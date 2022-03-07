@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 #     }
 # }
 
-DB_NAME = 'mongodb+srv://cl0ud-c4rr0t:izBdvfyqqw4OeXLu@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+DB_NAME = 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 DATABASES = {
     'default': {
@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'pithia-esc',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://cl0ud-c4rr0t:izBdvfyqqw4OeXLu@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+            'host': 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
         }
     }
 }
