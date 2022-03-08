@@ -1,0 +1,18 @@
+<li>
+    {% if node.narrowers|length > 0 %}
+    <details>
+        <summary>
+            {% include "search/ontology_tree_node_template.html" %}
+        </summary>
+        <ul>
+        {% for key, value in node.narrowers.items %}
+            {% with node=value ontology_component=ontology_component template_name="search/ontology_tree_template.html" %}
+            {% include template_name %}
+            {% endwith %}
+        {% endfor %}
+        </ul>
+    </details>
+    {% else %}
+    {% include "search/ontology_tree_node_template.html" %}
+    {% endif %}
+</li>
