@@ -4,17 +4,62 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Search</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'search/style.css' %}>
 </head>
 <body>
     <h1>Search</h1>
-    <h2>Observed Properties</h2>
-    {% autoescape off %}
-    {{ observed_properties_html }}
-    {% endautoescape %}
-    <h2>Measurands</h2>
-    {% autoescape off %}
-    {{ measurands_html }}
-    {% endautoescape %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend>
+                <h2>Observed Properties</h2>
+            </legend>
+            <ul>
+            {% for key, value in observed_properties.items %}
+                {% with node=value ontology_component=observed_properties %}
+                {% include "search/ontology_component_tree_template.html" %}
+                {% endwith %}
+            {% endfor %}
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <h2>Phenomenon</h2>
+            </legend>
+            <ul>
+                {% for key, value in phenomenons.items %}
+                    {% with node=value ontology_component=phenomenons %}
+                    {% include "search/ontology_component_tree_template.html" %}
+                    {% endwith %}
+                {% endfor %}
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <h2>Measurand</h2>
+            </legend>
+            <ul>
+                {% for key, value in measurands.items %}
+                    {% with node=value ontology_component=measurands %}
+                    {% include "search/ontology_component_tree_template.html" %}
+                    {% endwith %}
+                {% endfor %}
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>
+                <h2>Qualifier</h2>
+            </legend>
+            <ul>
+                {% for key, value in qualifiers.items %}
+                    {% with node=value ontology_component=qualifiers %}
+                    {% include "search/ontology_component_tree_template.html" %}
+                    {% endwith %}
+                {% endfor %}
+            </ul>
+        </fieldset>
+    </form>
 </body>
 </html>

@@ -1,0 +1,12 @@
+<li>
+    <input type="checkbox" id="{{ node.id }}"> <label for="{{ node.id }}">{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
+    {% if node.narrowers|length > 0 %}
+    <ul>
+    {% for key, value in node.narrowers.items %}
+        {% with node=value ontology_component=ontology_component template_name="search/ontology_component_tree_template.html" %}
+        {% include template_name %}
+        {% endwith %}
+    {% endfor %}
+    </ul>
+    {% endif %}
+</li>
