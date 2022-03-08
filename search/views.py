@@ -1,29 +1,12 @@
 from requests import get
 from django.shortcuts import render
 
-from functools import reduce
 from rdflib import Graph
 from rdflib.namespace import _SKOS
 
 ESPAS = 'https://ontology.espas-fp7.eu/'
 
-# Create your views here.
-def construct_html_from_nested_list_and_label_mappings(nested_list, pref_label_mappings, alt_label_mappings):
-    html = '<ul>'
-    human_readable_key = ''
-    for key in nested_list:
-        if key not in alt_label_mappings:
-            human_readable_key = pref_label_mappings[key]
-        else:
-            human_readable_key = f'{pref_label_mappings[key]} ({alt_label_mappings[key]})'
-        html += f'<li><input type="checkbox" id={key}> <label for={key}>{human_readable_key}</label>'
-        if nested_list[key] != 1:
-            html += f'{construct_html_from_nested_list_and_label_mappings(nested_list[key], pref_label_mappings, alt_label_mappings)}'
-        html += '</li>'
-    html += '</ul>'
-    return html
-
-def nested_list_and_label_mappings_from_ontology_component(ontology_component):
+def nested_list_from_ontology_component(ontology_component):
     # Fetch Observed Property component of ESPAS ontology text
     ontology_component_url = f'{ESPAS}{ontology_component}/'
     r = get(ontology_component_url)
@@ -48,39 +31,51 @@ def nested_list_and_label_mappings_from_ontology_component(ontology_component):
         o_value = o.replace(ontology_component_url, '')
         alt_label_mappings[s_value] = o_value
 
+    nested_list = {}
     for s, p, o in g.triples((None, SKOS.broader, None)):
+        # s_value is the narrower value
         s_value = s.replace(ontology_component_url, '')
+        # o_value is the broader value
         o_value = o.replace(ontology_component_url, '')
+        # If the broader value is not in the nested list, add it and set
+        # its value to an empty dictionary.
         if o_value not in nested_list:
-            nested_list[o_value] = {}
-        nested_list[o_value][s_value] = 1
+            nested_list[o_value] = {
+                'id': o_value,
+                'pref_label': pref_label_mappings[o_value],
+                'alt_label': alt_label_mappings[o_value] if o_value in alt_label_mappings else None,
+                'narrowers': {}
+            }
+        # Add to the broader value's dictionary by putting in a narrower
+        # value as a key and setting its value to '1'.
+        nested_list[o_value]['narrowers'][s_value] = {
+            'id': s_value,
+            'pref_label': pref_label_mappings[s_value],
+            'alt_label': alt_label_mappings[s_value] if s_value in alt_label_mappings else None,
+            'narrowers': {}
+        }
 
     keys_to_remove_at_top_level = []
     for key in nested_list:
-        for nestedKey in nested_list[key]:
+        for nestedKey in nested_list[key]['narrowers']:
             if nestedKey in nested_list:
-                nested_list[key][nestedKey] = nested_list[nestedKey]
+                nested_list[key]['narrowers'][nestedKey] = nested_list[nestedKey]
                 keys_to_remove_at_top_level.append(nestedKey)
 
     for key in keys_to_remove_at_top_level:
         del nested_list[key]
 
-    return nested_list, pref_label_mappings, alt_label_mappings
+    return nested_list
 
 def index(request):
-    observed_properties, op_pref_label_mappings, op_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('observedProperty')
-    qualifiers, q_pref_label_mappings, q_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('qualifier')
-    measurands, m_pref_label_mappings, m_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('measurand')
-    phenomenons, p_pref_label_mappings, p_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('phenomenon')
-
-    observed_properties_html = construct_html_from_nested_list_and_label_mappings(observed_properties, op_pref_label_mappings, op_alt_label_mappings)
-    qualifiers_html = construct_html_from_nested_list_and_label_mappings(qualifiers, q_pref_label_mappings, q_alt_label_mappings)
-    measurands_html = construct_html_from_nested_list_and_label_mappings(measurands, m_pref_label_mappings, m_alt_label_mappings)
-    phenomenons_html = construct_html_from_nested_list_and_label_mappings(phenomenons, p_pref_label_mappings, p_alt_label_mappings)
-
+    observed_properties = nested_list_from_ontology_component('observedProperty')
+    qualifiers = nested_list_from_ontology_component('qualifier')
+    measurands = nested_list_from_ontology_component('measurand')
+    phenomenons = nested_list_from_ontology_component('phenomenon')
+    
     return render(request, 'search/index.html', {
-        'observed_properties_html': observed_properties_html,
-        'qualifiers_html': qualifiers_html,
-        'measurands_html': measurands_html,
-        'phenomenons_html': phenomenons_html,
+        'observed_properties': observed_properties,
+        'qualifiers': qualifiers,
+        'measurands': measurands,
+        'phenomenons': phenomenons,
     })
