@@ -8,31 +8,24 @@ from rdflib.namespace import _SKOS
 ESPAS = 'https://ontology.espas-fp7.eu/'
 
 # Create your views here.
-def construct_html_from_human_readable_list(human_readable_list):
+def construct_html_from_nested_list_and_label_mappings(nested_list, pref_label_mappings, alt_label_mappings):
     html = '<ul>'
-    for key in human_readable_list:
-        html += f'<li><input type="checkbox"> {key}'
-        if human_readable_list[key] != 1:
-            html += f'{construct_html_from_human_readable_list(human_readable_list[key])}'
+    human_readable_key = ''
+    for key in nested_list:
+        if key not in alt_label_mappings:
+            human_readable_key = pref_label_mappings[key]
+        else:
+            human_readable_key = f'{pref_label_mappings[key]} ({alt_label_mappings[key]})'
+        html += f'<li><input type="checkbox" id={key}> <label for={key}>{human_readable_key}</label>'
+        if nested_list[key] != 1:
+            html += f'{construct_html_from_nested_list_and_label_mappings(nested_list[key], pref_label_mappings, alt_label_mappings)}'
         html += '</li>'
     html += '</ul>'
     return html
 
-def create_human_readable_nested_list(nested_list, pref_label_mappings, alt_label_mappings):
-    human_readable_nested_list = {}
-    for key in nested_list:
-        if (key not in alt_label_mappings):
-            human_readable_key = pref_label_mappings[key]
-        else:
-            human_readable_key = f'{pref_label_mappings[key]} ({alt_label_mappings[key]})'
-        human_readable_nested_list[human_readable_key] = nested_list[key]
-        if human_readable_nested_list[human_readable_key] != 1:
-            human_readable_nested_list[human_readable_key] = create_human_readable_nested_list(nested_list[key], pref_label_mappings, alt_label_mappings)
-    return human_readable_nested_list
-
-def nested_list_from_ontology_component(ontology_component):
+def nested_list_and_label_mappings_from_ontology_component(ontology_component):
     # Fetch Observed Property component of ESPAS ontology text
-    ontology_component_url = f'{ESPAS}{ontology_component}'
+    ontology_component_url = f'{ESPAS}{ontology_component}/'
     r = get(ontology_component_url)
     r_text = r.text
 
@@ -72,18 +65,18 @@ def nested_list_from_ontology_component(ontology_component):
     for key in keys_to_remove_at_top_level:
         del nested_list[key]
 
-    return create_human_readable_nested_list(nested_list, pref_label_mappings, alt_label_mappings)
+    return nested_list, pref_label_mappings, alt_label_mappings
 
 def index(request):
-    observed_properties = nested_list_from_ontology_component('observedProperty')
-    qualifiers = nested_list_from_ontology_component('qualifier')
-    measurands = nested_list_from_ontology_component('measurand')
-    phenomenons = nested_list_from_ontology_component('phenomenon')
+    observed_properties, op_pref_label_mappings, op_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('observedProperty')
+    qualifiers, q_pref_label_mappings, q_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('qualifier')
+    measurands, m_pref_label_mappings, m_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('measurand')
+    phenomenons, p_pref_label_mappings, p_alt_label_mappings = nested_list_and_label_mappings_from_ontology_component('phenomenon')
 
-    observed_properties_html = construct_html_from_human_readable_list(observed_properties)
-    qualifiers_html = construct_html_from_human_readable_list(qualifiers)
-    measurands_html = construct_html_from_human_readable_list(measurands)
-    phenomenons_html = construct_html_from_human_readable_list(phenomenons)
+    observed_properties_html = construct_html_from_nested_list_and_label_mappings(observed_properties, op_pref_label_mappings, op_alt_label_mappings)
+    qualifiers_html = construct_html_from_nested_list_and_label_mappings(qualifiers, q_pref_label_mappings, q_alt_label_mappings)
+    measurands_html = construct_html_from_nested_list_and_label_mappings(measurands, m_pref_label_mappings, m_alt_label_mappings)
+    phenomenons_html = construct_html_from_nested_list_and_label_mappings(phenomenons, p_pref_label_mappings, p_alt_label_mappings)
 
     return render(request, 'search/index.html', {
         'observed_properties_html': observed_properties_html,
