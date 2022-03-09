@@ -41,7 +41,8 @@ def nested_list_from_ontology_component(ontology_component):
         # its value to an empty dictionary.
         if o_value not in nested_list:
             nested_list[o_value] = {
-                'id': o_value,
+                'id': f'{ontology_component}{o_value}',
+                'value': o_value,
                 'pref_label': pref_label_mappings[o_value],
                 'alt_label': alt_label_mappings[o_value] if o_value in alt_label_mappings else None,
                 'narrowers': {}
@@ -49,7 +50,8 @@ def nested_list_from_ontology_component(ontology_component):
         # Add to the broader value's dictionary by putting in a narrower
         # value as a key and setting its value to '1'.
         nested_list[o_value]['narrowers'][s_value] = {
-            'id': s_value,
+            'id': f'{ontology_component}{s_value}',
+            'value': s_value,
             'pref_label': pref_label_mappings[s_value],
             'alt_label': alt_label_mappings[s_value] if s_value in alt_label_mappings else None,
             'narrowers': {}
