@@ -21,7 +21,7 @@
             </legend>
             <ul class="tree">
             {% for key, value in observed_properties.items %}
-                {% with node=value ontology_component=observed_properties %}
+                {% with node=value ontology_component=observed_properties list_level=1 %}
                 {% include "search/ontology_tree_template.html" %}
                 {% endwith %}
             {% endfor %}
@@ -33,7 +33,7 @@
             </legend>
             <ul>
                 {% for key, value in phenomenons.items %}
-                    {% with node=value ontology_component=phenomenons %}
+                    {% with node=value ontology_component=phenomenons list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
                     {% endwith %}
                 {% endfor %}
@@ -45,7 +45,7 @@
             </legend>
             <ul>
                 {% for key, value in measurands.items %}
-                    {% with node=value ontology_component=measurands %}
+                    {% with node=value ontology_component=measurands list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
                     {% endwith %}
                 {% endfor %}
@@ -57,7 +57,7 @@
             </legend>
             <ul>
                 {% for key, value in qualifiers.items %}
-                    {% with node=value ontology_component=qualifiers %}
+                    {% with node=value ontology_component=qualifiers list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
                     {% endwith %}
                 {% endfor %}

@@ -2,11 +2,13 @@
     {% if node.narrowers|length > 0 %}
     <details>
         <summary>
+            {% with is_parent_node="true" %}
             {% include "search/ontology_tree_node_template.html" %}
+            {% endwith %}
         </summary>
         <ul>
         {% for key, value in node.narrowers.items %}
-            {% with node=value ontology_component=ontology_component template_name="search/ontology_tree_template.html" %}
+            {% with node=value ontology_component=ontology_component list_level=list_level|add:"1" parent_node_in_tree=node.id is_parent_node="false" template_name="search/ontology_tree_template.html" %}
             {% include template_name %}
             {% endwith %}
         {% endfor %}
