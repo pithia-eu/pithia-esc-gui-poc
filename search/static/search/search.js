@@ -1,6 +1,16 @@
-const ontologyParentNodeCheckboxes = document.querySelectorAll("input[data-is-parent-node='true']");
-const ontologyChildNodeCheckboxes = document.querySelectorAll("input:not([data-parent-node-in-ontology=''])");
+const ontologyParentNodeCheckboxes = document.querySelectorAll(".tree input[data-is-parent-node='true']");
+const ontologyChildNodeCheckboxes = document.querySelectorAll(".tree input:not([data-parent-node-in-ontology=''])");
 
+
+function getEnclosingLiNode(checkbox) {
+    let currentParentNode = checkbox;
+    let currentChildNode = checkbox;
+    while (currentParentNode !== null && currentParentNode.nodeName !== "LI") {
+        currentParentNode = currentChildNode.parentNode;
+        currentChildNode = currentParentNode;
+    }
+    return currentParentNode;
+}
 
 function updateParentNodeCheckboxes(childNodeCheckbox) {
     const siblingNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']`);
@@ -14,6 +24,11 @@ function updateParentNodeCheckboxes(childNodeCheckbox) {
 
 function updateChildNodeCheckboxes(parentNodeCheckbox) {
     const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${parentNodeCheckbox.id}']`);
+    const enclosingLiNode = getEnclosingLiNode(parentNodeCheckbox);
+    const childDetailsNodes = enclosingLiNode.querySelectorAll("details");
+    childDetailsNodes.forEach(detailsNode => {
+        detailsNode.open = true;
+    });
     childNodeCheckboxes.forEach(checkbox => {
         checkbox.checked = parentNodeCheckbox.checked;
         const childNodeCheckboxesOfChildNodeCheckbox = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);

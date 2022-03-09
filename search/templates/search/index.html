@@ -31,7 +31,7 @@
             <legend>
                 <h2>Phenomenon</h2>
             </legend>
-            <ul>
+            <ul class="tree">
                 {% for key, value in phenomenons.items %}
                     {% with node=value ontology_component=phenomenons list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
@@ -43,7 +43,7 @@
             <legend>
                 <h2>Measurand</h2>
             </legend>
-            <ul>
+            <ul class="tree">
                 {% for key, value in measurands.items %}
                     {% with node=value ontology_component=measurands list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
@@ -55,7 +55,7 @@
             <legend>
                 <h2>Qualifier</h2>
             </legend>
-            <ul>
+            <ul class="tree">
                 {% for key, value in qualifiers.items %}
                     {% with node=value ontology_component=qualifiers list_level=1 %}
                     {% include "search/ontology_tree_template.html" %}
