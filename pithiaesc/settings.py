@@ -81,18 +81,18 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 #     }
 # }
 
-DB_NAME = 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+# DB_NAME = 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'pithia-esc',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-        }
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'pithia-esc',
+#         'ENFORCE_SCHEMA': False,
+#         'CLIENT': {
+#             'host': DB_NAME
+#         }
+#     }
+# }
 
 
 # Password validation
