@@ -1,3 +1,4 @@
 def handle_uploaded_file(f):
-    for chunk in f.chunks():
-        print(chunk)
+    with open(f'/tmp/', 'x+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
