@@ -1,10 +1,8 @@
 from pymongo import MongoClient
-def get_db_handle(db_name, host, port, username, password):
-    client = MongoClient(
-        host=host,
-        port=int(port),
-        username=username,
-        password=password
-    )
-    db_handle = client['db_name']
-    return db_handle, client
+import environ
+
+env = environ.Env()
+print(env('MONGODB_CONNECTION_STRING'))
+
+client = MongoClient(env('MONGODB_CONNECTION_STRING'))
+db = client[env('DB_NAME')]
