@@ -6,3 +6,7 @@ ul.tree,
 ul.tree ul {
     list-style-type: none;
 }
+
+.container {
+    max-width: 960px;
+}
