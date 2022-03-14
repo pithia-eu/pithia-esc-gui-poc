@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import environ
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tud2exf+)hj=xjwpp=d9!w&x$-s(y+f-tx+486oa#6=q2gn=de'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,20 +83,11 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# DB_NAME = 'mongodb+srv://cl0ud-c4rr0t:IHXSn80NAa49WjvW@cluster0.dqgcd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-
-# DATABASES = {
-#     'default': {
 #         'ENGINE': 'djongo',
-#         'NAME': 'pithia-esc',
+#         'NAME': env('DB_NAME'),
 #         'ENFORCE_SCHEMA': False,
 #         'CLIENT': {
-#             'host': DB_NAME
+#             'host': env('MONGODB_CONNECTION_STRING')
 #         }
 #     }
 # }
