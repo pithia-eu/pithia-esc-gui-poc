@@ -16,7 +16,7 @@
         {% csrf_token %}
         <div class="container">
             <div class="row">
-                <h1>Search</h1>
+                <h1 class="py-5">Search</h1>
                 <div class="col">
                     <fieldset>
                         <legend>
@@ -24,7 +24,7 @@
                         </legend>
                         <ul class="tree">
                             {% for key, value in phenomenons.items %}
-                                {% with node=value ontology_component=phenomenons list_level=1 %}
+                                {% with node=value ontology_component=phenomenons ontology_component_name="phenomenons" list_level=1 %}
                                 {% include "search/ontology_tree_template.html" %}
                                 {% endwith %}
                             {% endfor %}
@@ -36,7 +36,7 @@
                         </legend>
                         <ul class="tree">
                             {% for key, value in measurands.items %}
-                                {% with node=value ontology_component=measurands list_level=1 %}
+                                {% with node=value ontology_component=measurands ontology_component_name="measurands" list_level=1 %}
                                 {% include "search/ontology_tree_template.html" %}
                                 {% endwith %}
                             {% endfor %}
@@ -48,7 +48,7 @@
                         </legend>
                         <ul class="tree">
                             {% for key, value in qualifiers.items %}
-                                {% with node=value ontology_component=qualifiers list_level=1 %}
+                                {% with node=value ontology_component=qualifiers ontology_component_name="qualifiers" list_level=1 %}
                                 {% include "search/ontology_tree_template.html" %}
                                 {% endwith %}
                             {% endfor %}
@@ -62,7 +62,7 @@
                         </legend>
                         <ul class="tree">
                         {% for key, value in observed_properties.items %}
-                            {% with node=value ontology_component=observed_properties list_level=1 %}
+                            {% with node=value ontology_component=observed_properties ontology_component_name="observed_properties" list_level=1 %}
                             {% include "search/ontology_tree_template.html" %}
                             {% endwith %}
                         {% endfor %}
@@ -70,6 +70,7 @@
                     </fieldset>
                 </div>
             </div>
+            <button type="submit" class="btn btn-primary float-right">Search</button>
         </div>
     </form>
 </body>
