@@ -1,19 +1,26 @@
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         {% load static %}
         <img src="{% static "pithia-logo.png" %}" alt="PITHIA Logo" class="header-logo">
-        <span class="fs-4">PITHIA e-Science Centre</span>
+        <span class="fs-4">PITHIA-NRF</span>
     </a>
 
-    <ul class="nav nav-pills">
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li class="nav-item">
-            <a href="/" class="nav-link {% if request.path == "/" %}active{% endif %}" aria-current="page">Home</a>
+            <a href="/" class="nav-link px-2 {% if request.path == "/" %}link-secondary{% endif %}" aria-current="page">Home</a>
         </li>
         <li class="nav-item">
-            <a href="/register/" class="nav-link {% if "register" in request.path %}active{% endif %}">Register</a>
+            <a href="/register/" class="nav-link px-2 {% if "register" in request.path %}link-secondary{% endif %}">Register</a>
         </li>
         <li class="nav-item">
-            <a href="/search/" class="nav-link {% if "search" in request.path %}active{% endif %}">Search</a>
+            <a href="/search/" class="nav-link px-2 {% if "search" in request.path %}link-secondary{% endif %}">Search</a>
         </li>
     </ul>
+
+    <div class="col-md-3 text-end">
+        <button type="button" class="btn btn-outline-primary me-2">
+            Login
+        </button>
+        <button type="button" class="btn btn-primary">Sign-up</button>
+    </div>
 </header>
