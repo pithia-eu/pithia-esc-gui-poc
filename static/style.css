@@ -5,10 +5,6 @@ html, body {
     overflow: hidden;
 }
 
-.container {
-    max-width: 960px;
-}
-
 ul.tree,
 ul.tree ul {
     list-style-type: none;
