@@ -26,5 +26,6 @@ def index(request):
     else:
         form = UploadFileForm()
     return render(request, 'register/index.html', {
+        'title': 'Register Models/Datasets',
         'form': form
     })

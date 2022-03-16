@@ -19,6 +19,7 @@ def index(request):
         phenomenons = nested_list_from_ontology_component('phenomenon')
         
         return render(request, 'search/index.html', {
+            'title': 'Search Models/Datasets',
             'observed_properties': observed_properties,
             'qualifiers': qualifiers,
             'measurands': measurands,
