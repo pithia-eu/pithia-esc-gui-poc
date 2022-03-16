@@ -11,3 +11,7 @@ ul.tree ul {
 .container {
     max-width: 960px;
 }
+
+.header-logo {
+    width: 5rem;
+}
