@@ -10,7 +10,7 @@ def index(request):
         measurands = request.POST.getlist('measurands')
         qualifiers = request.POST.getlist('qualifiers')
         phenomenons = request.POST.getlist('phenomenons')
-        db.
+        # db.observation_collections.find()
         return HttpResponseRedirect('/search/')
     else:
         observed_properties = nested_list_from_ontology_component('observedProperty')
