@@ -3,11 +3,13 @@
 <h1 class="py-5">Register metadata</h1>
 <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="mb-3">
-        {{ form.file.errors }}
-        {{ form.file.label_tag }}
-        {{ form.file }}
+    {% for field in form %}
+    <div class="col-auto mb-4">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Register</button>
 </form>
 {% endblock content %}
