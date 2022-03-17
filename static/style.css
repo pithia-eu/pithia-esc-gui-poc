@@ -3,15 +3,25 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+.header-logo {
+    width: 5rem;
+}
+
+.tree-container {
+    max-height: 32rem;
+    overflow-y: auto;
+}
+
+.collapse .tree-container {
+    max-height: 20rem;
+}
+
+ul.tree {
+    padding-left: 0.5rem;
+}
+
 ul.tree,
 ul.tree ul {
     list-style-type: none;
 }
 
-.container {
-    max-width: 960px;
-}
-
-.header-logo {
-    width: 5rem;
-}
