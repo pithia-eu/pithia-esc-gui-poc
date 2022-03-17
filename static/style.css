@@ -18,7 +18,7 @@ html, body {
 /* Search page */
 .tree-container {
     padding: 1.5rem 1rem;
-    border: 1px solid --bs-light-grey;
+    border: 1px solid var(--bs-light-grey);
     border-radius: 0.3rem;
     max-height: var(--tree-max-height);
     overflow-y: auto;
