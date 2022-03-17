@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from .forms import UploadFileForm
-from .helpers import handle_uploaded_metadata
+from .metadata_helpers import handle_uploaded_metadata
 
 # Create your views here.
 class RegisterView(FormView):
