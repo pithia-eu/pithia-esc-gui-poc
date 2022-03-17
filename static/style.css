@@ -15,9 +15,13 @@ html, body {
     overflow-y: auto;
 }
 
-.collapse .tree-container {
+#accordion-filters .tree-container {
     border: none;
     max-height: 20rem;
+}
+
+#accordion-filters .accordion-body {
+    max-height: calc(20rem + 2rem);
 }
 
 ul.tree {
