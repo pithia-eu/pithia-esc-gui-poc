@@ -11,17 +11,17 @@ html, body {
     padding: 1.5rem 1rem;
     border: 1px solid #dee2e6;
     border-radius: 0.3rem;
-    max-height: 32rem;
+    max-height: var(--tree-max-height);
     overflow-y: auto;
 }
 
 #accordion-filters .tree-container {
     border: none;
-    max-height: 20rem;
+    max-height: var(--tree-max-height-in-accordion);
 }
 
 #accordion-filters .accordion-body {
-    max-height: calc(20rem + 2rem);
+    max-height: calc(--tree-max-height-in-accordion + (--accordion-body-padding-y * 2));
 }
 
 ul.tree {
@@ -31,5 +31,11 @@ ul.tree {
 ul.tree,
 ul.tree ul {
     list-style-type: none;
+}
+
+:root {
+    --tree-max-height: 26rem;
+    --tree-max-height-in-accordion: 13rem;
+    --accordion-body-padding-y: 1rem;
 }
 
