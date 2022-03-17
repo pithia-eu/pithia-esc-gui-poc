@@ -1,25 +1,33 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic.edit import FormView
 from .forms import UploadFileForm
 from .metadata_helpers import handle_uploaded_metadata
 
 # Create your views here.
-class RegisterView(FormView):
-    form_class = UploadFileForm
-    template_name = 'register/index.html'
-    success_url = '/register/'
-
-    def post(self, request, *args, **kwargs):
-        form_class = self.form_class
-        form = self.get_form(form_class)
+def index(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
         files = request.FILES.getlist('files')
         if form.is_valid():
-            handle_uploaded_metadata(files)
-            return self.form_valid(form)
+            uploaded_file_stats = handle_uploaded_metadata(files)
+            query_string = '?'
+            if uploaded_file_stats['acq_files_uploaded'] > 0:
+                query_string += f'acq_files_uploaded={uploaded_file_stats["acq_files_uploaded"]}'
+            if uploaded_file_stats['comp_files_uploaded'] > 0:
+                query_string += f'comp_files_uploaded={uploaded_file_stats["comp_files_uploaded"]}'
+            if uploaded_file_stats['op_files_uploaded'] > 0:
+                query_string += f'op_files_uploaded={uploaded_file_stats["op_files_uploaded"]}'
+            if uploaded_file_stats['proc_files_uploaded'] > 0:
+                query_string += f'proc_files_uploaded={uploaded_file_stats["proc_files_uploaded"]}'
+            print(query_string)
+            return HttpResponseRedirect(reverse('register:index') + query_string)
         else:
-            return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Register Models/Datasets'
-        return context
+            return HttpResponseRedirect(reverse('register:index'))
+    else:
+        form = UploadFileForm
+    return render(request, 'register/index.html', {
+        'title': 'Register Models/Data Collections',
+        'form': form
+    })
