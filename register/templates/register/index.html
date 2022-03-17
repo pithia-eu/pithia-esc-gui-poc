@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="py-5">Register metadata</h1>
-<form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="col-auto mb-4">
-        {{ field.errors }}
-        {{ field.label_tag }}
-        {{ field }}
-    </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+<div class="register-container">
+    <h1>Metadata file upload</h1>
+    <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" class="bg-secondary bg-opacity-10 p-5 rounded-3 my-3">
+        {% csrf_token %}
+        <div class="row align-items-end">
+            <div class="col-auto flex-fill">
+                {{ form.files.errors }}
+                {{ form.files.label_tag }}
+                {{ form.files }}
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock content %}
