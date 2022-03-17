@@ -4,6 +4,7 @@ html, body {
 }
 
 .header-logo {
+    /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
 }
 
