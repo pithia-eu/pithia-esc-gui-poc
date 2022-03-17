@@ -22,7 +22,7 @@ html, body {
 
 #accordion-filters .accordion-body {
     padding: 0;
-    max-height: calc(--tree-max-height-in-accordion);
+    max-height: var(--tree-max-height-in-accordion);
 }
 
 ul.tree {
