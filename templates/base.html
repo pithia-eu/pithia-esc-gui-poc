@@ -14,7 +14,9 @@
 <body>
     <div class="container">
         {% include "header.html" %}
-        {% block content %}{% endblock content %}
+        <main class="main-content">
+            {% block content %}{% endblock content %}
+        </main>
     </div>
 </body>
 </html>
