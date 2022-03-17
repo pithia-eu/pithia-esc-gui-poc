@@ -7,9 +7,18 @@ html, body {
     width: 97px;
 }
 
+/* Register page */
+.register-container {
+    max-width: 960px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Search page */
 .tree-container {
     padding: 1.5rem 1rem;
-    border: 1px solid #dee2e6;
+    border: 1px solid --bs-light-grey;
     border-radius: 0.3rem;
     max-height: var(--tree-max-height);
     overflow-y: auto;
@@ -37,5 +46,6 @@ ul.tree ul {
 :root {
     --tree-max-height: 26rem;
     --tree-max-height-in-accordion: 15rem;
+    --bs-light-grey: #dee2e6
 }
 
