@@ -8,11 +8,15 @@ html, body {
 }
 
 .tree-container {
+    padding: 1.5rem 1rem;
+    border: 1px solid #CCC;
+    border-radius: 0.3rem;
     max-height: 32rem;
     overflow-y: auto;
 }
 
 .collapse .tree-container {
+    border: none;
     max-height: 20rem;
 }
 
