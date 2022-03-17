@@ -4,7 +4,7 @@
 <script src="{% static "search/search.js" %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<form action="" method="POST" id="search-form">
+<form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row">
         <div class="col-auto">
