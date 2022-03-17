@@ -21,7 +21,8 @@ html, body {
 }
 
 #accordion-filters .accordion-body {
-    max-height: calc(--tree-max-height-in-accordion + (--accordion-body-padding-y * 2));
+    padding: 0;
+    max-height: calc(--tree-max-height-in-accordion);
 }
 
 ul.tree {
@@ -35,7 +36,6 @@ ul.tree ul {
 
 :root {
     --tree-max-height: 26rem;
-    --tree-max-height-in-accordion: 13rem;
-    --accordion-body-padding-y: 1rem;
+    --tree-max-height-in-accordion: 15rem;
 }
 
