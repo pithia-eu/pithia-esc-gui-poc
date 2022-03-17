@@ -4,90 +4,104 @@
 <script src="{% static "search/search.js" %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<form action="" method="POST">
+<form action="" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row">
-        <h1>Search by observed properties</h1>
-        <div class="col-auto flex-fill">
+        <div class="col-auto">
+            <h1>Search by observed properties</h1>
+        </div>
+        <div class="col-auto ms-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
             <h2 class="py-3">Filter By</h2>
-            <div class="accordion" id="accordionExample">
+            <div class="accordion" id="accordion-filters">
                 <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="headingOne">
+                    <legend class="accordion-header" id="heading-one">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
                             Phenomenon
                         </button>
                     </legend>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample">
+                    <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
+                        data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <ul class="tree">
-                                {% for key, value in phenomenons.items %}
-                                {% with node=value ontology_component=phenomenons ontology_component_name="phenomenons" list_level=1 %}
-                                {% include "search/ontology_tree_template.html" %}
-                                {% endwith %}
-                                {% endfor %}
-                            </ul>
+                            <div class="tree-container">
+                                <ul class="tree">
+                                    {% for key, value in phenomenons.items %}
+                                    {% with node=value ontology_component=phenomenons ontology_component_name="phenomenons" list_level=1 %}
+                                    {% include "search/ontology_tree_template.html" %}
+                                    {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="headingTwo">
+                    <legend class="accordion-header" id="heading-two">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
                             Measurand
                         </button>
                     </legend>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                        data-bs-parent="#accordionExample">
+                    <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
+                        data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <ul class="tree">
-                                {% for key, value in measurands.items %}
-                                {% with node=value ontology_component=measurands ontology_component_name="measurands" list_level=1 %}
-                                {% include "search/ontology_tree_template.html" %}
-                                {% endwith %}
-                                {% endfor %}
-                            </ul>
+                            <div class="tree-container">
+                                <ul class="tree">
+                                    {% for key, value in measurands.items %}
+                                    {% with node=value ontology_component=measurands ontology_component_name="measurands" list_level=1 %}
+                                    {% include "search/ontology_tree_template.html" %}
+                                    {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="headingThree">
+                    <legend class="accordion-header" id="heading-three">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            data-bs-target="#collapse-three" aria-expanded="false" aria-controls="collapse-three">
                             Qualifier
                         </button>
                     </legend>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                        data-bs-parent="#accordionExample">
+                    <div id="collapse-three" class="accordion-collapse collapse" aria-labelledby="heading-three"
+                        data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <ul class="tree">
-                                {% for key, value in qualifiers.items %}
-                                {% with node=value ontology_component=qualifiers ontology_component_name="qualifiers" list_level=1 %}
-                                {% include "search/ontology_tree_template.html" %}
-                                {% endwith %}
-                                {% endfor %}
-                            </ul>
+                            <div class="tree-container">
+                                <ul class="tree">
+                                    {% for key, value in qualifiers.items %}
+                                    {% with node=value ontology_component=qualifiers ontology_component_name="qualifiers" list_level=1 %}
+                                    {% include "search/ontology_tree_template.html" %}
+                                    {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
         </div>
-        <div class="col-auto">
-            <fieldset>
+        <div class="col-lg-6">
+            <fieldset class="option-row">
                 <legend>
                     <h2 class="py-3">Observed Properties</h2>
                 </legend>
-                <ul class="tree">
-                    {% for key, value in observed_properties.items %}
-                    {% with node=value ontology_component=observed_properties ontology_component_name="observed_properties" list_level=1 %}
-                    {% include "search/ontology_tree_template.html" %}
-                    {% endwith %}
-                    {% endfor %}
-                </ul>
+                <div class="tree-container">
+                    <ul class="tree">
+                        {% for key, value in observed_properties.items %}
+                        {% with node=value ontology_component=observed_properties ontology_component_name="observed_properties" list_level=1 %}
+                        {% include "search/ontology_tree_template.html" %}
+                        {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </fieldset>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary float-right">Search</button>
 </form>
 {% endblock content %}
