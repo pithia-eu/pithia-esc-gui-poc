@@ -78,7 +78,7 @@ def handle_uploaded_metadata(files):
             process_dicts.append(xml_as_dict['Process'])
         
         # DEBUG: Print out the resulting dictionary
-        print(json.dumps(xml_as_dict, indent=2, sort_keys=True))
+        # print(json.dumps(xml_as_dict, indent=2, sort_keys=True))
     # Insert the dictionaries into the database
     if len(acquisition_dicts) > 0:
         db['acquisitions'].insert_many(acquisition_dicts)
@@ -88,3 +88,10 @@ def handle_uploaded_metadata(files):
         db['observation_collections'].insert_many(observation_collection_dicts)
     if len(process_dicts) > 0:
         db['processes'].insert_many(process_dicts)
+    # Return number of files uploaded from each category
+    return {
+        'acq_files_uploaded': len(acquisition_dicts),
+        'comp_files_uploaded': len(computation_dicts),
+        'op_files_uploaded': len(observation_collection_dicts),
+        'proc_files_uploaded': len(process_dicts),
+    }
