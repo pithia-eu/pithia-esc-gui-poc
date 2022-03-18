@@ -8,7 +8,7 @@
         </summary>
         <ul>
         {% for key, value in node.narrowers.items %}
-            {% with node=value ontology_component=ontology_component parent_node_in_ontology=node.id is_parent_node="false" template_name="search/ontology_tree_template.html" %}
+            {% with node=value ontology_component=ontology_component parent_node_in_ontology=node.id is_parent_node="false" template_name="search/ontology_tree_template_inner.html" %}
             {% include template_name %}
             {% endwith %}
         {% endfor %}
