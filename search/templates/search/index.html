@@ -8,7 +8,7 @@
     {% csrf_token %}
     <div class="row">
         <div class="col-auto">
-            <h1>Search by observed properties</h1>
+            <h1>Search by Observed Properties</h1>
         </div>
         <div class="col-auto ms-auto">
             <button type="submit" class="btn btn-primary">Search</button>
@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <h2 class="py-3">Filter By</h2>
+            <h2 class="py-3">Filter by</h2>
             <div class="accordion" id="accordion-filters">
                 <fieldset class="accordion-item">
                     <legend class="accordion-header" id="heading-one">
@@ -85,10 +85,12 @@
                 <legend class="mb-0">
                     <h2 class="py-3">Observed Properties</h2>
                 </legend>
-                <div class="tree-container" id="observed-properties-tree-container">
-                    <div class="spinner-grow-container">
-                        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                <div class="tree-container-wrapper">
+                    <div class="tree-container" id="observed-properties-tree-container">
+                        <div class="spinner-grow-container">
+                            <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
