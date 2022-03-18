@@ -2,12 +2,6 @@ from utils import db
 import json
 import xmltodict
 
-# Dictionaries for the different metadata types
-acquisition_dicts = []
-computation_dicts = []
-observation_collection_dicts = []
-process_dicts = []
-
 def validate_acquisition_dictionary(dict):
     # Check if the 'capability' property is an
     # array-type property
@@ -50,6 +44,11 @@ def validate_process_dictionary(dict):
 
 
 def handle_uploaded_metadata(files):
+    # Dictionaries for the different metadata types
+    acquisition_dicts = []
+    computation_dicts = []
+    observation_collection_dicts = []
+    process_dicts = []
     for f in files:
         xml = f.read()
         # Convert XML to a dictionary to be able to convert it JSON
