@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block scripts %}
-<script src="{% static "search/search.js" %}" defer></script>
+<script src="{% static "search/search.js" %}" id="search-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
@@ -28,14 +28,12 @@
                     <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-container">
-                                <ul class="tree">
-                                    {% for key, value in phenomenons.items %}
-                                    {% with node=value ontology_component=phenomenons ontology_component_name="phenomenons" list_level=1 %}
-                                    {% include "search/ontology_tree_template.html" %}
-                                    {% endwith %}
-                                    {% endfor %}
-                                </ul>
+                            <div class="tree-container" id="phenomenons-tree-container">
+                                <div class="spinner-grow-container">
+                                    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -50,14 +48,12 @@
                     <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-container">
-                                <ul class="tree">
-                                    {% for key, value in measurands.items %}
-                                    {% with node=value ontology_component=measurands ontology_component_name="measurands" list_level=1 %}
-                                    {% include "search/ontology_tree_template.html" %}
-                                    {% endwith %}
-                                    {% endfor %}
-                                </ul>
+                            <div class="tree-container" id="measurands-tree-container">
+                                <div class="spinner-grow-container">
+                                    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,14 +68,12 @@
                     <div id="collapse-three" class="accordion-collapse collapse" aria-labelledby="heading-three"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-container">
-                                <ul class="tree">
-                                    {% for key, value in qualifiers.items %}
-                                    {% with node=value ontology_component=qualifiers ontology_component_name="qualifiers" list_level=1 %}
-                                    {% include "search/ontology_tree_template.html" %}
-                                    {% endwith %}
-                                    {% endfor %}
-                                </ul>
+                            <div class="tree-container" id="qualifiers-tree-container">
+                                <div class="spinner-grow-container">
+                                    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -91,14 +85,12 @@
                 <legend class="mb-0">
                     <h2 class="py-3">Observed Properties</h2>
                 </legend>
-                <div class="tree-container">
-                    <ul class="tree">
-                        {% for key, value in observed_properties.items %}
-                        {% with node=value ontology_component=observed_properties ontology_component_name="observed_properties" list_level=1 %}
-                        {% include "search/ontology_tree_template.html" %}
-                        {% endwith %}
-                        {% endfor %}
-                    </ul>
+                <div class="tree-container" id="observed-properties-tree-container">
+                    <div class="spinner-grow-container">
+                        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
         </div>
