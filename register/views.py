@@ -2,7 +2,6 @@ from pyexpat import ExpatError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic.edit import FormView
 from .forms import UploadFileForm
 from .metadata_helpers import handle_uploaded_metadata
 
