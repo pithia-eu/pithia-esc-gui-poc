@@ -8,6 +8,10 @@ html, body {
     width: 97px;
 }
 
+header .nav-link {
+    text-transform: uppercase;
+}
+
 /* Register page */
 .register-container {
     max-width: 960px;
@@ -45,8 +49,8 @@ ul.tree ul {
 }
 
 :root {
-    --tree-max-height: 26rem;
-    --tree-max-height-in-accordion: 15rem;
+    --tree-max-height: 19rem;
+    --tree-max-height-in-accordion: 9rem;
     --bs-light-grey: #dee2e6
 }
 
