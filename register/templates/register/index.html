@@ -25,12 +25,12 @@
     <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" class="bg-secondary bg-opacity-10 p-5 rounded-3 mb-3">
         {% csrf_token %}
         <div class="row align-items-end">
-            <div class="col-auto flex-fill">
+            <div class="col-auto flex-fill mb-3">
                 {{ form.files.errors }}
                 {{ form.files.label_tag }}
                 {{ form.files }}
             </div>
-            <div class="col-auto">
+            <div class="col-auto mb-3">
                 <button type="submit" class="btn btn-success">Register</button>
             </div>
         </div>
