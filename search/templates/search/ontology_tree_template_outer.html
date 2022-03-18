@@ -1,0 +1,7 @@
+<ul class="tree">
+    {% for key, value in ontology_component.items %}
+    {% with node=value %}
+    {% include "search/ontology_tree_template_inner.html" %}
+    {% endwith %}
+    {% endfor %}
+</ul>
