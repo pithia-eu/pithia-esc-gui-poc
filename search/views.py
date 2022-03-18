@@ -5,7 +5,10 @@ from utils import db
 import re
 
 ONTOLOGY_COMPONENT_ENUMS = {
-    'observedProperty': 'observed_properties'
+    'measurand': 'measurands',
+    'observedProperty': 'observed_properties',
+    'phenomenon': 'phenomenons',
+    'qualifier': 'qualifiers'
 }
 
 def convert_list_to_regex_list(list):
@@ -13,7 +16,7 @@ def convert_list_to_regex_list(list):
 
 def get_checkbox_tree_for_ontology_component(request, ontology_component):
     nested_list = nested_list_from_ontology_component(ontology_component)
-    return render(request, 'search/ontology_tree_template_in_container.html', {
+    return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': nested_list,
         'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component]
     })
@@ -49,15 +52,6 @@ def index(request):
                 print(f'name: {c["name"]}')
         return HttpResponseRedirect('/search/')
     else:
-        observed_properties = nested_list_from_ontology_component('observedProperty')
-        qualifiers = nested_list_from_ontology_component('qualifier')
-        measurands = nested_list_from_ontology_component('measurand')
-        phenomenons = nested_list_from_ontology_component('phenomenon')
-        
         return render(request, 'search/index.html', {
-            'title': 'Search Models/Data Collections',
-            'observed_properties': observed_properties,
-            'qualifiers': qualifiers,
-            'measurands': measurands,
-            'phenomenons': phenomenons,
+            'title': 'Search Models/Data Collections'
         })
