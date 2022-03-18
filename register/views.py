@@ -1,3 +1,4 @@
+from pyexpat import ExpatError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -11,7 +12,15 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         files = request.FILES.getlist('files')
         if form.is_valid():
-            uploaded_file_stats = handle_uploaded_metadata(files)
+            try:
+                uploaded_file_stats = handle_uploaded_metadata(files)
+            except ExpatError as err:
+                print("XML parsing error: {0}".format(err))
+                return HttpResponseRedirect(reverse('register:index') + '?error=ExpatError')
+            except BaseException as err:
+                print("Unexpected error: {0}".format(err))
+                return HttpResponseRedirect(reverse('register:index') + '?error=500')
+
             query_string = '?'
             if uploaded_file_stats['acq_files_uploaded'] > 0:
                 query_string += f'acq_files_uploaded={uploaded_file_stats["acq_files_uploaded"]}'
