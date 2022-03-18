@@ -88,7 +88,7 @@ async function loadSearchFormComponent(html) {
 async function loadSearchFormComponents() {
     const fetchParams = { method: "GET" };
 
-    fetch("/search/measurand/", fetchParams)
+    fetch("/search/templates/form/component/measurand/", fetchParams)
         .then(parseResponseText)
         .then(loadSearchFormComponent)
         .catch (error => {
@@ -96,7 +96,7 @@ async function loadSearchFormComponents() {
             console.error(error);
         });
 
-    fetch("/search/observedProperty/", fetchParams)
+    fetch("/search/templates/form/component/observedProperty/", fetchParams)
         .then(parseResponseText)
         .then(loadSearchFormComponent)
         .catch (error => {
@@ -104,7 +104,7 @@ async function loadSearchFormComponents() {
             console.error(error);
         });
 
-    fetch("/search/phenomenon/", fetchParams)
+    fetch("/search/templates/form/component/phenomenon/", fetchParams)
         .then(parseResponseText)
         .then(loadSearchFormComponent)
         .catch (error => {
@@ -112,7 +112,7 @@ async function loadSearchFormComponents() {
             console.error(error);
         });
 
-    fetch("/search/qualifier/", fetchParams)
+    fetch("/search/templates/form/component/qualifier/", fetchParams)
         .then(parseResponseText)
         .then(loadSearchFormComponent)
         .catch (error => {
