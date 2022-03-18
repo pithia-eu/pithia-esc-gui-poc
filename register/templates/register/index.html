@@ -1,8 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="register-container">
-    <h1>Metadata file upload</h1>
-    <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" class="bg-secondary bg-opacity-10 p-5 rounded-3 my-3">
+    <h1>Model & Data Collection Registration</h1>
+    {% if "acq_files_uploaded" in request.GET %}
+    <div class="alert alert-success my-2">
+        Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
+    </div>
+    {% endif %}
+    {% if "comp_files_uploaded" in request.GET %}
+    <div class="alert alert-success my-2">
+        Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
+    </div>
+    {% endif %}
+    {% if "op_files_uploaded" in request.GET %}
+    <div class="alert alert-success my-2">
+        Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata files.
+    </div>
+    {% endif %}
+    {% if "proc_files_uploaded" in request.GET %}
+    <div class="alert alert-success my-2">
+        Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
+    </div>
+    {% endif %}
+    <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" class="bg-secondary bg-opacity-10 p-5 rounded-3 mb-3">
         {% csrf_token %}
         <div class="row align-items-end">
             <div class="col-auto flex-fill">
