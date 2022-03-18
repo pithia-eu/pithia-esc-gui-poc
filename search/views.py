@@ -14,6 +14,12 @@ ONTOLOGY_COMPONENT_ENUMS = {
 def convert_list_to_regex_list(list):
     return [re.compile(x) for x in list]
 
+def map_ontology_components_to_local_ids(list):
+    local_ids_list = []
+    for x in list:
+        local_ids_list.append(x['identifier']['pithia:Identifier']['localID'])
+    return local_ids_list
+
 def get_checkbox_tree_for_ontology_component(request, ontology_component):
     nested_list = nested_list_from_ontology_component(ontology_component)
     return render(request, 'search/ontology_tree_template_outer.html', {
@@ -28,16 +34,21 @@ def index(request):
         qualifiers = convert_list_to_regex_list(request.POST.getlist('qualifiers'))
         phenomenons = convert_list_to_regex_list(request.POST.getlist('phenomenons'))
         
+        # Route is:
+        # Acquisition/Computation maps to,
+        # Process maps to,
+        # Observation Collection, which is what we want.
+
+        # Fetch Acquisitions/Computations
         acquisitions = list(db['acquisitions'].find({
             'capability': {
                 '$elemMatch': {
-                    'observedProperty.@xlink:href': {
+                    'pithia:processCapability.observedProperty.@xlink:href': {
                         '$in': observed_properties
                     }
                 }
             }
         }))
-        
         computations = list(db['computations'].find({
             'capability': {
                 '$elemMatch': {
@@ -47,9 +58,38 @@ def index(request):
                 }
             }
         }))
-        for c in computations:
-            if 'name' in list(c.keys()):
-                print(f'name: {c["name"]}')
+
+        # Fetch Processes
+        processes = list(db['processes'].find({
+            '$or': [
+                {
+                    'acquisitionComponent': {
+                        '$elemMatch': {
+                            '@xlink:href': {
+                                '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(acquisitions))
+                            }
+                        }
+                    }
+                },
+                {
+                    'computationComponent': {
+                        '$elemMatch': {
+                            '@xlink:href': {
+                                '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(computations))
+                            }
+                        }
+                    }
+                },
+            ]
+        }))
+
+        # Fetch Observation Collections
+        observation_collections = list(db['observation_collections'].find({
+            'om:procedure.@xlink:href': {
+                '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
+            }
+        }))
+
         return HttpResponseRedirect('/search/')
     else:
         return render(request, 'search/index.html', {
