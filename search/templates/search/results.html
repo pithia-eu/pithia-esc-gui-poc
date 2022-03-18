@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>
+    <a href="{% url 'search:index' %}">Search again</a>
+</p>
+{% if results|length > 0 %}
+<ul class="list-group">
+    {% for r in results %}
+    <li class="list-group-item">{{ r.name }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock content %}
