@@ -2,6 +2,17 @@
 {% block content %}
 <div class="register-container">
     <h1>Model & Data Collection Registration</h1>
+    {% if "error" in request.GET %}
+    {% if request.GET.error == "ExpatError" %}
+    <div class="alert alert-danger my-2">
+        Error parsing metadata files.
+    </div>
+    {% else %}
+    <div class="alert alert-danger my-2">
+        An unexpected error occurred.
+    </div>
+    {% endif %}
+    {% endif %}
     {% if "acq_files_uploaded" in request.GET %}
     <div class="alert alert-success my-2">
         Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
