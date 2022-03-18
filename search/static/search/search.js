@@ -34,54 +34,91 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
     })
 }
 
+function setupCheckboxesForTreeContainer(treeContainerId) {
+    const ontologyParentNodeCheckboxes = document.querySelectorAll(`#${treeContainerId} input[data-is-parent-node='true']`);
+    const ontologyChildNodeCheckboxes = document.querySelectorAll(`#${treeContainerId} input:not([data-parent-node-in-ontology=''])`);
+
+    ontologyParentNodeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", event => {
+            const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
+            if (childNodeCheckboxes.length > 0) {
+                updateChildNodeCheckboxes(checkbox);
+            }
+        });
+    });
+
+    ontologyChildNodeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", event => {
+            updateParentNodeCheckboxes(checkbox);
+        });
+    });
+}
+
+async function parseResponseText(response) {
+    return response.text();
+}
+
+function getTreeContainerIdFromHTML(html) {
+    if (html.includes('name="measurands"')) {
+        return "measurands-tree-container";
+    } else if (html.includes('name="observed_properties"')) {
+        return "observed-properties-tree-container";
+    } else if (html.includes('name="phenomenons"')) {
+        return "phenomenons-tree-container";
+    } else if (html.includes('name="qualifiers"')) {
+        return "qualifiers-tree-container";
+    }
+    return "unknown";
+}
+
+async function loadSearchFormComponent(html) {
+    console.log(html);
+    let treeContainerId = getTreeContainerIdFromHTML(html);
+    if (treeContainerId === "unknown") {
+        return;
+    }
+    setTimeout(async () => {
+        document.getElementById(treeContainerId).innerHTML = html;
+        setupCheckboxesForTreeContainer(treeContainerId);
+        document.getElementById(treeContainerId).style.opacity = 1;
+    }, 300);
+    document.getElementById(treeContainerId).style.opacity = 0;
+}
+
 async function loadSearchFormComponents() {
     const fetchParams = { method: "GET" };
-    const measurandsResponse = fetch("/search/measurand/", fetchParams);
-    const observedPropertiesResponse = fetch("/search/observedProperty/", fetchParams);
-    const phenomenonsResponse = fetch("/search/phenomenon/", fetchParams);
-    const qualifiersResponse = fetch("/search/qualifier/", fetchParams);
-    const responses = await Promise.all([
-        measurandsResponse,
-        observedPropertiesResponse,
-        phenomenonsResponse,
-        qualifiersResponse,
-    ]);
-    
-    setTimeout(async () => {
-        const responsesParsed = await Promise.all(responses.map(response => response.text()));
-        const measurandsFormComponent = responsesParsed[0];
-        const observedPropertiesFormComponent = responsesParsed[1];
-        const phenomenonsFormComponent = responsesParsed[2];
-        const qualifiersFormComponent = responsesParsed[3];
-        document.getElementById("measurands-tree-container").innerHTML = measurandsFormComponent;
-        document.getElementById("observed-properties-tree-container").innerHTML = observedPropertiesFormComponent;
-        document.getElementById("phenomenons-tree-container").innerHTML = phenomenonsFormComponent;
-        document.getElementById("qualifiers-tree-container").innerHTML = qualifiersFormComponent;
-        treeContainers.forEach(tc => {
-            tc.style.opacity = 1;
+
+    fetch("/search/measurand/", fetchParams)
+        .then(parseResponseText)
+        .then(loadSearchFormComponent)
+        .catch (error => {
+            console.error("Unable to load measurand checkboxes");
+            console.error(error);
         });
-        const ontologyParentNodeCheckboxes = document.querySelectorAll(".tree input[data-is-parent-node='true']");
-        const ontologyChildNodeCheckboxes = document.querySelectorAll(".tree input:not([data-parent-node-in-ontology=''])");
-    
-        ontologyParentNodeCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", event => {
-                const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
-                if (childNodeCheckboxes.length > 0) {
-                    updateChildNodeCheckboxes(checkbox);
-                }
-            });
+
+    fetch("/search/observedProperty/", fetchParams)
+        .then(parseResponseText)
+        .then(loadSearchFormComponent)
+        .catch (error => {
+            console.error("Unable to load observed property checkboxes");
+            console.error(error);
         });
-    
-        ontologyChildNodeCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", event => {
-                updateParentNodeCheckboxes(checkbox);
-            });
+
+    fetch("/search/phenomenon/", fetchParams)
+        .then(parseResponseText)
+        .then(loadSearchFormComponent)
+        .catch (error => {
+            console.error("Unable to load phenomenon checkboxes");
+            console.error(error);
         });
-    }, 300);
-    const treeContainers = document.querySelectorAll(".tree-container");
-    treeContainers.forEach(tc => {
-        tc.style.opacity = 0;
-    });
+
+    fetch("/search/qualifier/", fetchParams)
+        .then(parseResponseText)
+        .then(loadSearchFormComponent)
+        .catch (error => {
+            console.error("Unable to load qualifier checkboxes");
+            console.error(error);
+        });
 }
 
 document.getElementById("search-script").addEventListener("load", async event => {
