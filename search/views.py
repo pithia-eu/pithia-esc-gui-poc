@@ -2,20 +2,21 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .ontology_helpers import nested_list_from_ontology_component
 from utils import db
-from pprint import pprint
 import re
-import json
 
-PITHIA = 'https://vo.pithia.eu/ontology/2.2/observedProperty/'
-
-def prefix_pithia_namespace_to_list_elems(list):
-    list_with_prefixes = []
-    for x in list:
-        list_with_prefixes.append(f'{PITHIA}{x}')
-    return list_with_prefixes
+ONTOLOGY_COMPONENT_ENUMS = {
+    'observedProperty': 'observed_properties'
+}
 
 def convert_list_to_regex_list(list):
     return [re.compile(x) for x in list]
+
+def get_checkbox_tree_for_ontology_component(request, ontology_component):
+    nested_list = nested_list_from_ontology_component(ontology_component)
+    return render(request, 'search/ontology_tree_template_in_container.html', {
+        'ontology_component': nested_list,
+        'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component]
+    })
 
 def index(request):
     if request.method == 'POST':
