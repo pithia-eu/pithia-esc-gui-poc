@@ -3,13 +3,13 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+header .nav-link {
+    text-transform: uppercase;
+}
+
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
-}
-
-header .nav-link {
-    text-transform: uppercase;
 }
 
 /* Register page */
@@ -21,10 +21,13 @@ header .nav-link {
 }
 
 /* Search page */
-.tree-container {
-    padding: var(--tree-container-padding-y) var(--tree-container-padding-x);
+.tree-container-wrapper {
     border: var(--tree-container-border-width) solid var(--bs-light-grey);
     border-radius: 0.3rem;
+}
+
+.tree-container {
+    padding: var(--tree-container-padding-y) var(--tree-container-padding-x);
     max-height: var(--tree-max-height);
     overflow-y: auto;
     transition: opacity .3s ease-in-out;
@@ -40,7 +43,7 @@ header .nav-link {
 }
 
 .tree-container .spinner-grow-container {
-    height: calc(var(--tree-max-height) - (var(--tree-container-padding-y) * 2) - (var(--tree-container-border-width) * 2));
+    height: calc(var(--tree-max-height) - (var(--tree-container-padding-y) * 2));
 }
 
 #accordion-filters .tree-container {
@@ -67,7 +70,7 @@ ul.tree ul {
 }
 
 :root {
-    --tree-max-height: 19rem;
+    --tree-max-height: 19.5rem;
     --tree-max-height-in-accordion: 9rem;
     --tree-container-border-width: 1px;
     --tree-container-padding-y: 1rem;
