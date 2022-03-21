@@ -6,7 +6,13 @@
 {% if results|length > 0 %}
 <ul class="list-group">
     {% for r in results %}
-    <li class="list-group-item">{{ r.name }}</li>
+    <div class="list-group">
+        <a href="#" class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ r.name }}</h5>
+        </a>
+        <p class="mb-1 line-clamp search-result-description">{{ r.description }}</p>
+        <small class="text-muted">And some small print.</small>
+    </div>
     {% endfor %}
 </ul>
 {% endif %}
