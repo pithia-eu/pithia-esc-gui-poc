@@ -106,5 +106,5 @@ def index(request):
         return HttpResponseRedirect('/search/results/' + query_string)
     else:
         return render(request, 'search/index.html', {
-            'title': 'Search Models/Data Collections'
+            'title': 'Search Models & Data Collections'
         })

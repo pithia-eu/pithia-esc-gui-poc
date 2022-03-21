@@ -36,6 +36,6 @@ def index(request):
     else:
         form = UploadFileForm
     return render(request, 'register/index.html', {
-        'title': 'Register Models/Data Collections',
+        'title': 'Register Models & Data Collections',
         'form': form
     })
