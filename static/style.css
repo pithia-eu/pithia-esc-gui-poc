@@ -69,6 +69,17 @@ ul.tree ul {
     list-style-type: none;
 }
 
+/* Search results */
+.search-result-description {
+    overflow: hidden;
+} 
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
 :root {
     --tree-max-height: 19.5rem;
     --tree-max-height-in-accordion: 9rem;
