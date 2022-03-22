@@ -3,6 +3,10 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+section {
+    padding: 1rem 0;
+}
+
 header .nav-link {
     text-transform: uppercase;
 }
