@@ -1,4 +1,5 @@
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+<header
+    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
     <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         {% load static %}
         <img src="{% static "pithia-logo.png" %}" alt="PITHIA-NRF e-Science Centre" class="header-logo">
@@ -10,13 +11,23 @@
 
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li class="nav-item">
-            <a href="/" class="nav-link px-2 {% if request.path == "/" %}link-secondary{% endif %}" aria-current="page">Home</a>
+            {% url 'home' as base_url %}
+            <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
+                aria-current="page">Home</a>
         </li>
-        <li class="nav-item">
-            <a href="/register/" class="nav-link px-2 {% if "register" in request.path %}link-secondary{% endif %}">Register</a>
-        </li>
-        <li class="nav-item">
-            <a href="/search/" class="nav-link px-2 {% if "search" in request.path %}link-secondary{% endif %}">Search</a>
+        <li class="nav-item dropdown dropdown-menu-end">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                aria-expanded="false">Models & Data Collections</a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    {% url 'register:index' as register_url %}
+                    <a href="{{ register_url }}" class="nav-link px-2 {% if request.path == register_url %}link-secondary{% endif %}">Register</a>
+                </li>
+                <li class="dropdown-item">
+                    {% url 'search:index' as search_url %}
+                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search</a>
+                </li>
+            </ul>
         </li>
     </ul>
 
