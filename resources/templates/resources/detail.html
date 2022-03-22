@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="pb-5">{{ resource.name }}</h1>
+<h2>Description</h2>
+<p>{{ resource.description }}</p>
+<h2>Linkage</h2>
+{% with pithia_collection=resource.result|get_key_value:"pithia:Collection" %}
+{% endwith %}
+<p></p>
+{% endblock content %}

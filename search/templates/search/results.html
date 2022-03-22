@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load search_extras %}
 {% block content %}
 <p>
     <a href="{% url 'search:index' %}">Search again</a>
@@ -7,11 +8,13 @@
 <ul class="list-group">
     {% for r in results %}
     <div class="list-group">
-        <a href="#" class="d-flex w-100 justify-content-between">
+        {% with pithia_identifier=r.identifier|get_key_value:"pithia:Identifier" %}
+        <a href="{% url 'resources:detail' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ r.name }}</h5>
         </a>
+        {% endwith %}
         <p class="mb-1 line-clamp search-result-description">{{ r.description }}</p>
-        <small class="text-muted">And some small print.</small>
+        <small class="text-muted">List of observed properties</small>
     </div>
     {% endfor %}
 </ul>
