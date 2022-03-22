@@ -1,4 +1,4 @@
-from utils import db
+from mongodb import db
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
 
 def find_matching_observation_collections(request):
