@@ -1,1 +1,12 @@
 {% extends 'base.html' %}
+{% block content %}
+{% if namespaces|length > 0 %}
+<ul class="list-group">
+    {% for namespace in namespaces %}
+    <li class="list-group-item"><a href="{% url 'resources:list_by_namespace' namespace %}">{{ namespace }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are no resources to list!</p>
+{% endif %}
+{% endblock content %}
