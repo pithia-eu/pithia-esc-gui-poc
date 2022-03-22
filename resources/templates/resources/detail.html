@@ -1,18 +1,45 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block content %}
-<h1 class="pb-5">{{ resource.name }}</h1>
+<h1 class="pb-3">{{ resource.name }}</h1>
 <h2>Description</h2>
 <p>{{ resource.description }}</p>
-<h2>Linkage</h2>
-{% with pithia_collection=resource.result|get_key_value:"pithia:Collection" %}
-{% for s in source %}
-{% with o_res=s.OnlineResource %}
-{% spaceless %}
-<p>Service Function: {{ o_res|get_key_value:"@xlink:href" }}</p>
-{% endspaceless %}
-{% endwith %}
-{% endfor %}
-{% endwith %}
-<p></p>
+<h2>Online Resources</h2>
+<div class="accordion" id="accordionExample">
+    {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
+    {% for s in pithia_collection.source %}
+    {% with online_resource=s.OnlineResource %}
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="or-heading-{{ forloop.counter }}">
+            <button class="accordion-button{% if forloop.counter != 1 %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#or-collapse-{{ forloop.counter }}"
+                aria-expanded="{% if forloop.counter == 1 %}true{% else %}false{% endif %}" aria-controls="or-collapse-{{ forloop.counter }}">
+                {{ online_resource.name }}
+            </button>
+        </h3>
+        <div id="or-collapse-{{ forloop.counter }}" class="accordion-collapse collapse{% if forloop.counter == 1 %} show{% endif %}" aria-labelledby="or-heading-{{ forloop.counter }}"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <h4>Service Function</h4>
+                <p><a href="{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}">{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}</a></p>
+                <h4>Linkage</h4>
+                <em>URL</em>
+                <p><a href="{{ online_resource.linkage.URL|get_key_value:"#text" }}">{{ online_resource.linkage.URL|get_key_value:"#text" }}</a>
+                </p>
+                <em>XML Namespace</em>
+                <p><a href="{{ online_resource.linkage.URL|get_key_value:"@xmlns" }}">{{ online_resource.linkage.URL|get_key_value:"@xmlns" }}</a>
+                </p>
+                <h4>Protocol</h4>
+                <p>{{ online_resource.protocol }}</p>
+                <h4>Description</h4>
+                <p>{{ online_resource.description }}</p>
+                <h4>Data Format</h4>
+                <p><a href="{{ online_resource.dataFormat|get_key_value:"@xlink:href" }}">{{ online_resource.dataFormat|get_key_value:"@xlink:href" }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+    {% endwith %}
+</div>
 {% endblock content %}
