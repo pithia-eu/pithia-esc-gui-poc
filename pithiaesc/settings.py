@@ -39,7 +39,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'resources.apps.ResourcesConfig',
     'search.apps.SearchConfig',
-    'search.templatetags',
     'register.apps.RegisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,6 +74,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'project_tags': 'utils.templatetags.project_tags'
+            }
         },
     },
 ]
