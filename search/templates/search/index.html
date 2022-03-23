@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Search' %}
+{% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
 <script src="{% static "search/search.js" %}" id="search-script" defer></script>

@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load project_tags %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Search' 'search:index' %}
+{% breadcrumb_item_active 'Results' %}
+{% endblock breadcrumbs %}
 {% block content %}
 <p>
     <a href="{% url 'search:index' %}">Search again</a>

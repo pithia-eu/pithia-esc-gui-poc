@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Browse' %}
+{% endblock breadcrumbs %}
 {% block content %}
+<h1 class="pb-3">Resources by namespace</h1>
 {% if namespaces|length > 0 %}
 <ul class="list-group">
     {% for namespace in namespaces %}

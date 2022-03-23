@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Browse' 'resources:index' %}
+{% breadcrumb_item_active namespace %}
+{% endblock breadcrumbs %}
 {% block content %}
-<p><a href="{% url 'resources:index' %}">Go back</a></p>
 <h1 class="pb-3">Resources for "{{ namespace }}"</h1>
 {% if resources|length > 0 %}
 <ul class="list-group">
