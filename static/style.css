@@ -63,14 +63,26 @@ h1 {
 
 .card-menu .card:hover,
 .card-menu .card:focus {
-    outline-offset: -6px;
+    outline-offset: 6px;
 }
 
 .card-menu .card-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3em;
+    padding: 0;
+}
+
+.card-menu a {
+    display: block;
+    padding: 2em;
+}
+
+.card-menu a,
+.card-menu h3 {
+    text-align: center;
+    width: 100%;
+    height: 100%;
 }
 
 /* Register page */
