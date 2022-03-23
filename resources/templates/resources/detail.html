@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Browse' 'resources:index' %}
+{% breadcrumb_item 'Resources' 'resources:index' %}
 {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
 {% breadcrumb_item pithia_identifier.namespace 'resources:list_by_namespace' pithia_identifier.namespace %}
 {% endwith %}
