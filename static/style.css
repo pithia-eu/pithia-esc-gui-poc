@@ -58,7 +58,7 @@ h1 {
 .card-menu .card {
     outline: 2px solid var(--pithia-blue);
     outline-offset: 0;
-    transition: outline-offset 300ms ease-in;
+    transition: outline-offset 250ms ease-in;
 }
 
 .card-menu .card:hover,
