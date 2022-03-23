@@ -175,6 +175,11 @@ ul.tree ul {
     -webkit-box-orient: vertical;
 }
 
+/* Resource detail page */
+.resource-description {
+    font-size: 1.2rem;
+}
+
 :root {
     --tree-max-height: 19.5rem;
     --tree-max-height-in-accordion: 9rem;
