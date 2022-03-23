@@ -22,6 +22,18 @@
     <div class="container">
         {% include "header.html" %}
         <main class="main-content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% load project_tags %}
+                    {% url 'home' as base_url %}
+                    {% if request.path == base_url %}
+                    {% breadcrumb_item_active 'Home' %}
+                    {% else %}
+                    {% breadcrumb_item 'Home' 'home' %}
+                    {% endif %}
+                    {% block breadcrumbs %}{% endblock breadcrumbs %}
+                </ol>
+            </nav>
             {% block content %}{% endblock content %}
         </main>
         {% include "footer.html" %}
