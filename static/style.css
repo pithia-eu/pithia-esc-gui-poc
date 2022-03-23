@@ -59,6 +59,16 @@ h1 {
     color: var(--pithia-blue);
 }
 
+.card-menu img,
+.card-menu span {
+    margin: 0 0.5rem;
+}
+
+.card-menu img {
+    width: 3rem;
+    filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+}
+
 .card-menu .card:hover,
 .card-menu .card:focus {
     background-color: var(--pithia-blue);
@@ -67,6 +77,11 @@ h1 {
 .card-menu .card:hover a,
 .card-menu .card:focus a {
     color: white !important;
+}
+
+.card-menu .card:hover img,
+.card-menu .card:focus img {
+    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 .card-menu .card-body {
@@ -79,22 +94,14 @@ h1 {
 
 .card-menu a {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     width: 100%;
     height: 100%;
     font-size: 1.5em;
     padding: 3rem 1rem;
-}
-
-.card-menu img {
-    width: 3rem;
-    filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
-}
-
-.card-menu a:hover img,
-.card-menu a:focus img {
-    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 /* Register page */
