@@ -55,10 +55,6 @@ h1 {
     transition: background-color 250ms linear;
 }
 
-.card-menu .card a {
-    color: var(--pithia-blue);
-}
-
 .card-menu img,
 .card-menu span {
     margin: 0 0.5rem;
@@ -102,6 +98,9 @@ h1 {
     height: 100%;
     font-size: 1.5em;
     padding: 3rem 1rem;
+    word-break: break-word;
+    hyphens: auto;
+    overflow: hidden;
 }
 
 /* Register page */
