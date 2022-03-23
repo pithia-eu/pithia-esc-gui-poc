@@ -11,23 +11,49 @@ a {
     text-decoration: none;
 }
 
-header .nav-link {
+header .nav-item {
     text-transform: uppercase;
 }
 
+header .dropdown-menu {
+    text-transform: none;
+}
+
+h1 {
+    font-weight: normal;
+}
+
+/* Colours */
+.pithia-theme {
+    color: white;
+    background-color: var(--pithia-blue);
+}
+
+/* Header class */
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
 }
 
+/* Breadcrumb */
+.breadcrumb-wrapper {
+    padding: 0.5em 0;
+    margin-bottom: 2rem;
+    background-color: aliceblue;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+}
+
 /* Home page */
-.main-menu {
+.card-menu {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1em;
 }
 
-.main-menu .card-body {
+.card-menu .card-body {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,6 +135,7 @@ ul.tree ul {
     --tree-container-border-width: 1px;
     --tree-container-padding-y: 1rem;
     --tree-container-padding-x: 1rem;
-    --bs-light-grey: #dee2e6
+    --bs-light-grey: #dee2e6;
+    --pithia-blue: #007bb1;
 }
 
