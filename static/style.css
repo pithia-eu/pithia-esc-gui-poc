@@ -20,6 +20,7 @@ header .dropdown-menu {
 }
 
 h1 {
+    color: var(--pithia-blue);
     font-weight: normal;
 }
 
