@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="pb-5 text-uppercase">PITHIA-NRF e-Science Centre</h1>
-<h2 class="">Models & Data Collections</h2>
-<div class="main-menu">
-    <div class="card">
-        <div class="card-body"><h3 class="mb-0"><a href="{% url 'resources:index' %}">Browse</a></h3></div>
+<section class="mb-5">
+    <h1>PITHIA-NRF e-Science Centre</h1>
+</section>
+<section>
+    <h2 class="">Models & Data Collections</h2>
+    <div class="card-menu">
+        <div class="card">
+            <div class="card-body"><h3 class="mb-0"><a href="{% url 'resources:index' %}">Browse</a></h3></div>
+        </div>
+        <div class="card">
+            <div class="card-body"><h3 class="mb-0"><a href="{% url 'register:index' %}">Register</a></h3></div>
+        </div>
+        <div class="card">
+            <div class="card-body"><h3 class="mb-0"><a href="{% url 'search:index' %}">Search</a></h3></div>
+        </div>
     </div>
-    <div class="card">
-        <div class="card-body"><h3 class="mb-0"><a href="{% url 'register:index' %}">Register</a></h3></div>
-    </div>
-    <div class="card">
-        <div class="card-body"><h3 class="mb-0"><a href="{% url 'search:index' %}">Search</a></h3></div>
-    </div>
-</div>
+</section>
 {% endblock content %}
