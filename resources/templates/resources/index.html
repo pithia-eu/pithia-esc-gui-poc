@@ -6,11 +6,17 @@
 {% block content %}
 <h1 class="pb-3">Resources by namespace</h1>
 {% if namespaces|length > 0 %}
-<ul class="list-group">
+<div class="row row-cols-1 row-cols-md-3 g-4 card-menu">
     {% for namespace in namespaces %}
-    <li class="list-group-item"><a href="{% url 'resources:list_by_namespace' namespace %}">{{ namespace }}</a></li>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_by_namespace' namespace %}">{{ namespace }}</a>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% else %}
 <p>There are no resources to list!</p>
 {% endif %}
