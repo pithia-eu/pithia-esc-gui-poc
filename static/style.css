@@ -118,7 +118,7 @@ h1 {
 
 /* Search page */
 .tree-container-wrapper {
-    border: var(--tree-container-border-width) solid var(--bs-light-grey);
+    border: var(--tree-container-border-width) solid var(--bs-gray-300);
     border-radius: 0.3rem;
 }
 
@@ -135,7 +135,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--bs-light-grey);
+    color: var(--bs-gray-300);
 }
 
 .tree-container .spinner-grow-container {
@@ -182,7 +182,6 @@ ul.tree ul {
     --tree-container-border-width: 1px;
     --tree-container-padding-y: 1rem;
     --tree-container-padding-x: 1rem;
-    --bs-light-grey: #dee2e6;
     --pithia-blue: #007bb1;
 }
 
