@@ -9,6 +9,7 @@ section {
 
 a {
     text-decoration: none;
+    color: var(--pithia-blue) !important;
 }
 
 header .nav-item {
