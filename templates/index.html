@@ -1,26 +1,36 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h1 class="pb-5">PITHIA-NRF e-Science Centre</h1>
-<h2 class="">Models & Data Collections</h2>
+<h1>PITHIA-NRF e-Science Centre</h1>
+<h2 class="mb-3 pt-3">Models & Data Collections</h2>
 <div class="row row-cols-1 row-cols-md-3 g-4 card-menu">
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resources:index' %}">Browse</a>
+                <a href="{% url 'resources:index' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    Browse
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'register:index' %}">Register</a>
+                <a href="{% url 'register:index' %}">
+                    <img src="{% static 'upload.svg' %}" alt="Register">
+                    Register
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'search:index' %}">Search</a>
+                <a href="{% url 'search:index' %}">
+                    <img src="{% static 'search.svg' %}" alt="Search">
+                    Search
+                </a>
             </div>
         </div>
     </div>
