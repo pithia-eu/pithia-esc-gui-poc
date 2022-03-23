@@ -64,9 +64,13 @@ h1 {
 }
 
 /* Register page */
-.register-container {
-    max-width: 960px;
+#upload-form,
+.registration-alerts {
     margin: auto;
+    max-width: 70ch;
+}
+
+.registration-alerts {
     display: flex;
     flex-direction: column;
 }
