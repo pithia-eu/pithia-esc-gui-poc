@@ -52,13 +52,13 @@ h1 {
 .home-menu .card {
     border-color: transparent;
     outline: 2px solid var(--pithia-blue);
-    outline-offset: 0;
+    outline-offset: -2px;
     transition: outline-offset 250ms ease-in;
 }
 
 .home-menu .card:hover,
 .home-menu .card:focus {
-    outline-offset: 6px;
+    outline-offset: -6px;
 }
 
 .home-menu .card-body {
