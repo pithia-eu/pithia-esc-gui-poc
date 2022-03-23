@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Register' %}
+{% endblock breadcrumbs %}
 {% block content %}
 <div class="register-container">
     <h1>Model & Data Collection Registration</h1>
