@@ -7,6 +7,10 @@ section {
     padding: 1rem 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 header .nav-link {
     text-transform: uppercase;
 }
@@ -14,6 +18,21 @@ header .nav-link {
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
+}
+
+/* Home page */
+.main-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1em;
+}
+
+.main-menu .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5em;
+    font-size: 2rem;
 }
 
 /* Register page */
