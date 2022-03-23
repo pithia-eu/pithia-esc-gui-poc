@@ -55,12 +55,22 @@ h1 {
     gap: 1em;
 }
 
+.card-menu .card {
+    outline: 2px solid var(--pithia-blue);
+    outline-offset: 0;
+    transition: outline-offset 300ms ease-in;
+}
+
+.card-menu .card:hover,
+.card-menu .card:focus {
+    outline-offset: -6px;
+}
+
 .card-menu .card-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3.5em;
-    font-size: 2rem;
+    padding: 3em;
 }
 
 /* Register page */
