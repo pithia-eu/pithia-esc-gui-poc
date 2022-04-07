@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Resources' 'resources:index' %}
+{% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
+{% breadcrumb_item pithia_identifier.namespace 'resources:list_by_namespace' pithia_identifier.namespace %}
+{% endwith %}
+{% breadcrumb_item_active resource.name %}
+{% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">{{ resource.name }}</h1>
 <section>
     <h2>Description</h2>
-    <p>{{ resource.description }}</p>
+    <p class="col-md-8 resource-description">{{ resource.description }}</p>
 </section>
 <section>
     <h2>Online Resources</h2>

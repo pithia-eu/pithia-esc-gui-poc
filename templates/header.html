@@ -1,5 +1,5 @@
 <header
-    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
     <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         {% load static %}
         <img src="{% static "pithia-logo.png" %}" alt="PITHIA-NRF e-Science Centre" class="header-logo">
@@ -19,6 +19,10 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Models & Data Collections</a>
             <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    {% url 'resources:index' as resources_url %}
+                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse</a>
+                </li>
                 <li class="dropdown-item">
                     {% url 'register:index' as register_url %}
                     <a href="{{ register_url }}" class="nav-link px-2 {% if request.path == register_url %}link-secondary{% endif %}">Register</a>

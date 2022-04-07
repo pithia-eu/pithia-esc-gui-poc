@@ -7,26 +7,117 @@ section {
     padding: 1rem 0;
 }
 
-header .nav-link {
+a {
+    text-decoration: none;
+    color: var(--pithia-blue) !important;
+}
+
+header .nav-item {
     text-transform: uppercase;
 }
 
+header .dropdown-menu {
+    text-transform: none;
+}
+
+h1 {
+    color: var(--pithia-blue);
+    font-weight: normal;
+}
+
+/* Colours */
+.pithia-theme {
+    color: white;
+    background-color: var(--pithia-blue);
+}
+
+/* Header class */
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
 }
 
+/* Breadcrumb */
+.breadcrumb-wrapper {
+    padding: 0.5em 0;
+    margin-bottom: 2rem;
+    background-color: aliceblue;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+}
+
+/* Home page */
+.card-menu .card {
+    border-color: var(--pithia-blue);
+    background-color: white;
+    transition: background-color 250ms linear;
+}
+
+.card-menu img,
+.card-menu span {
+    margin: 0 0.5rem;
+}
+
+.card-menu img {
+    width: 3rem;
+    filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+}
+
+.card-menu .card:hover,
+.card-menu .card:focus {
+    background-color: var(--pithia-blue);
+}
+
+.card-menu .card:hover a,
+.card-menu .card:focus a {
+    color: white !important;
+}
+
+.card-menu .card:hover img,
+.card-menu .card:focus img {
+    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+}
+
+.card-menu .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.card-menu a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5em;
+    padding: 3rem 1rem;
+    word-break: break-word;
+    hyphens: auto;
+    overflow: hidden;
+}
+
 /* Register page */
-.register-container {
-    max-width: 960px;
+#upload-form,
+.registration-alerts {
     margin: auto;
+    max-width: 70ch;
+}
+
+.registration-alerts {
     display: flex;
     flex-direction: column;
 }
 
 /* Search page */
 .tree-container-wrapper {
-    border: var(--tree-container-border-width) solid var(--bs-light-grey);
+    border: var(--tree-container-border-width) solid var(--bs-gray-300);
     border-radius: 0.3rem;
 }
 
@@ -43,7 +134,7 @@ header .nav-link {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--bs-light-grey);
+    color: var(--bs-gray-300);
 }
 
 .tree-container .spinner-grow-container {
@@ -84,12 +175,17 @@ ul.tree ul {
     -webkit-box-orient: vertical;
 }
 
+/* Resource detail page */
+.resource-description {
+    font-size: 1.2rem;
+}
+
 :root {
     --tree-max-height: 19.5rem;
     --tree-max-height-in-accordion: 9rem;
     --tree-container-border-width: 1px;
     --tree-container-padding-y: 1rem;
     --tree-container-padding-x: 1rem;
-    --bs-light-grey: #dee2e6
+    --pithia-blue: #007bb1;
 }
 

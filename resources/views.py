@@ -3,11 +3,23 @@ from mongodb import db
 
 # Create your views here.
 def index(request):
-    return render(request, 'resources/index.html', {})
+    namespaces = list(db['observation_collections'].distinct('identifier.pithia:Identifier.namespace'))
+    return render(request, 'resources/index.html', {
+        'namespaces': namespaces
+    })
 
-def detail(request, namespace, localID):
+def list_by_namespace(request, namespace):
+    resources = list(db['observation_collections'].find({
+        'identifier.pithia:Identifier.namespace': namespace
+    }))
+    return render(request, 'resources/list_by_namespace.html', {
+        'namespace': namespace,
+        'resources': resources
+    })
+
+def detail(request, namespace, local_id):
     resource = db['observation_collections'].find_one({
-        'identifier.pithia:Identifier.localID': localID,
+        'identifier.pithia:Identifier.localID': local_id,
         'identifier.pithia:Identifier.namespace': namespace,
     })
     return render(request, 'resources/detail.html', {
