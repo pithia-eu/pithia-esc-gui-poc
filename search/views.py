@@ -21,9 +21,6 @@ def results(request):
 def index(request):
     if request.method == 'POST':
         observed_properties = request.POST.getlist('observed_properties')
-        measurands = convert_list_to_regex_list(request.POST.getlist('measurands'))
-        qualifiers = convert_list_to_regex_list(request.POST.getlist('qualifiers'))
-        phenomenons = convert_list_to_regex_list(request.POST.getlist('phenomenons'))
         query_string = '?'
         if len(observed_properties) > 0:
             query_string += f'observed_properties={",".join(observed_properties)}'
