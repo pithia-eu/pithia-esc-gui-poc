@@ -34,11 +34,24 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
     })
 }
 
-function setupCheckboxesForTreeContainer(treeContainerId) {
-    const ontologyParentNodeCheckboxes = document.querySelectorAll(`#${treeContainerId} input[data-is-parent-node='true']`);
-    const ontologyChildNodeCheckboxes = document.querySelectorAll(`#${treeContainerId} input:not([data-parent-node-in-ontology=''])`);
+function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
+    if (treeContainerId === "phenomenons-tree-container") {
+        
+    }
+}
 
-    ontologyParentNodeCheckboxes.forEach(checkbox => {
+function setupCheckboxesForTreeContainer(treeContainerId) {
+    const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input`);
+    const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[data-is-parent-node='true']`);
+    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input:not([data-parent-node-in-ontology=''])`);
+
+    allCheckboxesForTree.forEach(checkbox => {
+        checkbox.addEventListener("change", event => {
+            filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId}} input:checked`));
+        });
+    });
+
+    ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
             if (childNodeCheckboxes.length > 0) {
@@ -47,7 +60,7 @@ function setupCheckboxesForTreeContainer(treeContainerId) {
         });
     });
 
-    ontologyChildNodeCheckboxes.forEach(checkbox => {
+    ontologyChildNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             updateParentNodeCheckboxes(checkbox);
         });
@@ -72,7 +85,6 @@ function getTreeContainerIdFromHTML(html) {
 }
 
 async function loadSearchFormComponent(html) {
-    console.log(html);
     let treeContainerId = getTreeContainerIdFromHTML(html);
     if (treeContainerId === "unknown") {
         return;
