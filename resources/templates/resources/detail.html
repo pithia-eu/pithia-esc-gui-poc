@@ -15,7 +15,7 @@
 </section>
 <section>
     <h2>Online Resources</h2>
-    <div class="accordion" id="accordionExample">
+    <div class="accordion" id="accordion-resource">
         {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
         {% for s in pithia_collection.source %}
         {% with online_resource=s.OnlineResource %}
@@ -27,7 +27,7 @@
                 </button>
             </h3>
             <div id="or-collapse-{{ forloop.counter }}" class="accordion-collapse collapse{% if forloop.counter == 1 %} show{% endif %}" aria-labelledby="or-heading-{{ forloop.counter }}"
-                data-bs-parent="#accordionExample">
+                data-bs-parent="#accordion-resource">
                 <div class="accordion-body">
                     <h4>Service Function</h4>
                     <p><a href="{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}">{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}</a></p>
