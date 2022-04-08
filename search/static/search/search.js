@@ -35,21 +35,45 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
 }
 
 function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
-    if (treeContainerId === "phenomenons-tree-container") {
-        
+    console.log(selectedCheckboxes);
+    const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-container input`);
+    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-container li`);
+    let vocabFilter = "";
+    if (selectedCheckboxes.length === 0) {
+        observedPropertyLis.forEach(li => {
+            li.classList.remove("hide");
+        });
+    } else {
+        switch (treeContainerId) {
+            case "measurands-tree-container":
+                vocabFilter = "measurands";
+                break;
+            case "qualifiers-tree-container":
+                vocabFilter = "qualifiers";
+                break;
+            default:
+                vocabFilter = "phenomenons";
+        }
+        observedPropertyCheckboxes.forEach(opCheckbox => {
+            let isOpCheckboxAndChildrenVisible = false;
+            selectedCheckboxes.forEach(checkbox => {
+                if (opCheckbox.dataset && opCheckbox.dataset[vocabFilter] && opCheckbox.dataset[vocabFilter].includes(checkbox.id)) {
+                    isOpCheckboxAndChildrenVisible = true;
+                }
+            });
+            const enclosingLiNode = getEnclosingLiNode(opCheckbox);
+            if (isOpCheckboxAndChildrenVisible) {
+                enclosingLiNode.classList.remove("hide");
+            } else {
+                enclosingLiNode.classList.add("hide");
+            }
+        });
     }
 }
 
 function setupCheckboxesForTreeContainer(treeContainerId) {
-    const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input`);
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[data-is-parent-node='true']`);
     const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input:not([data-parent-node-in-ontology=''])`);
-
-    allCheckboxesForTree.forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
-            filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId}} input:checked`));
-        });
-    });
 
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
@@ -65,6 +89,15 @@ function setupCheckboxesForTreeContainer(treeContainerId) {
             updateParentNodeCheckboxes(checkbox);
         });
     });
+
+    if (treeContainerId !== "observed-properties-tree-container") {
+        const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input`);
+        allCheckboxesForTree.forEach(checkbox => {
+            checkbox.addEventListener("change", event => {
+                filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input:checked`));
+            });
+        });
+    }
 }
 
 async function parseResponseText(response) {

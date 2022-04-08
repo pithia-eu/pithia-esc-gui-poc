@@ -141,6 +141,10 @@ h1 {
     height: calc(var(--tree-max-height) - (var(--tree-container-padding-y) * 2));
 }
 
+#observed-properties-tree-container li.hide {
+    display: none;
+}
+
 #accordion-filters .tree-container {
     border: none;
     max-height: var(--tree-max-height-in-accordion);
