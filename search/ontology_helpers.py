@@ -1,3 +1,4 @@
+import os
 from requests import get
 from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import _SKOS
@@ -25,14 +26,19 @@ def add_phenomenons_qualifiers_and_measurands_to_op(op_uri, op_dict, g):
     return op_dict
 
 def nested_list_from_ontology_component(ontology_component):
-    # Fetch Observed Property component of ESPAS ontology text
     ontology_component_url = f'{ESPAS_ONTOLOGY_URL}{ontology_component}/'
-    r = get(ontology_component_url)
-    r_text = r.text
+
+    # Fetch ontology component of ESPAS ontology text
+    ontology_response = get(ontology_component_url)
+    ontology_text = ontology_response.text
+    
+    # Read ontology from file - alt method if connection to ontology server fails
+    # ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search\ontology\{ontology_component.capitalize()}.xml'))
+    # ontology_text = ontology_file.read()
 
     # Create a graph object with rdflib and parse fetched text
     g = Graph()
-    g.parse(data=r_text, format='application/rdf+xml')
+    g.parse(data=ontology_text, format='application/rdf+xml')
     SKOS = _SKOS.SKOS
 
     nested_list = {}
