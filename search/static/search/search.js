@@ -99,7 +99,7 @@ function filterTermsFromSearchBoxInput(treeContainerId) {
     }
 }
 
-function setupCheckboxesForTreeContainer(treeContainerId) {
+function setupInputsForTreeContainer(treeContainerId) {
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
     const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
@@ -157,7 +157,7 @@ async function loadSearchFormComponent(html) {
     }
     setTimeout(async () => {
         document.querySelector(`#${treeContainerId} .tree-search-terms`).innerHTML = html;
-        setupCheckboxesForTreeContainer(treeContainerId);
+        setupInputsForTreeContainer(treeContainerId);
         document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 1;
     }, 300);
     document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 0;
@@ -201,4 +201,29 @@ async function loadSearchFormComponents() {
 
 document.getElementById("search-script").addEventListener("load", async event => {
     await loadSearchFormComponents();
+
+    const clearInputsButton = document.querySelector(".btn-clear");
+    clearInputsButton.addEventListener("click", event => {
+        // Clear all search boxes, checkboxes, unhide all LI elements, etc.
+        const allTreeContainerSearchBoxes = document.querySelectorAll(".tree-search-box");
+        allTreeContainerSearchBoxes.forEach(searchBox => {
+            searchBox.value = "";
+        })
+
+        const allTreeContainerCheckboxes = document.querySelectorAll(".tree-search-terms input[type='checkbox']");
+        allTreeContainerCheckboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        const allTreeContainerLis = document.querySelectorAll(".tree-search-terms li");
+        allTreeContainerLis.forEach(li => {
+            li.classList.remove("filter-no-match");
+            li.classList.remove("search-no-match");
+        });
+
+        const allTreeDetailsElems = document.querySelectorAll(".tree-search-terms details");
+        allTreeDetailsElems.forEach(details => {
+            details.open = false;
+        });
+    });
 });

@@ -11,15 +11,16 @@
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row">
-        <div class="col-auto">
+        <div class="col-lg-9">
             <h1>Search by Observed Properties</h1>
+            <p>Select the Observed Property terms you would like to search for under the <b>Observed Properties</b> heading, and filter these by selecting the terms under the <b>Filter By</b> heading.</p>
         </div>
-        <div class="col-auto ms-auto">
-            <button type="submit" class="btn btn-primary">Search</button>
+        <div class="col-lg-3">
+            <div class="d-flex justify-content-center flex-wrap-reverse">
+                <button type="button" class="btn btn-light btn-clear me-2">Clear</button>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <p>You can filter the number of Observed Properties to choose from by using the Filter By function.</p>
     </div>
     <div class="row">
         <div class="col-lg-6">
