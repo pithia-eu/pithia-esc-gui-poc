@@ -148,7 +148,11 @@ h1 {
     height: calc(var(--tree-max-height) - (var(--tree-search-container-padding-y) * 2));
 }
 
-#observed-properties-tree-search-terms li.hide {
+#observed-properties-tree-search-terms li.filter-no-match {
+    display: none;
+}
+
+.tree-search-terms li.search-no-match {
     display: none;
 }
 

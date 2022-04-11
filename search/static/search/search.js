@@ -1,6 +1,6 @@
-function getEnclosingLiNode(checkbox) {
-    let currentParentNode = checkbox;
-    let currentChildNode = checkbox;
+function getEnclosingLiNode(elem) {
+    let currentParentNode = elem;
+    let currentChildNode = elem;
     while (currentParentNode !== null && currentParentNode.nodeName !== "LI") {
         currentParentNode = currentChildNode.parentNode;
         currentChildNode = currentParentNode;
@@ -36,11 +36,11 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
 
 function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
     const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-search-container input[type="checkbox"]`);
-    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-search-container li`);
     let vocabFilter = "";
     if (selectedCheckboxes.length === 0) {
-        observedPropertyLis.forEach(li => {
-            li.classList.remove("hide");
+        const hiddenObservedPropertyLis = document.querySelectorAll(`#observed-properties-tree-search-container li`);
+        hiddenObservedPropertyLis.forEach(li => {
+            li.classList.remove("filter-no-match");
         });
     } else {
         switch (treeContainerId) {
@@ -62,21 +62,47 @@ function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
             });
             const enclosingLiNode = getEnclosingLiNode(opCheckbox);
             if (isOpCheckboxAndChildrenVisible) {
-                enclosingLiNode.classList.remove("hide");
+                enclosingLiNode.classList.remove("filter-no-match");
             } else {
-                enclosingLiNode.classList.add("hide");
+                enclosingLiNode.classList.add("filter-no-match");
             }
         });
     }
 }
 
-function filterTermsFromSearchBoxInput(searchBoxId) {
+function filterTermsFromSearchBoxInput(treeContainerId) {
+    const allCheckboxLabelsForTree = document.querySelectorAll(`#${treeContainerId} .tree-search-terms label`);
+    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
+    const searchBoxInput = searchBoxForTree.value;
+    const searchBoxInputSplit = searchBoxInput.split("/\s+/"); // /\s+/ regex means to split by any length of whitespace
 
+    if (searchBoxInput === "") {
+        const allHiddenLisForTree = document.querySelectorAll(`#${treeContainerId} li`);
+        allHiddenLisForTree.forEach(li => {
+            li.classList.remove("search-no-match");
+        });
+    } else {
+        allCheckboxLabelsForTree.forEach(label => {
+            const enclosingLiNode = getEnclosingLiNode(label);
+            let inputMatchFound = false;
+            searchBoxInputSplit.forEach(inputTerm => {
+                if (label.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
+                    inputMatchFound = true;
+                }
+            });
+            if (inputMatchFound) {
+                enclosingLiNode.classList.remove("search-no-match");
+            } else {
+                enclosingLiNode.classList.add("search-no-match");
+            }
+        });
+    }
 }
 
 function setupCheckboxesForTreeContainer(treeContainerId) {
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
     const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
+    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
 
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
@@ -101,6 +127,10 @@ function setupCheckboxesForTreeContainer(treeContainerId) {
             });
         });
     }
+
+    searchBoxForTree.addEventListener("input", event => {
+        filterTermsFromSearchBoxInput(treeContainerId);
+    });
 }
 
 async function parseResponseText(response) {
