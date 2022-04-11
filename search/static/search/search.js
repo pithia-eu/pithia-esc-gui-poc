@@ -35,9 +35,8 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
 }
 
 function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
-    console.log(selectedCheckboxes);
-    const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-container input`);
-    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-container li`);
+    const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-search-terms input`);
+    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-search-terms li`);
     let vocabFilter = "";
     if (selectedCheckboxes.length === 0) {
         observedPropertyLis.forEach(li => {
@@ -45,10 +44,10 @@ function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
         });
     } else {
         switch (treeContainerId) {
-            case "measurands-tree-container":
+            case "measurands-tree-search-terms":
                 vocabFilter = "measurands";
                 break;
-            case "qualifiers-tree-container":
+            case "qualifiers-tree-search-terms":
                 vocabFilter = "qualifiers";
                 break;
             default:
@@ -90,7 +89,7 @@ function setupCheckboxesForTreeContainer(treeContainerId) {
         });
     });
 
-    if (treeContainerId !== "observed-properties-tree-container") {
+    if (treeContainerId !== "observed-properties-tree-search-terms") {
         const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input`);
         allCheckboxesForTree.forEach(checkbox => {
             checkbox.addEventListener("change", event => {
@@ -106,13 +105,13 @@ async function parseResponseText(response) {
 
 function getTreeContainerIdFromHTML(html) {
     if (html.includes('name="measurands"')) {
-        return "measurands-tree-container";
+        return "measurands-tree-search-terms";
     } else if (html.includes('name="observed_properties"')) {
-        return "observed-properties-tree-container";
+        return "observed-properties-tree-search-terms";
     } else if (html.includes('name="phenomenons"')) {
-        return "phenomenons-tree-container";
+        return "phenomenons-tree-search-terms";
     } else if (html.includes('name="qualifiers"')) {
-        return "qualifiers-tree-container";
+        return "qualifiers-tree-search-terms";
     }
     return "unknown";
 }

@@ -116,16 +116,23 @@ h1 {
 }
 
 /* Search page */
-.tree-container-wrapper {
-    border: var(--tree-container-border-width) solid var(--bs-gray-300);
+.tree-search-container {
+    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
+    max-height: var(--tree-max-height);
+    overflow-y: auto;
+}
+
+.observed-properties-tree-search-container-wrapper {
+    border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
     border-radius: 0.3rem;
 }
 
-.tree-container {
-    padding: var(--tree-container-padding-y) var(--tree-container-padding-x);
-    max-height: var(--tree-max-height);
-    overflow-y: auto;
+.tree-search-terms {
     transition: opacity .3s ease-in-out;
+}
+
+.tree-search-box {
+    margin-bottom: 1rem;
 }
 
 .spinner-grow-container {
@@ -137,21 +144,21 @@ h1 {
     color: var(--bs-gray-300);
 }
 
-.tree-container .spinner-grow-container {
-    height: calc(var(--tree-max-height) - (var(--tree-container-padding-y) * 2));
+.tree-search-terms .spinner-grow-container {
+    height: calc(var(--tree-max-height) - (var(--tree-search-container-padding-y) * 2));
 }
 
-#observed-properties-tree-container li.hide {
+#observed-properties-tree-search-terms li.hide {
     display: none;
 }
 
-#accordion-filters .tree-container {
+#accordion-filters .tree-search-container {
     border: none;
     max-height: var(--tree-max-height-in-accordion);
 }
 
-#accordion-filters .tree-container .spinner-grow-container {
-    height: calc(var(--tree-max-height-in-accordion) - (var(--tree-container-padding-y) * 2));
+#accordion-filters .tree-search-terms .spinner-grow-container {
+    height: calc(var(--tree-max-height-in-accordion) - (var(--tree-search-container-padding-y) * 2));
 }
 
 #accordion-filters .accordion-body {
@@ -187,9 +194,9 @@ ul.tree ul {
 :root {
     --tree-max-height: 19.5rem;
     --tree-max-height-in-accordion: 9rem;
-    --tree-container-border-width: 1px;
-    --tree-container-padding-y: 1rem;
-    --tree-container-padding-x: 1rem;
+    --tree-search-container-border-width: 1px;
+    --tree-search-container-padding-y: 1rem;
+    --tree-search-container-padding-x: 1rem;
     --pithia-blue: #007bb1;
 }
 
