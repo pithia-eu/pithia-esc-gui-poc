@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:espas="http://ontology.espas-fp7.eu/espasdefinitions#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"  xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#">
+    <skos:ConceptScheme rdf:about="http://ontology.espas-fp7.eu/qualifier">
+        <skos:prefLabel>ESPAS Qualifier</skos:prefLabel>
+        <dc:description>Qualifier is a common, cross-class attribute that refines the Measurand definition.           
+        </dc:description>
+        <dc:date>2013-05-31 21:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>ESPAS</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Approximation_ChapmanLayer">
+                <skos:prefLabel xml:lang="en">Chapman Layer Approximation</skos:prefLabel>
+                <skos:definition xml:lang="en">Estimate obtained under assumption of the Chapman function of plasma layer shape
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Ratio">
+                <skos:prefLabel xml:lang="en">Ratio</skos:prefLabel>
+                <skos:definition xml:lang="en">Ratio of two quantities
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_Z">
+                <skos:prefLabel xml:lang="en">Z-Component of Vector in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">Z-component of the measurand vector in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_Y">
+                <skos:prefLabel xml:lang="en">Y-Component of Vector in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">Y-component of the measurand vector in ENU system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ">
+                <skos:prefLabel xml:lang="en">Vector Component in HDZ</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the measurand vector components in HDZ system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_H"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_D"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_Z"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_Y">
+                <skos:prefLabel xml:lang="en">Y-Component of Vector in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">Y-component of the measurand vector in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_Area">
+                <skos:prefLabel xml:lang="en">Area Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Surface integral over an area
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Perpendicular">
+                <skos:prefLabel xml:lang="en">Perpendicular</skos:prefLabel>
+                <skos:definition xml:lang="en">In the right angle to the given reference direction
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/RateOfChange">
+                <skos:prefLabel xml:lang="en">Rate of Change</skos:prefLabel>
+                <skos:definition xml:lang="en">Time derivative of a quantity
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Harmonics">
+                <skos:prefLabel xml:lang="en">Harmonics</skos:prefLabel>
+                <skos:definition xml:lang="en">Sequence of frequencies that are multiple integers of a fundamental frequency
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleAcceptance">
+                <skos:prefLabel xml:lang="en">Acceptance Solid Angle Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated within the acceptance solid angle
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution_Kappa">
+                <skos:prefLabel xml:lang="en">Kappa Statistical Distribution</skos:prefLabel>
+                <skos:definition xml:lang="en">A probability distribution that was developed to describe two-population particle systems (e.g., space plasmas) that combine a classic Maxwell-Boltzmann distribution of velocities in the low-energy band with the power-law distribution of high-energy population velocities; resulting formalism applies well to complex particle systems tending to stationary states out of thermal equilibrium
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-12-11 20:17:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Corrected">
+                <skos:prefLabel xml:lang="en">Corrected</skos:prefLabel>
+                <skos:definition xml:lang="en">Revised estimate obtained with consideration of additional data or assumptions
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED">
+                <skos:prefLabel xml:lang="en">Vector Component in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the measurand vector components in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_X"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_Y"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_Z"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleSphere">
+                <skos:prefLabel xml:lang="en">Full Sphere Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over the full sphere of solid angles
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED_X">
+                <skos:prefLabel xml:lang="en">X-Component of Vector in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">X-component of the measurand vector in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_SolidAngle">
+                <skos:prefLabel xml:lang="en">Solid Angle Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Within a unit solid angle of acceptance dI along a particular look direction I
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Slant">
+                <skos:prefLabel xml:lang="en">Slant</skos:prefLabel>
+                <skos:definition xml:lang="en">Off the vertical direction
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Maximum">
+                <skos:prefLabel xml:lang="en">Maximum</skos:prefLabel>
+                <skos:definition xml:lang="en">Maximum value of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyPassband">
+                <skos:prefLabel xml:lang="en">Energy Passband Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over a passband dE around particular energy E
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Energy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/MultiHop">
+                <skos:prefLabel xml:lang="en">Multiple Hops of Propagation</skos:prefLabel>
+                <skos:definition xml:lang="en">Multiple travels of a probing signal between transmitter, reflection region, and receiver
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/MultiHop2"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/MultiHop3"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_Frequency">
+                <skos:prefLabel xml:lang="en">Frequency Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Within a unit passband dF at particular frequency F
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleHemisphere">
+                <skos:prefLabel xml:lang="en">Hemisphere Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over the hemisphere along a particular look direction
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Projection_ENU">
+                <skos:prefLabel xml:lang="en">Vector Projection a Plane in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">Projection of a measurand vector on a plane in ENU system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_ENU_XY"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/DiscreteGrid">
+                <skos:prefLabel xml:lang="en">Discrete Grid</skos:prefLabel>
+                <skos:definition xml:lang="en">Defined on a grid of discrete values of independent variables
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Discrete"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral">
+                <skos:prefLabel xml:lang="en">Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Quantity integrated over a range of its independent variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Area"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Energy"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Frequency"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngle"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Time"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Wavelength"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Scalar">
+                <skos:prefLabel xml:lang="en">Scalar</skos:prefLabel>
+                <skos:definition xml:lang="en">A measurand with magnitude and no direction
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Minimum">
+                <skos:prefLabel xml:lang="en">Minimum</skos:prefLabel>
+                <skos:definition xml:lang="en">Minimum value of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngle">
+                <skos:prefLabel xml:lang="en">Solid Angle Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over the solid angle variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleAcceptance"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleSphere"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_SolidAngleHemisphere"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/2DVector">
+                <skos:prefLabel xml:lang="en">2D Vector</skos:prefLabel>
+                <skos:definition xml:lang="en">A vector in 2D space
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVectorMagnitude"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVectorDirection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyAboveThreshold">
+                <skos:prefLabel xml:lang="en">Energy Integral Above Threshold Value</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over energies above certain energy level
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Energy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Parallel">
+                <skos:prefLabel xml:lang="en">Parallel</skos:prefLabel>
+                <skos:definition xml:lang="en">In the same direction as the given reference
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Spread">
+                <skos:prefLabel xml:lang="en">Spread</skos:prefLabel>
+                <skos:definition xml:lang="en">Distributed over an area or an image
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/StatisticalDIstribution_Normal">
+                <skos:prefLabel xml:lang="en">Normal Statistical Distribution</skos:prefLabel>
+                <skos:definition xml:lang="en">A popular class of distributions describing a random statistical process: single-peak, symmetric, bell-shaped probability distribution with two shape parameters, mean (also mode and median) and standard deviation (defining the shape girth)
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-12-11 20:23:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution_Maxwell-Boltzmann"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorMagnitude">
+                <skos:prefLabel xml:lang="en">Vector Magnitude</skos:prefLabel>
+                <skos:definition xml:lang="en">Magnitude of a vector measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Vector"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_Wavelength">
+                <skos:prefLabel xml:lang="en">Wavelength Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over the wavelength variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_WavelengthInterval"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_WavelengthTotal"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_X">
+                <skos:prefLabel xml:lang="en">X-Component of Vector in GSM</skos:prefLabel>
+                <skos:definition xml:lang="en">X-component of the measurand vector in GSM system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_Y">
+                <skos:prefLabel xml:lang="en">Y-Component of Vector in GSM</skos:prefLabel>
+                <skos:definition xml:lang="en">Y-component of the measurand vector in GSM system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_Z">
+                <skos:prefLabel xml:lang="en">Z-Component of Vector in GSM</skos:prefLabel>
+                <skos:definition xml:lang="en">Z-component of the measurand vector in GSM system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_Z">
+                <skos:prefLabel xml:lang="en">Z-Component of Vector in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">Z-component of the measurand vector in ENU system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_Energy">
+                <skos:prefLabel xml:lang="en">Energy Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Within a unit energy band dE at particular energy E
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_X">
+                <skos:prefLabel xml:lang="en">X-Component of Vector in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">X-component of the measurand vector in ENU system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VariationAboutMean">
+                <skos:prefLabel xml:lang="en">Variation About Mean</skos:prefLabel>
+                <skos:definition xml:lang="en">Variation of a quantity about its mean value
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/RMS">
+                <skos:prefLabel xml:lang="en">Root Mean Square</skos:prefLabel>
+                <skos:definition xml:lang="en">Root-mean-square measure of the magnitude of observed property variation
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential">
+                <skos:prefLabel xml:lang="en">Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Quantity per unit measure of an independent variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_Area"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_Energy"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_Frequency"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_SolidAngle"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_Time"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential_Wavelength"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Discrete">
+                <skos:prefLabel xml:lang="en">Discrete</skos:prefLabel>
+                <skos:definition xml:lang="en">Existing in a defined number of distinct individual parts
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/DiscreteGrid"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/DiscreteMultipoint"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Range">
+                <skos:prefLabel xml:lang="en">Range</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Range</skos:altLabel>
+                <skos:definition xml:lang="en">Difference between maximum and minimum values of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-11-25 20:54:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Vector">
+                <skos:prefLabel xml:lang="en">Vector</skos:prefLabel>
+                <skos:definition xml:lang="en">A measurand that has magnitude and direction in 3D space, commonly represented as directed line
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorMagnitude"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorDirection"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Contiguous">
+                <skos:prefLabel xml:lang="en">Contiguous</skos:prefLabel>
+                <skos:definition xml:lang="en">Defined at all values of independent variables, without gaps, usually in space
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Approximation_Parabolic">
+                <skos:prefLabel xml:lang="en">Parabolic Shape Approximation</skos:prefLabel>
+                <skos:definition xml:lang="en">Estimate obtained under assumption of a parabolic shape
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_Z">
+                <skos:prefLabel xml:lang="en">Z-Component of Vector in SC</skos:prefLabel>
+                <skos:definition xml:lang="en">Z-component of the measurand vector in Spacecraft Cartesian system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_X">
+                <skos:prefLabel xml:lang="en">X-Component of Vector in SC</skos:prefLabel>
+                <skos:definition xml:lang="en">X-component of the measurand vector in Spacecraft Cartesian system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_Y">
+                <skos:prefLabel xml:lang="en">Y-Component of Vector in SC</skos:prefLabel>
+                <skos:definition xml:lang="en">Y-component of the measurand vector in Spacecraft Cartesian system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Tensor">
+                <skos:prefLabel xml:lang="en">Tensor</skos:prefLabel>
+                <skos:definition xml:lang="en">Multi-dimensional array of measurands obtained with respect to a basis in the multidimensional space
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_Energy">
+                <skos:prefLabel xml:lang="en">Energy Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over energy variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyPassband"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyTotal"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyAboveThreshold"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyBelowThreshold"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/2DVectorMagnitude">
+                <skos:prefLabel xml:lang="en">2D Vector Magnitude</skos:prefLabel>
+                <skos:definition xml:lang="en">Magnitude of a 2D vector
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVector"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM">
+                <skos:prefLabel xml:lang="en">Vector Component in GSM</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the measurand vector components in GSM system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_X"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_Y"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM_Z"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_H">
+                <skos:prefLabel xml:lang="en">H-Component of Vector in HDZ</skos:prefLabel>
+                <skos:definition xml:lang="en">H-component of the measurand vector in HDZ system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_WavelengthTotal">
+                <skos:prefLabel xml:lang="en">Total Wavelength Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over all wavelengths
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Wavelength"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/2DVectorDeclination">
+                <skos:prefLabel xml:lang="en">Eastward magnetic declination</skos:prefLabel>
+                <skos:definition xml:lang="en">In the local tangential plane, angle between direction to geomagnetic (compass) north pole and geographic (true) north pole, positive when compass is east of true north
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVectorDirection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Vertical">
+                <skos:prefLabel xml:lang="en">Vertical</skos:prefLabel>
+                <skos:definition xml:lang="en">In the vertical direction
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyTotal">
+                <skos:prefLabel xml:lang="en">Total Energy Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over all energies
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Energy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_Time">
+                <skos:prefLabel xml:lang="en">Time Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Within a unit time dT at particular time T
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_D">
+                <skos:prefLabel xml:lang="en">D-Component of Vector in HDZ</skos:prefLabel>
+                <skos:definition xml:lang="en">D-component of the measurand vector in HDZ system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/MultiHop3">
+                <skos:prefLabel xml:lang="en">3 Hops of Propagation</skos:prefLabel>
+                <skos:definition xml:lang="en">Three travels of a probing signal between transmitter, reflection region, and receiver
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/MultiHop"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ_Z">
+                <skos:prefLabel xml:lang="en">Z-Component of Vector in HDZ</skos:prefLabel>
+                <skos:definition xml:lang="en">Z-component of the measurand vector in HDZ system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC">
+                <skos:prefLabel xml:lang="en">Vector Component in SC</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the measurand vector components in Spacecraft Cartesian system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_X"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_Y"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_SC_Z"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_FrequencyPassband">
+                <skos:prefLabel xml:lang="en">Frequency Passband Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over a passband around a particular frequency F
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_Area">
+                <skos:prefLabel xml:lang="en">Area Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Across a unit area dA perpendicular to a look direction, at a particular location r
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Projection_NED">
+                <skos:prefLabel xml:lang="en">Vector Projection a Plane in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">Projection of a measurand vector on a plane in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_NED_XY"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorDirection">
+                <skos:prefLabel xml:lang="en">Vector Direction</skos:prefLabel>
+                <skos:definition xml:lang="en">Direction of a vector measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Vector"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Derived">
+                <skos:prefLabel xml:lang="en">Derived</skos:prefLabel>
+                <skos:definition xml:lang="en">Obtained from the source data using processing, computation, or interpretation
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Projection">
+                <skos:prefLabel xml:lang="en">Projection of Vector on a Plane</skos:prefLabel>
+                <skos:definition xml:lang="en">Projection of a measurand vector on a plane
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_NED"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_ENU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_EnergyBelowThreshold">
+                <skos:prefLabel xml:lang="en">Energy Integral Below Threshold Value</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over energies below certain energy level
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Energy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Diffuse">
+                <skos:prefLabel xml:lang="en">Diffuse</skos:prefLabel>
+                <skos:definition xml:lang="en">Spread due to multiple reflection or refraction of EM wave
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Approximation">
+                <skos:prefLabel xml:lang="en">Approximation</skos:prefLabel>
+                <skos:definition xml:lang="en">Estimate obtained under simplifying assumptions about natural property organization
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation_Parabolic"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation_ChapmanLayer"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation_IRIProfile"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent">
+                <skos:prefLabel xml:lang="en">Vector Component</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the components of the vector measurand in a system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_GSM"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_NED"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_HDZ"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Vector"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/P-P">
+                <skos:prefLabel xml:lang="en">Peak to Peak</skos:prefLabel>
+                <skos:definition xml:lang="en">Peak-to-peak measure of the magnitude of observed property variation
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU">
+                <skos:prefLabel xml:lang="en">Vector Component in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">One of the measurand vector components in ENU system of coordinates (Geographic East-North-Up)
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_X"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_Y"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent_ENU_Z"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Virtual">
+                <skos:prefLabel xml:lang="en">Virtual</skos:prefLabel>
+                <skos:definition xml:lang="en">Estimated with known inaccuracy. Commonly used for distances in plasma obtained from the travel time under assumption of the probing signal traveling at the speed of light, without accounting for a slower group velocity in plasma
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/AtMaximum">
+                <skos:prefLabel xml:lang="en">At Maximum Output</skos:prefLabel>
+                <skos:definition xml:lang="en">Input value at which output is maximum
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_WavelengthInterval">
+                <skos:prefLabel xml:lang="en">Integral over Wavelength Interval</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over an interval around a particular wavelength L
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Wavelength"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution">
+                <skos:prefLabel xml:lang="en">Statistical Distribution</skos:prefLabel>
+                <skos:definition xml:lang="en">A functional description of probabilities assigned to each possible outcome of a random process
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-12-11 20:23:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDIstribution_Normal"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution_Kappa"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Shape">
+                <skos:prefLabel xml:lang="en">Shape</skos:prefLabel>
+                <skos:definition xml:lang="en">Pertaining to specific form or figure of the observed property
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_FrequencyTotal">
+                <skos:prefLabel xml:lang="en">Total Frequency Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over all frequencies
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Projection_ENU_XY">
+                <skos:prefLabel xml:lang="en">Vector Projection a XY-Plane in ENU</skos:prefLabel>
+                <skos:definition xml:lang="en">Projection of a measurand vector on the XY plane in ENU system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_ENU"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Differential_Wavelength">
+                <skos:prefLabel xml:lang="en">Wavelength Differential</skos:prefLabel>
+                <skos:definition xml:lang="en">Within a unit wavelength dL at a particular wavelength L
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Differential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_Time">
+                <skos:prefLabel xml:lang="en">Time Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over a time interval
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/DiscreteMultipoint">
+                <skos:prefLabel xml:lang="en">Discrete Multi-point</skos:prefLabel>
+                <skos:definition xml:lang="en">Defined at a multiple discrete points of independent variables, usually in space
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Discrete"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Projection_NED_XY">
+                <skos:prefLabel xml:lang="en">Vector Projection a XY-Plane in NED</skos:prefLabel>
+                <skos:definition xml:lang="en">Projection of a measurand vector on the XY plane in NED system of coordinates
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Projection_NED"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Average">
+                <skos:prefLabel xml:lang="en">Average</skos:prefLabel>
+                <skos:definition xml:lang="en">Average value of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Median">
+                <skos:prefLabel xml:lang="en">Median</skos:prefLabel>
+                <skos:definition xml:lang="en">Median value of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/2DVectorDirection">
+                <skos:prefLabel xml:lang="en">2D Vector Direction</skos:prefLabel>
+                <skos:definition xml:lang="en">Direction of a 2D vector
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVectorDeclination"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/2DVector"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/MultiHop2">
+                <skos:prefLabel xml:lang="en">2 Hops of Propagation</skos:prefLabel>
+                <skos:definition xml:lang="en">Two travels of a probing signal between transmitter, reflection region, and receiver
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/MultiHop"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/AtHalfMaximum">
+                <skos:prefLabel xml:lang="en">At Half Maximum Output</skos:prefLabel>
+                <skos:definition xml:lang="en">Input value at which output is half maximum
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Sequence">
+                <skos:prefLabel xml:lang="en">Sequence</skos:prefLabel>
+                <skos:definition xml:lang="en">An ordered list of multiple related values of the measurand
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Approximation_IRIProfile">
+                <skos:prefLabel xml:lang="en">IRI Profile Approximation</skos:prefLabel>
+                <skos:definition xml:lang="en">Estimate obtained under assumption of the IRI formalism for describing plasma profile shape
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Approximation"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Integral_Frequency">
+                <skos:prefLabel xml:lang="en">Frequency Integral</skos:prefLabel>
+                <skos:definition xml:lang="en">Integrated over the frequency variable
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_FrequencyPassband"/>
+                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral_FrequencyTotal"/>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/Integral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/StatisticalDistribution_Maxwell-Boltzmann">
+                <skos:prefLabel xml:lang="en">Maxwell-Boltzman Statistical Distribution</skos:prefLabel>
+                <skos:definition xml:lang="en">A specific class of normal probability distribution applicable to particle velocities in ideal gas (where the particles move freely without interacting with one another, except for very brief elastic collisions).
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-12-11 19:16:00.0</dc:date>
+                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/qualifier/StatisticalDIstribution_Normal"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/qualifier/Total">
+                <skos:prefLabel xml:lang="en">Total</skos:prefLabel>
+                <skos:definition xml:lang="en">Pertaining to the total of multiple instances
+                </skos:definition>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+            </skos:Concept>
+        </skos:member>
+</skos:ConceptScheme>
+</rdf:RDF>
