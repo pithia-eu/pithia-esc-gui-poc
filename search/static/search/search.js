@@ -35,8 +35,8 @@ function updateChildNodeCheckboxes(parentNodeCheckbox) {
 }
 
 function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
-    const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-search-terms input`);
-    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-search-terms li`);
+    const observedPropertyCheckboxes = document.querySelectorAll(`#observed-properties-tree-search-container input[type="checkbox"]`);
+    const observedPropertyLis = document.querySelectorAll(`#observed-properties-tree-search-container li`);
     let vocabFilter = "";
     if (selectedCheckboxes.length === 0) {
         observedPropertyLis.forEach(li => {
@@ -44,10 +44,10 @@ function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
         });
     } else {
         switch (treeContainerId) {
-            case "measurands-tree-search-terms":
+            case "measurands-tree-search-container":
                 vocabFilter = "measurands";
                 break;
-            case "qualifiers-tree-search-terms":
+            case "qualifiers-tree-search-container":
                 vocabFilter = "qualifiers";
                 break;
             default:
@@ -70,9 +70,13 @@ function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
     }
 }
 
+function filterTermsFromSearchBoxInput(searchBoxId) {
+
+}
+
 function setupCheckboxesForTreeContainer(treeContainerId) {
-    const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[data-is-parent-node='true']`);
-    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input:not([data-parent-node-in-ontology=''])`);
+    const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
+    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
 
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
@@ -89,11 +93,11 @@ function setupCheckboxesForTreeContainer(treeContainerId) {
         });
     });
 
-    if (treeContainerId !== "observed-properties-tree-search-terms") {
-        const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input`);
+    if (treeContainerId !== "observed-properties-tree-search-container") {
+        const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
         allCheckboxesForTree.forEach(checkbox => {
             checkbox.addEventListener("change", event => {
-                filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input:checked`));
+                filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:checked`));
             });
         });
     }
@@ -105,13 +109,13 @@ async function parseResponseText(response) {
 
 function getTreeContainerIdFromHTML(html) {
     if (html.includes('name="measurands"')) {
-        return "measurands-tree-search-terms";
+        return "measurands-tree-search-container";
     } else if (html.includes('name="observed_properties"')) {
-        return "observed-properties-tree-search-terms";
+        return "observed-properties-tree-search-container";
     } else if (html.includes('name="phenomenons"')) {
-        return "phenomenons-tree-search-terms";
+        return "phenomenons-tree-search-container";
     } else if (html.includes('name="qualifiers"')) {
-        return "qualifiers-tree-search-terms";
+        return "qualifiers-tree-search-container";
     }
     return "unknown";
 }
@@ -122,11 +126,11 @@ async function loadSearchFormComponent(html) {
         return;
     }
     setTimeout(async () => {
-        document.getElementById(treeContainerId).innerHTML = html;
+        document.querySelector(`#${treeContainerId} .tree-search-terms`).innerHTML = html;
         setupCheckboxesForTreeContainer(treeContainerId);
-        document.getElementById(treeContainerId).style.opacity = 1;
+        document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 1;
     }, 300);
-    document.getElementById(treeContainerId).style.opacity = 0;
+    document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 0;
 }
 
 async function loadSearchFormComponents() {
