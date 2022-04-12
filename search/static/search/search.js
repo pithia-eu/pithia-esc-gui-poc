@@ -55,6 +55,7 @@ function filterObservedPropertyCheckboxes(treeContainerId, selectedCheckboxes) {
         }
         observedPropertyCheckboxes.forEach(opCheckbox => {
             let isOpCheckboxAndChildrenVisible = false;
+            // OR match
             selectedCheckboxes.forEach(checkbox => {
                 if (opCheckbox.dataset && opCheckbox.dataset[vocabFilter] && opCheckbox.dataset[vocabFilter].includes(checkbox.id)) {
                     isOpCheckboxAndChildrenVisible = true;
@@ -74,36 +75,41 @@ function filterTermsFromSearchBoxInput(treeContainerId) {
     const allCheckboxLabelsForTree = document.querySelectorAll(`#${treeContainerId} .tree-search-terms label`);
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     const searchBoxInput = searchBoxForTree.value;
-    const searchBoxInputSplit = searchBoxInput.split("/\s+/"); // /\s+/ regex means to split by any length of whitespace
-
+    const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
+    
     if (searchBoxInput === "") {
         const allHiddenLisForTree = document.querySelectorAll(`#${treeContainerId} li`);
         allHiddenLisForTree.forEach(li => {
             li.classList.remove("search-no-match");
         });
     } else {
+        const visibleLiNodes = [], hiddenLiNodes = [];
         allCheckboxLabelsForTree.forEach(label => {
             const enclosingLiNode = getEnclosingLiNode(label);
-            let inputMatchFound = false;
+            // AND match
+            let numInputMatchesFound = 0;
             searchBoxInputSplit.forEach(inputTerm => {
                 if (label.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
-                    inputMatchFound = true;
+                    numInputMatchesFound++;
                 }
             });
-            if (inputMatchFound) {
-                enclosingLiNode.classList.remove("search-no-match");
+            if (numInputMatchesFound === searchBoxInputSplit.length) {
+                visibleLiNodes.push(enclosingLiNode);
             } else {
-                enclosingLiNode.classList.add("search-no-match");
+                hiddenLiNodes.push(enclosingLiNode);
             }
+        });
+        hiddenLiNodes.forEach(li => {
+            li.classList.add("search-no-match");
+        });
+        visibleLiNodes.forEach(li => {
+            li.classList.remove("search-no-match");
         });
     }
 }
 
 function setupInputsForTreeContainer(treeContainerId) {
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
-    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
-    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
-
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
@@ -113,14 +119,20 @@ function setupInputsForTreeContainer(treeContainerId) {
         });
     });
 
+    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
     ontologyChildNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             updateParentNodeCheckboxes(checkbox);
         });
     });
 
+    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
+    searchBoxForTree.addEventListener("input", event => {
+        filterTermsFromSearchBoxInput(treeContainerId);
+    });
+
+    const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
     if (treeContainerId !== "observed-properties-tree-search-container") {
-        const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
         allCheckboxesForTree.forEach(checkbox => {
             checkbox.addEventListener("change", event => {
                 filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:checked`));
@@ -128,8 +140,27 @@ function setupInputsForTreeContainer(treeContainerId) {
         });
     }
 
-    searchBoxForTree.addEventListener("input", event => {
-        filterTermsFromSearchBoxInput(treeContainerId);
+    const detailsElemsForTree = document.querySelectorAll(`#${treeContainerId} details`);
+    const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
+    deselectAllButtonForTree.addEventListener("click", event => {
+        searchBoxForTree.value = "";
+        allCheckboxesForTree.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        detailsElemsForTree.forEach(details => {
+            details.open = false;
+        });
+    });
+
+    const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
+    selectAllButtonForTree.addEventListener("click", event => {
+        searchBoxForTree.value = "";
+        allCheckboxesForTree.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        detailsElemsForTree.forEach(details => {
+            details.open = true;
+        });
     });
 }
 
