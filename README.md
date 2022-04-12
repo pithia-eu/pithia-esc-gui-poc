@@ -24,4 +24,4 @@ Now that Django, the MongoDB database and the .env file are set up, you should n
 
 [SOURCE](https://docs.djangoproject.com/en/4.0/intro/tutorial01/#the-development-server)
 
-You should now be able to visit the ESC Prototype Home Page at this URL - [http://localhost:8000/](http://localhost:8000/)!
+You should now be able to visit the e-Science Centre Prototype Home Page at this URL - [http://localhost:8000/](http://localhost:8000/)!
