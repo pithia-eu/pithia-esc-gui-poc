@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-lg-9">
             <h1>Search by Observed Properties</h1>
-            <p>Select the Observed Property terms you would like to search for under the <b>Observed Properties</b> heading, and filter these by selecting the terms under the <b>Filter By</b> heading.</p>
+            <p>Select the Observed Property terms you would like to search for under the <b>Observed Properties</b> heading, and filter these by selecting the terms under the <b>Filter by</b> heading.</p>
         </div>
         <div class="col-lg-3 text-md-end text-center">
             <button type="button" class="btn btn-light btn-clear me-2">Clear</button>
@@ -34,16 +34,9 @@
                     <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-search-container" id="phenomenons-tree-search-container">
-                                <input type="text" class="tree-search-box form-control form-control-sm" id="phenomenons-tree-search-box" placeholder="Start typing to select options...">
-                                <div class="tree-search-terms" id="phenomenons-tree-search-terms">
-                                    <div class="spinner-grow-container">
-                                        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% with ontology_component="phenomenons" %}
+                            {% include "search/ontology_tree_container_template.html" %}
+                            {% endwith %}
                         </div>
                     </div>
                 </fieldset>
@@ -57,16 +50,9 @@
                     <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-search-container" id="measurands-tree-search-container">
-                                <input type="text" class="tree-search-box form-control form-control-sm" id="measurands-tree-search-box" placeholder="Start typing to select options...">
-                                <div class="tree-search-terms" id="measurands-tree-search-terms">
-                                    <div class="spinner-grow-container">
-                                        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% with ontology_component="measurands" %}
+                            {% include "search/ontology_tree_container_template.html" %}
+                            {% endwith %}
                         </div>
                     </div>
                 </fieldset>
@@ -80,16 +66,9 @@
                     <div id="collapse-three" class="accordion-collapse collapse" aria-labelledby="heading-three"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            <div class="tree-search-container" id="qualifiers-tree-search-container">
-                                <input type="text" class="tree-search-box form-control form-control-sm" id="qualifiers-tree-search-box" placeholder="Start typing to select options...">
-                                <div class="tree-search-terms" id="qualifiers-tree-search-terms">
-                                    <div class="spinner-grow-container">
-                                        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% with ontology_component="qualifiers" %}
+                            {% include "search/ontology_tree_container_template.html" %}
+                            {% endwith %}
                         </div>
                     </div>
                 </fieldset>
@@ -101,16 +80,9 @@
                     <h2 class="py-3">Observed Properties</h2>
                 </legend>
                 <div class="observed-properties-tree-search-container-wrapper">
-                    <div class="tree-search-container" id="observed-properties-tree-search-container">
-                        <input type="text" class="tree-search-box form-control form-control-sm" id="observed-properties-tree-search-box" placeholder="Start typing to select options...">
-                        <div class="tree-search-terms" id="observed-properties-tree-search-terms">
-                            <div class="spinner-grow-container">
-                                <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% with ontology_component="observed-properties" %}
+                    {% include "search/ontology_tree_container_template.html" %}
+                    {% endwith %}
                 </div>
             </fieldset>
         </div>
