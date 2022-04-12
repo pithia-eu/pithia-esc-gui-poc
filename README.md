@@ -1,4 +1,4 @@
-# PITHIA e-Science Centre
+# 🌍 PITHIA e-Science Centre
 The code base for the PITHIA e-Science Centre Prototype.
 
 ## Install
