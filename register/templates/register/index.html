@@ -3,54 +3,70 @@
 {% block breadcrumbs %}
 {% breadcrumb_item_active 'Register' %}
 {% endblock breadcrumbs %}
+{% load static %}
+{% block scripts %}
+<script src="{% static "register/register.js" %}" defer></script>
+{% endblock scripts %}
 {% block content %}
-<div class="text-center">
-    <h1 class="pb-4">Model & Data Collection Registration</h1>
-    <div class="registration-alerts pb-2">
-        {% if "error" in request.GET %}
-        {% if request.GET.error == "ExpatError" %}
-        <div class="alert alert-danger my-2">
-            Error parsing metadata files.
+<h1 class="pb-4">Model & Data Collection Registration</h1>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="d-flex flex-column">
+            <div class="registration-alerts">
+                {% if "error" in request.GET %}
+                {% if request.GET.error == "ExpatError" %}
+                <div class="alert alert-danger">
+                    Error parsing metadata files.
+                </div>
+                {% else %}
+                <div class="alert alert-danger">
+                    An unexpected error occurred.
+                </div>
+                {% endif %}
+                {% endif %}
+                {% if "acq_files_uploaded" in request.GET %}
+                <div class="alert alert-success">
+                    Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
+                </div>
+                {% endif %}
+                {% if "comp_files_uploaded" in request.GET %}
+                <div class="alert alert-success">
+                    Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
+                </div>
+                {% endif %}
+                {% if "op_files_uploaded" in request.GET %}
+                <div class="alert alert-success">
+                    Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata files.
+                </div>
+                {% endif %}
+                {% if "proc_files_uploaded" in request.GET %}
+                <div class="alert alert-success">
+                    Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
+                </div>
+                {% endif %}
+            </div>
+            <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form" class="bg-secondary bg-opacity-10 p-4 py-lg-4 px-lg-5 rounded-3 mb-3">
+                {% csrf_token %}
+                <div class="row align-items-end">
+                    <div class="col-auto d-flex flex-column align-items-start flex-fill mb-3">
+                        {{ form.files.errors }}
+                        {{ form.files.label_tag }}
+                        {{ form.files }}
+                    </div>
+                    <div class="col-auto mb-3">
+                        <button type="submit" class="btn btn-success">Register</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        {% else %}
-        <div class="alert alert-danger my-2">
-            An unexpected error occurred.
-        </div>
-        {% endif %}
-        {% endif %}
-        {% if "acq_files_uploaded" in request.GET %}
-        <div class="alert alert-success my-2">
-            Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
-        </div>
-        {% endif %}
-        {% if "comp_files_uploaded" in request.GET %}
-        <div class="alert alert-success my-2">
-            Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
-        </div>
-        {% endif %}
-        {% if "op_files_uploaded" in request.GET %}
-        <div class="alert alert-success my-2">
-            Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata files.
-        </div>
-        {% endif %}
-        {% if "proc_files_uploaded" in request.GET %}
-        <div class="alert alert-success my-2">
-            Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
-        </div>
-        {% endif %}
     </div>
-    <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form" class="bg-secondary bg-opacity-10 py-4 px-5 rounded-3 mb-3">
-        {% csrf_token %}
-        <div class="row align-items-end">
-            <div class="col-auto d-flex flex-column align-items-start flex-fill mb-3">
-                {{ form.files.errors }}
-                {{ form.files.label_tag }}
-                {{ form.files }}
-            </div>
-            <div class="col-auto mb-3">
-                <button type="submit" class="btn btn-success">Register</button>
-            </div>
-        </div>
-    </form>
+    <div class="col-lg-4">
+        <ul class="list-group list-uploaded-files">
+            <li class="list-group-item py-4">
+                <p>Models and Data Collections can be registered with the e-Science Centre by uploading files containing metadata for them. These files must be formatted in xml.</p>
+                <p class="mb-0">When you upload the files using the provided file input, they will be listed here.</p>
+            </li>
+        </ul>
+    </div>
 </div>
 {% endblock content %}
