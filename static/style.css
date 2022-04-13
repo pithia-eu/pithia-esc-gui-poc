@@ -116,8 +116,8 @@ h1 {
 
 /* Search page */
 .tree-search-container {
-    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
     max-height: var(--tree-search-container-max-height);
+    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
     overflow-y: auto;
 }
 
@@ -134,17 +134,14 @@ h1 {
     margin-bottom: 1rem;
 }
 
-.spinner-grow-container {
+.tree-search-terms .spinner-grow-container {
     width: 100%;
     padding: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--bs-gray-300);
-}
-
-.tree-search-terms .spinner-grow-container {
-    height: calc(var(--tree-search-container-max-height) - (var(--tree-search-container-padding-y) * 2));
+    height: var(--tree-search-loading-spinner-height);
 }
 
 #observed-properties-tree-search-terms li.filter-no-match {
@@ -155,18 +152,21 @@ h1 {
     display: none;
 }
 
+#accordion-filters .accordion-body {
+    max-height: 100%;
+    padding: 0;
+}
+
 #accordion-filters .tree-search-container {
+    max-height: var(--tree-search-container-in-accordion-max-height);
+}
+
+#accordion-filters .tree-search-terms {
     border: none;
-    max-height: var(--tree-search-container-max-height-in-accordion);
 }
 
 #accordion-filters .tree-search-terms .spinner-grow-container {
-    height: calc(var(--tree-search-container-max-height-in-accordion) - (var(--tree-search-container-padding-y) * 2));
-}
-
-#accordion-filters .accordion-body {
-    padding: 0;
-    max-height: var(--tree-search-container-max-height-in-accordion);
+    height: var(--tree-search-loading-spinner-in-accordion-height);
 }
 
 ul.tree {
@@ -195,8 +195,10 @@ ul.tree ul {
 }
 
 :root {
-    --tree-search-container-max-height: 28rem;
-    --tree-search-container-max-height-in-accordion: 18rem;
+    --tree-search-container-max-height: 26rem;
+    --tree-search-container-in-accordion-max-height: 15.5rem;
+    --tree-search-loading-spinner-height: 16rem;
+    --tree-search-loading-spinner-in-accordion-height: 8rem;
     --tree-search-container-border-width: 1px;
     --tree-search-container-padding-y: 1rem;
     --tree-search-container-padding-x: 1rem;
