@@ -161,7 +161,9 @@ function setupInputsForTreeContainer(treeContainerId) {
         detailsElemsForTree.forEach(details => {
             details.open = true;
         });
-        filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:checked`));
+        if (treeContainerId !== "observed-properties-tree-search-container") {
+            filterObservedPropertyCheckboxes(treeContainerId, document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:checked`));
+        }
     });
 }
 
