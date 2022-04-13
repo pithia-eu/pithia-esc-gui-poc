@@ -15,14 +15,14 @@ filesInput.addEventListener("change", event => {
         uploadedFilesList.append(htmlToElement(
             `<li class="list-group-item">
                 <span class="metadata-file-for-reg-name">${file.name}</span>
-                <div class="d-flex justify-content-around flex-wrap">
-                    <div class="d-flex">
+                <div class="d-flex flex-wrap">
+                    <div class="d-flex align-items-center me-3">
                         <input type="radio" class="me-1" id="radio-model-${file.name}" name="${file.name}-metadata-type" value="model">
-                        <label for="radio-model-${file.name}">Model
+                        <label for="radio-model-${file.name}" class="mb-0">Model
                     </div>
-                    <div class="d-flex">
+                    <div class="d-flex align-items-center">
                         <input type="radio" class="me-1" id="radio-dataset-${file.name}" name="${file.name}-metadata-type" value="dataset">
-                        <label for="radio-dataset-${file.name}">Data Collection
+                        <label for="radio-dataset-${file.name}" class="mb-0">Data Collection
                     </div>
                 </div>
             </li>`
