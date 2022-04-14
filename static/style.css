@@ -113,6 +113,18 @@ h1 {
     font-style: italic;
 }
 
+#upload-form label {
+    margin-bottom: 0.5rem;
+}
+
+img[src="/static/info.svg"] {
+    width: 1.5rem;
+}
+
+.accordion-button:not(.collapsed) img[src="/static/info.svg"] {
+    filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
+}
+
 /* Search page */
 .tree-search-container {
     max-height: var(--tree-search-container-max-height);
