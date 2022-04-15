@@ -14,9 +14,6 @@
         <div class="col-lg-8">
             <h1>Model & Data Collection Registration</h1>
         </div>
-        <div class="col-lg-4 text-md-end text-center mt-2">
-            <button type="submit" class="btn btn-primary">Register</button>
-        </div>
     </div>
     <div class="row flex-wrap-reverse g-3">
         <div class="col-xl-9 col-lg-8">
@@ -56,19 +53,25 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div
-                        class="d-flex flex-column align-items-start flex-fill bg-secondary bg-opacity-10 rounded-3 p-4">
+                    <div class="d-flex flex-column align-items-start flex-fill bg-secondary bg-opacity-10 rounded-3 p-4">
                         {{ form.files.errors }}
                         {{ form.files.label_tag }}
                         {{ form.files }}
                     </div>
                 </div>
                 <div class="col-12">
-                    <ul class="list-group list-uploaded-files pe-0">
-                        <li class="list-group-item text-center py-4">
-                            <p class="mb-0">Uploaded metadata files will be listed here.</p>
-                        </li>
-                    </ul>
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-group list-uploaded-files pe-0">
+                                <li class="list-group-item text-center py-4">
+                                    <p class="mb-0">Uploaded metadata files will be listed here.</p>
+                                </li>
+                            </ul>
+                            <div class="text-md-end text-center mt-3">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,9 +87,8 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <p><b class="text-muted">What is metadata registration?</b></p>
                             <p>Models and Data Collections can be registered with the e-Science Centre by uploading their metadata
-                                files, which must be written in XML format.</p>
+                                files, which are normally written in XML format.</p>
                             <p>Use the provided file input to upload your metadata files, then, mark whether each file is for a Model or
                                 a Data Collection by using the provided radio buttons (which are generated as part of the uploaded
                                 files list when you upload the metadata files).</p>
