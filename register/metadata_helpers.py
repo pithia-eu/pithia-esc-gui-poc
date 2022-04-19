@@ -1,18 +1,25 @@
 from mongodb import db
+from enum import Enum
 import json
 import xmltodict
+
+class DataModelComponent(Enum):
+    ACQUISITION = 'Acquisition'
+    COMPUTATION = 'Computation'
+    OBSERVATION_COLLECTION = 'ObservationCollection'
+    PROCESS = 'Process'
 
 def validate_acquisition_dictionary(dict):
     # Check if the 'capability' property is an
     # array-type property
-    if not isinstance(dict['capability'], list):
+    if 'capability' in dict and not isinstance(dict['capability'], list):
         dict['capability'] = [dict['capability']]
     return dict
 
 def validate_computation_dictionary(dict):
     # Check if the 'capability' property is an
     # array-type property
-    if not isinstance(dict['capability'], list):
+    if 'capability' in dict and not isinstance(dict['capability'], list):
         dict['capability'] = [dict['capability']]
     return dict
 
@@ -43,12 +50,14 @@ def validate_process_dictionary(dict):
     return dict
 
 
-def handle_uploaded_metadata(files):
+def handle_uploaded_metadata(files, form):
     # Dictionaries for the different metadata types
-    acquisition_dicts = []
-    computation_dicts = []
-    observation_collection_dicts = []
-    process_dicts = []
+    num_acquisition_files = 0
+    num_computation_files = 0
+    num_observation_collection_files = 0
+    num_process_files = 0
+    new_resources = []
+    i = 0
     for f in files:
         xml = f.read()
         # Convert XML to a dictionary to be able to convert it JSON
@@ -62,35 +71,51 @@ def handle_uploaded_metadata(files):
         # pymongo takes dictionaries when inserting new documents,
         # so convert the JSON back to a dictionary
         xml_as_dict = json.loads(xml_as_json)
+        resource = {
+            'content': '',
+            'dataModelType': '',
+            'executable': f'is-file{i}-executable' in form,
+            'metadataType': form[f'file{i}-metadata-type'],
+        }
+        valid_resource_uploaded = False
         # Add the dictionary to the relevant dictionary list
-        if 'Acquisition' in xml_as_dict:
-            xml_as_dict['Acquisition'] = validate_acquisition_dictionary(xml_as_dict['Acquisition'])
-            acquisition_dicts.append(xml_as_dict['Acquisition'])
-        elif 'Computation' in xml_as_dict:
-            xml_as_dict['Computation'] = validate_computation_dictionary(xml_as_dict['Computation'])
-            computation_dicts.append(xml_as_dict['Computation'])
-        elif 'ObservationCollection' in xml_as_dict:
-            xml_as_dict['ObservationCollection'] = validate_observation_collection_dictionary(xml_as_dict['ObservationCollection'])
-            observation_collection_dicts.append(xml_as_dict['ObservationCollection'])
-        elif 'Process' in xml_as_dict:
-            xml_as_dict['Process'] = validate_process_dictionary(xml_as_dict['Process'])
-            process_dicts.append(xml_as_dict['Process'])
-        
+        if DataModelComponent.ACQUISITION.value in xml_as_dict:
+            xml_as_dict[DataModelComponent.ACQUISITION.value] = validate_acquisition_dictionary(xml_as_dict[DataModelComponent.ACQUISITION.value])
+            resource['content'] = xml_as_dict[DataModelComponent.ACQUISITION.value]
+            resource['dataModelType'] = DataModelComponent.ACQUISITION.value.lower()
+            valid_resource_uploaded = True
+            num_acquisition_files += 1
+        elif DataModelComponent.COMPUTATION.value in xml_as_dict:
+            xml_as_dict[DataModelComponent.COMPUTATION.value] = validate_computation_dictionary(xml_as_dict[DataModelComponent.COMPUTATION.value])
+            resource['content'] = xml_as_dict[DataModelComponent.COMPUTATION.value]
+            resource['dataModelType'] = DataModelComponent.COMPUTATION.value.lower()
+            valid_resource_uploaded = True
+            num_computation_files += 1
+        elif DataModelComponent.OBSERVATION_COLLECTION.value in xml_as_dict:
+            xml_as_dict[DataModelComponent.OBSERVATION_COLLECTION.value] = validate_observation_collection_dictionary(xml_as_dict[DataModelComponent.OBSERVATION_COLLECTION.value])
+            resource['content'] = xml_as_dict[DataModelComponent.OBSERVATION_COLLECTION.value]
+            resource['dataModelType'] = DataModelComponent.OBSERVATION_COLLECTION.value.lower()
+            valid_resource_uploaded = True
+            num_observation_collection_files += 1
+        elif DataModelComponent.PROCESS.value in xml_as_dict:
+            xml_as_dict[DataModelComponent.PROCESS.value] = validate_process_dictionary(xml_as_dict[DataModelComponent.PROCESS.value])
+            resource['content'] = xml_as_dict[DataModelComponent.PROCESS.value]
+            resource['dataModelType'] = DataModelComponent.PROCESS.value.lower()
+            valid_resource_uploaded = True
+            num_process_files += 1
+
+        if valid_resource_uploaded:
+            new_resources.append(resource)
         # DEBUG: Print out the resulting dictionary
         # print(json.dumps(xml_as_dict, indent=2, sort_keys=True))
+        i += 1
     # Insert the dictionaries into the database
-    if len(acquisition_dicts) > 0:
-        db['acquisitions'].insert_many(acquisition_dicts)
-    if len(computation_dicts) > 0:
-        db['computations'].insert_many(computation_dicts)
-    if len(observation_collection_dicts) > 0:
-        db['observation_collections'].insert_many(observation_collection_dicts)
-    if len(process_dicts) > 0:
-        db['processes'].insert_many(process_dicts)
+    if len(new_resources) > 0:
+        db['resources'].insert_many(new_resources)
     # Return number of files uploaded from each category
     return {
-        'acq_files_uploaded': len(acquisition_dicts),
-        'comp_files_uploaded': len(computation_dicts),
-        'op_files_uploaded': len(observation_collection_dicts),
-        'proc_files_uploaded': len(process_dicts),
+        'acq_files_uploaded': num_acquisition_files,
+        'comp_files_uploaded': num_computation_files,
+        'op_files_uploaded': num_observation_collection_files,
+        'proc_files_uploaded': num_process_files,
     }
