@@ -9,9 +9,9 @@
 {% if resources|length > 0 %}
 <ul class="list-group">
     {% for resource in resources %}
-    {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
+    {% with pithia_identifier=resource.content.identifier|get_key_value:"pithia:Identifier" %}
     {% with local_id=pithia_identifier.localID namespace=pithia_identifier.namespace %}
-    <li class="list-group-item"><a href="{% url 'resources:detail' namespace local_id %}">{{ resource.name }}</a></li>
+    <li class="list-group-item"><a href="{% url 'resources:detail' namespace local_id %}">{{ resource.content.name }}</a></li>
     {% endwith %}
     {% endwith %}
     {% endfor %}
