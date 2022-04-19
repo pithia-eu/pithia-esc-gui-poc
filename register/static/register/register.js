@@ -14,15 +14,21 @@ filesInput.addEventListener("change", event => {
     files.forEach(file => {
         uploadedFilesList.append(htmlToElement(
             `<li class="list-group-item">
-                <span class="metadata-file-for-reg-name">${file.name}</span>
-                <div class="d-flex flex-wrap">
-                    <div class="d-flex align-items-center me-3">
-                        <input type="radio" class="me-1" id="radio-model-${file.name}" name="${file.name}-metadata-type" value="model">
-                        <label for="radio-model-${file.name}" class="mb-0">Model
+                <div class="row py-2">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center"><img src="/static/register/file.svg" alt="file" class="me-3"><span>${file.name}</span></div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <input type="radio" class="me-1" id="radio-dataset-${file.name}" name="${file.name}-metadata-type" value="dataset">
-                        <label for="radio-dataset-${file.name}" class="mb-0">Data Collection
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-wrap justify-content-end">
+                            <div class="d-flex align-items-center me-3">
+                                <input type="radio" class="me-1" id="radio-model-${file.name}" name="${file.name}-metadata-type" value="model">
+                                <label for="radio-model-${file.name}" class="mb-0">Model
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" class="me-1" id="radio-dataset-${file.name}" name="${file.name}-metadata-type" value="dataset">
+                                <label for="radio-dataset-${file.name}" class="mb-0">Data Collection
+                            </div>
+                        </div>
                     </div>
                 </div>
             </li>`

@@ -113,6 +113,10 @@ h1 {
     font-style: italic;
 }
 
+.list-uploaded-files img {
+    height: 1.5rem;
+}
+
 #upload-form label {
     margin-bottom: 0.5rem;
 }
