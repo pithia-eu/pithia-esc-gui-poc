@@ -5,7 +5,7 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
-<script src="{% static "register/register.js" %}" defer></script>
+<script src="{% static "register/register.js" %}" id="register-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form">
