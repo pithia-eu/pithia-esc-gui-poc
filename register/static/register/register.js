@@ -14,12 +14,12 @@ function loadUploadedFilesList() {
     files.forEach((file, i) => {
         uploadedFilesList.append(htmlToElement(
             `<li class="list-group-item">
-                <div class="row g-2 py-2">
+                <div class="row g-4 py-2">
                     <div class="col-lg-5">
                         <div class="d-flex align-items-center">
                             <img src="/static/register/file.svg" alt="file" class="me-3">
                             <input type="hidden" name="file${i}-name" value="${file.name}">
-                            <span>${file.name}</span>
+                            <span class="file-name" title=${file.name}>${file.name}</span>
                         </div>
                     </div>
                     <div class="col-lg-5">
