@@ -12,14 +12,14 @@ class DataModelComponent(Enum):
 def validate_acquisition_dictionary(dict):
     # Check if the 'capability' property is an
     # array-type property
-    if not isinstance(dict['capability'], list):
+    if 'capability' in dict and not isinstance(dict['capability'], list):
         dict['capability'] = [dict['capability']]
     return dict
 
 def validate_computation_dictionary(dict):
     # Check if the 'capability' property is an
     # array-type property
-    if not isinstance(dict['capability'], list):
+    if 'capability' in dict and not isinstance(dict['capability'], list):
         dict['capability'] = [dict['capability']]
     return dict
 
