@@ -127,11 +127,12 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
-img[src="/static/info.svg"] {
+.card-header img,
+.accordion-button img {
     width: 1.5rem;
 }
 
-.accordion-button:not(.collapsed) img[src="/static/info.svg"] {
+.accordion-button:not(.collapsed) img {
     filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
 }
 

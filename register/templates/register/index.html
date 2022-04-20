@@ -76,24 +76,42 @@
             </div>
         </div>
         <div class="col-xl-3 col-lg-4">
-            <div class="accordion" id="accordionExample">
+            <div class="accordion" id="accordion-help">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
+                    <h2 class="accordion-header" id="heading-information">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            data-bs-target="#collapse-information" aria-expanded="true" aria-controls="collapse-information">
                             <img src="{% static "info.svg" %}" alt="Info" class="me-2">
                             Information
                         </button>
                     </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div id="collapse-information" class="accordion-collapse collapse show" aria-labelledby="heading-information" data-bs-parent="#accordion-help">
                         <div class="accordion-body">
-                            <p>Models and Data Collections can be registered with the e-Science Centre by uploading their metadata
+                            <p class="mb-0">Models and Data Collections can be registered with the e-Science Centre by uploading their metadata
                                 files, which are normally written in XML format.</p>
-                            <p>Use the provided file input to upload your metadata files, then, mark whether each file is for a Model or
-                                a Data Collection by using the provided radio buttons (which are generated as part of the uploaded
-                                files list when you upload the metadata files).</p>
-                            <p>Once you have finished inputting this information, press the Register button to finish registering
-                                your metadata files.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-guidance">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse-guidance" aria-expanded="false" aria-controls="collapse-guidance">
+                            <img src="{% static "register/list.svg" %}" alt="Guidance" class="me-2">
+                            Guidance
+                        </button>
+                    </h2>
+                    <div id="collapse-guidance" class="accordion-collapse collapse" aria-labelledby="heading-guidance" data-bs-parent="#accordion-help">
+                        <div class="accordion-body">
+                            <ol class="ps-3 mb-0">
+                                <li>
+                                    Use the provided file input to upload your metadata files, then from the auto-generated file list, mark whether each file is (a) for a Model or
+                                    a Data Collection by using the provided radio buttons (b) whether the Model or Data Collection being registered is executable.
+                                </li>
+                                <li>
+                                    Once you have finished inputting this information, press the Register button to finish registering
+                                your metadata files.
+                                </li>
+                            </ol>
                         </div>
                     </div>
                 </div>
