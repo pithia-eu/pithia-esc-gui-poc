@@ -210,11 +210,6 @@ ul.tree ul {
     -webkit-box-orient: vertical;
 }
 
-/* Resource detail page */
-.resource-description {
-    font-size: 1.2rem;
-}
-
 :root {
     --tree-search-container-max-height: 26rem;
     --tree-search-container-in-accordion-max-height: 15.5rem;
