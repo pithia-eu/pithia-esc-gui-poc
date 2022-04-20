@@ -46,8 +46,13 @@ function loadUploadedFilesList() {
     });
 }
 
+const collapseGuidance = document.getElementById('collapse-guidance')
+const bsCollapseGuidance = new bootstrap.Collapse(collapseGuidance, {
+    toggle: false
+});
 filesInput.addEventListener("change", event => {
     loadUploadedFilesList();
+    bsCollapseGuidance.show();
 });
 
 document.getElementById("register-script").addEventListener("load", event => {
