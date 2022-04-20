@@ -8,60 +8,60 @@
 <script src="{% static "register/register.js" %}" id="register-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form">
-    {% csrf_token %}
-    <div class="row pb-4">
-        <div class="col-lg-8">
-            <h1>Model & Data Collection Registration</h1>
-        </div>
+<div class="row pb-4">
+    <div class="col-lg-8">
+        <h1>Model & Data Collection Registration</h1>
     </div>
-    <div class="row flex-wrap-reverse g-3">
-        <div class="col-xl-9 col-lg-8">
-            <div class="row gy-3">
-                <div class="col-12">
-                    <div class="registration-alerts">
-                        {% if "error" in request.GET %}
-                        {% if request.GET.error == "ExpatError" %}
-                        <div class="alert alert-danger">
-                            Error parsing metadata files.
-                        </div>
-                        {% else %}
-                        <div class="alert alert-danger">
-                            An unexpected error occurred.
-                        </div>
-                        {% endif %}
-                        {% endif %}
-                        {% if "acq_files_uploaded" in request.GET %}
-                        <div class="alert alert-success">
-                            Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
-                        </div>
-                        {% endif %}
-                        {% if "comp_files_uploaded" in request.GET %}
-                        <div class="alert alert-success">
-                            Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
-                        </div>
-                        {% endif %}
-                        {% if "op_files_uploaded" in request.GET %}
-                        <div class="alert alert-success">
-                            Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata
-                            files.
-                        </div>
-                        {% endif %}
-                        {% if "proc_files_uploaded" in request.GET %}
-                        <div class="alert alert-success">
-                            Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
-                        </div>
-                        {% endif %}
+</div>
+<div class="row flex-wrap-reverse g-3">
+    <div class="col-xl-9 col-lg-8">
+        <div class="row gy-3">
+            <div class="col-12">
+                <div class="registration-alerts">
+                    {% if "error" in request.GET %}
+                    {% if request.GET.error == "ExpatError" %}
+                    <div class="alert alert-danger">
+                        Error parsing metadata files.
                     </div>
-                    <div class="d-flex flex-column align-items-start flex-fill bg-secondary bg-opacity-10 rounded-3 p-4">
-                        {{ form.files.errors }}
-                        {{ form.files.label_tag }}
-                        {{ form.files }}
+                    {% else %}
+                    <div class="alert alert-danger">
+                        An unexpected error occurred.
                     </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if "acq_files_uploaded" in request.GET %}
+                    <div class="alert alert-success">
+                        Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
+                    </div>
+                    {% endif %}
+                    {% if "comp_files_uploaded" in request.GET %}
+                    <div class="alert alert-success">
+                        Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
+                    </div>
+                    {% endif %}
+                    {% if "op_files_uploaded" in request.GET %}
+                    <div class="alert alert-success">
+                        Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata
+                        files.
+                    </div>
+                    {% endif %}
+                    {% if "proc_files_uploaded" in request.GET %}
+                    <div class="alert alert-success">
+                        Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
+                    </div>
+                    {% endif %}
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
+                <div class="d-flex flex-column align-items-start flex-fill bg-primary bg-opacity-10 rounded-3 p-4">
+                    {{ form.files.errors }}
+                    {{ form.files.label_tag }}
+                    {{ form.files }}
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form">
+                            {% csrf_token %}
                             <ul class="list-group list-uploaded-files pe-0">
                                 <li class="list-group-item text-center py-4">
                                     <p class="mb-0">Uploaded metadata files will be listed here.</p>
@@ -70,53 +70,54 @@
                             <div class="text-md-center text-center mt-3">
                                 <button type="submit" class="btn btn-primary">Register</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-lg-4">
-            <div class="accordion" id="accordion-help">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-information">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-information" aria-expanded="true" aria-controls="collapse-information">
-                            <img src="{% static "info.svg" %}" alt="Info" class="me-2">
-                            Information
-                        </button>
-                    </h2>
-                    <div id="collapse-information" class="accordion-collapse collapse show" aria-labelledby="heading-information" data-bs-parent="#accordion-help">
-                        <div class="accordion-body">
-                            <p class="mb-0">Models and Data Collections can be registered with the e-Science Centre by uploading their metadata
-                                files, which are normally written in XML format.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-guidance">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-guidance" aria-expanded="false" aria-controls="collapse-guidance">
-                            <img src="{% static "register/list.svg" %}" alt="Guidance" class="me-2">
-                            Guidance
-                        </button>
-                    </h2>
-                    <div id="collapse-guidance" class="accordion-collapse collapse" aria-labelledby="heading-guidance" data-bs-parent="#accordion-help">
-                        <div class="accordion-body">
-                            <ol class="ps-3 mb-0">
-                                <li>
-                                    Use the provided file input to upload your metadata files, then from the auto-generated file list, mark whether each file is (a) for a Model or
-                                    a Data Collection by using the provided radio buttons (b) whether the Model or Data Collection being registered is executable.
-                                </li>
-                                <li>
-                                    Once you have finished inputting this information, press the Register button to finish registering
-                                your metadata files.
-                                </li>
-                            </ol>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+    <div class="col-xl-3 col-lg-4">
+        <div class="accordion" id="accordion-help">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-information">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-information" aria-expanded="true" aria-controls="collapse-information">
+                        <img src="{% static "info.svg" %}" alt="Info" class="me-2">
+                        Information
+                    </button>
+                </h2>
+                <div id="collapse-information" class="accordion-collapse collapse show" aria-labelledby="heading-information" data-bs-parent="#accordion-help">
+                    <div class="accordion-body">
+                        <p class="mb-0">Models and Data Collections can be registered with the e-Science Centre by uploading their metadata
+                            files, which are normally written in XML format.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-guidance">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-guidance" aria-expanded="false" aria-controls="collapse-guidance">
+                        <img src="{% static "register/list.svg" %}" alt="Guidance" class="me-2">
+                        Guidance
+                    </button>
+                </h2>
+                <div id="collapse-guidance" class="accordion-collapse collapse" aria-labelledby="heading-guidance" data-bs-parent="#accordion-help">
+                    <div class="accordion-body">
+                        <ol class="ps-3 mb-0">
+                            <li>
+                                Use the provided file input to upload your metadata files, then from the auto-generated file list,
+                                <b>(a)</b> enter whether each file is for a Model or a Data Collection, and if a Model is being registered,
+                                <b>(b)</b> enter whether it is executable.
+                            </li>
+                            <li>
+                                Once you have finished inputting this information, press the Register button to finish registering
+                            your metadata files.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
