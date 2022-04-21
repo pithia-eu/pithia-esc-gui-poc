@@ -14,12 +14,12 @@
 <ul class="list-group">
     {% for r in results %}
     <div class="list-group">
-        {% with pithia_identifier=r.identifier|get_key_value:"pithia:Identifier" %}
+        {% with pithia_identifier=r.content.identifier|get_key_value:"pithia:Identifier" %}
         <a href="{% url 'resources:detail' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ r.name }}</h5>
+            <h5 class="mb-1">{{ r.content.name }}</h5>
         </a>
         {% endwith %}
-        <p class="mb-1 line-clamp search-result-description">{{ r.description }}</p>
+        <p class="mb-1 line-clamp search-result-description">{{ r.content.description }}</p>
     </div>
     {% endfor %}
 </ul>

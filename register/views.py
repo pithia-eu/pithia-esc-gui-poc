@@ -12,7 +12,7 @@ def index(request):
         files = request.FILES.getlist('files')
         if form.is_valid():
             try:
-                uploaded_file_stats = handle_uploaded_metadata(files)
+                uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
             except ExpatError as err:
                 print("XML parsing error: {0}".format(err))
                 return HttpResponseRedirect(reverse('register:index') + '?error=ExpatError')

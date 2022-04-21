@@ -150,6 +150,12 @@ function setupInputsForTreeContainer(treeContainerId) {
         detailsElemsForTree.forEach(details => {
             details.open = false;
         });
+        if (treeContainerId !== "observed-properties-tree-search-container") {
+            const observedPropertyTreeContainerLis = document.querySelectorAll("#observed-properties-tree-search-container li");
+            observedPropertyTreeContainerLis.forEach(li => {
+                li.classList.remove("filter-no-match");
+            });
+        }
     });
 
     const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);

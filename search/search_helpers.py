@@ -11,8 +11,9 @@ def find_matching_observation_collections(request):
     # Observation Collection, which is what we want.
 
     # Fetch Acquisitions/Computations
-    acquisitions = list(db['acquisitions'].find({
-        'capability': {
+    acquisitions = list(db['resources'].find({
+        'dataModelType': 'acquisition',
+        'content.capability': {
             '$elemMatch': {
                 'pithia:processCapability.observedProperty.@xlink:href': {
                     '$in': observed_properties
@@ -20,8 +21,9 @@ def find_matching_observation_collections(request):
             }
         }
     }))
-    computations = list(db['computations'].find({
-        'capability': {
+    computations = list(db['resources'].find({
+        'dataModelType': 'computation',
+        'content.capability': {
             '$elemMatch': {
                 'observedProperty.@xlink:href': {
                     '$in': observed_properties
@@ -31,10 +33,11 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Processes
-    processes = list(db['processes'].find({
+    processes = list(db['resources'].find({
+        'dataModelType': 'process',
         '$or': [
             {
-                'acquisitionComponent': {
+                'content.acquisitionComponent': {
                     '$elemMatch': {
                         '@xlink:href': {
                             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(acquisitions))
@@ -43,7 +46,7 @@ def find_matching_observation_collections(request):
                 }
             },
             {
-                'computationComponent': {
+                'content.computationComponent': {
                     '$elemMatch': {
                         '@xlink:href': {
                             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(computations))
@@ -55,8 +58,9 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Observation Collections
-    return list(db['observation_collections'].find({
-        'om:procedure.@xlink:href': {
+    return list(db['resources'].find({
+        'dataModelType': 'observationcollection',
+        'content.om:procedure.@xlink:href': {
             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
         }
     }))
