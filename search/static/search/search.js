@@ -130,7 +130,7 @@ function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, 
                     isCheckboxToFilterAndChildrenVisible = true;
                 }
             });
-            const enclosingLiNode = getEnclosingLiNode(label);
+            const enclosingLiNode = getEnclosingLiNode(checkboxToFilter);
             if (isCheckboxToFilterAndChildrenVisible) {
                 liNodesToShow.push(enclosingLiNode);
             } else {
