@@ -17,3 +17,4 @@ echo "MONGODB_CONNECTION_STRING=mongodb://localhost:27017" >> $envfile
 echo "DB_NAME=pithia-esc" >> $envfile
 cat $envfile
 printf "\nFinished setting up default .env\n"
+printf "\nTry running run.sh now!\n"
