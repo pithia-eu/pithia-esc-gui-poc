@@ -1,5 +1,8 @@
 !#/bin/sh
-sudo apt install python3-pip
-sudo pip3 install virtualenv virtualenvwrapper
+
+source djangoenv/bin/activate
+
+pip3 install -r requirements.txt
+
 read -rsn1 -p "PRESS ANY KEY TO EXIT"
 exit
