@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" 
+xmlns:pithia="https://ontology.pithia.eu/2.2" targetNamespace="https://ontology.pithia.eu/2.2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <annotation>
+        <documentation>[WARN-A001] - No package description in UML model</documentation>
+    </annotation>
+    <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+    <element name="FeatureOfInterest" substitutionGroup="gml:AbstractFeature" type="pithia:FeatureOfInterestType">
+        <annotation>
+            <documentation>-- Definition --
+A class representing  a feature type from an application domain that is the subject of the observation and caries the observed property. This feature is a real-world object or  a feature intended to sample the real-world object,  i.e.  sampling feature  [ISO 19156:2010 , Clause 8] 
+-- Description --
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="FeatureOfInterestType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="1" name="namedRegion" type="gml:ReferenceType">
+                        <annotation>
+                            <appinfo>
+                                <gml:defaultCodeSpace>#NOTES</gml:defaultCodeSpace>
+                            </appinfo>
+                            <documentation>-- Definition --
+Space region which is the feature of the interest of the observation or a sampled feature. This attribute takes values from a controlled vocabulary.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="description" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+A free text description of the feature of interest or sampled feature.</documentation>
+                        </annotation>
+                    </element>
+                    <element name="location" minOccurs="0" maxOccurs="1" type="gml:GeometryPropertyType">
+                        <annotation>
+                            <documentation>
+-- Definition --
+The spatial location of the feature of interest.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="sampledFeature" type="pithia:FeatureOfInterestPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+If FeatureOfInterest represents a sampling feature, the sampledFeature, if present, shall describe the principal domain feature of interest.</documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="FeatureOfInterestPropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:FeatureOfInterest"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+</schema>
