@@ -30,7 +30,7 @@ function loadUploadedFilesList() {
                             </div>
                             <div class="d-flex align-items-center">
                                 <input type="radio" class="me-1" id="radio-is-file${i}-dataset" name="file${i}-metadata-type" value="dataset" required>
-                                <label for="radio-is-file${i}-dataset" class="mb-0">Data Collection</label>
+                                <label for="radio-is-file${i}-dataset" class="mb-0">Measurement</label>
                             </div>
                         </div>
                     </div>
