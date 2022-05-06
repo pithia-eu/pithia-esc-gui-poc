@@ -14,10 +14,10 @@ def index(request):
             try:
                 uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
             except ExpatError as err:
-                print("XML parsing error: {0}".format(err))
+                print("There was an error whilst parsing the XML: {0}".format(err))
                 return HttpResponseRedirect(reverse('register:index') + '?error=ExpatError')
             except BaseException as err:
-                print("Unexpected error: {0}".format(err))
+                print("An unexpected error occurred: {0}".format(err))
                 return HttpResponseRedirect(reverse('register:index') + '?error=500')
 
             query_string = '?'
