@@ -4,5 +4,6 @@ from . import views
 
 app_name = 'register'
 urlpatterns = [
-    path('', views.index, name='index')
+    path('', views.index, name='index'),
+    path('<metadata_upload_type>/', views.metadata_upload, name='metadata_upload')
 ]

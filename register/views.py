@@ -1,5 +1,5 @@
 from pyexpat import ExpatError
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .forms import UploadFileForm
@@ -34,8 +34,29 @@ def index(request):
         else:
             return HttpResponseRedirect(reverse('register:index'))
     else:
-        form = UploadFileForm
+        form = UploadFileForm()
     return render(request, 'register/index.html', {
         'title': 'Register Models & Measurements',
+        'form': form
+    })
+
+def metadata_upload(request, metadata_upload_type):
+    valid_metadata_upload_types = [
+        'organisation',
+        'individual',
+        'project',
+        'platform',
+        'operation',
+        'instrument',
+        'acquisition',
+        'computation',
+        'process',
+        'model-or-measurement',
+    ]
+    if metadata_upload_type not in valid_metadata_upload_types:
+        raise Http404
+    form = UploadFileForm()
+    return render(request, 'register/metadata_upload.html', {
+        'metadata_upload_type': metadata_upload_type,
         'form': form
     })
