@@ -24,7 +24,7 @@
 <div class="row flex-wrap-reverse g-3">
     <div class="col-xl-9 col-lg-8">
         <div class="row gy-3">
-            <form action="{% url 'register:index' %}" method="post" enctype="multipart/form-data" id="upload-form">
+            <form action="{% url 'register:metadata_upload' metadata_upload_type %}" method="post" enctype="multipart/form-data" id="upload-form">
                 <div class="col-12">
                     <div class="registration-alerts">
                         {% if "error" in request.GET %}
