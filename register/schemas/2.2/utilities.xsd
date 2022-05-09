@@ -9,9 +9,10 @@ xmlns:pithia="https://ontology.pithia.eu/2.2" targetNamespace="https://ontology.
     
     <element name="Individual" substitutionGroup="pithia:Party" type="pithia:IndividualType">
         <annotation>
-            <documentation>-- Definition --
-An individual having a  particular role associated with a real world object.
-</documentation>
+            <documentation>
+                -- Definition --
+                An individual having a  particular role associated with a real world object.
+            </documentation>
         </annotation>
     </element>
     <complexType name="IndividualType">
@@ -20,14 +21,18 @@ An individual having a  particular role associated with a real world object.
                 <sequence>
                     <element maxOccurs="1" minOccurs="0" name="positionName" type="string">
                         <annotation>
-                            <documentation>-- Definition --
-Role of the individual within the organisation.</documentation>
+                            <documentation>
+                                -- Definition --
+                                Role of the individual within the organisation.
+                            </documentation>
                         </annotation>
                     </element>
                     <element maxOccurs="1" minOccurs="0" name="organisation" type="pithia:OrganisationPropertyType">
                         <annotation>
-                            <documentation>-- Definition --
-The organisation that the individual belogns to.</documentation>
+                            <documentation>
+                                -- Definition --
+                                The organisation that the individual belogns to.
+                            </documentation>
                         </annotation>
                     </element>
                 </sequence>
@@ -43,12 +48,13 @@ The organisation that the individual belogns to.</documentation>
     </complexType>
     <element name="Organisation" substitutionGroup="pithia:Party" type="pithia:OrganisationType">
         <annotation>
-            <documentation>-- Definition --
-A body/organization having a  particular role associated with a real world object.
+            <documentation>
+                -- Definition --
+                A body/organization having a  particular role associated with a real world object.
 
--- Description --
-EXAMPLE HECToR ( real world object)  is funded by the UK Research Councils ( funder).
-</documentation>
+                -- Description --
+                EXAMPLE HECToR ( real world object)  is funded by the UK Research Councils ( funder).
+            </documentation>
         </annotation>
     </element>
     <complexType name="OrganisationType">
@@ -64,14 +70,18 @@ EXAMPLE HECToR ( real world object)  is funded by the UK Research Councils ( fun
                     </element>                 
                     <element maxOccurs="1" minOccurs="0" name="description" type="string">
                         <annotation>
-                            <documentation>-- Definition --
-Textual description of the organisation. </documentation>
+                            <documentation>
+                                -- Definition --
+                                Textual description of the organisation.
+                            </documentation>
                         </annotation>
                     </element>
                     <element maxOccurs="unbounded" minOccurs="0" name="relatedParty" type="pithia:ResponsiblePartyInfoPropertyType">
                         <annotation>
-                            <documentation>--Definition--
-Individual or organisation related  to organisation.</documentation>
+                            <documentation>
+                                --Definition--
+                                Individual or organisation related  to organisation.
+                            </documentation>
                         </annotation>
                     </element>
                 </sequence>
@@ -87,32 +97,38 @@ Individual or organisation related  to organisation.</documentation>
     </complexType>
     <element abstract="true" name="Party" substitutionGroup="gml:AbstractFeature" type="pithia:PartyType">
         <annotation>
-            <documentation>-- Definition --
-A party , individual or organisation, having a responsibility regarding a real world object.
-</documentation>
+            <documentation>
+                -- Definition --
+                A party , individual or organisation, having a responsibility regarding a real world object.
+            </documentation>
         </annotation>
     </element>
     <complexType abstract="true" name="PartyType">
         <complexContent>
             <extension base="gml:AbstractFeatureType">
                 <sequence>
-                    <element name="identifier" type="pithia:IdentifierPropertyType">
+                    <element name="identifier" type="pithia:PITHIA_IdentifierType">
                         <annotation>
-                            <documentation>-- Definition --
+                            <documentation>
+                                -- Definition --
                                 External identifier of the organisation. 
                             </documentation>
                         </annotation>
                     </element>
                     <element maxOccurs="1" minOccurs="0" name="name" type="string">
                         <annotation>
-                            <documentation>-- Definition --
-                                Name of the responsible party.</documentation>
+                            <documentation>
+                                -- Definition --
+                                Name of the responsible party.
+                            </documentation>
                         </annotation>
                     </element>
                     <element maxOccurs="unbounded" minOccurs="0" name="contactInfo" type="gmd:CI_Contact_PropertyType">
                         <annotation>
-                            <documentation>-- Definition --
-Information required enabling contact with the  responsible person and/or organisation.</documentation>
+                            <documentation>
+                                -- Definition --
+                                Information required enabling contact with the  responsible person and/or organisation.
+                            </documentation>
                         </annotation>
                     </element>
                 </sequence>
@@ -128,23 +144,28 @@ Information required enabling contact with the  responsible person and/or organi
     </complexType>
     <element name="ResponsiblePartyInfo" substitutionGroup="gml:AbstractObject" type="pithia:ResponsiblePartyInfoType">
         <annotation>
-            <documentation>-- Definition --
-Responsibility, identification of, and means of communication with, person(s) and organisations associated with a real word object.
-</documentation>
+            <documentation>
+                -- Definition --
+                Responsibility, identification of, and means of communication with, person(s) and organisations associated with a real word object.
+            </documentation>
         </annotation>
     </element>
     <complexType name="ResponsiblePartyInfoType">
         <sequence>
             <element maxOccurs="unbounded" minOccurs="0" name="extent" type="gmd:EX_Extent_PropertyType">
                 <annotation>
-                    <documentation>-- Definition --
-Temporal and/or spatial extent of the responsibility.</documentation>
+                    <documentation>
+                        -- Definition --
+                        Temporal and/or spatial extent of the responsibility.
+                    </documentation>
                 </annotation>
             </element>
             <element name="role" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>-- Definition --
-Function performed by the responsible party.</documentation>
+                    <documentation>
+                        -- Definition --
+                        Function performed by the responsible party.
+                    </documentation>
                 </annotation>
             </element>
             <element maxOccurs="unbounded" minOccurs="1" name="party" type="pithia:PartyPropertyType"/>
@@ -158,91 +179,101 @@ Function performed by the responsible party.</documentation>
     </complexType>
     <element name="PITHIA_Identifier" substitutionGroup="gml:AbstractObject" type="pithia:PITHIA_IdentifierType">
         <annotation>
-            <documentation>-- Name --
-Identifier for PITHIA project
+            <documentation>
+                -- Name --
+                Identifier for PITHIA project
 
--- Definition --
-The identifier of the object in the PITHIA system
+                -- Definition --
+                The identifier of the object in the PITHIA system
 
--- Description --
-Every standalone data object in the PITHIA system must have an Identifier defined.
-Guidelines for Identifiers:
-namespace shall uniquely identify the 'owner' of the item and shall be according to an agreed convention within the PITHIA system.
-e.g. stfc, nkua, eiscat, dlr etc.
-localID assignments are at the discrection of the'owner but shall be alphanumeric strings with no spaces,
-[a decision needs to be take as to we encourage the use of opaque or non-opaque identifiers e.g. ABC234 versus radarX]
-version numbers are at the discretion of the owner but should usually follow typical conventions
-1, 2, 3
-or 
-1.0, 1.1, 2.0
+                -- Description --
+                Every standalone data object in the PITHIA system must have an Identifier defined.
+                Guidelines for Identifiers:
+                namespace shall uniquely identify the 'owner' of the item and shall be according to an agreed convention within the PITHIA system.
+                e.g. stfc, nkua, eiscat, dlr etc.
+                localID assignments are at the discrection of the'owner but shall be alphanumeric strings with no spaces,
+                [a decision needs to be take as to we encourage the use of opaque or non-opaque identifiers e.g. ABC234 versus radarX]
+                version numbers are at the discretion of the owner but should usually follow typical conventions
+                1, 2, 3
+                or 
+                1.0, 1.1, 2.0
 
-Both namespaces and localIds should be suitable for inclusion in URLs
+                Both namespaces and localIds should be suitable for inclusion in URLs
 
-i.e. must not use the following reserved characters:
-=  |  ;  |  /  |  #  | ? |  : | space 
+                i.e. must not use the following reserved characters:
+                =  |  ;  |  /  |  #  | ? |  : | space 
 
-----------------------------------------------------------
+                ----------------------------------------------------------
 
-Encoding namespaces according to the guidelines will enable the publication of information resources in a RESTful manner.
-e..g 
-(exact url structure to be agreed)
-http://www.espas-fp7.eu/dataset/stfc/STFC24/  (latest version of stfc owned object STFC24) 
+                Encoding namespaces according to the guidelines will enable the publication of information resources in a RESTful manner.
+                e..g 
+                (exact url structure to be agreed)
+                http://www.espas-fp7.eu/dataset/stfc/STFC24/  (latest version of stfc owned object STFC24) 
 
-http://www.espas-fp7.eu/dataset/stfc/STFC24/2 (version 2)
+                http://www.espas-fp7.eu/dataset/stfc/STFC24/2 (version 2)
 
-or with non-opaque identifiers
-http://www.espas-fp7.eu/dataset/eiscat/myionosonde  (myionosonde owned by eiscat)
+                or with non-opaque identifiers
+                http://www.espas-fp7.eu/dataset/eiscat/myionosonde  (myionosonde owned by eiscat)
 
-These urls can then resolve to XML-based descriptions (or RDF-XML, or both using HTTP content negotiation) depending on the agreed system architecture.
-</documentation>
+                These urls can then resolve to XML-based descriptions (or RDF-XML, or both using HTTP content negotiation) depending on the agreed system architecture.
+            </documentation>
         </annotation>
     </element>
     <complexType name="PITHIA_IdentifierType">
         <sequence>
             <element name="localID" type="string">
                 <annotation>
-                    <documentation>-- Name --
-local ID
+                    <documentation>
+                        -- Name --
+                        local ID
 
--- Definition --
-The local part of the identifier (assigned by the owner)
-</documentation>
+                        -- Definition --
+                        The local part of the identifier (assigned by the owner)
+                    </documentation>
                 </annotation>
             </element>
             <element name="namespace" type="string">
                 <annotation>
-                    <documentation>-- Name --
-namespace
+                    <documentation>
+                        -- Name --
+                        namespace
 
--- Definition --
-the namespace part of the identifier, agreed within PITHIA, e.g. 'stfc'. </documentation>
+                        -- Definition --
+                        the namespace part of the identifier, agreed within PITHIA, e.g. 'stfc'.
+                    </documentation>
                 </annotation>
             </element>
             <element name="version" type="string">
                 <annotation>
-                    <documentation>-- Name --
-version
+                    <documentation>
+                        -- Name --
+                        version
 
--- Definition --
-The version number of the object being identified</documentation>
+                        -- Definition --
+                        The version number of the object being identified
+                    </documentation>
                 </annotation>
             </element>
             <element name="creationDate" type="dateTime">
                 <annotation>
-                    <documentation>-- Name --
-creation date
+                    <documentation>
+                        -- Name --
+                        creation date
 
--- Definition --
-Date when the object/record was first created</documentation>
+                        -- Definition --
+                        Date when the object/record was first created
+                    </documentation>
                 </annotation>
             </element>
             <element name="lastModificationDate" type="dateTime">
                 <annotation>
-                    <documentation>-- Name --
-last modification date
+                    <documentation>
+                        -- Name --
+                        last modification date
 
--- Definition --
-Date when the object/record was last modified (the most recent modification)</documentation>
+                        -- Definition --
+                        Date when the object/record was last modified (the most recent modification)
+                    </documentation>
                 </annotation>
             </element>
         </sequence>
@@ -255,9 +286,10 @@ Date when the object/record was last modified (the most recent modification)</do
     </complexType>
     <element name="Citation" substitutionGroup="gmd:CI_Citation" type="pithia:CitationType">
         <annotation>
-            <documentation>-- Definition --
-Standardized resource reference (online/offline).
-</documentation>
+            <documentation>
+                -- Definition --
+                Standardized resource reference (online/offline).
+            </documentation>
         </annotation>
     </element>
     <complexType name="CitationType">
@@ -266,10 +298,12 @@ Standardized resource reference (online/offline).
                 <sequence>
                     <element maxOccurs="unbounded" minOccurs="0" name="onlineResource" type="gmd:CI_OnlineResource_PropertyType">
                         <annotation>
-                            <documentation>-- Definition --
-Reference to documentation online. 
+                            <documentation>
+                                -- Definition --
+                                Reference to documentation online. 
 
-Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained.</documentation>
+                                Information about online sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained.
+                            </documentation>
                         </annotation>
                     </element>               
                 </sequence>
