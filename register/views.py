@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from register.validation import get_xml_schema_by_type, validate_xml_files_by_type
+from register.validation import validate_xml_files_by_type
 from .forms import UploadFileForm
 from .metadata_helpers import handle_uploaded_metadata
 
