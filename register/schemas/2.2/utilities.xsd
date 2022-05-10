@@ -107,7 +107,7 @@ xmlns:pithia="https://ontology.pithia.eu/2.2" targetNamespace="https://ontology.
         <complexContent>
             <extension base="gml:AbstractFeatureType">
                 <sequence>
-                    <element name="identifier" type="pithia:PITHIA_IdentifierType">
+                    <element name="identifier" type="pithia:PITHIA_IdentifierPropertyType">
                         <annotation>
                             <documentation>
                                 -- Definition --
