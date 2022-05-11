@@ -17,19 +17,18 @@ def validate_xml_files_by_type(files, type):
     valid_xmls = []
     invalid_xmls = []
     schema_file_path = get_xml_schema_file_path_by_type(type)
-    with open(schema_file_path, "r") as schema_file:
-        schema_file_text = schema_file.read()
-        schema_root = etree.XML()
+    with open(schema_file_path, 'rb') as schema_file:
+        schema_root = etree.parse(schema_file)
         schema = etree.XMLSchema(schema_root)
         for f in files:
-            xml = f.read()
-            doc = etree.parse(xml)
-            try:
-                schema.validate(doc)
-                print(f'{f.name} is valid')
-                valid_xmls.append(f)
-            except BaseException as err:
-                print(err)
-                print(f'{f.name} is not valid')
-                invalid_xmls.append(f)
+            with open(f, 'rb') as metadata_file:
+                metadata_file_parsed = etree.parse(metadata_file)
+                is_metadata_file_valid = schema.validate(metadata_file_parsed)
+                if not is_metadata_file_valid:
+                    print(f'{metadata_file.name} is not valid', is_metadata_file_valid)
+                    invalid_xmls.append(metadata_file)
+                else:
+                    print(f'{metadata_file.name} is valid', is_metadata_file_valid)
+                    valid_xmls.append(metadata_file)
     return valid_xmls, invalid_xmls
+ 
