@@ -1,13 +1,18 @@
-<?xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.w3schools.com" xmlns="https://www.w3schools.com" elementFormDefault="qualified">
-    <xs:element name="note">
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:p="http://www.namespace.org/person" targetNamespace="http://www.namespace.org/person" version="1.0">
+
+    <xs:element name="person">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="to" type="xs:string" />
-                <xs:element name="from" type="xs:string" />
-                <xs:element name="heading" type="xs:string" />
-                <xs:element name="body" type="xs:string" />
-            </xs:sequence>
+            <xs:group ref="p:credential" />
         </xs:complexType>
     </xs:element>
-</xs:schema> 
+
+    <xs:group name="credential">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string" />
+            <xs:element name="surName" type="xs:string" />
+            <xs:element name="secondName" type="xs:string" />
+        </xs:sequence>
+    </xs:group>
+
+</xs:schema>
