@@ -1,9 +1,11 @@
+import json
 from pyexpat import ExpatError
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from register.validation import validate_xml_files_by_type
+from register import validation
+
 from .forms import UploadFileForm
 from .metadata_helpers import handle_uploaded_metadata
 
@@ -12,6 +14,20 @@ def index(request):
     return render(request, 'register/index.html', {
         'title': 'Register Models & Measurements',
     })
+
+def validate_xml_file_against_schema_by_type(request, metadata_upload_type):
+    if request.method == 'POST':
+        # Run three validations on XML file
+        xml_file = request.FILES['file']
+        # 1: Syntax validation (happens whilst parsing the file)
+        # 2: XML Schema Definition validation
+        is_xml_file_valid_against_schema = validation.validate_xml_file_against_schema_by_type(xml_file, metadata_upload_type)
+        # 3: Relation validaiton (whether a component the file metadata
+        # is referencing exists in the database or not).
+        return HttpResponse(json.dumps({
+            'result': is_xml_file_valid_against_schema
+        }), content_type="application/json")
+    return Http404
 
 def metadata_upload(request, metadata_upload_type):
     # There's probably a DRY-er way of handling
@@ -36,7 +52,6 @@ def metadata_upload(request, metadata_upload_type):
         files = request.FILES.getlist('files')
         if form.is_valid():
             # XML Schema validation
-            valid_xmls, invalid_xmls = validate_xml_files_by_type(files, metadata_upload_type)
             try:
                 uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
             except ExpatError as err:
