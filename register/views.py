@@ -1,6 +1,8 @@
 import json
+from lxml import etree
 from pyexpat import ExpatError
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from pyexpat.errors import XML_ERROR_SYNTAX
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -15,18 +17,29 @@ def index(request):
         'title': 'Register Models & Measurements',
     })
 
-def validate_xml_file_against_schema_by_type(request, metadata_upload_type):
+def validate_xml_file_by_type(request, metadata_upload_type):
     if request.method == 'POST':
         # Run three validations on XML file
         xml_file = request.FILES['file']
-        # 1: Syntax validation (happens whilst parsing the file)
-        # 2: XML Schema Definition validation
-        is_xml_file_valid_against_schema = validation.validate_xml_file_against_schema_by_type(xml_file, metadata_upload_type)
-        # 3: Relation validaiton (whether a component the file metadata
-        # is referencing exists in the database or not).
+        try:
+            # 1: Syntax validation (happens whilst parsing the file)
+            # 2: XML Schema Definition validation
+            is_xml_file_valid = validation.validate_xml_file_by_type(xml_file, metadata_upload_type)
+            # 3: Relation validaiton (whether a component the file metadata
+            # is referencing exists in the database or not).
+        except etree.XMLSyntaxError as err:
+            print(err)
+            return HttpResponse(json.dumps({
+                'error': str(err)
+            }), status=422, content_type='application/json')
+        except BaseException as err:
+            print(err)
+            return HttpResponseServerError(json.dumps({
+                'error': str(err)
+            }), content_type='application/json')
         return HttpResponse(json.dumps({
-            'result': is_xml_file_valid_against_schema
-        }), content_type="application/json")
+            'result': is_xml_file_valid
+        }), content_type='application/json')
     return Http404
 
 def metadata_upload(request, metadata_upload_type):
@@ -55,10 +68,10 @@ def metadata_upload(request, metadata_upload_type):
             try:
                 uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
             except ExpatError as err:
-                print("There was an error whilst parsing the XML: {0}".format(err))
+                print('There was an error whilst parsing the XML: {0}'.format(err))
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + '?error=ExpatError')
             except BaseException as err:
-                print("An unexpected error occurred: {0}".format(err))
+                print('An unexpected error occurred: {0}'.format(err))
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + '?error=500')
 
             query_string = '?'
