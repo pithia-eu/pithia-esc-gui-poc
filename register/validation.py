@@ -1,7 +1,9 @@
 import os
 from lxml import etree
 
-current_schema_version = '2.2'
+# TODO: change current_schema_version to 2.2
+# when schemas are finalised.
+current_schema_version = '2.1'
 
 def get_xml_schema_file_path_by_type(type):
     current_dir = os.path.dirname(__file__)
