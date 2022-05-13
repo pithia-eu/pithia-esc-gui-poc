@@ -65,7 +65,7 @@ function updateXMLFileValidationStatus(state, statusElem) {
     `);
     if (state === "validating") {
         statusElemContent.innerHTML = `
-            <div class="spinner-grow-container text-muted me-2">
+            <div class="spinner-grow-container text-muted me-3">
                 <div class="spinner-grow" style="width: 1rem; height: 1rem;" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
@@ -74,23 +74,23 @@ function updateXMLFileValidationStatus(state, statusElem) {
         `;
     } else if (state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/tick.svg" alt="tick" class="me-2"><span class="text-success">Valid</span>
+            <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
         `;
     } else if (state === xmlValidationStates.INVALID_SEMANTICS) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-2"><span class="text-danger">Semantically incorrect.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Semantically incorrect.</span>
         `;
     } else if (state === xmlValidationStates.INVALID_SYNTAX) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-2"><span class="text-danger">Invalid syntax.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
         `;
     } else if (state === xmlValidationStates.INTERNAL_SERVER_ERROR) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-2"><span class="text-danger">Encountered an unknown error during validation.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
         `;
     } else {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-2"><span class="text-danger">Unknown state.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Unknown state.</span>
         `;
     }
     
