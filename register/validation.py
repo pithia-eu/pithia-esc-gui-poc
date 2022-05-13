@@ -14,7 +14,7 @@ def get_xml_schema_file_path_by_type(type):
         return os.path.join(schemas_path, 'procedure.xsd')
     return 'unknown';
 
-def validate_xml_file_against_schema_by_type(xml_file, type):
+def validate_xml_file_by_type(xml_file, type):
     file_path_of_schema_for_type = get_xml_schema_file_path_by_type(type)
     with open(file_path_of_schema_for_type, 'rb') as schema_file:
         schema_file_parsed = etree.parse(schema_file)
