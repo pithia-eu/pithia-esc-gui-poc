@@ -4,20 +4,77 @@
 {% breadcrumb_item_active 'Resources' %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">Resources by namespace</h1>
-{% if namespaces|length > 0 %}
+<h1 class="pb-3">Resources</h1>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-    {% for namespace in namespaces %}
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resources:list_by_namespace' namespace %}">{{ namespace }}</a>
+                <a href="{% url 'resources:list_resource_namespaces' 'organisations' %}">Organisations</a>
             </div>
         </div>
     </div>
-    {% endfor %}
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'individuals' %}">Individuals</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'projects' %}">Projects</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'platforms' %}">Platforms</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'instruments' %}">Instruments</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'operations' %}">Operations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'acquisitions' %}">Acquisitions</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'computations' %}">Computations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'processes' %}">Processes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resources:list_resource_namespaces' 'collections' %}">Collections</a>
+            </div>
+        </div>
+    </div>
 </div>
-{% else %}
-<p>There are no resources to list!</p>
-{% endif %}
 {% endblock content %}

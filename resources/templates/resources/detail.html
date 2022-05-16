@@ -2,8 +2,9 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
+{% breadcrumb_item resources|capfirst 'resources:list_resource_namespaces' resources %}
 {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-{% breadcrumb_item pithia_identifier.namespace 'resources:list_by_namespace' pithia_identifier.namespace %}
+{% breadcrumb_item pithia_identifier.namespace 'resources:list_resources_in_namespace' resources pithia_identifier.namespace %}
 {% endwith %}
 {% breadcrumb_item_active resource.name %}
 {% endblock breadcrumbs %}
@@ -16,7 +17,7 @@
             <p class="lead">{{ resource.description }}</p>
         </section>
     </div>
-    <div class="col-lg-4">
+    {% comment %} <div class="col-lg-4">
         <section>
             <h2 class="mb-3">Properties</h2>
             <div class="table-responsive">
@@ -28,31 +29,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">Metadata Type</th>
-                            <td>{{ resource.metadataType }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Data Model Role</th>
-                            <td>{{ resource.dataModelType }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Executable</th>
-                            <td>
-                                {% if resource.executable %}
-                                Yes
-                                {% else %}
-                                No
-                                {% endif %}
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </section>
-    </div>
+    </div> {% endcomment %}
 </div>
-<section>
+{% comment %} <section>
     <h2 class="mb-3">Online Resources</h2>
     <div class="accordion" id="accordion-resource">
         {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
@@ -91,5 +74,5 @@
         {% endfor %}
         {% endwith %}
     </div>
-</section>
+</section> {% endcomment %}
 {% endblock content %}
