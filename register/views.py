@@ -82,7 +82,7 @@ def metadata_upload(request, metadata_upload_type):
                 messages.error(request, 'An unexpected error occurred.')
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
 
-            messages.success(request, f'Successfully uploaded {xml_file.name}.')
+            messages.success(request, f'Successfully registered {xml_file.name}.')
             return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
         else:
             messages.error(request, 'The form submitted was not valid.')
