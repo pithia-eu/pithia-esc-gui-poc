@@ -26,7 +26,8 @@ def validate_xml_file_by_type(request, metadata_upload_type):
         # 1: Syntax validation (happens whilst parsing the file)
         xml_file_parsed = validation.parse_xml_file(xml_file)
         # 2: XML Schema Definition validation
-        is_xml_conforming_to_schema = validation.validate_xml_file_by_type(xml_file_parsed, metadata_upload_type)
+        xml_schema_for_type_file_path = validation.get_xml_schema_file_path_by_type(metadata_upload_type)
+        is_xml_conforming_to_schema = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
         # 3: Relation validaiton (whether a component the file metadata
         # is referencing exists in the database or not).
     except etree.XMLSyntaxError as err:
