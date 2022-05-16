@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Register' 'register:index' %}
-{% if metadata_upload_type == 'model-or-measurement' %}
+{% if metadata_upload_type == 'data-collection' %}
 {% breadcrumb_item_active 'Model or Measurement' %}
 {% else %}
 {% breadcrumb_item_active metadata_upload_type|capfirst %}
@@ -16,7 +16,7 @@
 <div class="row pb-4">
     <div class="col-lg-8">
         <h1>
-        {% if metadata_upload_type == 'model-or-measurement' %}
+        {% if metadata_upload_type == 'data-collection' %}
         Register a Model or Measurement
         {% elif metadata_upload_type|lower|first in 'aeiou' %}
         Register an {{ metadata_upload_type|capfirst }}
