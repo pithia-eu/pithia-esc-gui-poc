@@ -18,29 +18,30 @@ def index(request):
     })
 
 def validate_xml_file_by_type(request, metadata_upload_type):
-    if request.method == 'POST':
-        # Run three validations on XML file
-        xml_file = request.FILES['file']
-        try:
-            # 1: Syntax validation (happens whilst parsing the file)
-            # 2: XML Schema Definition validation
-            is_xml_file_valid = validation.validate_xml_file_by_type(xml_file, metadata_upload_type)
-            # 3: Relation validaiton (whether a component the file metadata
-            # is referencing exists in the database or not).
-        except etree.XMLSyntaxError as err:
-            print(err)
-            return HttpResponse(json.dumps({
-                'error': str(err)
-            }), status=422, content_type='application/json')
-        except BaseException as err:
-            print(err)
-            return HttpResponseServerError(json.dumps({
-                'error': str(err)
-            }), content_type='application/json')
+    if request.method != 'POST':
+        return Http404
+    # Run three validations on XML file
+    xml_file = request.FILES['file']
+    try:
+        # 1: Syntax validation (happens whilst parsing the file)
+        xml_file_parsed = validation.parse_xml_file(xml_file)
+        # 2: XML Schema Definition validation
+        is_xml_conforming_to_schema = validation.validate_xml_file_by_type(xml_file_parsed, metadata_upload_type)
+        # 3: Relation validaiton (whether a component the file metadata
+        # is referencing exists in the database or not).
+    except etree.XMLSyntaxError as err:
+        print(err)
         return HttpResponse(json.dumps({
-            'result': is_xml_file_valid
+            'error': str(err)
+        }), status=422, content_type='application/json')
+    except BaseException as err:
+        print(err)
+        return HttpResponseServerError(json.dumps({
+            'error': str(err)
         }), content_type='application/json')
-    return Http404
+    return HttpResponse(json.dumps({
+        'result': is_xml_conforming_to_schema
+    }), content_type='application/json')
 
 def metadata_upload(request, metadata_upload_type):
     # There's probably a DRY-er way of handling

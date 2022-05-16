@@ -32,10 +32,13 @@ def get_xml_schema_file_path_by_type(type):
         return os.path.join(schemas_path, 'observationCollection.xsd')
     return 'unknown';
 
-def validate_xml_file_by_type(xml_file, type):
+def parse_xml_file(xml_file):
+    # Returns an ElementTree
+    return etree.parse(xml_file)
+
+def validate_xml_file_by_type(xml_file_parsed, type):
     file_path_of_schema_for_type = get_xml_schema_file_path_by_type(type)
     with open(file_path_of_schema_for_type, 'rb') as schema_file:
         schema_file_parsed = etree.parse(schema_file)
         schema = etree.XMLSchema(schema_file_parsed)
-        xml_file_parsed = etree.parse(xml_file)
         return schema.validate(xml_file_parsed)
