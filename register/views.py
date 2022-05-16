@@ -74,9 +74,11 @@ def metadata_upload(request, metadata_upload_type):
                     messages.error(request, 'The metadata file submitted is not currently supported.')
                     return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
             except ExpatError as err:
+                print(err)
                 messages.error(request, 'An error occurred whilst parsing the XML.')
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
             except BaseException as err:
+                print(err)
                 messages.error(request, 'An unexpected error occurred.')
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
 
