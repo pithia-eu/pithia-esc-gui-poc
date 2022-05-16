@@ -28,7 +28,7 @@ def get_xml_schema_file_path_by_type(type):
         return os.path.join(schemas_path, 'utilities.xsd')
     elif type == 'process':
         return os.path.join(schemas_path, 'process.xsd')
-    elif type == 'collection':
+    elif type == 'data-collection':
         return os.path.join(schemas_path, 'observationCollection.xsd')
     return 'unknown';
 
