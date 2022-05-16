@@ -1,7 +1,6 @@
 import json
 from lxml import etree
 from pyexpat import ExpatError
-from pyexpat.errors import XML_ERROR_SYNTAX
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.urls import reverse
