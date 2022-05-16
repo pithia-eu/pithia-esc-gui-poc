@@ -8,7 +8,7 @@ from django.urls import reverse
 from register import validation
 
 from .forms import UploadFileForm
-from .metadata_helpers import handle_uploaded_metadata
+from .metadata_upload import convert_and_upload_xml_file
 
 # Create your views here.
 def index(request):
@@ -67,7 +67,7 @@ def metadata_upload(request, metadata_upload_type):
         if form.is_valid():
             # XML Schema validation
             try:
-                uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
+                uploaded_file_stats = convert_and_upload_xml_file(files, request.POST)
             except ExpatError as err:
                 print('There was an error whilst parsing the XML: {0}'.format(err))
                 return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + '?error=ExpatError')
