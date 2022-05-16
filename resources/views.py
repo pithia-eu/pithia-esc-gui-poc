@@ -5,7 +5,7 @@ from mongodb import db
 def index(request):
     namespaces = list(db['resources'].find({
         'dataModelType': 'observationcollection',
-    }).distinct('content.identifier.pithia:Identifier.namespace'))
+    }).distinct('identifier.pithia:Identifier.namespace'))
     return render(request, 'resources/index.html', {
         'namespaces': namespaces
     })
@@ -13,7 +13,7 @@ def index(request):
 def list_by_namespace(request, namespace):
     resources = list(db['resources'].find({
         'dataModelType': 'observationcollection',
-        'content.identifier.pithia:Identifier.namespace': namespace
+        'identifier.pithia:Identifier.namespace': namespace
     }))
     return render(request, 'resources/list_by_namespace.html', {
         'namespace': namespace,
@@ -23,8 +23,8 @@ def list_by_namespace(request, namespace):
 def detail(request, namespace, local_id):
     resource = db['resources'].find_one({
         'dataModelType': 'observationcollection',
-        'content.identifier.pithia:Identifier.localID': local_id,
-        'content.identifier.pithia:Identifier.namespace': namespace,
+        'identifier.pithia:Identifier.localID': local_id,
+        'identifier.pithia:Identifier.namespace': namespace,
     })
     return render(request, 'resources/detail.html', {
         'resource': resource

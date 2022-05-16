@@ -2,18 +2,18 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
-{% with pithia_identifier=resource.content.identifier|get_key_value:"pithia:Identifier" %}
+{% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
 {% breadcrumb_item pithia_identifier.namespace 'resources:list_by_namespace' pithia_identifier.namespace %}
 {% endwith %}
-{% breadcrumb_item_active resource.content.name %}
+{% breadcrumb_item_active resource.name %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ resource.content.name }}</h1>
+<h1>{{ resource.name }}</h1>
 <div class="row">
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead">{{ resource.content.description }}</p>
+            <p class="lead">{{ resource.description }}</p>
         </section>
     </div>
     <div class="col-lg-4">
@@ -55,7 +55,7 @@
 <section>
     <h2 class="mb-3">Online Resources</h2>
     <div class="accordion" id="accordion-resource">
-        {% with pithia_collection=resource.content.result|get_key_value:"pithia:CollectionResults" %}
+        {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
         {% for s in pithia_collection.source %}
         {% with online_resource=s.OnlineResource %}
         <div class="accordion-item">
