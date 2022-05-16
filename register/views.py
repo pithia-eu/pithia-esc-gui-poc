@@ -57,7 +57,7 @@ def metadata_upload(request, metadata_upload_type):
         'acquisition',
         'computation',
         'process',
-        'model-or-measurement',
+        'data-collection',
     ]
     if metadata_upload_type not in valid_metadata_upload_types:
         raise Http404
