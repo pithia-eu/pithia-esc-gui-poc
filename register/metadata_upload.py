@@ -83,6 +83,8 @@ def add_dictionary_to_mongodb_collection(dictionary, collection_name):
 
 def convert_and_upload_xml_file(xml_file, type):
     xml_as_dict = convert_xml_file_to_dictionary(xml_file)
+    # Remove the top-level tag
+    xml_as_dict = xml_as_dict[(list(xml_as_dict)[0])]
     if type == ACQUISITION:
         format_acquisition_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, ACQUISITION_COLLECTION)
