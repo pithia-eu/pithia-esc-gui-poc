@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Register' %}
+{% breadcrumb_item 'Register' 'register:index' %}
+{% if metadata_upload_type == 'model-or-measurement' %}
+{% breadcrumb_item_active 'Model or Measurement' %}
+{% else %}
+{% breadcrumb_item_active metadata_upload_type|capfirst %}
+{% endif %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
