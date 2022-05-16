@@ -25,40 +25,15 @@
     <div class="col-xl-9 col-lg-8">
         <form action="{% url 'register:metadata_upload' metadata_upload_type %}" method="post" enctype="multipart/form-data" id="upload-form" class="row gy-3">
             <div class="col-12">
+                {% if messages %}
                 <div class="registration-alerts">
-                    {% if "error" in request.GET %}
-                    {% if request.GET.error == "ExpatError" %}
-                    <div class="alert alert-danger">
-                        Error parsing metadata files.
+                    {% for message in messages %}
+                    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-success{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                        {{ message }}
                     </div>
-                    {% else %}
-                    <div class="alert alert-danger">
-                        An unexpected error occurred.
-                    </div>
-                    {% endif %}
-                    {% endif %}
-                    {% if "acq_files_uploaded" in request.GET %}
-                    <div class="alert alert-success">
-                        Successfully registered {{ request.GET.acq_files_uploaded }} Acquisition metadata files.
-                    </div>
-                    {% endif %}
-                    {% if "comp_files_uploaded" in request.GET %}
-                    <div class="alert alert-success">
-                        Successfully registered {{ request.GET.comp_files_uploaded }} Computation metadata files.
-                    </div>
-                    {% endif %}
-                    {% if "op_files_uploaded" in request.GET %}
-                    <div class="alert alert-success">
-                        Successfully registered {{ request.GET.op_files_uploaded }} Observation Collection metadata
-                        files.
-                    </div>
-                    {% endif %}
-                    {% if "proc_files_uploaded" in request.GET %}
-                    <div class="alert alert-success">
-                        Successfully registered {{ request.GET.proc_files_uploaded }} Process metadata files.
-                    </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
+                {% endif %}
                 <div class="d-flex flex-column align-items-start flex-fill bg-primary bg-opacity-10 rounded-3 p-4">
                     {{ form.file.errors }}
                     {{ form.file.label_tag }}

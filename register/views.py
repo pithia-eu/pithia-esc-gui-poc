@@ -4,6 +4,7 @@ from pyexpat import ExpatError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
 
 from register import validation
 
@@ -63,30 +64,26 @@ def metadata_upload(request, metadata_upload_type):
     if request.method == 'POST':
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
-        files = request.FILES.getlist('files')
+        xml_file = request.FILES['file']
         if form.is_valid():
-            # XML Schema validation
+            # XML should have already been validated
+            # when uploading in the front-end.
             try:
-                uploaded_file_stats = convert_and_upload_xml_file(files, request.POST)
+                result = convert_and_upload_xml_file(xml_file, metadata_upload_type)
+                if result == 'Metadata type not supported.':
+                    messages.error(request, 'The metadata file submitted is not currently supported.')
+                    return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
             except ExpatError as err:
-                print('There was an error whilst parsing the XML: {0}'.format(err))
-                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + '?error=ExpatError')
+                messages.error(request, 'An error occurred whilst parsing the XML.')
+                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
             except BaseException as err:
-                print('An unexpected error occurred: {0}'.format(err))
-                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + '?error=500')
+                messages.error(request, 'An unexpected error occurred.')
+                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
 
-            query_string = '?'
-            if uploaded_file_stats['acq_files_uploaded'] > 0:
-                query_string += f'acq_files_uploaded={uploaded_file_stats["acq_files_uploaded"]}'
-            if uploaded_file_stats['comp_files_uploaded'] > 0:
-                query_string += f'comp_files_uploaded={uploaded_file_stats["comp_files_uploaded"]}'
-            if uploaded_file_stats['op_files_uploaded'] > 0:
-                query_string += f'op_files_uploaded={uploaded_file_stats["op_files_uploaded"]}'
-            if uploaded_file_stats['proc_files_uploaded'] > 0:
-                query_string += f'proc_files_uploaded={uploaded_file_stats["proc_files_uploaded"]}'
-            print(query_string)
-            return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]) + query_string)
+            messages.success(request, f'Successfully uploaded {xml_file.name}.')
+            return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
         else:
+            messages.error(request, 'The form submitted was not valid.')
             return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
     else:
         form = UploadFileForm()
