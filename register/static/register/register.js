@@ -78,11 +78,11 @@ function updateXMLFileValidationStatus(state, statusElem) {
         `;
     } else if (state === xmlValidationStates.INVALID_SEMANTICS) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Semantically incorrect.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">XML does not conform to the corresponding schema.</span>
         `;
     } else if (state === xmlValidationStates.INVALID_SYNTAX) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
         `;
     } else if (state === xmlValidationStates.INTERNAL_SERVER_ERROR) {
         statusElemContent.innerHTML = `
