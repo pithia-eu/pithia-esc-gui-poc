@@ -114,7 +114,7 @@ const collapseGuidance = document.getElementById("collapse-guidance")
 const bsCollapseGuidance = new bootstrap.Collapse(collapseGuidance, {
     toggle: false
 });
-const fileInput = document.getElementById("id_files");
+const fileInput = document.getElementById("id_file");
 const uploadedFilesList = document.querySelector(".list-uploaded-files");
 
 fileInput.addEventListener("change", async event => {
