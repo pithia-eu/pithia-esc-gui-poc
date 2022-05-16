@@ -41,3 +41,10 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_path):
         schema_file_parsed = etree.parse(schema_file)
         schema = etree.XMLSchema(schema_file_parsed)
         return schema.validate(xml_file_parsed)
+
+def validate_xml_xlinks_by_type(xml_file_parsed, type):
+    missing_xlinks = []
+    XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink'
+    XLINK = '{%s}' % XLINK_NAMESPACE
+    
+    return missing_xlinks
