@@ -10,8 +10,26 @@ def get_xml_schema_file_path_by_type(type):
     schemas_path = os.path.join(current_dir, 'schemas', current_schema_version)
     if type == 'organisation':
         return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'individual':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'project':
+        return os.path.join(schemas_path, 'project.xsd')
+    elif type == 'platform':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'instrument':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'operation':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'instrument':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'acquisition':
+        return os.path.join(schemas_path, 'utilities.xsd')
+    elif type == 'computation':
+        return os.path.join(schemas_path, 'utilities.xsd')
     elif type == 'process':
-        return os.path.join(schemas_path, 'procedure.xsd')
+        return os.path.join(schemas_path, 'process.xsd')
+    elif type == 'collection':
+        return os.path.join(schemas_path, 'observationCollection.xsd')
     return 'unknown';
 
 def validate_xml_file_by_type(xml_file, type):
