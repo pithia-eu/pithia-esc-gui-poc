@@ -11,7 +11,7 @@ OPERATION = 'operation'
 ACQUISITION = 'acquisition'
 COMPUTATION = 'computation'
 PROCESS = 'process'
-COLLECTION = 'collection'
+DATA_COLLECTION = 'data-collection'
 
 ORGANISATION_COLLECTION = 'organisations'
 INDIVIDUAL_COLLECTION = 'individuals'
@@ -22,7 +22,7 @@ OPERATION_COLLECTION = 'operations'
 ACQUISITION_COLLECTION = 'acquisitions'
 COMPUTATION_COLLECTION = 'computations'
 PROCESS_COLLECTION = 'processes'
-COLLECTION_COLLECTION = 'collections'
+DATA_COLLECTION_COLLECTION = 'data-collections'
 
 
 
@@ -91,9 +91,9 @@ def convert_and_upload_xml_file(xml_file, type):
     elif type == COMPUTATION:
         format_computation_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, COMPUTATION_COLLECTION)
-    elif type == COLLECTION:
+    elif type == DATA_COLLECTION:
         format_data_collection_dictionary(xml_as_dict)
-        return add_dictionary_to_mongodb_collection(xml_as_dict, COLLECTION_COLLECTION)
+        return add_dictionary_to_mongodb_collection(xml_as_dict, DATA_COLLECTION_COLLECTION)
     elif type == INDIVIDUAL:
         return add_dictionary_to_mongodb_collection(xml_as_dict, INDIVIDUAL_COLLECTION)
     elif type == INSTRUMENT:
