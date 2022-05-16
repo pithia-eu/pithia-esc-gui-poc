@@ -13,7 +13,7 @@ def find_matching_observation_collections(request):
     # Fetch Acquisitions/Computations
     acquisitions = list(db['resources'].find({
         'dataModelType': 'acquisition',
-        'content.capability': {
+        'capability': {
             '$elemMatch': {
                 'pithia:processCapability.observedProperty.@xlink:href': {
                     '$in': observed_properties
@@ -23,7 +23,7 @@ def find_matching_observation_collections(request):
     }))
     computations = list(db['resources'].find({
         'dataModelType': 'computation',
-        'content.capability': {
+        'capability': {
             '$elemMatch': {
                 'observedProperty.@xlink:href': {
                     '$in': observed_properties
@@ -37,7 +37,7 @@ def find_matching_observation_collections(request):
         'dataModelType': 'process',
         '$or': [
             {
-                'content.acquisitionComponent': {
+                'acquisitionComponent': {
                     '$elemMatch': {
                         '@xlink:href': {
                             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(acquisitions))
@@ -46,7 +46,7 @@ def find_matching_observation_collections(request):
                 }
             },
             {
-                'content.computationComponent': {
+                'computationComponent': {
                     '$elemMatch': {
                         '@xlink:href': {
                             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(computations))
@@ -60,7 +60,7 @@ def find_matching_observation_collections(request):
     # Fetch Observation Collections
     return list(db['resources'].find({
         'dataModelType': 'observationcollection',
-        'content.om:procedure.@xlink:href': {
+        'om:procedure.@xlink:href': {
             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
         }
     }))

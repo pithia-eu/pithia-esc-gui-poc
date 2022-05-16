@@ -1,41 +1,95 @@
+import json
+from lxml import etree
 from pyexpat import ExpatError
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
+
+from register import validation
+
 from .forms import UploadFileForm
-from .metadata_helpers import handle_uploaded_metadata
+from .metadata_upload import convert_and_upload_xml_file
 
 # Create your views here.
 def index(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        files = request.FILES.getlist('files')
-        if form.is_valid():
-            try:
-                uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
-            except ExpatError as err:
-                print("There was an error whilst parsing the XML: {0}".format(err))
-                return HttpResponseRedirect(reverse('register:index') + '?error=ExpatError')
-            except BaseException as err:
-                print("An unexpected error occurred: {0}".format(err))
-                return HttpResponseRedirect(reverse('register:index') + '?error=500')
-
-            query_string = '?'
-            if uploaded_file_stats['acq_files_uploaded'] > 0:
-                query_string += f'acq_files_uploaded={uploaded_file_stats["acq_files_uploaded"]}'
-            if uploaded_file_stats['comp_files_uploaded'] > 0:
-                query_string += f'comp_files_uploaded={uploaded_file_stats["comp_files_uploaded"]}'
-            if uploaded_file_stats['op_files_uploaded'] > 0:
-                query_string += f'op_files_uploaded={uploaded_file_stats["op_files_uploaded"]}'
-            if uploaded_file_stats['proc_files_uploaded'] > 0:
-                query_string += f'proc_files_uploaded={uploaded_file_stats["proc_files_uploaded"]}'
-            print(query_string)
-            return HttpResponseRedirect(reverse('register:index') + query_string)
-        else:
-            return HttpResponseRedirect(reverse('register:index'))
-    else:
-        form = UploadFileForm
     return render(request, 'register/index.html', {
         'title': 'Register Models & Measurements',
+    })
+
+def validate_xml_file_by_type(request, metadata_upload_type):
+    if request.method != 'POST':
+        return Http404
+    # Run three validations on XML file
+    xml_file = request.FILES['file']
+    try:
+        # 1: Syntax validation (happens whilst parsing the file)
+        xml_file_parsed = validation.parse_xml_file(xml_file)
+        # 2: XML Schema Definition validation
+        xml_schema_for_type_file_path = validation.get_xml_schema_file_path_by_type(metadata_upload_type)
+        is_xml_conforming_to_schema = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
+        # 3: Relation validaiton (whether a component the file metadata
+        # is referencing exists in the database or not).
+    except etree.XMLSyntaxError as err:
+        print(err)
+        return HttpResponse(json.dumps({
+            'error': str(err)
+        }), status=422, content_type='application/json')
+    except BaseException as err:
+        print(err)
+        return HttpResponseServerError(json.dumps({
+            'error': str(err)
+        }), content_type='application/json')
+    return HttpResponse(json.dumps({
+        'result': is_xml_conforming_to_schema
+    }), content_type='application/json')
+
+def metadata_upload(request, metadata_upload_type):
+    # There's probably a DRY-er way of handling
+    # 'valid metadata upload types'
+    valid_metadata_upload_types = [
+        'organisation',
+        'individual',
+        'project',
+        'platform',
+        'operation',
+        'instrument',
+        'acquisition',
+        'computation',
+        'process',
+        'model-or-measurement',
+    ]
+    if metadata_upload_type not in valid_metadata_upload_types:
+        raise Http404
+    if request.method == 'POST':
+        # Form validation
+        form = UploadFileForm(request.POST, request.FILES)
+        xml_file = request.FILES['file']
+        if form.is_valid():
+            # XML should have already been validated
+            # when uploading in the front-end.
+            try:
+                result = convert_and_upload_xml_file(xml_file, metadata_upload_type)
+                if result == 'Metadata type not supported.':
+                    messages.error(request, 'The metadata file submitted is not currently supported.')
+                    return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
+            except ExpatError as err:
+                print(err)
+                messages.error(request, 'An error occurred whilst parsing the XML.')
+                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
+            except BaseException as err:
+                print(err)
+                messages.error(request, 'An unexpected error occurred.')
+                return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
+
+            messages.success(request, f'Successfully uploaded {xml_file.name}.')
+            return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
+        else:
+            messages.error(request, 'The form submitted was not valid.')
+            return HttpResponseRedirect(reverse('register:metadata_upload', args=[metadata_upload_type]))
+    else:
+        form = UploadFileForm()
+    return render(request, 'register/metadata_upload.html', {
+        'metadata_upload_type': metadata_upload_type,
         'form': form
     })

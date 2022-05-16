@@ -113,7 +113,7 @@ h1 {
     font-style: italic;
 }
 
-.list-uploaded-files img {
+.list-uploaded-files .file-icon {
     height: 1.5rem;
 }
 
@@ -134,6 +134,14 @@ h1 {
 
 .accordion-button:not(.collapsed) img {
     filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
+}
+
+.file-validation-status img {
+    width: 1rem;
+}
+
+.file-validation-status img[alt="tick"] {
+    width: 1.2rem;
 }
 
 /* Search page */
