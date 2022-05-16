@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .forms import UploadFileForm
-from .metadata_helpers import handle_uploaded_metadata
+from .metadata_upload import convert_and_upload_xml_file
 
 # Create your views here.
 def index(request):
@@ -12,7 +12,7 @@ def index(request):
         files = request.FILES.getlist('files')
         if form.is_valid():
             try:
-                uploaded_file_stats = handle_uploaded_metadata(files, request.POST)
+                uploaded_file_stats = convert_and_upload_xml_file(files, request.POST)
             except ExpatError as err:
                 print("There was an error whilst parsing the XML: {0}".format(err))
                 return HttpResponseRedirect(reverse('register:index') + '?error=ExpatError')
