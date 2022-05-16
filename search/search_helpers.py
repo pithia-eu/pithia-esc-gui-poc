@@ -11,8 +11,7 @@ def find_matching_observation_collections(request):
     # Observation Collection, which is what we want.
 
     # Fetch Acquisitions/Computations
-    acquisitions = list(db['resources'].find({
-        'dataModelType': 'acquisition',
+    acquisitions = list(db['data-collections'].find({
         'capability': {
             '$elemMatch': {
                 'pithia:processCapability.observedProperty.@xlink:href': {
@@ -21,8 +20,7 @@ def find_matching_observation_collections(request):
             }
         }
     }))
-    computations = list(db['resources'].find({
-        'dataModelType': 'computation',
+    computations = list(db['data-collections'].find({
         'capability': {
             '$elemMatch': {
                 'observedProperty.@xlink:href': {
@@ -33,8 +31,7 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Processes
-    processes = list(db['resources'].find({
-        'dataModelType': 'process',
+    processes = list(db['data-collections'].find({
         '$or': [
             {
                 'acquisitionComponent': {
@@ -58,8 +55,7 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Observation Collections
-    return list(db['resources'].find({
-        'dataModelType': 'observationcollection',
+    return list(db['data-collections'].find({
         'om:procedure.@xlink:href': {
             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
         }
