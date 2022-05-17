@@ -43,13 +43,23 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_path):
         schema = etree.XMLSchema(schema_file_parsed)
         return schema.validate(xml_file_parsed)
 
-def get_db_query_from_xlink_url_and_type(url, type):
+def get_entities_from_xlink_href_and_type(url, type):
     ESPAS_RESOURCES_URL = 'http://resources.espas-fp7.eu/'
-    url.replace(ESPAS_RESOURCES_URL, '')
+    PITHIA_RESOURCES_URL = 'https://resources.pithia.eu/2.2/pithia/'
+    url = url.replace(ESPAS_RESOURCES_URL, '')
     url_components = url.split('/')
-    return db['organisations'].find({
-        
-    })
+    namespace = url_components[1]
+    localID = url_components[2]
+    if len(url_components) > 3:
+        version = url_components[3]
+    find_dictionary = {
+        'identifier.ESPAS_Identifier.localID': localID,
+        'identifier.ESPAS_Identifier.namespace': namespace,
+    }
+    if version:
+        find_dictionary['identifier.ESPAS_Identifier.version'] = version
+    # https://resources.pithia.eu/2.2/pithia/organisation/uml/UML/1
+    return db['organisations'].find_one(find_dictionary)
 
 def validate_xml_xlinks_by_type(xml_file_parsed, type):
     missing_xlinks = []
@@ -57,8 +67,9 @@ def validate_xml_xlinks_by_type(xml_file_parsed, type):
     XLINK = '{%s}' % XLINK_NAMESPACE
     parent = xml_file_parsed.getroot()
     xlinks = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
-    # http://resources.espas-fp7.eu/organisation/uml/UML/1
     if (len(xlinks) > 0):
-        db_query = get_db_query_from_xlink_url_and_type(xlinks[0], type)
+        for xlink in xlinks:
+            db_query = get_entities_from_xlink_href_and_type(xlink, type)
+        print('organisations', list(db_query))
     
     return missing_xlinks
