@@ -2,10 +2,20 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
+{% if resource_collection_name == 'data-collections' %}
+{% breadcrumb_item_active 'Data Collections' %}
+{% else %}
 {% breadcrumb_item_active resource_collection_name|capfirst %}
+{% endif %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">{{ resource_collection_name|capfirst }} Namespaces</h1>
+{% if resource_collection_name == 'processes' %}
+<h1 class="pb-3">Process Namespaces</h1>
+{% elif resource_collection_name == 'data-collections' %}
+<h1 class="pb-3">Data Collection Namespaces</h1>
+{% else %}
+<h1 class="pb-3">{{ resource_collection_name|slice:':-1'|capfirst }} Namespaces</h1>
+{% endif %}
 {% if namespaces|length > 0 %}
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
     {% for namespace in namespaces %}
