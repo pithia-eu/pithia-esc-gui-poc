@@ -11,7 +11,7 @@ def find_matching_observation_collections(request):
     # Observation Collection, which is what we want.
 
     # Fetch Acquisitions/Computations
-    acquisitions = list(db['data-collections'].find({
+    acquisitions = list(db['acquisitions'].find({
         'capability': {
             '$elemMatch': {
                 'pithia:processCapability.observedProperty.@xlink:href': {
@@ -20,7 +20,7 @@ def find_matching_observation_collections(request):
             }
         }
     }))
-    computations = list(db['data-collections'].find({
+    computations = list(db['computations'].find({
         'capability': {
             '$elemMatch': {
                 'observedProperty.@xlink:href': {
@@ -31,7 +31,7 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Processes
-    processes = list(db['data-collections'].find({
+    processes = list(db['processes'].find({
         '$or': [
             {
                 'acquisitionComponent': {

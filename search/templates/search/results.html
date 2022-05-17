@@ -6,7 +6,7 @@
 {% breadcrumb_item_active 'Results' %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">Search results</h1>
+<h1 class="pb-3">Data Collection search results</h1>
 <p>
     <a href="{% url 'search:index' %}">Search again</a>
 </p>
@@ -15,7 +15,7 @@
     {% for r in results %}
     <div class="list-group">
         {% with pithia_identifier=r.identifier|get_key_value:"pithia:Identifier" %}
-        <a href="{% url 'resources:detail' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
+        <a href="{% url 'resources:detail' 'data-collections' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ r.name }}</h5>
         </a>
         {% endwith %}
