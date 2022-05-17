@@ -2,17 +2,17 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
-{% breadcrumb_item resources|capfirst 'resources:list_resource_namespaces' resources %}
+{% breadcrumb_item resource_collection_name|capfirst 'resources:list_resource_namespaces' resource_collection_name %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">Resources for "{{ namespace }}"</h1>
-{% if resources|length > 0 %}
+{% if resources_list|length > 0 %}
 <ul class="list-group">
     {% for resource in resources_list %}
     {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
     {% with local_id=pithia_identifier.localID namespace=pithia_identifier.namespace %}
-    <li class="list-group-item"><a href="{% url 'resources:detail' resources namespace local_id %}">{{ resource.name }}</a></li>
+    <li class="list-group-item"><a href="{% url 'resources:detail' resource_collection_name namespace local_id %}">{{ resource.name }}</a></li>
     {% endwith %}
     {% endwith %}
     {% endfor %}

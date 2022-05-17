@@ -2,9 +2,9 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
-{% breadcrumb_item resources|capfirst 'resources:list_resource_namespaces' resources %}
+{% breadcrumb_item resource_collection_name|capfirst 'resources:list_resource_namespaces' resource_collection_name %}
 {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-{% breadcrumb_item pithia_identifier.namespace 'resources:list_resources_in_namespace' resources pithia_identifier.namespace %}
+{% breadcrumb_item pithia_identifier.namespace 'resources:list_resources_in_namespace' resource_collection_name pithia_identifier.namespace %}
 {% endwith %}
 {% breadcrumb_item_active resource.name %}
 {% endblock breadcrumbs %}
