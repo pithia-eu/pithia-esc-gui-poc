@@ -39,7 +39,8 @@
         </section>
     </div> {% endcomment %}
 </div>
-{% comment %} <section>
+{% if "result" in resource %}
+<section>
     <h2 class="mb-3">Online Resources</h2>
     <div class="accordion" id="accordion-resource">
         {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
@@ -78,5 +79,6 @@
         {% endfor %}
         {% endwith %}
     </div>
-</section> {% endcomment %}
+</section>
+{% endif %}
 {% endblock content %}
