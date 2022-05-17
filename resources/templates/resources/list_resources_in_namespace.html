@@ -2,7 +2,11 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
+{% if resource_collection_name == 'data-collections' %}
+{% breadcrumb_item 'Data Collections' 'resources:list_resource_namespaces' resource_collection_name %}
+{% else %}
 {% breadcrumb_item resource_collection_name|capfirst 'resources:list_resource_namespaces' resource_collection_name %}
+{% endif %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}
 {% block content %}
