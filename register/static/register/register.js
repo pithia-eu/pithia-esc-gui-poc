@@ -110,16 +110,11 @@ async function handleFileUpload(fileInput, listElem) {
     }
 }
 
-const collapseGuidance = document.getElementById("collapse-guidance")
-const bsCollapseGuidance = new bootstrap.Collapse(collapseGuidance, {
-    toggle: false
-});
 const fileInput = document.getElementById("id_file");
 const uploadedFilesList = document.querySelector(".list-uploaded-files");
 
 fileInput.addEventListener("change", async event => {
     await handleFileUpload(fileInput, uploadedFilesList);
-    bsCollapseGuidance.show();
 });
 
 document.getElementById("register-script").addEventListener("load", async event => {
@@ -127,6 +122,5 @@ document.getElementById("register-script").addEventListener("load", async event 
         // In case files have been entered into the file input
         // and the user refreshes the page.
         await handleFileUpload(fileInput, uploadedFilesList);
-        bsCollapseGuidance.show();
     }
 });
