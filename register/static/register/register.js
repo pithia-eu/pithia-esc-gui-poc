@@ -12,15 +12,10 @@ function listUploadedFiles(files, listElem) {
         listElem.append(htmlToElement(
             `<li class="list-group-item">
                 <div class="row g-lg-4 g-sm-2 py-2">
-                    <div class="col-lg-8">
-                        <div class="d-flex align-items-center">
-                            <img src="/static/register/file.svg" alt="file" class="file-icon me-3">
-                            <input type="hidden" name="file${i}-name" value="${file.name}">
-                            <span class="file-name" title=${file.name}>${file.name}</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-12">
                         <div class="file-validation-status">
+                        </div>
+                        <div class="file-validation-error mt-4">
                         </div>
                     </div>
                 </div>
@@ -46,24 +41,31 @@ async function validateXmlFile(file) {
         method: "POST",
         body: formData
     });
-    console.log(response.status);
+    const responseContent = await response.json();
     if (response.status === 422) {
-        return xmlValidationStates.INVALID_SYNTAX;
+        return {
+            state: xmlValidationStates.INVALID_SYNTAX,
+            error: responseContent.error
+        };
     }
     if (!response.ok) {
-        return xmlValidationStates.INTERNAL_SERVER_ERROR;
+        return {
+            state: xmlValidationStates.INTERNAL_SERVER_ERROR,
+            error: responseContent.error
+        };
     }
-    const responseContent = await response.json();
-    const isFileValid = (responseContent.result) ? xmlValidationStates.VALID : xmlValidationStates.INVALID_SEMANTICS;
-    return isFileValid;
+    const state = (responseContent.result) ? xmlValidationStates.VALID : xmlValidationStates.INVALID_SEMANTICS;
+    return {
+        state: state
+    };
 }
 
-function updateXMLFileValidationStatus(state, statusElem) {
+function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
     const statusElemContent = htmlToElement(`
     <div class="d-flex align-items-center">
     </div>
     `);
-    if (state === "validating") {
+    if (fileValidationStatus.state === "validating") {
         statusElemContent.innerHTML = `
             <div class="spinner-grow-container text-muted me-3">
                 <div class="spinner-grow" style="width: 1rem; height: 1rem;" role="status">
@@ -72,19 +74,19 @@ function updateXMLFileValidationStatus(state, statusElem) {
             </div>
             <span class="text-muted">Validating...</span>
         `;
-    } else if (state === xmlValidationStates.VALID) {
+    } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
             <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
         `;
-    } else if (state === xmlValidationStates.INVALID_SEMANTICS) {
+    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SEMANTICS) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">XML does not conform to the corresponding schema.</span>
         `;
-    } else if (state === xmlValidationStates.INVALID_SYNTAX) {
+    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
         `;
-    } else if (state === xmlValidationStates.INTERNAL_SERVER_ERROR) {
+    } else if (fileValidationStatus.state === xmlValidationStates.INTERNAL_SERVER_ERROR) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
         `;
@@ -98,15 +100,27 @@ function updateXMLFileValidationStatus(state, statusElem) {
     return statusElem.append(statusElemContent);
 }
 
+function updateXMLFileValidationError(errorMsg, errorMsgElem) {
+    errorMsgElem.innerHTML = `
+        <div class="alert alert-danger">
+            Error: ${errorMsg}
+        </div>
+    `;
+}
+
 async function handleFileUpload(fileInput, listElem) {
     const files = Array.from(fileInput.files);
     listUploadedFiles(files, listElem);
     const validationStatusElem = document.querySelector(".file-validation-status");
+    const validationStatusErrorElem = document.querySelector(".file-validation-error");
     
     for (const file of files) {
-        updateXMLFileValidationStatus(xmlValidationStates.VALIDATING, validationStatusElem);
+        updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem);
         const validationResults = await validateXmlFile(file);
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
+        if (validationResults.error) {
+            updateXMLFileValidationError(validationResults.error, validationStatusErrorElem);
+        }
     }
 }
 
