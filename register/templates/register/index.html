@@ -10,24 +10,24 @@
 {% block content %}
 <div class="row pb-4">
     <div class="col-lg-8">
-        <h1>Metadata Registration</h1>
+        <h1>Resource Metadata Registration</h1>
     </div>
 </div>
 <p class="lead">
-    Select the metadata you would like to register from the list below.
+    Select the type of resource you would like to register metadata for from the list below.
 </p>
 <div class="row">
     <ol class="list-group">
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'organisation' %}">Organisation</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'individual' %}">Individual</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'project' %}">Project</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'platform' %}">Platform</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'operation' %}">Operation</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'instrument' %}">Instrument</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'acquisition' %}">Acquisition</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'computation' %}">Computation</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'process' %}">Process</a></li>
-        <li class="list-group-item"><a href="{% url 'register:metadata_upload' 'data-collection' %}">Model or Measurement</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'organisation' %}">Organisation</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'individual' %}">Individual</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'project' %}">Project</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'platform' %}">Platform</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'operation' %}">Operation</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'instrument' %}">Instrument</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'acquisition' %}">Acquisition</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'computation' %}">Computation</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'process' %}">Process</a></li>
+        <li class="list-group-item"><a href="{% url 'register:resource_metadata_upload' 'data-collection' %}">Model or Measurement</a></li>
     </ol>
 </div>
 {% endblock content %}
