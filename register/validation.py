@@ -62,14 +62,14 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_path):
     with open(schema_file_path, 'rb') as schema_file:
         schema_file_parsed = etree.parse(schema_file)
         schema = etree.XMLSchema(schema_file_parsed)
-        return schema.assertValid(xml_file_parsed)
+        schema.assertValid(xml_file_parsed)
+        return 'valid'
 
 def get_ontology_term_from_xlink_href_and_type(href, type):
     ESPAS_ONTOLOGY_URL = 'http://ontology.espas-fp7.eu/' # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
     return
 
 def get_entities_from_xlink_href_and_type(href):
-    print('yo')
     ESPAS_RESOURCES_URL = 'http://resources.espas-fp7.eu/' # e.g. # https://resources.pithia.eu/2.2/pithia/organisation/uml/UML/1
     PITHIA_RESOURCES_URL = 'https://resources.pithia.eu/2.2/pithia/'
     href = href.replace(ESPAS_RESOURCES_URL, '')

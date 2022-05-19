@@ -28,7 +28,7 @@ def validate_xml_file_by_type(request, metadata_upload_type):
         xml_file_parsed = validation.parse_xml_file(xml_file)
         # 2: XML Schema Definition validation
         xml_schema_for_type_file_path = validation.get_xml_schema_file_path_by_type(metadata_upload_type)
-        is_xml_conforming_to_schema = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
+        schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
         # 3: Relation validaiton (whether a component the file metadata
         # is referencing exists in the database or not).
         are_xml_xlinks_valid = validation.validate_xml_xlinks_by_type(xml_file_parsed, metadata_upload_type)
@@ -43,7 +43,7 @@ def validate_xml_file_by_type(request, metadata_upload_type):
             return HttpResponse(response_body, status=422, content_type='application/json')
         return HttpResponseServerError(response_body, content_type='application/json')
     return HttpResponse(json.dumps({
-        'result': is_xml_conforming_to_schema
+        'result': schema_validation_result
     }), content_type='application/json')
 
 def metadata_upload(request, metadata_upload_type):
