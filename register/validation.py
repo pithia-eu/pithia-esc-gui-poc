@@ -62,7 +62,7 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_path):
     with open(schema_file_path, 'rb') as schema_file:
         schema_file_parsed = etree.parse(schema_file)
         schema = etree.XMLSchema(schema_file_parsed)
-        return schema.validate(xml_file_parsed)
+        return schema.assertValid(xml_file_parsed)
 
 def get_ontology_term_from_xlink_href_and_type(href, type):
     ESPAS_ONTOLOGY_URL = 'http://ontology.espas-fp7.eu/' # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator

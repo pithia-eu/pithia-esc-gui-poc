@@ -1,4 +1,5 @@
 import json
+import traceback
 from lxml import etree
 from pyexpat import ExpatError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
@@ -31,16 +32,16 @@ def validate_xml_file_by_type(request, metadata_upload_type):
         # 3: Relation validaiton (whether a component the file metadata
         # is referencing exists in the database or not).
         are_xml_xlinks_valid = validation.validate_xml_xlinks_by_type(xml_file_parsed, metadata_upload_type)
-    except etree.XMLSyntaxError as err:
-        print(err)
-        return HttpResponse(json.dumps({
-            'error': str(err)
-        }), status=422, content_type='application/json')
     except BaseException as err:
-        print(err)
-        return HttpResponseServerError(json.dumps({
+        print(traceback.format_exc())
+        err_class = type(err)
+        response_body = json.dumps({
+            'errorType': str(err_class),
             'error': str(err)
-        }), content_type='application/json')
+        })
+        if err_class == etree.DocumentInvalid or err_class == etree.XMLSyntaxError:
+            return HttpResponse(response_body, status=422, content_type='application/json')
+        return HttpResponseServerError(response_body, content_type='application/json')
     return HttpResponse(json.dumps({
         'result': is_xml_conforming_to_schema
     }), content_type='application/json')

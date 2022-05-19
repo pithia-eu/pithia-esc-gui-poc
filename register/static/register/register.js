@@ -27,9 +27,8 @@ function listUploadedFiles(files, listElem) {
 const xmlValidationStates =  {
     VALIDATING: "validating",
     VALID: "valid",
-    INVALID_SEMANTICS: "invalid",
-    INVALID_SYNTAX: "XMLSyntaxError",
-    INTERNAL_SERVER_ERROR: "InternalServerError",
+    INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
+    INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
 }
 
 async function validateXmlFile(file) {
@@ -42,15 +41,9 @@ async function validateXmlFile(file) {
         body: formData
     });
     const responseContent = await response.json();
-    if (response.status === 422) {
-        return {
-            state: xmlValidationStates.INVALID_SYNTAX,
-            error: responseContent.error
-        };
-    }
     if (!response.ok) {
         return {
-            state: xmlValidationStates.INTERNAL_SERVER_ERROR,
+            state: responseContent.errorType,
             error: responseContent.error
         };
     }
@@ -86,13 +79,9 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
         `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INTERNAL_SERVER_ERROR) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
-        `;
     } else {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Unknown state.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
         `;
     }
     
@@ -100,7 +89,7 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
     return statusElem.append(statusElemContent);
 }
 
-function updateXMLFileValidationError(errorMsg, errorMsgElem) {
+function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
     errorMsgElem.innerHTML = `
         <div class="alert alert-danger">
             Error: ${errorMsg}
@@ -119,7 +108,7 @@ async function handleFileUpload(fileInput, listElem) {
         const validationResults = await validateXmlFile(file);
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (validationResults.error) {
-            updateXMLFileValidationError(validationResults.error, validationStatusErrorElem);
+            updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
         }
     }
 }
