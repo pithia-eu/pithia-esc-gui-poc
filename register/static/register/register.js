@@ -29,6 +29,7 @@ const xmlValidationStates =  {
     VALID: "valid",
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
+    UNREGISTERED_XLINK_HREFS: "<class 'register.exceptions.UnregisteredXlinkHrefsException'>",
 }
 
 async function validateXmlFile(file) {
@@ -78,6 +79,13 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
     } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_XLINK_HREFS) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3">
+            <span class="text-danger">
+                One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.
+            </span>
         `;
     } else {
         statusElemContent.innerHTML = `

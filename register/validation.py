@@ -92,14 +92,12 @@ def get_entities_from_xlink_href_and_type(href):
 
 def validate_xml_xlinks_by_type(xml_file_parsed, type):
     missing_xlinks = []
-    XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink'
-    XLINK = '{%s}' % XLINK_NAMESPACE
     parent = xml_file_parsed.getroot()
     xlinks = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
     if (len(xlinks) > 0):
-        print(xlinks)
-        print(list(xlinks))
-        for xlink in list(xlinks):
+        for xlink in xlinks:
             xlink_reference = get_entities_from_xlink_href_and_type(xlink)
+            if not xlink_reference:
+                missing_xlinks.append(xlink)
     
     return missing_xlinks

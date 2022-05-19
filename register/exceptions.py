@@ -1,0 +1,2 @@
+class UnregisteredXlinkHrefsException(Exception):
+    pass
