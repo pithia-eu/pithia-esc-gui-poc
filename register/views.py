@@ -32,9 +32,9 @@ def validate_xml_file_by_resource_type(request, resource_type):
         schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
         # 3: Relation validaiton (whether a resource the metadata file
         # is referencing exists in the database or not).
-        missing_xlinks = validation.validate_xml_xlink_hrefs_for_xml(xml_file_parsed)
-        if len(missing_xlinks) > 0:
-            raise UnregisteredXlinkHrefsException('Unregistered resource IRIs: %s.' % ', '.join(missing_xlinks))
+        unregistered_resource_hrefs = validation.validate_xml_xlink_hrefs_for_xml(xml_file_parsed)
+        if len(unregistered_resource_hrefs) > 0:
+            raise UnregisteredXlinkHrefsException('Unregistered resource IRIs: %s.' % ', '.join(unregistered_resource_hrefs))
     except BaseException as err:
         print(traceback.format_exc())
         err_class = type(err)

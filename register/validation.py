@@ -69,7 +69,7 @@ def get_ontology_term_from_xlink_href(href):
     ESPAS_ONTOLOGY_URL = 'http://ontology.espas-fp7.eu/' # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
     return
 
-def get_resource_from_xlink_href_components (resource_type, localID, namespace, version):
+def get_resource_from_xlink_href_components(resource_type, localID, namespace, version):
     find_dictionary = {
         'identifier.ESPAS_Identifier.localID': localID,
         'identifier.ESPAS_Identifier.namespace': namespace,
@@ -84,12 +84,12 @@ def get_components_from_xlink_href(href):
     PITHIA_RESOURCES_URL = 'https://resources.pithia.eu/2.2/pithia/'
     href = href.replace(ESPAS_RESOURCES_URL, '')
     href_components = href.split('/')
-    resource_referenced = href_components[0]
+    resource_type = href_components[0]
     namespace = href_components[1]
     localID = href_components[2]
     if len(href_components) > 3:
         version = href_components[3]
-    return resource_referenced, localID, namespace, version
+    return resource_type, localID, namespace, version
 
 
 
@@ -99,8 +99,9 @@ def validate_xml_xlink_hrefs_for_xml(xml_file_parsed):
     hrefs = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
     if (len(hrefs) > 0):
         for href in hrefs:
-            xlink_reference =  get_resource_from_xlink_href_components (href)
-            if not xlink_reference:
+            resource_type, localID, namespace, version  = get_components_from_xlink_href(href)
+            referenced_resource_registered = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
+            if not referenced_resource_registered :
                 unregistered_resource_hrefs.append(href)
     
     return unregistered_resource_hrefs
