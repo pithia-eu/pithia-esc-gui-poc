@@ -81,32 +81,32 @@ def convert_xml_file_to_dictionary(xml_file):
 def add_dictionary_to_mongodb_collection(dictionary, collection_name):
     return db[collection_name].insert_one(dictionary)
 
-def convert_and_upload_xml_file(xml_file, type):
+def convert_and_upload_xml_file(xml_file, resource_type):
     xml_as_dict = convert_xml_file_to_dictionary(xml_file)
     # Remove the top-level tag
     xml_as_dict = xml_as_dict[(list(xml_as_dict)[0])]
-    if type == ACQUISITION:
+    if resource_type  == ACQUISITION:
         format_acquisition_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, ACQUISITION_COLLECTION)
-    elif type == COMPUTATION:
+    elif resource_type  == COMPUTATION:
         format_computation_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, COMPUTATION_COLLECTION)
-    elif type == DATA_COLLECTION:
+    elif resource_type  == DATA_COLLECTION:
         format_data_collection_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, DATA_COLLECTION_COLLECTION)
-    elif type == INDIVIDUAL:
+    elif resource_type  == INDIVIDUAL:
         return add_dictionary_to_mongodb_collection(xml_as_dict, INDIVIDUAL_COLLECTION)
-    elif type == INSTRUMENT:
+    elif resource_type  == INSTRUMENT:
         return add_dictionary_to_mongodb_collection(xml_as_dict, INSTRUMENT_COLLECTION)
-    elif type == OPERATION:
+    elif resource_type  == OPERATION:
         return add_dictionary_to_mongodb_collection(xml_as_dict, OPERATION_COLLECTION)
-    elif type == ORGANISATION:
+    elif resource_type  == ORGANISATION:
         return add_dictionary_to_mongodb_collection(xml_as_dict, ORGANISATION_COLLECTION)
-    elif type == PLATFORM:
+    elif resource_type  == PLATFORM:
         return add_dictionary_to_mongodb_collection(xml_as_dict, PLATFORM_COLLECTION)
-    elif type == PROCESS:
+    elif resource_type  == PROCESS:
         format_process_dictionary(xml_as_dict)
         return add_dictionary_to_mongodb_collection(xml_as_dict, PROCESS_COLLECTION)
-    elif type == PROJECT:
+    elif resource_type  == PROJECT:
         return add_dictionary_to_mongodb_collection(xml_as_dict, PROJECT_COLLECTION)
-    return 'Metadata type not supported.'
+    return 'Resource type not supported.'
