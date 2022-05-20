@@ -32,19 +32,32 @@ def validate_xml_file_by_resource_type(request, resource_type):
         schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
         # 3: Relation validaiton (whether a resource the metadata file
         # is referencing exists in the database or not).
-        unregistered_resource_hrefs = validation.validate_xml_xlink_hrefs_for_xml(xml_file_parsed)
-        if len(unregistered_resource_hrefs) > 0:
-            raise UnregisteredXlinkHrefsException('Unregistered resource IRIs: %s.' % ', '.join(unregistered_resource_hrefs))
+        unregistered_referenced_resource_hrefs, unregistered_referenced_resource_types = validation.get_unregistered_referenced_resources_from_xml(xml_file_parsed)
+        if len(unregistered_referenced_resource_hrefs) > 0:
+            err_class = type(UnregisteredXlinkHrefsException)
+            response_body = {
+                'error': {
+                    'type': str(err_class),
+                    'message': 'Unregistered resource IRIs: %s.' % ', '.join(unregistered_referenced_resource_hrefs),
+                    'extra_details': {}
+                }
+            }
+            response_body['error']['extra_details']['unregistered_referenced_resource_types'] = unregistered_referenced_resource_types
+            response_body_json = json.dumps(response_body)
+            return HttpResponse(response_body_json, status=422, content_type='application/json')
     except BaseException as err:
         print(traceback.format_exc())
         err_class = type(err)
-        response_body = json.dumps({
-            'errorType': str(err_class),
-            'error': str(err)
-        })
-        if err_class == etree.DocumentInvalid or err_class == etree.XMLSyntaxError or err_class == UnregisteredXlinkHrefsException:
-            return HttpResponse(response_body, status=422, content_type='application/json')
-        return HttpResponseServerError(response_body, content_type='application/json')
+        response_body = {
+            'error': {
+                'type': str(err_class),
+                'message': str(err),
+            }
+        }
+        response_body_json = json.dumps(response_body)
+        if err_class == etree.DocumentInvalid or err_class == etree.XMLSyntaxError:
+            return HttpResponse(response_body_json, status=422, content_type='application/json')
+        return HttpResponseServerError(response_body_json, content_type='application/json')
     return HttpResponse(json.dumps({
         'result': schema_validation_result
     }), content_type='application/json')
