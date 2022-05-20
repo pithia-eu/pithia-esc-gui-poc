@@ -44,11 +44,11 @@ async function validateXmlFile(file) {
     const responseContent = await response.json();
     if (!response.ok) {
         return {
-            state: responseContent.errorType,
-            error: responseContent.error
+            state: responseContent.error.type,
+            error: responseContent.error.message,
+            error_details: response.error.extra_details,
         };
     }
-    const state = (responseContent.result) ? xmlValidationStates.VALID : xmlValidationStates.INVALID_SEMANTICS;
     return {
         state: state
     };
@@ -117,6 +117,9 @@ async function handleFileUpload(fileInput, listElem) {
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (validationResults.error) {
             updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
+        }
+        if (validationResults.extra_details) {
+            
         }
     }
 }
