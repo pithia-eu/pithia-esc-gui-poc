@@ -93,15 +93,17 @@ def get_components_from_xlink_href(href):
 
 
 
-def validate_xml_xlink_hrefs_for_xml(xml_file_parsed):
-    unregistered_resource_hrefs = []
+def get_unregistered_referenced_resources_from_xml(xml_file_parsed):
+    unregistered_referenced_resource_hrefs = []
+    unregistered_referenced_resource_types = set()
     parent = xml_file_parsed.getroot()
     hrefs = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
     if (len(hrefs) > 0):
         for href in hrefs:
             resource_type, localID, namespace, version  = get_components_from_xlink_href(href)
-            referenced_resource_registered = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
-            if not referenced_resource_registered :
-                unregistered_resource_hrefs.append(href)
+            referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
+            if not referenced_resource:
+                unregistered_referenced_resource_hrefs.append(href)
+                unregistered_referenced_resource_types.add(resource_type)
     
-    return unregistered_resource_hrefs
+    return unregistered_referenced_resource_hrefs, list(unregistered_referenced_resource_types)
