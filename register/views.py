@@ -34,7 +34,7 @@ def validate_xml_file_by_resource_type(request, resource_type):
         # is referencing exists in the database or not).
         unregistered_referenced_resource_hrefs, unregistered_referenced_resource_types = validation.get_unregistered_referenced_resources_from_xml(xml_file_parsed)
         if len(unregistered_referenced_resource_hrefs) > 0:
-            err_class = type(UnregisteredXlinkHrefsException)
+            err_class = UnregisteredXlinkHrefsException
             response_body = {
                 'error': {
                     'type': str(err_class),
@@ -52,6 +52,7 @@ def validate_xml_file_by_resource_type(request, resource_type):
             'error': {
                 'type': str(err_class),
                 'message': str(err),
+                'extra_details': {}
             }
         }
         response_body_json = json.dumps(response_body)
