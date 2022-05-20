@@ -6,22 +6,20 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
-function listUploadedFiles(files, listElem) {
-    listElem.innerHTML = "";
-    files.forEach((file, i) => {
-        listElem.append(htmlToElement(
-            `<li class="list-group-item">
-                <div class="row g-lg-4 g-sm-2 py-2">
-                    <div class="col-lg-12">
-                        <div class="file-validation-status">
-                        </div>
-                        <div class="file-validation-error mt-4">
-                        </div>
-                    </div>
+function loadFileValidationElems(file, containerElem) {
+    containerElem.innerHTML = "";
+    return containerElem.append(htmlToElement(`
+        <div class="row g-lg-4 g-sm-2">
+            <div class="col-lg-12">
+                <div class="file-validation-status">
                 </div>
-            </li>`
-        ));
-    });
+            </div>
+            <div class="col-lg-12">
+                <div class="file-validation-error">
+                </div>
+            </div>
+        </div>
+    `));
 }
 
 const xmlValidationStates =  {
@@ -43,14 +41,15 @@ async function validateXmlFile(file) {
     });
     const responseContent = await response.json();
     if (!response.ok) {
+        console.log(responseContent);
         return {
             state: responseContent.error.type,
             error: responseContent.error.message,
-            error_details: response.error.extra_details,
+            extra_details: responseContent.error.extra_details,
         };
     }
     return {
-        state: state
+        state: responseContent.result
     };
 }
 
@@ -66,7 +65,7 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <span class="text-muted">Validating...</span>
+            <span class="text-muted">Validating metadata</span>
         `;
     } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
@@ -98,43 +97,57 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
 }
 
 function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
-    errorMsgElem.innerHTML = `
-        <div class="alert alert-danger">
+    return errorMsgElem.innerHTML = `
+        <div class="alert alert-danger mb-0" role="alert">
             Error: ${errorMsg}
         </div>
     `;
 }
 
-async function handleFileUpload(fileInput, listElem) {
-    const files = Array.from(fileInput.files);
-    listUploadedFiles(files, listElem);
+function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
+    const extraDetailsMessage = htmlToElement('<div class="mt-5">Please register the following resources referenced in the submitted metadata file:</div>');
+    const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
+    unregisteredReferencedResourceTypes.forEach(resourceType => {
+        registrationLinksList.appendChild(htmlToElement(`
+            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)}</a></li>
+        `));
+    });
+    registrationLinksElem.append(extraDetailsMessage);
+    return registrationLinksElem.append(registrationLinksList);
+}
+
+async function handleFileUpload(fileInput, containerElem) {
+    const file = Array.from(fileInput.files)[0];
+    loadFileValidationElems(file, containerElem);
     const validationStatusElem = document.querySelector(".file-validation-status");
     const validationStatusErrorElem = document.querySelector(".file-validation-error");
     
-    for (const file of files) {
-        updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem);
-        const validationResults = await validateXmlFile(file);
-        updateXMLFileValidationStatus(validationResults, validationStatusElem);
-        if (validationResults.error) {
-            updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
-        }
-        if (validationResults.extra_details) {
-            
-        }
+    updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem);
+    const validationResults = await validateXmlFile(file);
+    updateXMLFileValidationStatus(validationResults, validationStatusElem);
+    if (validationResults.error) {
+        updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
+    }
+    if (!validationResults.extra_details) {
+        return;
+    }
+    if (validationResults.extra_details.unregistered_referenced_resource_types) {
+        const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
+        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_referenced_resource_types, metadataRegistrationLinksElem);
     }
 }
 
 const fileInput = document.getElementById("id_file");
-const uploadedFilesList = document.querySelector(".list-uploaded-files");
+const fileValidationStatusElem = document.querySelector(".card-file-validation-status .file-validation-status-container");
 
 fileInput.addEventListener("change", async event => {
-    await handleFileUpload(fileInput, uploadedFilesList);
+    await handleFileUpload(fileInput, fileValidationStatusElem);
 });
 
 document.getElementById("register-script").addEventListener("load", async event => {
     if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
-        await handleFileUpload(fileInput, uploadedFilesList);
+        await handleFileUpload(fileInput, fileValidationStatusElem);
     }
 });
