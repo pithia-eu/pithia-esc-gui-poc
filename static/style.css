@@ -7,7 +7,12 @@ section {
     padding: 1rem 0;
 }
 
-a {
+.breadcrumb-item a,
+.accordion-button a,
+header .nav-link,
+.card-menu a,
+.list-group-item > a,
+.pithia-blue {
     text-decoration: none;
     color: var(--pithia-blue) !important;
 }
@@ -111,16 +116,6 @@ h1 {
 .metadata-file-for-reg-name {
     font-size: 1.1rem;
     font-style: italic;
-}
-
-.list-uploaded-files .file-icon {
-    height: 1.5rem;
-}
-
-.list-uploaded-files .file-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 #upload-form label {
