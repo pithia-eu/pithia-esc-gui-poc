@@ -26,59 +26,87 @@
         </h1>
     </div>
 </div>
-<div class="row flex-wrap-reverse g-3">
+<div class="row gy-3">
     <div class="col-xl-9 col-lg-8">
-        <form action="{% url 'register:resource_metadata_upload' resource_type %}" method="post" enctype="multipart/form-data" id="upload-form" class="row gy-3">
+        <div class="row gy-3">
             <div class="col-12">
-                {% if messages %}
-                <div class="registration-alerts">
-                    {% for message in messages %}
-                    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="d-flex flex-column align-items-start flex-fill bg-primary bg-opacity-10 rounded-3 p-4">
-                    {{ form.file.errors }}
-                    {{ form.file.label_tag }}
-                    {{ form.file }}
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        {% csrf_token %}
-                        <ul class="list-group list-uploaded-files pe-0">
-                            <li class="list-group-item text-center py-4">
-                                <p class="mb-0">Validation status will be displayed here upon selecting a file for upload.</p>
-                            </li>
-                        </ul>
-                        <div class="text-md-center text-center mt-3">
-                            <button type="submit" class="btn btn-primary">Register</button>
+                <div class="accordion" id="accordion-help">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-information">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse-information" aria-expanded="true" aria-controls="collapse-information">
+                                <img src="{% static "info.svg" %}" alt="Info" class="me-2">
+                                Information
+                            </button>
+                        </h2>
+                        <div id="collapse-information" class="accordion-collapse collapse show" aria-labelledby="heading-information" data-bs-parent="#accordion-help">
+                            <div class="accordion-body">
+                                <p class="mb-0">
+                                    Resources can be registered with the e-Science Centre by uploading their metadata files, in XML format.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+            <div class="col-12">
+                <form action="{% url 'register:resource_metadata_upload' resource_type %}" method="post" enctype="multipart/form-data" id="upload-form" class="row gy-3">
+                    {% csrf_token %}
+                    <div class="col-12">
+                        {% if messages %}
+                        <div class="registration-alerts">
+                            {% for message in messages %}
+                            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-4">
+                            <div class="row gy-3 align-items-lg-end align-items-center">
+                                <div class="col-xl-10 col-lg-9">
+                                    {{ form.file.errors }}
+                                    {{ form.file.label_tag }}
+                                    {{ form.file }}
+                                </div>
+                                <div class="col-xl-2 col-lg-3">
+                                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card card-file-validation-status">
+                            <div class="card-header">
+                                Metadata validation status
+                            </div>
+                            <div class="card-body">
+                                <div class="file-validation-status-container">
+                                    The status will be updated upon selecting a file for upload.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="col-xl-3 col-lg-4">
-        <div class="accordion" id="accordion-help">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="heading-information">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse-information" aria-expanded="true" aria-controls="collapse-information">
-                        <img src="{% static "info.svg" %}" alt="Info" class="me-2">
-                        Information
-                    </button>
-                </h2>
-                <div id="collapse-information" class="accordion-collapse collapse show" aria-labelledby="heading-information" data-bs-parent="#accordion-help">
-                    <div class="accordion-body">
-                        <p class="mb-0">
-                            Resources can be registered with the e-Science Centre by uploading their metadata files, in XML format.
-                        </p>
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <b class="text-secondary">Register other resources:</b>
+                <ul class="mt-3 mb-0">
+                    <li><a href="{% url 'register:resource_metadata_upload' 'organisation' %}" class="pithia-blue">Organisation</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'individual' %}" class="pithia-blue">Individual</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'project' %}" class="pithia-blue">Project</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'platform' %}" class="pithia-blue">Platform</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'operation' %}" class="pithia-blue">Operation</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'instrument' %}" class="pithia-blue">Instrument</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'acquisition' %}" class="pithia-blue">Acquisition</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'computation' %}" class="pithia-blue">Computation</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'process' %}" class="pithia-blue">Process</a></li>
+                    <li><a href="{% url 'register:resource_metadata_upload' 'data-collection' %}" class="pithia-blue">Model or Measurement</a></li>
+                </ul>
             </div>
         </div>
     </div>
