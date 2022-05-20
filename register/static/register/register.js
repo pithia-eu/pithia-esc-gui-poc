@@ -41,7 +41,6 @@ async function validateXmlFile(file) {
     });
     const responseContent = await response.json();
     if (!response.ok) {
-        console.log(responseContent);
         return {
             state: responseContent.error.type,
             error: responseContent.error.message,
@@ -105,11 +104,11 @@ function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
 }
 
 function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
-    const extraDetailsMessage = htmlToElement('<div class="mt-5">Please register the following resources referenced in the submitted metadata file:</div>');
+    const extraDetailsMessage = htmlToElement('<div class="mt-5">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
     const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
     unregisteredReferencedResourceTypes.forEach(resourceType => {
         registrationLinksList.appendChild(htmlToElement(`
-            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)}</a></li>
+            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} Metadata Registration</a></li>
         `));
     });
     registrationLinksElem.append(extraDetailsMessage);
