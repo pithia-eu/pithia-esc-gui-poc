@@ -9,14 +9,10 @@ function htmlToElement(html) {
 function loadFileValidationElems(file, containerElem) {
     containerElem.innerHTML = "";
     return containerElem.append(htmlToElement(`
-        <div class="row g-lg-4 g-sm-2">
-            <div class="col-lg-12">
-                <div class="file-validation-status">
-                </div>
+        <div class="row g-3">
+            <div class="col-lg-12 file-validation-status">
             </div>
-            <div class="col-lg-12">
-                <div class="file-validation-error">
-                </div>
+            <div class="col-lg-12 file-validation-error d-none">
             </div>
         </div>
     `));
@@ -52,10 +48,10 @@ async function validateXmlFile(file) {
     };
 }
 
-function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
+function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validatingStatusMsg) {
     const statusElemContent = htmlToElement(`
-    <div class="d-flex align-items-center">
-    </div>
+        <div class="d-flex align-items-center">
+        </div>
     `);
     if (fileValidationStatus.state === "validating") {
         statusElemContent.innerHTML = `
@@ -64,7 +60,7 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem) {
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <span class="text-muted">Validating metadata</span>
+            <span class="text-muted">${validatingStatusMsg}</span>
         `;
     } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
@@ -115,16 +111,21 @@ function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedRe
     return registrationLinksElem.append(registrationLinksList);
 }
 
+function removeClassNameFromElem(elem, className) {
+    return elem.classList.remove(className);
+}
+
 async function handleFileUpload(fileInput, containerElem) {
     const file = Array.from(fileInput.files)[0];
     loadFileValidationElems(file, containerElem);
     const validationStatusElem = document.querySelector(".file-validation-status");
     const validationStatusErrorElem = document.querySelector(".file-validation-error");
     
-    updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem);
+    updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
     const validationResults = await validateXmlFile(file);
     updateXMLFileValidationStatus(validationResults, validationStatusElem);
     if (validationResults.error) {
+        removeClassNameFromElem(validationStatusErrorElem, "d-none");
         updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
     }
     if (!validationResults.extra_details) {
@@ -137,7 +138,7 @@ async function handleFileUpload(fileInput, containerElem) {
 }
 
 const fileInput = document.getElementById("id_file");
-const fileValidationStatusElem = document.querySelector(".card-file-validation-status .file-validation-status-container");
+const fileValidationStatusElem = document.querySelector(".file-validation-status-container");
 
 fileInput.addEventListener("change", async event => {
     await handleFileUpload(fileInput, fileValidationStatusElem);
