@@ -3,13 +3,13 @@
  * the PITHIA ontology).
  * 
  * The top-level classes from the ontology in this case are "Measurand", "Observed Property",
- * "Phenomenon", "Qualifier".
+ * "Phenomenon", "Feature Of Interest".
  * 
  */
 const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
 const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
 const PHENOMENONS_TREE_CONTAINER_ID = "phenomenons-tree-search-container";
-const QUALIFIERS_TREE_CONTAINER_ID = "qualifiers-tree-search-container";
+const FEATURES_OF_INTEREST_TREE_CONTAINER_ID = "features-of-interest-tree-search-container";
 
 const CHECKBOX_FILTER_CLASS = "filter-no-match";
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
@@ -26,8 +26,8 @@ function getTreeContainerIdFromInitialSearchFormComponentHTML(htmlText) {
         return OBSERVED_PROPERTIES_TREE_CONTAINER_ID;
     } else if (htmlText.includes('name="phenomenons"')) {
         return PHENOMENONS_TREE_CONTAINER_ID;
-    } else if (htmlText.includes('name="qualifiers"')) {
-        return QUALIFIERS_TREE_CONTAINER_ID;
+    } else if (htmlText.includes('name="featuresOfInterest"')) {
+        return FEATURES_OF_INTEREST_TREE_CONTAINER_ID;
     }
     return UNKNOWN;
 }
@@ -35,9 +35,9 @@ function getTreeContainerIdFromInitialSearchFormComponentHTML(htmlText) {
 function getHTMLDatasetNameFromTreeContainerId(treeContainerId) {
     switch (treeContainerId) {
         case MEASURANDS_TREE_CONTAINER_ID: return "measurands";
-        case OBSERVED_PROPERTIES_TREE_CONTAINER_ID: return "observed-properties";
+        case OBSERVED_PROPERTIES_TREE_CONTAINER_ID: return "observedProperties";
         case PHENOMENONS_TREE_CONTAINER_ID: return "phenomenons";
-        case QUALIFIERS_TREE_CONTAINER_ID: return "qualifiers";
+        case FEATURES_OF_INTEREST_TREE_CONTAINER_ID: return "featuresOfInterest";
         default: UNKNOWN;
     }
 }
@@ -149,7 +149,7 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
     
     if (searchBoxInput === "") {
-        const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerIdToFilter);
+        const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
         removeFilterClassesFromLiNodes([SEARCH_BOX_INPUT_FILTER_CLASS], hiddenLisForTreeContainer);
     } else {
         const liNodesToShow = [], liNodesToHide = [];
@@ -293,11 +293,11 @@ async function loadSearchFormComponents() {
             console.error(error);
         });
 
-    fetch("/search/templates/form/component/qualifier/", fetchParams)
+    fetch("/search/templates/form/component/featureOfInterest/", fetchParams)
         .then(parseResponseText)
         .then(loadSearchFormComponent)
         .catch (error => {
-            console.error("Unable to load qualifier checkboxes");
+            console.error("Unable to load feature of interest checkboxes");
             console.error(error);
         });
 }
@@ -311,7 +311,7 @@ document.getElementById("search-script").addEventListener("load", async event =>
             MEASURANDS_TREE_CONTAINER_ID,
             OBSERVED_PROPERTIES_TREE_CONTAINER_ID,
             PHENOMENONS_TREE_CONTAINER_ID,
-            QUALIFIERS_TREE_CONTAINER_ID,
+            FEATURES_OF_INTEREST_TREE_CONTAINER_ID,
         ];
         for (const treeContainerId in treeContainerIds) {
             setTreeContainerSelectionById(treeContainerId, false);

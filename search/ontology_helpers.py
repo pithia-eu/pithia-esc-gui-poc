@@ -13,16 +13,16 @@ def get_object_names_from_triple(triple):
         return o.replace(f'{ESPAS_ONTOLOGY_URL}phenomenon/', 'phenomenon')
     if 'measurand' in o:
         return o.replace(f'{ESPAS_ONTOLOGY_URL}measurand/', 'measurand')
-    if 'qualifier' in o:
-        return o.replace(f'{ESPAS_ONTOLOGY_URL}qualifier/', 'qualifier')
+    if 'featureOfInterest' in o:
+        return o.replace(f'{ESPAS_ONTOLOGY_URL}featureOfInterest/', 'featureOfInterest')
 
-def add_phenomenons_qualifiers_and_measurands_to_op(op_uri, op_dict, g):
+def add_phenomenons_featuresOfInterest_and_measurands_to_op(op_uri, op_dict, g):
     op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.phenomenon, None))))
     op_measurands = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.measurand, None))))
-    op_qualifiers = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.qualifier, None))))
+    op_featuresOfInterest = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.featureOfInterest, None))))
     op_dict['phenomenons'] = op_phenomenons
     op_dict['measurands'] = op_measurands
-    op_dict['qualifiers'] = op_qualifiers
+    op_dict['featuresOfInterest'] = op_featuresOfInterest
     return op_dict
 
 def nested_list_from_ontology_component(ontology_component):
@@ -74,7 +74,7 @@ def nested_list_from_ontology_component(ontology_component):
                 'narrowers': {},
             }
             if ontology_component == 'observedProperty':
-                nested_list[o_value] = add_phenomenons_qualifiers_and_measurands_to_op(o, nested_list[o_value], g)
+                nested_list[o_value] = add_phenomenons_featuresOfInterest_and_measurands_to_op(o, nested_list[o_value], g)
 
         # Add to the broader value's dictionary by putting in a narrower
         # value as a key and setting its value to '1'.
@@ -86,7 +86,7 @@ def nested_list_from_ontology_component(ontology_component):
             'narrowers': {},
         }
         if ontology_component == 'observedProperty':
-            nested_list[o_value]['narrowers'][s_value] = add_phenomenons_qualifiers_and_measurands_to_op(s, nested_list[o_value]['narrowers'][s_value], g)
+            nested_list[o_value]['narrowers'][s_value] = add_phenomenons_featuresOfInterest_and_measurands_to_op(s, nested_list[o_value]['narrowers'][s_value], g)
 
     keys_to_remove_at_top_level = []
     for key in nested_list:

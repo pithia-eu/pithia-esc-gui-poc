@@ -4,7 +4,7 @@ ONTOLOGY_COMPONENT_ENUMS = {
     'measurand': 'measurands',
     'observedProperty': 'observed_properties',
     'phenomenon': 'phenomenons',
-    'qualifier': 'qualifiers'
+    'featureOfInterest': 'featuresOfInterest'
 }
 
 def convert_list_to_regex_list(list):

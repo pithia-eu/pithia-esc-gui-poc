@@ -32,13 +32,13 @@
                     <legend class="accordion-header" id="heading-one">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
-                            Phenomenon
+                            Feature Of Interest
                         </button>
                     </legend>
                     <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="phenomenons" %}
+                            {% with ontology_component="features-of-interest" %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
@@ -48,13 +48,13 @@
                     <legend class="accordion-header" id="heading-two">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
-                            Measurand
+                            Phenomenon
                         </button>
                     </legend>
                     <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="measurands" %}
+                            {% with ontology_component="phenomenons" %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
@@ -64,13 +64,13 @@
                     <legend class="accordion-header" id="heading-three">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse-three" aria-expanded="false" aria-controls="collapse-three">
-                            Qualifier
+                            Measurand
                         </button>
                     </legend>
                     <div id="collapse-three" class="accordion-collapse collapse" aria-labelledby="heading-three"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="qualifiers" %}
+                            {% with ontology_component="measurands" %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>

@@ -3,5 +3,5 @@
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}"
     {% if node.phenomenons %}data-phenomenons="{{ node.phenomenons|join:" " }}"{% endif %}
     {% if node.measurands %}data-measurands="{{ node.measurands|join:" " }}"{% endif %}
-    {% if node.qualifiers %}data-qualifiers="{{ node.qualifiers|join:" " }}"{% endif %}>
+    {% if node.featuresOfInterest %}data-features-of-interest="{{ node.featuresOfInterest|join:" " }}"{% endif %}>
 <label for="{{ node.id }}">{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
