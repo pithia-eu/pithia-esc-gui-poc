@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .helpers import convert_list_to_regex_list, ONTOLOGY_COMPONENT_ENUMS
+from .helpers import ONTOLOGY_COMPONENT_ENUMS
 from .ontology_helpers import nested_list_from_ontology_component
 from .search_helpers import find_matching_observation_collections
 
