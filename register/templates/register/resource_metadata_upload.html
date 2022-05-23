@@ -14,7 +14,7 @@
 {% endblock scripts %}
 {% block content %}
 <div class="row pb-4">
-    <div class="col-lg-8">
+    <div class="col-xl-9 col-lg-8">
         <h1>
         {% if resource_type == 'data-collection' %}
         Register a Model or Measurement
@@ -28,11 +28,9 @@
 </div>
 <div class="row gy-3">
     <div class="col-xl-9 col-lg-8">
-        <h2>XML File Upload</h2>
-    </div>
-    <div class="col-xl-9 col-lg-8">
         <div class="row gy-3">
-            <div class="col-12">
+            <div class="col-lg-8 col-12">
+                <h2 class="mb-3">XML File Upload</h2>
                 {% if messages %}
                 <div class="registration-alerts">
                     {% for message in messages %}
@@ -42,32 +40,30 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <div class="card">
-                    <div class="card-body">
-                        <form action="{% url 'register:resource_metadata_upload' resource_type %}" method="post" enctype="multipart/form-data" id="upload-form">
-                            {% csrf_token %}
-                            <div class="row gy-3 align-items-lg-end align-items-center">
-                                <div class="col-xl-10 col-lg-9">
-                                    {% if form.file.errors %}
-                                        <ul>
-                                        {% for error in form.file.errors %}
-                                            <li>{{ error|escape }}</li>
-                                        {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                    <strong>{{ form.file.label_tag }}</strong>
-                                    {{ form.file }}
-                                </div>
-                                <div class="col-xl-2 col-lg-3">
-                                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="mt-4">XML validation status:</div>
-                        <div class="file-validation-status-container mt-2">
-                            The status will be updated upon selecting a file for upload.
+                <form action="{% url 'register:resource_metadata_upload' resource_type %}" method="post" enctype="multipart/form-data" id="upload-form">
+                    {% csrf_token %}
+                    <div class="row gy-3 align-items-lg-end align-items-center">
+                        <div class="col-xl-10 col-lg-9">
+                            {% if form.file.errors %}
+                                <ul>
+                                {% for error in form.file.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <strong>{{ form.file.label_tag }}</strong>
+                            {{ form.file }}
+                        </div>
+                        <div class="col-xl-2 col-lg-3">
+                            <button type="submit" class="btn btn-primary w-100">Register</button>
                         </div>
                     </div>
+                </form>
+            </div>
+            <div class="col-12">
+                <div class="mt-1">XML validation status:</div>
+                <div class="file-validation-status-container mt-2">
+                    The status will be updated upon selecting a file for upload.
                 </div>
             </div>
         </div>
