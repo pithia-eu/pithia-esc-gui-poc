@@ -19,6 +19,15 @@ def index(request):
         'title': 'Register Models & Measurements',
     })
 
+def create_error_response_body(err_class, err_message, err_extra_details):
+    return {
+        'error': {
+            'type': str(err_class),
+            'message': err_message,
+            'extra_details': err_extra_details
+        }
+    }
+
 def validate_xml_file_by_resource_type(request, resource_type):
     if request.method != 'POST':
         return Http404
@@ -36,27 +45,22 @@ def validate_xml_file_by_resource_type(request, resource_type):
         # is referencing exists in the database or not).
         unregistered_referenced_resource_hrefs, unregistered_referenced_resource_types = validation.get_unregistered_referenced_resources_from_xml(xml_file_parsed)
         if len(unregistered_referenced_resource_hrefs) > 0:
+            # "Exception" is handled here to be able to pass more
+            # information to the error response body.
             err_class = UnregisteredXlinkHrefsException
-            response_body = {
-                'error': {
-                    'type': str(err_class),
-                    'message': 'Unregistered resource IRIs: %s.' % ', '.join(unregistered_referenced_resource_hrefs),
-                    'extra_details': {}
+            response_body = create_error_response_body(
+                err_class,
+                'Unregistered resource IRIs: %s.' % ', '.join(unregistered_referenced_resource_hrefs),
+                {
+                    'unregistered_referenced_resource_types': unregistered_referenced_resource_types
                 }
-            }
-            response_body['error']['extra_details']['unregistered_referenced_resource_types'] = unregistered_referenced_resource_types
+            )
             response_body_json = json.dumps(response_body)
             return HttpResponse(response_body_json, status=422, content_type='application/json')
     except BaseException as err:
         print(traceback.format_exc())
         err_class = type(err)
-        response_body = {
-            'error': {
-                'type': str(err_class),
-                'message': str(err),
-                'extra_details': {}
-            }
-        }
+        response_body = create_error_response_body(err_class, str(err), {})
         response_body_json = json.dumps(response_body)
         if err_class == etree.DocumentInvalid or err_class == etree.XMLSyntaxError:
             return HttpResponse(response_body_json, status=422, content_type='application/json')
