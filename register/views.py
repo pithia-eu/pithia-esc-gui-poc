@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from register import validation
-from register.exceptions import UnregisteredXlinkHrefsException
+from register.exceptions import MetadataFileNotForResourceTypeException, UnregisteredXlinkHrefsException
 
 from .forms import UploadFileForm
 from .resource_metadata_upload import convert_and_upload_xml_file
@@ -38,6 +38,8 @@ def validate_xml_file_by_resource_type(request, resource_type):
         xml_file_parsed = validation.parse_xml_file(xml_file)
         # Resource type validation
         is_xml_matching_resource_type = validation.validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
+        if not is_xml_matching_resource_type:
+            raise MetadataFileNotForResourceTypeException("The metadata file does not match the type of resource being registered.")
         # XML Schema Definition validation
         xml_schema_for_type_file_path = validation.get_xml_schema_file_path_for_resource_type(resource_type)
         schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
