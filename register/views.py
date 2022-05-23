@@ -25,12 +25,14 @@ def validate_xml_file_by_resource_type(request, resource_type):
     # Run three validations on XML file
     xml_file = request.FILES['file']
     try:
-        # 1: Syntax validation (happens whilst parsing the file)
+        # Syntax validation (happens whilst parsing the file)
         xml_file_parsed = validation.parse_xml_file(xml_file)
-        # 2: XML Schema Definition validation
+        # Resource type validation
+        is_xml_matching_resource_type = validation.validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
+        # XML Schema Definition validation
         xml_schema_for_type_file_path = validation.get_xml_schema_file_path_for_resource_type(resource_type)
         schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
-        # 3: Relation validaiton (whether a resource the metadata file
+        # Relation validaiton (whether a resource the metadata file
         # is referencing exists in the database or not).
         unregistered_referenced_resource_hrefs, unregistered_referenced_resource_types = validation.get_unregistered_referenced_resources_from_xml(xml_file_parsed)
         if len(unregistered_referenced_resource_hrefs) > 0:

@@ -58,6 +58,31 @@ def parse_xml_file(xml_file):
     # Returns an ElementTree
     return etree.parse(xml_file)
 
+def validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type):
+    root = xml_file_parsed.getroot()
+    root_localname = etree.QName(root).localname # Get the root tag text without the namespace
+    if resource_type == 'organisation':
+        return root_localname == 'Organisation'
+    elif resource_type == 'individual':
+        return root_localname == 'Individual'
+    elif resource_type == 'project':
+        return root_localname == 'Project'
+    elif resource_type == 'platform':
+        return root_localname == 'Platform'
+    elif resource_type == 'operation':
+        return root_localname == 'Procedure'
+    elif resource_type == 'instrument':
+        return root_localname == 'Instrument'
+    elif resource_type == 'acquisition':
+        return root_localname == 'Acquisition'
+    elif resource_type == 'computation':
+        return root_localname == 'Computation'
+    elif resource_type == 'process':
+        return root_localname == 'Procedure'
+    elif resource_type == 'data-collection':
+        return root_localname == 'Collection'
+    return False
+
 def validate_xml_against_schema(xml_file_parsed, schema_file_path):
     with open(schema_file_path, 'rb') as schema_file:
         schema_file_parsed = etree.parse(schema_file)
