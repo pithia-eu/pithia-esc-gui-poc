@@ -16,7 +16,7 @@ from .resource_metadata_upload import convert_and_upload_xml_file
 # Create your views here.
 def index(request):
     return render(request, 'register/index.html', {
-        'title': 'Register Models & Measurements',
+        'title': 'Resource Metadata Registration',
     })
 
 def create_error_response_body(err_class, err_message, err_extra_details):
@@ -116,7 +116,13 @@ def resource_metadata_upload(request, resource_type):
             return HttpResponseRedirect(reverse('register:resource_metadata_upload', args=[resource_type]))
     else:
         form = UploadFileForm()
+        title = f'Register a {resource_type.capitalize()}'
+        if resource_type[0].lower() in 'aeiou':
+            title = f'Register an {resource_type.capitalize()}'
+        if resource_type.lower() == 'data-collection':
+            title = 'Register a Model or Measurement'
     return render(request, 'register/resource_metadata_upload.html', {
+        'title': title,
         'resource_type': resource_type,
         'form': form
     })

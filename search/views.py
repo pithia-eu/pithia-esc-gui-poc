@@ -15,6 +15,7 @@ def results(request):
     observation_collections = find_matching_observation_collections(request)
 
     return render(request, 'search/results.html', {
+        'title': 'Search results',
         'results': observation_collections
     })
 

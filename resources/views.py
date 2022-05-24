@@ -3,7 +3,9 @@ from mongodb import db
 
 # Create your views here.
 def index(request):
-    return render(request, 'resources/index.html', {})
+    return render(request, 'resources/index.html', {
+        'title': 'Resources'
+    })
 
 def list_resource_namespaces(request, resource_collection_name):
     namespaces = list(db[resource_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
