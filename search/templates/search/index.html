@@ -26,6 +26,18 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
+            <fieldset class="option-row">
+                <legend class="mb-0">
+                    <h2 class="pt-3 pb-2">Observed Properties</h2>
+                </legend>
+                <div class="observed-properties-tree-search-container-wrapper">
+                    {% with ontology_component="observed-properties" %}
+                    {% include "search/ontology_tree_container_template.html" %}
+                    {% endwith %}
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-lg-6">
             <h2 class="pt-3 pb-2">Filter by</h2>
             <div class="accordion" id="accordion-filters">
                 <fieldset class="accordion-item">
@@ -77,18 +89,6 @@
                     </div>
                 </fieldset>
             </div>
-        </div>
-        <div class="col-lg-6">
-            <fieldset class="option-row">
-                <legend class="mb-0">
-                    <h2 class="pt-3 pb-2">Observed Properties</h2>
-                </legend>
-                <div class="observed-properties-tree-search-container-wrapper">
-                    {% with ontology_component="observed-properties" %}
-                    {% include "search/ontology_tree_container_template.html" %}
-                    {% endwith %}
-                </div>
-            </fieldset>
         </div>
     </div>
 </form>
