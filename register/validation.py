@@ -62,25 +62,25 @@ def validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
     root = xml_file_parsed.getroot()
     root_localname = etree.QName(root).localname # Get the root tag text without the namespace
     if resource_type == 'organisation':
-        return root_localname == 'Organisation'
+        return root_localname == 'ESPAS_Organisation'
     elif resource_type == 'individual':
-        return root_localname == 'Individual'
+        return root_localname == 'ESPAS_Individual'
     elif resource_type == 'project':
-        return root_localname == 'Project'
+        return root_localname == 'ESPAS_Project'
     elif resource_type == 'platform':
-        return root_localname == 'Platform'
+        return root_localname == 'ESPAS_Platform'
     elif resource_type == 'operation':
-        return root_localname == 'Procedure'
+        return root_localname == 'ESPAS_Procedure'
     elif resource_type == 'instrument':
-        return root_localname == 'Instrument'
+        return root_localname == 'ESPAS_Instrument'
     elif resource_type == 'acquisition':
-        return root_localname == 'Acquisition'
+        return root_localname == 'ESPAS_Acquisition'
     elif resource_type == 'computation':
-        return root_localname == 'Computation'
+        return root_localname == 'ESPAS_Computation'
     elif resource_type == 'process':
-        return root_localname == 'Procedure'
+        return root_localname == 'ESPAS_Procedure'
     elif resource_type == 'data-collection':
-        return root_localname == 'Collection'
+        return root_localname == 'ESPAS_ObservationCollection'
     return False
 
 def validate_xml_against_schema(xml_file_parsed, schema_file_path):
@@ -104,10 +104,8 @@ def get_resource_from_xlink_href_components(resource_type, localID, namespace, v
     collection_name_for_resource_type = get_mongodb_collection_name_for_resource_type(resource_type)
     return db[collection_name_for_resource_type].find_one(find_dictionary)
 
-def get_components_from_xlink_href(href):
-    ESPAS_RESOURCES_URL = 'http://resources.espas-fp7.eu/' # e.g. # https://resources.pithia.eu/2.2/pithia/organisation/uml/UML/1
-    PITHIA_RESOURCES_URL = 'https://resources.pithia.eu/2.2/pithia/'
-    href = href.replace(ESPAS_RESOURCES_URL, '')
+def get_components_from_xlink_href(href, href_section_to_remove):
+    href = href.replace(href_section_to_remove, '')
     href_components = href.split('/')
     resource_type = href_components[0]
     namespace = href_components[1]
@@ -128,7 +126,7 @@ def get_unregistered_referenced_resources_from_xml(xml_file_parsed):
     for href in hrefs:
         if not 'resources' in href:
             continue
-        resource_type, localID, namespace, version  = get_components_from_xlink_href(href)
+        resource_type, localID, namespace, version  = get_components_from_xlink_href(href, 'http://resources.espas-fp7.eu/')
         referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
         if not referenced_resource:
             unregistered_referenced_resource_hrefs.append(href)
