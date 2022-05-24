@@ -52,6 +52,15 @@ function getEnclosingLiNode(elem) {
     return currentParentNode;
 }
 
+function getParentNodeCheckboxes(checkbox, parentNodeCheckboxes) {
+    const parentNodeCheckbox = document.getElementById(checkbox.dataset.parentNodeInOntology);
+    parentNodeCheckboxes.push(parentNodeCheckbox);
+    if (parentNodeCheckbox.dataset.parentNodeInOntology !== "") {
+        parentNodeCheckboxes = getParentNodeCheckboxes(checkbox, parentNodeCheckboxes);
+    }
+    return parentNodeCheckboxes;
+}
+
 function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
     const siblingNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']`);
     const siblingNodeCheckboxesChecked = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']:checked`);
