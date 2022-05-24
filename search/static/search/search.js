@@ -53,10 +53,16 @@ function getEnclosingLiNode(elem) {
 }
 
 function getParentNodeCheckboxes(checkbox, parentNodeCheckboxes) {
+    if (!parentNodeCheckboxes) {
+        parentNodeCheckboxes = [];
+    }
+    if (checkbox.dataset.parentNodeInOntology === "") {
+        return parentNodeCheckboxes;
+    }
     const parentNodeCheckbox = document.getElementById(checkbox.dataset.parentNodeInOntology);
     parentNodeCheckboxes.push(parentNodeCheckbox);
     if (parentNodeCheckbox.dataset.parentNodeInOntology !== "") {
-        parentNodeCheckboxes = getParentNodeCheckboxes(checkbox, parentNodeCheckboxes);
+        parentNodeCheckboxes = getParentNodeCheckboxes(parentNodeCheckbox, parentNodeCheckboxes);
     }
     return parentNodeCheckboxes;
 }
@@ -142,6 +148,9 @@ function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, 
             const enclosingLiNode = getEnclosingLiNode(checkboxToFilter);
             if (isCheckboxToFilterAndChildrenVisible) {
                 liNodesToShow.push(enclosingLiNode);
+                const parentCheckboxes = getParentNodeCheckboxes(checkboxToFilter);
+                const parentLiNodesToShow = parentCheckboxes.map(checkbox => getEnclosingLiNode(checkbox));
+                liNodesToShow.push(...parentLiNodesToShow);
             } else {
                 liNodesToHide.push(enclosingLiNode);
             }
