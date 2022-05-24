@@ -1,4 +1,5 @@
 import os
+from requests import get
 from mongodb import db
 from lxml import etree
 
@@ -62,26 +63,30 @@ def validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
     root = xml_file_parsed.getroot()
     root_localname = etree.QName(root).localname # Get the root tag text without the namespace
     if resource_type == 'organisation':
-        return root_localname == 'ESPAS_Organisation'
+        expected_root_localname = 'ESPAS_Organisation'
     elif resource_type == 'individual':
-        return root_localname == 'ESPAS_Individual'
+        expected_root_localname = 'ESPAS_Individual'
     elif resource_type == 'project':
-        return root_localname == 'ESPAS_Project'
+        expected_root_localname = 'ESPAS_Project'
     elif resource_type == 'platform':
-        return root_localname == 'ESPAS_Platform'
+        expected_root_localname = 'ESPAS_Platform'
     elif resource_type == 'operation':
-        return root_localname == 'ESPAS_Procedure'
+        expected_root_localname = 'ESPAS_Procedure'
     elif resource_type == 'instrument':
-        return root_localname == 'ESPAS_Instrument'
+        expected_root_localname = 'ESPAS_Instrument'
     elif resource_type == 'acquisition':
-        return root_localname == 'ESPAS_Acquisition'
+        expected_root_localname = 'ESPAS_Acquisition'
     elif resource_type == 'computation':
-        return root_localname == 'ESPAS_Computation'
+        expected_root_localname = 'ESPAS_Computation'
     elif resource_type == 'process':
-        return root_localname == 'ESPAS_Procedure'
+        expected_root_localname = 'ESPAS_Procedure'
     elif resource_type == 'data-collection':
-        return root_localname == 'ESPAS_ObservationCollection'
-    return False
+        expected_root_localname = 'ESPAS_ObservationCollection'
+    return {
+        'root_tag': f'{root_localname}',
+        'expected_root_tag': f'{expected_root_localname}',
+        'is_root_tag_valid': root_localname == expected_root_localname
+    }
 
 def validate_xml_against_schema(xml_file_parsed, schema_file_path):
     with open(schema_file_path, 'rb') as schema_file:
@@ -90,9 +95,11 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_path):
         schema.assertValid(xml_file_parsed)
         return 'valid'
 
-def get_ontology_term_from_xlink_href(href):
+def validate_ontology_component_with_term(component, term_id):
     ESPAS_ONTOLOGY_URL = 'http://ontology.espas-fp7.eu/' # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
-    return
+    print(f'{ESPAS_ONTOLOGY_URL}{component}/{term_id}')
+    ontology_term_response = get(f'{ESPAS_ONTOLOGY_URL}{component}/{term_id}')
+    return ontology_term_response.status_code == 200
 
 def get_resource_from_xlink_href_components(resource_type, localID, namespace, version):
     find_dictionary = {
@@ -106,30 +113,42 @@ def get_resource_from_xlink_href_components(resource_type, localID, namespace, v
 
 def get_components_from_xlink_href(href, href_section_to_remove):
     href = href.replace(href_section_to_remove, '')
-    href_components = href.split('/')
-    resource_type = href_components[0]
-    namespace = href_components[1]
-    localID = href_components[2]
-    if len(href_components) > 3:
-        version = href_components[3]
-    return resource_type, localID, namespace, version
+    return href.split('/')
 
-
-
-def get_unregistered_referenced_resources_from_xml(xml_file_parsed):
-    unregistered_referenced_resource_hrefs = []
-    unregistered_referenced_resource_types = set()
+def get_unregistered_referenced_resources_and_ontology_terms_from_xml(xml_file_parsed):
+    unregistered_resources_and_ontology_terms = {
+        'unregistered_referenced_resource_hrefs': set(),
+        'unregistered_referenced_resource_types': set(),
+        'unregistered_referenced_ontology_term_hrefs': set(),
+    }
     parent = xml_file_parsed.getroot()
     hrefs = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
     if not len(hrefs) > 0:
-        return unregistered_referenced_resource_hrefs, list(unregistered_referenced_resource_types)
+        for key in unregistered_resources_and_ontology_terms:
+            unregistered_resources_and_ontology_terms[key] = list(unregistered_resources_and_ontology_terms[key])
+        return unregistered_resources_and_ontology_terms
     for href in hrefs:
-        if not 'resources' in href:
-            continue
-        resource_type, localID, namespace, version  = get_components_from_xlink_href(href, 'http://resources.espas-fp7.eu/')
-        referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
-        if not referenced_resource:
-            unregistered_referenced_resource_hrefs.append(href)
-            unregistered_referenced_resource_types.add(resource_type)
+        if 'ontology' in href:
+            href_components  = get_components_from_xlink_href(href, 'http://ontology.espas-fp7.eu/')
+            ontology_component = href_components[0]
+            ontology_term_id = href_components[1]
+            is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
+            if not is_valid_ontology_term:
+                unregistered_resources_and_ontology_terms['unregistered_referenced_ontology_term_hrefs'].add(href)
+
+        if 'resources' in href:
+            href_components  = get_components_from_xlink_href(href, 'http://resources.espas-fp7.eu/')
+            resource_type = href_components[0]
+            namespace = href_components[1]
+            localID = href_components[2]
+            version = None
+            if len(href_components) > 3:
+                version = href_components[3]
+            referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
+            if not referenced_resource:
+                unregistered_resources_and_ontology_terms['unregistered_referenced_resource_hrefs'].add(href)
+                unregistered_resources_and_ontology_terms['unregistered_referenced_resource_types'].add(resource_type)
     
-    return unregistered_referenced_resource_hrefs, list(unregistered_referenced_resource_types)
+    for key in unregistered_resources_and_ontology_terms:
+        unregistered_resources_and_ontology_terms[key] = list(unregistered_resources_and_ontology_terms[key])
+    return unregistered_resources_and_ontology_terms

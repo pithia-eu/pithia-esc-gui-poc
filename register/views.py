@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from register import validation
-from register.exceptions import MetadataFileNotForResourceTypeException, UnregisteredXlinkHrefsException
+from register.exceptions import MetadataFileNotForResourceTypeException, XlinkHrefReferencedOntologyTermIsUnregisteredException, XlinkHrefReferencedResourceIsUnregisteredException
 
 from .forms import UploadFileForm
 from .resource_metadata_upload import convert_and_upload_xml_file
@@ -37,19 +37,23 @@ def validate_xml_file_by_resource_type(request, resource_type):
         # Syntax validation (happens whilst parsing the file)
         xml_file_parsed = validation.parse_xml_file(xml_file)
         # Resource type validation
-        is_xml_matching_resource_type = validation.validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
-        if not is_xml_matching_resource_type:
-            raise MetadataFileNotForResourceTypeException("The metadata file does not match the type of resource being registered.")
+        xml_matching_resource_type_validation_details = validation.validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type)
+        if not xml_matching_resource_type_validation_details['is_root_tag_valid']:
+            print(xml_matching_resource_type_validation_details)
+            raise MetadataFileNotForResourceTypeException(f"Expected the metadata file to have a root element name of \"{xml_matching_resource_type_validation_details['expected_root_tag']}\", but got \"{xml_matching_resource_type_validation_details['root_tag']}\".")
         # XML Schema Definition validation
         xml_schema_for_type_file_path = validation.get_xml_schema_file_path_for_resource_type(resource_type)
         schema_validation_result = validation.validate_xml_against_schema(xml_file_parsed, xml_schema_for_type_file_path)
         # Relation validaiton (whether a resource the metadata file
         # is referencing exists in the database or not).
-        unregistered_referenced_resource_hrefs, unregistered_referenced_resource_types = validation.get_unregistered_referenced_resources_from_xml(xml_file_parsed)
+        unregistered_references = validation.get_unregistered_referenced_resources_and_ontology_terms_from_xml(xml_file_parsed)
+        unregistered_referenced_resource_hrefs = unregistered_references['unregistered_referenced_resource_hrefs']
+        unregistered_referenced_resource_types = unregistered_references['unregistered_referenced_resource_types']
+        unregistered_referenced_ontology_term_hrefs = unregistered_references['unregistered_referenced_ontology_term_hrefs']
         if len(unregistered_referenced_resource_hrefs) > 0:
             # "Exception" is handled here to be able to pass more
             # information to the error response body.
-            err_class = UnregisteredXlinkHrefsException
+            err_class = XlinkHrefReferencedResourceIsUnregisteredException
             response_body = create_error_response_body(
                 err_class,
                 'Unregistered resource IRIs: %s.' % ', '.join(unregistered_referenced_resource_hrefs),
@@ -59,6 +63,8 @@ def validate_xml_file_by_resource_type(request, resource_type):
             )
             response_body_json = json.dumps(response_body)
             return HttpResponse(response_body_json, status=422, content_type='application/json')
+        if len(unregistered_referenced_ontology_term_hrefs) > 0:
+            raise XlinkHrefReferencedOntologyTermIsUnregisteredException('Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_referenced_ontology_term_hrefs))
     except BaseException as err:
         print(traceback.format_exc())
         err_class = type(err)
