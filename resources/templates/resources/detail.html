@@ -80,7 +80,11 @@
                         {% for key, value in resource_flattened.items %}
                         <tr>
                             <td>{{ key }}</td>
+                            {% if 'xlink:href' in key %}
+                            <td><a href="{{ value }}" target="_blank">{{ value }}</a></td>
+                            {% else %}
                             <td>{{ value }}</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
