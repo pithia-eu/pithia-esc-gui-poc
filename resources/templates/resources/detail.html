@@ -81,11 +81,6 @@
                         <tr>
                             <td>{{ key }}</td>
                             <td>{{ value|urlize }}</td>
-                            {% comment %} {% if 'xlink:href' in key %}
-                            <td><a href="{{ value }}" target="_blank">{{ value }}</a></td>
-                            {% else %}
-                            <td>{{ value }}</td>
-                            {% endif %} {% endcomment %}
                         </tr>
                         {% endfor %}
                     </tbody>
