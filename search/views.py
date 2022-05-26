@@ -1,13 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
-from .ontology_helpers import nested_list_from_ontology_component
+from .ontology_helpers import create_dictionary_from_pithia_ontology_component
 from .search_helpers import find_matching_observation_collections
 
-def get_checkbox_tree_for_ontology_component(request, ontology_component):
-    nested_list = nested_list_from_ontology_component(ontology_component)
+def get_tree_form_for_ontology_component(request, ontology_component):
+    dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
     return render(request, 'search/ontology_tree_template_outer.html', {
-        'ontology_component': nested_list,
+        'ontology_component': dictionary,
         'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component]
     })
 
