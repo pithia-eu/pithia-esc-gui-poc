@@ -5,7 +5,7 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
-<script src="{% static "search/search.js" %}" id="search-script" defer></script>
+<script type="module" src="{% static "search/opsearch.js" %}" id="search-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
@@ -59,7 +59,7 @@
                 <fieldset class="accordion-item">
                     <legend class="accordion-header" id="heading-two">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-three" aria-expanded="false" aria-controls="collapse-three">
+                            data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
                             Measurand
                         </button>
                     </legend>
