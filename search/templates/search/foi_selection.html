@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Search' %}
+{% endblock breadcrumbs %}
+{% load static %}
+{% block scripts %}
+<script src="{% static "search/search.js" %}" id="search-script" defer></script>
+{% endblock scripts %}
+{% block content %}
+<form action="{% url 'search:index' %}" method="POST" id="search-form">
+    {% csrf_token %}
+    <div class="row gy-4">
+        <div class="col-lg-9">
+            <h1>Search by Observed Properties</h1>
+        </div>
+        <div class="col-lg-3 text-md-end text-center">
+            <button type="button" class="btn btn-light btn-clear me-2">Clear</button>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <fieldset class="option-row">
+                <legend class="mb-0">
+                    <h2 class="pt-3 pb-2">Feature Of Interest</h2>
+                </legend>
+                <div class="observed-properties-tree-search-container-wrapper">
+                    {% with ontology_component="features-of-interest" %}
+                    {% include "search/ontology_tree_container_template.html" %}
+                    {% endwith %}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</form>
+{% endblock content %}
