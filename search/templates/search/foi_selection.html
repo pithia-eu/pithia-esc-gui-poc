@@ -5,14 +5,14 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
-<script src="{% static "search/search.js" %}" id="search-script" defer></script>
+<script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-9">
-            <h1>Search by Observed Properties</h1>
+            <h1>Step 1: Feature of Interest Selection</h1>
         </div>
         <div class="col-lg-3 text-md-end text-center">
             <button type="button" class="btn btn-light btn-clear me-2">Clear</button>
