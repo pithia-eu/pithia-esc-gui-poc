@@ -5,14 +5,14 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
-<script src="{% static "search/search.js" %}" id="search-script" defer></script>
+<script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-9">
-            <h1>Search by Observed Properties</h1>
+            <h1>Step 3: Observed Property Selection</h1>
             <p class="mb-0">
                 Select the Observed Property terms you would like to search for under the
                 <b>Observed Properties</b> heading, and filter these by selecting the terms
