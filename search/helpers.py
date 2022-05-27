@@ -1,10 +1,12 @@
 import re
 
 ONTOLOGY_COMPONENT_ENUMS = {
+    'computationType': 'computationType',
+    'featureOfInterest': 'featuresOfInterest',
+    'instrumentType': 'instrumentType',
     'measurand': 'measurands',
-    'observedProperty': 'observed_properties',
+    'observedProperty': 'observedProperties',
     'phenomenon': 'phenomenons',
-    'featureOfInterest': 'featuresOfInterest'
 }
 
 def convert_list_to_regex_list(list):
