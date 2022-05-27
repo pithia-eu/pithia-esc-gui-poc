@@ -9,7 +9,7 @@ import {
     setupSearchFormComponent
 } from "./search.js";
 
-export const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
+const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
 const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
 const PHENOMENONS_TREE_CONTAINER_ID = "phenomenons-tree-search-container";
 
@@ -35,8 +35,6 @@ async function fetchAndSetupSearchFormComponents() {
         setupDeselectAllButtonForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
         addTreeContainerIdToClearInputsButton(PHENOMENONS_TREE_CONTAINER_ID);
     });
-    return;
-
 }
 
 function getHTMLDatasetNameFromTreeContainerId(treeContainerId) {
@@ -107,6 +105,6 @@ function setupSelectAllButtonForTreeContainerId(treeContainerId) {
 }
 
 
-document.getElementById("search-script").addEventListener("load", async event => {
+document.getElementById("opsearch-script").addEventListener("load", async event => {
     await fetchAndSetupSearchFormComponents();
 });
