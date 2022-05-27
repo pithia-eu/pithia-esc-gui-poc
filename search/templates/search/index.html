@@ -4,76 +4,10 @@
 {% breadcrumb_item_active 'Search' %}
 {% endblock breadcrumbs %}
 {% load static %}
-{% block scripts %}
-<script type="module" src="{% static "search/opsearch.js" %}" id="search-script" defer></script>
-{% endblock scripts %}
 {% block content %}
-<form action="{% url 'search:index' %}" method="POST" id="search-form">
-    {% csrf_token %}
-    <div class="row gy-4">
-        <div class="col-lg-9">
-            <h1>Search by Observed Properties</h1>
-            <p class="mb-0">
-                Select the Observed Property terms you would like to search for under the
-                <b>Observed Properties</b> heading, and filter these by selecting the terms
-                under the <b>Filter by</b> heading.
-            </p>
-        </div>
-        <div class="col-lg-3 text-md-end text-center">
-            <button type="button" class="btn btn-light btn-clear me-2">Clear</button>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <fieldset class="option-row">
-                <legend class="mb-0">
-                    <h2 class="pt-3 pb-2">Observed Properties</h2>
-                </legend>
-                <div class="observed-properties-tree-search-container-wrapper">
-                    {% with ontology_component="observed-properties" %}
-                    {% include "search/ontology_tree_container_template.html" %}
-                    {% endwith %}
-                </div>
-            </fieldset>
-        </div>
-        <div class="col-lg-6">
-            <h2 class="pt-3 pb-2">Filter by</h2>
-            <div class="accordion" id="accordion-filters">
-                <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="heading-one">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
-                            Phenomenon
-                        </button>
-                    </legend>
-                    <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
-                        data-bs-parent="#accordion-filters">
-                        <div class="accordion-body">
-                            {% with ontology_component="phenomenons" %}
-                            {% include "search/ontology_tree_container_template.html" %}
-                            {% endwith %}
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="heading-two">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
-                            Measurand
-                        </button>
-                    </legend>
-                    <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
-                        data-bs-parent="#accordion-filters">
-                        <div class="accordion-body">
-                            {% with ontology_component="measurands" %}
-                            {% include "search/ontology_tree_container_template.html" %}
-                            {% endwith %}
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-</form>
+<ul>
+    <li><a href="{% url 'search:foi_selection' %}">Step 1: Feature of Interest Selection</a></li>
+    <li><a href="{% url 'search:comp_and_instr_type_selection' %}">Step 2: Computation Type & Instrument Type Selection</a></li>
+    <li><a href="{% url 'search:op_selection' %}">Step 3: Observed Property Selection</a></li>
+</ul>
 {% endblock content %}
