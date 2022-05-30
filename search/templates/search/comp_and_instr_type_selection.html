@@ -28,10 +28,10 @@
     <div class="col-lg-3"></div>
 </div>
 <h1>Data Collection Search</h1>
-<h2>Step 2: Computation Type and Instrument Type Selection</h2>
+<h2><span class="text-muted">Step 2:</span> Computation Type and Instrument Type Selection</h2>
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
-    <div class="row">
+    <div class="row gy-4">
         <div class="col-lg-6">
             <fieldset class="option-row">
                 <legend>
@@ -57,10 +57,10 @@
             </fieldset>
         </div>
     </div>
-    <div class="d-flex flex-column align-items-lg-end">
-        <button class="btn btn-light btn-clear mt-2 mb-3" type="button">Clear Input Selection</button>
+    <div class="d-flex flex-column align-items-lg-end my-3">
+        <button class="btn btn-light btn-clear" type="button">Clear Input Selection</button>
     </div>
-    <div class="row gy-3 mt-3">
+    <div class="row gy-3 flex-wrap-reverse mt-3">
         <div class="col-lg-6">
             <div class="d-flex flex-column align-items-lg-start">
                 <a href="{% url 'search:foi_selection' %}" class="btn btn-light" role="button">Back</a>
