@@ -9,9 +9,7 @@ const FEATURES_OF_INTEREST_TREE_CONTAINER_ID = "features-of-interest-tree-search
 
 async function fetchAndSetupFeatureOfInterestForm() {
     const featureOfInterestForm = await fetchSearchFormComponent("featureOfInterest");
-    setupSearchFormComponent(featureOfInterestForm, FEATURES_OF_INTEREST_TREE_CONTAINER_ID, () => {
-        addTreeContainerIdToClearInputsButton(FEATURES_OF_INTEREST_TREE_CONTAINER_ID);
-    });
+    setupSearchFormComponent(featureOfInterestForm, FEATURES_OF_INTEREST_TREE_CONTAINER_ID);
 }
 
 document.getElementById("foisearch-script").addEventListener("load", async event => {

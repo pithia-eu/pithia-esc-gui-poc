@@ -32,13 +32,6 @@
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row">
-        <div class="col-lg-12">
-            <div class="text-end">
-                <button class="btn btn-light btn-clear" type="button">Clear Input Selection</button>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-lg-6">
             <fieldset class="option-row">
                 <legend>
@@ -54,11 +47,9 @@
     </div>
     <div class="row gy-3 mt-3">
         <div class="col-lg-6">
-        </div>
-        <div class="col-lg-6">
-            <div class="d-flex flex-column align-items-lg-end">
+            <div class="d-flex flex-column align-items-lg-start">
                 <a href="{% url 'search:comp_and_instr_type_selection' %}" class="btn btn-light" role="button">Go to Next Step</a>
-                <small class="text-muted text-lg-end text-center">Computation Types and/or Instrument Types</small>
+                <small class="text-muted text-lg-start text-center">Computation Types and/or Instrument Types</small>
             </div>
         </div>
     </div>
