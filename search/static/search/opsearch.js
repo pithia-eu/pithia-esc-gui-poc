@@ -81,7 +81,6 @@ function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, 
 
 function setupObservedPropertiesTreeFilteringForTreeContainerId(treeContainerId) {
     const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
-    console.log(treeContainerId);
     allCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             filterTreeContainerIdByAnotherTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, treeContainerId);
