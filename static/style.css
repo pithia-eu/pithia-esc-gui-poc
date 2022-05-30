@@ -203,6 +203,57 @@ ul.tree ul {
     list-style-type: none;
 }
 
+#search-form-progress {
+    position: relative;
+    /* margin-bottom: 30px; */
+}
+
+#search-form-progress-bar {
+    position: absolute;
+    background: var(--pithia-blue);
+    height: 5px;
+    width: 0%;
+    top: 50%;
+    left: 0;
+}
+
+#search-form-progress-num {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+#search-form-progress-num::before {
+    content: "";
+    background-color: lightgrey;
+    position: absolute;
+    top: calc(50% - 2.5px);
+    left: 5px;
+    height: 5px;
+    width: calc(100% - 10px);
+    z-index: -1;
+}
+
+#search-form-progress-num .step {
+    border: 3px solid lightgrey;
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+    line-height: 1.5rem;
+    text-align: center;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+#search-form-progress-num .step.active {
+    border-color: var(--pithia-blue);
+    background-color: var(--pithia-blue);
+    color: #fff;
+}
+
 /* Search results */
 .search-result-description {
     overflow: hidden;
