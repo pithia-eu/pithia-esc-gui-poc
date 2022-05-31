@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Search' %}
+{% breadcrumb_item 'Search' 'search:index' %}
+{% breadcrumb_item_active 'Step 3: Observed Property Selection' %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
 <script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row gy-3 mb-5">
+<div class="row mb-lg-5 mb-4">
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
-        <div id="search-form-progress">
+        <div id="search-form-progress" class="noselect">
             <div id="search-form-progress-bar"></div>
             <ul id="search-form-progress-num">
                 <li class="step">1</li>
@@ -43,7 +44,7 @@
 <form action="{% url 'search:index' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row gy-4">
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <fieldset class="option-row">
                 <legend>
                     <h3 class="text-muted">Observed Properties</h3>
@@ -55,10 +56,10 @@
                 </div>
             </fieldset>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <fieldset class="option-row">
                 <legend>
-                    <h3 class="text-muted">Filter OPs by</h3>
+                    <h4 class="text-muted">Filter Observed Properties by</h4>
                 </legend>
                 <div class="accordion" id="accordion-filters">
                     <fieldset class="accordion-item">

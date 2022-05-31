@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Search' %}
+{% breadcrumb_item 'Search' 'search:index' %}
+{% breadcrumb_item_active 'Step 1: Feature of Interest Selection' %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
 <script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row gy-3 mb-5">
+<div class="row gy-3 mb-lg-5 mb-4">
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
-        <div id="search-form-progress">
+        <div id="search-form-progress" class="noselect">
             <div id="search-form-progress-bar"></div>
             <ul id="search-form-progress-num">
                 <li class="step active">1</li>
@@ -21,8 +22,8 @@
         </div>
         <div class="d-flex justify-content-between">
             <small>Features of Interest</small>
-            <small class="text-center">Computation Types and/or Instrument Types</small>
-            <small class="text-end">Observed Properties</small>
+            <small class="text-center text-muted">Computation Types and/or Instrument Types</small>
+            <small class="text-end text-muted">Observed Properties</small>
         </div>
     </div>
     <div class="col-lg-3"></div>
@@ -47,7 +48,7 @@
     </div>
     <div class="row gy-3 mt-3">
         <div class="col-lg-6">
-            <div class="d-flex flex-column align-items-lg-start">
+            <div class="d-flex flex-column align-items-lg-start justify-content-center">
                 <a href="{% url 'search:comp_and_instr_type_selection' %}" class="btn btn-primary" role="button">Go to Next Step</a>
                 <small class="text-muted text-lg-start text-center">Computation Types and/or Instrument Types</small>
             </div>

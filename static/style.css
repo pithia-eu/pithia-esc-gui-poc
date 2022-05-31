@@ -203,8 +203,19 @@ ul.tree ul {
     list-style-type: none;
 }
 
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
 #search-form-progress {
     position: relative;
+    pointer-events: none;
+    
     /* margin-bottom: 30px; */
 }
 
@@ -243,7 +254,7 @@ ul.tree ul {
     height: 2rem;
     line-height: 1.5rem;
     text-align: center;
-    background-color: #fff;
+    background-color: white;
     position: relative;
     z-index: 1;
 }
@@ -251,7 +262,7 @@ ul.tree ul {
 #search-form-progress-num .step.active {
     border-color: var(--pithia-blue);
     background-color: var(--pithia-blue);
-    color: #fff;
+    color: white;
 }
 
 /* Search results */
