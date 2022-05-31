@@ -1,9 +1,9 @@
 import re
 
 ONTOLOGY_COMPONENT_ENUMS = {
-    'computationType': 'computationType',
+    'computationType': 'computationTypes',
     'featureOfInterest': 'featuresOfInterest',
-    'instrumentType': 'instrumentType',
+    'instrumentType': 'instrumentTypes',
     'measurand': 'measurands',
     'observedProperty': 'observedProperties',
     'phenomenon': 'phenomenons',
