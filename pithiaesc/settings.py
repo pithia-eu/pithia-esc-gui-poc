@@ -87,16 +87,16 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': env('DB_NAME'),
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': env('MONGODB_CONNECTION_STRING')
-#         }
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': env('DB_NAME'),
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': env('MONGODB_CONNECTION_STRING')
+        }
+    }
+}
 
 
 # Password validation
@@ -143,3 +143,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sessions
+
+SESSION_SAVE_EVERY_REQUEST = True
