@@ -30,7 +30,7 @@
 </div>
 <h1>Data Collection Search</h1>
 <h2><span class="text-muted">Step 2:</span> Computation Type and Instrument Type Selection</h2>
-<form action="{% url 'search:index' %}" method="POST" id="search-form">
+<form action="{% url 'search:comp_and_instr_type_selection' %}" method="POST" id="search-form">
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-6">
@@ -70,7 +70,7 @@
         </div>
         <div class="col-lg-6">
             <div class="d-flex flex-column align-items-lg-end">
-                <a href="{% url 'search:op_selection' %}" class="btn btn-primary" role="button">Go to Next Step</a>
+                <button type="submit" class="btn btn-primary">Go to Next Step</button>
                 <small class="text-muted text-lg-end text-center">Observed Properties</small>
             </div>
         </div>
