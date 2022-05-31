@@ -3,8 +3,8 @@ from .helpers import convert_list_to_regex_list, map_ontology_components_to_loca
 
 def find_matching_observation_collections(request):
     observed_properties = []
-    if 'observed-properties' in request.GET:
-        observed_properties = convert_list_to_regex_list(request.GET['observed-properties'].split(','))
+    if 'observed_properties' in request.session:
+        observed_properties = convert_list_to_regex_list(request.session['observed_properties'])
     # Route is:
     # Acquisition/Computation maps to,
     # Process maps to,

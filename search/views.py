@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component
 from .search_helpers import find_matching_observation_collections
@@ -12,31 +13,35 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     })
 
 def index(request):
-    if request.method == 'POST':
-        observed_properties = request.POST.getlist('observedProperties')
-        query_string = '?'
-        if len(observed_properties) > 0:
-            query_string += f'observed-properties={",".join(observed_properties)}'
-        if query_string == '?':
-            query_string = ''
-
-        return HttpResponseRedirect('/search/results/' + query_string)
-    else:
-        return render(request, 'search/index.html', {
-            'title': 'Search Models & Measurements'
-        })
+    return render(request, 'search/index.html', {
+        'title': 'Search Models & Measurements'
+    })
 
 def foi_selection(request):
+    if request.method == 'POST':
+        features_of_interests = request.POST.getlist('featuresOfInterest')
+        request.session['features_of_interests'] = features_of_interests
+        return HttpResponseRedirect(reverse('search:comp_and_instr_type_selection'))
     return render(request, 'search/foi_selection.html', {
         'title': 'Step 1: Select Features of Interest'
     })
 
 def comp_and_instr_type_selection(request):
+    if request.method == 'POST':
+        computation_types = request.POST.getlist('computationTypes')
+        request.session['computation_types'] = computation_types
+        instrument_types = request.POST.getlist('instrumentTypes')
+        request.session['instrument_types'] = instrument_types
+        return HttpResponseRedirect(reverse('search:op_selection'))
     return render(request, 'search/comp_and_instr_type_selection.html', {
         'title': 'Step 2: Select Computation Types and Instrument Types'
     })
 
 def op_selection(request):
+    if request.method == 'POST':
+        observed_properties = request.POST.getlist('observedProperties')
+        request.session['observed_properties'] = observed_properties
+        return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/op_selection.html', {
         'title': 'Step 3: Select Observed Properties'
     })
