@@ -40,14 +40,24 @@ def get_rdf_text_for_ontology_component(ontology_component):
 
     return ontology_text
 
-
-def create_dictionary_from_pithia_ontology_component(ontology_component):
-    ontology_component_url = f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/'
+def get_graph_of_pithia_ontology_component(ontology_component):
     ontology_text = get_rdf_text_for_ontology_component(ontology_component)
 
     # Create a graph object with rdflib and parse fetched text
     g = Graph()
-    g.parse(data=ontology_text, format='application/rdf+xml')
+    return g.parse(data=ontology_text, format='application/rdf+xml')
+
+def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
+    op_hrefs = []
+    g = get_graph_of_pithia_ontology_component('observedProperty')
+    for s, p, o in g.triples((None, ESPAS.featureOfInterest, None)):
+        if any(x in str(o) for x in features_of_interest):
+            op_hrefs.append(str(s))
+    return op_hrefs
+
+def create_dictionary_from_pithia_ontology_component(ontology_component):
+    ontology_component_url = f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/'
+    g = get_graph_of_pithia_ontology_component(ontology_component)
     SKOS = _SKOS.SKOS
 
     ontology_dictionary = {}
