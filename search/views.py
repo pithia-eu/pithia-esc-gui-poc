@@ -20,7 +20,7 @@ def index(request):
 def foi_selection(request):
     if request.method == 'POST':
         features_of_interests = request.POST.getlist('featuresOfInterest')
-        request.session['features_of_interests'] = features_of_interests
+        request.session['features_of_interest'] = features_of_interests
         return HttpResponseRedirect(reverse('search:comp_and_instr_type_selection'))
     return render(request, 'search/foi_selection.html', {
         'title': 'Step 1: Select Features of Interest'
