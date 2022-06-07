@@ -9,25 +9,6 @@
 <script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row mb-lg-5 mb-4">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <div id="search-form-progress" class="noselect">
-            <div id="search-form-progress-bar"></div>
-            <ul id="search-form-progress-num">
-                <li class="step">1</li>
-                <li class="step">2</li>
-                <li class="step active">3</li>
-            </ul>
-        </div>
-        <div class="d-flex justify-content-between">
-            <small>Features of Interest</small>
-            <small class="text-center">Computation Types and/or Instrument Types</small>
-            <small class="text-end">Observed Properties</small>
-        </div>
-    </div>
-    <div class="col-lg-3"></div>
-</div>
 <h1>Data Collection Search</h1>
 <h2><span class="text-muted">Step 3:</span> Observed Property Selection</h2>
 <div class="row">
@@ -101,14 +82,29 @@
     <div class="d-flex flex-column align-items-lg-end my-3">
         <button class="btn btn-light btn-clear" type="button">Clear Input Selection</button>
     </div>
-    <div class="row gy-3 flex-wrap-reverse mt-3">
-        <div class="col-lg-6">
+    <div class="row gy-3 flex-wrap-reverse mt-5">
+        <div class="col-lg-3">
             <div class="d-flex flex-column align-items-lg-start">
                 <a href="{% url 'search:comp_and_instr_type_selection' %}" class="btn btn-light" role="button">Back</a>
                 <small class="text-muted text-lg-end text-center">Computation Types and/or Instrument Types</small>
             </div>
         </div>
         <div class="col-lg-6">
+            <div id="search-form-progress" class="noselect">
+                <div id="search-form-progress-bar"></div>
+                <ul id="search-form-progress-num">
+                    <li class="step">1</li>
+                    <li class="step">2</li>
+                    <li class="step active">3</li>
+                </ul>
+            </div>
+            <div class="d-flex justify-content-between">
+                <small>Features of Interest</small>
+                <small class="text-center">Computation Types and/or Instrument Types</small>
+                <small class="text-end">Observed Properties</small>
+            </div>
+        </div>
+        <div class="col-lg-3">
             <div class="d-flex flex-column align-items-lg-end">
                 <button type="submit" class="btn btn-primary">Search</button>
                 <small class="text-muted text-lg-end text-center">Search results</small>

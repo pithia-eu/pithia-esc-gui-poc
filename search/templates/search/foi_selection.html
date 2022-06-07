@@ -9,25 +9,6 @@
 <script type="module" src="{% static "search/foisearch.js" %}" id="foisearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row gy-3 mb-lg-5 mb-4">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <div id="search-form-progress" class="noselect">
-            <div id="search-form-progress-bar"></div>
-            <ul id="search-form-progress-num">
-                <li class="step active">1</li>
-                <li class="step">2</li>
-                <li class="step">3</li>
-            </ul>
-        </div>
-        <div class="d-flex justify-content-between">
-            <small>Features of Interest</small>
-            <small class="text-center text-muted">Computation Types and/or Instrument Types</small>
-            <small class="text-end text-muted">Observed Properties</small>
-        </div>
-    </div>
-    <div class="col-lg-3"></div>
-</div>
 <h1>Data Collection Search</h1>
 <h2><span class="text-muted">Step 1:</span> Feature of Interest Selection</h2>
 <form action="{% url 'search:foi_selection' %}" method="POST" id="search-form">
@@ -36,7 +17,7 @@
         <div class="col-lg-6">
             <fieldset class="option-row">
                 <legend>
-                    <h3 class="text-muted">Feature Of Interest</h3>
+                    <h3 class="text-muted">Feature of Interest</h3>
                 </legend>
                 <div class="observed-properties-tree-search-container-wrapper">
                     {% with ontology_component="features-of-interest" %}
@@ -46,9 +27,27 @@
             </fieldset>
         </div>
     </div>
-    <div class="row gy-3 mt-3">
+    <div class="row gy-3 mt-5">
+        <div class="col-lg-3">
+            <span class="text-muted">Start of search process.</span>
+        </div>
         <div class="col-lg-6">
-            <div class="d-flex flex-column align-items-lg-start justify-content-center">
+            <div id="search-form-progress" class="noselect">
+                <div id="search-form-progress-bar"></div>
+                <ul id="search-form-progress-num">
+                    <li class="step active">1</li>
+                    <li class="step">2</li>
+                    <li class="step">3</li>
+                </ul>
+            </div>
+            <div class="d-flex justify-content-between">
+                <small>Features of Interest</small>
+                <small class="text-center text-muted">Computation Types and/or Instrument Types</small>
+                <small class="text-end text-muted">Observed Properties</small>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="d-flex flex-column align-items-lg-end justify-content-center">
                 <button type="submit" class="btn btn-primary">Go to Next Step</button>
                 <small class="text-muted text-lg-start text-center">Computation Types and/or Instrument Types</small>
             </div>
