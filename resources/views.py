@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from mongodb import db
+from register.resource_metadata_upload import ORGANISATION, current_resource_version_collection_names
 
 # Create your views here.
 def index(request):
@@ -7,12 +8,21 @@ def index(request):
         'title': 'Resources'
     })
 
-def list_resource_namespaces(request, resource_collection_name):
-    namespaces = list(db[resource_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
+def render_resource_namespaces_list(request, title, resource_type, namespaces):
     return render(request, 'resources/list_resource_namespaces.html', {
-        'resource_collection_name': resource_collection_name,
+        'title': title,
+        'resource_type': resource_type,
         'namespaces': namespaces,
     })
+
+def list_organisation_namespaces(request):
+    resource_type = ORGANISATION
+    current_organisation_version_collection_name = current_resource_version_collection_names.get(ORGANISATION, None)
+    namespaces = list(db[current_organisation_version_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
+    return render_resource_namespaces_list(request, f'{ORGANISATION} Namespaces', resource_type, namespaces)
+
+def list_resource_namespaces(request, resource_collection_name):
+    namespaces = list(db[resource_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
 
 def list_resources_in_namespace(request, resource_collection_name, namespace):
     resources_list = list(db[resource_collection_name].find({
