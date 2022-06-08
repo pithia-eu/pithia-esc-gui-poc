@@ -13,71 +13,31 @@ COMPUTATION = 'computation'
 PROCESS = 'process'
 DATA_COLLECTION = 'data-collection'
 
-CURRENT_ORGANISATIONS = 'current-organisations'
-CURRENT_INDIVIDUALS = 'current-individuals'
-CURRENT_PROJECTS = 'current-projects'
-CURRENT_PLATFORMS = 'current-platforms'
-CURRENT_INSTRUMENTS = 'current-instruments'
-CURRENT_OPERATIONS = 'current-operations'
-CURRENT_ACQUISITIONS = 'current-acquisitions'
-CURRENT_COMPUTATIONS = 'current-computations'
-CURRENT_PROCESSES = 'current-processes'
-CURRENT_DATA_COLLECTIONS = 'current-data-collections'
+resource_revision_collection_names = {
+    ORGANISATION: 'organisation-revisions',
+    INDIVIDUAL: 'individual-revisions',
+    PROJECT: 'project-revisions',
+    PLATFORM: 'platform-revisions',
+    INSTRUMENT: 'instrument-revisions',
+    OPERATION: 'operation-revisions',
+    ACQUISITION: 'acquisition-revisions',
+    COMPUTATION: 'computation-revisions',
+    PROCESS: 'process-revisions',
+    DATA_COLLECTION: 'data-collection-revisions',
+}
 
-ORGANISATION_REVISIONS = 'organisation-revisions'
-INDIVIDUAL_REVISIONS = 'individual-revisions'
-PROJECT_REVISIONS = 'project-revisions'
-PLATFORM_REVISIONS = 'platform-revisions'
-INSTRUMENT_REVISIONS = 'instrument-revisions'
-OPERATION_REVISIONS = 'operation-revisions'
-ACQUISITION_REVISIONS = 'acquisition-revisions'
-COMPUTATION_REVISIONS = 'computation-revisions'
-PROCESS_REVISIONS = 'processe-revisions'
-DATA_COLLECTION_REVISIONS = 'data-collection-revisions'
-
-ORGANISATION_COLLECTION = 'organisations'
-INDIVIDUAL_COLLECTION = 'individuals'
-PROJECT_COLLECTION = 'projects'
-PLATFORM_COLLECTION = 'platforms'
-INSTRUMENT_COLLECTION = 'instruments'
-OPERATION_COLLECTION = 'operations'
-ACQUISITION_COLLECTION = 'acquisitions'
-COMPUTATION_COLLECTION = 'computations'
-PROCESS_COLLECTION = 'processes'
-DATA_COLLECTION_COLLECTION = 'data-collections'
-
-def get_collection_names_from_resource_type(resource_type):
-    if resource_type  == ACQUISITION:
-        current_resource_version_collection = CURRENT_ACQUISITIONS
-        resource_revisions_collection = ACQUISITION_REVISIONS
-    elif resource_type  == COMPUTATION:
-        current_resource_version_collection = CURRENT_COMPUTATIONS
-        resource_revisions_collection = COMPUTATION_REVISIONS
-    elif resource_type  == DATA_COLLECTION:
-        current_resource_version_collection = CURRENT_DATA_COLLECTIONS
-        resource_revisions_collection = DATA_COLLECTION_REVISIONS
-    elif resource_type  == INDIVIDUAL:
-        current_resource_version_collection = CURRENT_INDIVIDUALS
-        resource_revisions_collection = INDIVIDUAL_REVISIONS
-    elif resource_type  == INSTRUMENT:
-        current_resource_version_collection = CURRENT_INSTRUMENTS
-        resource_revisions_collection = INSTRUMENT_REVISIONS
-    elif resource_type  == OPERATION:
-        current_resource_version_collection = CURRENT_OPERATIONS
-        resource_revisions_collection = OPERATION_REVISIONS
-    elif resource_type  == ORGANISATION:
-        current_resource_version_collection = CURRENT_ORGANISATIONS
-        resource_revisions_collection = ORGANISATION_REVISIONS
-    elif resource_type  == PLATFORM:
-        current_resource_version_collection = CURRENT_PLATFORMS
-        resource_revisions_collection = PLATFORM_REVISIONS
-    elif resource_type  == PROCESS:
-        current_resource_version_collection = CURRENT_PROCESSES
-        resource_revisions_collection = PROCESS_REVISIONS
-    elif resource_type  == PROJECT:
-        current_resource_version_collection = CURRENT_PROJECTS
-        resource_revisions_collection = PROJECT_REVISIONS
-    return current_resource_version_collection or 'unknown', resource_revisions_collection or 'unknown'
+current_resource_version_collection_names = {
+    ORGANISATION: 'current-organisations',
+    INDIVIDUAL: 'current-individuals',
+    PROJECT: 'current-projects',
+    PLATFORM: 'current-platforms',
+    INSTRUMENT: 'current-instruments',
+    OPERATION: 'current-operations',
+    ACQUISITION: 'current-acquisitions',
+    COMPUTATION: 'current-computations',
+    PROCESS: 'current-processes',
+    DATA_COLLECTION: 'current-data-collections',
+}
 
 def format_acquisition_dictionary(dictionary):
     # Check if the 'capability' property is an
@@ -120,22 +80,21 @@ def format_process_dictionary(dictionary):
     return dictionary
 
 # TODO: Replace ESPAS_Identifier with pithia:Identifier
-def copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_version_collection, resource_revisions_collection):
-    current_version_of_resource = db[current_resource_version_collection].find_one({
+def copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_version_collection_name, resource_revisions_collection_name):
+    current_version_of_resource = db[current_resource_version_collection_name].find_one({
         'identifier.ESPAS_Identifier.localID': resource_pithia_identifier['localID'],
         'identifier.ESPAS_Identifier.namespace': resource_pithia_identifier['namespace'],
     })
-    print(current_version_of_resource)
     if not current_version_of_resource:
         return
-    return db[resource_revisions_collection].insert_one(current_version_of_resource)
+    return db[resource_revisions_collection_name].insert_one(current_version_of_resource)
 
-def replace_current_version_of_resource_with_newer_version(newer_resource_version, current_resource_version_collection):
+def replace_current_version_of_resource_with_newer_version(newer_resource_version, current_resource_version_collection_name):
     # The resource version is expected to be added
     # by data owners, but if not, may need to add
     # it here.
-    db[current_resource_version_collection].delete_many({})
-    return db[current_resource_version_collection].insert_one(newer_resource_version)
+    db[current_resource_version_collection_name].delete_many({})
+    return db[current_resource_version_collection_name].insert_one(newer_resource_version)
 
 def convert_xml_file_to_dictionary(xml_file):
     xml = xml_file.read()
@@ -160,13 +119,14 @@ def convert_and_upload_xml_file(xml_file, resource_type):
         format_acquisition_dictionary(xml_as_dict)
     elif resource_type  == COMPUTATION:
         format_computation_dictionary(xml_as_dict)
-    elif resource_type  == DATA_COLLECTION:
-        format_data_collection_dictionary(xml_as_dict)
     elif resource_type  == PROCESS:
         format_process_dictionary(xml_as_dict)
+    elif resource_type  == DATA_COLLECTION:
+        format_data_collection_dictionary(xml_as_dict)
     
-    current_resource_version_collection, resource_revisions_collection = get_collection_names_from_resource_type(resource_type)
-    if not current_resource_version_collection and not resource_revisions_collection:
+    current_resource_version_collection_name = current_resource_version_collection_names.get(resource_type, None)
+    resource_revision_collection_name = resource_revision_collection_names.get(resource_type, None)
+    if not current_resource_version_collection_name and not resource_revision_collection_name:
         return 'Resource type not supported.'
-    copy_current_version_of_resource_to_revisions_collection(xml_as_dict['identifier']['ESPAS_Identifier'], current_resource_version_collection, resource_revisions_collection)
-    return replace_current_version_of_resource_with_newer_version(xml_as_dict, current_resource_version_collection)
+    copy_current_version_of_resource_to_revisions_collection(xml_as_dict['identifier']['ESPAS_Identifier'], current_resource_version_collection_name, resource_revision_collection_name)
+    return replace_current_version_of_resource_with_newer_version(xml_as_dict, current_resource_version_collection_name)
