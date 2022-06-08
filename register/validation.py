@@ -3,6 +3,8 @@ from requests import get
 from mongodb import db
 from lxml import etree
 
+from register.resource_metadata_upload import current_resource_version_collection_names
+
 # TODO: change current_schema_version to 2.2
 # when schemas are finalised.
 current_schema_version = '2.1'
@@ -30,29 +32,6 @@ def get_xml_schema_file_path_for_resource_type(resource_type):
         return os.path.join(schemas_path, 'process.xsd')
     elif resource_type == 'data-collection':
         return os.path.join(schemas_path, 'observationCollection.xsd')
-    return 'unknown'
-
-def get_mongodb_collection_name_for_resource_type(resource_type):
-    if resource_type == 'organisation':
-        return 'organisations'
-    elif resource_type == 'individual':
-        return 'individuals'
-    elif resource_type == 'project':
-        return 'projects'
-    elif resource_type == 'platform':
-        return 'platforms'
-    elif resource_type == 'operation':
-        return 'operations'
-    elif resource_type == 'instrument':
-        return 'instruments'
-    elif resource_type == 'acquisition':
-        return 'acquisitions'
-    elif resource_type == 'computation':
-        return 'computations'
-    elif resource_type == 'process':
-        return 'processes'
-    elif resource_type == 'data-collection':
-        return 'data-collections'
     return 'unknown'
 
 def parse_xml_file(xml_file):
@@ -108,8 +87,10 @@ def get_resource_from_xlink_href_components(resource_type, localID, namespace, v
     }
     if version:
         find_dictionary['identifier.ESPAS_Identifier.version'] = version
-    collection_name_for_resource_type = get_mongodb_collection_name_for_resource_type(resource_type)
-    return db[collection_name_for_resource_type].find_one(find_dictionary)
+    current_resource_version_collection_name = current_resource_version_collection_names.get(resource_type, None)
+    if not current_resource_version_collection_name:
+        return None
+    return db[current_resource_version_collection_name].find_one(find_dictionary)
 
 def get_components_from_xlink_href(href, href_section_to_remove):
     href = href.replace(href_section_to_remove, '')
