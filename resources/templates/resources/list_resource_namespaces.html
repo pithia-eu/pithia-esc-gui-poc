@@ -5,14 +5,15 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">{{ title }}</h1>
+<h1 class="pb-3">{{ title|default_if_none:'Resource Namespaces' }}</h1>
+<span>{% url url_namespace|add:':list_resources_in_namespace' 'namespace' %}</span>
 {% if namespaces|length > 0 %}
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
     {% for namespace in namespaces %}
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resources:list_resources_in_namespace' resource_collection_name namespace %}">{{ namespace }}</a>
+                <a href="{% url url_namespace|add:':list_resources_in_namespace' namespace %}">{{ namespace }}</a>
             </div>
         </div>
     </div>
