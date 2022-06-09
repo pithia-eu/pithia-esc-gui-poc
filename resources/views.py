@@ -8,23 +8,19 @@ def index(request):
         'title': 'Resources'
     })
 
-def render_resource_namespaces_list(request, title, resource_type, namespaces):
-    return render(request, 'resources/list_resource_namespaces.html', {
-        'title': title,
-        'resource_type': resource_type,
-        'namespaces': namespaces,
-    })
-
-def list_organisation_namespaces(request):
+def list_resource_namespaces(request):
+    url_namespace = request.resolver_match.namespace
     resource_type = ORGANISATION
     current_organisation_version_collection_name = current_resource_version_collection_names.get(ORGANISATION, None)
     namespaces = list(db[current_organisation_version_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
-    return render_resource_namespaces_list(request, f'{ORGANISATION} Namespaces', resource_type, namespaces)
+    return render(request, 'resources/list_resource_namespaces.html', {
+        'title': None,
+        'resource_type': resource_type,
+        'url_namespace': url_namespace,
+        'namespaces': namespaces,
+    })
 
-def list_resource_namespaces(request, resource_collection_name):
-    namespaces = list(db[resource_collection_name].find({}).distinct('identifier.pithia:Identifier.namespace'))
-
-def list_resources_in_namespace(request, resource_collection_name, namespace):
+def list_resources_in_namespace(request, namespace):
     resources_list = list(db[resource_collection_name].find({
         'identifier.pithia:Identifier.namespace': namespace
     }))
@@ -49,7 +45,7 @@ def flatten(d):
             out[key] = value
     return out
 
-def detail(request, resource_collection_name, namespace, local_id):
+def detail(request, namespace, local_id):
     resource = db[resource_collection_name].find_one({
         'identifier.pithia:Identifier.localID': local_id,
         'identifier.pithia:Identifier.namespace': namespace,
