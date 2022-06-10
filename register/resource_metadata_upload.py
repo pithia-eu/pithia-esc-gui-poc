@@ -128,5 +128,5 @@ def convert_and_upload_xml_file(xml_file, resource_type):
     resource_revision_collection_name = resource_revision_collection_names.get(resource_type, None)
     if not current_resource_version_collection_name and not resource_revision_collection_name:
         return 'Resource type not supported.'
-    copy_current_version_of_resource_to_revisions_collection(xml_as_dict['identifier']['ESPAS_Identifier'], current_resource_version_collection_name, resource_revision_collection_name)
+    copy_current_version_of_resource_to_revisions_collection(xml_as_dict['identifier']['pithia:Identifier'], current_resource_version_collection_name, resource_revision_collection_name)
     return replace_current_version_of_resource_with_newer_version(xml_as_dict, current_resource_version_collection_name)
