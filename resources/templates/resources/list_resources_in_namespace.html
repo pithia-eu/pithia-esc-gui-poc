@@ -2,10 +2,12 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resources' 'resources:index' %}
-{% if resource_collection_name == 'data-collections' %}
-{% breadcrumb_item 'Data Collections' 'resources:list_resource_namespaces' resource_collection_name %}
+{% if resource_type == 'data-collection' %}
+{% breadcrumb_item 'Data Collections' url_namespace|add:':list_resource_namespaces' %}
+{% elif resource_type == 'process' %}
+{% breadcrumb_item 'Processes' url_namespace|add:':list_resource_namespaces' %}
 {% else %}
-{% breadcrumb_item resource_collection_name|capfirst 'resources:list_resource_namespaces' resource_collection_name %}
+{% breadcrumb_item resource_collection_name|capfirst|add:'s' url_namespace|add:':list_resource_namespaces' %}
 {% endif %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}
@@ -16,7 +18,7 @@
     {% for resource in resources_list %}
     {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
     {% with local_id=pithia_identifier.localID namespace=pithia_identifier.namespace %}
-    <li class="list-group-item"><a href="{% url 'resources:detail' resource_collection_name namespace local_id %}">{{ resource.name|default:local_id }}</a></li>
+    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' namespace local_id %}">{{ resource.name|default:local_id }}</a></li>
     {% endwith %}
     {% endwith %}
     {% endfor %}
