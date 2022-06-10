@@ -7,7 +7,7 @@
 {% elif resource_type == 'process' %}
 {% breadcrumb_item 'Processes' url_namespace|add:':list_resource_namespaces' %}
 {% else %}
-{% breadcrumb_item resource_collection_name|capfirst|add:'s' url_namespace|add:':list_resource_namespaces' %}
+{% breadcrumb_item resource_type|capfirst|add:'s' url_namespace|add:':list_resource_namespaces' %}
 {% endif %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}
