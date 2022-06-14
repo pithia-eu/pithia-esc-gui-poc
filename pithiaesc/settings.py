@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'resources.apps.ResourcesConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',
-    'register.apps.ValidationConfig',
+    'validation.apps.ValidationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
