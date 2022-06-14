@@ -23,9 +23,9 @@ const xmlValidationStates =  {
     VALID: "valid",
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
-    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'register.exceptions.MetadataFileNotForResourceTypeException'>",
-    UNREGISTERED_REFERENCED_RESOURCES: "<class 'register.exceptions.XlinkHrefReferencedResourceIsUnregisteredException'>",
-    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'register.exceptions.XlinkHrefReferencedOntologyTermIsUnregisteredException'>",
+    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'register.exceptions.InvalidRootElementNameForMetadataFileException'>",
+    UNREGISTERED_REFERENCED_RESOURCES: "<class 'register.exceptions.UnregisteredMetadataDocumentException'>",
+    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'register.exceptions.UnregisteredOntologyTermException'>",
 }
 
 async function validateXmlFile(file) {
@@ -144,9 +144,9 @@ async function handleFileUpload(fileInput, containerElem) {
     if (!validationResults.extra_details) {
         return;
     }
-    if (validationResults.extra_details.unregistered_referenced_resource_types) {
+    if (validationResults.extra_details.unregistered_document_types) {
         const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
-        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_referenced_resource_types, metadataRegistrationLinksElem);
+        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
     }
 }
 
