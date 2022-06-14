@@ -41,7 +41,7 @@ def parse_xml_file(xml_file):
 
 def _create_validation_error_details_dict(err_type, err_message, extra_details):
     return {
-        'type': err_type,
+        'type': str(err_type),
         'message': err_message,
         'extra_details': extra_details
     }
@@ -54,6 +54,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         'is_each_document_reference_valid': False,
         'is_each_ontology_reference_valid': False,
     }
+
     try:
         xml_file_parsed = etree.parse(xml_file)
     except etree.XMLSyntaxError as err:
@@ -61,11 +62,13 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
         return validation_checklist
     validation_checklist['is_syntax_valid'] = True
+
     root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
     validation_checklist['is_root_element_name_valid'] = root_element_name_validation_details['is_root_element_name_valid']
     if not validation_checklist['is_root_element_name_valid']:
         validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementNameForMetadataFileException, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
         return validation_checklist
+        
     try:
         validate_xml_against_schema(xml_file_parsed, xml_schema_file_name)
     except etree.DocumentInvalid as err:
@@ -73,6 +76,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
         return validation_checklist
     validation_checklist['is_valid_against_schema'] = True
+
     # Relation validaiton (whether a resource the metadata file
     # is referencing exists in the database or not).
     unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
@@ -193,91 +197,3 @@ def get_unregistered_references_from_xml(xml_file_parsed):
     for key in unregistered_references:
         unregistered_references[key] = list(unregistered_references[key])
     return unregistered_references
-
-# Things to remove
-
-def get_xml_schema_file_path_for_resource_type(resource_type):
-    current_dir = os.path.dirname(__file__)
-    schemas_path = os.path.join(current_dir, 'schemas', current_schema_version)
-    if resource_type == 'organisation':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'individual':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'project':
-        return os.path.join(schemas_path, 'project.xsd')
-    elif resource_type == 'platform':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'operation':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'instrument':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'acquisition':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'computation':
-        return os.path.join(schemas_path, 'utilities.xsd')
-    elif resource_type == 'process':
-        return os.path.join(schemas_path, 'process.xsd')
-    elif resource_type == 'data-collection':
-        return os.path.join(schemas_path, 'observationCollection.xsd')
-    return 'unknown'
-
-def get_mongodb_collection_name_for_resource_type(resource_type):
-    if resource_type == 'organisation':
-        return 'organisations'
-    elif resource_type == 'individual':
-        return 'individuals'
-    elif resource_type == 'project':
-        return 'projects'
-    elif resource_type == 'platform':
-        return 'platforms'
-    elif resource_type == 'operation':
-        return 'operations'
-    elif resource_type == 'instrument':
-        return 'instruments'
-    elif resource_type == 'acquisition':
-        return 'acquisitions'
-    elif resource_type == 'computation':
-        return 'computations'
-    elif resource_type == 'process':
-        return 'processes'
-    elif resource_type == 'data-collection':
-        return 'data-collections'
-    return 'unknown'
-
-def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname):
-    root = xml_file_parsed.getroot()
-    root_localname = etree.QName(root).localname # Get the root tag text without the namespace
-    return {
-        'root_tag': f'{root_localname}',
-        'expected_root_tag': f'{expected_root_localname}',
-        'is_root_tag_valid': root_localname == expected_root_localname
-    }
-
-def validate_xml_matches_submitted_resource_type(xml_file_parsed, resource_type):
-    root = xml_file_parsed.getroot()
-    root_localname = etree.QName(root).localname # Get the root tag text without the namespace
-    if resource_type == 'organisation':
-        expected_root_localname = 'ESPAS_Organisation'
-    elif resource_type == 'individual':
-        expected_root_localname = 'ESPAS_Individual'
-    elif resource_type == 'project':
-        expected_root_localname = 'ESPAS_Project'
-    elif resource_type == 'platform':
-        expected_root_localname = 'ESPAS_Platform'
-    elif resource_type == 'operation':
-        expected_root_localname = 'ESPAS_Procedure'
-    elif resource_type == 'instrument':
-        expected_root_localname = 'ESPAS_Instrument'
-    elif resource_type == 'acquisition':
-        expected_root_localname = 'ESPAS_Acquisition'
-    elif resource_type == 'computation':
-        expected_root_localname = 'ESPAS_Computation'
-    elif resource_type == 'process':
-        expected_root_localname = 'ESPAS_Procedure'
-    elif resource_type == 'data-collection':
-        expected_root_localname = 'ESPAS_ObservationCollection'
-    return {
-        'root_tag': f'{root_localname}',
-        'expected_root_tag': f'{expected_root_localname}',
-        'is_root_tag_valid': root_localname == expected_root_localname
-    }

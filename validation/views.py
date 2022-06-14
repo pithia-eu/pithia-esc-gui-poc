@@ -8,13 +8,13 @@ from validation.validation import validate_acquisition_metadata_xml_file, valida
 
 # Create your views here.
 def handle_validation_results(request, validation_results):
-    if not validation_results['error']:
+    if 'error' not in validation_results:
         return HttpResponse(json.dumps({
             'result': 'valid'
         }), content_type='application/json')
     if validation_results['error']['type'] == etree.DocumentInvalid or validation_results['error']['type'] == etree.XMLSyntaxError:
-        return HttpResponse(validation_results['error'], status=422, content_type='application/json')
-    return HttpResponseServerError(validation_results['error'], content_type='application/json')
+        return HttpResponse(json.dumps({ 'error': validation_results['error'] }), status=422, content_type='application/json')
+    return HttpResponseServerError(json.dumps({ 'error': validation_results['error'] }), content_type='application/json')
 
 @require_POST
 def organisation(request):
