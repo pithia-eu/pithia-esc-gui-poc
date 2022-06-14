@@ -28,12 +28,12 @@ const xmlValidationStates =  {
     UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'register.exceptions.UnregisteredOntologyTermException'>",
 }
 
-async function validateXmlFile(file) {
+async function validateXmlFile(file, fileValidationUrl) {
     const formData = new FormData();
     const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
     formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
     formData.append("file", file);
-    const response = await fetch(`${window.location.protocol}//${window.location.host}${window.location.pathname}validation/schema`, {
+    const response = await fetch(fileValidationUrl, {
         method: "POST",
         body: formData
     });
@@ -135,7 +135,8 @@ async function handleFileUpload(fileInput, containerElem) {
     const validationStatusErrorElem = document.querySelector(".file-validation-error");
     
     updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-    const validationResults = await validateXmlFile(file);
+    const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+    const validationResults = await validateXmlFile(file, fileValidationUrl);
     updateXMLFileValidationStatus(validationResults, validationStatusElem);
     if (validationResults.error) {
         removeClassNameFromElem(validationStatusErrorElem, "d-none");
@@ -157,7 +158,7 @@ fileInput.addEventListener("change", async event => {
     await handleFileUpload(fileInput, fileValidationStatusElem);
 });
 
-document.getElementById("register-script").addEventListener("load", async event => {
+window.addEventListener("load", async event => {
     if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
