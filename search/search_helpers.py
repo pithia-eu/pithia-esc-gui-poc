@@ -1,7 +1,7 @@
 from mongodb import db
 from search.ontology_helpers import get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from register.resource_metadata_upload import ACQUISITION, COMPUTATION, DATA_COLLECTION, INSTRUMENT, PROCESS, resource_revision_collection_names, current_resource_version_collection_names
+from register.upload import ACQUISITION, COMPUTATION, DATA_COLLECTION, INSTRUMENT, PROCESS, current_resource_version_collection_names
 
 def find_matching_observation_collections(request):
     observed_properties = []

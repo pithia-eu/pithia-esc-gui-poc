@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from mongodb import db
-from register.resource_metadata_upload import ACQUISITION, COMPUTATION, DATA_COLLECTION, INDIVIDUAL, INSTRUMENT, OPERATION, ORGANISATION, PLATFORM, PROCESS, PROJECT, current_resource_version_collection_names
+from register.upload import ACQUISITION, COMPUTATION, DATA_COLLECTION, INDIVIDUAL, INSTRUMENT, OPERATION, ORGANISATION, PLATFORM, PROCESS, PROJECT, current_resource_version_collection_names
 
 def get_resource_type_by_url_namespace(url_namespace):
     if ORGANISATION in url_namespace:
