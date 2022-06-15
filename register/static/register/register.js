@@ -23,17 +23,17 @@ const xmlValidationStates =  {
     VALID: "valid",
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
-    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'register.exceptions.MetadataFileNotForResourceTypeException'>",
-    UNREGISTERED_REFERENCED_RESOURCES: "<class 'register.exceptions.XlinkHrefReferencedResourceIsUnregisteredException'>",
-    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'register.exceptions.XlinkHrefReferencedOntologyTermIsUnregisteredException'>",
+    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'register.exceptions.InvalidRootElementNameForMetadataFileException'>",
+    UNREGISTERED_REFERENCED_RESOURCES: "<class 'register.exceptions.UnregisteredMetadataDocumentException'>",
+    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'register.exceptions.UnregisteredOntologyTermException'>",
 }
 
-async function validateXmlFile(file) {
+async function validateXmlFile(file, fileValidationUrl) {
     const formData = new FormData();
     const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
     formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
     formData.append("file", file);
-    const response = await fetch(`${window.location.protocol}//${window.location.host}${window.location.pathname}validation/schema`, {
+    const response = await fetch(fileValidationUrl, {
         method: "POST",
         body: formData
     });
@@ -135,7 +135,8 @@ async function handleFileUpload(fileInput, containerElem) {
     const validationStatusErrorElem = document.querySelector(".file-validation-error");
     
     updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-    const validationResults = await validateXmlFile(file);
+    const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+    const validationResults = await validateXmlFile(file, fileValidationUrl);
     updateXMLFileValidationStatus(validationResults, validationStatusElem);
     if (validationResults.error) {
         removeClassNameFromElem(validationStatusErrorElem, "d-none");
@@ -144,9 +145,9 @@ async function handleFileUpload(fileInput, containerElem) {
     if (!validationResults.extra_details) {
         return;
     }
-    if (validationResults.extra_details.unregistered_referenced_resource_types) {
+    if (validationResults.extra_details.unregistered_document_types) {
         const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
-        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_referenced_resource_types, metadataRegistrationLinksElem);
+        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
     }
 }
 
@@ -157,7 +158,7 @@ fileInput.addEventListener("change", async event => {
     await handleFileUpload(fileInput, fileValidationStatusElem);
 });
 
-document.getElementById("register-script").addEventListener("load", async event => {
+window.addEventListener("load", async event => {
     if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
