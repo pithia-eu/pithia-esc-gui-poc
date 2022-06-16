@@ -20,28 +20,23 @@ def register_metadata_file_and_redirect(request, mongodb_model, validation, preu
         # XML should have already been validated at
         # the template, but do it again just to be
         # safe.
-        validation_results = validation(xml_file)
-        if 'error' not in validation_results:
-            try:
-                print(validation_results)
-                metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
-                if preupload_check_and_fix:
-                    preupload_check_and_fix(metadata_file_dict)
-                mongodb_model.insert_one(metadata_file_dict)
-            except ExpatError as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An error occurred whilst parsing the XML.')
-                return HttpResponseRedirect(redirect_url)
-            except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An unexpected error occurred.')
-                return HttpResponseRedirect(redirect_url)
-
-            messages.success(request, f'Successfully registered {xml_file.name}.')
+        try:
+            metadata_file_dict = convert_xml_metadata_file_to_dictionary(request.FILES['file'])
+            if preupload_check_and_fix:
+                preupload_check_and_fix(metadata_file_dict)
+            mongodb_model.insert_one(metadata_file_dict)
+        except ExpatError as err:
+            print(err)
+            print(traceback.format_exc())
+            messages.error(request, 'An error occurred whilst parsing the XML.')
             return HttpResponseRedirect(redirect_url)
-        messages.error(request, 'Validation failed. Please ensure your files are valid before uploading.')
+        except BaseException as err:
+            print(err)
+            print(traceback.format_exc())
+            messages.error(request, 'An unexpected error occurred.')
+            return HttpResponseRedirect(redirect_url)
+
+        messages.success(request, f'Successfully registered {xml_file.name}.')
         return HttpResponseRedirect(redirect_url)
     else:
         messages.error(request, 'The form submitted was not valid.')
