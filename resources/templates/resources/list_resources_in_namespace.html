@@ -1,18 +1,12 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Resources' 'resources:index' %}
-{% if resource_type == 'data-collection' %}
-{% breadcrumb_item 'Data Collections' url_namespace|add:':list_resource_namespaces' %}
-{% elif resource_type == 'process' %}
-{% breadcrumb_item 'Processes' url_namespace|add:':list_resource_namespaces' %}
-{% else %}
-{% breadcrumb_item resource_type|capfirst|add:'s' url_namespace|add:':list_resource_namespaces' %}
-{% endif %}
+{% breadcrumb_item 'Browse' 'resources:index' %}
+{% breadcrumb_item breadcrumb_item_list_resource_namespaces_text url_namespace|add:':list_resource_namespaces' %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">Resources for "{{ namespace }}"</h1>
+<h1 class="pb-3">{{ title }}</h1>
 {% if resources_list|length > 0 %}
 <ul class="list-group">
     {% for resource in resources_list %}
@@ -24,6 +18,6 @@
     {% endfor %}
 </ul>
 {% else %}
-<p>There are no resources to list!</p>
+<p>There are no {{ resource_type_plural|lower }} for the {{ namespace }} namespace.</p>
 {% endif %}
 {% endblock content %}
