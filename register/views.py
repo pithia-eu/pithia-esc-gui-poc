@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+from django.views.decorators.http import require_GET
 from register.register import register_metadata_xml_file
 
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
@@ -50,6 +51,7 @@ def index(request):
         'title': 'Resource Metadata Registration'
     })
 
+@require_GET
 def organisation(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentOrganisation, validate_organisation_metadata_xml_file, None, reverse('register:organisation'))
@@ -61,6 +63,7 @@ def organisation(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def individual(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentIndividual, validate_individual_metadata_xml_file, None, reverse('register:individual'))
@@ -72,6 +75,7 @@ def individual(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def project(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentProject, validate_project_metadata_xml_file, None, reverse('register:project'))
@@ -83,6 +87,7 @@ def project(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def platform(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentPlatform, validate_platform_metadata_xml_file, None, reverse('register:platform'))
@@ -94,6 +99,7 @@ def platform(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def instrument(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentInstrument, validate_instrument_metadata_xml_file, None, reverse('register:instrument'))
@@ -105,6 +111,7 @@ def instrument(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def operation(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentOperation, validate_operation_metadata_xml_file, None, reverse('register:operation'))
@@ -116,6 +123,7 @@ def operation(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def acquisition(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentAcquisition, validate_acquisition_metadata_xml_file, xml_conversion_checks_and_fixes.format_acquisition_dictionary, reverse('register:acquisition'))
@@ -127,6 +135,7 @@ def acquisition(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def computation(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentComputation, validate_computation_metadata_xml_file, xml_conversion_checks_and_fixes.format_computation_dictionary, reverse('register:computation'))
@@ -138,6 +147,7 @@ def computation(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def process(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentProcess, validate_process_metadata_xml_file, xml_conversion_checks_and_fixes.format_process_dictionary, reverse('register:process'))
@@ -149,6 +159,7 @@ def process(request):
         'form': UploadFileForm(),
     })
 
+@require_GET
 def data_collection(request):
     if request.method == 'POST':
         validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentDataCollection, validate_data_collection_metadata_xml_file, xml_conversion_checks_and_fixes.format_data_collection_dictionary, reverse('register:data_collection'))
