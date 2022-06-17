@@ -1,7 +1,7 @@
 from mongodb import db
 from search.ontology_helpers import get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from register.upload import ACQUISITION, COMPUTATION, DATA_COLLECTION, INSTRUMENT, PROCESS, current_resource_version_collection_names
+from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
 def find_matching_observation_collections(request):
     observed_properties = []
@@ -30,7 +30,7 @@ def find_matching_observation_collections(request):
     # Observation Collection, which is what we want
 
     # Fetch Instruments
-    instruments = list(db[current_resource_version_collection_names[INSTRUMENT]].find({
+    instruments = list(CurrentInstrument.find({
         'type.@xlink:href': {
             '$in': instrument_types
         }
@@ -38,7 +38,7 @@ def find_matching_observation_collections(request):
     instrument_localids = [i['identifier']['pithia:Identifier']['localID'] for i in instruments]
 
     # Fetch Acquisitions/Computations
-    acquisitions = list(db[current_resource_version_collection_names[ACQUISITION]].find({
+    acquisitions = list(CurrentAcquisition.find({
         '$or': [
             {
                 'capability': {
@@ -56,7 +56,7 @@ def find_matching_observation_collections(request):
             }
         ]
     }))
-    computations = list(db[current_resource_version_collection_names[COMPUTATION]].find({
+    computations = list(CurrentComputation.find({
         '$or': [
             {
                 'capability': {
@@ -76,7 +76,7 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Processes
-    processes = list(db[current_resource_version_collection_names[PROCESS]].find({
+    processes = list(CurrentProcess.find({
         '$or': [
             {
                 'acquisitionComponent': {
@@ -100,7 +100,7 @@ def find_matching_observation_collections(request):
     }))
 
     # Fetch Observation Collections
-    return list(db[current_resource_version_collection_names[DATA_COLLECTION]].find({
+    return list(CurrentDataCollection.find({
         'om:procedure.@xlink:href': {
             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
         }
