@@ -1,27 +1,3 @@
-ORGANISATION = 'organisation'
-INDIVIDUAL = 'individual'
-PROJECT = 'project'
-PLATFORM = 'platform'
-INSTRUMENT = 'instrument'
-OPERATION = 'operation'
-ACQUISITION = 'acquisition'
-COMPUTATION = 'computation'
-PROCESS = 'process'
-DATA_COLLECTION = 'data-collection'
-
-current_resource_version_collection_names = {
-    ORGANISATION: 'current-organisations',
-    INDIVIDUAL: 'current-individuals',
-    PROJECT: 'current-projects',
-    PLATFORM: 'current-platforms',
-    INSTRUMENT: 'current-instruments',
-    OPERATION: 'current-operations',
-    ACQUISITION: 'current-acquisitions',
-    COMPUTATION: 'current-computations',
-    PROCESS: 'current-processes',
-    DATA_COLLECTION: 'current-data-collections',
-}
-
 # TODO: Replace ESPAS_Identifier with pithia:Identifier
 def find_and_copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
     current_version_of_resource = current_resource_mongodb_model.find_one({
