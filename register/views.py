@@ -28,6 +28,8 @@ def register_metadata_file_and_redirect(request, mongodb_model, validation, preu
                 # Otherwise the file is read as an empty string.
                 xml_file.seek(0)
                 metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
+                # Remove the top-level tag
+                metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
                 if preupload_check_and_fix:
                     preupload_check_and_fix(metadata_file_dict)
                 mongodb_model.insert_one(metadata_file_dict)
@@ -143,7 +145,7 @@ def computation(request):
 
 def process(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentDataCollection, validate_process_metadata_xml_file, preupload_checks.format_process_dictionary, reverse('register:process'))
+        register_metadata_file_and_redirect(request, mongodb_models.CurrentProcess, validate_process_metadata_xml_file, preupload_checks.format_process_dictionary, reverse('register:process'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Process',
         'breadcrumb_item_active_text': 'Process',
