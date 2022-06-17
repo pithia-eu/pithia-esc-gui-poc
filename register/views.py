@@ -4,15 +4,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+from register.register import register_metadata_xml_file
 
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
-
 from .forms import UploadFileForm
+from register import mongodb_models, xml_conversion_checks_and_fixes
 
-from register import mongodb_models, preupload_checks
-
-def register_metadata_file_and_redirect(request, mongodb_model, validation, preupload_check_and_fix, redirect_url):
+def validate_and_register_metadata_file_then_redirect(request, mongodb_model, validation, xml_conversion_check_and_fix, redirect_url):
     # Form validation
     form = UploadFileForm(request.POST, request.FILES)
     xml_file = request.FILES['file']
@@ -26,13 +24,7 @@ def register_metadata_file_and_redirect(request, mongodb_model, validation, preu
                 # xml_file.seek(0) sets the read pointer back to 0
                 # after reading the file during validation.
                 # Otherwise the file is read as an empty string.
-                xml_file.seek(0)
-                metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
-                # Remove the top-level tag
-                metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
-                if preupload_check_and_fix:
-                    preupload_check_and_fix(metadata_file_dict)
-                mongodb_model.insert_one(metadata_file_dict)
+                register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())
@@ -45,6 +37,9 @@ def register_metadata_file_and_redirect(request, mongodb_model, validation, preu
                 return HttpResponseRedirect(redirect_url)
 
             messages.success(request, f'Successfully registered {xml_file.name}.')
+        else:
+            messages.error(request, 'The file submitted was not valid.')
+            return HttpResponseRedirect(redirect_url)
     else:
         messages.error(request, 'The form submitted was not valid.')
         return HttpResponseRedirect(redirect_url)
@@ -57,7 +52,7 @@ def index(request):
 
 def organisation(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentOrganisation, validate_organisation_metadata_xml_file, None, reverse('register:organisation'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentOrganisation, validate_organisation_metadata_xml_file, None, reverse('register:organisation'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register an Organisation',
         'breadcrumb_item_active_text': 'Organisation',
@@ -68,7 +63,7 @@ def organisation(request):
 
 def individual(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentIndividual, validate_individual_metadata_xml_file, None, reverse('register:individual'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentIndividual, validate_individual_metadata_xml_file, None, reverse('register:individual'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register an Individual',
         'breadcrumb_item_active_text': 'Individual',
@@ -79,7 +74,7 @@ def individual(request):
 
 def project(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentProject, validate_project_metadata_xml_file, None, reverse('register:project'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentProject, validate_project_metadata_xml_file, None, reverse('register:project'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Project',
         'breadcrumb_item_active_text': 'Project',
@@ -90,7 +85,7 @@ def project(request):
 
 def platform(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentPlatform, validate_platform_metadata_xml_file, None, reverse('register:platform'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentPlatform, validate_platform_metadata_xml_file, None, reverse('register:platform'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Platform',
         'breadcrumb_item_active_text': 'Platform',
@@ -101,7 +96,7 @@ def platform(request):
 
 def instrument(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentInstrument, validate_instrument_metadata_xml_file, None, reverse('register:instrument'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentInstrument, validate_instrument_metadata_xml_file, None, reverse('register:instrument'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register an Instrument',
         'breadcrumb_item_active_text': 'Instrument',
@@ -112,7 +107,7 @@ def instrument(request):
 
 def operation(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentOperation, validate_operation_metadata_xml_file, None, reverse('register:operation'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentOperation, validate_operation_metadata_xml_file, None, reverse('register:operation'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register an Operation',
         'breadcrumb_item_active_text': 'Operation',
@@ -123,7 +118,7 @@ def operation(request):
 
 def acquisition(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentAcquisition, validate_acquisition_metadata_xml_file, preupload_checks.format_acquisition_dictionary, reverse('register:acquisition'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentAcquisition, validate_acquisition_metadata_xml_file, xml_conversion_checks_and_fixes.format_acquisition_dictionary, reverse('register:acquisition'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register an Acquisition',
         'breadcrumb_item_active_text': 'Acquisition',
@@ -134,7 +129,7 @@ def acquisition(request):
 
 def computation(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentComputation, validate_computation_metadata_xml_file, preupload_checks.format_computation_dictionary, reverse('register:computation'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentComputation, validate_computation_metadata_xml_file, xml_conversion_checks_and_fixes.format_computation_dictionary, reverse('register:computation'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Computation',
         'breadcrumb_item_active_text': 'Computation',
@@ -145,7 +140,7 @@ def computation(request):
 
 def process(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentProcess, validate_process_metadata_xml_file, preupload_checks.format_process_dictionary, reverse('register:process'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentProcess, validate_process_metadata_xml_file, xml_conversion_checks_and_fixes.format_process_dictionary, reverse('register:process'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Process',
         'breadcrumb_item_active_text': 'Process',
@@ -156,7 +151,7 @@ def process(request):
 
 def data_collection(request):
     if request.method == 'POST':
-        register_metadata_file_and_redirect(request, mongodb_models.CurrentDataCollection, validate_data_collection_metadata_xml_file, preupload_checks.format_data_collection_dictionary, reverse('register:data_collection'))
+        validate_and_register_metadata_file_then_redirect(request, mongodb_models.CurrentDataCollection, validate_data_collection_metadata_xml_file, xml_conversion_checks_and_fixes.format_data_collection_dictionary, reverse('register:data_collection'))
     return render(request, 'register/file_upload.html', {
         'title': 'Register a Data Collection',
         'breadcrumb_item_active_text': 'Data Collection',
