@@ -17,6 +17,10 @@ header .nav-link,
     color: var(--pithia-blue) !important;
 }
 
+a {
+    word-wrap: break-word;
+}
+
 header .nav-item {
     text-transform: uppercase;
 }
