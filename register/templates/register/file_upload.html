@@ -31,7 +31,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="upload-form">
+                <form action="" method="post" enctype="multipart/form-data" id="upload-form">
                     {% csrf_token %}
                     <div class="row gy-3 align-items-lg-end align-items-center">
                         <div class="col-xl-9 col-lg-8">
@@ -46,7 +46,7 @@
                             {{ form.file }}
                         </div>
                         <div class="col-xl-3 col-lg-4">
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
+                            <button type="submit" class="btn btn-primary w-100 disabled" disabled>Register</button>
                         </div>
                     </div>
                 </form>
