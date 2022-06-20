@@ -35,7 +35,7 @@ def get_rdf_text_for_ontology_component(ontology_component):
     except BaseException as err:
         print(err)
         # Read ontology from file - alt method if connection to ontology server fails
-        ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search\ontology\{ontology_component.capitalize()}.xml'))
+        ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search/ontology/{ontology_component.lower()}.xml'))
         ontology_text = ontology_file.read()
 
     return ontology_text
