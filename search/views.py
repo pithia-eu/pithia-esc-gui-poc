@@ -4,12 +4,17 @@ from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component
 from .search_helpers import find_matching_observation_collections
+from register.mongodb_models import CurrentAcquisition, CurrentComputation
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
+    registered_ontology_terms = None
+    if ontology_component.lower() == 'observedproperty':
+        registered_ontology_terms = get_observed_properties_from_data_collections()
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
-        'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component]
+        'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component],
+        'registered_ontology_terms': registered_ontology_terms,
     })
 
 def index(request):
@@ -43,7 +48,7 @@ def op_selection(request):
         request.session['observed_properties'] = observed_properties
         return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/op_selection.html', {
-        'title': 'Step 3: Select Observed Properties'
+        'title': 'Step 3: Select Observed Properties',
     })
 
 def results(request):
@@ -54,5 +59,43 @@ def results(request):
         'results': observation_collections
     })
 
-def get_observed_properties_from_data_collections(request):
-    return
+def extract_op_id_from_xlinkhref(xlinkhref):
+    return xlinkhref.split('/')[-1]
+
+def get_observed_properties_from_data_collections():
+    observed_properties_from_computations = list(CurrentComputation.aggregate([
+        {
+            '$unwind': {
+                'path': '$capability'
+            }
+        },
+        {
+            '$group': {
+                '_id': None,
+                'xlink_hrefs': {
+                    '$addToSet': '$capability.observedProperty.@xlink:href'
+                }
+            }
+        }
+    ]))
+
+    observed_properties_from_acquisitions = list(CurrentAcquisition.aggregate([
+        {
+            '$unwind': {
+                'path': '$capability'
+            }
+        },
+            {
+                '$group': {
+                    '_id': None,
+                    'xlink_hrefs': {
+                        '$addToSet': '$capability.pithia:processCapability.observedProperty.@xlink:href'
+                    }
+                }
+            }
+    ]))
+    observed_property_ids = []
+    observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_computations[0]['xlink_hrefs'])))
+    observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
+
+    return list(set(observed_property_ids))

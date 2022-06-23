@@ -3,5 +3,6 @@
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}"
     {% if node.phenomenons %}data-phenomenons="{{ node.phenomenons|join:" " }}"{% endif %}
     {% if node.measurands %}data-measurands="{{ node.measurands|join:" " }}"{% endif %}
-    {% if node.featuresOfInterest %}data-features-of-interest="{{ node.featuresOfInterest|join:" " }}"{% endif %}>
-<label for="{{ node.id }}">{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
+    {% if node.featuresOfInterest %}data-features-of-interest="{{ node.featuresOfInterest|join:" " }}"{% endif %}
+    {% if node.value not in registered_ontology_terms %}disabled{% endif %}>
+<label for="{{ node.id }}" {% if registered_ontology_terms and node.value not in registered_ontology_terms %}disabled class="text-muted"{% endif %}>{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
