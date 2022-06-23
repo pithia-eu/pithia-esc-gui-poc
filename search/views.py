@@ -53,3 +53,6 @@ def results(request):
         'title': 'Search results',
         'results': observation_collections
     })
+
+def get_observed_properties_from_data_collections(request):
+    return
