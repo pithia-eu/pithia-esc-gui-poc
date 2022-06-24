@@ -12,11 +12,11 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties(ontology_component)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     elif ontology_component.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties('observedProperty')
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
         'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component],
@@ -113,9 +113,12 @@ def get_registered_features_of_interest(registered_observed_property_ids):
         get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
     return feature_of_interest_ids
 
-def get_parents_of_registered_ontology_terms(ontology_term_ids, ontology_component):
-    parent_node_ids = []
-    g = get_graph_of_pithia_ontology_component(ontology_component)
+def get_parents_of_registered_ontology_terms(ontology_term_ids, ontology_component, g, parent_node_ids):
+    if g is None:
+        g = get_graph_of_pithia_ontology_component(ontology_component)
     for id in ontology_term_ids:
-        parent_node_ids.extend(get_parent_node_ids_of_node_id(id, ontology_component, g, []))
+        parent_node_ids_of_id = get_parent_node_ids_of_node_id(id, ontology_component, g, [])
+        if len(parent_node_ids_of_id) > 0:
+            parent_node_ids.extend(parent_node_ids_of_id)
+            parent_node_ids = get_parents_of_registered_ontology_terms(parent_node_ids_of_id, ontology_component, g, parent_node_ids)
     return parent_node_ids
