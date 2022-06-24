@@ -5,4 +5,4 @@
     {% if node.measurands %}data-measurands="{{ node.measurands|join:" " }}"{% endif %}
     {% if node.featuresOfInterest %}data-features-of-interest="{{ node.featuresOfInterest|join:" " }}"{% endif %}
     {% if node.value not in registered_ontology_terms %}disabled{% endif %}>
-<label for="{{ node.id }}" {% if registered_ontology_terms and node.value not in registered_ontology_terms %}disabled class="text-muted"{% endif %}>{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
+<label for="{{ node.id }}" {% if registered_ontology_terms and node.value not in registered_ontology_terms %}disabled{% endif %}{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted"{% endif %}>{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>

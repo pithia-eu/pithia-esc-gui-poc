@@ -2,19 +2,22 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
-from .ontology_helpers import create_dictionary_from_pithia_ontology_component
+from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component, get_parent_node_ids_of_node_id
 from .search_helpers import find_matching_observation_collections
 from register.mongodb_models import CurrentAcquisition, CurrentComputation
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
-    registered_ontology_terms = None
+    registered_ontology_terms = []
+    parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
-        registered_ontology_terms = get_observed_properties_from_data_collections()
+        registered_ontology_terms = get_registered_observed_properties(ontology_component)
+        parents_of_registered_ontology_terms = get_parents_of_registered_observed_properties(registered_ontology_terms, ontology_component)
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
         'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component],
         'registered_ontology_terms': registered_ontology_terms,
+        'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
 
 def index(request):
@@ -62,7 +65,7 @@ def results(request):
 def extract_op_id_from_xlinkhref(xlinkhref):
     return xlinkhref.split('/')[-1]
 
-def get_observed_properties_from_data_collections():
+def get_registered_observed_properties(ontology_component):
     observed_properties_from_computations = list(CurrentComputation.aggregate([
         {
             '$unwind': {
@@ -97,5 +100,11 @@ def get_observed_properties_from_data_collections():
     observed_property_ids = []
     observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_computations[0]['xlink_hrefs'])))
     observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
-
     return list(set(observed_property_ids))
+
+def get_parents_of_registered_observed_properties(observed_property_ids, ontology_component):
+    parent_node_ids = []
+    g = get_graph_of_pithia_ontology_component(ontology_component)
+    for id in observed_property_ids:
+        parent_node_ids.extend(get_parent_node_ids_of_node_id(id, ontology_component, g, []))
+    return parent_node_ids

@@ -55,11 +55,17 @@ def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
             op_hrefs.append(str(s))
     return op_hrefs
 
+def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
+    SKOS = _SKOS.SKOS
+    print(f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/{node_id}')
+    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
+        parent_node_ids.append(o.split('/')[-1])
+    return parent_node_ids
+
 def create_dictionary_from_pithia_ontology_component(ontology_component):
     ontology_component_url = f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/'
     g = get_graph_of_pithia_ontology_component(ontology_component)
     SKOS = _SKOS.SKOS
-
     ontology_dictionary = {}
     pref_label_mappings = {}
     alt_label_mappings = {}
