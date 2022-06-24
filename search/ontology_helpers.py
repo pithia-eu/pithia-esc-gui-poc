@@ -60,6 +60,16 @@ def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, 
         feature_of_interest_ids.append(o.split('/')[-1])
     return feature_of_interest_ids
 
+def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
+    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.phenomenon, None)):
+        phenomenon_ids.append(o.split('/')[-1])
+    return phenomenon_ids
+
+def get_measurand_ids_from_observed_property_id(observed_property_id, g, measurand_ids):
+    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.measurand, None)):
+        measurand_ids.append(o.split('/')[-1])
+    return measurand_ids
+
 def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
     SKOS = _SKOS.SKOS
     for s, p, o in g.triples((None, SKOS.narrower, URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/{node_id}'))):
