@@ -4,18 +4,24 @@ from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id
 from .search_helpers import find_matching_observation_collections
-from register.mongodb_models import CurrentAcquisition, CurrentComputation
+from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
-        registered_ontology_terms = get_registered_observed_properties(ontology_component)
+        registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     elif ontology_component.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties('observedProperty')
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
+    elif ontology_component.lower() == 'instrumenttype':
+        registered_ontology_terms = get_registered_instrument_types()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
+    elif ontology_component.lower() == 'computationtype':
+        registered_ontology_terms = get_registered_computation_types()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
@@ -66,10 +72,10 @@ def results(request):
         'results': observation_collections
     })
 
-def extract_op_id_from_xlinkhref(xlinkhref):
+def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
-def get_registered_observed_properties(ontology_component):
+def get_registered_observed_properties():
     observed_properties_from_computations = list(CurrentComputation.aggregate([
         {
             '$unwind': {
@@ -102,8 +108,8 @@ def get_registered_observed_properties(ontology_component):
             }
     ]))
     observed_property_ids = []
-    observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_computations[0]['xlink_hrefs'])))
-    observed_property_ids.extend(list(map(extract_op_id_from_xlinkhref, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
+    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
+    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
     return list(set(observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
@@ -112,6 +118,12 @@ def get_registered_features_of_interest(registered_observed_property_ids):
     for id in registered_observed_property_ids:
         get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
     return feature_of_interest_ids
+
+def get_registered_instrument_types():
+    return list(map(extract_localid_from_xlink_href, list(CurrentInstrument.find().distinct('type.@xlink:href'))))
+
+def get_registered_computation_types():
+    return list(map(extract_localid_from_xlink_href, list(CurrentComputation.find().distinct('type.@xlink:href'))))
 
 def get_parents_of_registered_ontology_terms(ontology_term_ids, ontology_component, g, parent_node_ids):
     if g is None:
