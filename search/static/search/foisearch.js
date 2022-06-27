@@ -1,5 +1,4 @@
 import {
-    addTreeContainerIdToClearInputsButton,
     fetchSearchFormComponent,
     setupSearchFormComponent
 } from "./search.js";
