@@ -39,6 +39,16 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     })
 
 def index(request):
+    if request.method == 'POST':
+        features_of_interests = request.POST.getlist('featuresOfInterest')
+        request.session['features_of_interest'] = features_of_interests
+        computation_types = request.POST.getlist('computationTypes')
+        request.session['computation_types'] = computation_types
+        instrument_types = request.POST.getlist('instrumentTypes')
+        request.session['instrument_types'] = instrument_types
+        observed_properties = request.POST.getlist('observedProperties')
+        request.session['observed_properties'] = observed_properties
+        return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/index.html', {
         'title': 'Search Models & Measurements'
     })
