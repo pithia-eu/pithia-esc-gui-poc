@@ -13,20 +13,7 @@
 <h2><span class="text-muted">Step 1:</span> Feature of Interest Selection</h2>
 <form action="{% url 'search:foi_selection' %}" method="POST" id="search-form">
     {% csrf_token %}
-    <div class="row">
-        <div class="col-lg-6">
-            <fieldset class="option-row">
-                <legend>
-                    <h3 class="text-muted">Feature of Interest</h3>
-                </legend>
-                <div class="observed-properties-tree-search-container-wrapper">
-                    {% with ontology_component="features-of-interest" %}
-                    {% include "search/ontology_tree_container_template.html" %}
-                    {% endwith %}
-                </div>
-            </fieldset>
-        </div>
-    </div>
+    {% include 'search/foi_form_section.html' %}
     <div class="row gy-3 mt-5">
         <div class="col-lg-3">
             <span class="text-muted">Search Introduction</span>

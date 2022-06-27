@@ -13,35 +13,7 @@
 <h2><span class="text-muted">Step 2:</span> Computation Type and Instrument Type Selection</h2>
 <form action="{% url 'search:comp_and_instr_type_selection' %}" method="POST" id="search-form">
     {% csrf_token %}
-    <div class="row gy-4">
-        <div class="col-lg-6">
-            <fieldset class="option-row">
-                <legend>
-                    <h3 class="text-muted">Computation Types</h3>
-                </legend>
-                <div class="observed-properties-tree-search-container-wrapper">
-                    {% with ontology_component="computation-types" %}
-                    {% include "search/ontology_tree_container_template.html" %}
-                    {% endwith %}
-                </div>
-            </fieldset>
-        </div>
-        <div class="col-lg-6">
-            <fieldset class="option-row">
-                <legend>
-                    <h3 class="text-muted">Instrument Types</h3>
-                </legend>
-                <div class="observed-properties-tree-search-container-wrapper">
-                    {% with ontology_component="instrument-types" %}
-                    {% include "search/ontology_tree_container_template.html" %}
-                    {% endwith %}
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="d-flex flex-column align-items-lg-end my-3">
-        <button class="btn btn-light btn-clear" type="button">Clear Input Selection</button>
-    </div>
+    {% include 'search/comp_type_and_instr_type_form_section.html' %}
     <div class="row gy-3 flex-wrap-reverse mt-5">
         <div class="col-lg-3">
             <div class="d-flex flex-column align-items-lg-start">
