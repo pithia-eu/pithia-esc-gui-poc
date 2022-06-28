@@ -2,19 +2,18 @@ import os
 from requests import get
 from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import _SKOS
-from pprint import pprint
 
-PITHIA_ONTOLOGY_BASE_URL = 'https://ontology.espas-fp7.eu/'
+ONTOLOGY_SERVER_BASE_URL = 'https://ontology.espas-fp7.eu/'
 ESPAS = Namespace('http://ontology.espas-fp7.eu/espasdefinitions#')
 
 def get_object_names_from_triple(triple):
     s, p, o = triple
     if 'phenomenon' in o:
-        return o.replace(f'{PITHIA_ONTOLOGY_BASE_URL}phenomenon/', 'phenomenon')
+        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}phenomenon/', 'phenomenon')
     if 'measurand' in o:
-        return o.replace(f'{PITHIA_ONTOLOGY_BASE_URL}measurand/', 'measurand')
+        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}measurand/', 'measurand')
     if 'featureOfInterest' in o:
-        return o.replace(f'{PITHIA_ONTOLOGY_BASE_URL}featureOfInterest/', 'featureOfInterest')
+        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}featureOfInterest/', 'featureOfInterest')
 
 def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.phenomenon, None))))
@@ -26,7 +25,7 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     return op_dict
 
 def get_rdf_text_for_ontology_component(ontology_component):
-    ontology_component_url = f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/'
+    ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
 
     # Fetch ontology component of ESPAS ontology text
     try:
@@ -56,28 +55,28 @@ def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
     return op_hrefs
 
 def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, g, feature_of_interest_ids):
-    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.featureOfInterest, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.featureOfInterest, None)):
         feature_of_interest_ids.append(o.split('/')[-1])
     return feature_of_interest_ids
 
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
-    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.phenomenon, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.phenomenon, None)):
         phenomenon_ids.append(o.split('/')[-1])
     return phenomenon_ids
 
 def get_measurand_ids_from_observed_property_id(observed_property_id, g, measurand_ids):
-    for s, p, o in g.triples((URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.measurand, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.measurand, None)):
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
 def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
     SKOS = _SKOS.SKOS
-    for s, p, o in g.triples((None, SKOS.narrower, URIRef(f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/{node_id}'))):
+    for s, p, o in g.triples((None, SKOS.narrower, URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'))):
         parent_node_ids.append(s.split('/')[-1])
     return parent_node_ids
 
 def create_dictionary_from_pithia_ontology_component(ontology_component):
-    ontology_component_url = f'{PITHIA_ONTOLOGY_BASE_URL}{ontology_component}/'
+    ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
     g = get_graph_of_pithia_ontology_component(ontology_component)
     SKOS = _SKOS.SKOS
     ontology_dictionary = {}
