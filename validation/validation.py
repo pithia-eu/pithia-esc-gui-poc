@@ -2,6 +2,8 @@ import os
 import traceback
 from requests import get
 from lxml import etree
+from rdflib import Graph, URIRef, RDF, SKOS
+from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from validation.exceptions import InvalidRootElementNameForMetadataFileException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
@@ -79,18 +81,23 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
 
     # Relation validaiton (whether a resource the metadata file
     # is referencing exists in the database or not).
-    unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
-    unregistered_document_hrefs = unregistered_references['unregistered_document_hrefs']
-    unregistered_document_types = unregistered_references['unregistered_document_types']
-    unregistered_ontology_term_hrefs = unregistered_references['unregistered_ontology_term_hrefs']
+    try:
+        unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
+    except BaseException as err:
+        print(traceback.format_exc())
+        validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
+        return validation_checklist
+    unregistered_document_hrefs = unregistered_references['document_hrefs']
+    unregistered_document_types = unregistered_references['document_types']
+    unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
     if len(unregistered_document_hrefs) > 0:
-        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
+        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
             'unregistered_document_types': unregistered_document_types
         })
         return validation_checklist
     validation_checklist['is_each_document_reference_valid'] = True
     if len(unregistered_ontology_term_hrefs) > 0:
-        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
+        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
         return validation_checklist
     validation_checklist['is_each_ontology_reference_valid'] = True
 
@@ -118,10 +125,18 @@ def validate_xml_against_schema(xml_file_parsed, schema_file_name):
         schema.assertValid(xml_file_parsed)
 
 def validate_ontology_component_with_term(component, term_id):
-    ESPAS_ONTOLOGY_URL = 'http://ontology.espas-fp7.eu/' # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
-    print(f'{ESPAS_ONTOLOGY_URL}{component}/{term_id}')
-    ontology_term_response = get(f'{ESPAS_ONTOLOGY_URL}{component}/{term_id}')
-    return ontology_term_response.status_code == 200
+    ontology_term_server_url = f'{ONTOLOGY_SERVER_BASE_URL}{component}/{term_id}'
+    response = get(ontology_term_server_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
+    if response.status_code == 404:
+        return False
+    if response.ok:
+        response_text = response.text
+        g = Graph()
+        g.parse(data=response_text, format='application/rdf+xml')
+        ontology_term = URIRef(ontology_term_server_url)
+        return (ontology_term, RDF['type'], SKOS['Concept']) in g
+    response.raise_for_status()
+    return False
 
 def get_mongodb_model_for_resource_type(resource_type):
     if resource_type == 'organisation':
@@ -162,9 +177,9 @@ def get_components_from_xlink_href(href, href_section_to_remove):
 
 def get_unregistered_references_from_xml(xml_file_parsed):
     unregistered_references = {
-        'unregistered_document_hrefs': set(),
-        'unregistered_document_types': set(),
-        'unregistered_ontology_term_hrefs': set(),
+        'document_hrefs': set(),
+        'document_types': set(),
+        'ontology_term_hrefs': set(),
     }
     parent = xml_file_parsed.getroot()
     hrefs = parent.xpath("//@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']")
@@ -179,7 +194,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             ontology_term_id = href_components[1]
             is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
             if not is_valid_ontology_term:
-                unregistered_references['unregistered_ontology_term_hrefs'].add(href)
+                unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
             href_components  = get_components_from_xlink_href(href, 'http://resources.espas-fp7.eu/')
@@ -191,8 +206,8 @@ def get_unregistered_references_from_xml(xml_file_parsed):
                 version = href_components[3]
             referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
             if not referenced_resource:
-                unregistered_references['unregistered_document_hrefs'].add(href)
-                unregistered_references['unregistered_document_types'].add(resource_type)
+                unregistered_references['document_hrefs'].add(href)
+                unregistered_references['document_types'].add(resource_type)
     
     for key in unregistered_references:
         unregistered_references[key] = list(unregistered_references[key])
