@@ -118,7 +118,7 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
         const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
         removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
     } else {
-        const liNodesToShow = [], liNodesToHide = [];
+        let liNodesToShow = [], liNodesToHide = [];
         allCheckboxLabelsForTree.forEach(label => {
             // AND match
             let numInputMatchesFound = 0;
@@ -130,12 +130,23 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
             const enclosingLiNode = getEnclosingLiNode(label);
             if (numInputMatchesFound === searchBoxInputSplit.length) {
                 liNodesToShow.push(enclosingLiNode);
+                const childNodeCheckboxes = enclosingLiNode.getElementsByTagName("input");
+                if (childNodeCheckboxes.length > 0) {
+                    const firstChildNodeCheckbox = childNodeCheckboxes[0];
+                    const parentNodeCheckboxes = getParentNodeCheckboxes(firstChildNodeCheckbox);
+                    parentNodeCheckboxes.forEach(checkbox => {
+                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(checkbox);
+                        liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
+                    });
+                }
             } else {
                 liNodesToHide.push(enclosingLiNode);
             }
         });
+        liNodesToHide = Array.from(new Set(liNodesToHide));
+        liNodesToShow = Array.from(new Set(liNodesToShow));
         addSearchBoxInputFiltersToLiNodes(liNodesToHide);
-        removeCheckboxFiltersFromLiNodes(liNodesToShow);
+        removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
     }
 }
 
