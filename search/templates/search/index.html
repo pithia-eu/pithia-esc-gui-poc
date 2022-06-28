@@ -13,16 +13,20 @@
 <h1>Data Collection Search</h1>
 <form action="{% url 'search:index' %}" method="post">
     {% csrf_token %}
-    <div class="row">
+    <div class="row gy-4">
         <div class="col-lg-8">
-            <p>
-                Fill out the search parameters accordion below, then press "Search".
-            </p>
-            <p>
-                Terms associated with resources registered with the e-Science Centre will have a working checkbox input next to black text.
-    
-                Parent terms containing child terms will have disabled checkboxes next to greyed out text.
-            </p>
+            <h2>Usage Instructions</h2>
+            <details>
+                <ul>
+                    <li>Terms associated with resources registered with the e-Science Centre will have a enabled checkbox input next to the non-greyed out term.</li>
+                    <li>Parent terms containing child terms associated with resources registered with the e-Science Centre will have a disabled checkbox next to the non-greyed out term.</li>
+                    <li>Terms not associated with any resources registered with the e-Science Centre will have a disabled checkbox next to the greyed-out term.</li>
+                    {% comment %} <li>Fill out the search parameters in the accordion below, then press "Search".</li> {% endcomment %}
+                </ul>
+                <summary>
+                    Fill out the search parameters in the accordion below, then press "Search". Click for more details.
+                </summary>
+            </details>
         </div>
         <div class="col-lg-4">
             <div class="d-flex flex-column align-items-lg-end align-items-md-center">
@@ -30,7 +34,7 @@
             </div>
         </div>
     </div>
-    <h2 class="mt-4 fs-5">Search Parameter Configuration</h2>
+    <h2 class="mt-4">Search Parameter Configuration</h2>
     <div class="accordion" id="accordionExample">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
