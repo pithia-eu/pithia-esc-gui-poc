@@ -4,11 +4,9 @@
             <legend>
                 <h3 class="fs-5 text-muted mb-0">Computation Types</h3>
             </legend>
-            <div class="observed-properties-tree-search-container-wrapper">
-                {% with ontology_component="computation-types" %}
-                {% include "search/ontology_tree_container_template.html" %}
-                {% endwith %}
-            </div>
+            {% with ontology_component="computation-types" %}
+            {% include "search/ontology_tree_container_template.html" %}
+            {% endwith %}
         </fieldset>
     </div>
     <div class="col-lg-6">
@@ -16,11 +14,9 @@
             <legend>
                 <h3 class="fs-5 text-muted mb-0">Instrument Types</h3>
             </legend>
-            <div class="observed-properties-tree-search-container-wrapper">
-                {% with ontology_component="instrument-types" %}
-                {% include "search/ontology_tree_container_template.html" %}
-                {% endwith %}
-            </div>
+            {% with ontology_component="instrument-types" %}
+            {% include "search/ontology_tree_container_template.html" %}
+            {% endwith %}
         </fieldset>
     </div>
 </div>

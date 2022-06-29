@@ -145,9 +145,6 @@ h1 {
 
 /* Search page */
 .tree-search-container {
-    /* max-height: var(--tree-search-container-max-height); */
-    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
-    overflow-y: auto;
 }
 
 .observed-properties-tree-search-container-wrapper {
@@ -187,7 +184,7 @@ h1 {
 }
 
 #accordion-filters .tree-search-container {
-    /* max-height: var(--tree-search-container-in-accordion-max-height); */
+    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
 }
 
 #accordion-filters .tree-search-terms {
