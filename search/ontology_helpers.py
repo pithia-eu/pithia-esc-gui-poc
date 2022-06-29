@@ -71,8 +71,8 @@ def get_measurand_ids_from_observed_property_id(observed_property_id, g, measura
 
 def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
     SKOS = _SKOS.SKOS
-    for s, p, o in g.triples((None, SKOS.narrower, URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'))):
-        parent_node_ids.append(s.split('/')[-1])
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
+        parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
 
 def create_dictionary_from_pithia_ontology_component(ontology_component):
