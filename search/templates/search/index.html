@@ -15,62 +15,61 @@
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-8">
-            <h2>Usage Instructions</h2>
+            <h2>How the search works</h2>
             <details>
                 <ul>
                     <li>Terms associated with resources registered with the e-Science Centre will have a enabled checkbox input next to the non-greyed out term.</li>
                     <li>Parent terms containing child terms associated with resources registered with the e-Science Centre will have a disabled checkbox next to the non-greyed out term.</li>
                     <li>Terms not associated with any resources registered with the e-Science Centre will have a disabled checkbox next to the greyed-out term.</li>
-                    {% comment %} <li>Fill out the search parameters in the accordion below, then press "Search".</li> {% endcomment %}
                 </ul>
                 <summary>
-                    Fill out the search parameters in the accordion below, then press "Search". Click for more details.
+                    Fill out the search parameters in the accordion below, then press "Search" at the bottom of the form. Click this summary for more details.
                 </summary>
             </details>
         </div>
+        <div class="col-lg-12">
+            <h2>Search Parameter Configuration</h2>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Features of Interest
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% include 'search/foi_form_section.html' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Computation Types & Instrument Types
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% include 'search/comp_type_and_instr_type_form_section.html' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Observed Properties
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {% include 'search/op_form_section.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-4">
-            <div class="d-flex flex-column align-items-lg-end align-items-md-center">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-        </div>
-    </div>
-    <h2 class="mt-4">Search Parameter Configuration</h2>
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Features of Interest
-                </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    {% include 'search/foi_form_section.html' %}
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Computation Types & Instrument Types
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    {% include 'search/comp_type_and_instr_type_form_section.html' %}
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Observed Properties
-                </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    {% include 'search/op_form_section.html' %}
-                </div>
-            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
         </div>
     </div>
 </form>
