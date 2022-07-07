@@ -53,7 +53,7 @@ def _get_view_helper_variables_by_url_namespace(url_namespace):
 
 # Create your views here.
 def index(request):
-    return render(request, 'resources/index.html', {
+    return render(request, 'browse/index.html', {
         'title': 'Browse'
     })
 
@@ -61,7 +61,7 @@ def list_resource_namespaces(request):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
     namespaces = list(view_helper_vars['mongodb_model'].find({}).distinct('identifier.pithia:Identifier.namespace'))
-    return render(request, 'resources/list_resource_namespaces.html', {
+    return render(request, 'browse/list_resource_namespaces.html', {
         'title': f'{view_helper_vars["resource_type"]} Namespaces',
         'resource_type_plural': view_helper_vars['resource_type_plural'],
         'url_namespace': url_namespace,
@@ -74,7 +74,7 @@ def list_resources_in_namespace(request, namespace):
     resources_list = list(view_helper_vars['mongodb_model'].find({
         'identifier.pithia:Identifier.namespace': namespace
     }))
-    return render(request, 'resources/list_resources_in_namespace.html', {
+    return render(request, 'browse/list_resources_in_namespace.html', {
         'title': f'{view_helper_vars["resource_type_plural"]} in the {namespace} namespace',
         'breadcrumb_item_list_resource_namespaces_text': f'{view_helper_vars["resource_type"]} Namespaces',
         'resource_type_plural': view_helper_vars['resource_type_plural'],
@@ -106,7 +106,7 @@ def detail(request, namespace, local_id):
         'identifier.pithia:Identifier.namespace': namespace,
     })
     resource_flattened = flatten(resource)
-    return render(request, 'resources/detail.html', {
+    return render(request, 'browse/detail.html', {
         'breadcrumb_item_list_resource_namespaces_text': f'{view_helper_vars["resource_type"]} Namespaces',
         'url_namespace': url_namespace,
         'resource': resource,
