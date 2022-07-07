@@ -57,6 +57,16 @@ def index(request):
         'title': 'Browse'
     })
 
+def resource_types(request):
+    return render(request, 'browse/resource_types.html', {
+        'title': 'Browse Resource Types'
+    })
+
+def schemas(request):
+    return render(request, 'browse/schemas.html', {
+        'title': 'Browse Schemas'
+    })
+
 def list_resource_namespaces(request):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
