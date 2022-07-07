@@ -144,9 +144,6 @@ h1 {
 }
 
 /* Search page */
-.tree-search-container {
-}
-
 .observed-properties-tree-search-container-wrapper {
     border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
     border-radius: 0.3rem;
@@ -276,7 +273,11 @@ ul.tree ul {
             var(--line-3-position),
             var(--line-4-position),
             var(--line-5-position),
-            /* var(--line-6-position), */
+            var(--circle-1-position),
+            var(--circle-2-position),
+            var(--circle-3-position),
+            var(--circle-4-position),
+            var(--circle-5-position),
             0 0;
     }
 }
@@ -295,8 +296,12 @@ ul.tree ul {
         var(--line-2-skeleton),
         var(--line-2-skeleton),
         var(--line-2-skeleton),
-        var(--line-3-skeleton),
-        /* var(--line-3-skeleton), */
+        var(--line-2-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
         var(--card-skeleton);
 
     background-size:
@@ -306,7 +311,11 @@ ul.tree ul {
         var(--line-3-width) var(--line-height),
         var(--line-4-width) var(--line-height),
         var(--line-5-width) var(--line-height),
-        /* var(--line-6-width) var(--line-height), */
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
         100% 100%;
 
     background-position:
@@ -316,10 +325,14 @@ ul.tree ul {
         var(--line-3-position),
         var(--line-4-position),
         var(--line-5-position),
-        /* var(--line-6-position), */
+        var(--circle-1-position),
+        var(--circle-2-position),
+        var(--circle-3-position),
+        var(--circle-4-position),
+        var(--circle-5-position),
         0 0;
     background-repeat: no-repeat;
-    animation: loading 1.8s infinite;
+    animation: loading 1s infinite;
 }
 
 /* Search results */
@@ -346,41 +359,57 @@ ul.tree ul {
     /* Search page skeleton loader variables */
     --card-height: calc((var(--line-height) * 6) + (var(--line-spacing) * 5) + var(--card-y-padding));
     --card-width: 280px;
-    --card-y-padding: 12px;
-    --card-x-padding: 5px;
+    --card-y-padding: 8px;
+    --card-x-padding: 8px;
     --card-skeleton: linear-gradient(transparent var(--card-height), transparent 0);
 
-    --line-height: 25px;
+    --line-height: 12px;
     --line-spacing: 15px;
+    --line-x-position: calc(var(--line-height) + 8px + var(--card-x-padding));
     --line-1-skeleton: linear-gradient(#ccc var(--line-height), #ccc 0);
     --line-2-skeleton: linear-gradient(#ddd var(--line-height), #ddd 0);
     --line-3-skeleton: linear-gradient(#eee var(--line-height), #eee 0);
     
-    --line-1-width: 150px;
+    --line-1-width: 120px;
     --line-1-y-position: var(--card-y-padding);
-    --line-1-position: var(--card-x-padding) var(--line-1-y-position);;
+    --line-1-position: var(--line-x-position) var(--line-1-y-position);;
 
-    --line-2-width: 120px;
+    --line-2-width: 150px;
     --line-2-y-position: calc(var(--line-1-y-position) + var(--line-height) + var(--line-spacing));
-    --line-2-position: var(--card-x-padding) var(--line-2-y-position);
+    --line-2-position: var(--line-x-position) var(--line-2-y-position);
 
-    --line-3-width: 200px;
+    --line-3-width: 80px;
     --line-3-y-position: calc(var(--line-2-y-position) + var(--line-height) + var(--line-spacing));
-    --line-3-position: var(--card-x-padding) var(--line-3-y-position);
+    --line-3-position: var(--line-x-position) var(--line-3-y-position);
 
-    --line-4-width: 100px;
+    --line-4-width: 60px;
     --line-4-y-position: calc(var(--line-3-y-position) + var(--line-height) + var(--line-spacing));
-    --line-4-position: var(--card-x-padding) var(--line-4-y-position);
+    --line-4-position: var(--line-x-position) var(--line-4-y-position);
 
-    --line-5-width: 50px;
+    --line-5-width: 30px;
     --line-5-y-position: calc(var(--line-4-y-position) + var(--line-height) + var(--line-spacing));
-    --line-5-position: var(--card-x-padding) var(--line-5-y-position);
-
-    --line-6-width: 50px;
-    --line-6-y-position: calc(var(--line-5-y-position) + var(--line-height) + var(--line-spacing));
-    --line-6-position: var(--card-x-padding) var(--line-6-y-position);
+    --line-5-position: var(--line-x-position) var(--line-5-y-position);
 
     --blur-width: 100px;
     --blur-size: var(--blur-width) var(--card-height);
+
+    --circle-size: var(--line-height);
+    --circle-x-position: var(--card-x-padding);
+    --circle-skeleton: radial-gradient(circle calc(var(--circle-size) / 2) at center, #ddd 100%, transparent 0);
+    
+    --circle-1-y-position: var(--card-y-padding);
+    --circle-1-position: var(--circle-x-position) var(--circle-1-y-position);
+    
+    --circle-2-y-position: calc(var(--circle-1-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-2-position: var(--circle-x-position) var(--circle-2-y-position);
+    
+    --circle-3-y-position: calc(var(--circle-2-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-3-position: var(--circle-x-position) var(--circle-3-y-position);
+    
+    --circle-4-y-position: calc(var(--circle-3-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-4-position: var(--circle-x-position) var(--circle-4-y-position);
+    
+    --circle-5-y-position: calc(var(--circle-4-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
 }
 

@@ -21,7 +21,7 @@
     <div class="col-xl-9 col-lg-8">
         <h2 class="mb-3">XML File Upload</h2>
         <div class="row gy-4">
-            <div class="col-lg-8 col-12">
+            <div class="col-lg-8">
                 {% if messages %}
                 <div class="registration-alerts">
                     {% for message in messages %}
@@ -33,25 +33,18 @@
                 {% endif %}
                 <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="upload-form">
                     {% csrf_token %}
-                    <div class="row gy-3 align-items-lg-end align-items-center">
-                        <div class="col-xl-9 col-lg-8">
-                            {% if form.file.errors %}
-                                <ul>
-                                {% for error in form.file.errors %}
-                                    <li>{{ error|escape }}</li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            {{ form.file.label_tag }}
-                            {{ form.file }}
-                        </div>
-                        <div class="col-xl-3 col-lg-4">
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
-                        </div>
-                    </div>
+                    {% if form.file.errors %}
+                        <ul>
+                        {% for error in form.file.errors %}
+                            <li>{{ error|escape }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.file.label_tag }}
+                    {{ form.file }}
                 </form>
             </div>
-            <div class="col-lg-10 col-12">
+            <div class="col-lg-8">
                 <div>XML Validation Status:</div>
                 <div class="card mt-2">
                     <div class="card-body">
@@ -59,6 +52,11 @@
                             The status will be updated upon selecting a file for upload.
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -77,7 +75,7 @@
                     <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisition</a></li>
                     <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computation</a></li>
                     <li><a href="{% url 'register:process' %}" class="pithia-blue">Process</a></li>
-                    <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Model or Measurement</a></li>
+                    <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collection</a></li>
                 </ul>
             </div>
         </div>
