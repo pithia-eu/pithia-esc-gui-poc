@@ -1,5 +1,6 @@
 # TODO: Replace ESPAS_Identifier with pithia:Identifier
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+from register.mongodb_models import OriginalMetadataXml
 
 
 def find_and_copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
@@ -25,7 +26,10 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(metadata_file_dict)
+    newly_registered_metadata = mongodb_model.insert_one(metadata_file_dict)
     xml_file.seek(0)
-    metadata_file_dict['original_xml_as_string'] = xml_file.read().decode()
-    
-    return mongodb_model.insert_one(metadata_file_dict)
+    original_metadata_xml = {
+        'metadataId': newly_registered_metadata['_id'],
+        'value': xml_file.read().decode()
+    }
+    OriginalMetadataXml.insert_one(original_metadata_xml)
