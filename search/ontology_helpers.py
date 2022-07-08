@@ -24,18 +24,29 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_dict['featuresOfInterest'] = op_featuresOfInterest
     return op_dict
 
-def get_rdf_text_for_ontology_component(ontology_component):
+def get_rdf_text_remotely(ontology_component):
     ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
+    ontology_response = get(ontology_component_url)
+    return ontology_response.text
 
+def get_rdf_text_locally(ontology_component):
+    ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search/ontology/{ontology_component.lower()}.xml'))
+    return ontology_file.read()
+
+
+def get_rdf_text_for_ontology_component(ontology_component):
     # Fetch ontology component of ESPAS ontology text
-    try:
-        ontology_response = get(ontology_component_url)
-        ontology_text = ontology_response.text
-    except BaseException as err:
-        print(err)
-        # Read ontology from file - alt method if connection to ontology server fails
-        ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search/ontology/{ontology_component.lower()}.xml'))
-        ontology_text = ontology_file.read()
+    if ontology_component.lower() == 'featureofinterest':
+        # Current solution as PITHIA ontology server is not ready
+        # yet.
+        ontology_text = get_rdf_text_locally(ontology_component)
+    else:
+        try:
+            ontology_text = get_rdf_text_remotely(ontology_component)
+        except BaseException as err:
+            print(err)
+            # Read ontology from file - alt method if connection to ontology server fails
+            ontology_text = get_rdf_text_locally(ontology_component)
 
     return ontology_text
 

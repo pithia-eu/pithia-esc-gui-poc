@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Browse' 'resources:index' %}
+{% breadcrumb_item 'Browse' 'browse:index' %}
 {% breadcrumb_item breadcrumb_item_list_resource_namespaces_text url_namespace|add:':list_resource_namespaces' %}
 {% breadcrumb_item_active namespace %}
 {% endblock breadcrumbs %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Browse' %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1 class="pb-3">Browse</h1>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:resource_types' %}">Resources</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:schemas' %}">XML Schemas</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

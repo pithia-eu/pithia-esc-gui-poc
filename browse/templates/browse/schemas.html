@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Browse' 'browse:index' %}
+{% breadcrumb_item_active 'XML Schemas' %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1 class="pb-3">XML Schemas</h1>
+<p class="lead">
+    Links to view the XML metadata schemas in your browser.
+</p>
+<ul class="list-group">
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/espas.xsd" target="_blank" rel="noopener noreferrer">ESPAS Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/featureOfInterest.xsd" target="_blank" rel="noopener noreferrer">Feature of Interest Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/observation.xsd" target="_blank" rel="noopener noreferrer">Observation Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/observationCollection.xsd" target="_blank" rel="noopener noreferrer">Observation Collection Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/observedProperty.xsd" target="_blank" rel="noopener noreferrer">Observed Property Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/process.xsd" target="_blank" rel="noopener noreferrer">Process Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/project.xsd" target="_blank" rel="noopener noreferrer">Project Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/result.xsd" target="_blank" rel="noopener noreferrer">Result Schema</a>
+    </li>
+    <li class="list-group-item">
+        <a href="https://schemas.espas-fp7.eu/xsd/2.1/utilities.xsd" target="_blank" rel="noopener noreferrer">Utilities Schema</a>
+    </li>
+</ul>
+{% endblock content %}

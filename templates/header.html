@@ -20,7 +20,7 @@
                 aria-expanded="false">Resources</a>
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
-                    {% url 'resources:index' as resources_url %}
+                    {% url 'browse:index' as resources_url %}
                     <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse</a>
                 </li>
                 <li class="dropdown-item">

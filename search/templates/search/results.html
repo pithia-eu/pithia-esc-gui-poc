@@ -15,7 +15,7 @@
     {% for r in results %}
     <div class="list-group-item">
         {% with pithia_identifier=r.identifier|get_key_value:"pithia:Identifier" %}
-        <a href="{% url 'resources:data-collections:detail' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
+        <a href="{% url 'browse:data-collections:detail' pithia_identifier.namespace pithia_identifier.localID %}" class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ r.name }}</h5>
         </a>
         {% endwith %}
