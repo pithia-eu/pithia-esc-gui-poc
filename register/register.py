@@ -26,10 +26,10 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(metadata_file_dict)
-    newly_registered_metadata = mongodb_model.insert_one(metadata_file_dict)
+    metadata_registration_result = mongodb_model.insert_one(metadata_file_dict)
     xml_file.seek(0)
     original_metadata_xml = {
-        'metadataId': newly_registered_metadata['_id'],
+        'metadataId': metadata_registration_result.inserted_id,
         'value': xml_file.read().decode()
     }
     OriginalMetadataXml.insert_one(original_metadata_xml)
