@@ -21,3 +21,5 @@ AcquisitionRevision = db['acquisition-revisions']
 ComputationRevision = db['computation-revisions']
 ProcessRevision = db['processe-revisions']
 DataCollectionRevision = db['data-collection-revisions']
+
+OriginalMetadataXml = db['original-metadata-xmls']

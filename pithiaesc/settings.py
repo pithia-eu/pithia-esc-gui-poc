@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': env('DB_NAME'),
+        'NAME': env('UTIL_DB_NAME'),
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': env('MONGODB_CONNECTION_STRING')
