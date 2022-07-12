@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Browse' 'browse:index' %}
+{% breadcrumb_item_active breadcrumb_item_list_resource_namespaces_text %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1 class="pb-3">{{ title }}</h1>
+{% if resources_list|length > 0 %}
+<ul class="list-group">
+    {% for resource in resources_list %}
+    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' resource|underscore_attribute:'_id' %}">{{ resource.name|default:resource.local_id }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are no {{ resource_type_plural|lower }} for the {{ namespace }} namespace.</p>
+{% endif %}
+{% endblock content %}

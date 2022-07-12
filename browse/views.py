@@ -93,6 +93,18 @@ def list_resources_in_namespace(request, namespace):
         'resources_list': resources_list
     })
 
+def list_resources_of_type(request):
+    url_namespace = request.resolver_match.namespace
+    view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
+    resources_list = list(view_helper_vars['mongodb_model'].find({}))
+    return render(request, 'browse/list_resources_of_type.html', {
+        'title': view_helper_vars["resource_type_plural"],
+        'breadcrumb_item_list_resource_namespaces_text': view_helper_vars["resource_type_plural"],
+        'resource_type_plural': view_helper_vars['resource_type_plural'],
+        'url_namespace': url_namespace,
+        'resources_list': resources_list
+    })
+
 def flatten(d):
     out = {}
     for key, value in d.items():
@@ -108,12 +120,11 @@ def flatten(d):
             out[key] = value
     return out
 
-def detail(request, namespace, local_id):
+def detail(request, resource_id):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
     resource = view_helper_vars['mongodb_model'].find_one({
-        'identifier.pithia:Identifier.localID': local_id,
-        'identifier.pithia:Identifier.namespace': namespace,
+        '_id': resource_id
     })
     resource_flattened = flatten(resource)
     return render(request, 'browse/detail.html', {

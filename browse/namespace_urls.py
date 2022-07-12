@@ -4,7 +4,6 @@ from . import views
 
 app_name = 'browse'
 urlpatterns = [
-    path('', views.list_resource_namespaces, name='list_resource_namespaces'),
-    path('<namespace>/', views.list_resources_in_namespace, name='list_resources_in_namespace'),
-    path('<namespace>/<local_id>/', views.detail, name='detail'),
+    path('', views.list_resources_of_type, name='list_resource_namespaces'),
+    path('<resource_id>/', views.detail, name='detail'),
 ]
