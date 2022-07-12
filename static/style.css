@@ -292,11 +292,11 @@ ul.tree ul {
             #fff, 
             transparent
         ),
-        var(--line-2-skeleton),
-        var(--line-2-skeleton),
-        var(--line-2-skeleton),
-        var(--line-2-skeleton),
-        var(--line-2-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
         var(--circle-skeleton),
         var(--circle-skeleton),
         var(--circle-skeleton),
@@ -362,13 +362,12 @@ ul.tree ul {
     --card-y-padding: 8px;
     --card-x-padding: 8px;
     --card-skeleton: linear-gradient(transparent var(--card-height), transparent 0);
+    --skeleton-colour: #ddd;
 
     --line-height: 12px;
     --line-spacing: 15px;
     --line-x-position: calc(var(--line-height) + 8px + var(--card-x-padding));
-    --line-1-skeleton: linear-gradient(#ccc var(--line-height), #ccc 0);
-    --line-2-skeleton: linear-gradient(#ddd var(--line-height), #ddd 0);
-    --line-3-skeleton: linear-gradient(#eee var(--line-height), #eee 0);
+    --line-skeleton: linear-gradient(var(--skeleton-colour) var(--line-height), var(--skeleton-colour) 0);
     
     --line-1-width: 120px;
     --line-1-y-position: var(--card-y-padding);
@@ -395,7 +394,7 @@ ul.tree ul {
 
     --circle-size: var(--line-height);
     --circle-x-position: var(--card-x-padding);
-    --circle-skeleton: radial-gradient(circle calc(var(--circle-size) / 2) at center, #ddd 100%, transparent 0);
+    --circle-skeleton: linear-gradient(var(--skeleton-colour) var(--circle-size), var(--skeleton-colour) 0);
     
     --circle-1-y-position: var(--card-y-padding);
     --circle-1-position: var(--circle-x-position) var(--circle-1-y-position);
