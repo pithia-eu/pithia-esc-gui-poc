@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'present.apps.PresentConfig',
     'resources.apps.ResourcesConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',

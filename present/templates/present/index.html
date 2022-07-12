@@ -3,13 +3,25 @@
 {% block breadcrumbs %}
 {% breadcrumb_item_active 'Present' %}
 {% endblock breadcrumbs %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui.css' %}>
+<link rel="stylesheet" type="text/css" href={% static 'present/index.css' %}>
+
+{% block scripts %}
+<script src="{% static "present/swagger-ui-bundle.js" %}" id="swagger-ui-bundle-script" defer></script>
+<script src="{% static "present/swagger-ui-standalone-preset.js" %}" id="swagger-ui-standalone-script" defer></script>
+<script src="{% static "present/swagger-initializer.js" %}" id="swagger-initializer-script" defer></script>
+{% endblock scripts %}
+{% block content %}
 <div class="row pb-4">
     <div class="col-lg-8">
         <h1>Model execution</h1>
     </div>
 </div>
-<div class="row pb-4">
-    <div class="col-lg-8">
-        <iframe src="http://localhost:8081/" height="600" width="1200" title="Iframe Example"></iframe>
-    </div>
+    <div id="swagger-ui"></div>
+    <script id="swagger-ui-bundle-script" charset="UTF-8"> </script>
+    <script id="swagger-ui-standalone-preset-script" charset="UTF-8"> </script>
+    <script id="swagger-initializer-script" charset="UTF-8"> </script>
 </div>
+
+{% endblock content %}
