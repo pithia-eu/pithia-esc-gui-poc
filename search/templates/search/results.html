@@ -20,6 +20,9 @@
         </a>
         {% endwith %}
         <p class="mb-1 line-clamp search-result-description">{{ r.description }}</p>
+        {% if 'link_to_api_spec' in r %}
+        <small><b class="text-muted">API:</b> <a href="{{ r.link_to_api_spec }}" target="_blank" rel="noopener noreferrer">{{ r.link_to_api_spec }}</a></small>
+        {% endif %}
     </div>
     {% endfor %}
 </ul>

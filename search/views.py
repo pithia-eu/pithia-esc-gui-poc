@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
-from .search_helpers import find_matching_observation_collections
+from .search_helpers import find_matching_data_collections, get_api_specifications_from_data_collections
 from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
 
 def get_tree_form_for_ontology_component(request, ontology_component):
@@ -54,11 +54,17 @@ def index(request):
     })
 
 def results(request):
-    observation_collections = find_matching_observation_collections(request)
+    data_collections = find_matching_data_collections(request)
+    api_specifications = get_api_specifications_from_data_collections(data_collections)
+    for spec in api_specifications:
+        for dc in data_collections:
+            if dc['_id'] == spec['resourceId']:
+                dc['link_to_api_spec'] = spec['link']
+                break
 
     return render(request, 'search/results.html', {
         'title': 'Search results',
-        'results': observation_collections
+        'results': data_collections
     })
 
 def extract_localid_from_xlink_href(xlinkhref):

@@ -1,9 +1,8 @@
-from mongodb import db
 from search.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
+from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess, ApiSpecification
 
-def find_matching_observation_collections(request):
+def find_matching_data_collections(request):
     observed_properties = []
     instrument_types = []
     computation_types = []
@@ -106,3 +105,14 @@ def find_matching_observation_collections(request):
             '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
         }
     }))
+
+def get_id_from_resource(resource):
+    return resource['_id']
+
+def get_api_specifications_from_data_collections(data_collections):
+    data_collection_ids = list(map(get_id_from_resource, data_collections))
+    return ApiSpecification.find({
+        'resourceId': {
+            '$in': data_collection_ids
+        }
+    })
