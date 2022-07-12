@@ -23,3 +23,5 @@ ProcessRevision = db['processe-revisions']
 DataCollectionRevision = db['data-collection-revisions']
 
 OriginalMetadataXml = db['original-metadata-xmls']
+
+ApiSpecification = db['api-specifications']
