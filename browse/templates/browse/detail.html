@@ -17,6 +17,18 @@
             <p class="lead">{{ resource.description }}</p>
         </section>
     </div>
+    {% if api_spec %}
+    <div class="col-lg-4">
+        <section>
+            <h2 class="mb-3">API</h2>
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ api_spec.link }}" target="_blank" rel="noopener noreferrer">{{ api_spec.link }}</a>
+                </div>
+            </div>
+        </section>
+    </div>
+    {% endif %}
 </div>
 {% if "result" in resource %}
 <section>

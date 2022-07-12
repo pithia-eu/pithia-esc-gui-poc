@@ -116,9 +116,14 @@ def detail(request, namespace, local_id):
         'identifier.pithia:Identifier.namespace': namespace,
     })
     resource_flattened = flatten(resource)
+    if 'data-collection' in url_namespace:
+        api_spec = mongodb_models.ApiSpecification.find_one({
+            'resourceId': resource['_id']
+        })
     return render(request, 'browse/detail.html', {
         'breadcrumb_item_list_resource_namespaces_text': f'{view_helper_vars["resource_type"]} Namespaces',
         'url_namespace': url_namespace,
         'resource': resource,
-        'resource_flattened': resource_flattened
+        'resource_flattened': resource_flattened,
+        'api_spec': api_spec
     })
