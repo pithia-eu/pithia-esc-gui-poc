@@ -2,11 +2,11 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item breadcrumb_item_list_resource_namespaces_text url_namespace|add:':list_resource_namespaces' %}
+{% breadcrumb_item 'Resources' 'browse:resources' %}
+{% breadcrumb_item breadcrumb_item_list_resources_of_type_text url_namespace|add:':list_resources_of_type' %}
 {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-{% breadcrumb_item pithia_identifier.namespace url_namespace|add:':list_resources_in_namespace' pithia_identifier.namespace %}
+{% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
 {% endwith %}
-{% breadcrumb_item_active resource.name %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ resource.name }}</h1>

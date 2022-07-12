@@ -17,3 +17,7 @@ def map_ontology_components_to_local_ids(list):
     for x in list:
         local_ids_list.append(x['identifier']['pithia:Identifier']['localID'])
     return local_ids_list
+
+def remove_underscore_from_id_attribute(resource):
+    resource['id'] = resource['_id']
+    return resource
