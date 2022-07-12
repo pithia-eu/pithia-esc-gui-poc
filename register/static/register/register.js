@@ -6,57 +6,162 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
-const filesInput = document.getElementById("id_files");
-function loadUploadedFilesList() {
-    const files = Array.from(filesInput.files);
-    const uploadedFilesList = document.querySelector(".list-uploaded-files");
-    uploadedFilesList.innerHTML = "";
-    files.forEach((file, i) => {
-        uploadedFilesList.append(htmlToElement(
-            `<li class="list-group-item">
-                <div class="row g-lg-4 g-sm-2 py-2">
-                    <div class="col-lg-6">
-                        <div class="d-flex align-items-center">
-                            <img src="/static/register/file.svg" alt="file" class="me-3">
-                            <input type="hidden" name="file${i}-name" value="${file.name}">
-                            <span class="file-name" title=${file.name}>${file.name}</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="d-flex flex-wrap justify-content-xl-center">
-                            <div class="d-flex align-items-center me-3">
-                                <input type="radio" class="me-1" id="radio-is-file${i}-model" name="file${i}-metadata-type" value="model" required>
-                                <label for="radio-is-file${i}-model" class="mb-0">Model</label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <input type="radio" class="me-1" id="radio-is-file${i}-dataset" name="file${i}-metadata-type" value="dataset" required>
-                                <label for="radio-is-file${i}-dataset" class="mb-0">Measurement</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="d-flex align-items-center justify-content-lg-end">
-                            <input type="checkbox" class="me-1" id="checkbox-is-file${i}-executable" name="is-file${i}-executable">
-                            <label for="checkbox-is-file${i}-executable" class="mb-0">Executable</label>
-                        </div>
-                    </div>
-                </div>
-            </li>`
-        ));
-    });
+function loadFileValidationElems(file, containerElem) {
+    containerElem.innerHTML = "";
+    return containerElem.append(htmlToElement(`
+        <div class="row g-3">
+            <div class="col-lg-12 file-validation-status">
+            </div>
+            <div class="col-lg-12 file-validation-error d-none">
+            </div>
+        </div>
+    `));
 }
 
-const collapseGuidance = document.getElementById('collapse-guidance')
-const bsCollapseGuidance = new bootstrap.Collapse(collapseGuidance, {
-    toggle: false
-});
-filesInput.addEventListener("change", event => {
-    loadUploadedFilesList();
-    bsCollapseGuidance.show();
+const xmlValidationStates =  {
+    VALIDATING: "validating",
+    VALID: "valid",
+    INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
+    INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
+    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.exceptions.InvalidRootElementNameForMetadataFileException'>",
+    UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.exceptions.UnregisteredMetadataDocumentException'>",
+    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.exceptions.UnregisteredOntologyTermException'>",
+}
+
+async function validateXmlFile(file, fileValidationUrl) {
+    const formData = new FormData();
+    const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
+    formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
+    formData.append("file", file);
+    const response = await fetch(fileValidationUrl, {
+        method: "POST",
+        body: formData
+    });
+    const responseContent = await response.json();
+    if (!response.ok) {
+        return {
+            state: responseContent.error.type,
+            error: responseContent.error.message,
+            extra_details: responseContent.error.extra_details,
+        };
+    }
+    return {
+        state: responseContent.result
+    };
+}
+
+function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validatingStatusMsg) {
+    const statusElemContent = htmlToElement(`
+        <div class="d-flex align-items-center">
+        </div>
+    `);
+    if (fileValidationStatus.state === "validating") {
+        statusElemContent.innerHTML = `
+            <div class="spinner-grow-container text-muted me-3">
+                <div class="spinner-grow" style="width: 1rem; height: 1rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <span class="text-muted">${validatingStatusMsg}</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.SUBMITTED_METADATA_NOT_MATCHING_TYPE) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">The metadata file submitted is for the wrong resource type.</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SEMANTICS) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">XML does not conform to the corresponding schema.</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_RESOURCES) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3">
+            <span class="text-danger">
+                One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.
+            </span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_ONTOLOGY_TERMS) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3">
+            <span class="text-danger">
+                One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.
+            </span>
+        `;
+    } else {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
+        `;
+    }
+    
+    statusElem.innerHTML = "";
+    return statusElem.append(statusElemContent);
+}
+
+function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
+    return errorMsgElem.innerHTML = `
+        <div class="alert alert-danger mb-0" role="alert">
+            Error: ${errorMsg}
+        </div>
+    `;
+}
+
+function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
+    const extraDetailsMessage = htmlToElement('<div class="mt-5">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
+    const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
+    unregisteredReferencedResourceTypes.forEach(resourceType => {
+        registrationLinksList.appendChild(htmlToElement(`
+            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} Metadata Registration</a></li>
+        `));
+    });
+    registrationLinksElem.append(extraDetailsMessage);
+    return registrationLinksElem.append(registrationLinksList);
+}
+
+function removeClassNameFromElem(elem, className) {
+    return elem.classList.remove(className);
+}
+
+async function handleFileUpload(fileInput, containerElem) {
+    const file = Array.from(fileInput.files)[0];
+    loadFileValidationElems(file, containerElem);
+    const validationStatusElem = document.querySelector(".file-validation-status");
+    const validationStatusErrorElem = document.querySelector(".file-validation-error");
+    
+    updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
+    const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+    const validationResults = await validateXmlFile(file, fileValidationUrl);
+    updateXMLFileValidationStatus(validationResults, validationStatusElem);
+    if (validationResults.error) {
+        removeClassNameFromElem(validationStatusErrorElem, "d-none");
+        updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
+    }
+    if (!validationResults.extra_details) {
+        return;
+    }
+    if (validationResults.extra_details.unregistered_document_types) {
+        const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
+        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
+    }
+}
+
+const fileInput = document.getElementById("id_file");
+const fileValidationStatusElem = document.querySelector(".file-validation-status-container");
+
+fileInput.addEventListener("change", async event => {
+    await handleFileUpload(fileInput, fileValidationStatusElem);
 });
 
-document.getElementById("register-script").addEventListener("load", event => {
-    if (filesInput.value !== "") {
-        loadUploadedFilesList();
+window.addEventListener("load", async event => {
+    if (fileInput.value !== "") {
+        // In case files have been entered into the file input
+        // and the user refreshes the page.
+        await handleFileUpload(fileInput, fileValidationStatusElem);
     }
 });

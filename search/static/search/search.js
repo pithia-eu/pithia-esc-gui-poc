@@ -1,48 +1,10 @@
-/**
- * "Trees" in this context are the top-level class trees from the ESPAS ontology (eventually to become
- * the PITHIA ontology).
- * 
- * The top-level classes from the ontology in this case are "Measurand", "Observed Property",
- * "Phenomenon", "Qualifier".
- * 
- */
-const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
-const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
-const PHENOMENONS_TREE_CONTAINER_ID = "phenomenons-tree-search-container";
-const QUALIFIERS_TREE_CONTAINER_ID = "qualifiers-tree-search-container";
-
 const CHECKBOX_FILTER_CLASS = "filter-no-match";
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
-
-const UNKNOWN = "unknown"; // because "unknown" is used a lot throughout this code
 
 
 // Utility functions
 
-function getTreeContainerIdFromInitialSearchFormComponentHTML(htmlText) {
-    if (htmlText.includes('name="measurands"')) {
-        return MEASURANDS_TREE_CONTAINER_ID;
-    } else if (htmlText.includes('name="observed_properties"')) {
-        return OBSERVED_PROPERTIES_TREE_CONTAINER_ID;
-    } else if (htmlText.includes('name="phenomenons"')) {
-        return PHENOMENONS_TREE_CONTAINER_ID;
-    } else if (htmlText.includes('name="qualifiers"')) {
-        return QUALIFIERS_TREE_CONTAINER_ID;
-    }
-    return UNKNOWN;
-}
-
-function getHTMLDatasetNameFromTreeContainerId(treeContainerId) {
-    switch (treeContainerId) {
-        case MEASURANDS_TREE_CONTAINER_ID: return "measurands";
-        case OBSERVED_PROPERTIES_TREE_CONTAINER_ID: return "observed-properties";
-        case PHENOMENONS_TREE_CONTAINER_ID: return "phenomenons";
-        case QUALIFIERS_TREE_CONTAINER_ID: return "qualifiers";
-        default: UNKNOWN;
-    }
-}
-
-function getEnclosingLiNode(elem) {
+export function getEnclosingLiNode(elem) {
     let currentParentNode = elem;
     let currentChildNode = elem;
     while (currentParentNode !== null && currentParentNode.nodeName !== "LI") {
@@ -50,6 +12,21 @@ function getEnclosingLiNode(elem) {
         currentChildNode = currentParentNode;
     }
     return currentParentNode;
+}
+
+export function getParentNodeCheckboxes(checkbox, parentNodeCheckboxes) {
+    if (!parentNodeCheckboxes) {
+        parentNodeCheckboxes = [];
+    }
+    if (checkbox.dataset.parentNodeInOntology === "") {
+        return parentNodeCheckboxes;
+    }
+    const parentNodeCheckbox = document.getElementById(checkbox.dataset.parentNodeInOntology);
+    parentNodeCheckboxes.push(parentNodeCheckbox);
+    if (parentNodeCheckbox.dataset.parentNodeInOntology !== "") {
+        parentNodeCheckboxes = getParentNodeCheckboxes(parentNodeCheckbox, parentNodeCheckboxes);
+    }
+    return parentNodeCheckboxes;
 }
 
 function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
@@ -78,68 +55,57 @@ function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
     })
 }
 
-// Filtering
 
-function getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId) {
+// Checkbox filtering
+
+export function getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId) {
     return document.querySelectorAll(`#${treeContainerId} li.filter-no-match`);
 }
+
+function addCheckboxFilterToLiNode(liNode) {
+    liNode.classList.add(CHECKBOX_FILTER_CLASS);
+}
+
+function removeCheckboxFilterFromLiNode(liNode) {
+    liNode.classList.remove(CHECKBOX_FILTER_CLASS);
+}
+
+export function addCheckboxFiltersToLiNodes(liNodes) {
+    liNodes.forEach(liNode => {
+        addCheckboxFilterToLiNode(liNode);
+    });
+}
+
+export function removeCheckboxFiltersFromLiNodes(liNodes) {
+    liNodes.forEach(liNode => {
+        removeCheckboxFilterFromLiNode(liNode);
+    });
+}
+
+// Search box input filtering
 
 function getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId) {
     return document.querySelectorAll(`#${treeContainerId} li.search-no-match`);
 }
 
-function addFilterClassesToLiNodes(filters, liNodes) {
-    liNodes.forEach(liNode => {
-        if (filters.includes(CHECKBOX_FILTER_CLASS)) {
-            liNode.classList.add(CHECKBOX_FILTER_CLASS);
-        }
+function addSearchBoxInputFilterToLiNode(liNode) {
+    liNode.classList.add(SEARCH_BOX_INPUT_FILTER_CLASS);
+}
 
-        if (filters.includes(SEARCH_BOX_INPUT_FILTER_CLASS)) {
-            liNode.classList.add(SEARCH_BOX_INPUT_FILTER_CLASS);
-        }
+function removeSearchBoxInputFilterFromLiNode(liNode) {
+    liNode.classList.remove(SEARCH_BOX_INPUT_FILTER_CLASS);
+}
+
+function addSearchBoxInputFiltersToLiNodes(liNodes) {
+    liNodes.forEach(liNode => {
+        addSearchBoxInputFilterToLiNode(liNode);
     });
 }
 
-function removeFilterClassesFromLiNodes(filters, liNodes) {
+function removeSearchBoxInputFiltersFromLiNodes(liNodes) {
     liNodes.forEach(liNode => {
-        if (filters.includes(CHECKBOX_FILTER_CLASS)) {
-            liNode.classList.remove(CHECKBOX_FILTER_CLASS);
-        }
-
-        if (filters.includes(SEARCH_BOX_INPUT_FILTER_CLASS)) {
-            liNode.classList.remove(SEARCH_BOX_INPUT_FILTER_CLASS);
-        }
+        removeSearchBoxInputFilterFromLiNode(liNode);
     });
-}
-
-function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, filterTreeContainerId) {
-    const checkboxesToFilterBy = document.querySelectorAll(`#${filterTreeContainerId} input[type="checkbox"]:checked`)
-    if (checkboxesToFilterBy.length === 0) {
-        const hiddenLisForTreeContainer = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerIdToFilter);
-        removeFilterClassesFromLiNodes([CHECKBOX_FILTER_CLASS], hiddenLisForTreeContainer);
-    } else {
-        const ontologyClassDatasetToFilterBy = getHTMLDatasetNameFromTreeContainerId(filterTreeContainerId);
-        const checkboxesToFilter = document.querySelectorAll(`#${treeContainerIdToFilter} input[type="checkbox"]`);
-        const liNodesToHide = [], liNodesToShow = [];
-        checkboxesToFilter.forEach(checkboxToFilter => {
-            let isCheckboxToFilterAndChildrenVisible = false;
-            // OR match
-            checkboxesToFilterBy.forEach(checkbox => {
-                const ontologyClassDatasetExists = checkboxToFilter.dataset && checkboxToFilter.dataset[ontologyClassDatasetToFilterBy];
-                if (ontologyClassDatasetExists && checkboxToFilter.dataset[ontologyClassDatasetToFilterBy].includes(checkbox.id)) {
-                    isCheckboxToFilterAndChildrenVisible = true;
-                }
-            });
-            const enclosingLiNode = getEnclosingLiNode(checkboxToFilter);
-            if (isCheckboxToFilterAndChildrenVisible) {
-                liNodesToShow.push(enclosingLiNode);
-            } else {
-                liNodesToHide.push(enclosingLiNode);
-            }
-        });
-        addFilterClassesToLiNodes([CHECKBOX_FILTER_CLASS], liNodesToHide);
-        removeFilterClassesFromLiNodes([CHECKBOX_FILTER_CLASS], liNodesToShow);
-    }
 }
 
 function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
@@ -149,10 +115,10 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
     
     if (searchBoxInput === "") {
-        const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerIdToFilter);
-        removeFilterClassesFromLiNodes([SEARCH_BOX_INPUT_FILTER_CLASS], hiddenLisForTreeContainer);
+        const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
+        removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
     } else {
-        const liNodesToShow = [], liNodesToHide = [];
+        let liNodesToShow = [], liNodesToHide = [];
         allCheckboxLabelsForTree.forEach(label => {
             // AND match
             let numInputMatchesFound = 0;
@@ -164,40 +130,51 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
             const enclosingLiNode = getEnclosingLiNode(label);
             if (numInputMatchesFound === searchBoxInputSplit.length) {
                 liNodesToShow.push(enclosingLiNode);
+                const childNodeCheckboxes = enclosingLiNode.getElementsByTagName("input");
+                if (childNodeCheckboxes.length > 0) {
+                    const firstChildNodeCheckbox = childNodeCheckboxes[0];
+                    const parentNodeCheckboxes = getParentNodeCheckboxes(firstChildNodeCheckbox);
+                    parentNodeCheckboxes.forEach(checkbox => {
+                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(checkbox);
+                        liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
+                    });
+                }
             } else {
                 liNodesToHide.push(enclosingLiNode);
             }
         });
-        addFilterClassesToLiNodes([SEARCH_BOX_INPUT_FILTER_CLASS], liNodesToHide);
-        removeFilterClassesFromLiNodes([SEARCH_BOX_INPUT_FILTER_CLASS], liNodesToShow);
+        liNodesToHide = Array.from(new Set(liNodesToHide));
+        liNodesToShow = Array.from(new Set(liNodesToShow));
+        addSearchBoxInputFiltersToLiNodes(liNodesToHide);
+        removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
     }
 }
 
 function resetSearchBoxFilteringForTreeContainerId(treeContainerId) {
     document.querySelector(`#${treeContainerId} .tree-search-box`).value = "";
     const searchBoxInputFilteredLiNodesForTreeContainerId = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
-    removeFilterClassesFromLiNodes([SEARCH_BOX_INPUT_FILTER_CLASS], searchBoxInputFilteredLiNodesForTreeContainerId);
+    removeSearchBoxInputFiltersFromLiNodes(searchBoxInputFilteredLiNodesForTreeContainerId);
 }
 
-function setTreeContainerSelectionById(treeContainerId, selectAll) {
-    resetSearchBoxFilteringForTreeContainerId(treeContainerId);
-    setCheckboxStatesForTreeContainerId(treeContainerId, selectAll);
-    setDetailsNodeStatesForTreeContainerId(treeContainerId, selectAll);
-}
-
-function setCheckboxStatesForTreeContainerId(treeContainerId, checked) {
+function setCheckboxCheckedStatesForTreeContainerId(treeContainerId, checked) {
     return document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`).forEach(checkbox => {
         checkbox.checked = checked;
     });
 }
 
-function setDetailsNodeStatesForTreeContainerId(treeContainerId, open) {
+function setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, open) {
     return document.querySelectorAll(`#${treeContainerId} details`).forEach(detailsNode => {
         detailsNode.open = open;
     });
 }
 
-function setupInputsForTreeContainer(treeContainerId) {
+export function checkAllCheckboxesForTreeContainerId(treeContainerId, allCheckboxesChecked) {
+    resetSearchBoxFilteringForTreeContainerId(treeContainerId);
+    setCheckboxCheckedStatesForTreeContainerId(treeContainerId, allCheckboxesChecked);
+    setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, allCheckboxesChecked);
+}
+
+function setupInputsForTreeContainerId(treeContainerId) {
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
@@ -220,103 +197,51 @@ function setupInputsForTreeContainer(treeContainerId) {
         filterTreeContainerIdBySearchBoxInput(treeContainerId);
     });
 
-    const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
-    if (treeContainerId !== OBSERVED_PROPERTIES_TREE_CONTAINER_ID) {
-        allCheckboxesForTree.forEach(checkbox => {
-            checkbox.addEventListener("change", event => {
-                filterTreeContainerIdByAnotherTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, treeContainerId);
-            });
-        });
-    }
-
     const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
     deselectAllButtonForTree.addEventListener("click", event => {
-        setTreeContainerSelectionById(treeContainerId, false);
-        if (treeContainerId !== OBSERVED_PROPERTIES_TREE_CONTAINER_ID) {
-            const observedPropertyTreeContainerLis = document.querySelectorAll(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID} li`);
-            removeFilterClassesFromLiNodes([CHECKBOX_FILTER_CLASS], observedPropertyTreeContainerLis);
-        }
+        checkAllCheckboxesForTreeContainerId(treeContainerId, false);
     });
 
     const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
     selectAllButtonForTree.addEventListener("click", event => {
-        setTreeContainerSelectionById(treeContainerId, true);
-        if (treeContainerId !== OBSERVED_PROPERTIES_TREE_CONTAINER_ID) {
-            filterTreeContainerIdByAnotherTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, treeContainerId);
-        }
+        checkAllCheckboxesForTreeContainerId(treeContainerId, true);
     });
 }
 
 // Search form setup
 
-async function parseResponseText(response) {
-    return response.text();
+export function addTreeContainerIdToClearInputsButton(treeContainerId) {
+    const clearInputsButton = document.querySelector(".btn-clear");
+    clearInputsButton.addEventListener("click", event => {
+        checkAllCheckboxesForTreeContainerId(treeContainerId, false);
+        const checkboxFilteredLiNodesForTreeContainerId = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId);
+        removeCheckboxFiltersFromLiNodes(checkboxFilteredLiNodesForTreeContainerId);
+    });
 }
 
-async function loadSearchFormComponent(html) {
-    let treeContainerId = getTreeContainerIdFromInitialSearchFormComponentHTML(html);
-    if (treeContainerId === UNKNOWN) {
-        return console.error("Could not load search form component");
-    }
+export async function setupSearchFormComponent(html, treeContainerId, callback) {
     setTimeout(async () => {
         document.querySelector(`#${treeContainerId} .tree-search-terms`).innerHTML = html;
-        setupInputsForTreeContainer(treeContainerId);
+        setupInputsForTreeContainerId(treeContainerId);
         document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 1;
+        if (callback) {
+            callback();
+        }
     }, 300);
     document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 0;
 }
 
-async function loadSearchFormComponents() {
+async function parseResponseText(response) {
+    return response.text();
+}
+
+export async function fetchSearchFormComponent(ontologyComponent) {
     const fetchParams = { method: "GET" };
 
-    fetch("/search/templates/form/component/measurand/", fetchParams)
+    return fetch(`/search/templates/form/component/${ontologyComponent}/`, fetchParams)
         .then(parseResponseText)
-        .then(loadSearchFormComponent)
         .catch (error => {
-            console.error("Unable to load measurand checkboxes");
-            console.error(error);
-        });
-
-    fetch("/search/templates/form/component/observedProperty/", fetchParams)
-        .then(parseResponseText)
-        .then(loadSearchFormComponent)
-        .catch (error => {
-            console.error("Unable to load observed property checkboxes");
-            console.error(error);
-        });
-
-    fetch("/search/templates/form/component/phenomenon/", fetchParams)
-        .then(parseResponseText)
-        .then(loadSearchFormComponent)
-        .catch (error => {
-            console.error("Unable to load phenomenon checkboxes");
-            console.error(error);
-        });
-
-    fetch("/search/templates/form/component/qualifier/", fetchParams)
-        .then(parseResponseText)
-        .then(loadSearchFormComponent)
-        .catch (error => {
-            console.error("Unable to load qualifier checkboxes");
+            console.error(`Unable to fetch ${ontologyComponent} search form.`);
             console.error(error);
         });
 }
-
-document.getElementById("search-script").addEventListener("load", async event => {
-    await loadSearchFormComponents();
-
-    const clearInputsButton = document.querySelector(".btn-clear");
-    clearInputsButton.addEventListener("click", event => {
-        const treeContainerIds = [
-            MEASURANDS_TREE_CONTAINER_ID,
-            OBSERVED_PROPERTIES_TREE_CONTAINER_ID,
-            PHENOMENONS_TREE_CONTAINER_ID,
-            QUALIFIERS_TREE_CONTAINER_ID,
-        ];
-        for (const treeContainerId in treeContainerIds) {
-            setTreeContainerSelectionById(treeContainerId, false);
-            const checkboxFilteredLiNodesForTreeContainerId = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId);
-            removeFilterClassesFromLiNodes([CHECKBOX_FILTER_CLASS], checkboxFilteredLiNodesForTreeContainerId);
-        }
-    });
-});

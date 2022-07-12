@@ -1,14 +1,9 @@
 <div class="tree-search-container" id="{{ ontology_component }}-tree-search-container">
+    <label for="{{ ontology_component }}-tree-search-box" class="text-muted"><small>Keyword Search</small></label>
     <input type="text" class="tree-search-box form-control form-control-sm mb-2" id="{{ ontology_component }}-tree-search-box" placeholder="Start typing to select options...">
     <div class="d-flex justify-content-start mb-3">
         <button type="button" class="btn btn-sm btn-light btn-deselect-all me-2">Deselect All</button>
         <button type="button" class="btn btn-sm btn-light btn-select-all">Select All</button>
     </div>
-    <div class="tree-search-terms" id="{{ ontology_component }}-tree-search-terms">
-        <div class="spinner-grow-container">
-            <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    </div>
+    <div class="tree-search-terms" id="{{ ontology_component }}-tree-search-terms"></div>
 </div>

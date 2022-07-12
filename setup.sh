@@ -14,6 +14,7 @@ envfile="./pithiaesc/.env"
 secret_key=$(python3 -c "import secrets; print(secrets.token_urlsafe())")
 echo "SECRET_KEY=$secret_key" > $envfile
 echo "MONGODB_CONNECTION_STRING=mongodb://localhost:27017" >> $envfile
+echo "UTIL_DB_NAME=django" >> $envfile
 echo "DB_NAME=pithia-esc" >> $envfile
 cat $envfile
 printf "\nFinished setting up default .env\n"

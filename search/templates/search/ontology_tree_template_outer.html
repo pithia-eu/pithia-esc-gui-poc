@@ -1,6 +1,6 @@
 <ul class="tree">
     {% for key, value in ontology_component.items %}
-    {% with node=value %}
+    {% with node=value registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
     {% include "search/ontology_tree_template_inner.html" %}
     {% endwith %}
     {% endfor %}

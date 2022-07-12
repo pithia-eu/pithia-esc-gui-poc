@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:espas="http://schemas.espas-fp7.eu/2.1"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:om="http://www.opengis.net/om/2.0"
+        targetNamespace="http://schemas.espas-fp7.eu/2.1"
+        elementFormDefault="qualified"
+        attributeFormDefault="qualified"
+        version="1.0">
+
+    <import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/XML/2008/06/xlink.xsd"/>
+    <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+    <import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"/>
+    <import namespace="http://www.opengis.net/om/2.0" schemaLocation="http://schemas.opengis.net/om/2.0/observation.xsd"/>
+
+    <!-- ESPAS_Individual -->
+    <element name="ESPAS_Individual" substitutionGroup="espas:ESPAS_Party" type="espas:ESPAS_IndividualType">
+        <annotation>
+            <documentation>-- Definition --
+                An individual having a particular role associated with a real world object.
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="ESPAS_IndividualType">
+        <complexContent>
+            <extension base="espas:ESPAS_PartyType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="positionName" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Role of the individual within the organisation.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="organisation"
+                             type="espas:xlinkHref_PropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                The organisation that the individual belongs to.
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_IndividualPropertyType">
+        <sequence minOccurs="0">
+            <element ref="espas:ESPAS_Individual"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- ESPAS_Organisation -->
+    <element name="ESPAS_Organisation" substitutionGroup="espas:ESPAS_Party" type="espas:ESPAS_OrganisationType">
+        <annotation>
+            <documentation>-- Definition --
+                A body/organization having a particular role associated with a real world object.
+
+                -- Description --
+                EXAMPLE HECToR ( real world object) is funded by the UK Research Councils ( funder).
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="ESPAS_OrganisationType">
+        <complexContent>
+            <extension base="espas:ESPAS_PartyType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="shortName" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Acronym of the organisation
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="description" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Textual description of the organisation.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="unbounded" minOccurs="0" name="relatedOrganisation"
+                             type="espas:ESPAS_ResponsiblePartyInfoPropertyType">
+                        <annotation>
+                            <documentation>--Definition--
+                                Individual or organisation related to organisation.
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_OrganisationPropertyType">
+        <sequence minOccurs="0">
+            <element ref="espas:ESPAS_Organisation"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- ESPAS_Party -->
+    <element abstract="true" name="ESPAS_Party" substitutionGroup="gml:AbstractFeature" type="espas:ESPAS_PartyType">
+        <annotation>
+            <documentation>-- Definition --
+                A party , individual or organisation, having a responsibility regarding a real world object.
+            </documentation>
+        </annotation>
+    </element>
+    <complexType abstract="true" name="ESPAS_PartyType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="identifier" type="espas:ESPAS_IdentifierPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                External identifier of the organisation.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="name" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Name of the responsible party.
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element maxOccurs="unbounded" minOccurs="0" name="contactInfo" type="espas:CI_Contact_ExtendedPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Information required enabling contact with the responsible person and/or organisation.
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_PartyPropertyType">
+        <sequence minOccurs="0">
+            <element ref="espas:ESPAS_Party"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- ESPAS_ResponsiblePartyInfo -->
+    <element name="ESPAS_ResponsiblePartyInfo" substitutionGroup="gml:AbstractObject"
+             type="espas:ESPAS_ResponsiblePartyInfoType">
+        <annotation>
+            <documentation>-- Definition --
+                Responsibility, identification of, and means of communication with, person(s) and organisations
+                associated with a real word object.
+            </documentation>
+        </annotation>
+    </element>
+    
+    <complexType name="ESPAS_ResponsiblePartyInfoType">
+        <sequence>
+            <element name="role" minOccurs="1" maxOccurs="1" type="espas:xlinkHref_PropertyType" />
+            <element name="party" minOccurs="1" maxOccurs="unbounded" type="espas:xlinkHref_ExtendedPropertyType" />
+            <element name="extent" minOccurs="0" maxOccurs="unbounded" type="espas:ESPAS_Extent" />
+        </sequence>
+    </complexType>
+    
+    <complexType name="ESPAS_Extent">
+    	<sequence>
+    		<element name="location" minOccurs="0" maxOccurs="1" type="gmd:EX_GeographicExtent_PropertyType" />
+    		<element name="timePeriod" minOccurs="0" maxOccurs="1" type="om:TimeObjectPropertyType" />
+    		<element name="description" minOccurs="0" maxOccurs="1" type="string" />
+    	</sequence>
+        <attribute name="deleted" type="espas:deleteType" />
+    </complexType>
+    
+    <complexType name="ESPAS_ResponsiblePartyInfoPropertyType">
+        <sequence>
+            <element ref="espas:ESPAS_ResponsiblePartyInfo"/>
+        </sequence>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- ESPAS_Identifier -->
+    <element name="ESPAS_Identifier" substitutionGroup="gml:AbstractObject" type="espas:ESPAS_IdentifierType">
+        <annotation>
+            <documentation>
+                -- Name --
+                ESPAS Identifier
+
+                -- Definition --
+                The identifier of the object in the ESPAS system
+
+                -- Description --
+                Every standalone data object in the ESPAS system must have an ESPAS_Identifier defined.
+                Guidelines for ESPAS_Identifiers:
+                namespace shall uniquely identify the 'owner' of the item and shall be according to an agreed convention
+                within the ESPAS system.
+                e.g. stfc, nkua, eiscat, dlr etc.
+                localID assignments are at the discrection of the'owner but shall be alphanumeric strings with no
+                spaces,
+                [a decision needs to be take as to we encourage the use of opaque or non-opaque identifiers e.g. ABC234
+                versus radarX]
+                version numbers are at the discretion of the owner but should usually follow typical conventions
+                1, 2, 3
+                or
+                1.0, 1.1, 2.0
+
+                Both namespaces and localIds should be suitable for inclusion in URLs
+
+                i.e. must not use the following reserved characters:
+                = | ; | / | # | ? | : | space
+
+                ----------------------------------------------------------
+
+                Encoding namespaces according to the guidelines will enable the publication of information resources in
+                a RESTful manner.
+                e..g
+                (exact url structure to be agreed)
+                http://www.espas-fp7.eu/dataset/stfc/STFC24/ (latest version of stfc owned object STFC24)
+
+                http://www.espas-fp7.eu/dataset/stfc/STFC24/2 (version 2)
+
+                or with non-opaque identifiers
+                http://www.espas-fp7.eu/dataset/eiscat/myionosonde (myionosonde owned by eiscat)
+
+                These urls can then resolve to XML-based descriptions (or RDF-XML, or both using HTTP content
+                negotiation) depending on the agreed system architecture.
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="ESPAS_IdentifierType">
+        <sequence>
+            <element name="localID" type="string">
+                <annotation>
+                    <documentation>-- Name --
+                        local ID
+
+                        -- Definition --
+                        The local part of the identifier (assigned by the owner)
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="namespace" type="string">
+                <annotation>
+                    <documentation>-- Name --
+                        namespace
+
+                        -- Definition --
+                        the namespace part of the identifier, agreed within ESPAS, e.g. 'stfc'.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="version" type="string">
+                <annotation>
+                    <documentation>-- Name --
+                        version
+
+                        -- Definition --
+                        The version number of the object being identified
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="creationDate" type="dateTime">
+                <annotation>
+                    <documentation>-- Name --
+                        creation date
+
+                        -- Definition --
+                        Date when the object/record was first created
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="lastModificationDate" type="dateTime">
+                <annotation>
+                    <documentation>-- Name --
+                        last modification date
+
+                        -- Definition --
+                        Date when the object/record was last modified (the most recent modification)
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <complexType name="ESPAS_IdentifierPropertyType">
+        <sequence>
+            <element ref="espas:ESPAS_Identifier"/>
+        </sequence>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- ESPAS_Citation -->
+    <element name="ESPAS_Citation" substitutionGroup="gmd:CI_Citation" type="espas:ESPAS_CitationType">
+        <annotation>
+            <documentation>-- Definition --
+                Standardized resource reference (online/offline).
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="ESPAS_CitationType">
+        <complexContent>
+            <extension base="gmd:CI_Citation_Type">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="0" name="onlineResource"
+                             type="espas:CI_OnlineResource_ExtendedPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Reference to documentation online.
+
+                                Information about online sources from which the dataset, specification, or community
+                                profile name and extended metadata elements can be obtained.
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_CitationPropertyType">
+        <sequence>
+            <element ref="espas:ESPAS_Citation"/>
+        </sequence>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!-- Utilities -->
+    <simpleType name="deleteType">
+        <restriction base="string">
+            <enumeration value="true"/>
+            <enumeration value="false"/>
+        </restriction>
+    </simpleType>
+    <complexType name="xlinkHref_PropertyType">
+        <attribute ref="xlink:href"/>
+    </complexType>
+    <complexType name="xlinkHref_ExtendedPropertyType">
+        <attribute ref="xlink:href"/>
+        <attribute name="deleted" type="espas:deleteType"/>
+    </complexType>
+
+    <!-- Extended Types -->
+    <complexType name="CI_Contact_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:CI_Contact_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="EX_Extent_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:EX_Extent_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="CI_OnlineResource_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:CI_OnlineResource_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="URL_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:URL_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_Citation_ExtendedPropertyType">
+        <complexContent>
+            <extension base="espas:ESPAS_CitationPropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="MD_Keywords_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:MD_Keywords_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ESPAS_ResponsiblePartyInfo_ExtendedPropertyType">
+        <complexContent>
+            <extension base="espas:ESPAS_ResponsiblePartyInfoPropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="EX_GeographicExtent_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:EX_GeographicExtent_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="GML_Reference_ExtendedType">
+        <complexContent>
+            <extension base="gml:ReferenceType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="MD_Metadata_ExtendedPropertyType">
+        <complexContent>
+            <extension base="gmd:MD_Metadata_PropertyType">
+                <attribute name="deleted" type="espas:deleteType"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+</schema>
+

@@ -16,7 +16,9 @@ import environ
 
 # Initialise environment variables
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(
+    ALLOWED_HOSTS=('127.0.0.1,localhost')
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,16 +33,16 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'present.apps.PresentConfig',
-    'resources.apps.ResourcesConfig',
+    'browse.apps.BrowseConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',
+    'validation.apps.ValidationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -88,16 +90,16 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': env('DB_NAME'),
-#         'ENFORCE_SCHEMA': False,
-#         'CLIENT': {
-#             'host': env('MONGODB_CONNECTION_STRING')
-#         }
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': env('UTIL_DB_NAME'),
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': env('MONGODB_CONNECTION_STRING')
+        }
+    }
+}
 
 
 # Password validation
@@ -144,3 +146,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sessions
+
+SESSION_SAVE_EVERY_REQUEST = True

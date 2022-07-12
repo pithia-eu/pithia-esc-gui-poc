@@ -1,61 +1,28 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Resources' 'resources:index' %}
-{% with pithia_identifier=resource.content.identifier|get_key_value:"pithia:Identifier" %}
-{% breadcrumb_item pithia_identifier.namespace 'resources:list_by_namespace' pithia_identifier.namespace %}
+{% breadcrumb_item 'Browse' 'browse:index' %}
+{% breadcrumb_item breadcrumb_item_list_resource_namespaces_text url_namespace|add:':list_resource_namespaces' %}
+{% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
+{% breadcrumb_item pithia_identifier.namespace url_namespace|add:':list_resources_in_namespace' pithia_identifier.namespace %}
 {% endwith %}
-{% breadcrumb_item_active resource.content.name %}
+{% breadcrumb_item_active resource.name %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ resource.content.name }}</h1>
+<h1>{{ resource.name }}</h1>
 <div class="row">
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead">{{ resource.content.description }}</p>
-        </section>
-    </div>
-    <div class="col-lg-4">
-        <section>
-            <h2 class="mb-3">Properties</h2>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">Property</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Metadata Type</th>
-                            <td>{{ resource.metadataType }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Data Model Role</th>
-                            <td>{{ resource.dataModelType }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Executable</th>
-                            <td>
-                                {% if resource.executable %}
-                                Yes
-                                {% else %}
-                                No
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <p class="lead">{{ resource.description }}</p>
         </section>
     </div>
 </div>
+{% if "result" in resource %}
 <section>
     <h2 class="mb-3">Online Resources</h2>
     <div class="accordion" id="accordion-resource">
-        {% with pithia_collection=resource.content.result|get_key_value:"pithia:CollectionResults" %}
+        {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
         {% for s in pithia_collection.source %}
         {% with online_resource=s.OnlineResource %}
         <div class="accordion-item">
@@ -92,4 +59,30 @@
         {% endwith %}
     </div>
 </section>
+{% endif %}
+<div class="row">
+    <div class="col-lg-12">
+        <section>
+            <h2 class="mb-3">Properties</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Property</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in resource_flattened.items %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value|urlize }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
 {% endblock content %}
