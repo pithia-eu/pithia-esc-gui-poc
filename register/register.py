@@ -29,7 +29,7 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     metadata_registration_result = mongodb_model.insert_one(metadata_file_dict)
     xml_file.seek(0)
     original_metadata_xml = {
-        'metadataId': metadata_registration_result.inserted_id,
+        'resourceId': metadata_registration_result.inserted_id,
         'value': xml_file.read().decode()
     }
     OriginalMetadataXml.insert_one(original_metadata_xml)
