@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Present' %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="row pb-4">
+    <div class="col-lg-8">
+        <h1>Model execution</h1>
+    </div>
+</div>
+<div class="row pb-4">
+    <div class="col-lg-8">
+        <iframe src="http://vm2.pithia.eu:8080/docs" height="600" width="1200" title="Iframe Example"></iframe>
+    </div>
+</div>
+
+{% endblock content %}
