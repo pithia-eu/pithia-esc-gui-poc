@@ -1,5 +1,6 @@
 from register import mongodb_models
 from django.shortcuts import render
+from bson.objectid import ObjectId
 
 def _get_view_helper_variables_by_url_namespace(url_namespace):
     mongodb_model = None
@@ -57,9 +58,9 @@ def index(request):
         'title': 'Browse'
     })
 
-def resource_types(request):
-    return render(request, 'browse/resource_types.html', {
-        'title': 'Browse Resource Types'
+def resources(request):
+    return render(request, 'browse/resources.html', {
+        'title': 'Browse Resources'
     })
 
 def schemas(request):
@@ -67,39 +68,18 @@ def schemas(request):
         'title': 'Browse Schemas'
     })
 
-def list_resource_namespaces(request):
-    url_namespace = request.resolver_match.namespace
-    view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
-    namespaces = list(view_helper_vars['mongodb_model'].find({}).distinct('identifier.pithia:Identifier.namespace'))
-    return render(request, 'browse/list_resource_namespaces.html', {
-        'title': f'{view_helper_vars["resource_type"]} Namespaces',
-        'resource_type_plural': view_helper_vars['resource_type_plural'],
-        'url_namespace': url_namespace,
-        'namespaces': namespaces,
-    })
-
-def list_resources_in_namespace(request, namespace):
-    url_namespace = request.resolver_match.namespace
-    view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
-    resources_list = list(view_helper_vars['mongodb_model'].find({
-        'identifier.pithia:Identifier.namespace': namespace
-    }))
-    return render(request, 'browse/list_resources_in_namespace.html', {
-        'title': f'{view_helper_vars["resource_type_plural"]} in the {namespace} namespace',
-        'breadcrumb_item_list_resource_namespaces_text': f'{view_helper_vars["resource_type"]} Namespaces',
-        'resource_type_plural': view_helper_vars['resource_type_plural'],
-        'namespace': namespace,
-        'url_namespace': url_namespace,
-        'resources_list': resources_list
-    })
+def remove_underscore_from_id_attribute(resource):
+    resource['id'] = resource['_id']
+    return resource
 
 def list_resources_of_type(request):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
     resources_list = list(view_helper_vars['mongodb_model'].find({}))
+    resources_list = list(map(remove_underscore_from_id_attribute, resources_list))
     return render(request, 'browse/list_resources_of_type.html', {
         'title': view_helper_vars["resource_type_plural"],
-        'breadcrumb_item_list_resource_namespaces_text': view_helper_vars["resource_type_plural"],
+        'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
         'resource_type_plural': view_helper_vars['resource_type_plural'],
         'url_namespace': url_namespace,
         'resources_list': resources_list
@@ -124,11 +104,11 @@ def detail(request, resource_id):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
     resource = view_helper_vars['mongodb_model'].find_one({
-        '_id': resource_id
+        '_id': ObjectId(resource_id)
     })
     resource_flattened = flatten(resource)
     return render(request, 'browse/detail.html', {
-        'breadcrumb_item_list_resource_namespaces_text': f'{view_helper_vars["resource_type"]} Namespaces',
+        'breadcrumb_item_list_resources_of_type_text': f'{view_helper_vars["resource_type_plural"]}',
         'url_namespace': url_namespace,
         'resource': resource,
         'resource_flattened': resource_flattened

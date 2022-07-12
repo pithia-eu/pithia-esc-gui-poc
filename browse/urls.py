@@ -5,7 +5,7 @@ from . import views
 app_name = 'browse'
 urlpatterns = [
     path('browse/', views.index, name='index'),
-    path('resource-types/', views.resource_types, name='resource_types'),
+    path('resources/', views.resources, name='resources'),
     path('schemas/', views.schemas, name='schemas'),
     path('organisations/', include('browse.namespace_urls', namespace='organisations')),
     path('individuals/', include('browse.namespace_urls', namespace='individuals')),
