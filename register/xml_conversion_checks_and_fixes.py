@@ -26,7 +26,7 @@ def format_process_dictionary(dictionary):
 def format_data_collection_dictionary(dictionary):
     # Check if the 'relatedParty' property is an
     # array-type property
-    if not isinstance(dictionary['relatedParty'], list):
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
         dictionary['relatedParty'] = [dictionary['relatedParty']]
     # Check if the 'om:parameter' property exists and
     # if it is an array-type property
@@ -34,6 +34,6 @@ def format_data_collection_dictionary(dictionary):
         dictionary['om:paramater'] = [dictionary['om:paramater']]
     # Check if nested 'source' property is an
     # array-type property
-    if not isinstance(dictionary['result']['pithia:CollectionResults']['source'], list):
+    if 'result' in dictionary and 'pithia:CollectionResults' in dictionary['result'] and 'source' in dictionary['result']['pithia:CollectionResults'] and not isinstance(dictionary['result']['pithia:CollectionResults']['source'], list):
         dictionary['result']['pithia:CollectionResults']['source'] = [dictionary['result']['pithia:CollectionResults']['source']]
     return dictionary
