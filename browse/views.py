@@ -2,6 +2,8 @@ from register import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 
+from search.helpers import remove_underscore_from_id_attribute
+
 def _get_view_helper_variables_by_url_namespace(url_namespace):
     mongodb_model = None
     resource_type = ''
@@ -67,10 +69,6 @@ def schemas(request):
     return render(request, 'browse/schemas.html', {
         'title': 'Browse Schemas'
     })
-
-def remove_underscore_from_id_attribute(resource):
-    resource['id'] = resource['_id']
-    return resource
 
 def list_resources_of_type(request):
     url_namespace = request.resolver_match.namespace
