@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
-from register.register import register_metadata_xml_file
+from register.register import assign_api_spec_to_resource, register_metadata_xml_file, register_original_metadata_xml
 
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 from .forms import UploadFileForm
@@ -19,12 +19,15 @@ def validate_and_register_metadata_file_then_redirect(request, mongodb_model, va
         # the template, but do it again just to be
         # safe.
         validation_results = validation(xml_file)
-        if 'error' not in validation_results:
+        if 'error' in validation_results:
             try:
                 # xml_file.seek(0) sets the read pointer back to 0
                 # after reading the file during validation.
                 # Otherwise the file is read as an empty string.
-                register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                metadata_registration_result = register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                register_original_metadata_xml(metadata_registration_result.inserted_id, xml_file)
+                if request.path == reverse('register:data_collection'):
+                    assign_api_spec_to_resource(metadata_registration_result.inserted_id, 'http://vm2.pithia.eu:8080/openapi.json')
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())
