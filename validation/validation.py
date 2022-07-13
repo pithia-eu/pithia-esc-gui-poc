@@ -57,6 +57,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         'is_each_ontology_reference_valid': False,
     }
 
+    # Syntax validation
     try:
         xml_file_parsed = etree.parse(xml_file)
     except etree.XMLSyntaxError as err:
@@ -65,14 +66,22 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         return validation_checklist
     validation_checklist['is_syntax_valid'] = True
 
+    # Validate root tag name
     root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
     validation_checklist['is_root_element_name_valid'] = root_element_name_validation_details['is_root_element_name_valid']
     if not validation_checklist['is_root_element_name_valid']:
         validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementNameForMetadataFileException, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
         return validation_checklist
-        
+    
+    # Schema validationn
     try:
-        validate_xml_against_schema(xml_file_parsed, xml_schema_file_name)
+        parent = xml_file_parsed.getroot()
+        urls_with_xsi_ns = parent.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+        urls_with_xsi_ns = urls_with_xsi_ns[0].split()
+        schema_url = urls_with_xsi_ns[0]
+        if len(urls_with_xsi_ns) > 1:
+            schema_url = urls_with_xsi_ns[1]
+        validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
@@ -111,6 +120,12 @@ def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expecte
         'expected_root_element_name': f'{expected_root_localname}',
         'is_root_element_name_valid': root_localname == expected_root_localname
     }
+
+def validate_xml_against_schema_at_url(xml_file_parsed, schema_url):
+    schema_response = get(schema_url)
+    schema_text_parsed = etree.XML(schema_response.text.encode())
+    schema = etree.XMLSchema(schema_text_parsed)
+    schema.assertValid(xml_file_parsed)
 
 def validate_xml_against_schema(xml_file_parsed, schema_file_name):
     current_dir = os.path.dirname(__file__)
