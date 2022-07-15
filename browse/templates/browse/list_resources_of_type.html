@@ -2,8 +2,8 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item breadcrumb_item_list_resource_namespaces_text url_namespace|add:':list_resource_namespaces' %}
-{% breadcrumb_item_active namespace %}
+{% breadcrumb_item 'Resources' 'browse:resources' %}
+{% breadcrumb_item_active breadcrumb_item_list_resources_of_type_text %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">{{ title }}</h1>
@@ -11,9 +11,7 @@
 <ul class="list-group">
     {% for resource in resources_list %}
     {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-    {% with local_id=pithia_identifier.localID namespace=pithia_identifier.namespace %}
-    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' namespace local_id %}">{{ resource.name|default:local_id }}</a></li>
-    {% endwith %}
+    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
     {% endwith %}
     {% endfor %}
 </ul>

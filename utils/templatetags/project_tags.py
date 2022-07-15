@@ -20,3 +20,7 @@ def breadcrumb_item_active(text):
     return {
         'text': text
     }
+
+@register.filter(name='underscore_attribute')
+def underscore_attribute(obj, attribute):
+    return getattr(obj, attribute)
