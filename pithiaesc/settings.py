@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'browse.apps.BrowseConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',
+    'present.apps.PresentConfig',
     'validation.apps.ValidationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
