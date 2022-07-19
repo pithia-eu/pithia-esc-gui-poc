@@ -4,6 +4,7 @@ from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
+from validation.resolvers import PrefixResolver
 from validation.exceptions import InvalidRootElementNameForMetadataFileException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
@@ -81,6 +82,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         schema_url = urls_with_xsi_ns[0]
         if len(urls_with_xsi_ns) > 1:
             schema_url = urls_with_xsi_ns[1]
+        # get_schema_at_url_and_included_schemas(schema_url)
         validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
@@ -88,7 +90,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         return validation_checklist
     validation_checklist['is_valid_against_schema'] = True
 
-    # Relation validaiton (whether a resource the metadata file
+    # Relation validation (whether a resource the metadata file
     # is referencing exists in the database or not).
     try:
         unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
@@ -121,9 +123,62 @@ def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expecte
         'is_root_element_name_valid': root_localname == expected_root_localname
     }
 
+def get_schema_at_url(schema_url):
+    return get(schema_url)
+
+def get_schema_at_url_and_included_schemas(schema_url):
+    BASE_URL = ''
+    base_schema_name = schema_url.split('/')[-1]
+    if len(schema_url.split('/')) > 1:
+        BASE_URL = schema_url[:-len(base_schema_name)]
+    base_schema = get_schema_at_url(schema_url)
+    schema_document = etree.XML(base_schema.content, base_url=BASE_URL)
+    tree = schema_document.getroottree()
+
+    schemas = []
+    for schema_child in schema_document.iterchildren():
+        print(schema_child)
+        if schema_child.tag.endswith("include"):
+            try:
+                # Assume all schemas are hosted remotely
+                r = get(os.path.join(BASE_URL, schema_child.get("schemaLocation")), "r")
+                s = etree.fromstring(r.content, base_url=BASE_URL)
+                schemas.append(s)
+            except Exception as ex:
+                print("failed to load schema: %s" % ex)
+            # remove the <xsd:include ...> element
+            schema_document.remove(schema_child)
+
+    for s in schemas:
+    # inside <schema>
+        for s_child in s:
+            schema_document.append(s_child)
+
+    return schemas
+
+def validate_xml_against_multiple_schemas(schemas):
+    for schema in schemas:
+        schema = etree.XMLSchema(schema_text_parsed)
+        return schema.assertValid(xml_file_parsed)
+
+def create_customised_parser_for_http_protocols():
+    parser = etree.XMLParser()
+    parser.resolvers.add(PrefixResolver('http'))
+    parser.resolvers.add(PrefixResolver('https'))
+    return parser
+
+def get_base_url_from_schema_url(schema_url):
+    BASE_URL = ''
+    base_schema_name = schema_url.split('/')[-1]
+    if len(schema_url.split('/')) > 1:
+        BASE_URL = schema_url[:-len(base_schema_name)]
+    return BASE_URL
+
 def validate_xml_against_schema_at_url(xml_file_parsed, schema_url):
     schema_response = get(schema_url)
-    schema_text_parsed = etree.XML(schema_response.text.encode())
+    BASE_URL = get_base_url_from_schema_url(schema_url)
+    customised_parser = create_customised_parser_for_http_protocols()
+    schema_text_parsed = etree.fromstring(schema_response.content, base_url=BASE_URL, parser=customised_parser)
     schema = etree.XMLSchema(schema_text_parsed)
     schema.assertValid(xml_file_parsed)
 
