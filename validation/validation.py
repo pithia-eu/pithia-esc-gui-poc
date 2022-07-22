@@ -82,8 +82,8 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         schema_url = urls_with_xsi_ns[0]
         if len(urls_with_xsi_ns) > 1:
             schema_url = urls_with_xsi_ns[1]
-        # get_schema_at_url_and_included_schemas(schema_url)
-        validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
+        schemas = get_schema_at_url_and_included_schemas(schema_url)
+        # validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
@@ -137,10 +137,13 @@ def get_schema_at_url_and_included_schemas(schema_url):
 
     schemas = []
     for schema_child in schema_document.iterchildren():
-        print(schema_child)
-        if schema_child.tag.endswith("include"):
+        print(schema_child.tag)
+        if schema_child.tag type schema_child.tag.endswith('include'):
+            print(schema_child.tag)
+            print(schema_child.tag.endswith("include"))
             try:
                 # Assume all schemas are hosted remotely
+                print(os.path.join(BASE_URL, schema_child.get("schemaLocation")))
                 r = get(os.path.join(BASE_URL, schema_child.get("schemaLocation")), "r")
                 s = etree.fromstring(r.content, base_url=BASE_URL)
                 schemas.append(s)
@@ -156,9 +159,9 @@ def get_schema_at_url_and_included_schemas(schema_url):
 
     return schemas
 
-def validate_xml_against_multiple_schemas(schemas):
+def validate_xml_against_multiple_schemas(xml_file_parsed, schemas):
     for schema in schemas:
-        schema = etree.XMLSchema(schema_text_parsed)
+        schema = etree.XMLSchema(schema)
         return schema.assertValid(xml_file_parsed)
 
 def create_customised_parser_for_http_protocols():
