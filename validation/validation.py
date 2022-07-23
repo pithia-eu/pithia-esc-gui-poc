@@ -82,7 +82,8 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
         schema_url = urls_with_xsi_ns[0]
         if len(urls_with_xsi_ns) > 1:
             schema_url = urls_with_xsi_ns[1]
-        schemas = get_schema_at_url_and_included_schemas(schema_url)
+        schemas = get_schema_at_url_and_included_schemas(schema_url, None, None)
+        print('Finished loading schemas')
         # validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
@@ -123,38 +124,56 @@ def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expecte
         'is_root_element_name_valid': root_localname == expected_root_localname
     }
 
-def get_schema_at_url(schema_url):
-    return get(schema_url)
-
-def get_schema_at_url_and_included_schemas(schema_url):
+def get_schema_at_url_and_included_schemas(schema_url, schema_document, found_schema_locations):
     BASE_URL = ''
     base_schema_name = schema_url.split('/')[-1]
     if len(schema_url.split('/')) > 1:
         BASE_URL = schema_url[:-len(base_schema_name)]
-    base_schema = get_schema_at_url(schema_url)
-    schema_document = etree.XML(base_schema.content, base_url=BASE_URL)
+    if schema_document is None:
+        base_schema_response = get(schema_url)
+        schema_document = etree.XML(base_schema_response.content, base_url=BASE_URL)
+    if found_schema_locations is None:
+        found_schema_locations = set()
     tree = schema_document.getroottree()
 
     schemas = []
     for schema_child in schema_document.iterchildren():
-        print(schema_child.tag)
-        if schema_child.tag type schema_child.tag.endswith('include'):
-            print(schema_child.tag)
-            print(schema_child.tag.endswith("include"))
+        if isinstance(schema_child.tag, str) and schema_child.tag.endswith('include'):
             try:
                 # Assume all schemas are hosted remotely
-                print(os.path.join(BASE_URL, schema_child.get("schemaLocation")))
-                r = get(os.path.join(BASE_URL, schema_child.get("schemaLocation")), "r")
-                s = etree.fromstring(r.content, base_url=BASE_URL)
-                schemas.append(s)
+                schema_child_location = os.path.join(BASE_URL, schema_child.get("schemaLocation"))
+                if schema_child_location in found_schema_locations:
+                    continue
+                found_schema_locations.add(schema_child_location)
+                print('include', schema_child_location)
+                response = get(schema_child_location)
+                schema = etree.fromstring(response.content, base_url=BASE_URL)
+                get_schema_at_url_and_included_schemas(schema_child_location, schema, found_schema_locations)
+                schemas.append(schema)
             except Exception as ex:
                 print("failed to load schema: %s" % ex)
             # remove the <xsd:include ...> element
             schema_document.remove(schema_child)
+        if isinstance(schema_child.tag, str) and schema_child.tag.endswith('import'):
+            try:
+                # Assume all schemas are hosted remotely
+                schema_child_location = schema_child.get("schemaLocation")
+                if schema_child_location in found_schema_locations:
+                    continue
+                found_schema_locations.add(schema_child_location)
+                print('import', schema_child_location)
+                response = get(schema_child_location)
+                schema = etree.fromstring(response.content)
+                get_schema_at_url_and_included_schemas(schema_child_location, schema, found_schema_locations)
+                schemas.append(schema)
+            except Exception as ex:
+                print("failed to load schema: %s" % ex)
+            # remove the <xsd:import ...> element
+            schema_document.remove(schema_child)
 
-    for s in schemas:
+    for schema in schemas:
     # inside <schema>
-        for s_child in s:
+        for s_child in schema:
             schema_document.append(s_child)
 
     return schemas
