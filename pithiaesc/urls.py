@@ -8,6 +8,7 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('register/', include('register.urls')),
     path('validate/', include('validation.urls')),
-    path('resource-management/', include('resource_management.urls')),
+    path('manage/', include('resource_management.urls')),
+    path('present/', include('present.urls')),
     path('admin/', admin.site.urls),
 ]
