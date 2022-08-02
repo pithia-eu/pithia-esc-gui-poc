@@ -16,14 +16,20 @@ def replace_current_version_of_resource_with_newer_version(newer_resource_versio
     # The resource version is expected to be added
     # by data owners, but if not, may need to add
     # it here.
-    current_resource_mongodb_model.delete_many({})
+    # This is wrong, rewrite this function
+    current_resource_mongodb_model.delete_one({
+
+    })
     return current_resource_mongodb_model.insert_one(newer_resource_version)
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
     xml_file.seek(0)
     metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
-    # Remove the top-level tag
+    # Remove the top-level tag - this will be just <Organisation>, for example
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
+    # The XML-to-Python dictionary conversion may not convert correctly
+    # according to the blue PowerPoint diagram, so checks and fixes should be
+    # applied.
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(metadata_file_dict)
     metadata_registration_result = mongodb_model.insert_one(metadata_file_dict)
