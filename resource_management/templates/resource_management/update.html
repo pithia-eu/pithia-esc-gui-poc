@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Register' 'register:index' %}
-{% breadcrumb_item_active breadcrumb_item_active_text %}
+{% breadcrumb_item 'Resource Management' 'resource_management:index' %}
+{% breadcrumb_item 'Acquisitions' url_namespace|add:':list_resources_of_type' %}
+{% breadcrumb_item_active 'Update Resource Metadata' %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
