@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Resource Management' 'browse:index' %}
+{% breadcrumb_item 'Resource Management' 'resource_management:index' %}
 {% breadcrumb_item_active breadcrumb_item_list_resources_of_type_text %}
 {% endblock breadcrumbs %}
 {% block content %}
@@ -10,7 +10,24 @@
 <ul class="list-group">
     {% for resource in resources_list %}
     {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-lg-8">
+                <a href="{% url url_namespace|add:':update' resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex">
+                    <a href="{% url url_namespace|add:':update' resource.id %}" class="btn btn-dark ms-auto me-2" role="button">Update</a>
+                    <form action="{% url url_namespace|add:':delete' resource.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-dark" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+    </li>
     {% endwith %}
     {% endfor %}
 </ul>
