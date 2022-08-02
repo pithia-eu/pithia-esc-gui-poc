@@ -23,7 +23,7 @@ def schemas(request):
 def list_resources_of_type(request):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resources_list = list(view_helper_vars['mongodb_model'].find({}))
+    resources_list = list(view_helper_vars['current_version_mongodb_model'].find({}))
     resources_list = list(map(remove_underscore_from_id_attribute, resources_list))
     return render(request, 'browse/list_resources_of_type.html', {
         'title': view_helper_vars["resource_type_plural"],
@@ -51,7 +51,7 @@ def flatten(d):
 def detail(request, resource_id):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resource = view_helper_vars['mongodb_model'].find_one({
+    resource = view_helper_vars['current_version_mongodb_model'].find_one({
         '_id': ObjectId(resource_id)
     })
     resource_flattened = flatten(resource)

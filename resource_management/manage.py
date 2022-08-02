@@ -1,5 +1,4 @@
 from bson.objectid import ObjectId
-from search.helpers import get_view_helper_variables_by_url_namespace
 
 from register.register import register_metadata_xml_file
 
