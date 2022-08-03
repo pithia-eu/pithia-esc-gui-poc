@@ -24,7 +24,7 @@
         <div class="alert-info">
 
         </div>
-        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="update-resource-form">
+        <form action="{% url url_namespace|add:':update' resource_id %}" method="post" enctype="multipart/form-data" id="update-resource-form">
             {% csrf_token %}
             <div class="row gy-4">
                 <div class="col-lg-8">

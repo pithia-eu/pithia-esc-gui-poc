@@ -28,14 +28,9 @@ def list_resources_of_type(request):
 @require_http_methods(["GET", "POST"])
 def update(request, resource_id):
     url_namespace = request.resolver_match.namespace
+    if request.method == 'POST':
+        return HttpResponseRedirect(reverse(f'{url_namespace}:list_resources_of_type'))
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resource_to_update = view_helper_vars['current_version_mongodb_model'].find_one({
-        '_id': ObjectId(resource_id)
-    })
-    resource_name = resource_to_update['identifier']['pithia:Identifier']['localID']
-    if 'name' in resource_to_update:
-        resource_name = resource_to_update['name']
-    
     a_or_an = 'a'
     if view_helper_vars["resource_type"].lower().startswith(('a', 'e', 'i',  'o', 'u' )):
         a_or_an = 'an'
@@ -43,7 +38,8 @@ def update(request, resource_id):
         'title': f'Update {a_or_an} {view_helper_vars["resource_type"].title()}',
         'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
         'url_namespace': url_namespace,
-        'form': UploadUpdatedFileForm()
+        'form': UploadUpdatedFileForm(),
+        'resource_id': resource_id
     })
 
 @require_POST
