@@ -2,8 +2,8 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resource Management' 'resource_management:index' %}
-{% breadcrumb_item 'Acquisitions' url_namespace|add:':list_resources_of_type' %}
-{% breadcrumb_item_active 'Update Resource Metadata' %}
+{% breadcrumb_item breadcrumb_item_list_resources_of_type_text url_namespace|add:':list_resources_of_type' %}
+{% breadcrumb_item_active 'Update a Resource' %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
@@ -20,7 +20,7 @@
 </div>
 <div class="row gy-3">
     <div class="col-xl-9 col-lg-8">
-        <h2 class="mb-3">XML File Upload</h2>
+        <h2 class="mb-3">Upload a New XML Metadata File</h2>
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="upload-form">
             {% csrf_token %}
             <div class="row gy-4">

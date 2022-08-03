@@ -35,7 +35,8 @@ def update(request, resource_id):
     if 'name' in resource_to_update:
         resource_name = resource_to_update['name']
     return render(request, 'resource_management/update.html', {
-        'title': f'Upload New Resource Metadata for {resource_name}',
+        'title': f'Update a Resource',
+        'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
         'url_namespace': url_namespace
     })
 
