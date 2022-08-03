@@ -1,26 +1,22 @@
 # TODO: Replace ESPAS_Identifier with pithia:Identifier
+from bson import ObjectId
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.mongodb_models import OriginalMetadataXml
 
 
-def find_and_copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
+def move_current_version_of_resource_to_revisions(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
     current_version_of_resource = current_resource_mongodb_model.find_one({
         'identifier.ESPAS_Identifier.localID': resource_pithia_identifier['localID'],
         'identifier.ESPAS_Identifier.namespace': resource_pithia_identifier['namespace'],
     })
     if not current_version_of_resource:
-        return
-    return resource_revision_mongodb_model.insert_one(current_version_of_resource)
-
-def replace_current_version_of_resource_with_newer_version(newer_resource_version, current_resource_mongodb_model):
-    # The resource version is expected to be added
-    # by data owners, but if not, may need to add
-    # it here.
-    # This is wrong, rewrite this function
-    current_resource_mongodb_model.delete_one({
-
+        return 'Resource not found.'
+    # It's "moving" the resource, so first copy the resource to the revisions
+    # collection, and then delete from the current version collection.
+    resource_revision_mongodb_model.insert_one(current_version_of_resource)
+    current_version_of_resource.delete_one({
+        '_id': ObjectId(current_version_of_resource['_id'])
     })
-    return current_resource_mongodb_model.insert_one(newer_resource_version)
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
     xml_file.seek(0)
