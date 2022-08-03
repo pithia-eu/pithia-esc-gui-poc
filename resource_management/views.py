@@ -1,8 +1,13 @@
+from pyexpat import ExpatError
+import traceback
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_http_methods
+from django.contrib import messages
 from bson.objectid import ObjectId
+from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
+from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedFileForm
 from search.helpers import remove_underscore_from_id_attribute, get_view_helper_variables_by_url_namespace
 
@@ -28,8 +33,32 @@ def list_resources_of_type(request):
 @require_http_methods(["GET", "POST"])
 def update(request, resource_id):
     url_namespace = request.resolver_match.namespace
+    redirect_url = reverse(f'{url_namespace}:list_resources_of_type')
     if request.method == 'POST':
-        return HttpResponseRedirect(reverse(f'{url_namespace}:list_resources_of_type'))
+        view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
+        # Form validation
+        form = UploadUpdatedFileForm(request.POST, request.FILES)
+        xml_file = request.FILES['file']
+        if form.is_valid():
+            # XML should have already been validated at
+            # the template, but do it again just to be
+            # safe.
+            validation_results = view_helper_vars['validation_function'](xml_file)
+            if True:
+                try:
+                    converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
+                    converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['pithia:Identifier'], view_helper_vars['current_version_mongodb_model'], view_helper_vars['resource_revision_mongodb_model'])
+                    register_metadata_xml_file(xml_file, view_helper_vars['current_version_mongodb_model'], view_helper_vars['conversion_validation_and_fixing_function'])
+                except ExpatError as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, 'An error occurred whilst parsing the XML.')
+                except BaseException as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, 'An unexpected error occurred.')
+        return HttpResponseRedirect(redirect_url)
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
     a_or_an = 'a'
     if view_helper_vars["resource_type"].lower().startswith(('a', 'e', 'i',  'o', 'u' )):
@@ -53,7 +82,7 @@ def delete(request, resource_id):
         '_id': ObjectId(resource_id)
     })
     view_helper_vars['resource_revision_mongodb_model'].delete_many({
-        'identifier.PITHIA_Identifier.localID': resource_to_delete['identifier']['PITHIA_Identifier']['localID'],
-        'identifier.PITHIA_Identifier.namespace': resource_to_delete['identifier']['PITHIA_Identifier']['namespace'],
+        'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
+        'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
     })
     return HttpResponseRedirect(reverse(f'{url_namespace}:list_resources_of_type'))
