@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_http_methods
 from bson.objectid import ObjectId
+from resource_management.forms import UploadUpdatedFileForm
 from search.helpers import remove_underscore_from_id_attribute, get_view_helper_variables_by_url_namespace
 
 # Create your views here.
@@ -34,10 +35,15 @@ def update(request, resource_id):
     resource_name = resource_to_update['identifier']['pithia:Identifier']['localID']
     if 'name' in resource_to_update:
         resource_name = resource_to_update['name']
+    
+    a_or_an = 'a'
+    if view_helper_vars["resource_type"].lower().startswith(('a', 'e', 'i',  'o', 'u' )):
+        a_or_an = 'an'
     return render(request, 'resource_management/update.html', {
-        'title': f'Update a Resource',
+        'title': f'Update {a_or_an} {view_helper_vars["resource_type"].title()}',
         'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
-        'url_namespace': url_namespace
+        'url_namespace': url_namespace,
+        'form': UploadUpdatedFileForm()
     })
 
 @require_POST
