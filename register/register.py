@@ -6,20 +6,20 @@ from register.mongodb_models import OriginalMetadataXml
 
 def move_current_version_of_resource_to_revisions(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
     current_version_of_resource = current_resource_mongodb_model.find_one({
-        'identifier.ESPAS_Identifier.localID': resource_pithia_identifier['localID'],
-        'identifier.ESPAS_Identifier.namespace': resource_pithia_identifier['namespace'],
+        'identifier.pithia:Identifier.localID': resource_pithia_identifier['localID'],
+        'identifier.pithia:Identifier.namespace': resource_pithia_identifier['namespace'],
     })
     if not current_version_of_resource:
+        print('Resource not found.')
         return 'Resource not found.'
     # It's "moving" the resource, so first copy the resource to the revisions
     # collection, and then delete from the current version collection.
-    resource_revision_mongodb_model.insert_one(current_version_of_resource)
-    current_version_of_resource.delete_one({
+    current_resource_mongodb_model.delete_one({
         '_id': ObjectId(current_version_of_resource['_id'])
     })
+    resource_revision_mongodb_model.insert_one(current_version_of_resource)
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
-    xml_file.seek(0)
     metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
