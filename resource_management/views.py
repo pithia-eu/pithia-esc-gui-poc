@@ -60,6 +60,12 @@ def update(request, resource_id):
                     messages.error(request, 'An unexpected error occurred.')
         return HttpResponseRedirect(redirect_url)
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
+    resource_to_update = view_helper_vars['current_version_mongodb_model'].find_one({
+        '_id': ObjectId(resource_id)
+    })
+    resource_to_update_name = resource_to_update['identifier']['pithia:Identifier']['localID']
+    if 'name' in resource_to_update:
+        resource_to_update_name = resource_to_update['name']
     a_or_an = 'a'
     if view_helper_vars["resource_type"].lower().startswith(('a', 'e', 'i',  'o', 'u' )):
         a_or_an = 'an'
@@ -68,7 +74,8 @@ def update(request, resource_id):
         'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
         'url_namespace': url_namespace,
         'form': UploadUpdatedFileForm(),
-        'resource_id': resource_id
+        'resource_id': resource_id,
+        'resource_to_update_name': resource_to_update_name,
     })
 
 @require_POST
