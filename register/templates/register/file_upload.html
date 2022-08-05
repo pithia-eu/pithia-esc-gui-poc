@@ -19,7 +19,7 @@
 </div>
 <div class="row gy-3">
     <div class="col-xl-9 col-lg-8">
-        <h2 class="mb-3">XML File Upload</h2>
+        <h2 class="fs-5">Upload an XML Metadata File</h2>
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="register-resource-form">
             {% csrf_token %}
             <div class="row gy-4">
@@ -44,14 +44,7 @@
                     {{ form.file }}
                 </div>
                 <div class="col-lg-8">
-                    <div>XML Validation Status:</div>
-                    <div class="card mt-2">
-                        <div class="card-body">
-                            <div class="file-validation-status-container">
-                                The status will be updated upon selecting a file for upload.
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'register/validation_template.html' %}
                 </div>
                 <div class="col-lg-12">
                     <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
