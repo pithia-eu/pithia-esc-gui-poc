@@ -13,17 +13,17 @@
 {% block content %}
 <div class="row pb-4">
     <div class="col-xl-9 col-lg-8">
-        <h1>
+        <h1 class="mb-0">
             {{ title }}
         </h1>
+        <small class="text-muted">
+            Editing resource: {{ resource_to_update_name }}
+        </small>
     </div>
 </div>
 <div class="row gy-3">
     <div class="col-xl-9 col-lg-8">
-        <h2 class="mb-3">Upload an Updated XML Metadata File</h2>
-        <div class="alert-info">
-
-        </div>
+        <h2 class="fs-5">Upload an XML Metadata File</h2>
         <form action="{% url url_namespace|add:':update' resource_id %}" method="post" enctype="multipart/form-data" id="update-resource-form">
             {% csrf_token %}
             <div class="row gy-4">
