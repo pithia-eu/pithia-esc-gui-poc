@@ -21,7 +21,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="d-flex">
-                    <a href="{% url url_namespace|add:':update' resource.id %}" class="btn btn-light ms-auto me-2" role="button">Update</a>
+                    <a href="{% url url_namespace|add:':update' resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
                     <form action="{% url url_namespace|add:':delete' resource.id %}" method="post" class="delete-form">
                         {% csrf_token %}
                         <button class="btn btn-danger btn-delete" type="submit">Delete</button>
