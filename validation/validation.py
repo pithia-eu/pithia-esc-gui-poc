@@ -58,48 +58,47 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
     }
 
     try:
+        # Syntax validation
         xml_file_parsed = etree.parse(xml_file)
+        validation_checklist['is_syntax_valid'] = True
+
+        # Root element name validation
+        root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
+        validation_checklist['is_root_element_name_valid'] = root_element_name_validation_details['is_root_element_name_valid']
+        if not validation_checklist['is_root_element_name_valid']:
+            validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementNameForMetadataFileException, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
+            return validation_checklist
+
+        # XSD Schema validation
+        validate_xml_against_schema(xml_file_parsed, xml_schema_file_name)
+        validation_checklist['is_valid_against_schema'] = True
+
+        # Relation validaiton (whether a resource the metadata file
+        # is referencing exists in the database or not).
+        unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
+        unregistered_document_hrefs = unregistered_references['document_hrefs']
+        unregistered_document_types = unregistered_references['document_types']
+        unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
+        if len(unregistered_document_hrefs) > 0:
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
+                'unregistered_document_types': unregistered_document_types
+            })
+            return validation_checklist
+        validation_checklist['is_each_document_reference_valid'] = True
+        if len(unregistered_ontology_term_hrefs) > 0:
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
+            return validation_checklist
+        validation_checklist['is_each_ontology_reference_valid'] = True
     except etree.XMLSyntaxError as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
-        return validation_checklist
-    validation_checklist['is_syntax_valid'] = True
-
-    root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
-    validation_checklist['is_root_element_name_valid'] = root_element_name_validation_details['is_root_element_name_valid']
-    if not validation_checklist['is_root_element_name_valid']:
-        validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementNameForMetadataFileException, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
-        return validation_checklist
-        
-    try:
-        validate_xml_against_schema(xml_file_parsed, xml_schema_file_name)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
-        return validation_checklist
-    validation_checklist['is_valid_against_schema'] = True
-
-    # Relation validaiton (whether a resource the metadata file
-    # is referencing exists in the database or not).
-    try:
-        unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
     except BaseException as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
-        return validation_checklist
-    unregistered_document_hrefs = unregistered_references['document_hrefs']
-    unregistered_document_types = unregistered_references['document_types']
-    unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
-    if len(unregistered_document_hrefs) > 0:
-        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
-            'unregistered_document_types': unregistered_document_types
-        })
-        return validation_checklist
-    validation_checklist['is_each_document_reference_valid'] = True
-    if len(unregistered_ontology_term_hrefs) > 0:
-        validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
-        return validation_checklist
-    validation_checklist['is_each_ontology_reference_valid'] = True
+    
 
     return validation_checklist
 
