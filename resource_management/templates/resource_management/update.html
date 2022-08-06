@@ -6,8 +6,8 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
-{% block scripts %}
 {{ validation_url|json_script:"validation-url" }}
+{% block scripts %}
 <script src="{% static 'register/register.js' %}" id="register-script" defer></script>
 {% endblock scripts %}
 {% block content %}
@@ -17,7 +17,7 @@
             {{ title }}
         </h1>
         <small class="text-muted">
-            Editing resource: {{ resource_to_update_name }}
+            Updating resource: {{ resource_to_update_name }}
         </small>
     </div>
 </div>
