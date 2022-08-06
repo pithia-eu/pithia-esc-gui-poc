@@ -76,6 +76,7 @@ def update(request, resource_id):
         'form': UploadUpdatedFileForm(),
         'resource_id': resource_id,
         'resource_to_update_name': resource_to_update_name,
+        'validation_url': view_helper_vars['validation_url'],
     })
 
 @require_POST
