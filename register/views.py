@@ -21,10 +21,10 @@ def validate_and_register_metadata_file_then_redirect(request, mongodb_model, va
         validation_results = validation(xml_file)
         if 'error' not in validation_results:
             try:
-                # xml_file.seek(0) sets the read pointer back to 0
-                # after reading the file during validation.
-                # Otherwise the file is read as an empty string.
-                register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                registration_results = register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                if registration_results == 'This XML metadata file has been registered before.':
+                    messages.error(request, registration_results)
+                    return HttpResponseRedirect(redirect_url)
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())
