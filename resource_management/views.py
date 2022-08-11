@@ -83,14 +83,26 @@ def update(request, resource_id):
 def delete(request, resource_id):
     url_namespace = request.resolver_match.namespace
     view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
+    
+    # Find the resource to delete, so it can be referenced later when deleting from
+    # the revisions collection
     resource_to_delete = view_helper_vars['current_version_mongodb_model'].find_one({
         '_id': ObjectId(resource_id)
     })
+
+    # Delete the current version of the resource
     view_helper_vars['current_version_mongodb_model'].delete_one({
         '_id': ObjectId(resource_id)
     })
+
+    # Delete revisions stored as version control
     view_helper_vars['resource_revision_mongodb_model'].delete_many({
         'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
         'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
     })
+
+    # Delete resources that are referencing the resource to be deleted. These should not
+    # be able to exist without the resource being deleted.
+    
+
     return HttpResponseRedirect(reverse(f'{url_namespace}:list_resources_of_type'))
