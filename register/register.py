@@ -31,8 +31,11 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
         xml_conversion_check_and_fix(metadata_file_dict)
     metadata_registration_result = mongodb_model.insert_one(metadata_file_dict)
     xml_file.seek(0)
+    xml_file_string = xml_file.read()
+    if isinstance(xml_file_string, bytes):
+        xml_file_string = xml_file_string.decode()
     original_metadata_xml = {
         'resourceId': metadata_registration_result.inserted_id,
-        'value': xml_file.read().decode()
+        'value': xml_file_string
     }
     OriginalMetadataXml.insert_one(original_metadata_xml)
