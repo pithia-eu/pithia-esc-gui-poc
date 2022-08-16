@@ -1,4 +1,4 @@
-from register.mongodb_models import CurrentIndividual
+from register.mongodb_models import CurrentIndividual, CurrentProject
 
 
 def get_lower_level_resource_types(resource_type):
@@ -17,9 +17,17 @@ def get_lower_level_resource_types(resource_type):
     return resource_types[:resource_types.index(resource_type)]
 
 def create_resource_url(namespace, resource_type, localid):
-    return f'https://metadata.pithia.eu/resources/2.2/{namespace}/{resource_type}/{localid}'
+    # TODO: Change after testing
+    return f'https://resources.pithia.eu/2.2/{namespace}/{resource_type}/{localid}'
 
-def get_individuals_referencing_resource_url(resource_url):
-    return CurrentIndividual.find_one({
-        
+def get_individuals_referencing_organisation_url(organisation_url):
+    return CurrentIndividual.find({
+        'organisation.xlink:href': organisation_url
+    })
+
+def get_projects_referencing_individual_url(individual_url):
+    return CurrentProject.find({
+        'relatedParty': {
+            'ResponsiblePartyInfo.party.xlink:href': individual_url
+        }
     })
