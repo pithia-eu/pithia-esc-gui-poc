@@ -4,56 +4,6 @@ from bson.objectid import ObjectId
 
 from search.helpers import remove_underscore_from_id_attribute
 
-def _get_view_helper_variables_by_url_namespace(url_namespace):
-    mongodb_model = None
-    resource_type = ''
-    resource_type_plural = ''
-    if 'organisation' in url_namespace:
-        mongodb_model = mongodb_models.CurrentOrganisation
-        resource_type = 'Organisation'
-        resource_type_plural = 'Organisations'
-    if 'individual' in url_namespace:
-        mongodb_model = mongodb_models.CurrentIndividual
-        resource_type = 'Individual'
-        resource_type_plural = 'Individuals'
-    if 'project' in url_namespace:
-        mongodb_model = mongodb_models.CurrentProject
-        resource_type = 'Project'
-        resource_type_plural = 'Projects'
-    if 'platform' in url_namespace:
-        mongodb_model = mongodb_models.CurrentPlatform
-        resource_type = 'Platform'
-        resource_type_plural = 'Platforms'
-    if 'instrument' in url_namespace:
-        mongodb_model = mongodb_models.CurrentInstrument
-        resource_type = 'Instrument'
-        resource_type_plural = 'Instruments'
-    if 'operation' in url_namespace:
-        mongodb_model = mongodb_models.CurrentOperation
-        resource_type = 'Operation'
-        resource_type_plural = 'Operations'
-    if 'acquisition' in url_namespace:
-        mongodb_model = mongodb_models.CurrentAcquisition
-        resource_type = 'Acquisition'
-        resource_type_plural = 'Acquisitions'
-    if 'computation' in url_namespace:
-        mongodb_model = mongodb_models.CurrentComputation
-        resource_type = 'Computation'
-        resource_type_plural = 'Computations'
-    if 'process' in url_namespace:
-        mongodb_model = mongodb_models.CurrentProcess
-        resource_type = 'Process'
-        resource_type_plural = 'Processes'
-    if 'data-collection' in url_namespace:
-        mongodb_model = mongodb_models.CurrentDataCollection
-        resource_type = 'Data Collection'
-        resource_type_plural = 'Data Collections'
-    return {
-        'mongodb_model': mongodb_model,
-        'resource_type': resource_type,
-        'resource_type_plural': resource_type_plural,
-    }
-
 # Create your views here.
 def index(request):
     return render(request, 'browse/index.html', {
@@ -70,18 +20,48 @@ def schemas(request):
         'title': 'Browse Schemas'
     })
 
-def list_resources_of_type(request):
+def list_resources_of_type(request, resource_mongodb_model, resource_type_plural, resource_detail_view_name):
     url_namespace = request.resolver_match.namespace
-    view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
-    resources_list = list(view_helper_vars['mongodb_model'].find({}))
+    resources_list = list(resource_mongodb_model.find({}))
     resources_list = list(map(remove_underscore_from_id_attribute, resources_list))
     return render(request, 'browse/list_resources_of_type.html', {
-        'title': view_helper_vars["resource_type_plural"],
-        'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
-        'resource_type_plural': view_helper_vars['resource_type_plural'],
+        'title': resource_type_plural,
+        'breadcrumb_item_list_resources_of_type_text': resource_type_plural,
+        'resource_type_plural': resource_type_plural,
+        'resource_detail_view_name': resource_detail_view_name,
         'url_namespace': url_namespace,
         'resources_list': resources_list
     })
+
+def list_organisations(request):
+    return list_resources_of_type(request, mongodb_models.CurrentOrganisation, 'Organisations', 'browse:organisation_detail')
+
+def list_individuals(request):
+    return list_resources_of_type(request, mongodb_models.CurrentIndividual, 'Individuals', 'browse:individual_detail')
+
+def list_projects(request):
+    return list_resources_of_type(request, mongodb_models.CurrentProject, 'Projects', 'browse:project_detail')
+
+def list_platforms(request):
+    return list_resources_of_type(request, mongodb_models.CurrentPlatform, 'Platforms', 'browse:platform_detail')
+
+def list_instruments(request):
+    return list_resources_of_type(request, mongodb_models.CurrentInstrument, 'Instruments', 'browse:instrument_detail')
+
+def list_operations(request):
+    return list_resources_of_type(request, mongodb_models.CurrentOperation, 'Operations', 'browse:operation_detail')
+
+def list_acquisitions(request):
+    return list_resources_of_type(request, mongodb_models.CurrentAcquisition, 'Acquisitions', 'browse:acquisition_detail')
+
+def list_computations(request):
+    return list_resources_of_type(request, mongodb_models.CurrentComputation, 'Computations', 'browse:computation_detail')
+
+def list_processes(request):
+    return list_resources_of_type(request, mongodb_models.CurrentProcess, 'Processes', 'browse:process_detail')
+
+def list_data_collections(request):
+    return list_resources_of_type(request, mongodb_models.CurrentDataCollection, 'Data Collections', 'browse:data_collection_detail')
 
 def flatten(d):
     out = {}
@@ -98,16 +78,44 @@ def flatten(d):
             out[key] = value
     return out
 
-def detail(request, resource_id):
-    url_namespace = request.resolver_match.namespace
-    view_helper_vars = _get_view_helper_variables_by_url_namespace(url_namespace)
-    resource = view_helper_vars['mongodb_model'].find_one({
+def resource_detail(request, resource_id, resource_mongodb_model, resource_type_plural, list_resources_of_type_view_name):
+    resource = resource_mongodb_model.find_one({
         '_id': ObjectId(resource_id)
     })
     resource_flattened = flatten(resource)
     return render(request, 'browse/detail.html', {
-        'breadcrumb_item_list_resources_of_type_text': f'{view_helper_vars["resource_type_plural"]}',
-        'url_namespace': url_namespace,
+        'breadcrumb_item_list_resources_of_type_text': f'{resource_type_plural}',
         'resource': resource,
-        'resource_flattened': resource_flattened
+        'resource_flattened': resource_flattened,
+        'list_resources_of_type_view_name': list_resources_of_type_view_name
     })
+
+def organisation_detail(request, organisation_id):
+    return resource_detail(request, organisation_id, mongodb_models.CurrentOrganisation, 'Organisations', 'browse:list_organisations')
+
+def individual_detail(request, individual_id):
+    return resource_detail(request, individual_id, mongodb_models.CurrentIndividual, 'Individuals', 'browse:list_individuals')
+
+def project_detail(request, project_id):
+    return resource_detail(request, project_id, mongodb_models.CurrentProject, 'Projects', 'browse:list_projects')
+
+def platform_detail(request, platform_id):
+    return resource_detail(request, platform_id, mongodb_models.CurrentPlatform, 'Platforms', 'browse:list_platforms')
+
+def instrument_detail(request, instrument_id):
+    return resource_detail(request, instrument_id, mongodb_models.CurrentInstrument, 'Instruments', 'browse:list_instruments')
+
+def operation_detail(request, operation_id):
+    return resource_detail(request, operation_id, mongodb_models.CurrentOperation, 'Operations', 'browse:list_operations')
+
+def acquisition_detail(request, acquisition_id):
+    return resource_detail(request, acquisition_id, mongodb_models.CurrentAcquisition, 'Acquisitions', 'browse:list_acquisitions')
+
+def computation_detail(request, computation_id):
+    return resource_detail(request, computation_id, mongodb_models.CurrentComputation, 'Computations', 'browse:list_computations')
+
+def process_detail(request, process_id):
+    return resource_detail(request, process_id, mongodb_models.CurrentProcess, 'Processes', 'browse:list_processes')
+
+def data_collection_detail(request, data_collection_id):
+    return resource_detail(request, data_collection_id, mongodb_models.CurrentDataCollection, 'Data Collections', 'browse:list_data_collections')
