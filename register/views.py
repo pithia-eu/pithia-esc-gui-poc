@@ -8,7 +8,8 @@ from register.register import register_metadata_xml_file
 
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 from .forms import UploadFileForm
-from register import mongodb_models, xml_conversion_checks_and_fixes
+from register import xml_conversion_checks_and_fixes
+from common import mongodb_models
 
 def validate_and_register_metadata_file_then_redirect(request, mongodb_model, validation, xml_conversion_check_and_fix, redirect_url):
     # Form validation

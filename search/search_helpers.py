@@ -1,7 +1,7 @@
 from mongodb import db
 from search.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
 def find_matching_data_collections(request):
     observed_properties = []

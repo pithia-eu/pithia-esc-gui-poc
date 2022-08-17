@@ -1,6 +1,6 @@
 # TODO: Replace ESPAS_Identifier with pithia:Identifier
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from register.mongodb_models import OriginalMetadataXml
+from common.mongodb_models import OriginalMetadataXml
 from validation.registration_validation import validate_xml_file_is_unique
 
 

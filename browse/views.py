@@ -1,4 +1,4 @@
-from register import mongodb_models
+from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 
