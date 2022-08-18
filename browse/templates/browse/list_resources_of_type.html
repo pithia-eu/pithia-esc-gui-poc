@@ -3,7 +3,7 @@
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
 {% breadcrumb_item 'Resources' 'browse:resources' %}
-{% breadcrumb_item_active breadcrumb_item_list_resources_of_type_text %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">{{ title }}</h1>
@@ -11,7 +11,7 @@
 <ul class="list-group">
     {% for resource in resources_list %}
     {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
-    <li class="list-group-item"><a href="{% url url_namespace|add:':detail' resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
+    <li class="list-group-item"><a href="{% url resource_detail_view_name resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
     {% endwith %}
     {% endfor %}
 </ul>

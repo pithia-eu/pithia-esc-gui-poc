@@ -8,7 +8,8 @@ from register.register import register_metadata_xml_file
 
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 from .forms import UploadFileForm
-from register import mongodb_models, xml_conversion_checks_and_fixes
+from register import xml_conversion_checks_and_fixes
+from common import mongodb_models
 
 def validate_and_register_metadata_file_then_redirect(request, mongodb_model, validation, xml_conversion_check_and_fix, redirect_url):
     # Form validation
@@ -21,7 +22,10 @@ def validate_and_register_metadata_file_then_redirect(request, mongodb_model, va
         validation_results = validation(xml_file)
         if 'error' not in validation_results:
             try:
-                register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                registration_results = register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix)
+                if registration_results == 'This XML metadata file has been registered before.':
+                    messages.error(request, registration_results)
+                    return HttpResponseRedirect(redirect_url)
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())

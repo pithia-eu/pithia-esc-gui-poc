@@ -5,7 +5,7 @@ from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from validation.exceptions import InvalidRootElementNameForMetadataFileException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
-from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
 def validate_organisation_metadata_xml_file(xml_file):
     return _validate_metadata_xml_file(xml_file, 'ESPAS_Organisation', 'utilities.xsd')
