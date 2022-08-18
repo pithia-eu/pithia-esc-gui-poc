@@ -1,18 +1,16 @@
 from django.urls import include, path
 
-from . import views
-
 app_name = 'resource_management'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('organisations/', include('resource_management.include_urls', namespace='organisations')),
-    path('individuals/', include('resource_management.include_urls', namespace='individuals')),
-    path('projects/', include('resource_management.include_urls', namespace='projects')),
-    path('platforms/', include('resource_management.include_urls', namespace='platforms')),
-    path('instruments/', include('resource_management.include_urls', namespace='instruments')),
-    path('operations/', include('resource_management.include_urls', namespace='operations')),
-    path('acquisitions/', include('resource_management.include_urls', namespace='acquisitions')),
-    path('computations/', include('resource_management.include_urls', namespace='computations')),
-    path('processes/', include('resource_management.include_urls', namespace='processes')),
-    path('data-collections/', include('resource_management.include_urls', namespace='data-collections')),
+    path('manage/', include('resource_management.manage_urls')),
+    path('organisations/', include('resource_management.organisation_urls')),
+    path('individuals/', include('resource_management.individual_urls')),
+    path('projects/', include('resource_management.project_urls')),
+    path('platforms/', include('resource_management.platform_urls')),
+    path('instruments/', include('resource_management.instrument_urls')),
+    path('operations/', include('resource_management.operation_urls')),
+    path('acquisitions/', include('resource_management.acquisition_urls')),
+    path('computations/', include('resource_management.computation_urls')),
+    path('processes/', include('resource_management.process_urls')),
+    path('data-collections/', include('resource_management.data_collection_urls')),
 ]
