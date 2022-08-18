@@ -1,5 +1,6 @@
 import re
-from register import mongodb_models, xml_conversion_checks_and_fixes
+from common import mongodb_models
+from register import xml_conversion_checks_and_fixes
 from validation import validation
 from django.urls import reverse
 

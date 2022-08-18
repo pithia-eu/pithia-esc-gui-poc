@@ -1,4 +1,4 @@
-from register.mongodb_models import CurrentIndividual, CurrentProject
+from common.mongodb_models import CurrentIndividual, CurrentProject
 
 
 def get_lower_level_resource_types(resource_type):
