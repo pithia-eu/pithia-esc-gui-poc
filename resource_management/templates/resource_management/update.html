@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Resource Management' 'resource_management:index' %}
-{% breadcrumb_item breadcrumb_item_list_resources_of_type_text url_namespace|add:':list_resources_of_type' %}
+{% breadcrumb_item breadcrumb_item_list_resources_of_type_text list_resource_type_view_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
@@ -37,7 +37,7 @@
             </div>
         </div>
         <h2 class="fs-5">Upload an XML Metadata File</h2>
-        <form action="{% url url_namespace|add:':update' resource_id %}" method="post" enctype="multipart/form-data" id="update-resource-form">
+        <form action="{% url update_resource_type_view_name resource_id %}" method="post" enctype="multipart/form-data" id="update-resource-form">
             {% csrf_token %}
             <div class="row gy-4">
                 <div class="col-lg-8">
