@@ -39,6 +39,8 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'delete.apps.DeleteConfig',
+    'update.apps.UpdateConfig',
     'browse.apps.BrowseConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',
