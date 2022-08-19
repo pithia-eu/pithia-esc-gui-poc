@@ -38,7 +38,7 @@ class organisations(ManageResourcesView):
     resource_mongodb_model = CurrentOrganisation
     resource_type_plural = 'Organisations'
     delete_resource_view_name = 'delete:organisation'
-    update_resource_view_name = 'update:organisition'
+    update_resource_view_name = 'update:organisation'
 
 class individuals(ManageResourcesView):
     resource_mongodb_model = CurrentIndividual
