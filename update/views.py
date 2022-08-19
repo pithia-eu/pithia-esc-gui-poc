@@ -1,38 +1,67 @@
-from django.shortcuts import render
+from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 import traceback
-from django.urls import reverse
-from django.views.decorators.http import require_POST, require_http_methods
-from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.contrib import messages
 from bson.objectid import ObjectId
 from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
 from register.xml_conversion_checks_and_fixes import format_acquisition_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedFileForm
-from search.helpers import remove_underscore_from_id_attribute, get_view_helper_variables_by_url_namespace
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from validation.validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 
 # Create your views here.
-def update(request, resource_id, resource_mongodb_model, resource_revision_mongodb_model, resource_validation_function, resource_conversion_validate_and_correct_function, list_resource_type_view_name, update_resource_type_view_name, validation_url, resource_type, resource_type_plural):
-    url_namespace = request.resolver_match.namespace
-    if request.method == 'POST':
-        # Form validation
-        form = UploadUpdatedFileForm(request.POST, request.FILES)
+class UpdateResourceView(FormView):
+    # Registration variables
+    resource_id = ''
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
+    resource_conversion_validate_and_correct_function = None
+    validate_resource = None
+
+    # Template variables
+    a_or_an = 'a'
+    resource_type = ''
+    resource_type_plural = ''
+    list_resources_of_type_view_name = ''
+    update_resource_type_view_name = ''
+    validation_url = ''
+    resource_to_update_name = '' # Set in get() function
+
+    # Class variables
+    template_name = 'update/detail.html'
+    form_class = UploadUpdatedFileForm
+    success_url = reverse_lazy(list_resources_of_type_view_name)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Update {self.a_or_an} {self.resource_type.title()}'
+        context['form'] = self.form_class
+        context['resource_id'] = self.resource_id
+        context['resource_to_update_name'] = self.resource_to_update_name
+        context['validation_url'] = self.validation_url
+        context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
+        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['update_resource_type_view_name'] = self.update_resource_type_view_name
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
         xml_file = request.FILES['file']
         if form.is_valid():
             # XML should have already been validated at
             # the template, but do it again just to be
             # safe.
-            validation_results = resource_validation_function(xml_file)
+            validation_results = self.validate_resource(xml_file)
             # TODO: Change to checking validation results before deploying to production
             if True:
                 try:
                     converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                     converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['pithia:Identifier'], resource_mongodb_model, resource_revision_mongodb_model)
-                    register_metadata_xml_file(xml_file, resource_mongodb_model, resource_conversion_validate_and_correct_function)
+                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['pithia:Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                    register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
@@ -41,64 +70,178 @@ def update(request, resource_id, resource_mongodb_model, resource_revision_mongo
                     print(err)
                     print(traceback.format_exc())
                     messages.error(request, 'An unexpected error occurred.')
-        return HttpResponseRedirect(reverse(list_resource_type_view_name))
-    resource_to_update = resource_mongodb_model.find_one({
-        '_id': ObjectId(resource_id)
-    })
-    resource_to_update_name = resource_to_update['identifier']['pithia:Identifier']['localID']
-    if 'name' in resource_to_update:
-        resource_to_update_name = resource_to_update['name']
-    a_or_an = 'a'
-    if resource_type.lower().startswith(('a', 'e', 'i',  'o', 'u' )):
-        a_or_an = 'an'
-    return render(request, 'resource_management/update.html', {
-        'title': f'Update {a_or_an} {resource_type.title()}',
-        'breadcrumb_item_list_resources_of_type_text': f'Manage {resource_type_plural}',
-        'url_namespace': url_namespace,
-        'form': UploadUpdatedFileForm(),
-        'resource_id': resource_id,
-        'resource_to_update_name': resource_to_update_name,
-        'validation_url': validation_url,
-        'list_resource_type_view_name': list_resource_type_view_name,
-        'update_resource_type_view_name': update_resource_type_view_name,
-    })
 
-@require_http_methods(["GET", "POST"])
-def organisation(request, organisation_id):
-    return update(request, organisation_id, CurrentOrganisation, OrganisationRevision, validate_organisation_metadata_xml_file, None, 'resource_management:list_organisations', 'resource_management:update_organisation', 'validate:organisation', 'Organisation', 'Organisations')
+    def get(self, request, *args, **kwargs):
+        resource_to_update = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        resource_to_update_name = resource_to_update['identifier']['pithia:Identifier']['localID']
+        if 'name' in resource_to_update:
+            resource_to_update_name = resource_to_update['name']
+        self.resource_to_update_name = resource_to_update_name
+        return super().get(request, *args, **kwargs)
 
-@require_http_methods(["GET", "POST"])
-def individual(request, individual_id):
-    return update(request, individual_id, CurrentIndividual, IndividualRevision, validate_individual_metadata_xml_file, None, 'resource_management:list_individuals', 'resource_management:update_individual', 'validate:individual', 'Individual', 'Individuals')
+class organisation(UpdateResourceView):
+    resource_mongodb_model = CurrentOrganisation
+    resource_revision_mongodb_model = OrganisationRevision
+    validate_resource = validate_organisation_metadata_xml_file
 
-@require_http_methods(["GET", "POST"])
-def project(request, project_id):
-    return update(request, project_id, CurrentProject, ProjectRevision, validate_project_metadata_xml_file, None, 'resource_management:list_projects', 'resource_management:update_project', 'validate:project', 'Project', 'Projects')
+    a_or_an = 'an'
+    resource_type = 'Organisation'
+    resource_type_plural = 'Organisations'
+    list_resources_of_type_view_name = 'resource_management:organisations'
+    update_resource_type_view_name = 'update:organisation'
+    validation_url = 'validation:organisation'
 
-@require_http_methods(["GET", "POST"])
-def platform(request, platform_id):
-    return update(request, platform_id, CurrentPlatform, PlatformRevision, validate_platform_metadata_xml_file, None, 'resource_management:list_platforms', 'resource_management:update_platform', 'validate:platform', 'Platform', 'Platforms')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['organisation_id']
+        return super().get(request, *args, **kwargs)
+    
 
-@require_http_methods(["GET", "POST"])
-def instrument(request, instrument_id):
-    return update(request, instrument_id, CurrentInstrument, InstrumentRevision, validate_instrument_metadata_xml_file, None, 'resource_management:list_instruments', 'resource_management:update_instrument', 'validate:instrument', 'Instrument', 'Instruments')
+class individual(UpdateResourceView):
+    resource_mongodb_model = CurrentIndividual
+    resource_revision_mongodb_model = IndividualRevision
+    validate_resource = validate_individual_metadata_xml_file
 
-@require_http_methods(["GET", "POST"])
-def operation(request, operation_id):
-    return update(request, operation_id, CurrentOperation, OperationRevision, validate_operation_metadata_xml_file, None, 'resource_management:list_operations', 'resource_management:update_operation', 'validate:operation', 'Operation', 'Operations')
+    a_or_an = 'an'
+    resource_type = 'Individual'
+    resource_type_plural = 'Individuals'
+    list_resources_of_type_view_name = 'resource_management:individuals'
+    update_resource_type_view_name = 'update:individual'
+    validation_url = 'validation:individual'
 
-@require_http_methods(["GET", "POST"])
-def acquisition(request, acquisition_id):
-    return update(request, acquisition_id, CurrentAcquisition, AcquisitionRevision, validate_acquisition_metadata_xml_file, format_acquisition_dictionary, 'resource_management:list_acquisitions', 'resource_management:update_acquisition', 'validate:acquisition', 'Acquisition', 'Acquisitions')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['individual_id']
+        return super().get(request, *args, **kwargs)
 
-@require_http_methods(["GET", "POST"])
-def computation(request, computation_id):
-    return update(request, computation_id, CurrentComputation, ComputationRevision, validate_computation_metadata_xml_file, format_computation_dictionary, 'resource_management:list_computations', 'resource_management:update_computation', 'validate:computation', 'Computation', 'Computations')
+class project(UpdateResourceView):
+    resource_mongodb_model = CurrentProject
+    resource_revision_mongodb_model = ProjectRevision
+    validate_resource = validate_project_metadata_xml_file
 
-@require_http_methods(["GET", "POST"])
-def process(request, process_id):
-    return update(request, process_id, CurrentProcess, ProcessRevision, validate_process_metadata_xml_file, format_process_dictionary, 'resource_management:list_processes', 'resource_management:update_process', 'validate:process', 'Process', 'Processes')
+    a_or_an = 'an'
+    resource_type = 'Project'
+    resource_type_plural = 'Projects'
+    list_resources_of_type_view_name = 'resource_management:projects'
+    update_resource_type_view_name = 'update:project'
+    validation_url = 'validation:project'
 
-@require_http_methods(["GET", "POST"])
-def data_collection(request, data_collection_id):
-    return update(request, data_collection_id, CurrentDataCollection, DataCollectionRevision, validate_data_collection_metadata_xml_file, format_data_collection_dictionary, 'resource_management:list_data_collections', 'resource_management:update_data_collection', 'validate:data_collection', 'Data Collection', 'Data Collections')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['project_id']
+        return super().get(request, *args, **kwargs)
+
+class platform(UpdateResourceView):
+    resource_mongodb_model = CurrentPlatform
+    resource_revision_mongodb_model = PlatformRevision
+    validate_resource = validate_platform_metadata_xml_file
+
+    a_or_an = 'an'
+    resource_type = 'Platform'
+    resource_type_plural = 'Platforms'
+    list_resources_of_type_view_name = 'resource_management:platforms'
+    update_resource_type_view_name = 'update:platform'
+    validation_url = 'validation:platform'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['platform_id']
+        return super().get(request, *args, **kwargs)
+
+class instrument(UpdateResourceView):
+    resource_mongodb_model = CurrentInstrument
+    resource_revision_mongodb_model = InstrumentRevision
+    validate_resource = validate_instrument_metadata_xml_file
+
+    a_or_an = 'an'
+    resource_type = 'Instrument'
+    resource_type_plural = 'Instruments'
+    list_resources_of_type_view_name = 'resource_management:instruments'
+    update_resource_type_view_name = 'update:instrument'
+    validation_url = 'validation:instrument'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['instrument_id']
+        return super().get(request, *args, **kwargs)
+
+class operation(UpdateResourceView):
+    resource_mongodb_model = CurrentOperation
+    resource_revision_mongodb_model = OperationRevision
+    validate_resource = validate_operation_metadata_xml_file
+
+    a_or_an = 'an'
+    resource_type = 'Operation'
+    resource_type_plural = 'Operations'
+    list_resources_of_type_view_name = 'resource_management:operations'
+    update_resource_type_view_name = 'update:operation'
+    validation_url = 'validation:operation'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['operation_id']
+        return super().get(request, *args, **kwargs)
+
+class acquisition(UpdateResourceView):
+    resource_mongodb_model = CurrentAcquisition
+    resource_revision_mongodb_model = AcquisitionRevision
+    validate_resource = validate_acquisition_metadata_xml_file
+    resource_conversion_validate_and_correct_function = format_acquisition_dictionary
+
+    a_or_an = 'an'
+    resource_type = 'Acquisition'
+    resource_type_plural = 'Acquisitions'
+    list_resources_of_type_view_name = 'resource_management:acquisitions'
+    update_resource_type_view_name = 'update:acquisition'
+    validation_url = 'validation:acquisition'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_id']
+        return super().get(request, *args, **kwargs)
+
+class computation(UpdateResourceView):
+    resource_mongodb_model = CurrentComputation
+    resource_revision_mongodb_model = ComputationRevision
+    validate_resource = validate_computation_metadata_xml_file
+    resource_conversion_validate_and_correct_function = format_computation_dictionary
+
+    a_or_an = 'an'
+    resource_type = 'Computation'
+    resource_type_plural = 'Computations'
+    list_resources_of_type_view_name = 'resource_management:computations'
+    update_resource_type_view_name = 'update:computation'
+    validation_url = 'validation:computation'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_id']
+        return super().get(request, *args, **kwargs)
+
+class process(UpdateResourceView):
+    resource_mongodb_model = CurrentProcess
+    resource_revision_mongodb_model = ProcessRevision
+    validate_resource = validate_process_metadata_xml_file
+    resource_conversion_validate_and_correct_function = format_process_dictionary
+
+    a_or_an = 'an'
+    resource_type = 'Process'
+    resource_type_plural = 'Processes'
+    list_resources_of_type_view_name = 'resource_management:processes'
+    update_resource_type_view_name = 'update:process'
+    validation_url = 'validation:process'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['process_id']
+        return super().get(request, *args, **kwargs)
+
+class data_collection(UpdateResourceView):
+    resource_mongodb_model = CurrentDataCollection
+    resource_revision_mongodb_model = DataCollectionRevision
+    validate_resource = validate_data_collection_metadata_xml_file
+    resource_conversion_validate_and_correct_function = format_data_collection_dictionary
+
+    a_or_an = 'an'
+    resource_type = 'Data Collection'
+    resource_type_plural = 'Data Collections'
+    list_resources_of_type_view_name = 'resource_management:data_collections'
+    update_resource_type_view_name = 'update:data_collection'
+    validation_url = 'validation:data_collection'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['data_collection_id']
+        return super().get(request, *args, **kwargs)
