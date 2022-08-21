@@ -7,7 +7,9 @@ from common.mongodb_models import AcquisitionRevision, ComputationRevision, Curr
 
 # Create your views here.
 def _create_resource_url(namespace, resource_type, localid):
-    return f'https://resources.pithia.eu/2.2/{namespace}/{resource_type}/{resource_type.capitalize()}_{localid}'
+    if not localid.startswith(f'{resource_type.capitalize()}_'):
+        localid = f'{resource_type.capitalize()}_{localid}'
+    return f'https://resources.pithia.eu/2.2/{namespace}/{resource_type}/{localid}'
 
 def _get_projects_referencing_party_url(party_url):
     return CurrentProject.find({
@@ -81,44 +83,76 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         data_collections = CurrentDataCollection.find({
             'project.@xlink:href': resource_url
         })
-        return
     elif resource_mongodb_model == CurrentPlatform:
         # Referenced by: Acquisition
         # Acquisition references it via the platform prop.
-        return
+        acquisitions = CurrentAcquisition.find({
+            'platform.@xlink:href': resource_url
+        })
     elif resource_mongodb_model == CurrentInstrument:
         # Referenced by: Acquisition (from instrument prop
         # and instrumentModePair.instrument prop)
-        return
-    elif resource_mongodb_model == CurrentOperation:
-        # Operation is part of the Instrument resource
-        # as the operationalMode prop. This prop is referenced by
-        # Acquisition via the instrumentModePair.mode
-        # prop. Operation is NOT ITS OWN resource.
-        return
+        acquisitions = CurrentAcquisition.find({
+            'instrument.@xlink:href': resource_url
+        })
+    # elif resource_mongodb_model == CurrentOperation:
+    #     # Operation is part of the Instrument resource
+    #     # as the operationalMode prop. This prop is referenced by
+    #     # Acquisition via the instrumentModePair.mode
+    #     # prop. Operation is NOT ITS OWN resource.
+    #     acquisitions = CurrentAcquisition.find({
+    #         'instrumentModePair.mode': resource_url
+    #     })
+    #     return
     elif resource_mongodb_model == CurrentAcquisition:
         # Acquisition is referenced by Process via
         # the acquisitionComponent prop.
-        return
+        processes = CurrentProcess.find({
+            'acquisitionComponent.@xlink.href': resource_url
+        })
     elif resource_mongodb_model == CurrentComputation:
         # Referenced by Process via the computationComponent.
-        return
+        processes = CurrentProcess.find({
+            'computationComponent.@xlink:href': resource_url
+        })
     elif resource_mongodb_model == CurrentProcess:
         # Referenced by Data Collection via the om:procedure
         # prop.
-        return
+        data_collections = CurrentDataCollection.find({
+            'om:procedure.@xlink:href': resource_url
+        })
     # Data Collection is not included as no other resources
     # (including other data collections) reference this.
     individuals = list(individuals)
+    for i in individuals:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(i['_id']), 'individual', CurrentIndividual))
     projects = list(projects)
+    for p in projects:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'project', CurrentProject))
     platforms = list(platforms)
+    for p in platforms:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'platform', CurrentPlatform))
     instruments = list(instruments)
+    for i in instruments:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(i['_id']), 'instrument', CurrentInstrument))
+    acquisitions = list(acquisitions)
+    for a in acquisitions:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(a['_id']), 'acquisition', CurrentAcquisition))
+    computations = list(computations)
+    for c in computations:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(c['_id']), 'computation', CurrentComputation))
+    processes = list(processes)
+    for p in processes:
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'process', CurrentProcess))
     data_collections = list(data_collections)
-    print(len(individuals))
-    print(len(projects))
-    print(len(platforms))
-    print(len(instruments))
-    print(len(data_collections))
+    linked_resources.extend(individuals)
+    linked_resources.extend(projects)
+    linked_resources.extend(platforms)
+    linked_resources.extend(instruments)
+    linked_resources.extend(acquisitions)
+    linked_resources.extend(computations)
+    linked_resources.extend(processes)
+    linked_resources.extend(data_collections)
 
     return linked_resources
 
