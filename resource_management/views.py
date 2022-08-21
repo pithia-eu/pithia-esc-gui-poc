@@ -35,60 +35,70 @@ class ManageResourcesView(TemplateView):
         return context
 
 class organisations(ManageResourcesView):
+    title = 'Manage Organisations'
     resource_mongodb_model = CurrentOrganisation
     resource_type_plural = 'Organisations'
     delete_resource_view_name = 'delete:organisation'
     update_resource_view_name = 'update:organisation'
 
 class individuals(ManageResourcesView):
+    title = 'Manage Individuals'
     resource_mongodb_model = CurrentIndividual
     resource_type_plural = 'Individuals'
     delete_resource_view_name = 'delete:individual'
     update_resource_view_name = 'update:individual'
 
 class projects(ManageResourcesView):
+    title = 'Manage Projects'
     resource_mongodb_model = CurrentProject
     resource_type_plural = 'Projects'
     delete_resource_view_name = 'delete:project'
     update_resource_view_name = 'update:project'
 
 class platforms(ManageResourcesView):
+    title = 'Manage Platforms'
     resource_mongodb_model = CurrentPlatform
     resource_type_plural = 'PLatforms'
     delete_resource_view_name = 'delete:platform'
     update_resource_view_name = 'update:platform'
 
 class instruments(ManageResourcesView):
+    title = 'Manage Instruments'
     resource_mongodb_model = CurrentInstrument
     resource_type_plural = 'Instruments'
     delete_resource_view_name = 'delete:instrument'
     update_resource_view_name = 'update:instrument'
 
 class operations(ManageResourcesView):
+    title = 'Manage Operations'
     resource_mongodb_model = CurrentOperation
     resource_type_plural = 'Operations'
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
 
 class acquisitions(ManageResourcesView):
+    title = 'Manage Acquisitions'
     resource_mongodb_model = CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     delete_resource_view_name = 'delete:acquisition'
     update_resource_view_name = 'update:acquisition'
 
 class computations(ManageResourcesView):
+    title = 'Manage Computations'
     resource_mongodb_model = CurrentComputation
     resource_type_plural = 'Computations'
     delete_resource_view_name = 'delete:computation'
     update_resource_view_name = 'update:computation'
 
 class processes(ManageResourcesView):
+    title = 'Manage Processes'
     resource_mongodb_model = CurrentProcess
     resource_type_plural = 'Processes'
     delete_resource_view_name = 'delete:process'
     update_resource_view_name = 'update:process'
 
 class data_collections(ManageResourcesView):
+    title = 'Manage Data Collections'
     resource_mongodb_model = CurrentDataCollection
     resource_type_plural = 'Data Collections'
     delete_resource_view_name = 'delete:data_collection'
