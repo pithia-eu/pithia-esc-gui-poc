@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from bson.objectid import ObjectId
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from django.views.generic import View
 
 # Create your views here.
 def _create_resource_url(namespace, resource_type, localid):
@@ -48,7 +48,6 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     })
     resource_pithia_identifier = resource['identifier']['pithia:Identifier']
     resource_url = _create_resource_url(resource_pithia_identifier['namespace'], resource_type, resource_pithia_identifier['localID'])
-    print(resource_url)
     if resource_mongodb_model == CurrentOrganisation:
         # Referenced by: Individual, Project, Platform?, Instrument?, Data Collection
         # Individual references it via the organisation prop.
@@ -124,27 +123,36 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     # Data Collection is not included as no other resources
     # (including other data collections) reference this.
     individuals = list(individuals)
-    for i in individuals:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(i['_id']), 'individual', CurrentIndividual))
+    for i in range(len(individuals)):
+        individuals[i] = (individuals[i], 'individual', CurrentIndividual)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
     projects = list(projects)
-    for p in projects:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'project', CurrentProject))
+    for i in range(len(projects)):
+        projects[i] = (projects[i], 'project', CurrentProject)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
     platforms = list(platforms)
-    for p in platforms:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'platform', CurrentPlatform))
+    for i in range(len(platforms)):
+        platforms[i] = (platforms[i], 'platform', CurrentPlatform)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][2][0]['_id']), 'platform', platforms[i][2]))
     instruments = list(instruments)
-    for i in instruments:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(i['_id']), 'instrument', CurrentInstrument))
+    for i in range(len(instruments)):
+        instruments[i] = (instruments[i], 'instrument', CurrentInstrument)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][2][0]['_id']), 'instrument', instruments[i][2]))
     acquisitions = list(acquisitions)
-    for a in acquisitions:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(a['_id']), 'acquisition', CurrentAcquisition))
+    for i in range(len(acquisitions)):
+        acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][2][0]['_id']), 'acquisition', acquisitions[i][2]))
     computations = list(computations)
-    for c in computations:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(c['_id']), 'computation', CurrentComputation))
+    for i in range(len(computations)):
+        computations[i] = (computations[i], 'computation', CurrentComputation)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(computations[i][2][0]['_id']), 'computation', computations[i][2]))
     processes = list(processes)
-    for p in processes:
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(p['_id']), 'process', CurrentProcess))
+    for i in range(len(processes)):
+        processes[i] = (processes[i], 'process', CurrentProcess)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(processes[i][2][0]['_id']), 'process', processes[i][2]))
     data_collections = list(data_collections)
+    for i in range(len(data_collections)):
+        data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection)
     linked_resources.extend(individuals)
     linked_resources.extend(projects)
     linked_resources.extend(platforms)
@@ -156,68 +164,137 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
 
     return linked_resources
 
-def delete(request, resource_id, resource_mongodb_model, resource_revision_mongodb_model, redirect_view):
-    # Find the resource to delete, so it can be referenced later when deleting from
-    # the revisions collection
-    resource_to_delete = resource_mongodb_model.find_one({
-        '_id': ObjectId(resource_id)
-    })
+class DeleteResourceView(View):
+    resource_id = ''
+    resource_type = ''
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
+    redirect_url = ''
 
-    # Delete the current version of the resource
-    resource_revision_mongodb_model.delete_one({
-        '_id': ObjectId(resource_id)
-    })
+    def post(self, request, *args, **kwargs):
+        # Find the resource to delete, so it can be referenced later when deleting from
+        # the revisions collection
+        # resource_to_delete = self.resource_mongodb_model.find_one({
+        #     '_id': ObjectId(self.resource_id)
+        # })
 
-    # Delete revisions stored as version control
-    resource_revision_mongodb_model.delete_many({
-        'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
-        'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
-    })
+        # # Delete the current version of the resource
+        # self.resource_revision_mongodb_model.delete_one({
+        #     '_id': ObjectId(self.resource_id)
+        # })
 
-    # Delete resources that are referencing the resource to be deleted. These should not
-    # be able to exist without the resource being deleted.
-    
+        # # Delete revisions stored as version control
+        # self.resource_revision_mongodb_model.delete_many({
+        #     'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
+        #     'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
+        # })
 
-    return HttpResponseRedirect(reverse(redirect_view))
+        # Delete resources that are referencing the resource to be deleted. These should not
+        # be able to exist without the resource being deleted.
+        linked_resources = _get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        for r in linked_resources:
+            r_pithia_identifier = r[0]['identifier']['pithia:Identifier']
+            print(_create_resource_url(r_pithia_identifier['namespace'], r[1], r_pithia_identifier['localID']))
 
-@require_POST
-def organisation(request, organisation_id):
-    _get_resources_linked_through_resource_id(organisation_id, 'organisation', CurrentOrganisation)
-    return HttpResponseRedirect(reverse('resource_management:organisations'))
-    # return delete(request, organisation_id, CurrentOrganisation, OrganisationRevision)
+        return HttpResponseRedirect(self.redirect_url)
 
-@require_POST
-def individual(request, individual_id):
-    return delete(request, individual_id, CurrentIndividual, IndividualRevision)
 
-@require_POST
-def project(request, project_id):
-    return delete(request, project_id, CurrentProject, ProjectRevision)
+class organisation(DeleteResourceView):
+    resource_type = 'organisation'
+    resource_mongodb_model = CurrentOrganisation
+    resource_revision_mongodb_model = OrganisationRevision
+    redirect_url = reverse_lazy('resource_management:organisations')
 
-@require_POST
-def platform(request, platform_id):
-    return delete(request, platform_id, CurrentPlatform, PlatformRevision)
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['organisation_id']
+        return super().post(request, *args, **kwargs)
 
-@require_POST
-def instrument(request, instrument_id):
-    return delete(request, instrument_id, CurrentInstrument, InstrumentRevision)
+class individual(DeleteResourceView):
+    resource_type = 'individual'
+    resource_mongodb_model = CurrentIndividual
+    resource_revision_mongodb_model = IndividualRevision
+    redirect_url = reverse_lazy('resource_management:individuals')
 
-@require_POST
-def operation(request, operation_id):
-    return delete(request, operation_id, CurrentOperation, OperationRevision)
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['individual_id']
+        return super().post(request, *args, **kwargs)
 
-@require_POST
-def acquisition(request, acquisition_id):
-    return delete(request, acquisition_id, CurrentAcquisition, AcquisitionRevision)
+class project(DeleteResourceView):
+    resource_type = 'project'
+    resource_mongodb_model = CurrentProject
+    resource_revision_mongodb_model = ProjectRevision
+    redirect_url = reverse_lazy('resource_management:projects')
 
-@require_POST
-def computation(request, computation_id):
-    return delete(request, computation_id, CurrentComputation, ComputationRevision)
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['project_id']
+        return super().post(request, *args, **kwargs)
 
-@require_POST
-def process(request, process_id):
-    return delete(request, process_id, CurrentProcess, ProcessRevision)
+class platform(DeleteResourceView):
+    resource_type = 'platform'
+    resource_mongodb_model = CurrentPlatform
+    resource_revision_mongodb_model = PlatformRevision
+    redirect_url = reverse_lazy('resource_management:platforms')
 
-@require_POST
-def data_collection(request, data_collection_id):
-    return delete(request, data_collection_id, CurrentDataCollection, DataCollectionRevision)
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['platform_id']
+        return super().post(request, *args, **kwargs)
+
+class instrument(DeleteResourceView):
+    resource_type = 'instrument'
+    resource_mongodb_model = CurrentInstrument
+    resource_revision_mongodb_model = InstrumentRevision
+    redirect_url = reverse_lazy('resource_management:instruments')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['instrument_id']
+        return super().post(request, *args, **kwargs)
+
+class operation(DeleteResourceView):
+    resource_type = 'operation'
+    resource_mongodb_model = CurrentOperation
+    resource_revision_mongodb_model = OperationRevision
+    redirect_url = reverse_lazy('resource_management:operations')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['operation_id']
+        return super().post(request, *args, **kwargs)
+
+class acquisition(DeleteResourceView):
+    resource_type = 'acquisition'
+    resource_mongodb_model = CurrentAcquisition
+    resource_revision_mongodb_model = AcquisitionRevision
+    redirect_url = reverse_lazy('resource_management:acquisitions')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_id']
+        return super().post(request, *args, **kwargs)
+
+class computation(DeleteResourceView):
+    resource_type = 'computation'
+    resource_mongodb_model = CurrentComputation
+    resource_revision_mongodb_model = ComputationRevision
+    redirect_url = reverse_lazy('resource_management:computations')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_id']
+        return super().post(request, *args, **kwargs)
+
+class process(DeleteResourceView):
+    resource_type = 'process'
+    resource_mongodb_model = CurrentProcess
+    resource_revision_mongodb_model = ProcessRevision
+    redirect_url = reverse_lazy('resource_management:processes')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['process_id']
+        return super().post(request, *args, **kwargs)
+
+class data_collection(DeleteResourceView):
+    resource_type = 'collection'
+    resource_mongodb_model = CurrentDataCollection
+    resource_revision_mongodb_model = DataCollectionRevision
+    redirect_url = reverse_lazy('resource_management:data_collections')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['data_collection_id']
+        return super().post(request, *args, **kwargs)
