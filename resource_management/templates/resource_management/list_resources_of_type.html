@@ -22,10 +22,7 @@
             <div class="col-lg-4">
                 <div class="d-flex">
                     <a href="{% url update_resource_view_name resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
-                    <form action="{% url delete_resource_view_name resource.id %}" method="post" class="delete-form">
-                        {% csrf_token %}
-                        <button class="btn btn-danger btn-delete" type="submit">Delete</button>
-                    </form>
+                    <a href="{% url delete_resource_view_name resource.id %}" role="button" class="btn btn-danger btn-delete">Delete</a>
                 </div>
             </div>
             <div class="col-lg-2">

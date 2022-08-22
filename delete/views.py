@@ -1,9 +1,10 @@
+from webbrowser import get
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from bson.objectid import ObjectId
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
-from django.views.generic import View
+from django.views.generic import TemplateView
 
 # Create your views here.
 def _create_resource_url(namespace, resource_type, localid):
@@ -164,12 +165,39 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
 
     return linked_resources
 
-class DeleteResourceView(View):
+class DeleteResourceView(TemplateView):
     resource_id = ''
     resource_type = ''
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
     redirect_url = ''
+    template_name = 'delete/confirm_delete_resource.html'
+    list_resources_of_type_view_page_title = 'Manage Resources'
+    list_resources_of_type_view_name = 'resource_management:index'
+    delete_resource_type_view_name = ''
+    resource_to_delete = None
+    other_resources_to_delete = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type'] = self.resource_type
+        if self.resource_type.lower() == 'collection':
+            context['resource_type'] = 'data collection'
+        context['title'] = f'Confirm the deletion of this {context["resource_type"]}'
+        context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
+        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['delete_resource_type_view_name'] = self.delete_resource_type_view_name
+        context['resource_id'] = self.resource_id
+        context['resource_to_delete'] = self.resource_to_delete
+        context['other_resources_to_delete'] = self.other_resources_to_delete
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.resource_to_delete = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        self.other_resources_to_delete = _get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Find the resource to delete, so it can be referenced later when deleting from
@@ -195,7 +223,6 @@ class DeleteResourceView(View):
         for r in linked_resources:
             r_pithia_identifier = r[0]['identifier']['pithia:Identifier']
             print(_create_resource_url(r_pithia_identifier['namespace'], r[1], r_pithia_identifier['localID']))
-
         return HttpResponseRedirect(self.redirect_url)
 
 
@@ -204,97 +231,127 @@ class organisation(DeleteResourceView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
+    list_resources_of_type_view_page_title = 'Manage Organisations'
+    list_resources_of_type_view_name = 'resource_management:organisations'
+    delete_resource_type_view_name = 'delete:organisation'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class individual(DeleteResourceView):
     resource_type = 'individual'
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
+    list_resources_of_type_view_page_title = 'Manage Individuals'
+    list_resources_of_type_view_name = 'resource_management:individuals'
+    delete_resource_type_view_name = 'delete:individual'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class project(DeleteResourceView):
     resource_type = 'project'
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
+    list_resources_of_type_view_page_title = 'Manage Projects'
+    list_resources_of_type_view_name = 'resource_management:projects'
+    delete_resource_type_view_name = 'delete:project'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class platform(DeleteResourceView):
     resource_type = 'platform'
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
+    list_resources_of_type_view_page_title = 'Manage Platforms'
+    list_resources_of_type_view_name = 'resource_management:platforms'
+    delete_resource_type_view_name = 'delete:platform'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class instrument(DeleteResourceView):
     resource_type = 'instrument'
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
+    list_resources_of_type_view_page_title = 'Manage Instruments'
+    list_resources_of_type_view_name = 'resource_management:instruments'
+    delete_resource_type_view_name = 'delete:instrument'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class operation(DeleteResourceView):
     resource_type = 'operation'
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
+    list_resources_of_type_view_page_title = 'Manage Operations'
+    list_resources_of_type_view_name = 'resource_management:operations'
+    delete_resource_type_view_name = 'delete:operation'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class acquisition(DeleteResourceView):
     resource_type = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
+    list_resources_of_type_view_page_title = 'Manage Acquisitions'
+    list_resources_of_type_view_name = 'resource_management:acquisitions'
+    delete_resource_type_view_name = 'delete:acquisition'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class computation(DeleteResourceView):
     resource_type = 'computation'
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
+    list_resources_of_type_view_page_title = 'Manage Computations'
+    list_resources_of_type_view_name = 'resource_management:computations'
+    delete_resource_type_view_name = 'delete:computation'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class process(DeleteResourceView):
     resource_type = 'process'
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
+    list_resources_of_type_view_page_title = 'Manage Processes'
+    list_resources_of_type_view_name = 'resource_management:processes'
+    delete_resource_type_view_name = 'delete:process'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class data_collection(DeleteResourceView):
     resource_type = 'collection'
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
+    list_resources_of_type_view_page_title = 'Manage Data Collections'
+    list_resources_of_type_view_name = 'resource_management:data_collections'
+    delete_resource_type_view_name = 'delete:data_collection'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
