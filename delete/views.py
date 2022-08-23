@@ -125,35 +125,35 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     # (including other data collections) reference this.
     individuals = list(individuals)
     for i in range(len(individuals)):
-        individuals[i] = (individuals[i], 'individual', CurrentIndividual)
+        individuals[i] = (individuals[i], 'individual', CurrentIndividual, IndividualRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
     projects = list(projects)
     for i in range(len(projects)):
-        projects[i] = (projects[i], 'project', CurrentProject)
+        projects[i] = (projects[i], 'project', CurrentProject, ProjectRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
     platforms = list(platforms)
     for i in range(len(platforms)):
-        platforms[i] = (platforms[i], 'platform', CurrentPlatform)
+        platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][2][0]['_id']), 'platform', platforms[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
-        instruments[i] = (instruments[i], 'instrument', CurrentInstrument)
+        instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][2][0]['_id']), 'instrument', instruments[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
-        acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition)
+        acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][2][0]['_id']), 'acquisition', acquisitions[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
-        computations[i] = (computations[i], 'computation', CurrentComputation)
+        computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(computations[i][2][0]['_id']), 'computation', computations[i][2]))
     processes = list(processes)
     for i in range(len(processes)):
-        processes[i] = (processes[i], 'process', CurrentProcess)
+        processes[i] = (processes[i], 'process', CurrentProcess, ProcessRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(processes[i][2][0]['_id']), 'process', processes[i][2]))
     data_collections = list(data_collections)
     for i in range(len(data_collections)):
-        data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection)
+        data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection, DataCollectionRevision)
     linked_resources.extend(individuals)
     linked_resources.extend(projects)
     linked_resources.extend(platforms)
@@ -164,6 +164,26 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     linked_resources.extend(data_collections)
 
     return linked_resources
+
+def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
+    # Find the resource to delete, so it can be referenced later when deleting from
+    # the revisions collection
+    resource_to_delete = resource_mongodb_model.find_one({
+        '_id': ObjectId(resource_id)
+    })
+
+    # Delete the current version of the resource
+    resource_mongodb_model.delete_one({
+        '_id': ObjectId(resource_id)
+    })
+
+    # Delete revisions stored as version control
+    resource_revision_mongodb_model.delete_many({
+        'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
+        'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
+    })
+
+
 
 class DeleteResourceView(TemplateView):
     resource_id = ''
@@ -200,29 +220,14 @@ class DeleteResourceView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # Find the resource to delete, so it can be referenced later when deleting from
-        # the revisions collection
-        resource_to_delete = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-
-        # # Delete the current version of the resource
-        self.resource_revision_mongodb_model.delete_one({
-            '_id': ObjectId(self.resource_id)
-        })
-
-        # # Delete revisions stored as version control
-        self.resource_revision_mongodb_model.delete_many({
-            'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
-            'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
-        })
-
+        _delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         # Delete resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
         linked_resources = _get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
         for r in linked_resources:
-            r_pithia_identifier = r[0]['identifier']['pithia:Identifier']
-            print(_create_resource_url(r_pithia_identifier['namespace'], r[1], r_pithia_identifier['localID']))
+            _delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
+            # r_pithia_identifier = r[0]['identifier']['pithia:Identifier']
+            # print(_create_resource_url(r_pithia_identifier['namespace'], r[1], r_pithia_identifier['localID']))
         return HttpResponseRedirect(self.redirect_url)
 
 
