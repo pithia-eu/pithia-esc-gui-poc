@@ -55,8 +55,7 @@ class UpdateResourceView(FormView):
             # the template, but do it again just to be
             # safe.
             validation_results = self.validate_resource(xml_file)
-            # TODO: Change to checking validation results before deploying to production
-            if True:
+            if 'error' not in validation_results:
                 try:
                     converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                     converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
