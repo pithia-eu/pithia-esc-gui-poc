@@ -135,6 +135,7 @@ class operation(RegisterResourceFormView):
 class acquisition(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     validate_resource = validate_acquisition_metadata_xml_file
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
     success_url = reverse_lazy('register:acquisition')
 
     a_or_an = 'an'
@@ -145,6 +146,7 @@ class acquisition(RegisterResourceFormView):
 class computation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     validate_resource = validate_computation_metadata_xml_file
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
     success_url = reverse_lazy('register:computation')
 
     a_or_an = 'a'
@@ -155,6 +157,7 @@ class computation(RegisterResourceFormView):
 class process(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     validate_resource = validate_process_metadata_xml_file
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
     success_url = reverse_lazy('register:process')
 
     a_or_an = 'a'
@@ -165,6 +168,7 @@ class process(RegisterResourceFormView):
 class data_collection(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     validate_resource = validate_data_collection_metadata_xml_file
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')
 
     a_or_an = 'a'
