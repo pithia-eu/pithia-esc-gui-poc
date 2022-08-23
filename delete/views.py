@@ -202,20 +202,20 @@ class DeleteResourceView(TemplateView):
     def post(self, request, *args, **kwargs):
         # Find the resource to delete, so it can be referenced later when deleting from
         # the revisions collection
-        # resource_to_delete = self.resource_mongodb_model.find_one({
-        #     '_id': ObjectId(self.resource_id)
-        # })
+        resource_to_delete = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
 
         # # Delete the current version of the resource
-        # self.resource_revision_mongodb_model.delete_one({
-        #     '_id': ObjectId(self.resource_id)
-        # })
+        self.resource_revision_mongodb_model.delete_one({
+            '_id': ObjectId(self.resource_id)
+        })
 
         # # Delete revisions stored as version control
-        # self.resource_revision_mongodb_model.delete_many({
-        #     'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
-        #     'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
-        # })
+        self.resource_revision_mongodb_model.delete_many({
+            'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
+            'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
+        })
 
         # Delete resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
