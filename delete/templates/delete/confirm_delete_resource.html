@@ -36,11 +36,11 @@
         </div>
         {% if other_resources_to_delete|length > 0 %}
         <section>
-            <h2 class="fs-5 mb-3">By deleting this {{ resource_type }}, the following resources will also be deleted:</h2>
+            <h2 class="fs-5 mb-3">There are resources referencing this {{ resource_type }} will also be deleted. Please review these in the list below.</h2>
             <ul class="list-group">
                 {% for r in other_resources_to_delete %}
                 {% with pithia_identifier=r.0.identifier|get_key_value:"pithia:Identifier" %}
-                <li class="list-group-item">{% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %} {{ r.0.name|default:pithia_identifier.localID }}</li>
+                <li class="list-group-item">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
                 {% endwith %}
                 {% endfor %}
             </ul>
@@ -52,7 +52,11 @@
                 <div class="col-lg-12">
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
                         <a href="{% url list_resources_of_type_view_name %}" class="btn btn-light me-2">Go Back</a>
+                        {% if other_resources_to_delete|length > 0 %}
+                        <button type="submit" class="btn btn-danger">Delete this {{ resource_type }} and the resources referencing it</button>
+                        {% else %}
                         <button type="submit" class="btn btn-danger">Delete this {{ resource_type }}</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
