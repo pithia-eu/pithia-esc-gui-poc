@@ -1,4 +1,3 @@
-# TODO: Replace ESPAS_Identifier with pithia:Identifier
 from bson import ObjectId
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from common.mongodb_models import OriginalMetadataXml

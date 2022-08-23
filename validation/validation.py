@@ -162,11 +162,11 @@ def get_mongodb_model_for_resource_type(resource_type):
 
 def get_resource_from_xlink_href_components(resource_type, localID, namespace, version):
     find_dictionary = {
-        'identifier.ESPAS_Identifier.localID': localID,
-        'identifier.ESPAS_Identifier.namespace': namespace,
+        'identifier.PITHIA_Identifier.localID': localID,
+        'identifier.PITHIA_Identifier.namespace': namespace,
     }
     if version:
-        find_dictionary['identifier.ESPAS_Identifier.version'] = version
+        find_dictionary['identifier.PITHIA_Identifier.version'] = version
     mongodb_model_for_resource_type = get_mongodb_model_for_resource_type(resource_type)
     return mongodb_model_for_resource_type.find_one(find_dictionary)
 
