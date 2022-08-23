@@ -23,7 +23,7 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
-    if (validate_xml_file_is_unique(metadata_file_dict, mongodb_model)):
+    if not validate_xml_file_is_unique(metadata_file_dict, mongodb_model):
         return 'This XML metadata file has been registered before.'
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(metadata_file_dict)
