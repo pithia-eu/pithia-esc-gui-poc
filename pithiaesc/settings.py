@@ -39,11 +39,14 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'delete.apps.DeleteConfig',
+    'update.apps.UpdateConfig',
     'browse.apps.BrowseConfig',
     'search.apps.SearchConfig',
     'register.apps.RegisterConfig',
     'present.apps.PresentConfig',
     'validation.apps.ValidationConfig',
+    'resource_management.apps.ResourceManagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

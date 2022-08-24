@@ -122,7 +122,8 @@ h1 {
     font-style: italic;
 }
 
-#upload-form label {
+#update-resource-form label,
+#register-resource-form label {
     margin-bottom: 0.5rem;
 }
 

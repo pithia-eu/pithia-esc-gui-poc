@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Resource Management' 'resource_management:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'resource_management/resource_management.js' %}" defer></script>
+{% endblock scripts %}
+{% block content %}
+<h1 class="pb-3">{{ title }}</h1>
+{% if resources_list|length > 0 %}
+<ul class="list-group">
+    {% for resource in resources_list %}
+    {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-lg-8">
+                <a href="{% url update_resource_view_name resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex">
+                    <a href="{% url update_resource_view_name resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
+                    <a href="{% url delete_resource_view_name resource.id %}" role="button" class="btn btn-danger btn-delete">Delete</a>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+    </li>
+    {% endwith %}
+    {% endfor %}
+</ul>
+{% else %}
+<p>No {{ resource_type_plural|lower }} have been registered with the e-Science Centre.</p>
+{% endif %}
+{% endblock content %}

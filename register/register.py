@@ -1,29 +1,27 @@
-# TODO: Replace ESPAS_Identifier with pithia:Identifier
+from bson import ObjectId
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from common.mongodb_models import OriginalMetadataXml
 from validation.registration_validation import validate_xml_file_is_unique
 
 
-def find_and_copy_current_version_of_resource_to_revisions_collection(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
+def move_current_version_of_resource_to_revisions(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
     current_version_of_resource = current_resource_mongodb_model.find_one({
-        'identifier.ESPAS_Identifier.localID': resource_pithia_identifier['localID'],
-        'identifier.ESPAS_Identifier.namespace': resource_pithia_identifier['namespace'],
+        'identifier.pithia:Identifier.localID': resource_pithia_identifier['localID'],
+        'identifier.pithia:Identifier.namespace': resource_pithia_identifier['namespace'],
     })
     if not current_version_of_resource:
-        return
-    return resource_revision_mongodb_model.insert_one(current_version_of_resource)
-
-def replace_current_version_of_resource_with_newer_version(newer_resource_version, current_resource_mongodb_model):
-    # The resource version is expected to be added
-    # by data owners, but if not, may need to add
-    # it here.
-    current_resource_mongodb_model.delete_many({})
-    return current_resource_mongodb_model.insert_one(newer_resource_version)
+        print('Resource not found.')
+        return 'Resource not found.'
+    # It's "moving" the resource, so first copy the resource to the revisions
+    # collection, and then delete from the current version collection.
+    current_resource_mongodb_model.delete_one({
+        '_id': ObjectId(current_version_of_resource['_id'])
+    })
+    resource_revision_mongodb_model.insert_one(current_version_of_resource)
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
-    xml_file.seek(0)
     metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
-    # Remove the top-level tag
+    # Remove the top-level tag - this will be just <Organisation>, for example
     metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
     if not validate_xml_file_is_unique(metadata_file_dict, mongodb_model):
         return 'This XML metadata file has been registered before.'

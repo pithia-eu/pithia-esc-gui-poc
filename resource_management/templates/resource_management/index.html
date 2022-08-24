@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Resource Management' %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1 class="pb-3">Resource Management</h1>
+<p class="lead">
+    Select the type of resource you would like to make changes for below.
+</p>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:acquisitions' %}">Acquisitions</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:computations' %}">Computations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:data_collections' %}">Data Collections</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:individuals' %}">Individuals</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:instruments' %}">Instruments</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:operations' %}">Operations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:organisations' %}">Organisations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:platforms' %}">Platforms</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:processes' %}">Processes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:projects' %}">Projects</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
