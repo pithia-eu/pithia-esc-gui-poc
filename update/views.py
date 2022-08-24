@@ -122,7 +122,7 @@ class project(UpdateResourceView):
     resource_revision_mongodb_model = ProjectRevision
     validate_resource = validate_project_metadata_xml_file
 
-    a_or_an = 'an'
+    a_or_an = 'a'
     resource_type = 'Project'
     resource_type_plural = 'Projects'
     list_resources_of_type_view_name = 'resource_management:projects'
@@ -139,7 +139,7 @@ class platform(UpdateResourceView):
     resource_revision_mongodb_model = PlatformRevision
     validate_resource = validate_platform_metadata_xml_file
 
-    a_or_an = 'an'
+    a_or_an = 'a'
     resource_type = 'Platform'
     resource_type_plural = 'Platforms'
     list_resources_of_type_view_name = 'resource_management:platforms'
@@ -209,7 +209,7 @@ class computation(UpdateResourceView):
     validate_resource = validate_computation_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_computation_dictionary
 
-    a_or_an = 'an'
+    a_or_an = 'a'
     resource_type = 'Computation'
     resource_type_plural = 'Computations'
     list_resources_of_type_view_name = 'resource_management:computations'
@@ -227,7 +227,7 @@ class process(UpdateResourceView):
     validate_resource = validate_process_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_process_dictionary
 
-    a_or_an = 'an'
+    a_or_an = 'a'
     resource_type = 'Process'
     resource_type_plural = 'Processes'
     list_resources_of_type_view_name = 'resource_management:processes'
@@ -245,7 +245,7 @@ class data_collection(UpdateResourceView):
     validate_resource = validate_data_collection_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
 
-    a_or_an = 'an'
+    a_or_an = 'a'
     resource_type = 'Data Collection'
     resource_type_plural = 'Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
