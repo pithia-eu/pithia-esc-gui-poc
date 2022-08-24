@@ -9,34 +9,34 @@ from validation.exceptions import InvalidRootElementNameForMetadataFileException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
 def validate_organisation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Organisation', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Organisation')
 
 def validate_individual_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Individual', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Individual')
 
 def validate_project_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Project', 'project.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Project')
 
 def validate_platform_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Platform', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Platform')
 
 def validate_instrument_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Instrument', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Instrument')
 
 def validate_operation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Operation', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Operation')
 
 def validate_acquisition_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Acquisition', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Acquisition')
 
 def validate_computation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Computation', 'utilities.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Computation')
 
 def validate_process_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Process', 'process.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Process')
 
 def validate_data_collection_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Collection', 'observationCollection.xsd')
+    return _validate_metadata_xml_file(xml_file, 'Collection')
 
 def parse_xml_file(xml_file):
     # Returns an ElementTree
@@ -49,7 +49,7 @@ def _create_validation_error_details_dict(err_type, err_message, extra_details):
         'extra_details': extra_details
     }
 
-def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_file_name):
+def _validate_metadata_xml_file(xml_file, expected_root_localname):
     validation_checklist = {
         'is_root_element_name_valid': False,
         'is_syntax_valid': False,
@@ -71,14 +71,13 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname, xml_schema_fi
             return validation_checklist
 
         # XSD Schema validation
-        # parent = xml_file_parsed.getroot()
-        # urls_with_xsi_ns = parent.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
-        # urls_with_xsi_ns = urls_with_xsi_ns[0].split()
-        # schema_url = urls_with_xsi_ns[0]
-        # if len(urls_with_xsi_ns) > 1:
-        #     schema_url = urls_with_xsi_ns[1]
-        validate_xml_against_schema(xml_file_parsed, 'pithia.xsd')
-        # validate_xml_against_schema_at_url(xml_file_parsed, schema_url)
+        parent = xml_file_parsed.getroot()
+        urls_with_xsi_ns = parent.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+        urls_with_xsi_ns = urls_with_xsi_ns[0].split()
+        schema_url = urls_with_xsi_ns[0]
+        if len(urls_with_xsi_ns) > 1:
+            schema_url = urls_with_xsi_ns[1]
+        validate_xml_against_schema_at_url(xml_file, schema_url)
         validation_checklist['is_valid_against_schema'] = True
 
         # Relation validaiton (whether a resource the metadata file
@@ -119,24 +118,11 @@ def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expecte
         'is_root_element_name_valid': root_localname == expected_root_localname
     }
 
-def validate_xml_against_schema_at_url(xml_file_parsed, schema_url):
-    # schema_response = get(schema_url)
-    # schema_text_parsed = etree.XML(schema_response.text.encode())
-    # schema = etree.XMLSchema(schema_text_parsed)
-    # schema.assertValid(xml_file_parsed)
+def validate_xml_against_schema_at_url(xml_file, schema_url):
+    xml_file.seek(0)
     schema_response = get(schema_url)
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
-    xml_schema.validate(xml_file_parsed)
-
-def validate_xml_against_schema(xml_file_parsed, schema_file_name):
-    current_dir = os.path.dirname(__file__)
-    # TODO: change current_schema_version to 2.2
-    # when schemas are finalised.
-    schema_file_path = os.path.join(current_dir, 'schemas', schema_file_name)
-    with open(schema_file_path, 'rb') as schema_file:
-        schema_file_parsed = etree.parse(schema_file)
-        schema = etree.XMLSchema(schema_file_parsed)
-        schema.assertValid(xml_file_parsed)
+    xml_schema.validate(xml_file.read())
 
 def validate_ontology_component_with_term(component, term_id):
     ontology_term_server_url = f'{ONTOLOGY_SERVER_BASE_URL}{component}/{term_id}'
