@@ -161,15 +161,14 @@ def get_mongodb_model_for_resource_type(resource_type):
         return CurrentDataCollection
     return 'unknown'
 
-def get_resource_from_xlink_href_components(resource_type, localID, namespace, version):
+def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
     find_dictionary = {
         'identifier.pithia:Identifier.localID': localID,
         'identifier.pithia:Identifier.namespace': namespace,
     }
     if version:
         find_dictionary['identifier.pithia:Identifier.version'] = version
-    mongodb_model_for_resource_type = get_mongodb_model_for_resource_type(resource_type)
-    return mongodb_model_for_resource_type.find_one(find_dictionary)
+    return resource_mongodb_model.find_one(find_dictionary)
 
 def get_components_from_xlink_href(href, href_section_to_remove):
     href = href.replace(href_section_to_remove, '')
@@ -193,19 +192,22 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             ontology_component = href_components[0]
             ontology_term_id = href_components[1]
             is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
-            if not is_valid_ontology_term:
+            if is_valid_ontology_term == None:
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
             href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/resources/2.2/')
-            namespace = href_components[0]
-            resource_type = href_components[1]
+            resource_type = href_components[0]
+            namespace = href_components[1]
             localID = href_components[2]
             version = None
             if len(href_components) > 3:
                 version = href_components[3]
-            referenced_resource = get_resource_from_xlink_href_components(resource_type, localID, namespace, version)
-            if not referenced_resource:
+            resource_mongodb_model = get_mongodb_model_for_resource_type(resource_type)
+            if resource_mongodb_model == 'unknown':
+                continue
+            referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version)
+            if referenced_resource == None:
                 unregistered_references['document_hrefs'].add(href)
                 unregistered_references['document_types'].add(resource_type)
     
