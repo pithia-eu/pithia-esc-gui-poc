@@ -189,7 +189,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
         return unregistered_references
     for href in hrefs:
         if 'ontology' in href:
-            href_components  = get_components_from_xlink_href(href, 'http://ontology.espas-fp7.eu/')
+            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/ontology/2.2/')
             ontology_component = href_components[0]
             ontology_term_id = href_components[1]
             is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
@@ -197,9 +197,9 @@ def get_unregistered_references_from_xml(xml_file_parsed):
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
-            href_components  = get_components_from_xlink_href(href, 'http://resources.espas-fp7.eu/')
-            resource_type = href_components[0]
-            namespace = href_components[1]
+            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/resources/2.2/')
+            namespace = href_components[0]
+            resource_type = href_components[1]
             localID = href_components[2]
             version = None
             if len(href_components) > 3:
