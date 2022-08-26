@@ -6,8 +6,8 @@ from validation.registration_validation import validate_xml_file_is_unique
 
 def move_current_version_of_resource_to_revisions(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
     current_version_of_resource = current_resource_mongodb_model.find_one({
-        'identifier.pithia:Identifier.localID': resource_pithia_identifier['localID'],
-        'identifier.pithia:Identifier.namespace': resource_pithia_identifier['namespace'],
+        'identifier.PITHIA_Identifier.localID': resource_pithia_identifier['localID'],
+        'identifier.PITHIA_Identifier.namespace': resource_pithia_identifier['namespace'],
     })
     if not current_version_of_resource:
         print('Resource not found.')

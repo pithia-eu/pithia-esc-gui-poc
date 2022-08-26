@@ -36,7 +36,7 @@ def find_matching_data_collections(request):
             '$in': instrument_types
         }
     }))
-    instrument_localids = [i['identifier']['pithia:Identifier']['localID'] for i in instruments]
+    instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
 
     # Fetch Acquisitions/Computations
     acquisitions = list(CurrentAcquisition.find({

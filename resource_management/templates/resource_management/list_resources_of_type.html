@@ -13,7 +13,7 @@
 {% if resources_list|length > 0 %}
 <ul class="list-group">
     {% for resource in resources_list %}
-    {% with pithia_identifier=resource.identifier|get_key_value:"pithia:Identifier" %}
+    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
     <li class="list-group-item">
         <div class="row">
             <div class="col-lg-8">

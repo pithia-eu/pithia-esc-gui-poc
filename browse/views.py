@@ -83,7 +83,7 @@ def resource_detail(request, resource_id, resource_mongodb_model, resource_type_
         '_id': ObjectId(resource_id)
     })
     resource_flattened = flatten(resource)
-    title = resource['identifier']['pithia:Identifier']['localID']
+    title = resource['identifier']['PITHIA_Identifier']['localID']
     if 'name' in resource:
         title = resource['name']
     return render(request, 'browse/detail.html', {

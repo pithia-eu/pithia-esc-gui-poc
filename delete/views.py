@@ -47,7 +47,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     resource = resource_mongodb_model.find_one({
         '_id': ObjectId(resource_id)
     })
-    resource_pithia_identifier = resource['identifier']['pithia:Identifier']
+    resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
     resource_url = _create_resource_url(resource_pithia_identifier['namespace'], resource_type, resource_pithia_identifier['localID'])
     if resource_mongodb_model == CurrentOrganisation:
         # Referenced by: Individual, Project, Platform?, Instrument?, Data Collection
@@ -179,8 +179,8 @@ def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_m
 
     # Delete revisions stored as version control
     resource_revision_mongodb_model.delete_many({
-        'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
-        'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
+        'identifier.PITHIA_Identifier.localID': resource_to_delete['identifier']['PITHIA_Identifier']['localID'],
+        'identifier.PITHIA_Identifier.namespace': resource_to_delete['identifier']['PITHIA_Identifier']['namespace'],
     })
 
 
@@ -226,8 +226,6 @@ class DeleteResourceView(TemplateView):
         _delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         for r in linked_resources:
             _delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
-            # r_pithia_identifier = r[0]['identifier']['pithia:Identifier']
-            # print(_create_resource_url(r_pithia_identifier['namespace'], r[1], r_pithia_identifier['localID']))
         return HttpResponseRedirect(self.redirect_url)
 
 

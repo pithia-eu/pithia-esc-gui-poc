@@ -13,7 +13,7 @@
             {{ title }}
         </h1>
         <small class="text-muted">
-            {% with pithia_identifier=resource_to_delete.identifier|get_key_value:"pithia:Identifier" %}
+            {% with pithia_identifier=resource_to_delete.identifier.PITHIA_Identifier %}
             Deleting resource: {{ resource_to_delete.name|default:pithia_identifier.localID }}
             {% endwith %}
         </small>
@@ -39,7 +39,7 @@
             <h2 class="fs-5 mb-3">There are resources referencing this {{ resource_type }} will also be deleted. Please review these in the list below.</h2>
             <ul class="list-group">
                 {% for r in other_resources_to_delete %}
-                {% with pithia_identifier=r.0.identifier|get_key_value:"pithia:Identifier" %}
+                {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
                 <li class="list-group-item">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
                 {% endwith %}
                 {% endfor %}

@@ -163,11 +163,11 @@ def get_mongodb_model_for_resource_type(resource_type):
 
 def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
     find_dictionary = {
-        'identifier.pithia:Identifier.localID': localID,
-        'identifier.pithia:Identifier.namespace': namespace,
+        'identifier.PITHIA_Identifier.localID': localID,
+        'identifier.PITHIA_Identifier.namespace': namespace,
     }
     if version:
-        find_dictionary['identifier.pithia:Identifier.version'] = version
+        find_dictionary['identifier.PITHIA_Identifier.version'] = version
     return resource_mongodb_model.find_one(find_dictionary)
 
 def get_components_from_xlink_href(href, href_section_to_remove):

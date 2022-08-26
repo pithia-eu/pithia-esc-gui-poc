@@ -59,7 +59,7 @@ class UpdateResourceView(FormView):
                 try:
                     converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                     converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['pithia:Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
                     register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 except ExpatError as err:
                     print(err)
@@ -76,7 +76,7 @@ class UpdateResourceView(FormView):
         resource_to_update = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        resource_to_update_name = resource_to_update['identifier']['pithia:Identifier']['localID']
+        resource_to_update_name = resource_to_update['identifier']['PITHIA_Identifier']['localID']
         if 'name' in resource_to_update:
             resource_to_update_name = resource_to_update['name']
         self.resource_to_update_name = resource_to_update_name
