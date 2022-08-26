@@ -56,6 +56,8 @@ class RegisterResourceFormView(FormView):
                 registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 if registration_results == 'This XML metadata file has been registered before.':
                     messages.error(request, registration_results)
+                else:
+                    messages.success(request, f'Successfully registered {xml_file.name}.')
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())
@@ -64,8 +66,6 @@ class RegisterResourceFormView(FormView):
                 print(err)
                 print(traceback.format_exc())
                 messages.error(request, 'An unexpected error occurred.')
-
-            messages.success(request, f'Successfully registered {xml_file.name}.')
             # validation_results = self.validate_resource(xml_file)
             # if 'error' not in validation_results:
             # else:
