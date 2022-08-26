@@ -1,7 +1,7 @@
 import re
 from common import mongodb_models
 from register import xml_conversion_checks_and_fixes
-from validation import validation
+from validation import metadata_validation
 from django.urls import reverse
 
 ONTOLOGY_COMPONENT_ENUMS = {
@@ -37,49 +37,49 @@ def get_view_helper_variables_by_url_namespace(url_namespace):
     if 'organisation' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentOrganisation
         resource_revision_mongodb_model = mongodb_models.OrganisationRevision
-        validation_function = validation.validate_organisation_metadata_xml_file
+        validation_function = metadata_validation.validate_organisation_metadata_xml_file
         validation_url = reverse('validation:organisation')
         resource_type = 'Organisation'
         resource_type_plural = 'Organisations'
     if 'individual' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentIndividual
         resource_revision_mongodb_model = mongodb_models.IndividualRevision
-        validation_function = validation.validate_individual_metadata_xml_file
+        validation_function = metadata_validation.validate_individual_metadata_xml_file
         validation_url = reverse('validation:individual')
         resource_type = 'Individual'
         resource_type_plural = 'Individuals'
     if 'project' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentProject
         resource_revision_mongodb_model = mongodb_models.ProjectRevision
-        validation_function = validation.validate_project_metadata_xml_file
+        validation_function = metadata_validation.validate_project_metadata_xml_file
         validation_url = reverse('validation:project')
         resource_type = 'Project'
         resource_type_plural = 'Projects'
     if 'platform' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentPlatform
         resource_revision_mongodb_model = mongodb_models.PlatformRevision
-        validation_function = validation.validate_platform_metadata_xml_file
+        validation_function = metadata_validation.validate_platform_metadata_xml_file
         validation_url = reverse('validation:platform')
         resource_type = 'Platform'
         resource_type_plural = 'Platforms'
     if 'instrument' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentInstrument
         resource_revision_mongodb_model = mongodb_models.InstrumentRevision
-        validation_function = validation.validate_instrument_metadata_xml_file
+        validation_function = metadata_validation.validate_instrument_metadata_xml_file
         validation_url = reverse('validation:instrument')
         resource_type = 'Instrument'
         resource_type_plural = 'Instruments'
     if 'operation' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentOperation
         resource_revision_mongodb_model = mongodb_models.OperationRevision
-        validation_function = validation.validate_operation_metadata_xml_file
+        validation_function = metadata_validation.validate_operation_metadata_xml_file
         validation_url = reverse('validation:operation')
         resource_type = 'Operation'
         resource_type_plural = 'Operations'
     if 'acquisition' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentAcquisition
         resource_revision_mongodb_model = mongodb_models.AcquisitionRevision
-        validation_function = validation.validate_acquisition_metadata_xml_file
+        validation_function = metadata_validation.validate_acquisition_metadata_xml_file
         validation_url = reverse('validation:acquisition')
         conversion_validation_and_fixing_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
         resource_type = 'Acquisition'
@@ -87,7 +87,7 @@ def get_view_helper_variables_by_url_namespace(url_namespace):
     if 'computation' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentComputation
         resource_revision_mongodb_model = mongodb_models.ComputationRevision
-        validation_function = validation.validate_computation_metadata_xml_file
+        validation_function = metadata_validation.validate_computation_metadata_xml_file
         validation_url = reverse('validation:computation')
         conversion_validation_and_fixing_function = xml_conversion_checks_and_fixes.format_computation_dictionary
         resource_type = 'Computation'
@@ -95,7 +95,7 @@ def get_view_helper_variables_by_url_namespace(url_namespace):
     if 'process' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentProcess
         resource_revision_mongodb_model = mongodb_models.ProcessRevision
-        validation_function = validation.validate_process_metadata_xml_file
+        validation_function = metadata_validation.validate_process_metadata_xml_file
         validation_url = reverse('validation:process')
         conversion_validation_and_fixing_function = xml_conversion_checks_and_fixes.format_process_dictionary
         resource_type = 'Process'
@@ -103,7 +103,7 @@ def get_view_helper_variables_by_url_namespace(url_namespace):
     if 'data-collection' in url_namespace:
         current_version_mongodb_model = mongodb_models.CurrentDataCollection
         resource_revision_mongodb_model = mongodb_models.DataCollectionRevision
-        validation_function = validation.validate_data_collection_metadata_xml_file
+        validation_function = metadata_validation.validate_data_collection_metadata_xml_file
         validation_url = reverse('validation:data_collection')
         conversion_validation_and_fixing_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
         resource_type = 'Data Collection'
