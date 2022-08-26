@@ -1,8 +1,4 @@
 import re
-from common import mongodb_models
-from register import xml_conversion_checks_and_fixes
-from validation import metadata_validation
-from django.urls import reverse
 
 ONTOLOGY_COMPONENT_ENUMS = {
     'computationType': 'computationTypes',
