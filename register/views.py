@@ -48,26 +48,28 @@ class RegisterResourceFormView(FormView):
         xml_file = request.FILES['file']
         if form.is_valid():
             # XML should have already been validated at
-            # the template, but do it again just to be
-            # safe.
-            validation_results = self.validate_resource(xml_file)
-            if 'error' not in validation_results:
-                try:
-                    registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                    if registration_results == 'This XML metadata file has been registered before.':
-                        messages.error(request, registration_results)
-                except ExpatError as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An error occurred whilst parsing the XML.')
-                except BaseException as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An unexpected error occurred.')
+            # the template, and validation could take
+            # place again, but takes a long time. Another
+            # method which verifies validation took place
+            # should be implemented.
+            try:
+                registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                if registration_results == 'This XML metadata file has been registered before.':
+                    messages.error(request, registration_results)
+            except ExpatError as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An error occurred whilst parsing the XML.')
+            except BaseException as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An unexpected error occurred.')
 
-                messages.success(request, f'Successfully registered {xml_file.name}.')
-            else:
-                messages.error(request, 'The file submitted was not valid.')
+            messages.success(request, f'Successfully registered {xml_file.name}.')
+            # validation_results = self.validate_resource(xml_file)
+            # if 'error' not in validation_results:
+            # else:
+            #     messages.error(request, 'The file submitted was not valid.')
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
