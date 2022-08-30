@@ -1,11 +1,12 @@
 import os
+import re
 import traceback
 import xmlschema
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
-from validation.exceptions import InvalidRootElementNameForMetadataFileException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
+from validation.exceptions import InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
 def validate_organisation_metadata_xml_file(self, xml_file):
@@ -36,7 +37,7 @@ def validate_process_metadata_xml_file(self, xml_file):
     return _validate_metadata_xml_file(xml_file, 'Process')
 
 def validate_data_collection_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Collection')
+    return _validate_metadata_xml_file(xml_file, 'DataCollection')
 
 def parse_xml_file(xml_file):
     # Returns an ElementTree
@@ -54,6 +55,7 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
         'is_root_element_name_valid': False,
         'is_syntax_valid': False,
         'is_valid_against_schema': False,
+        'is_file_name_matching_with_localid': False,
         'is_each_document_reference_valid': False,
         'is_each_ontology_reference_valid': False,
     }
@@ -71,14 +73,23 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
             return validation_checklist
 
         # XSD Schema validation
-        parent = xml_file_parsed.getroot()
-        urls_with_xsi_ns = parent.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+        root = xml_file_parsed.getroot()
+        urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
         urls_with_xsi_ns = urls_with_xsi_ns[0].split()
         schema_url = urls_with_xsi_ns[0]
         if len(urls_with_xsi_ns) > 1:
             schema_url = urls_with_xsi_ns[1]
         validate_xml_against_schema_at_url(xml_file, schema_url)
         validation_checklist['is_valid_against_schema'] = True
+
+        # Matching file name and localID tag text validation
+        localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
+        xml_file_name_with_no_extension = re.sub('.xml$' , '', xml_file.name)
+        print(localid_tag_text)
+        print(xml_file_name_with_no_extension)
+        if localid_tag_text != xml_file_name_with_no_extension:
+            validation_checklist['error'] = _create_validation_error_details_dict(MetadataFileNameAndLocalIDNotMatchingException, f"The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".", None)
+            return validation_checklist
 
         # Relation validaiton (whether a resource the metadata file
         # is referencing exists in the database or not).
