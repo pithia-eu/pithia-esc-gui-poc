@@ -85,8 +85,6 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
         # Matching file name and localID tag text validation
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
         xml_file_name_with_no_extension = re.sub('.xml$' , '', xml_file.name)
-        print(localid_tag_text)
-        print(xml_file_name_with_no_extension)
         if localid_tag_text != xml_file_name_with_no_extension:
             validation_checklist['error'] = _create_validation_error_details_dict(MetadataFileNameAndLocalIDNotMatchingException, f"The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".", None)
             return validation_checklist
