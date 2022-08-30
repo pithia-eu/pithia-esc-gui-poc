@@ -98,8 +98,10 @@ def get_registered_observed_properties():
             }
     ]))
     observed_property_ids = []
-    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
-    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
+    if len(observed_properties_from_computations) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
+    if len(observed_properties_from_acquisitions) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
     return list(set(observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
