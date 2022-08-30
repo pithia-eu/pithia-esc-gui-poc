@@ -34,7 +34,7 @@ def validate_computation_metadata_xml_file(self, xml_file):
     return _validate_metadata_xml_file(xml_file, 'Computation')
 
 def validate_process_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Process')
+    return _validate_metadata_xml_file(xml_file, 'CompositeProcess')
 
 def validate_data_collection_metadata_xml_file(self, xml_file):
     return _validate_metadata_xml_file(xml_file, 'DataCollection')
@@ -171,6 +171,8 @@ def get_mongodb_model_for_resource_type(resource_type):
     return 'unknown'
 
 def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
+    print('localID', localID)
+    print('namespace', namespace)
     find_dictionary = {
         'identifier.PITHIA_Identifier.localID': localID,
         'identifier.PITHIA_Identifier.namespace': namespace,
