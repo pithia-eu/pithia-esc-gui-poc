@@ -6,3 +6,6 @@ class UnregisteredOntologyTermException(Exception):
 
 class InvalidRootElementNameForMetadataFileException(Exception):
     pass
+
+class MetadataFileNameAndLocalIDNotMatchingException(Exception):
+    pass
