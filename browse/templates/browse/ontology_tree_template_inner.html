@@ -1,0 +1,22 @@
+<li>
+    {% if node.narrowers|length > 0 %}
+    <details>
+        <summary>
+            {% with is_parent_node="true" registered_ontology_terms=registered_ontology_terms %}
+            {% include "search/ontology_tree_node_template.html" %}
+            {% endwith %}
+        </summary>
+        <ul>
+        {% for key, value in node.narrowers.items %}
+            {% with node=value ontology_component=ontology_component parent_node_in_ontology=node.id is_parent_node="false" template_name="search/ontology_tree_template_inner.html" registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
+            {% include template_name %}
+            {% endwith %}
+        {% endfor %}
+        </ul>
+    </details>
+    {% else %}
+    {% with registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
+    {% include "search/ontology_tree_node_template.html" %}
+    {% endwith %}
+    {% endif %}
+</li>
