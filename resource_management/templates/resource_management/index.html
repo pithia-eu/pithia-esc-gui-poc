@@ -12,70 +12,120 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:acquisitions' %}">Acquisitions</a>
+                <a href="{% url 'resource_management:acquisitions' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Acquisitions</span>
+                        <span class="text-muted">{{ num_current_acquisitions }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:computations' %}">Computations</a>
+                <a href="{% url 'resource_management:computations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Computations</span>
+                        <span class="text-muted">{{ num_current_computations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:data_collections' %}">Data Collections</a>
+                <a href="{% url 'resource_management:data_collections' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-center">Data Collections</span>
+                        <span class="text-muted">{{ num_current_data_collections }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:individuals' %}">Individuals</a>
+                <a href="{% url 'resource_management:individuals' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Individuals</span>
+                        <span class="text-muted">{{ num_current_individuals }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:instruments' %}">Instruments</a>
+                <a href="{% url 'resource_management:instruments' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Instruments</span>
+                        <span class="text-muted">{{ num_current_instruments }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:operations' %}">Operations</a>
+                <a href="{% url 'resource_management:operations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Operations</span>
+                        <span class="text-muted">{{ num_current_operations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:organisations' %}">Organisations</a>
+                <a href="{% url 'resource_management:organisations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Organisations</span>
+                        <span class="text-muted">{{ num_current_organisations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:platforms' %}">Platforms</a>
+                <a href="{% url 'resource_management:platforms' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Platforms</span>
+                        <span class="text-muted">{{ num_current_platforms }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:processes' %}">Processes</a>
+                <a href="{% url 'resource_management:processes' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Processes</span>
+                        <span class="text-muted">{{ num_current_processes }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:projects' %}">Projects</a>
+                <a href="{% url 'resource_management:projects' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Projects</span>
+                        <span class="text-muted">{{ num_current_projects }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
