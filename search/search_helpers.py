@@ -28,7 +28,7 @@ def find_matching_data_collections(request):
     # Observed properties map to acquisition and computations
     # Acquisition/Computation maps to
     # Process maps to
-    # Observation Collection, which is what we want
+    # Data Collection, which is what we want
 
     # Fetch Instruments
     instruments = list(CurrentInstrument.find({
