@@ -20,6 +20,16 @@ def schemas(request):
         'title': 'Browse Schemas'
     })
 
+def ontology(request):
+    return render(request, 'browse/ontology.html', {
+        'title': 'Browse PITHIA Ontology'
+    })
+
+def ontology_detail(request, category, term_id):
+    return render(request, 'browse/ontology_detail.html', {
+        'title': 'Ontology Term'
+    })
+
 def list_resources_of_type(request, resource_mongodb_model, resource_type_plural, resource_detail_view_name):
     url_namespace = request.resolver_match.namespace
     resources_list = list(resource_mongodb_model.find({}))
