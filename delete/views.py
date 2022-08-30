@@ -1,7 +1,5 @@
-from webbrowser import get
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.decorators.http import require_POST
 from bson.objectid import ObjectId
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
@@ -10,7 +8,7 @@ from django.views.generic import TemplateView
 def _create_resource_url(namespace, resource_type, localid):
     if not localid.startswith(f'{resource_type.capitalize()}_'):
         localid = f'{resource_type.capitalize()}_{localid}'
-    return f'https://resources.pithia.eu/2.2/{namespace}/{resource_type}/{localid}'
+    return f'https://metadata.pithia.eu/resources/2.2/{namespace}/{resource_type}/{localid}'
 
 def _get_projects_referencing_party_url(party_url):
     return CurrentProject.find({
