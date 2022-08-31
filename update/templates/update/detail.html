@@ -6,8 +6,8 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
-{{ validation_url|json_script:"validation-url" }}
 {% block scripts %}
+{{ validation_url|json_script:"validation-url" }}
 <script src="{% static 'register/register.js' %}" id="register-script" defer></script>
 {% endblock scripts %}
 {% block content %}
