@@ -9,6 +9,15 @@
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
+{% if messages %}
+<div class="registration-alerts">
+    {% for message in messages %}
+    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 <h1 class="pb-3">{{ title }}</h1>
 {% if resources_list|length > 0 %}
 <ul class="list-group">
