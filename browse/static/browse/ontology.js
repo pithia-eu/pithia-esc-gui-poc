@@ -117,36 +117,9 @@ export function checkAllCheckboxesForTreeContainerId(treeContainerId, allCheckbo
 }
 
 function setupInputsForTreeContainerId(treeContainerId) {
-    const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
-    ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
-            const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
-            if (childNodeCheckboxes.length > 0) {
-                updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
-            }
-        });
-    });
-
-    const ontologyChildNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]:not([data-parent-node-in-ontology=""])`);
-    ontologyChildNodeCheckboxesForTree.forEach(checkbox => {
-        checkbox.addEventListener("change", event => {
-            updateParentNodeCheckboxesByChildNodeCheckbox(checkbox);
-        });
-    });
-
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     searchBoxForTree.addEventListener("input", event => {
         filterTreeContainerIdBySearchBoxInput(treeContainerId);
-    });
-
-    const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
-    deselectAllButtonForTree.addEventListener("click", event => {
-        checkAllCheckboxesForTreeContainerId(treeContainerId, false);
-    });
-
-    const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
-    selectAllButtonForTree.addEventListener("click", event => {
-        checkAllCheckboxesForTreeContainerId(treeContainerId, true);
     });
 }
 
