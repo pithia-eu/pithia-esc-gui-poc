@@ -1,7 +1,7 @@
 from mongodb import db
 from search.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
 def find_matching_data_collections(request):
     observed_properties = []
@@ -28,7 +28,7 @@ def find_matching_data_collections(request):
     # Observed properties map to acquisition and computations
     # Acquisition/Computation maps to
     # Process maps to
-    # Observation Collection, which is what we want
+    # Data Collection, which is what we want
 
     # Fetch Instruments
     instruments = list(CurrentInstrument.find({
@@ -36,7 +36,7 @@ def find_matching_data_collections(request):
             '$in': instrument_types
         }
     }))
-    instrument_localids = [i['identifier']['pithia:Identifier']['localID'] for i in instruments]
+    instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
 
     # Fetch Acquisitions/Computations
     acquisitions = list(CurrentAcquisition.find({

@@ -12,70 +12,120 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:acquisitions:list_resources_of_type' %}">Acquisitions</a>
+                <a href="{% url 'resource_management:acquisitions' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Acquisitions</span>
+                        <span class="text-muted">{{ num_current_acquisitions }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:computations:list_resources_of_type' %}">Computations</a>
+                <a href="{% url 'resource_management:computations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Computations</span>
+                        <span class="text-muted">{{ num_current_computations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:data-collections:list_resources_of_type' %}">Data Collections</a>
+                <a href="{% url 'resource_management:data_collections' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-center">Data Collections</span>
+                        <span class="text-muted">{{ num_current_data_collections }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:individuals:list_resources_of_type' %}">Individuals</a>
+                <a href="{% url 'resource_management:individuals' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Individuals</span>
+                        <span class="text-muted">{{ num_current_individuals }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:instruments:list_resources_of_type' %}">Instruments</a>
+                <a href="{% url 'resource_management:instruments' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Instruments</span>
+                        <span class="text-muted">{{ num_current_instruments }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:operations:list_resources_of_type' %}">Operations</a>
+                <a href="{% url 'resource_management:operations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Operations</span>
+                        <span class="text-muted">{{ num_current_operations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:organisations:list_resources_of_type' %}">Organisations</a>
+                <a href="{% url 'resource_management:organisations' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Organisations</span>
+                        <span class="text-muted">{{ num_current_organisations }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:platforms:list_resources_of_type' %}">Platforms</a>
+                <a href="{% url 'resource_management:platforms' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Platforms</span>
+                        <span class="text-muted">{{ num_current_platforms }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:processes:list_resources_of_type' %}">Processes</a>
+                <a href="{% url 'resource_management:processes' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Processes</span>
+                        <span class="text-muted">{{ num_current_processes }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:projects:list_resources_of_type' %}">Projects</a>
+                <a href="{% url 'resource_management:projects' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Projects</span>
+                        <span class="text-muted">{{ num_current_projects }}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>

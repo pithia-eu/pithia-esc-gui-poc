@@ -1,96 +1,125 @@
-from pyexpat import ExpatError
-import traceback
-from django.http import HttpResponseRedirect
+from importlib import resources
 from django.shortcuts import render
-from django.urls import reverse
-from django.views.decorators.http import require_POST, require_http_methods
-from django.contrib import messages
-from bson.objectid import ObjectId
-from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from resource_management.forms import UploadUpdatedFileForm
-from search.helpers import remove_underscore_from_id_attribute, get_view_helper_variables_by_url_namespace
+from django.views.generic import TemplateView
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+
+from search.helpers import remove_underscore_from_id_attribute
+
 
 # Create your views here.
 def index(request):
+    num_current_organsations = CurrentOrganisation.count_documents({})
+    num_current_individuals = CurrentIndividual.count_documents({})
+    num_current_projects = CurrentProject.count_documents({})
+    num_current_platforms = CurrentPlatform.count_documents({})
+    num_current_instruments = CurrentInstrument.count_documents({})
+    num_current_operations = CurrentOperation.count_documents({})
+    num_current_acquisitions = CurrentAcquisition.count_documents({})
+    num_current_computations = CurrentComputation.count_documents({})
+    num_current_processes = CurrentProcess.count_documents({})
+    num_current_data_collections = CurrentDataCollection.count_documents({})
     return render(request, 'resource_management/index.html', {
+        'num_current_organisations': num_current_organsations,
+        'num_current_individuals': num_current_individuals,
+        'num_current_projects': num_current_projects,
+        'num_current_platforms': num_current_platforms,
+        'num_current_instruments': num_current_instruments,
+        'num_current_operations': num_current_operations,
+        'num_current_acquisitions': num_current_acquisitions,
+        'num_current_computations': num_current_computations,
+        'num_current_processes': num_current_processes,
+        'num_current_data_collections': num_current_data_collections,
         'title': 'Manage Resources'
     })
 
-def list_resources_of_type(request):
-    url_namespace = request.resolver_match.namespace
-    view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resources_list = list(view_helper_vars['current_version_mongodb_model'].find({}))
-    resources_list = list(map(remove_underscore_from_id_attribute, resources_list))
-    return render(request, 'resource_management/list_resources_of_type.html', {
-        'title': view_helper_vars["resource_type_plural"],
-        'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
-        'resource_type_plural': view_helper_vars['resource_type_plural'],
-        'url_namespace': url_namespace,
-        'resources_list': resources_list
-    })
+class ManageResourcesView(TemplateView):
+    template_name = 'resource_management/list_resources_of_type.html'
+    resource_mongodb_model = None
+    resource_type_plural = 'Resources'
+    title = f'Manage {resource_type_plural}'
+    resources_list = []
+    delete_resource_view_name = ''
+    update_resource_view_name = ''
 
-@require_http_methods(["GET", "POST"])
-def update(request, resource_id):
-    url_namespace = request.resolver_match.namespace
-    redirect_url = reverse(f'{url_namespace}:list_resources_of_type')
-    if request.method == 'POST':
-        view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-        # Form validation
-        form = UploadUpdatedFileForm(request.POST, request.FILES)
-        xml_file = request.FILES['file']
-        if form.is_valid():
-            # XML should have already been validated at
-            # the template, but do it again just to be
-            # safe.
-            validation_results = view_helper_vars['validation_function'](xml_file)
-            if True:
-                try:
-                    converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-                    converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['pithia:Identifier'], view_helper_vars['current_version_mongodb_model'], view_helper_vars['resource_revision_mongodb_model'])
-                    register_metadata_xml_file(xml_file, view_helper_vars['current_version_mongodb_model'], view_helper_vars['conversion_validation_and_fixing_function'])
-                except ExpatError as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An error occurred whilst parsing the XML.')
-                except BaseException as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An unexpected error occurred.')
-        return HttpResponseRedirect(redirect_url)
-    view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resource_to_update = view_helper_vars['current_version_mongodb_model'].find_one({
-        '_id': ObjectId(resource_id)
-    })
-    resource_to_update_name = resource_to_update['identifier']['pithia:Identifier']['localID']
-    if 'name' in resource_to_update:
-        resource_to_update_name = resource_to_update['name']
-    a_or_an = 'a'
-    if view_helper_vars["resource_type"].lower().startswith(('a', 'e', 'i',  'o', 'u' )):
-        a_or_an = 'an'
-    return render(request, 'resource_management/update.html', {
-        'title': f'Update {a_or_an} {view_helper_vars["resource_type"].title()}',
-        'breadcrumb_item_list_resources_of_type_text': view_helper_vars["resource_type_plural"],
-        'url_namespace': url_namespace,
-        'form': UploadUpdatedFileForm(),
-        'resource_id': resource_id,
-        'resource_to_update_name': resource_to_update_name,
-        'validation_url': view_helper_vars['validation_url'],
-    })
+    def get_resources_list(self):
+        resources_list = list(self.resource_mongodb_model.find({}))
+        return list(map(remove_underscore_from_id_attribute, resources_list))
 
-@require_POST
-def delete(request, resource_id):
-    url_namespace = request.resolver_match.namespace
-    view_helper_vars = get_view_helper_variables_by_url_namespace(url_namespace)
-    resource_to_delete = view_helper_vars['current_version_mongodb_model'].find_one({
-        '_id': ObjectId(resource_id)
-    })
-    view_helper_vars['current_version_mongodb_model'].delete_one({
-        '_id': ObjectId(resource_id)
-    })
-    view_helper_vars['resource_revision_mongodb_model'].delete_many({
-        'identifier.pithia:Identifier.localID': resource_to_delete['identifier']['pithia:Identifier']['localID'],
-        'identifier.pithia:Identifier.namespace': resource_to_delete['identifier']['pithia:Identifier']['namespace'],
-    })
-    return HttpResponseRedirect(reverse(f'{url_namespace}:list_resources_of_type'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title
+        context['resource_type_plural'] = self.resource_type_plural
+        context['resources_list'] = self.get_resources_list()
+        context['delete_resource_view_name'] = self.delete_resource_view_name
+        context['update_resource_view_name'] = self.update_resource_view_name
+        return context
+
+class organisations(ManageResourcesView):
+    title = 'Manage Organisations'
+    resource_mongodb_model = CurrentOrganisation
+    resource_type_plural = 'Organisations'
+    delete_resource_view_name = 'delete:organisation'
+    update_resource_view_name = 'update:organisation'
+
+class individuals(ManageResourcesView):
+    title = 'Manage Individuals'
+    resource_mongodb_model = CurrentIndividual
+    resource_type_plural = 'Individuals'
+    delete_resource_view_name = 'delete:individual'
+    update_resource_view_name = 'update:individual'
+
+class projects(ManageResourcesView):
+    title = 'Manage Projects'
+    resource_mongodb_model = CurrentProject
+    resource_type_plural = 'Projects'
+    delete_resource_view_name = 'delete:project'
+    update_resource_view_name = 'update:project'
+
+class platforms(ManageResourcesView):
+    title = 'Manage Platforms'
+    resource_mongodb_model = CurrentPlatform
+    resource_type_plural = 'PLatforms'
+    delete_resource_view_name = 'delete:platform'
+    update_resource_view_name = 'update:platform'
+
+class instruments(ManageResourcesView):
+    title = 'Manage Instruments'
+    resource_mongodb_model = CurrentInstrument
+    resource_type_plural = 'Instruments'
+    delete_resource_view_name = 'delete:instrument'
+    update_resource_view_name = 'update:instrument'
+
+class operations(ManageResourcesView):
+    title = 'Manage Operations'
+    resource_mongodb_model = CurrentOperation
+    resource_type_plural = 'Operations'
+    delete_resource_view_name = 'delete:operation'
+    update_resource_view_name = 'update:operation'
+
+class acquisitions(ManageResourcesView):
+    title = 'Manage Acquisitions'
+    resource_mongodb_model = CurrentAcquisition
+    resource_type_plural = 'Acquisitions'
+    delete_resource_view_name = 'delete:acquisition'
+    update_resource_view_name = 'update:acquisition'
+
+class computations(ManageResourcesView):
+    title = 'Manage Computations'
+    resource_mongodb_model = CurrentComputation
+    resource_type_plural = 'Computations'
+    delete_resource_view_name = 'delete:computation'
+    update_resource_view_name = 'update:computation'
+
+class processes(ManageResourcesView):
+    title = 'Manage Processes'
+    resource_mongodb_model = CurrentProcess
+    resource_type_plural = 'Processes'
+    delete_resource_view_name = 'delete:process'
+    update_resource_view_name = 'update:process'
+
+class data_collections(ManageResourcesView):
+    title = 'Manage Data Collections'
+    resource_mongodb_model = CurrentDataCollection
+    resource_type_plural = 'Data Collections'
+    delete_resource_view_name = 'delete:data_collection'
+    update_resource_view_name = 'update:data_collection'

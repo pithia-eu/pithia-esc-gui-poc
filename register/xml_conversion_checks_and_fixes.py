@@ -1,18 +1,18 @@
-def format_acquisition_dictionary(dictionary):
+def format_acquisition_dictionary(self, dictionary):
     # Check if the 'capability' property is an
     # array-type property
     if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
         dictionary['capability'] = [dictionary['capability']]
     return dictionary
 
-def format_computation_dictionary(dictionary):
+def format_computation_dictionary(self, dictionary):
     # Check if the 'capability' property is an
     # array-type property
     if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
         dictionary['capability'] = [dictionary['capability']]
     return dictionary
 
-def format_process_dictionary(dictionary):
+def format_process_dictionary(self, dictionary):
     # Check if the 'acquisitionComponent' property exists and
     # if it is an array-type property
     if 'acquisitionComponent' in dictionary and not isinstance(dictionary['acquisitionComponent'], list):
@@ -23,7 +23,7 @@ def format_process_dictionary(dictionary):
         dictionary['computationComponent'] = [dictionary['computationComponent']]
     return dictionary
 
-def format_data_collection_dictionary(dictionary):
+def format_data_collection_dictionary(self, dictionary):
     # Check if the 'relatedParty' property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):

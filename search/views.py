@@ -4,7 +4,7 @@ from django.urls import reverse
 from .helpers import ONTOLOGY_COMPONENT_ENUMS, remove_underscore_from_id_attribute
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
 from .search_helpers import find_matching_data_collections
-from register.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
@@ -98,8 +98,10 @@ def get_registered_observed_properties():
             }
     ]))
     observed_property_ids = []
-    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
-    observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
+    if len(observed_properties_from_computations) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
+    if len(observed_properties_from_acquisitions) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
     return list(set(observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
