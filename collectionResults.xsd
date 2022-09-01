@@ -6,7 +6,7 @@
     <annotation>
         <documentation>Version 2.2 08/20/2022</documentation>
     </annotation>
-    <element name="CollectionResults" substitutionGroup="gml:AbstractObject" type="pithia:ResultType">
+    <element name="PITHIA_CollectionResults" substitutionGroup="gml:AbstractObject" type="pithia:CollectionResultsType">
         <annotation>
             <documentation>-- Definition --
 List of resources for online access to the observation collection results.
@@ -16,25 +16,13 @@ NOTE The result may be  consisted of segments accessible with their own resource
             </documentation>
         </annotation>
     </element>
-    <complexType name="ResultType">
+    <complexType name="CollectionResultsType">
         <sequence>
-            <element maxOccurs="1" minOccurs="1" name="source" type="pithia:OnlineResourcePropertyType">
+            <element name="source" maxOccurs="unbounded" minOccurs="1" type="pithia:OnlineResourcePropertyType">
                 <annotation>
                     <documentation>-- Definition --
 Resource where the observation result ( as a whole or partly ) can be accessed. 
                     </documentation>
-                </annotation>
-            </element>
-            <element maxOccurs="unbounded" minOccurs="0" name="segmentGeographicExtent" type="gmd:EX_GeographicExtent_PropertyType">
-                <annotation>
-                    <documentation>-- Definition --
-Information about the geographic extent of the  particular segment of the result.</documentation>
-                </annotation>
-            </element>
-            <element maxOccurs="unbounded" minOccurs="0" name="segmentVerticalExtent" type="gmd:EX_VerticalExtent_PropertyType">
-                <annotation>
-                    <documentation>-- Definition --
-Information about the vertical extent of particular segment of the result.</documentation>
                 </annotation>
             </element>
         </sequence>
@@ -48,7 +36,7 @@ Information about online sources.
     </element>
     <complexType name="OnlineResourceType">
         <sequence>
-            <element maxOccurs="1" minOccurs="0" name="serviceFunction" type="gml:ReferenceType">
+            <element name="serviceFunction" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                 <annotation>
                     <documentation>-- Definition -- 
 The function performed by the online resource. Values of the attribute &lt;i&gt;ServiceFunctionValue&lt;/i&gt; , e.g. download, are obtained from a controlled vocabulary. 
@@ -76,14 +64,14 @@ The connection protocol e.g., http, ftp, file.
                     </documentation>
                 </annotation>
             </element>
-            <element maxOccurs="1" minOccurs="0" name="description" type="string">
+            <element name="description" maxOccurs="1" minOccurs="0" type="string">
                 <annotation>
                     <documentation>-- Definition --
 A text description of what the online resource is/does.
                     </documentation>
                 </annotation>
             </element>
-            <element name="dataFormat" type="gml:ReferenceType">
+            <element name="dataFormat" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
                 <annotation>
                     <documentation>-- Definition --
 The format of the strored result accessible from the online resource. This property references a term, e.g. NetCDF,  from a controlled vocabulary.

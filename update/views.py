@@ -51,24 +51,20 @@ class UpdateResourceView(FormView):
         form = self.get_form(form_class)
         xml_file = request.FILES['file']
         if form.is_valid():
-            # XML should have already been validated at
-            # the template, but do it again just to be
-            # safe.
-            validation_results = self.validate_resource(xml_file)
-            if 'error' not in validation_results:
-                try:
-                    converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-                    converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                    move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
-                    register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                except ExpatError as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An error occurred whilst parsing the XML.')
-                except BaseException as err:
-                    print(err)
-                    print(traceback.format_exc())
-                    messages.error(request, 'An unexpected error occurred.')
+            try:
+                converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
+                converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+                move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                messages.success(request, f'Successfully updated {xml_file.name}.')
+            except ExpatError as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An error occurred whilst parsing the XML.')
+            except BaseException as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An unexpected error occurred.')
 
         return super().post(request, *args, **kwargs)
 
@@ -92,7 +88,7 @@ class organisation(UpdateResourceView):
     resource_type_plural = 'Organisations'
     list_resources_of_type_view_name = 'resource_management:organisations'
     update_resource_type_view_name = 'update:organisation'
-    validation_url = 'validation:organisation'
+    validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
     def get(self, request, *args, **kwargs):
@@ -110,7 +106,7 @@ class individual(UpdateResourceView):
     resource_type_plural = 'Individuals'
     list_resources_of_type_view_name = 'resource_management:individuals'
     update_resource_type_view_name = 'update:individual'
-    validation_url = 'validation:individual'
+    validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
 
     def get(self, request, *args, **kwargs):
@@ -127,7 +123,7 @@ class project(UpdateResourceView):
     resource_type_plural = 'Projects'
     list_resources_of_type_view_name = 'resource_management:projects'
     update_resource_type_view_name = 'update:project'
-    validation_url = 'validation:project'
+    validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
     def get(self, request, *args, **kwargs):
@@ -144,7 +140,7 @@ class platform(UpdateResourceView):
     resource_type_plural = 'Platforms'
     list_resources_of_type_view_name = 'resource_management:platforms'
     update_resource_type_view_name = 'update:platform'
-    validation_url = 'validation:platform'
+    validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
     def get(self, request, *args, **kwargs):
@@ -161,7 +157,7 @@ class instrument(UpdateResourceView):
     resource_type_plural = 'Instruments'
     list_resources_of_type_view_name = 'resource_management:instruments'
     update_resource_type_view_name = 'update:instrument'
-    validation_url = 'validation:instrument'
+    validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
 
     def get(self, request, *args, **kwargs):
@@ -178,7 +174,7 @@ class operation(UpdateResourceView):
     resource_type_plural = 'Operations'
     list_resources_of_type_view_name = 'resource_management:operations'
     update_resource_type_view_name = 'update:operation'
-    validation_url = 'validation:operation'
+    validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
 
     def get(self, request, *args, **kwargs):
@@ -196,7 +192,7 @@ class acquisition(UpdateResourceView):
     resource_type_plural = 'Acquisitions'
     list_resources_of_type_view_name = 'resource_management:acquisitions'
     update_resource_type_view_name = 'update:acquisition'
-    validation_url = 'validation:acquisition'
+    validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
     def get(self, request, *args, **kwargs):
@@ -214,7 +210,7 @@ class computation(UpdateResourceView):
     resource_type_plural = 'Computations'
     list_resources_of_type_view_name = 'resource_management:computations'
     update_resource_type_view_name = 'update:computation'
-    validation_url = 'validation:computation'
+    validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
     def get(self, request, *args, **kwargs):
@@ -232,7 +228,7 @@ class process(UpdateResourceView):
     resource_type_plural = 'Processes'
     list_resources_of_type_view_name = 'resource_management:processes'
     update_resource_type_view_name = 'update:process'
-    validation_url = 'validation:process'
+    validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
 
     def get(self, request, *args, **kwargs):
@@ -250,7 +246,7 @@ class data_collection(UpdateResourceView):
     resource_type_plural = 'Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
     update_resource_type_view_name = 'update:data_collection'
-    validation_url = 'validation:data_collection'
+    validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
     def get(self, request, *args, **kwargs):

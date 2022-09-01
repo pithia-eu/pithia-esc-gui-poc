@@ -11,7 +11,7 @@
     <!-- 
            P R O C E S S   C A P A B I L I T Y
            defines one observed property and its attributes
-           included in Acquisition and Computation
+           included in Process that is the parent for for Acquisition and Computation
     -->
     <element name="processCapability" substitutionGroup="gml:AbstractObject" type="pithia:ProcessCapabilityType">
         <annotation>
@@ -89,6 +89,13 @@ An acquisition type   component  interacts with the feature of interest /samplin
                     </documentation>
                 </annotation>
             </element>                
+            <element name="name" type="string">
+                <annotation>
+                    <documentation>-- Definition --
+                        Name of the process component (for internal use within PITHIA system)
+                    </documentation>
+                </annotation>
+            </element>
             <element name="description" maxOccurs="1" minOccurs="0" type="string">
                 <annotation>
                     <documentation>-- Definition --
@@ -96,7 +103,31 @@ An acquisition type   component  interacts with the feature of interest /samplin
                     </documentation>
                 </annotation>
             </element>            
+            <element name="documentation" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
+                <annotation>
+                    <documentation>-- Definition --
+                          Reference to documentation describing the component.
+                    </documentation>
+                </annotation>
+            </element>
             <element name="capability" maxOccurs="unbounded" minOccurs="0" type="pithia:ProcessCapabilityPropertyType"/>
+            <element name="dataLevel" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
+                <annotation>
+                    <documentation>-- Definition --
+                        Data Level of the result from a controlled vocabulary.
+                    </documentation>
+                </annotation>
+            </element>    
+            <element name="qualityAssessment" maxOccurs="unbounded" minOccurs="0" type="pithia:QualityAssessmentType">
+                <annotation>
+                    <documentation>-- Definition --
+                          Description of the Quality Assessment, including 
+                          (a) scientific quality, 
+                          (b) quality of metadata, and 
+                          (c) operational quality of data resources
+                    </documentation>
+                </annotation>
+            </element>    
         </sequence>
         <!-- new end -->      
     </complexType>
@@ -115,20 +146,14 @@ An acquisition type   component  interacts with the feature of interest /samplin
         <annotation>
             <documentation>-- Definition --
 A process component which interacts with the feature of interest  (e.g. an atmospheric column)  to provide a result. 
-</documentation>
+            </documentation>
         </annotation>
     </element>
     <complexType name="AcquisitionType">
         <complexContent>
             <extension base="pithia:ProcessType">
                 <sequence>
-                    <element name="documentation" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Reference to documentation describing the acquisition component.</documentation>
-                        </annotation>
-                    </element>
-                    <element name="instrumentPlatformPair" maxOccurs="unbounded" minOccurs="0" type="pithia:InstrumentPlatformPairPropertyType">
+                    <element name="instrumentPlatformPairs" maxOccurs="1" minOccurs="0" type="pithia:InstrumentPlatformPairsPropertyType">
                         <annotation>
                             <documentation>-- Definition --
 Notification of  the platform and  the mounted on it  instrument for the specified acquisition component. 
@@ -136,7 +161,7 @@ Notification of  the platform and  the mounted on it  instrument for the specifi
                         </annotation>
                     </element>
                     <!-- New  start-->
-                    <element name="instrumentModePair" maxOccurs="unbounded" minOccurs="0" type="pithia:InstrumentOperationalModePairPropertyType"/>
+                    <element name="instrumentModePairs" maxOccurs="1" minOccurs="0" type="pithia:InstrumentOperationalModePairsPropertyType"/>
                     <!-- New  end -->
                     <element name="outputDescription" maxOccurs="1" minOccurs="0" type="pithia:InputOutputPropertyType">
                         <annotation>
@@ -179,23 +204,6 @@ Operation of a platform.
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="dataLevel" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Data Level of the acquisition result from a controlled vocabulary.
-                            </documentation>
-                        </annotation>
-                    </element>    
-                    <element name="qualityAssessment" maxOccurs="unbounded" minOccurs="0" type="pithia:QualityAssessmentType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Description of the Quality Assessment, including 
-                                (a) scientific quality, 
-                                (b) quality of metadata, and 
-                                (c) operational quality of data resources
-                            </documentation>
-                        </annotation>
-                    </element>    
                 </sequence>
             </extension>
         </complexContent>
@@ -324,7 +332,7 @@ Platform hosting the specified instrument.
             </element>
         </sequence>
     </complexType>
-    <complexType name="InstrumentPlatformPairPropertyType">
+    <complexType name="InstrumentPlatformPairsPropertyType">
         <sequence>
             <element ref="pithia:InstrumentPlatformPair"/>
         </sequence>
@@ -576,13 +584,6 @@ An instance of Computation  provides a) a  description of a process component   
         <complexContent>
             <extension base="pithia:ProcessType">
                 <sequence>     
-                    <element name="name" type="string">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Name of the computation component.
-                            </documentation>
-                        </annotation>
-                    </element>     
                     <element name="version" maxOccurs="1" minOccurs="0" type="string">
                         <annotation>
                             <documentation>-- Definition --
@@ -597,29 +598,6 @@ An instance of Computation  provides a) a  description of a process component   
                             </documentation>
                         </annotation>
                     </element>    
-                    <element name="dataLevel" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Data Level of the computation result from a controlled vocabulary.
-                            </documentation>
-                        </annotation>
-                    </element>    
-                    <element name="qualityAssessment" maxOccurs="unbounded" minOccurs="0" type="pithia:QualityAssessmentType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Description of the Quality Assessment, including 
-                                (a) scientific quality, 
-                                (b) quality of metadata, and 
-                                (c) operational quality of data resources
-                            </documentation>
-                        </annotation>
-                    </element>    
-                    <element name="documentation" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Reference to documentation describing the computation component.</documentation>
-                        </annotation>
-                    </element>
                     <element name="softwareReference" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
                         <annotation>
                             <documentation>-- Definition --
@@ -731,7 +709,7 @@ Name  or other identification  of input or output   data relevant to a process c
             <element name="mode" type="pithia:InstrumentOperationalModePropertyType"/>
         </sequence>
     </complexType>
-    <complexType name="InstrumentOperationalModePairPropertyType">
+    <complexType name="InstrumentOperationalModePairsPropertyType">
         <sequence>
             <element ref="pithia:InstrumentOperationalModePair"/>
         </sequence>
@@ -765,28 +743,22 @@ A process consisting of more than one components. A component shall be either  o
         <complexContent>
             <extension base="pithia:ProcessType">
                 <sequence>
-                     <element name="documentation" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Reference to documentation describing the composite process.</documentation>
-                        </annotation>
-                    </element>
                     <element name="relatedParty" maxOccurs="unbounded" minOccurs="0" type="pithia:ResponsiblePartyInfoPropertyType">
                         <annotation>
                             <documentation>-- Definition --
 Individual or organisation related  to composite process.</documentation>
                         </annotation>
                     </element>
-                    <element name="computationComponent" maxOccurs="unbounded" minOccurs="0" type="pithia:ComputationPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
- A component   of computation  type.</documentation>
-                        </annotation>
-                    </element>
                     <element name="acquisitionComponent" maxOccurs="unbounded" minOccurs="0" type="pithia:AcquisitionPropertyType">
                         <annotation>
                             <documentation>-- Definition --
  A component   of acquisition type.</documentation>
+                        </annotation>
+                    </element>
+                    <element name="computationComponent" maxOccurs="unbounded" minOccurs="0" type="pithia:ComputationPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+ A component   of computation  type.</documentation>
                         </annotation>
                     </element>
                 </sequence>
