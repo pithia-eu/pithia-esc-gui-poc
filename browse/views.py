@@ -25,8 +25,8 @@ def ontology(request):
         'title': 'Browse PITHIA Ontology'
     })
 
-def ontology_detail(request, category, term_id):
-    return render(request, 'browse/ontology_detail.html', {
+def ontology_term_detail(request, category, term_id):
+    return render(request, 'browse/ontology_term_detail.html', {
         'title': 'Ontology Term'
     })
 
