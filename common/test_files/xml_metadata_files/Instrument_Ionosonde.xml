@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Instrument 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" >
+    
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Instrument_Ionosonde</localID>
+            <namespace>pithia</namespace>
+            <version>1</version>
+            <creationDate>2013-04-25T14:00:00Z</creationDate>
+            <lastModificationDate>2013-04-25T14:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>   
+    <name>Ionosonde</name>
+    <description>
+A vertical-incidence ionospheric sounder (ionosonde) observes the overhead ionosphere properties by using 
+a high-frequency (HF) swept-frequency probing signal transmitted and received by the instrument.
+    </description>
+    <type xlink:href="http://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/> <!-- use the instrumentType ontology to describe the type of the instrument -->
+    
+    <operationalMode><InstrumentOperationalMode>
+        <id>scanning</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+        <name>Scanning Ionogram</name> <!-- it would be preferable the name of the mode not to include any space characters -->
+        <description>The system steps through frequencies according to
+            the selected program, transmitting and coherently integrating (a full
+            spectrum, i.e. FFT, Doppler integration) a stream of N pulses. Just prior
+            to transmission on each frequency four possible operating frequencies are
+            monitored for interference/occupancy and the quietest is selected for the
+            measurement. Then a few trial pulses are transmitted to allow automatic
+            adjustment of receiver gain. As each coherent integration of pulse streams
+            in completed, the raw output (i.e. 128 color coded amplitudes representing
+            echoes at 128 heights) is added to the display of the developing ionogram.
+            After all frequency steps have been completed the raw ionogram (16 complex
+            Doppler lines at 256 heights and M frequency steps) is written out to a
+            disk file and the automatic scaling program ARTIST (Automatic Real-Time
+            Ionogram Scaler with True height analysis), is invoked and a file of
+            automatically scaled parameters is created and displayed.</description>
+    </InstrumentOperationalMode> 
+    </operationalMode>
+    <operationalMode>
+        <InstrumentOperationalMode>
+            <id>drift</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+            <name>Drift Ionogram</name>
+            <description>This is similar to the Doppler Ionogram in that
+                higher Doppler resolution is achieved by extending the integration period.
+                In addition to multiplexing frequencies the receive antennas are also
+                multiplexed. This provides a raw data file which records the relative
+                phase of all Doppler lines of all echoes on the four antennas in the
+                receiver array, giving the angle of arrival of the individual echoes.</description>
+        </InstrumentOperationalMode>
+    </operationalMode>
+</Instrument>
+    
+
+
+

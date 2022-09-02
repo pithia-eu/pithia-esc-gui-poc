@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCollection 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:om="http://www.opengis.net/om/2.0" >
+    <!--
+         First report some required elements from ISO standard for Observation
+    -->
+    <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+    <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/lgdc/process/CompositeProcess_DIDBase_EvaluatedAutoscaling"/>
+    <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+    <om:featureOfInterest>
+        <FeatureOfInterest>
+            <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+            <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+        </FeatureOfInterest>
+    </om:featureOfInterest>
+    <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+    <!--
+         Now our Data Collection elements next
+    -->
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>DataCollection_DIDBase_EvaluatedAutoscaling</localID>
+            <namespace>pithia</namespace>
+            <version>1</version>
+            <creationDate>2022-02-28T15:00:00Z</creationDate>
+            <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>Digital Ionogram DataBase</name>
+    <description>
+Digital Ionogram Database (DIDBase) collection contains vertical-incidence ionogram 
+measurements and ionogram-derived information acquired by Global Ionosphere Radio 
+Observatory (GIRO), https://giro.uml.edu, a network of ionosondes (high-frequency 
+remote sensing sounders). Ionosondes detect echoes of the probing signal of varying 
+frequency that correspond to reflections of the vertically transmitted signal from 
+various locations in the ionosphere illuminated by the signal. Resulting image of 
+the signal strength as function of the operating frequency and the time of flight
+is called ionogram. When viewed in the ionogram frame, signal echoes form traces 
+that correspond to different plasma layers in the ionosphere. Interpretation of the 
+ionograms allows derivation and computation of actionable numerical information for 
+subsequent use in a variety of applied and research cases. 
+    </description>
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+    <project xlink:href="https://metadata.pithia.eu/resources/2.2/pithia/project/Project_RION"/>
+    <relatedParty>
+        <ResponsiblePartyInfo>
+            <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/pithia/individual/Individual_LGDC_Galkin"/>
+        </ResponsiblePartyInfo>
+    </relatedParty>
+    <relatedParty>
+        <ResponsiblePartyInfo>
+            <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/> 
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC"/>
+        </ResponsiblePartyInfo>
+    </relatedParty>
+    <collectionResults>
+        <source>
+            <OnlineResource>
+                <!-- The function performed by the online resource is the landing page for the collection provider-->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                <name>DIDBase Ionogram Image Portal</name>
+                <protocol>HTTPS</protocol>
+                <description>
+                      The DIDBase WebPortal is a landing page for browsing and display of ionogram images. 
+                </description>
+                <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+            </OnlineResource>
+        </source>        
+        <source>
+            <OnlineResource>
+                <!-- The function performed by the online resource is the landing page for the collection provider-->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                <name>SAO Explorer for DIDBase ionograms</name>
+                <protocol>HTTPS</protocol>
+                <description>
+                     The SAO Explorer installation and documentation page. SAO Explorer is the main visualization and editing tool for ionogram
+                     and ionogram-derived data in DIDBase
+                </description>
+                <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+            </OnlineResource>
+        </source>        
+        <source>
+            <OnlineResource>
+                <!-- The function performed by the online resource is the landing page for the collection provider-->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                <name>FastChar</name>
+                <protocol>HTTPS</protocol>
+                <description>
+                      FastChar is a landing page for the LGDC servlet to retrieve numerical ionogram-derived data in DIDBase, formatted as a plain-text tabulation
+                </description>
+                <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+            </OnlineResource>
+        </source>        
+    </collectionResults>
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+    <qualityAssessment>
+       <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+    </qualityAssessment>
+    <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+</DataCollection>

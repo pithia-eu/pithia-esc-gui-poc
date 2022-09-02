@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompositeProcess 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" >
+    <!-- Instructions:
+This is a composite process that includes all data acquisitions and data computations involved in a single Observation. 
+1. If ObservationCollection is a model computation, acquisitionComponent is not defined
+2. Input parameters for the model or measurement are not listed here, they are in ObservationCollection
+3. Capability items inside acquisition and computation components are all-inclusive
+    -->
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>CompositeProcess_IonogramDerived_Basic</localID>
+            <namespace>pithia</namespace>
+            <version>1</version>
+            <creationDate>2022-02-13T14:30:00Z</creationDate>
+            <lastModificationDate>2022-03-13T14:30:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>Basic process of acquiring and autoscaling ionograms</name>  
+    <description>
+This is generic process of obtaining standard URSI ionospheric characteristics and a profile of electron density
+from a generic vertical-insidence ionogram measurement.
+    </description>
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+    <qualityAssessment>
+       <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1"/>
+    </qualityAssessment>
+    <!-- describe the Composite Process from which components is consisted of. You can put more than one computationComponent and more than one acquisitionComponent -->
+    <acquisitionComponent xlink:href="https://metadata.pithia.eu/resources/2.2/acquisition/pithia/Acquisition_Ionogram"/>
+    <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_IonogramScaling_StandardChars_Basic"/>
+    <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_IonogramScaling_Profile_Basic"/>
+</CompositeProcess>
+

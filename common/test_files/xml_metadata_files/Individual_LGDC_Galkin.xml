@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Individual 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco" >
+  
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Individual_LGDC_Galkin</localID>
+            <namespace>lgdc</namespace>
+            <version>1</version>
+            <creationDate>2022-02-03T11:00:00Z</creationDate>
+            <lastModificationDate>2022-02-03T11:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>  
+    <name>Ivan Galkin</name>
+    <contactInfo>
+        <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
+            <phone>
+                <CI_Telephone><voice><gco:CharacterString>+1 978-934-4912</gco:CharacterString></voice> <!-- telephone -->
+                </CI_Telephone>
+            </phone>           
+            <address>
+                <CI_Address>                   
+                    <deliveryPoint><gco:CharacterString>600 Suffolk St., Suite 315</gco:CharacterString></deliveryPoint> <!-- street name, number -->
+                    <city><gco:CharacterString>Lowell</gco:CharacterString></city>
+                    <administrativeArea><gco:CharacterString>MA</gco:CharacterString></administrativeArea>
+                    <postalCode><gco:CharacterString>01854</gco:CharacterString></postalCode>
+                    <country><gco:CharacterString>USA</gco:CharacterString></country>
+                    <electronicMailAddress><gco:CharacterString>Ivan_Galkin@uml.edu</gco:CharacterString></electronicMailAddress>
+                </CI_Address>
+            </address>
+            <onlineResource><CI_OnlineResource><linkage><URL>http://giro.uml.edu</URL></linkage></CI_OnlineResource></onlineResource> 
+            <hoursOfService><gco:CharacterString>9:00am-5:00pm</gco:CharacterString></hoursOfService>
+            <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
+        </CI_Contact>
+    </contactInfo>
+    <positionName>Research Associate Professor, LGDC Principal Investigator</positionName>
+    <organisation xlink:href="https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC"></organisation> <!-- link to the organisation that this individual has the position name -->
+ </Individual>
+ 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Platform
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Platform_Ionosondes_GIRO</localID>
+            <namespace>pithia</namespace>
+            <version>1</version>
+            <creationDate>2022-03-14T16:00:00Z</creationDate>
+            <lastModificationDate>2022-03-14T16:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+
+    <name>Global Ionosphere Radio Observatory</name>    
+    <shortName>GIRO</shortName>
+    <URL><gmd:URL>http://www.noa.gr</gmd:URL></URL>
+    <description>
+Global Ionosphere Radio Observatory (GIRO) is formed through data sharing agreements with 
+100+ ionosonde sites in 30+ countries. Ionosondes are high frequency sounding remote sensors 
+for accurate specification of the bottomside electron density in the Earth's ionosphere. 
+As of 2020, 61 GIRO locations provide near-real-time data to the Lowell GIRO Data Center (LGDC) 
+in Lowell, Massachusetts. Real-time and retrospective data from GIRO locations are ingested 
+in several LGDC databases, including Digital Ionogram DataBase (DIDBase), Ionospheric Plasma 
+Drift DataBase (DriftBase), Global Assimilative Model of Bottomside Ionosphere with Topside
+Extension (GAMBIT) database, and Traveling Ionospheric Disturbances DataBase (TIDBase)
+GIRO data are open for public access via GIRO Web Portal, and custom software tools 
+for ionosonde data analysis.
+    </description>
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/platformType/GroundBasedStation"/><!-- Type is required -->
+
+    <childPlatform xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_AT138_Athens"/>
+    <!-- continue listing all ionosondes that are registered with PITHIA NRF as childPlatforms -->
+
+</Platform>
