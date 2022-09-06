@@ -5,12 +5,15 @@
 {% breadcrumb_item 'Ontology' 'browse:ontology' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% load static %}
 {% block scripts %}
+{{ category|json_script:"category" }}
+<script type="module" src="{% static "browse/ontology.js" %}" id="ontology-script" defer></script>
 {% endblock scripts %}
 {% block content %}
 <h1 class="pb-3">{{ title }}</h1>
 <div class="col-lg-12">
-    {% with ontology_component="features-of-interest" %}
+    {% with category=category %}
     {% include "browse/ontology_tree_container_template.html" %}
     {% endwith %}
 </div>
