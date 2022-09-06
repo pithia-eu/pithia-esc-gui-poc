@@ -1,8 +1,5 @@
-<input type="checkbox" id="{{ node.id }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
-    data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
-    data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}"
-    {% if node.phenomenons %}data-phenomenons="{{ node.phenomenons|join:" " }}"{% endif %}
-    {% if node.measurands %}data-measurands="{{ node.measurands|join:" " }}"{% endif %}
-    {% if node.featuresOfInterest %}data-features-of-interest="{{ node.featuresOfInterest|join:" " }}"{% endif %}
-    {% if node.value not in registered_ontology_terms %}disabled{% endif %}>
-<label for="{{ node.id }}" {% if registered_ontology_terms and node.value not in registered_ontology_terms %}disabled{% endif %}{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted"{% endif %}>{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</label>
+<div id="{{ node.id }}" value="{{ node.value }}">
+<span{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted"{% endif %}>{{ node.pref_label }} {% if node.alt_label %}({{ node.alt_label }}){% endif %}</span>
+<p>{{ node.description }}</p>
+</div>
+<input>

@@ -1,12 +1,17 @@
-<div class="accordion-item">
-    <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            {{ ontology_category_pref_label }}
-        </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-            {% include 'search/foi_form_section.html' %}
-        </div>
-    </div>
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Browse' 'browse:index' %}
+{% breadcrumb_item 'Ontology' 'browse:ontology' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+{% endblock scripts %}
+{% block content %}
+<h1 class="pb-3">{{ title }}</h1>
+<div class="col-lg-12">
+    {% with ontology_component="features-of-interest" %}
+    {% include "browse/ontology_tree_container_template.html" %}
+    {% endwith %}
 </div>
+{% endblock content %}
