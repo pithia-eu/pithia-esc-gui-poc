@@ -112,10 +112,16 @@ async function parseResponseText(response) {
 export async function fetchSearchFormComponent(ontologyComponent) {
     const fetchParams = { method: "GET" };
 
-    return fetch(`/browse/ontology/terms/${ontologyComponent}/`, fetchParams)
+    return fetch(`/ontology/categories/${ontologyComponent}/terms/`, fetchParams)
         .then(parseResponseText)
         .catch (error => {
             console.error(`Unable to fetch "${ontologyComponent}" terms list.`);
             console.error(error);
         });
 }
+
+document.getElementById("ontology-script").addEventListener("load", async event => {
+    const ontology_category = JSON.parse(document.getElementById("category").textContent);
+    const termsList = await fetchSearchFormComponent(ontology_category);
+    setupSearchFormComponent(termsList, `${ontology_category}-tree-search-container`);
+});
