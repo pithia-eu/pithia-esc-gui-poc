@@ -1,29 +1,3 @@
-// Checkbox filtering
-
-export function getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId) {
-    return document.querySelectorAll(`#${treeContainerId} li.filter-no-match`);
-}
-
-function addCheckboxFilterToLiNode(liNode) {
-    liNode.classList.add(CHECKBOX_FILTER_CLASS);
-}
-
-function removeCheckboxFilterFromLiNode(liNode) {
-    liNode.classList.remove(CHECKBOX_FILTER_CLASS);
-}
-
-export function addCheckboxFiltersToLiNodes(liNodes) {
-    liNodes.forEach(liNode => {
-        addCheckboxFilterToLiNode(liNode);
-    });
-}
-
-export function removeCheckboxFiltersFromLiNodes(liNodes) {
-    liNodes.forEach(liNode => {
-        removeCheckboxFilterFromLiNode(liNode);
-    });
-}
-
 // Search box input filtering
 
 function getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId) {
@@ -98,22 +72,10 @@ function resetSearchBoxFilteringForTreeContainerId(treeContainerId) {
     removeSearchBoxInputFiltersFromLiNodes(searchBoxInputFilteredLiNodesForTreeContainerId);
 }
 
-function setCheckboxCheckedStatesForTreeContainerId(treeContainerId, checked) {
-    return document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`).forEach(checkbox => {
-        checkbox.checked = checked;
-    });
-}
-
 function setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, open) {
     return document.querySelectorAll(`#${treeContainerId} details`).forEach(detailsNode => {
         detailsNode.open = open;
     });
-}
-
-export function checkAllCheckboxesForTreeContainerId(treeContainerId, allCheckboxesChecked) {
-    resetSearchBoxFilteringForTreeContainerId(treeContainerId);
-    setCheckboxCheckedStatesForTreeContainerId(treeContainerId, allCheckboxesChecked);
-    setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, allCheckboxesChecked);
 }
 
 function setupInputsForTreeContainerId(treeContainerId) {
@@ -128,9 +90,6 @@ function setupInputsForTreeContainerId(treeContainerId) {
 export function addTreeContainerIdToClearInputsButton(treeContainerId) {
     const clearInputsButton = document.querySelector(".btn-clear");
     clearInputsButton.addEventListener("click", event => {
-        checkAllCheckboxesForTreeContainerId(treeContainerId, false);
-        const checkboxFilteredLiNodesForTreeContainerId = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId);
-        removeCheckboxFiltersFromLiNodes(checkboxFilteredLiNodesForTreeContainerId);
     });
 }
 
@@ -153,10 +112,10 @@ async function parseResponseText(response) {
 export async function fetchSearchFormComponent(ontologyComponent) {
     const fetchParams = { method: "GET" };
 
-    return fetch(`/search/templates/form/component/${ontologyComponent}/`, fetchParams)
+    return fetch(`/browse/ontology/terms/${ontologyComponent}/`, fetchParams)
         .then(parseResponseText)
         .catch (error => {
-            console.error(`Unable to fetch ${ontologyComponent} search form.`);
+            console.error(`Unable to fetch "${ontologyComponent}" terms list.`);
             console.error(error);
         });
 }
