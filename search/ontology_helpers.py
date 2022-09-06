@@ -2,6 +2,7 @@ import os
 from requests import get
 from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import _SKOS
+from rdflib.resource import Resource
 
 ONTOLOGY_SERVER_BASE_URL = 'https://ontology.espas-fp7.eu/'
 ESPAS = Namespace('http://ontology.espas-fp7.eu/espasdefinitions#')
@@ -148,6 +149,36 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
             ontology_dictionary[o_value]['narrowers'][s_value]['definition'] = definition_mappings[s_value]
         if ontology_component == 'observedProperty':
             ontology_dictionary[o_value]['narrowers'][s_value] = map_ontology_components_to_observed_property_dictionary(s, ontology_dictionary[o_value]['narrowers'][s_value], g)
+
+    for s, p, o in g.triples((None, SKOS.member, None)):
+        # o_value is the localID after the ontology_component_url
+        o_value = o.replace(ontology_component_url, '')
+        if o_value not in ontology_dictionary:
+            ontology_dictionary[o_value] = {
+                'id': f'{ontology_component}{o_value}',
+                'value': o_value,
+                'narrowers': {},
+            }
+            o_resource = Resource(g, o)
+            print('o_value', o_value)
+            for op in o_resource.predicates():
+                print('op.identifier', op.identifier)
+                op_identifier_no_prefix = op.identifier.split('#')[-1]
+                if len(op.identifier.split('#')) == 1:
+                    op_identifier_no_prefix = op.identifier.split('/')[-1]
+                print('op_identifier_no_prefix', op_identifier_no_prefix)
+                if op_identifier_no_prefix not in ontology_dictionary[o_value]:
+                    if len(list(g.triples((o, op.identifier, None)))) > 1:
+                        ontology_dictionary[o_value][op_identifier_no_prefix] = []
+                        for ops, opp, opo in g.triples((o, op.identifier, None)):
+                            print('opo', opo)
+                            ontology_dictionary[o_value][op_identifier_no_prefix].append(str(opo))
+                    else:
+                        print('opo', list(g.triples((o, op.identifier, None)))[0][2])
+                        ontology_dictionary[o_value][op_identifier_no_prefix] = str(list(g.triples((o, op.identifier, None)))[0][2])
+            # print('o_resource', o_resource)
+            # print('o_resource.description', o_resource.value())
+            # print('o_value', o_value)
 
     # Property dictionaries for child terms are nested within
     # the property dictionaries for parent terms, but the keys
