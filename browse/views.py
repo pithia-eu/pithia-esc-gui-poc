@@ -2,7 +2,9 @@ from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 
-from search.helpers import remove_underscore_from_id_attribute
+from search.helpers import ONTOLOGY_COMPONENT_ENUMS, remove_underscore_from_id_attribute
+from search.ontology_helpers import create_dictionary_from_pithia_ontology_component
+from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
 # Create your views here.
 def index(request):
@@ -27,7 +29,39 @@ def ontology(request):
 
 def ontology_category_terms_list(request, category):
     return render(request, 'browse/ontology_category_terms_list.html', {
-        'title': ''
+        'title': category.capitalize()
+    })
+
+def ontology_category_terms_list_only(request, category):
+    dictionary = create_dictionary_from_pithia_ontology_component(category)
+    registered_ontology_terms = []
+    parents_of_registered_ontology_terms = []
+    if category.lower() == 'observedproperty':
+        registered_ontology_terms = get_registered_observed_properties()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    elif category.lower() == 'featureofinterest':
+        registered_observed_property_ids = get_registered_observed_properties()
+        registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    elif category.lower() == 'instrumenttype':
+        registered_ontology_terms = get_registered_instrument_types()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    elif category.lower() == 'computationtype':
+        registered_ontology_terms = get_registered_computation_types()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    elif category.lower() == 'phenomenon':
+        registered_observed_property_ids = get_registered_observed_properties()
+        registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    elif category.lower() == 'measurand':
+        registered_observed_property_ids = get_registered_observed_properties()
+        registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+    return render(request, 'browse/ontology_tree_template_outer.html', {
+        'category': dictionary,
+        'category_name': ONTOLOGY_COMPONENT_ENUMS[category],
+        'registered_ontology_terms': registered_ontology_terms,
+        'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
 
 def ontology_term_detail(request, category, term_id):
