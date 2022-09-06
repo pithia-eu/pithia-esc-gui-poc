@@ -93,6 +93,7 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
     ontology_dictionary = {}
     pref_label_mappings = {}
     alt_label_mappings = {}
+    definition_mappings = {}
 
     for s, p, o in g.triples((None, SKOS.prefLabel, None)):
         s_value = s.replace(ontology_component_url, '')
@@ -103,6 +104,13 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
         s_value = s.replace(ontology_component_url, '')
         o_value = o.replace(ontology_component_url, '')
         alt_label_mappings[s_value] = o_value
+
+    for s, p, o in g.triples((None, SKOS.definition, None)):
+        s_value = s.replace(ontology_component_url, '')
+        o_value = o.replace(ontology_component_url, '')
+        definition_mappings[s_value] = o_value
+
+
 
     ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.broader, None)):
@@ -116,10 +124,13 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
             ontology_dictionary[o_value] = {
                 'id': f'{ontology_component}{o_value}',
                 'value': o_value,
+                'definition': '',
                 'pref_label': pref_label_mappings[o_value],
                 'alt_label': alt_label_mappings[o_value] if o_value in alt_label_mappings else None,
                 'narrowers': {},
             }
+            if o_value in definition_mappings:
+                ontology_dictionary[o_value]['definition'] = definition_mappings[o_value]
             if ontology_component == 'observedProperty':
                 ontology_dictionary[o_value] = map_ontology_components_to_observed_property_dictionary(o, ontology_dictionary[o_value], g)
 
@@ -128,10 +139,13 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
         ontology_dictionary[o_value]['narrowers'][s_value] = {
             'id': f'{ontology_component}{s_value}',
             'value': s_value,
+            'definition': '',
             'pref_label': pref_label_mappings[s_value],
             'alt_label': alt_label_mappings[s_value] if s_value in alt_label_mappings else None,
             'narrowers': {},
         }
+        if s_value in definition_mappings:
+            ontology_dictionary[o_value]['narrowers'][s_value]['definition'] = definition_mappings[s_value]
         if ontology_component == 'observedProperty':
             ontology_dictionary[o_value]['narrowers'][s_value] = map_ontology_components_to_observed_property_dictionary(s, ontology_dictionary[o_value]['narrowers'][s_value], g)
 
