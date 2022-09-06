@@ -2,7 +2,7 @@ from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 
-from search.helpers import ONTOLOGY_COMPONENT_ENUMS, remove_underscore_from_id_attribute
+from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
@@ -27,9 +27,25 @@ def ontology(request):
         'title': 'Browse PITHIA Ontology'
     })
 
+def _split_camel_case(string):
+    current_string = string[0]
+    string_split = []
+    for c in string[1:]:
+        if c.isupper():
+            string_split.append(current_string)
+            current_string = c
+        else:
+            current_string += c
+    string_split.append(current_string)
+    return string_split
+
 def ontology_category_terms_list(request, category):
+    title = ' '.join(_split_camel_case(category)).title()
+    if category.lower() == 'crs':
+        title = 'Co-ordinate Reference System'
     return render(request, 'browse/ontology_category_terms_list.html', {
-        'title': category.capitalize()
+        'category': category,
+        'title': title
     })
 
 def ontology_category_terms_list_only(request, category):
@@ -59,7 +75,6 @@ def ontology_category_terms_list_only(request, category):
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
     return render(request, 'browse/ontology_tree_template_outer.html', {
         'category': dictionary,
-        'category_name': ONTOLOGY_COMPONENT_ENUMS[category],
         'registered_ontology_terms': registered_ontology_terms,
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
