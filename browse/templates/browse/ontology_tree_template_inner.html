@@ -2,7 +2,7 @@
     {% if node.narrowers|length > 0 %}
     <details>
         <summary>
-            {% with is_parent_node="true" registered_ontology_terms=registered_ontology_terms %}
+            {% with is_parent_node="true" category=category registered_ontology_terms=registered_ontology_terms %}
             {% include "browse/ontology_tree_node_template.html" %}
             {% endwith %}
         </summary>
@@ -15,7 +15,7 @@
         </ul>
     </details>
     {% else %}
-    {% with registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
+    {% with category=category registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
     {% include "browse/ontology_tree_node_template.html" %}
     {% endwith %}
     {% endif %}
