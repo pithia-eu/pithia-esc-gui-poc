@@ -3,5 +3,5 @@
     {% if 'definition' in node %}
     <p>{{ node.definition }}</p>
     {% endif %}
-    <a href="#" role="button" class="btn btn-light btn-sm">View Details</a>
+    <a href="{% url 'browse:ontology_term_detail' category node.value %}" class="btn btn-light btn-sm">View Details</a>
 </div>
