@@ -1,3 +1,5 @@
+from rdflib import URIRef
+from rdflib.resource import Resource
 from rdflib.namespace import _SKOS
 from common import mongodb_models
 from django.shortcuts import render
@@ -82,14 +84,45 @@ def ontology_category_terms_list_only(request, category):
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
 
+def _remove_namespace_prefix_from_predicate(p):
+    p_identifier_no_prefix = p.identifier.split('#')[-1]
+    if len(p.identifier.split('#')) == 1:
+        p_identifier_no_prefix = p.identifier.split('/')[-1]
+    return p_identifier_no_prefix
+
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
     SKOS = _SKOS.SKOS
-    term = g.triples((None, SKOS.member, f'ONTOLOGY_SERVER_BASE_URL{category}/{term_id}'))
+    resource = None
+    resource_uriref = URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}')
+    triples = list(g.triples((None, SKOS.member, resource_uriref)))
+    if len(triples) > 0:
+        resource = Resource(g, triples[0][2])
+    resource_predicates_no_prefix = list(set(map(_remove_namespace_prefix_from_predicate, resource.predicates())))
+    # Turn resource into a dictionary for easier usage + have a human-readable
+    # version of the predicates to display in the front-end.
+    resource_dictionary = {}
+    resource_predicates_readable = {}
+    for p in resource.predicates():
+        p_identifier_no_prefix = p.identifier.split('#')[-1]
+        if len(p.identifier.split('#')) == 1:
+            p_identifier_no_prefix = p.identifier.split('/')[-1]
+        if p_identifier_no_prefix not in resource_dictionary:
+            if len(list(g.triples((resource_uriref, p.identifier, None)))) > 1:
+                resource_dictionary[p_identifier_no_prefix] = []
+                for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
+                    resource_dictionary[p_identifier_no_prefix].append(str(o2))
+            else:
+                resource_dictionary[p_identifier_no_prefix] = str(list(g.triples((resource_uriref, p.identifier, None)))[0][2])
+    for p in resource_predicates_no_prefix:
+        resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
     return render(request, 'browse/ontology_term_detail.html', {
         'title': 'Ontology Term',
-        'term': term,
-        'category': category
+        'resource_dictionary': resource_dictionary,
+        'resource_predicates_no_prefix': resource_predicates_no_prefix,
+        'resource_predicates_readable': resource_predicates_readable,
+        'category': category,
+        'category_readable': ' '.join(_split_camel_case(category)).title(),
     })
 
 def list_resources_of_type(request, resource_mongodb_model, resource_type_plural, resource_detail_view_name):
