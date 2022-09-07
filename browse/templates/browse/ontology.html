@@ -2,10 +2,10 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item_active 'Ontology' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">PITHIA Ontology</h1>
+<h1 class="pb-3">{{ title }}</h1>
 <p class="lead">
     Ontology categories can be further expanded in the list below.
 </p>
