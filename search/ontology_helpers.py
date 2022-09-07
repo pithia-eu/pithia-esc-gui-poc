@@ -114,42 +114,6 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
 
 
     ontology_dictionary = {}
-    for s, p, o in g.triples((None, SKOS.broader, None)):
-        # s_value is the narrower value
-        s_value = s.replace(ontology_component_url, '')
-        # o_value is the broader value
-        o_value = o.replace(ontology_component_url, '')
-        # If the broader value is not in the nested list, add it and set
-        # its value to an empty dictionary.
-        if o_value not in ontology_dictionary:
-            ontology_dictionary[o_value] = {
-                'id': f'{ontology_component}{o_value}',
-                'value': o_value,
-                'definition': '',
-                'pref_label': pref_label_mappings[o_value],
-                'alt_label': alt_label_mappings[o_value] if o_value in alt_label_mappings else None,
-                'narrowers': {},
-            }
-            if o_value in definition_mappings:
-                ontology_dictionary[o_value]['definition'] = definition_mappings[o_value]
-            if ontology_component == 'observedProperty':
-                ontology_dictionary[o_value] = map_ontology_components_to_observed_property_dictionary(o, ontology_dictionary[o_value], g)
-
-        # Add to the broader value's dictionary by putting in a narrower
-        # value as a key and setting its value to '1'.
-        ontology_dictionary[o_value]['narrowers'][s_value] = {
-            'id': f'{ontology_component}{s_value}',
-            'value': s_value,
-            'definition': '',
-            'pref_label': pref_label_mappings[s_value],
-            'alt_label': alt_label_mappings[s_value] if s_value in alt_label_mappings else None,
-            'narrowers': {},
-        }
-        if s_value in definition_mappings:
-            ontology_dictionary[o_value]['narrowers'][s_value]['definition'] = definition_mappings[s_value]
-        if ontology_component == 'observedProperty':
-            ontology_dictionary[o_value]['narrowers'][s_value] = map_ontology_components_to_observed_property_dictionary(s, ontology_dictionary[o_value]['narrowers'][s_value], g)
-
     for s, p, o in g.triples((None, SKOS.member, None)):
         # o_value is the localID after the ontology_component_url
         o_value = o.replace(ontology_component_url, '')
@@ -160,26 +124,36 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
                 'narrowers': {},
             }
             o_resource = Resource(g, o)
-            print('o_value', o_value)
             for op in o_resource.predicates():
-                print('op.identifier', op.identifier)
                 op_identifier_no_prefix = op.identifier.split('#')[-1]
                 if len(op.identifier.split('#')) == 1:
                     op_identifier_no_prefix = op.identifier.split('/')[-1]
-                print('op_identifier_no_prefix', op_identifier_no_prefix)
-                if op_identifier_no_prefix not in ontology_dictionary[o_value]:
+                if op_identifier_no_prefix not in ontology_dictionary[o_value] and (op_identifier_no_prefix == 'phenomenon' or op_identifier_no_prefix == 'featureOfInterest' or op_identifier_no_prefix == 'measurand'):
+                    ontology_dictionary[o_value][op_identifier_no_prefix] = []
+                    if op_identifier_no_prefix == 'phenomenon':
+                        for ops, opp, opo in g.triples((o, op.identifier, None)):
+                            opo_value_with_prefix = f'phenomenon{opo.split("/")[-1]}'
+                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
+                    if op_identifier_no_prefix == 'featureOfInterest':
+                        for ops, opp, opo in g.triples((o, op.identifier, None)):
+                            opo_value_with_prefix = f'featureOfInterest{opo.split("/")[-1]}'
+                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
+                    if op_identifier_no_prefix == 'measurand':
+                        for ops, opp, opo in g.triples((o, op.identifier, None)):
+                            opo_value_with_prefix = f'measurand{opo.split("/")[-1]}'
+                            ontology_dictionary[o_value][op_identifier_no_prefix].append(opo_value_with_prefix)
+                elif op_identifier_no_prefix not in ontology_dictionary[o_value]:
                     if len(list(g.triples((o, op.identifier, None)))) > 1:
                         ontology_dictionary[o_value][op_identifier_no_prefix] = []
                         for ops, opp, opo in g.triples((o, op.identifier, None)):
-                            print('opo', opo)
                             ontology_dictionary[o_value][op_identifier_no_prefix].append(str(opo))
                     else:
-                        print('opo', list(g.triples((o, op.identifier, None)))[0][2])
                         ontology_dictionary[o_value][op_identifier_no_prefix] = str(list(g.triples((o, op.identifier, None)))[0][2])
-            # print('o_resource', o_resource)
-            # print('o_resource.description', o_resource.value())
-            # print('o_value', o_value)
 
+            # SKOS.broader covers more than SKOS.narrower
+            for broader_s, broader_p, broader_o in g.triples((None, SKOS.broader, o)):
+                broader_s_value = broader_s.replace(ontology_component_url, '')
+                ontology_dictionary[o_value]['narrowers'][broader_s_value] = 1
     # Property dictionaries for child terms are nested within
     # the property dictionaries for parent terms, but the keys
     # for the child terms will still be present at the top level
@@ -190,9 +164,9 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
             if nestedKey in ontology_dictionary:
                 ontology_dictionary[key]['narrowers'][nestedKey] = ontology_dictionary[nestedKey]
                 keys_to_remove_at_top_level.append(nestedKey)
-
+    
     for key in keys_to_remove_at_top_level:
-        del ontology_dictionary[key]
+        ontology_dictionary.pop(key, None)
 
     return ontology_dictionary
 
