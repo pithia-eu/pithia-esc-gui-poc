@@ -92,28 +92,6 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
     g = get_graph_of_pithia_ontology_component(ontology_component)
     SKOS = _SKOS.SKOS
     ontology_dictionary = {}
-    pref_label_mappings = {}
-    alt_label_mappings = {}
-    definition_mappings = {}
-
-    for s, p, o in g.triples((None, SKOS.prefLabel, None)):
-        s_value = s.replace(ontology_component_url, '')
-        o_value = o.replace(ontology_component_url, '')
-        pref_label_mappings[s_value] = o_value
-
-    for s, p, o in g.triples((None, SKOS.altLabel, None)):
-        s_value = s.replace(ontology_component_url, '')
-        o_value = o.replace(ontology_component_url, '')
-        alt_label_mappings[s_value] = o_value
-
-    for s, p, o in g.triples((None, SKOS.definition, None)):
-        s_value = s.replace(ontology_component_url, '')
-        o_value = o.replace(ontology_component_url, '')
-        definition_mappings[s_value] = o_value
-
-
-
-    ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.member, None)):
         # o_value is the localID after the ontology_component_url
         o_value = o.replace(ontology_component_url, '')
