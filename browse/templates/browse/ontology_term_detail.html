@@ -3,42 +3,33 @@
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
 {% breadcrumb_item 'Ontology' 'browse:ontology' %}
-{% breadcrumb_item category 'browse:ontology_category_terms_list' category %}
-{% breadcrumb_item_active 'Term' %}
+{% breadcrumb_item category_readable 'browse:ontology_category_terms_list' category %}
+{% breadcrumb_item_active resource_dictionary.prefLabel %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ term.prefLabel }}</h1>
+<h1>{{ resource_dictionary.prefLabel }}</h1>
 <div class="row">
     <div class="col-lg-8">
-        <section>
-            <h2 class="mb-3">Definition</h2>
-            <p class="lead">{{ term.definition }}</p>
-        </section>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <section>
-            <h2 class="mb-3">Properties</h2>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">Property</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in term_flattened.items %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value|urlize }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Property</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in resource_predicates_no_prefix %}
+                    {% if p != 'type' and p != 'versionInfo' and p != 'date' %}
+                    <tr>
+                        <td>{{ resource_predicates_readable|get_key_value:p }}</td>
+                        <td>{{ resource_dictionary|get_key_value:p }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock content %}
