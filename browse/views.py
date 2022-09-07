@@ -1,9 +1,11 @@
+from rdflib.namespace import _SKOS
 from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 
+from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
-from search.ontology_helpers import create_dictionary_from_pithia_ontology_component
+from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
 # Create your views here.
@@ -74,14 +76,20 @@ def ontology_category_terms_list_only(request, category):
         registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
     return render(request, 'browse/ontology_tree_template_outer.html', {
-        'category': dictionary,
+        'dictionary': dictionary,
+        'category': category,
         'registered_ontology_terms': registered_ontology_terms,
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
 
 def ontology_term_detail(request, category, term_id):
+    g = get_graph_of_pithia_ontology_component(category)
+    SKOS = _SKOS.SKOS
+    term = g.triples((None, SKOS.member, f'ONTOLOGY_SERVER_BASE_URL{category}/{term_id}'))
     return render(request, 'browse/ontology_term_detail.html', {
-        'title': 'Ontology Term'
+        'title': 'Ontology Term',
+        'term': term,
+        'category': category
     })
 
 def list_resources_of_type(request, resource_mongodb_model, resource_type_plural, resource_detail_view_name):
