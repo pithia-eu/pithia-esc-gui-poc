@@ -19,11 +19,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in resource_predicates_no_prefix %}
+                    {% for p in resource_predicates_no_prefix|dictsort:0 %}
                     {% if p != 'type' and p != 'versionInfo' and p != 'date' %}
                     <tr>
                         <td>{{ resource_predicates_readable|get_key_value:p }}</td>
-                        <td>{{ resource_dictionary|get_key_value:p }}</td>
+                        <td>
+                            {% if resource_dictionary|get_key_value:p|get_type == 'list' %}
+                            <ul class="list-no-style">
+                                {% for i in resource_dictionary|get_key_value:p %}
+                                {% if p == 'observedProperty' or p == 'phenomenon' or p == 'measurand' or p == 'featureOfInterest' or p == 'propagationMode' or p == 'interaction' or p == 'qualifier' or p == 'narrower' or p == 'broader' %}
+                                <li>
+                                    {% autoescape off %}
+                                    {{ i }}
+                                    {% endautoescape %}
+                                </li> 
+                                {% else %}
+                                <li>{{ i }}</li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            {{ resource_dictionary|get_key_value:p }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endif %}
                     {% endfor %}

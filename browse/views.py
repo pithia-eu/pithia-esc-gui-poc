@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rdflib import URIRef
 from rdflib.resource import Resource
 from rdflib.namespace import _SKOS
@@ -99,14 +100,33 @@ def ontology_term_detail(request, category, term_id):
     if len(triples) > 0:
         resource = Resource(g, triples[0][2])
     resource_predicates_no_prefix = list(set(map(_remove_namespace_prefix_from_predicate, resource.predicates())))
-    # Turn resource into a dictionary for easier usage + have a human-readable
-    # version of the predicates to display in the front-end.
+    # Turn resource into a dictionary for easier usage
     resource_dictionary = {}
     resource_predicates_readable = {}
     for p in resource.predicates():
         p_identifier_no_prefix = p.identifier.split('#')[-1]
         if len(p.identifier.split('#')) == 1:
             p_identifier_no_prefix = p.identifier.split('/')[-1]
+        if p_identifier_no_prefix not in resource_dictionary and (p_identifier_no_prefix == 'observedProperty' or p_identifier_no_prefix == 'phenomenon' or p_identifier_no_prefix == 'measurand' or p_identifier_no_prefix == 'featureOfInterest' or p_identifier_no_prefix == 'propagationMode' or p_identifier_no_prefix == 'interaction' or p_identifier_no_prefix == 'qualifier' or p_identifier_no_prefix == 'narrower' or p_identifier_no_prefix == 'broader'):
+            # Other ontology terms referenced by the resource
+            if p_identifier_no_prefix == 'narrower' or p_identifier_no_prefix == 'broader':
+                g_other_ontology_term = g
+            else:
+                g_other_ontology_term = get_graph_of_pithia_ontology_component(p_identifier_no_prefix)
+            urls_of_referenced_terms = []
+            urls_of_referenced_terms_with_preflabels = []
+            for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
+                urls_of_referenced_terms.append(str(o2))
+            for u in urls_of_referenced_terms:
+                term_pref_label = u
+                pref_label_triples = list(g_other_ontology_term.triples((URIRef(u), SKOS.prefLabel, None)))
+                if len(pref_label_triples) > 0:
+                    term_pref_label = str(pref_label_triples[0][2])
+                u_split = u.split('/')
+                ontology_category = u_split[-2]
+                ontology_term_id = u_split[-1]
+            urls_of_referenced_terms_with_preflabels.append(f"<a href=\"{reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])}\">{term_pref_label}</a>")
+            resource_dictionary[p_identifier_no_prefix]= urls_of_referenced_terms_with_preflabels
         if p_identifier_no_prefix not in resource_dictionary:
             if len(list(g.triples((resource_uriref, p.identifier, None)))) > 1:
                 resource_dictionary[p_identifier_no_prefix] = []
@@ -114,8 +134,26 @@ def ontology_term_detail(request, category, term_id):
                     resource_dictionary[p_identifier_no_prefix].append(str(o2))
             else:
                 resource_dictionary[p_identifier_no_prefix] = str(list(g.triples((resource_uriref, p.identifier, None)))[0][2])
+    # Have a human-readable version of the predicates to display in the front-end.
     for p in resource_predicates_no_prefix:
-        resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
+        if p == 'broader':
+            resource_predicates_readable[p] = 'Broader Terms' 
+        elif p == 'narrower':
+            resource_predicates_readable[p] = 'Narrower Terms' 
+        elif p == 'observedProperty':
+            resource_predicates_readable[p] = 'Observed Properties' 
+        elif p == 'phenomenon':
+            resource_predicates_readable[p] = 'Phenomenons' 
+        elif p == 'measurand':
+            resource_predicates_readable[p] = 'Measurands' 
+        elif p == 'featureOfInterest':
+            resource_predicates_readable[p] = 'Features of Interest' 
+        elif p == 'interaction':
+            resource_predicates_readable[p] = 'Interactions' 
+        elif p == 'qualifier':
+            resource_predicates_readable[p] = 'Qualifiers'
+        else:
+            resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
     return render(request, 'browse/ontology_term_detail.html', {
         'title': 'Ontology Term',
         'resource_dictionary': resource_dictionary,
