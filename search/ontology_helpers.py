@@ -4,7 +4,7 @@ from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import _SKOS
 from rdflib.resource import Resource
 
-ONTOLOGY_SERVER_BASE_URL = 'https://ontology.espas-fp7.eu/'
+ONTOLOGY_SERVER_BASE_URL = 'https://metadata.pithia.eu/ontology/2.2/'
 ESPAS = Namespace('http://ontology.espas-fp7.eu/espasdefinitions#')
 
 def get_object_names_from_triple(triple):
