@@ -94,7 +94,7 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
     ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.member, None)):
         # o_value is the localID after the ontology_component_url
-        o_value = o.replace(ontology_component_url, '')
+        o_value = o.split('/')[-1]
         if o_value not in ontology_dictionary:
             ontology_dictionary[o_value] = {
                 'id': f'{ontology_component}{o_value}',
@@ -130,8 +130,25 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
 
             # SKOS.broader covers more than SKOS.narrower
             for broader_s, broader_p, broader_o in g.triples((None, SKOS.broader, o)):
-                broader_s_value = broader_s.replace(ontology_component_url, '')
-                ontology_dictionary[o_value]['narrowers'][broader_s_value] = 1
+                broader_o_value = broader_o.split('/')[-1]
+                broader_s_value = broader_s.split('/')[-1]
+                if broader_o_value != broader_s_value and broader_s_value not in ontology_dictionary[o_value]['narrowers']:
+                    ontology_dictionary[o_value]['narrowers'][broader_s_value] = {
+                        'id': f'{ontology_component}{broader_s_value}',
+                        'value': broader_s_value,
+                        'narrowers': {},
+                    }
+
+            # Do SKOS.narrower JIC
+            for narrower_s, narrower_p, narrower_o in g.triples((o, SKOS.narrower, None)):
+                narrower_s_value = narrower_s.split('/')[-1]
+                narrower_o_value = narrower_o.split('/')[-1]
+                if narrower_o_value != narrower_s_value and narrower_o_value not in ontology_dictionary[o_value]['narrowers']:
+                    ontology_dictionary[o_value]['narrowers'][narrower_o_value] = {
+                        'id': f'{ontology_component}{narrower_o_value}',
+                        'value': narrower_o_value,
+                        'narrowers': {},
+                    }
     # Property dictionaries for child terms are nested within
     # the property dictionaries for parent terms, but the keys
     # for the child terms will still be present at the top level
@@ -142,6 +159,8 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
             if nestedKey in ontology_dictionary:
                 ontology_dictionary[key]['narrowers'][nestedKey] = ontology_dictionary[nestedKey]
                 keys_to_remove_at_top_level.append(nestedKey)
+            else:
+                print(nestedKey)
     
     for key in keys_to_remove_at_top_level:
         ontology_dictionary.pop(key, None)
