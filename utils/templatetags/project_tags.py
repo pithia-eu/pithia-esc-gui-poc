@@ -24,3 +24,7 @@ def breadcrumb_item_active(text):
 @register.filter(name='underscore_attribute')
 def underscore_attribute(obj, attribute):
     return getattr(obj, attribute)
+
+@register.filter
+def get_type(value):
+    return type(value).__name__
