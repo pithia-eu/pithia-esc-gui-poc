@@ -7,7 +7,7 @@
 {% load static %}
 {% block scripts %}
 {{ validation_url|json_script:"validation-url" }}
-<script src="{% static "register/register.js" %}" id="register-script" defer></script>
+<script src="{% static "register/register.js" %}" id="register-script" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
 <div class="row pb-4">

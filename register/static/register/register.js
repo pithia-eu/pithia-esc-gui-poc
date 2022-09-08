@@ -28,11 +28,18 @@ const xmlValidationStates =  {
     UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.exceptions.UnregisteredOntologyTermException'>",
 }
 
-async function validateXmlFile(file, fileValidationUrl) {
+async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
     const formData = new FormData();
     const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
     formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
     formData.append("file", file);
+    if (validateNotAlreadyRegistered === true) {
+        formData.append("validate_is_not_registered", true);
+    }
+    if (validateUpdatedXmlIsValid === true) {
+        formData.append("validate_xml_file_localid_matches_existing_resource_localid", true);
+        formData.append("resource_id", JSON.parse(document.getElementById("resource-id").textContent));
+    }
     const response = await fetch(fileValidationUrl, {
         method: "POST",
         body: formData
@@ -128,7 +135,13 @@ function removeClassNameFromElem(elem, className) {
     return elem.classList.remove(className);
 }
 
-async function handleFileUpload(fileInput, containerElem) {
+export async function handleFileUpload(fileInput, containerElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
+    if (!validateNotAlreadyRegistered) {
+        validateNotAlreadyRegistered = false
+    }
+    if (!validateUpdatedXmlIsValid) {
+        validateUpdatedXmlIsValid = false
+    }
     const file = Array.from(fileInput.files)[0];
     loadFileValidationElems(file, containerElem);
     const validationStatusElem = document.querySelector(".file-validation-status");
@@ -136,7 +149,7 @@ async function handleFileUpload(fileInput, containerElem) {
     
     updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
     const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
-    const validationResults = await validateXmlFile(file, fileValidationUrl);
+    const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
     updateXMLFileValidationStatus(validationResults, validationStatusElem);
     if (validationResults.error) {
         removeClassNameFromElem(validationStatusErrorElem, "d-none");
@@ -155,13 +168,13 @@ const fileInput = document.getElementById("id_file");
 const fileValidationStatusElem = document.querySelector(".file-validation-status-container");
 
 fileInput.addEventListener("change", async event => {
-    await handleFileUpload(fileInput, fileValidationStatusElem);
+    await handleFileUpload(fileInput, fileValidationStatusElem, true, false);
 });
 
 window.addEventListener("load", async event => {
     if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
-        await handleFileUpload(fileInput, fileValidationStatusElem);
+        await handleFileUpload(fileInput, fileValidationStatusElem, true, false);
     }
 });
