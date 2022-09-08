@@ -36,18 +36,12 @@ def get_rdf_text_locally(ontology_component):
 
 
 def get_rdf_text_for_ontology_component(ontology_component):
-    # Fetch ontology component of ESPAS ontology text
-    if ontology_component.lower() == 'featureofinterest':
-        # Current solution as PITHIA ontology server is not ready
-        # yet.
+    try:
+        ontology_text = get_rdf_text_remotely(ontology_component)
+    except BaseException as err:
+        print(err)
+        # Read ontology from file - alt method if connection to ontology server fails
         ontology_text = get_rdf_text_locally(ontology_component)
-    else:
-        try:
-            ontology_text = get_rdf_text_remotely(ontology_component)
-        except BaseException as err:
-            print(err)
-            # Read ontology from file - alt method if connection to ontology server fails
-            ontology_text = get_rdf_text_locally(ontology_component)
 
     return ontology_text
 
