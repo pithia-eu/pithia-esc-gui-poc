@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
@@ -7,6 +7,7 @@ urlpatterns = [
     path('browse/', views.index, name='index'),
     path('resources/', views.resources, name='resources'),
     path('schemas/', views.schemas, name='schemas'),
+    path('ontology/', include('browse.ontology_urls')),
     path('organisations/', views.list_organisations, name='list_organisations'),
     path('individuals/', views.list_individuals, name='list_individuals'),
     path('projects/', views.list_projects, name='list_projects'),
