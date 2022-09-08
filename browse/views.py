@@ -5,6 +5,7 @@ from rdflib.namespace import _SKOS
 from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
+from django.http import HttpResponseNotFound
 
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
@@ -48,6 +49,7 @@ def ontology_category_terms_list(request, category):
     title = ' '.join(_split_camel_case(category)).title()
     if category.lower() == 'crs':
         title = 'Co-ordinate Reference System'
+    title += ' Terms'
     return render(request, 'browse/ontology_category_terms_list.html', {
         'category': category,
         'title': title
@@ -99,6 +101,8 @@ def ontology_term_detail(request, category, term_id):
     triples = list(g.triples((None, SKOS.member, resource_uriref)))
     if len(triples) > 0:
         resource = Resource(g, triples[0][2])
+    if resource is None:
+        return HttpResponseNotFound(f'Details for the ontology term ID <b>"{term_id}"</b> were not found.')
     resource_predicates_no_prefix = list(set(map(_remove_namespace_prefix_from_predicate, resource.predicates())))
     # Turn resource into a dictionary for easier usage
     resource_dictionary = {}
@@ -118,14 +122,17 @@ def ontology_term_detail(request, category, term_id):
             for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
                 urls_of_referenced_terms.append(str(o2))
             for u in urls_of_referenced_terms:
-                term_pref_label = u
-                pref_label_triples = list(g_other_ontology_term.triples((URIRef(u), SKOS.prefLabel, None)))
-                if len(pref_label_triples) > 0:
-                    term_pref_label = str(pref_label_triples[0][2])
                 u_split = u.split('/')
                 ontology_category = u_split[-2]
                 ontology_term_id = u_split[-1]
-            urls_of_referenced_terms_with_preflabels.append(f"<a href=\"{reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])}\">{term_pref_label}</a>")
+                term_pref_label = ontology_term_id
+                pref_label_triples = list(g_other_ontology_term.triples((URIRef(u), SKOS.prefLabel, None)))
+                if len(pref_label_triples) > 0:
+                    term_pref_label = str(pref_label_triples[0][2])
+                if len(pref_label_triples) > 0:
+                    urls_of_referenced_terms_with_preflabels.append(f"<a href=\"{reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])}\">{term_pref_label}</a>")
+                else:
+                    urls_of_referenced_terms_with_preflabels.append(term_pref_label)
             resource_dictionary[p_identifier_no_prefix]= urls_of_referenced_terms_with_preflabels
         if p_identifier_no_prefix not in resource_dictionary:
             if len(list(g.triples((resource_uriref, p.identifier, None)))) > 1:
@@ -155,7 +162,8 @@ def ontology_term_detail(request, category, term_id):
         else:
             resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
     return render(request, 'browse/ontology_term_detail.html', {
-        'title': 'Ontology Term',
+        'title': resource_dictionary['prefLabel'],
+        'resource_ontology_url': f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}',
         'resource_dictionary': resource_dictionary,
         'resource_predicates_no_prefix': resource_predicates_no_prefix,
         'resource_predicates_readable': resource_predicates_readable,
