@@ -203,7 +203,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             ontology_component = href_components[0]
             ontology_term_id = href_components[1]
             is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
-            if is_valid_ontology_term == None:
+            if is_valid_ontology_term == False:
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
