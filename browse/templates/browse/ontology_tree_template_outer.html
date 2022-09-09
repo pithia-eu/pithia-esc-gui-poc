@@ -1,5 +1,5 @@
 <ul class="tree">
-    {% for key, value in dictionary.items %}
+    {% for key, value in dictionary.items|dictsort:0 %}
     {% with node=value registered_ontology_terms=registered_ontology_terms parents_of_registered_ontology_terms=parents_of_registered_ontology_terms %}
     {% include "browse/ontology_tree_template_inner.html" %}
     {% endwith %}
