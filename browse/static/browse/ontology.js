@@ -1,3 +1,33 @@
+const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
+
+
+// Utility functions
+
+export function getEnclosingLiNode(elem) {
+    let currentParentNode = elem;
+    let currentChildNode = elem;
+    while (currentParentNode !== null && currentParentNode.nodeName !== "LI") {
+        currentParentNode = currentChildNode.parentNode;
+        currentChildNode = currentParentNode;
+    }
+    return currentParentNode;
+}
+
+export function getParentNodeElems(div, parentNodeElems) {
+    if (!parentNodeElems) {
+        parentNodeElems = [];
+    }
+    if (div.dataset.parentNodeInOntology === "") {
+        return parentNodeElems;
+    }
+    const parentNodeElem = document.getElementById(div.dataset.parentNodeInOntology);
+    parentNodeElems.push(parentNodeElem);
+    if (parentNodeElem.dataset.parentNodeInOntology !== "") {
+        parentNodeElems = getParentNodeElems(parentNodeElem, parentNodeElems);
+    }
+    return parentNodeElems;
+}
+
 // Search box input filtering
 
 function getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId) {
@@ -25,7 +55,7 @@ function removeSearchBoxInputFiltersFromLiNodes(liNodes) {
 }
 
 function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
-    const allCheckboxLabelsForTree = document.querySelectorAll(`#${treeContainerId} .tree-search-terms label`);
+    const keywordSearchableElems = document.querySelectorAll(`#${treeContainerId} .tree-search-terms .keyword-searchable`);
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     const searchBoxInput = searchBoxForTree.value;
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
@@ -35,23 +65,23 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
         removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
     } else {
         let liNodesToShow = [], liNodesToHide = [];
-        allCheckboxLabelsForTree.forEach(label => {
+        keywordSearchableElems.forEach(elem => {
             // AND match
             let numInputMatchesFound = 0;
             searchBoxInputSplit.forEach(inputTerm => {
-                if (label.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
+                if (elem.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
                     numInputMatchesFound++;
                 }
             });
-            const enclosingLiNode = getEnclosingLiNode(label);
+            const enclosingLiNode = getEnclosingLiNode(elem);
             if (numInputMatchesFound === searchBoxInputSplit.length) {
                 liNodesToShow.push(enclosingLiNode);
-                const childNodeCheckboxes = enclosingLiNode.getElementsByTagName("input");
-                if (childNodeCheckboxes.length > 0) {
-                    const firstChildNodeCheckbox = childNodeCheckboxes[0];
-                    const parentNodeCheckboxes = getParentNodeCheckboxes(firstChildNodeCheckbox);
-                    parentNodeCheckboxes.forEach(checkbox => {
-                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(checkbox);
+                const childNodeDivs = enclosingLiNode.getElementsByTagName("div");
+                if (childNodeDivs.length > 0) {
+                    const firstChildNodeDiv = childNodeDivs[0];
+                    const parentNodeElems = getParentNodeElems(firstChildNodeDiv);
+                    parentNodeElems.forEach(div => {
+                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(div);
                         liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
                     });
                 }
@@ -66,18 +96,6 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
     }
 }
 
-function resetSearchBoxFilteringForTreeContainerId(treeContainerId) {
-    document.querySelector(`#${treeContainerId} .tree-search-box`).value = "";
-    const searchBoxInputFilteredLiNodesForTreeContainerId = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
-    removeSearchBoxInputFiltersFromLiNodes(searchBoxInputFilteredLiNodesForTreeContainerId);
-}
-
-function setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, open) {
-    return document.querySelectorAll(`#${treeContainerId} details`).forEach(detailsNode => {
-        detailsNode.open = open;
-    });
-}
-
 function setupInputsForTreeContainerId(treeContainerId) {
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     searchBoxForTree.addEventListener("input", event => {
@@ -86,12 +104,6 @@ function setupInputsForTreeContainerId(treeContainerId) {
 }
 
 // Search form setup
-
-export function addTreeContainerIdToClearInputsButton(treeContainerId) {
-    const clearInputsButton = document.querySelector(".btn-clear");
-    clearInputsButton.addEventListener("click", event => {
-    });
-}
 
 export async function setupSearchFormComponent(html, treeContainerId, callback) {
     setTimeout(async () => {

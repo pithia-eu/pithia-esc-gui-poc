@@ -1,5 +1,7 @@
-<div id="{{ node.id }}" class="d-inline-flex flex-column align-items-start mb-3">
-    <span{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted" {% else %} class="fw-bold"{% endif %}>{{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}</span>
+<div id="{{ node.id }}" class="d-inline-flex flex-column align-items-start mb-3"
+    data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
+    data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
+    <span{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted keyword-searchable" {% else %} class="fw-bold"{% endif %}>{{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}</span>
     <p>{{ node.definition|default:'' }}</p>
     {% if node.prefLabel %}
     <a href="{% url 'browse:ontology_term_detail' category node.value %}" class="btn btn-light btn-sm">View Details</a>
