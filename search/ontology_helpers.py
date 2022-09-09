@@ -94,6 +94,7 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
                 'id': f'{ontology_component}{o_value}',
                 'value': o_value,
                 'narrowers': {},
+                'iri': f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{o_value}',
             }
             o_resource = Resource(g, o)
             for op in o_resource.predicates():
