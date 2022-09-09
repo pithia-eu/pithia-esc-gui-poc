@@ -235,6 +235,8 @@ def resource_detail(request, resource_id, resource_mongodb_model, resource_type_
     resource = resource_mongodb_model.find_one({
         '_id': ObjectId(resource_id)
     })
+    if resource is None:
+        return HttpResponseNotFound('Resource not found.')
     resource_flattened = flatten(resource)
     title = resource['identifier']['PITHIA_Identifier']['localID']
     if 'name' in resource:
