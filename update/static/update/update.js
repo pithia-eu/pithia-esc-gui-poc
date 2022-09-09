@@ -1,6 +1,6 @@
 import {
     handleFileUpload
-} from "/static/register/register.js";
+} from "/static/file_upload.js";
 
 const fileInput = document.getElementById("id_file");
 const fileValidationStatusElem = document.querySelector(".file-validation-status-container");
