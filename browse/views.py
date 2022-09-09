@@ -49,6 +49,8 @@ def ontology_category_terms_list(request, category):
     title = ' '.join(_split_camel_case(category)).title()
     if category.lower() == 'crs':
         title = 'Co-ordinate Reference System'
+    elif category.lower() == 'verticalcrs':
+        title = 'Vertical Co-ordinate Reference System'
     title += ' Terms'
     return render(request, 'browse/ontology_category_terms_list.html', {
         'category': category,
