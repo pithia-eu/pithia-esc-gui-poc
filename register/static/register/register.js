@@ -103,7 +103,7 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
         `;
     } else {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an unknown error during validation.</span>
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an error during validation.</span>
         `;
     }
     
