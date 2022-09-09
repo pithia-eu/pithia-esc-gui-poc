@@ -31,6 +31,10 @@
                     {% url 'search:index' as search_url %}
                     <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search</a>
                 </li>
+                <li class="dropdown-item">
+                    {% url 'resource_management:index' as resource_management_url %}
+                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Manage</a>
+                </li>
             </ul>
         </li>
     </ul>
