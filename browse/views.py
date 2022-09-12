@@ -6,6 +6,7 @@ from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
+from django.views.generic import TemplateView
 
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
@@ -173,48 +174,92 @@ def ontology_term_detail(request, category, term_id):
         'category_readable': ' '.join(_split_camel_case(category)).title(),
     })
 
-def list_resources_of_type(request, resource_mongodb_model, resource_type_plural, resource_detail_view_name):
-    url_namespace = request.resolver_match.namespace
-    resources_list = list(resource_mongodb_model.find({}))
-    resources_list = list(map(remove_underscore_from_id_attribute, resources_list))
-    return render(request, 'browse/list_resources_of_type.html', {
-        'title': resource_type_plural,
-        'breadcrumb_item_list_resources_of_type_text': resource_type_plural,
-        'resource_type_plural': resource_type_plural,
-        'resource_detail_view_name': resource_detail_view_name,
-        'url_namespace': url_namespace,
-        'resources_list': resources_list
-    })
+class ListResourcesView(TemplateView):
+    template_name = 'browse/list_resources_of_type.html'
+    description = ''
+    resource_mongodb_model = None
+    resource_type_plural = 'Resources'
+    resource_detail_view_name = ''
+    resources_list = []
 
-def list_organisations(request):
-    return list_resources_of_type(request, mongodb_models.CurrentOrganisation, 'Organisations', 'browse:organisation_detail')
+    def get_resources_list(self):
+        resources_list = list(self.resource_mongodb_model.find({}))
+        return list(map(remove_underscore_from_id_attribute, resources_list))
 
-def list_individuals(request):
-    return list_resources_of_type(request, mongodb_models.CurrentIndividual, 'Individuals', 'browse:individual_detail')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.resource_type_plural
+        context['description'] = self.description
+        context['breadcrumb_item_list_resources_of_type_text'] = self.resource_type_plural
+        context['resource_type_plural'] = self.resource_type_plural
+        context['resource_detail_view_name'] = self.resource_detail_view_name
+        context['resources_list'] = self.get_resources_list()
 
-def list_projects(request):
-    return list_resources_of_type(request, mongodb_models.CurrentProject, 'Projects', 'browse:project_detail')
+        return context
 
-def list_platforms(request):
-    return list_resources_of_type(request, mongodb_models.CurrentPlatform, 'Platforms', 'browse:platform_detail')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
-def list_instruments(request):
-    return list_resources_of_type(request, mongodb_models.CurrentInstrument, 'Instruments', 'browse:instrument_detail')
 
-def list_operations(request):
-    return list_resources_of_type(request, mongodb_models.CurrentOperation, 'Operations', 'browse:operation_detail')
+class list_organisations(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentOrganisation
+    resource_type_plural = 'Organisations'
+    resource_detail_view_name = 'browse:organisation_detail'
+    description = 'Data Provider/Owner organisation'
 
-def list_acquisitions(request):
-    return list_resources_of_type(request, mongodb_models.CurrentAcquisition, 'Acquisitions', 'browse:acquisition_detail')
+class list_individuals(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentIndividual
+    resource_type_plural = 'Individuals'
+    resource_detail_view_name = 'browse:individual_detail'
+    description = 'An individual, acting in a particular role and associated with an Organisation'
 
-def list_computations(request):
-    return list_resources_of_type(request, mongodb_models.CurrentComputation, 'Computations', 'browse:computation_detail')
+class list_projects(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentProject
+    resource_type_plural = 'Projects'
+    resource_detail_view_name = 'browse:project_detail'
+    description = 'An identifiable activity designed to accomplish a set of objectives'
 
-def list_processes(request):
-    return list_resources_of_type(request, mongodb_models.CurrentProcess, 'Processes', 'browse:process_detail')
+class list_platforms(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentPlatform
+    resource_type_plural = 'Platforms'
+    resource_detail_view_name = 'browse:platform_detail'
+    description = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory)'
 
-def list_data_collections(request):
-    return list_resources_of_type(request, mongodb_models.CurrentDataCollection, 'Data Collections', 'browse:data_collection_detail')
+class list_instruments(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentInstrument
+    resource_type_plural = 'Instruments'
+    resource_detail_view_name = 'browse:instrument_detail'
+    description = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values'
+
+class list_operations(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentOperation
+    resource_type_plural = 'Operations'
+    resource_detail_view_name = 'browse:operation_detail'
+    description = 'Description how platform operates in order to support data acquisition by the instrument'
+
+class list_acquisitions(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentAcquisition
+    resource_type_plural = 'Acquisitions'
+    resource_detail_view_name = 'browse:acquisition_detail'
+    description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
+
+class list_computations(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentComputation
+    resource_type_plural = 'Computations'
+    resource_detail_view_name = 'browse:computation_detail'
+    description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
+
+class list_processes(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentProcess
+    resource_type_plural = 'Processes'
+    resource_detail_view_name = 'browse:process_detail'
+    description = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations'
+
+class list_data_collections(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentDataCollection
+    resource_type_plural = 'Data Collections'
+    resource_detail_view_name = 'browse:data_collection_detail'
+    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
 
 def flatten(d):
     out = {}
