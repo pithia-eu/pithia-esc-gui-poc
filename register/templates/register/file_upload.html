@@ -33,15 +33,15 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    {% if form.file.errors %}
+                    {% if form.files.errors %}
                         <ul>
-                        {% for error in form.file.errors %}
+                        {% for error in form.files.errors %}
                             <li>{{ error|escape }}</li>
                         {% endfor %}
                         </ul>
                     {% endif %}
-                    {{ form.file.label_tag }}
-                    {{ form.file }}
+                    {{ form.files.label_tag }}
+                    {{ form.files }}
                 </div>
                 <div class="col-lg-8">
                     {% include 'register/validation_template.html' %}
@@ -58,17 +58,17 @@
         <div class="card">
             <div class="card-body">
                 <b class="text-secondary">Register other resources:</b>
-                <ul class="mt-3 mb-0">
-                    <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisation</a></li>
-                    <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individual</a></li>
-                    <li><a href="{% url 'register:project' %}" class="pithia-blue">Project</a></li>
-                    <li><a href="{% url 'register:platform' %}" class="pithia-blue">Platform</a></li>
-                    <li><a href="{% url 'register:operation' %}" class="pithia-blue">Operation</a></li>
-                    <li><a href="{% url 'register:instrument' %}" class="pithia-blue">Instrument</a></li>
-                    <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisition</a></li>
-                    <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computation</a></li>
-                    <li><a href="{% url 'register:process' %}" class="pithia-blue">Process</a></li>
-                    <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collection</a></li>
+                <ul class="mt-2 mb-0">
+                    <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisations</a></li>
+                    <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individuals</a></li>
+                    <li><a href="{% url 'register:project' %}" class="pithia-blue">Projects</a></li>
+                    <li><a href="{% url 'register:platform' %}" class="pithia-blue">Platforms</a></li>
+                    <li><a href="{% url 'register:operation' %}" class="pithia-blue">Operations</a></li>
+                    <li><a href="{% url 'register:instrument' %}" class="pithia-blue">Instruments</a></li>
+                    <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisitions</a></li>
+                    <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computations</a></li>
+                    <li><a href="{% url 'register:process' %}" class="pithia-blue">Processes</a></li>
+                    <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collections</a></li>
                 </ul>
             </div>
         </div>
