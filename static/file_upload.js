@@ -13,10 +13,12 @@ function resetFileValidationList(listElem) {
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
         <li class="list-group-item">
-            <span>${file.name}</span>
-            <div class="col-lg-12 file-validation-status file-validation-status-${index}">
-            </div>
-            <div class="col-lg-12 file-validation-error file-validation-error-${index} d-none">
+            <div class="row g-2">
+                <div class="col-lg-12">${file.name}</div>
+                <div class="col-lg-12 file-validation-status file-validation-status-${index}">
+                </div>
+                <div class="col-lg-12 file-validation-error file-validation-error-${index}">
+                </div>
             </div>
         </li>
     `));
