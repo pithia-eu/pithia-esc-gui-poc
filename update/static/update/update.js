@@ -3,7 +3,7 @@ import {
 } from "/static/file_upload.js";
 
 const fileInput = document.getElementById("id_file");
-const fileValidationStatusElem = document.querySelector(".file-validation-status-container");
+const fileValidationStatusElem = document.querySelector(".file-validation-status-list");
 
 fileInput.addEventListener("change", async event => {
     await handleFileUpload(fileInput, fileValidationStatusElem, false, true);
