@@ -45,31 +45,32 @@ class RegisterResourceFormView(FormView):
     def post(self, request, *args, **kwargs):
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
-        xml_file = request.FILES['file']
+        xml_files = request.FILES.getlist('files')
         if form.is_valid():
-            # XML should have already been validated at
-            # the template, and validation could take
-            # place again, but takes a long time. Another
-            # method which verifies validation took place
-            # should be implemented.
-            try:
-                registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                if registration_results == 'This XML metadata file has been registered before.':
-                    messages.error(request, registration_results)
-                else:
-                    messages.success(request, f'Successfully registered {xml_file.name}.')
-            except ExpatError as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An error occurred whilst parsing the XML.')
-            except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An unexpected error occurred.')
-            # validation_results = self.validate_resource(xml_file)
-            # if 'error' not in validation_results:
-            # else:
-            #     messages.error(request, 'The file submitted was not valid.')
+            for xml_file in xml_files:
+                # XML should have already been validated at
+                # the template, and validation could take
+                # place again, but takes a long time. Another
+                # method which verifies validation took place
+                # should be implemented.
+                try:
+                    registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                    if registration_results == 'This XML metadata file has been registered before.':
+                        messages.error(request, f'{xml_file.name} has been registered before.')
+                    else:
+                        messages.success(request, f'Successfully registered {xml_file.name}.')
+                except ExpatError as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, f'An error occurred whilst parsing the {xml_file.name}.')
+                except BaseException as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, 'An unexpected error occurred.')
+                # validation_results = self.validate_resource(xml_file)
+                # if 'error' not in validation_results:
+                # else:
+                #     messages.error(request, 'The file submitted was not valid.')
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
