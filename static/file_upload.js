@@ -6,15 +6,19 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
-function loadFileValidationElems(file, containerElem) {
-    containerElem.innerHTML = "";
-    return containerElem.append(htmlToElement(`
-        <div class="row g-3">
-            <div class="col-lg-12 file-validation-status">
+function resetFileValidationList(listElem) {
+    listElem.innerHTML = "";
+}
+
+function loadFileValidationElemsForFile(file, listElem, index) {
+    return listElem.append(htmlToElement(`
+        <li class="list-group-item">
+            <span>${file.name}</span>
+            <div class="col-lg-12 file-validation-status file-validation-status-${index}">
             </div>
-            <div class="col-lg-12 file-validation-error d-none">
+            <div class="col-lg-12 file-validation-error file-validation-error-${index} d-none">
             </div>
-        </div>
+        </li>
     `));
 }
 
@@ -136,36 +140,39 @@ function removeClassNameFromElem(elem, className) {
 }
 
 const uploadFormSubmitButton = document.querySelector("form button[type='submit']");
-export async function handleFileUpload(fileInput, containerElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
+export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
     if (!validateNotAlreadyRegistered) {
         validateNotAlreadyRegistered = false
     }
     if (!validateUpdatedXmlIsValid) {
         validateUpdatedXmlIsValid = false
     }
-    const file = Array.from(fileInput.files)[0];
-    loadFileValidationElems(file, containerElem);
-    const validationStatusElem = document.querySelector(".file-validation-status");
-    const validationStatusErrorElem = document.querySelector(".file-validation-error");
-    
-    uploadFormSubmitButton.disabled = true;
-    updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-    const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
-    const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
-    updateXMLFileValidationStatus(validationResults, validationStatusElem);
-    if (!validationResults.error) {
-        uploadFormSubmitButton.disabled = false;
-    }
-    if (validationResults.error) {
+    resetFileValidationList(listElem);
+    const files = Array.from(fileInput.files);
+    files.forEach(async (file, i) => {
+        loadFileValidationElemsForFile(file, listElem, i);
+        const validationStatusElem = document.querySelector(`.file-validation-status-${i}`);
+        const validationStatusErrorElem = document.querySelector(`.file-validation-error-${i}`);
+        
         uploadFormSubmitButton.disabled = true;
-        removeClassNameFromElem(validationStatusErrorElem, "d-none");
-        updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
-    }
-    if (!validationResults.extra_details) {
-        return;
-    }
-    if (validationResults.extra_details.unregistered_document_types) {
-        const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
-        appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
-    }
+        updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
+        const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
+        updateXMLFileValidationStatus(validationResults, validationStatusElem);
+        if (!validationResults.error) {
+            uploadFormSubmitButton.disabled = false;
+        }
+        if (validationResults.error) {
+            uploadFormSubmitButton.disabled = true;
+            removeClassNameFromElem(validationStatusErrorElem, "d-none");
+            updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
+        }
+        if (!validationResults.extra_details) {
+            return;
+        }
+        if (validationResults.extra_details.unregistered_document_types) {
+            const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
+            appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
+        }
+    });
 }
