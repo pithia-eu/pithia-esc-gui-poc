@@ -1,9 +1,25 @@
-// Source for htmlToElement function: https://stackoverflow.com/a/35385518
+// Source for htmlToElement() function: https://stackoverflow.com/a/35385518
 function htmlToElement(html) {
     const template = document.createElement("template");
     html = html.trim();
     template.innerHTML = html;
     return template.content.firstChild;
+}
+
+// Source for removeFileFromFileList() function: https://stackoverflow.com/a/64019766
+function removeFileFromFileList(index, fileInput) {
+    const dt = new DataTransfer();
+    const { files } = fileInput;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (index !== i) {
+            dt.items.add(file);
+        }
+    }
+
+    fileInput.files = dt.files; // Assign the newly constructed file list
+    return fileInput.files.length;
 }
 
 function resetFileValidationList(listElem) {
@@ -12,12 +28,21 @@ function resetFileValidationList(listElem) {
 
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
-        <li class="list-group-item">
+        <li class="list-group-item file-list-group-item-${index}">
             <div class="row g-2">
-                <div class="col-lg-12">${file.name}</div>
-                <div class="col-lg-12 file-validation-status file-validation-status-${index}">
+                <div class="col-lg-10">
+                    <div class="row g-2">
+                        <div class="col-lg-12">${file.name}</div>
+                        <div class="col-lg-12 file-validation-status file-validation-status-${index}">
+                        </div>
+                        <div class="col-lg-12 file-validation-error file-validation-error-${index}">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-12 file-validation-error file-validation-error-${index}">
+                <div class="col-lg-2">
+                    <div class="d-flex flex-column justify-content-center align-items-end h-100">
+                        <button id="btn-rm-file-${index}" class="btn btn-danger btn-sm btn-rm-file" data-list-item-num="${index}" type="button">Remove</button>
+                    </div>
                 </div>
             </div>
         </li>
@@ -141,6 +166,14 @@ function removeClassNameFromElem(elem, className) {
     return elem.classList.remove(className);
 }
 
+function showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining) {
+    if (numFilesRemaining > 0) {
+        document.querySelector('.file-list-empty-msg').classList.add('d-none');
+    } else {
+        document.querySelector('.file-list-empty-msg').classList.remove('d-none');
+    }
+}
+
 const uploadFormSubmitButton = document.querySelector("form button[type='submit']");
 export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
     if (!validateNotAlreadyRegistered) {
@@ -150,22 +183,41 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         validateUpdatedXmlIsValid = false
     }
     resetFileValidationList(listElem);
+    const btnRmFileIdsToClick = [];
+    const finishedValidating = [];
+
     const files = Array.from(fileInput.files);
+    showFileListEmptyMsgIfFileInputEmpty(files.length);
     files.forEach(async (file, i) => {
         loadFileValidationElemsForFile(file, listElem, i);
         const validationStatusElem = document.querySelector(`.file-validation-status-${i}`);
         const validationStatusErrorElem = document.querySelector(`.file-validation-error-${i}`);
-        
+        const btnRemoveFile = document.querySelector(`#btn-rm-file-${i}`);
+        btnRemoveFile.addEventListener("click", event => {
+            const allBtnRmFiles = Array.from(document.querySelectorAll(".btn-rm-file"));
+            const clickedBtnRmFileIndex = allBtnRmFiles.findIndex(btn => btn.id === event.target.id);
+            const numFilesRemaining = removeFileFromFileList(clickedBtnRmFileIndex, fileInput);
+            const listItemNum = event.target.dataset.listItemNum;
+            document.querySelector(`.file-list-group-item-${listItemNum}`).remove();
+            showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining);
+            btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
+            finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
+            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0);
+        });
         uploadFormSubmitButton.disabled = true;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
         const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
         const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
+        if (document.querySelector(`.file-list-group-item-${i}`)) {
+            finishedValidating.push(`file${i}`);
+        }
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (!validationResults.error) {
-            uploadFormSubmitButton.disabled = false;
+            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0);
         }
-        if (validationResults.error) {
+        if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
             uploadFormSubmitButton.disabled = true;
+            btnRmFileIdsToClick.push(`btn-rm-file-${i}`);
             removeClassNameFromElem(validationStatusErrorElem, "d-none");
             updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
         }
