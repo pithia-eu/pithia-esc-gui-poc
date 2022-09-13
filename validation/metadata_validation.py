@@ -1,4 +1,3 @@
-import os
 import re
 import traceback
 import xmlschema
@@ -50,6 +49,9 @@ def _create_validation_error_details_dict(err_type, err_message, extra_details):
         'extra_details': extra_details
     }
 
+def _map_string_to_li_element(string):
+    return f'<li>{string}</li>'
+
 def _validate_metadata_xml_file(xml_file, expected_root_localname):
     validation_checklist = {
         'is_root_element_name_valid': False,
@@ -96,13 +98,13 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
         unregistered_document_types = unregistered_references['document_types']
         unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
         if len(unregistered_document_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Invalid document URLs: %s.' % ', '.join(unregistered_document_hrefs), {
                 'unregistered_document_types': unregistered_document_types
             })
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><b>Note:</b> Please ensure all URLs work before uploading and start with "<i>https://</i>" instead of "<i>http://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
     except etree.XMLSyntaxError as err:
@@ -133,16 +135,15 @@ def validate_xml_against_schema_at_url(xml_file, schema_url):
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_schema.validate(xml_file.read())
 
-def validate_ontology_component_with_term(component, term_id):
-    ontology_term_server_url = f'{ONTOLOGY_SERVER_BASE_URL}{component}/{term_id}'
-    response = get(ontology_term_server_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
+def validate_ontology_term_url(ontology_term_url):
+    response = get(ontology_term_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
     if response.status_code == 404:
         return False
     if response.ok:
         response_text = response.text
         g = Graph()
         g.parse(data=response_text, format='application/rdf+xml')
-        ontology_term = URIRef(ontology_term_server_url)
+        ontology_term = URIRef(ontology_term_url)
         return (ontology_term, RDF['type'], SKOS['Concept']) in g
     response.raise_for_status()
     return False
@@ -171,8 +172,6 @@ def get_mongodb_model_for_resource_type(resource_type):
     return 'unknown'
 
 def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
-    print('localID', localID)
-    print('namespace', namespace)
     find_dictionary = {
         'identifier.PITHIA_Identifier.localID': localID,
         'identifier.PITHIA_Identifier.namespace': namespace,
@@ -181,8 +180,7 @@ def get_resource_from_xlink_href_components(resource_mongodb_model, localID, nam
         find_dictionary['identifier.PITHIA_Identifier.version'] = version
     return resource_mongodb_model.find_one(find_dictionary)
 
-def get_components_from_xlink_href(href, href_section_to_remove):
-    href = href.replace(href_section_to_remove, '')
+def split_xlink_href(href):
     return href.split('/')
 
 def get_unregistered_references_from_xml(xml_file_parsed):
@@ -199,18 +197,17 @@ def get_unregistered_references_from_xml(xml_file_parsed):
         return unregistered_references
     for href in hrefs:
         if 'ontology' in href:
-            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/ontology/2.2/')
-            ontology_component = href_components[0]
-            ontology_term_id = href_components[1]
-            is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
+            href_components  = split_xlink_href(href)
+            ontology_component = href_components[-2]
+            ontology_term_id = href_components[-1]
+            is_valid_ontology_term = validate_ontology_term_url(href)
             if is_valid_ontology_term == False:
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
-            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/resources/2.2/')
-            resource_type = href_components[0]
-            namespace = href_components[1]
-            localID = href_components[2]
+            resource_type = href_components[-3]
+            namespace = href_components[-2]
+            localID = href_components[-1]
             version = None
             if len(href_components) > 3:
                 version = href_components[3]

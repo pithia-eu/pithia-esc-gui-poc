@@ -1,14 +1,14 @@
 <div id="{{ node.id }}" class="d-inline-flex flex-column align-items-start mb-3"
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
-    <div class="d-flex align-items-center">
-        <span{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted keyword-searchable me-2" {% else %} class="fw-bold keyword-searchable me-2"{% endif %}>{{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}</span>
+    <div class="d-flex align-items-start">
+        <span{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted keyword-searchable mt-1 me-2" {% else %} class="fw-bold keyword-searchable me-2"{% endif %}>{{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}</span>
         {% if node.prefLabel %}
         <a href="{% url 'browse:ontology_term_detail' category node.value %}" class="btn btn-light btn-sm">Details</a>
         {% else %}
         <small class="text-muted fst-italic">(This ontology term may be invalid.)</small>
         {% endif %}
     </div>
-    {% if node.prefLabel %}<small class="text-muted">Ontology IRI: <a href="{{ node.iri|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ node.iri|default:'' }}</a></small>{% endif %}
-    <p class="text-muted"><small>{{ node.definition|default:'' }}</small></p>
+    {% if node.prefLabel %}<small class="text-muted text-break">Ontology IRI: <a href="{{ node.iri|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ node.iri|default:'' }}</a></small>{% endif %}
+    <p class="text-muted text-break"><small>{{ node.definition|default:'' }}</small></p>
 </div>
