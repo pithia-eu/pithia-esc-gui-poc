@@ -235,7 +235,7 @@ class list_operations(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     resource_type_plural = 'Operations'
     resource_detail_view_name = 'browse:operation_detail'
-    description = 'Description how platform operates in order to support data acquisition by the instrument'
+    description = 'Description of how a platform operates in order to support data acquisition by the instrument'
 
 class list_acquisitions(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
@@ -247,7 +247,7 @@ class list_computations(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_type_plural = 'Computations'
     resource_detail_view_name = 'browse:computation_detail'
-    description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
+    description = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output'
 
 class list_processes(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentProcess
