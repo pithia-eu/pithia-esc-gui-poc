@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Platform
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Platform_Test</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2022-03-14T16:00:00Z</creationDate>
+            <lastModificationDate>2022-03-14T16:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+
+    <name>Platform Test</name>
+    <shortName>P_Test</shortName>
+    <URL><gmd:URL>http://www.test.test</gmd:URL></URL>
+    <description>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </description>
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/platformType/GroundBasedStation"/><!-- Type is required -->
+
+    <childPlatform xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_AT138_Athens"/>
+    <!-- continue listing all ionosondes that are registered with PITHIA NRF as childPlatforms -->
+
+</Platform>

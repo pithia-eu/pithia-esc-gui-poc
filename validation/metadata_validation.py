@@ -32,6 +32,15 @@ def _create_validation_error_details_dict(err_type, err_message, extra_details):
         'extra_details': extra_details
     }
 
+def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
+    root = xml_file_parsed.getroot()
+    urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+    urls_with_xsi_ns = urls_with_xsi_ns[0].split()
+    schema_url = urls_with_xsi_ns[0]
+    if len(urls_with_xsi_ns) > 1:
+        schema_url = urls_with_xsi_ns[1]
+    return schema_url
+
 def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
 
@@ -58,12 +67,7 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             return validation_checklist
 
         # XSD Schema validation
-        root = xml_file_parsed.getroot()
-        urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
-        urls_with_xsi_ns = urls_with_xsi_ns[0].split()
-        schema_url = urls_with_xsi_ns[0]
-        if len(urls_with_xsi_ns) > 1:
-            schema_url = urls_with_xsi_ns[1]
+        schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
         validate_xml_against_schema_at_url(xml_file, schema_url)
         validation_checklist['is_valid_against_schema'] = True
 
@@ -128,6 +132,12 @@ def validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expecte
         'expected_root_element_name': f'{expected_root_localname}',
         'is_root_element_name_valid': root_localname == expected_root_localname
     }
+
+def is_xml_valid_against_schema_at_url(xml_file, schema_url):
+    xml_file.seek(0)
+    schema_response = get(schema_url)
+    xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
+    return xml_schema.is_valid(xml_file.read())
 
 def validate_xml_against_schema_at_url(xml_file, schema_url):
     xml_file.seek(0)
