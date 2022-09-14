@@ -15,7 +15,7 @@
             <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
-    <name>Organisation Test Invalid Syntax</name>
+    <name>Organisation Test</name>
     <contactInfo>
         <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
             <phone>
