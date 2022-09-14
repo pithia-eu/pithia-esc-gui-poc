@@ -8,6 +8,8 @@ from validation.exceptions import InvalidRootElementNameForMetadataFileException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
+from pathlib import Path
+
 ORGANISATION_XML_ROOT_TAG_NAME = 'Organisation'
 INDIVIDUAL_XML_ROOT_TAG_NAME = 'Individual'
 PROJECT_XML_ROOT_TAG_NAME = 'Project'
@@ -87,12 +89,13 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
 
         # Matching file name and localID tag text validation
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
-        xml_file_name_with_no_extension = re.sub('.xml$' , '', xml_file.name)
+        xml_file_name_with_no_extension = Path(xml_file.name).stem
         if localid_tag_text != xml_file_name_with_no_extension:
             validation_checklist['error'] = _create_validation_error_details_dict(MetadataFileNameAndLocalIDNotMatchingException, f"The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".", None)
             return validation_checklist
+        validation_checklist['is_file_name_matching_with_localid'] = True
 
-        # Relation validaiton (whether a resource the metadata file
+        # Relation validation (whether a resource the metadata file
         # is referencing exists in the database or not).
         unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
         unregistered_document_hrefs = unregistered_references['document_hrefs']
@@ -178,13 +181,11 @@ def get_mongodb_model_for_resource_type(resource_type):
         return CurrentDataCollection
     return 'unknown'
 
-def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
+def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace):
     find_dictionary = {
         'identifier.PITHIA_Identifier.localID': localID,
         'identifier.PITHIA_Identifier.namespace': namespace,
     }
-    if version:
-        find_dictionary['identifier.PITHIA_Identifier.version'] = version
     return resource_mongodb_model.find_one(find_dictionary)
 
 def split_xlink_href(href):
@@ -216,13 +217,11 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             resource_type = href_components[-3]
             namespace = href_components[-2]
             localID = href_components[-1]
-            version = None
-            if len(href_components) > 3:
-                version = href_components[3]
             resource_mongodb_model = get_mongodb_model_for_resource_type(resource_type)
             if resource_mongodb_model == 'unknown':
                 continue
-            referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version)
+            referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace)
+            
             if referenced_resource == None:
                 unregistered_references['document_hrefs'].add(href)
                 unregistered_references['document_types'].add(resource_type)
