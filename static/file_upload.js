@@ -151,7 +151,7 @@ function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
 }
 
 function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
-    const extraDetailsMessage = htmlToElement('<div class="mt-5">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
+    const extraDetailsMessage = htmlToElement('<div class="mt-2">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
     const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
     unregisteredReferencedResourceTypes.forEach(resourceType => {
         registrationLinksList.appendChild(htmlToElement(`
