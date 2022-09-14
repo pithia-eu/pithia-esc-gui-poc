@@ -7,28 +7,23 @@
 
     <identifier>
         <PITHIA_Identifier>
-            <localID>Platform_Ionosondes_GIRO</localID>
-            <namespace>pithia</namespace>
+            <localID>Platform_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-03-14T16:00:00Z</creationDate>
             <lastModificationDate>2022-03-14T16:00:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
 
-    <name>Global Ionosphere Radio Observatory</name>    
-    <shortName>GIRO</shortName>
-    <URL><gmd:URL>http://www.noa.gr</gmd:URL></URL>
+    <name>Platform Test</name>
+    <shortName>P_Test</shortName>
+    <URL><gmd:URL>http://www.test.test</gmd:URL></URL>
     <description>
-Global Ionosphere Radio Observatory (GIRO) is formed through data sharing agreements with 
-100+ ionosonde sites in 30+ countries. Ionosondes are high frequency sounding remote sensors 
-for accurate specification of the bottomside electron density in the Earth's ionosphere. 
-As of 2020, 61 GIRO locations provide near-real-time data to the Lowell GIRO Data Center (LGDC) 
-in Lowell, Massachusetts. Real-time and retrospective data from GIRO locations are ingested 
-in several LGDC databases, including Digital Ionogram DataBase (DIDBase), Ionospheric Plasma 
-Drift DataBase (DriftBase), Global Assimilative Model of Bottomside Ionosphere with Topside
-Extension (GAMBIT) database, and Traveling Ionospheric Disturbances DataBase (TIDBase)
-GIRO data are open for public access via GIRO Web Portal, and custom software tools 
-for ionosonde data analysis.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <type xlink:href="https://metadata.pithia.eu/ontology/2.2/platformType/GroundBasedStation"/><!-- Type is required -->
 

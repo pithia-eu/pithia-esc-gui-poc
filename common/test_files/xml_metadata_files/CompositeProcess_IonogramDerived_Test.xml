@@ -11,17 +11,20 @@ This is a composite process that includes all data acquisitions and data computa
     -->
     <identifier>
         <PITHIA_Identifier>
-            <localID>CompositeProcess_IonogramDerived_Basic</localID>
-            <namespace>pithia</namespace>
+            <localID>CompositeProcess_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-02-13T14:30:00Z</creationDate>
             <lastModificationDate>2022-03-13T14:30:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
-    <name>Basic process of acquiring and autoscaling ionograms</name>  
+    <name>Composite Process Test</name>  
     <description>
-This is generic process of obtaining standard URSI ionospheric characteristics and a profile of electron density
-from a generic vertical-insidence ionogram measurement.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
     <qualityAssessment>
@@ -32,4 +35,3 @@ from a generic vertical-insidence ionogram measurement.
     <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_IonogramScaling_StandardChars_Basic"/>
     <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_IonogramScaling_Profile_Basic"/>
 </CompositeProcess>
-

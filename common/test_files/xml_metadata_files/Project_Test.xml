@@ -7,44 +7,33 @@
     xmlns:gco="http://www.isotc211.org/2005/gco" >    
     <identifier>
         <PITHIA_Identifier>
-            <localID>Project_LGDC_RION</localID>
-            <namespace>pithia</namespace>
+            <localID>Project_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-08-23T08:27:00Z</creationDate>
             <lastModificationDate>2022-08-23T08:27:49Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
-    <name>Realistic Ionosphere</name>
-    <shortName>RION</shortName>
+    <name>Project Test</name>
+    <shortName>Pr_Test</shortName>
     <abstract>
-The Realistic Ionosphere (RION) is an Instrument Project of the United Nations (UN) International Space Weather
-Initiative (ISWI), a program of international cooperation to advance the space weather science. RION provides 
-accurate and prompt nowcast of the 3D global plasma density distribution in the subpeak ionosphere in its variety 
-of dynamic behavior. It includes several coordinated sensing, modeling, and computer science components: (1) 
-Global Ionosphere Radio Observatory (GIRO), https://giro.uml.edu, a network of ionosondes with the real-time
-data feeds to the data analysis center in Lowell, Massachusetts; (2) IRI-based Real-Time Assimilative Model (IRTAM)
-for 3D specification of subpeak ionospheric density, https://giro.uml.edu/IRTAM; (3) TID Explorer for nowcast 
-and forecast of traveling ionospheric disturbances (TIDs) based on the Doppler-Frequency-Angular Sounding (FAS) 
-sensing technique between two Digisonde DPS4D instruments, https://backends.giro.uml.edu/tidx/; (4) Skymapping 
-for Local Ionospheric Tilt Evaluateion (Sky-LITE), technology for the wide-angle sensing of the ionospheric 
-plasma structures to determine local tilts of isodensity surfaces in the ionosphere; (5) Ray-Tracing through 
-Realistic Ionosphere eXplorer (RayTRIX), an HF signal raytracing through the ionospheric channel specified by 
-IRTAM, Sky-LITE and TIDx subsystems of RION; and (6) Lowell GIRO Data Center (LGDC), a collection of computer 
-software, database engines, and computer infrastructure for computations associated with RION nowcast and 
-warning services, with open international data access for academia, students, radio enthusiasts, and space 
-weather applications. 
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </abstract>
     <description>
     </description>
-    <URL><gmd:URL>http://iswi-secretariat.org/</gmd:URL></URL>
+    <URL><gmd:URL>http://test.test/</gmd:URL></URL>
     <documentation>
         <Citation>
-            <gmd:title><gco:CharacterString>Realistic Ionosphere (RION)</gco:CharacterString></gmd:title>
+            <gmd:title><gco:CharacterString>Project Test (Pr_Test)</gco:CharacterString></gmd:title>
             <date xmlns="http://www.isotc211.org/2005/gmd">
                 <CI_Date>
                     <date><gco:Date>2018-02-09</gco:Date></date>
                     <dateType>
-                        <CI_DateTypeCode codeList="" codeListValue="">Publication Date</CI_DateTypeCode>                      
+                        <CI_DateTypeCode codeList="" codeListValue="">Publication Date</CI_DateTypeCode>
                     </dateType>
                 </CI_Date>
             </date>
@@ -53,14 +42,14 @@ weather applications.
             </identifier>
             <gmd:otherCitationDetails>
                <gco:CharacterString>
-Galkin, I. A., Reinisch, B. W., and Bilitza, D. (2018), Realistic Ionosphere: real-time ionosonde service for ISWI, 
-Sun and Geosphere, vol. 13, pp. 173-178. doi:10.31401/SunGeo.2018.02.09.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
                </gco:CharacterString>
             </gmd:otherCitationDetails>
             <onlineResource>
                <CI_OnlineResource xmlns="http://www.isotc211.org/2005/gmd">
                   <linkage>
-                     <URL>http://newserver.stil.bas.bg/SUNGEO/00SGArhiv/SG_v13_No2_2018-pp-173-178.pdf</URL>
+                     <URL>http://www.isotc211.org/2005/gmd</URL>
                   </linkage>
                </CI_OnlineResource>
             </onlineResource>
@@ -68,32 +57,32 @@ Sun and Geosphere, vol. 13, pp. 173-178. doi:10.31401/SunGeo.2018.02.09.
     </documentation>    
     <keywords>
         <MD_Keywords xmlns="http://www.isotc211.org/2005/gmd">
-            <keyword><gco:CharacterString>Ionosphere</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>Bottomside</gco:CharacterString></keyword>
-            <type><MD_KeywordTypeCode codeList="#pr1" codeListValue="Observed Region"/></type>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <type><MD_KeywordTypeCode codeList="#test1" codeListValue="Test"/></type>
         </MD_Keywords>
     </keywords>   
     <keywords>
         <MD_Keywords xmlns="http://www.isotc211.org/2005/gmd">
-            <keyword><gco:CharacterString>Digisonde</gco:CharacterString></keyword>
-            <type><MD_KeywordTypeCode codeList="#pr1" codeListValue="Instrument"/></type>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <type><MD_KeywordTypeCode codeList="#test1" codeListValue="Test"/></type>
         </MD_Keywords>
     </keywords>
     <keywords>
         <MD_Keywords xmlns="http://www.isotc211.org/2005/gmd">
-            <keyword><gco:CharacterString>Ionospheric Specification</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>Ionospheric observations</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>HF radio wave propagation</gco:CharacterString></keyword>       
-            <type><MD_KeywordTypeCode codeList="#pr1" codeListValue="Miscellaneous"/></type>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>       
+            <type><MD_KeywordTypeCode codeList="#test1" codeListValue="Test"/></type>
         </MD_Keywords>
     </keywords>    
     <keywords>
         <MD_Keywords xmlns="http://www.isotc211.org/2005/gmd">
-            <keyword><gco:CharacterString>Ionograms</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>Ionogram-derived data</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>Doppler skymaps</gco:CharacterString></keyword>
-            <keyword><gco:CharacterString>Bulk Plasma Velocities</gco:CharacterString></keyword>
-            <type><MD_KeywordTypeCode codeList="#pr1" codeListValue="Products"/></type>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <keyword><gco:CharacterString>Test</gco:CharacterString></keyword>
+            <type><MD_KeywordTypeCode codeList="#test1" codeListValue="Test"/></type>
         </MD_Keywords>
     </keywords>     
     <relatedParty>

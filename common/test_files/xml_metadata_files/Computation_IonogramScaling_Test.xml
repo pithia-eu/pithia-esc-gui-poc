@@ -11,18 +11,20 @@ The list of capabilities is all-inclusive, even though not every computation can
     -->
     <identifier>
         <PITHIA_Identifier>
-            <localID>Computation_IonogramScaling_Manual</localID>
-            <namespace>pithia</namespace>
+            <localID>Computation_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-08-16T07:55:00Z</creationDate>
             <lastModificationDate>2022-08-16T07:55:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
-    <name>Manual verification of Ionogram Autoscaling</name>  
+    <name>Computation Test</name>  
     <description>
-Given automatic HF sounding ionogram scaling results, verify that the data are free 
-from the autoscaling errors and fix the errors if any. Less common: ionogram scaler starts 
-with the raw ionogram to produce manually scaled data.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <!-- There are no new capabilities here to list, this is manual verification to produce L2V data -->
     <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V"/>

@@ -24,26 +24,20 @@
     -->
     <identifier>
         <PITHIA_Identifier>
-            <localID>DataCollection_DIDBase_EvaluatedAutoscaling</localID>
-            <namespace>pithia</namespace>
+            <localID>DataCollection_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-02-28T15:00:00Z</creationDate>
             <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>
-    <name>Digital Ionogram DataBase</name>
+    <name>DataCollection Test</name>
     <description>
-Digital Ionogram Database (DIDBase) collection contains vertical-incidence ionogram 
-measurements and ionogram-derived information acquired by Global Ionosphere Radio 
-Observatory (GIRO), https://giro.uml.edu, a network of ionosondes (high-frequency 
-remote sensing sounders). Ionosondes detect echoes of the probing signal of varying 
-frequency that correspond to reflections of the vertically transmitted signal from 
-various locations in the ionosphere illuminated by the signal. Resulting image of 
-the signal strength as function of the operating frequency and the time of flight
-is called ionogram. When viewed in the ionogram frame, signal echoes form traces 
-that correspond to different plasma layers in the ionosphere. Interpretation of the 
-ionograms allows derivation and computation of actionable numerical information for 
-subsequent use in a variety of applied and research cases. 
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
     <project xlink:href="https://metadata.pithia.eu/resources/2.2/pithia/project/Project_RION"/>
@@ -65,10 +59,11 @@ subsequent use in a variety of applied and research cases.
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
                 <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
-                <name>DIDBase Ionogram Image Portal</name>
+                <name>Online Resource 1</name>
                 <protocol>HTTPS</protocol>
                 <description>
-                      The DIDBase WebPortal is a landing page for browsing and display of ionogram images. 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
                 </description>
                 <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
             </OnlineResource>
@@ -78,11 +73,11 @@ subsequent use in a variety of applied and research cases.
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
                 <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
-                <name>SAO Explorer for DIDBase ionograms</name>
+                <name>Online Resource 2</name>
                 <protocol>HTTPS</protocol>
                 <description>
-                     The SAO Explorer installation and documentation page. SAO Explorer is the main visualization and editing tool for ionogram
-                     and ionogram-derived data in DIDBase
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                    laboris nisi ut aliquip ex ea commodo consequat.
                 </description>
                 <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
             </OnlineResource>
@@ -92,10 +87,12 @@ subsequent use in a variety of applied and research cases.
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
                 <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
-                <name>FastChar</name>
+                <name>Online Resource 3</name>
                 <protocol>HTTPS</protocol>
                 <description>
-                      FastChar is a landing page for the LGDC servlet to retrieve numerical ionogram-derived data in DIDBase, formatted as a plain-text tabulation
+                    Duis aute irure dolor in reprehenderit in
+                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 </description>
                 <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
             </OnlineResource>

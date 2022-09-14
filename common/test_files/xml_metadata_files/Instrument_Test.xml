@@ -6,53 +6,44 @@
     
     <identifier>
         <PITHIA_Identifier>
-            <localID>Instrument_Ionosonde</localID>
-            <namespace>pithia</namespace>
+            <localID>Instrument_Test</localID>
+            <namespace>test</namespace>
             <version>1</version>
             <creationDate>2013-04-25T14:00:00Z</creationDate>
             <lastModificationDate>2013-04-25T14:00:00Z</lastModificationDate>
         </PITHIA_Identifier>
     </identifier>   
-    <name>Ionosonde</name>
+    <name>Instrument Test</name>
     <description>
-A vertical-incidence ionospheric sounder (ionosonde) observes the overhead ionosphere properties by using 
-a high-frequency (HF) swept-frequency probing signal transmitted and received by the instrument.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <type xlink:href="http://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/> <!-- use the instrumentType ontology to describe the type of the instrument -->
     
-    <operationalMode><InstrumentOperationalMode>
-        <id>scanning</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
-        <name>Scanning Ionogram</name> <!-- it would be preferable the name of the mode not to include any space characters -->
-        <description>The system steps through frequencies according to
-            the selected program, transmitting and coherently integrating (a full
-            spectrum, i.e. FFT, Doppler integration) a stream of N pulses. Just prior
-            to transmission on each frequency four possible operating frequencies are
-            monitored for interference/occupancy and the quietest is selected for the
-            measurement. Then a few trial pulses are transmitted to allow automatic
-            adjustment of receiver gain. As each coherent integration of pulse streams
-            in completed, the raw output (i.e. 128 color coded amplitudes representing
-            echoes at 128 heights) is added to the display of the developing ionogram.
-            After all frequency steps have been completed the raw ionogram (16 complex
-            Doppler lines at 256 heights and M frequency steps) is written out to a
-            disk file and the automatic scaling program ARTIST (Automatic Real-Time
-            Ionogram Scaler with True height analysis), is invoked and a file of
-            automatically scaled parameters is created and displayed.</description>
-    </InstrumentOperationalMode> 
+    <operationalMode>
+        <InstrumentOperationalMode>
+            <id>instrumentoperationalmode1</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+            <name>Instrument Operational Mode 1</name> <!-- it would be preferable the name of the mode not to include any space characters -->
+            <description>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat.
+            </description>
+        </InstrumentOperationalMode> 
     </operationalMode>
     <operationalMode>
         <InstrumentOperationalMode>
-            <id>drift</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
-            <name>Drift Ionogram</name>
-            <description>This is similar to the Doppler Ionogram in that
-                higher Doppler resolution is achieved by extending the integration period.
-                In addition to multiplexing frequencies the receive antennas are also
-                multiplexed. This provides a raw data file which records the relative
-                phase of all Doppler lines of all echoes on the four antennas in the
-                receiver array, giving the angle of arrival of the individual echoes.</description>
+            <id>instrumentoperationalmode2</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+            <name>Instrument Operational Mode 2</name>
+            <description>
+                Duis aute irure dolor in reprehenderit in
+                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </description>
         </InstrumentOperationalMode>
     </operationalMode>
 </Instrument>
     
-
-
-
