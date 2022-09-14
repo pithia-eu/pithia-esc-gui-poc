@@ -4,39 +4,20 @@ import xmlschema
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
-from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from validation.exceptions import InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
-
-def validate_organisation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Organisation')
-
-def validate_individual_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Individual')
-
-def validate_project_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Project')
-
-def validate_platform_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Platform')
-
-def validate_instrument_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Instrument')
-
-def validate_operation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Operation')
-
-def validate_acquisition_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Acquisition')
-
-def validate_computation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Computation')
-
-def validate_process_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'CompositeProcess')
-
-def validate_data_collection_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'DataCollection')
+from validation.registration_validation import validate_xml_file_is_unique
+from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
+ORGANISATION_XML_ROOT_TAG_NAME = 'Organisation'
+INDIVIDUAL_XML_ROOT_TAG_NAME = 'Individual'
+PROJECT_XML_ROOT_TAG_NAME = 'Project'
+PLATFORM_XML_ROOT_TAG_NAME = 'Platform'
+INSTRUMENT_XML_ROOT_TAG_NAME = 'Instrument'
+OPERATION_XML_ROOT_TAG_NAME = 'Operation'
+ACQUISITION_XML_ROOT_TAG_NAME = 'Acquisition'
+COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
+PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
+DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
 
 def parse_xml_file(xml_file):
     # Returns an ElementTree
@@ -52,7 +33,7 @@ def _create_validation_error_details_dict(err_type, err_message, extra_details):
 def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
 
-def _validate_metadata_xml_file(xml_file, expected_root_localname):
+def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
     validation_checklist = {
         'is_root_element_name_valid': False,
         'is_syntax_valid': False,
@@ -83,6 +64,22 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
             schema_url = urls_with_xsi_ns[1]
         validate_xml_against_schema_at_url(xml_file, schema_url)
         validation_checklist['is_valid_against_schema'] = True
+
+        # New registration validation
+        if check_file_is_unregistered is True and mongodb_model is not None:
+            validation_checklist['is_new_registration'] = False
+            if not validate_xml_file_is_unique(mongodb_model, xml_file=xml_file):
+                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'This XML metadata file has been registered before.', None)
+                return validation_checklist
+            validation_checklist['is_new_registration'] = True
+
+        # localID and namespace of file is the same as the resource to update's validation
+        if check_xml_file_localid_matches_existing_resource_localid == True and mongodb_model is not None and existing_resource_id != '':
+            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = False
+            if validate_xml_file_localid_matches_existing_resource_localid(mongodb_model, existing_resource_id, xml_file=xml_file) == False:
+                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'The localID and namespace must be matching with the resource being updated.', None)
+                return validation_checklist
+            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = True
 
         # Matching file name and localID tag text validation
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
