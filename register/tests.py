@@ -22,6 +22,6 @@ class RegisterMetadataTestCase(SimpleTestCase):
         """
         client = mongomock.MongoClient()
         db = client[env('DB_NAME')]['current-organisations']
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_LGDC.xml')) as xml_file:
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             registration_results = register_metadata_xml_file(xml_file, db, None)
             self.assertIs(ObjectId.is_valid(registration_results.inserted_id), True)
