@@ -145,7 +145,7 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
 function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
     return errorMsgElem.innerHTML = `
         <div class="alert alert-danger mb-0" role="alert">
-            Error: ${errorMsg}
+            ${errorMsg}
         </div>
     `;
 }

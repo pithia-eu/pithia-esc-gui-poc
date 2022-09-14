@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acquisition 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" >
+
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Acquisition_Test</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2022-02-28T10:00:00Z</creationDate>
+            <lastModificationDate>2022-02-28T10:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>Acquisition Test</name>
+    <description>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </description>
+    <capability>
+        <processCapability>
+            <name>Process Capability 1</name>
+            <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength"/>
+            <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+            <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            <units xlink:href="https://metadata.pithia.eu/ontology/2.2/unit/dB"/> 
+        </processCapability>
+    </capability>   
+    <capability>
+        <processCapability>
+            <name>Process Capability 2</name>
+            <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Polarization"/>
+            <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+            <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+        </processCapability>
+    </capability>   
+    <capability>
+        <processCapability>
+            <name>Process Capability 3</name>
+            <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_DopplerFrequencyShift"/>
+            <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+            <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+        </processCapability>
+    </capability>   
+    <capability>
+        <processCapability>
+            <name>Process Capability 4</name>
+            <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_AngleOfArrival"/> 
+            <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+            <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+        </processCapability>
+    </capability>   
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+    <qualityAssessment>
+       <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0"/>
+    </qualityAssessment>
+    <instrument xlink:href="https://metadata.pithia.eu/ontology/2.2/instrument/pithia/Instrument_Ionosonde"/> <!-- link to the instrument that was used in this acquisition -->
+    <!-- no link to the actual platform that was used in this acquisition... -->
+    <platform/> 
+</Acquisition>
+    

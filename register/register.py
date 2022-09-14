@@ -37,3 +37,4 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
         'value': xml_file_string
     }
     OriginalMetadataXml.insert_one(original_metadata_xml)
+    return metadata_registration_result

@@ -79,7 +79,9 @@ h1 {
 }
 
 .card-menu .card:hover a,
-.card-menu .card:focus a {
+.card-menu .card:focus a,
+.card-menu .card:hover .text-muted,
+.card-menu .card:focus .text-muted {
     color: white !important;
 }
 

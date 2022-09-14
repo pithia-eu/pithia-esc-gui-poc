@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Instrument 
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" >
+    
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Instrument_Test</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2013-04-25T14:00:00Z</creationDate>
+            <lastModificationDate>2013-04-25T14:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>   
+    <name>Instrument Test</name>
+    <description>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </description>
+    <type xlink:href="http://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/> <!-- use the instrumentType ontology to describe the type of the instrument -->
+    
+    <operationalMode>
+        <InstrumentOperationalMode>
+            <id>instrumentoperationalmode1</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+            <name>Instrument Operational Mode 1</name> <!-- it would be preferable the name of the mode not to include any space characters -->
+            <description>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat.
+            </description>
+        </InstrumentOperationalMode> 
+    </operationalMode>
+    <operationalMode>
+        <InstrumentOperationalMode>
+            <id>instrumentoperationalmode2</id> <!-- the id should not  include any space characters. It is used to be referenced by Acquisition -->
+            <name>Instrument Operational Mode 2</name>
+            <description>
+                Duis aute irure dolor in reprehenderit in
+                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </description>
+        </InstrumentOperationalMode>
+    </operationalMode>
+</Instrument>
+    
