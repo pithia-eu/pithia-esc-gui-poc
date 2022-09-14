@@ -101,7 +101,7 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><b>Note:</b> Please ensure all URLs work before uploading and start with "<i>https://</i>" instead of "<i>http://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
     except etree.XMLSyntaxError as err:
@@ -202,6 +202,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
+            href_components  = split_xlink_href(href)
             resource_type = href_components[-3]
             namespace = href_components[-2]
             localID = href_components[-1]
