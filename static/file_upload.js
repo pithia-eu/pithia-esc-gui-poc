@@ -32,10 +32,10 @@ function loadFileValidationElemsForFile(file, listElem, index) {
             <div class="row g-2">
                 <div class="col-lg-10">
                     <div class="row g-2">
-                        <div class="col-lg-12">${file.name}</div>
-                        <div class="col-lg-12 file-validation-status file-validation-status-${index}">
+                        <div class="col-lg-12 text-truncate">${file.name}</div>
+                        <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
-                        <div class="col-lg-12 file-validation-error file-validation-error-${index}">
+                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break">
                         </div>
                     </div>
                 </div>
