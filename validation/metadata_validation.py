@@ -1,6 +1,6 @@
-import re
 import traceback
 import xmlschema
+from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
@@ -43,6 +43,10 @@ def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
 
 def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
+
+def _map_string_to_li_element_with_register_link(string):
+    print(string)
+    return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
     validation_checklist = {
@@ -99,12 +103,13 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
         # is referencing exists in the database or not).
         unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
         unregistered_document_hrefs = unregistered_references['document_hrefs']
-        unregistered_document_types = unregistered_references['document_types']
+        unregistered_document_types = list(set(unregistered_references['document_types']))
         unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
         if len(unregistered_document_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Invalid document URLs: %s.' % ', '.join(unregistered_document_hrefs), {
-                'unregistered_document_types': unregistered_document_types
-            })
+            error_msg = 'Invalid document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
+            error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, unregistered_document_types)))
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
