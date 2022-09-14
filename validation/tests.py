@@ -49,5 +49,7 @@ class XsdValidationTestCase(SimpleTestCase):
     def test_xml_metadata_files_validate_against_schemas(self):
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
         for fname in xml_file_names:
+            if fname == 'Organisation_Test_InvalidSyntax.xml':
+                continue
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
                 self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
