@@ -1,18 +1,24 @@
 import json
 from django.http import HttpResponse, HttpResponseServerError
-from django.views.decorators.http import require_POST
 from django.views.generic import View
 from lxml import etree
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
-from validation.metadata_validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
+from validation.metadata_validation import ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
 
 # Create your views here.
 class ValidateXmlMetadataFileFormView(View):
-    validate_xml_metadata_file = None
+    mongodb_model = None
+    expected_root_tag_name = ''
 
     def post(self, request, *args, **kwargs):
         xml_file = request.FILES['file']
-        validation_results = self.validate_xml_metadata_file(xml_file)
+        check_file_is_unregistered = 'validate_is_not_registered' in request.POST
+        check_xml_file_localid_matches_existing_resource_localid = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
+        existing_resource_id = ''
+        if 'resource_id' in request.POST:
+            existing_resource_id = request.POST['resource_id']
+        validation_results = validate_xml_metadata_file(xml_file, self.expected_root_tag_name, mongodb_model=self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
         if 'error' not in validation_results:
             return HttpResponse(json.dumps({
                 'result': 'valid'
@@ -22,31 +28,41 @@ class ValidateXmlMetadataFileFormView(View):
         return HttpResponseServerError(json.dumps({ 'error': validation_results['error'] }), content_type='application/json')
 
 class organisation(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_organisation_metadata_xml_file
+    mongodb_model = CurrentOrganisation
+    expected_root_tag_name = ORGANISATION_XML_ROOT_TAG_NAME
     
 class individual(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_individual_metadata_xml_file
+    mongodb_model = CurrentIndividual
+    expected_root_tag_name = INDIVIDUAL_XML_ROOT_TAG_NAME
 
 class project(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_project_metadata_xml_file
+    mongodb_model = CurrentProject
+    expected_root_tag_name = PROJECT_XML_ROOT_TAG_NAME
 
 class platform(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_platform_metadata_xml_file
+    mongodb_model = CurrentPlatform
+    expected_root_tag_name = PLATFORM_XML_ROOT_TAG_NAME
 
 class instrument(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_instrument_metadata_xml_file
+    mongodb_model = CurrentInstrument
+    expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
 
 class operation(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_operation_metadata_xml_file
+    mongodb_model = CurrentOperation
+    expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
 
 class acquisition(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_acquisition_metadata_xml_file
+    mongodb_model = CurrentAcquisition
+    expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
 
 class computation(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_computation_metadata_xml_file
+    mongodb_model = CurrentComputation
+    expected_root_tag_name = COMPUTATION_XML_ROOT_TAG_NAME
 
 class process(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_process_metadata_xml_file
+    mongodb_model = CurrentProcess
+    expected_root_tag_name = PROCESS_XML_ROOT_TAG_NAME
 
 class data_collection(ValidateXmlMetadataFileFormView):
-    validate_xml_metadata_file = validate_data_collection_metadata_xml_file
+    mongodb_model = CurrentDataCollection
+    expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME

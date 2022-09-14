@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.views.generic import FormView
 from register.register import register_metadata_xml_file
 
-from validation.metadata_validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 from .forms import UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
@@ -20,7 +19,6 @@ def index(request):
 
 class RegisterResourceFormView(FormView):
     resource_mongodb_model = None
-    validate_resource = None
     resource_conversion_validate_and_correct_function = None
     success_url = ''
     form_class = UploadFileForm
@@ -66,17 +64,12 @@ class RegisterResourceFormView(FormView):
                 print(err)
                 print(traceback.format_exc())
                 messages.error(request, 'An unexpected error occurred.')
-            # validation_results = self.validate_resource(xml_file)
-            # if 'error' not in validation_results:
-            # else:
-            #     messages.error(request, 'The file submitted was not valid.')
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
 
 class organisation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
-    validate_resource = validate_organisation_metadata_xml_file
     success_url = reverse_lazy('register:organisation')
 
     a_or_an = 'an'
@@ -86,7 +79,6 @@ class organisation(RegisterResourceFormView):
 
 class individual(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
-    validate_resource = validate_individual_metadata_xml_file
     success_url = reverse_lazy('register:individual')
 
     a_or_an = 'an'
@@ -96,7 +88,6 @@ class individual(RegisterResourceFormView):
 
 class project(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentProject
-    validate_resource = validate_project_metadata_xml_file
     success_url = reverse_lazy('register:project')
 
     a_or_an = 'a'
@@ -106,7 +97,6 @@ class project(RegisterResourceFormView):
 
 class platform(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
-    validate_resource = validate_platform_metadata_xml_file
     success_url = reverse_lazy('register:platform')
 
     a_or_an = 'a'
@@ -116,7 +106,6 @@ class platform(RegisterResourceFormView):
 
 class instrument(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
-    validate_resource = validate_instrument_metadata_xml_file
     success_url = reverse_lazy('register:instrument')
 
     a_or_an = 'an'
@@ -126,7 +115,6 @@ class instrument(RegisterResourceFormView):
 
 class operation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
-    validate_resource = validate_operation_metadata_xml_file
     success_url = reverse_lazy('register:operation')
 
     a_or_an = 'an'
@@ -136,7 +124,6 @@ class operation(RegisterResourceFormView):
 
 class acquisition(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
-    validate_resource = validate_acquisition_metadata_xml_file
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
     success_url = reverse_lazy('register:acquisition')
 
@@ -147,7 +134,6 @@ class acquisition(RegisterResourceFormView):
 
 class computation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
-    validate_resource = validate_computation_metadata_xml_file
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
     success_url = reverse_lazy('register:computation')
 
@@ -158,7 +144,6 @@ class computation(RegisterResourceFormView):
 
 class process(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
-    validate_resource = validate_process_metadata_xml_file
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
     success_url = reverse_lazy('register:process')
 
@@ -169,7 +154,6 @@ class process(RegisterResourceFormView):
 
 class data_collection(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
-    validate_resource = validate_data_collection_metadata_xml_file
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')
 

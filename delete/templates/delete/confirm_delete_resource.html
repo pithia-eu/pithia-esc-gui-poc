@@ -14,7 +14,7 @@
         </h1>
         <small class="text-muted">
             {% with pithia_identifier=resource_to_delete.identifier.PITHIA_Identifier %}
-            Deleting resource: {{ resource_to_delete.name|default:pithia_identifier.localID }}
+            Deleting: {{ resource_to_delete.name|default:pithia_identifier.localID }}
             {% endwith %}
         </small>
     </div>
@@ -36,7 +36,7 @@
         </div>
         {% if other_resources_to_delete|length > 0 %}
         <section>
-            <h2 class="fs-5 mb-3">There are resources referencing this {{ resource_type }} will also be deleted. Please review these in the list below.</h2>
+            <h2 class="fs-5 mb-3">There are resources referencing this {{ resource_type }} that will also be deleted. Please review these in the list below.</h2>
             <ul class="list-group">
                 {% for r in other_resources_to_delete %}
                 {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}

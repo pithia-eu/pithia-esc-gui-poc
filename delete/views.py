@@ -201,7 +201,7 @@ class DeleteResourceView(TemplateView):
         context['resource_type'] = self.resource_type
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
-        context['title'] = f'Deletion Confirmation'
+        context['title'] = f'Confirm Resource Deletion'
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         context['delete_resource_type_view_name'] = self.delete_resource_type_view_name

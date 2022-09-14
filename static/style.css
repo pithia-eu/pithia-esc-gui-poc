@@ -79,7 +79,9 @@ h1 {
 }
 
 .card-menu .card:hover a,
-.card-menu .card:focus a {
+.card-menu .card:focus a,
+.card-menu .card:hover .text-muted,
+.card-menu .card:focus .text-muted {
     color: white !important;
 }
 
@@ -154,10 +156,6 @@ h1 {
     transition: opacity .3s ease-in-out;
 }
 
-.tree-search-box {
-    margin-bottom: 1rem;
-}
-
 .tree-search-terms .spinner-grow-container {
     width: 100%;
     padding: auto;
@@ -168,11 +166,15 @@ h1 {
     height: var(--tree-search-loading-spinner-height);
 }
 
-#observed-properties-tree-search-terms li.filter-no-match {
+.tree-search-terms li.search-no-match {
     display: none;
 }
 
-.tree-search-terms li.search-no-match {
+.tree-search-box {
+    margin-bottom: 1rem;
+}
+
+#observed-properties-tree-search-terms li.filter-no-match {
     display: none;
 }
 

@@ -1,43 +1,23 @@
-import os
 import re
 import traceback
 import xmlschema
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
-from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from validation.exceptions import InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
-
-def validate_organisation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Organisation')
-
-def validate_individual_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Individual')
-
-def validate_project_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Project')
-
-def validate_platform_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Platform')
-
-def validate_instrument_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Instrument')
-
-def validate_operation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Operation')
-
-def validate_acquisition_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Acquisition')
-
-def validate_computation_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'Computation')
-
-def validate_process_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'CompositeProcess')
-
-def validate_data_collection_metadata_xml_file(self, xml_file):
-    return _validate_metadata_xml_file(xml_file, 'DataCollection')
+from validation.registration_validation import validate_xml_file_is_unique
+from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
+ORGANISATION_XML_ROOT_TAG_NAME = 'Organisation'
+INDIVIDUAL_XML_ROOT_TAG_NAME = 'Individual'
+PROJECT_XML_ROOT_TAG_NAME = 'Project'
+PLATFORM_XML_ROOT_TAG_NAME = 'Platform'
+INSTRUMENT_XML_ROOT_TAG_NAME = 'Instrument'
+OPERATION_XML_ROOT_TAG_NAME = 'Operation'
+ACQUISITION_XML_ROOT_TAG_NAME = 'Acquisition'
+COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
+PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
+DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
 
 def parse_xml_file(xml_file):
     # Returns an ElementTree
@@ -59,7 +39,10 @@ def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
         schema_url = urls_with_xsi_ns[1]
     return schema_url
 
-def _validate_metadata_xml_file(xml_file, expected_root_localname):
+def _map_string_to_li_element(string):
+    return f'<li>{string}</li>'
+
+def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
     validation_checklist = {
         'is_root_element_name_valid': False,
         'is_syntax_valid': False,
@@ -86,6 +69,22 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
         validate_xml_against_schema_at_url(xml_file, schema_url)
         validation_checklist['is_valid_against_schema'] = True
 
+        # New registration validation
+        if check_file_is_unregistered is True and mongodb_model is not None:
+            validation_checklist['is_new_registration'] = False
+            if not validate_xml_file_is_unique(mongodb_model, xml_file=xml_file):
+                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'This XML metadata file has been registered before.', None)
+                return validation_checklist
+            validation_checklist['is_new_registration'] = True
+
+        # localID and namespace of file is the same as the resource to update's validation
+        if check_xml_file_localid_matches_existing_resource_localid == True and mongodb_model is not None and existing_resource_id != '':
+            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = False
+            if validate_xml_file_localid_matches_existing_resource_localid(mongodb_model, existing_resource_id, xml_file=xml_file) == False:
+                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'The localID and namespace must be matching with the resource being updated.', None)
+                return validation_checklist
+            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = True
+
         # Matching file name and localID tag text validation
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
         xml_file_name_with_no_extension = re.sub('.xml$' , '', xml_file.name)
@@ -100,13 +99,13 @@ def _validate_metadata_xml_file(xml_file, expected_root_localname):
         unregistered_document_types = unregistered_references['document_types']
         unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
         if len(unregistered_document_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Unregistered document IRIs: %s.' % ', '.join(unregistered_document_hrefs), {
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), 'Invalid document URLs: %s.' % ', '.join(unregistered_document_hrefs), {
                 'unregistered_document_types': unregistered_document_types
             })
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Unregistered ontology term IRIs: %s.' % ', '.join(unregistered_ontology_term_hrefs), None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
     except etree.XMLSyntaxError as err:
@@ -143,16 +142,15 @@ def validate_xml_against_schema_at_url(xml_file, schema_url):
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_schema.validate(xml_file.read())
 
-def validate_ontology_component_with_term(component, term_id):
-    ontology_term_server_url = f'{ONTOLOGY_SERVER_BASE_URL}{component}/{term_id}'
-    response = get(ontology_term_server_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
+def validate_ontology_term_url(ontology_term_url):
+    response = get(ontology_term_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
     if response.status_code == 404:
         return False
     if response.ok:
         response_text = response.text
         g = Graph()
         g.parse(data=response_text, format='application/rdf+xml')
-        ontology_term = URIRef(ontology_term_server_url)
+        ontology_term = URIRef(ontology_term_url)
         return (ontology_term, RDF['type'], SKOS['Concept']) in g
     response.raise_for_status()
     return False
@@ -181,8 +179,6 @@ def get_mongodb_model_for_resource_type(resource_type):
     return 'unknown'
 
 def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace, version):
-    print('localID', localID)
-    print('namespace', namespace)
     find_dictionary = {
         'identifier.PITHIA_Identifier.localID': localID,
         'identifier.PITHIA_Identifier.namespace': namespace,
@@ -191,8 +187,7 @@ def get_resource_from_xlink_href_components(resource_mongodb_model, localID, nam
         find_dictionary['identifier.PITHIA_Identifier.version'] = version
     return resource_mongodb_model.find_one(find_dictionary)
 
-def get_components_from_xlink_href(href, href_section_to_remove):
-    href = href.replace(href_section_to_remove, '')
+def split_xlink_href(href):
     return href.split('/')
 
 def get_unregistered_references_from_xml(xml_file_parsed):
@@ -209,18 +204,18 @@ def get_unregistered_references_from_xml(xml_file_parsed):
         return unregistered_references
     for href in hrefs:
         if 'ontology' in href:
-            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/ontology/2.2/')
-            ontology_component = href_components[0]
-            ontology_term_id = href_components[1]
-            is_valid_ontology_term = validate_ontology_component_with_term(ontology_component, ontology_term_id)
-            if is_valid_ontology_term == None:
+            href_components  = split_xlink_href(href)
+            ontology_component = href_components[-2]
+            ontology_term_id = href_components[-1]
+            is_valid_ontology_term = validate_ontology_term_url(href)
+            if is_valid_ontology_term == False:
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
-            href_components  = get_components_from_xlink_href(href, 'https://metadata.pithia.eu/resources/2.2/')
-            resource_type = href_components[0]
-            namespace = href_components[1]
-            localID = href_components[2]
+            href_components  = split_xlink_href(href)
+            resource_type = href_components[-3]
+            namespace = href_components[-2]
+            localID = href_components[-1]
             version = None
             if len(href_components) > 3:
                 version = href_components[3]

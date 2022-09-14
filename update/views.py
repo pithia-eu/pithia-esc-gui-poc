@@ -9,7 +9,6 @@ from register.xml_conversion_checks_and_fixes import format_acquisition_dictiona
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedFileForm
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
-from validation.metadata_validation import validate_acquisition_metadata_xml_file, validate_computation_metadata_xml_file, validate_data_collection_metadata_xml_file, validate_individual_metadata_xml_file, validate_instrument_metadata_xml_file, validate_operation_metadata_xml_file, validate_organisation_metadata_xml_file, validate_platform_metadata_xml_file, validate_process_metadata_xml_file, validate_project_metadata_xml_file
 
 # Create your views here.
 class UpdateResourceView(FormView):
@@ -18,7 +17,6 @@ class UpdateResourceView(FormView):
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
     resource_conversion_validate_and_correct_function = None
-    validate_resource = None
 
     # Template variables
     a_or_an = 'a'
@@ -81,7 +79,6 @@ class UpdateResourceView(FormView):
 class organisation(UpdateResourceView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
-    validate_resource = validate_organisation_metadata_xml_file
 
     a_or_an = 'an'
     resource_type = 'Organisation'
@@ -99,7 +96,6 @@ class organisation(UpdateResourceView):
 class individual(UpdateResourceView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
-    validate_resource = validate_individual_metadata_xml_file
 
     a_or_an = 'an'
     resource_type = 'Individual'
@@ -116,7 +112,6 @@ class individual(UpdateResourceView):
 class project(UpdateResourceView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
-    validate_resource = validate_project_metadata_xml_file
 
     a_or_an = 'a'
     resource_type = 'Project'
@@ -133,7 +128,6 @@ class project(UpdateResourceView):
 class platform(UpdateResourceView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
-    validate_resource = validate_platform_metadata_xml_file
 
     a_or_an = 'a'
     resource_type = 'Platform'
@@ -150,7 +144,6 @@ class platform(UpdateResourceView):
 class instrument(UpdateResourceView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
-    validate_resource = validate_instrument_metadata_xml_file
 
     a_or_an = 'an'
     resource_type = 'Instrument'
@@ -167,7 +160,6 @@ class instrument(UpdateResourceView):
 class operation(UpdateResourceView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
-    validate_resource = validate_operation_metadata_xml_file
 
     a_or_an = 'an'
     resource_type = 'Operation'
@@ -184,7 +176,6 @@ class operation(UpdateResourceView):
 class acquisition(UpdateResourceView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
-    validate_resource = validate_acquisition_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_acquisition_dictionary
 
     a_or_an = 'an'
@@ -202,7 +193,6 @@ class acquisition(UpdateResourceView):
 class computation(UpdateResourceView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
-    validate_resource = validate_computation_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_computation_dictionary
 
     a_or_an = 'a'
@@ -220,7 +210,6 @@ class computation(UpdateResourceView):
 class process(UpdateResourceView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
-    validate_resource = validate_process_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_process_dictionary
 
     a_or_an = 'a'
@@ -238,7 +227,6 @@ class process(UpdateResourceView):
 class data_collection(UpdateResourceView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
-    validate_resource = validate_data_collection_metadata_xml_file
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
 
     a_or_an = 'a'

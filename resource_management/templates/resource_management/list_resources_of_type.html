@@ -21,20 +21,23 @@
 <h1 class="pb-3">{{ title }}</h1>
 {% if resources_list|length > 0 %}
 <ul class="list-group">
-    {% for resource in resources_list %}
+    {% for resource in resources_list|dictsort:'name' %}
     {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
     <li class="list-group-item">
         <div class="row">
             <div class="col-lg-8">
-                <a href="{% url update_resource_view_name resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a>
+                <div class="d-flex flex-column">
+                    <p>
+                        {{ resource.name|default:pithia_identifier.localID }}
+                    </p>
+                    <small class="text-muted">{{ pithia_identifier.namespace }}, {{ pithia_identifier.localID }}</small>
+                </div>
             </div>
             <div class="col-lg-4">
-                <div class="d-flex">
+                <div class="d-flex justify-content-end align-items-start">
                     <a href="{% url update_resource_view_name resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
                     <a href="{% url delete_resource_view_name resource.id %}" role="button" class="btn btn-danger btn-delete">Delete...</a>
                 </div>
-            </div>
-            <div class="col-lg-2">
             </div>
         </div>
     </li>

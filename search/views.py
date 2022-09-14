@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .helpers import ONTOLOGY_COMPONENT_ENUMS, remove_underscore_from_id_attribute
+from .helpers import remove_underscore_from_id_attribute
 from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
 from .search_helpers import find_matching_data_collections
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
@@ -33,20 +33,20 @@ def get_tree_form_for_ontology_component(request, ontology_component):
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
-        'ontology_component_name': ONTOLOGY_COMPONENT_ENUMS[ontology_component],
+        'ontology_component_name': ontology_component,
         'registered_ontology_terms': registered_ontology_terms,
         'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
     })
 
 def index(request):
     if request.method == 'POST':
-        features_of_interests = request.POST.getlist('featuresOfInterest')
+        features_of_interests = request.POST.getlist('featureOfInterest')
         request.session['features_of_interest'] = features_of_interests
-        computation_types = request.POST.getlist('computationTypes')
+        computation_types = request.POST.getlist('computationType')
         request.session['computation_types'] = computation_types
-        instrument_types = request.POST.getlist('instrumentTypes')
+        instrument_types = request.POST.getlist('instrumentType')
         request.session['instrument_types'] = instrument_types
-        observed_properties = request.POST.getlist('observedProperties')
+        observed_properties = request.POST.getlist('observedProperty')
         request.session['observed_properties'] = observed_properties
         return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/index.html', {
