@@ -41,6 +41,22 @@ class RegistrationValidationTestCase(SimpleTestCase):
                 print('error', validation_results['error'])
             self.assertIn('error', validation_results)
 
+    def test_multiple_file_validation(self):
+        xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
+        for fname in xml_file_names:
+            with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
+                client = mongomock.MongoClient()
+                db = client[env('DB_NAME')]['current-organisations']
+                validation_results = validate_xml_metadata_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
+                if fname == 'Organisation_Test.xml':
+                    if 'error' in validation_results:
+                        print('error', validation_results['error'])
+                    self.assertNotIn('error', validation_results)
+                else:
+                    if 'error' in validation_results:
+                        print('error', validation_results['error'])
+                    self.assertIn('error', validation_results)
+
 
 class XsdValidationTestCase(SimpleTestCase):
     """

@@ -26,12 +26,13 @@ class RegisterResourceFormView(FormView):
 
     a_or_an = ''
     resource_type = ''
+    resource_type_plural = ''
     validation_url = ''
     post_url = ''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register {self.a_or_an} {self.resource_type.title()}'
+        context['title'] = f'Register {self.resource_type_plural.title()}'
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
@@ -43,27 +44,32 @@ class RegisterResourceFormView(FormView):
     def post(self, request, *args, **kwargs):
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
-        xml_file = request.FILES['file']
+        xml_files = request.FILES.getlist('files')
         if form.is_valid():
-            # XML should have already been validated at
-            # the template, and validation could take
-            # place again, but takes a long time. Another
-            # method which verifies validation took place
-            # should be implemented.
-            try:
-                registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                if registration_results == 'This XML metadata file has been registered before.':
-                    messages.error(request, registration_results)
-                else:
-                    messages.success(request, f'Successfully registered {xml_file.name}.')
-            except ExpatError as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An error occurred whilst parsing the XML.')
-            except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An unexpected error occurred.')
+            for xml_file in xml_files:
+                # XML should have already been validated at
+                # the template, and validation could take
+                # place again, but takes a long time. Another
+                # method which verifies validation took place
+                # should be implemented.
+                try:
+                    registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                    if registration_results == 'This XML metadata file has been registered before.':
+                        messages.error(request, f'{xml_file.name} has been registered before.')
+                    else:
+                        messages.success(request, f'Successfully registered {xml_file.name}.')
+                except ExpatError as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
+                except BaseException as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, 'An unexpected error occurred.')
+                # validation_results = self.validate_resource(xml_file)
+                # if 'error' not in validation_results:
+                # else:
+                #     messages.error(request, 'The file submitted was not valid.')
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
@@ -74,6 +80,7 @@ class organisation(RegisterResourceFormView):
 
     a_or_an = 'an'
     resource_type = 'organisation'
+    resource_type_plural = 'organisations'
     validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
 
@@ -83,6 +90,7 @@ class individual(RegisterResourceFormView):
 
     a_or_an = 'an'
     resource_type = 'individual'
+    resource_type_plural = 'individuals'
     validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
 
@@ -92,6 +100,7 @@ class project(RegisterResourceFormView):
 
     a_or_an = 'a'
     resource_type = 'project'
+    resource_type_plural = 'projects'
     validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
 
@@ -101,6 +110,7 @@ class platform(RegisterResourceFormView):
 
     a_or_an = 'a'
     resource_type = 'platform'
+    resource_type_plural = 'platforms'
     validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
 
@@ -110,6 +120,7 @@ class instrument(RegisterResourceFormView):
 
     a_or_an = 'an'
     resource_type = 'instrument'
+    resource_type_plural = 'instruments'
     validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
 
@@ -119,6 +130,7 @@ class operation(RegisterResourceFormView):
 
     a_or_an = 'an'
     resource_type = 'operation'
+    resource_type_plural = 'operations'
     validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
 
@@ -129,6 +141,7 @@ class acquisition(RegisterResourceFormView):
 
     a_or_an = 'an'
     resource_type = 'acquisition'
+    resource_type_plural = 'acquisitions'
     validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
 
@@ -139,6 +152,7 @@ class computation(RegisterResourceFormView):
 
     a_or_an = 'a'
     resource_type = 'computation'
+    resource_type_plural = 'computations'
     validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
 
@@ -149,6 +163,7 @@ class process(RegisterResourceFormView):
 
     a_or_an = 'a'
     resource_type = 'process'
+    resource_type_plural = 'processes'
     validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
 
@@ -159,5 +174,6 @@ class data_collection(RegisterResourceFormView):
 
     a_or_an = 'a'
     resource_type = 'data collection'
+    resource_type_plural = 'data collections'
     validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
