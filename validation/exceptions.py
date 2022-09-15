@@ -1,3 +1,6 @@
+class InvalidMetadataDocumentUrlException(Exception):
+    pass
+
 class UnregisteredMetadataDocumentException(Exception):
     pass
 
