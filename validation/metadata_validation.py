@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
-from validation.exceptions import InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
+from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
@@ -104,16 +104,22 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
         unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
         unregistered_document_hrefs = unregistered_references['document_hrefs']
         unregistered_document_types = list(set(unregistered_references['document_types']))
+        invalid_document_hrefs = list(set(unregistered_references['invalid_document_hrefs']))
         unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
+        if len(invalid_document_hrefs) > 0:
+            error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
+            error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
+            validation_checklist['error'] = _create_validation_error_details_dict(type(InvalidMetadataDocumentUrlException()), error_msg, None)
+            return validation_checklist
         if len(unregistered_document_hrefs) > 0:
-            error_msg = 'Invalid document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
+            error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
             error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, unregistered_document_types)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
     except etree.XMLSyntaxError as err:
@@ -200,6 +206,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
     unregistered_references = {
         'document_hrefs': set(),
         'document_types': set(),
+        'invalid_document_hrefs': set(),
         'ontology_term_hrefs': set(),
     }
     parent = xml_file_parsed.getroot()
@@ -223,10 +230,16 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             namespace = href_components[-2]
             localID = href_components[-1]
             resource_mongodb_model = get_mongodb_model_for_resource_type(resource_type)
-            if resource_mongodb_model == 'unknown':
-                continue
-            referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace)
-            
+            referenced_resource = None
+            # If resource_mongodb_model is unknown, the resource type is not yet supported
+            # or some parts of the URL path are in the wrong order:
+            # e.g. https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC (wrong)
+            # instead of https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC (correct)
+            if resource_mongodb_model != 'unknown':
+                referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace)
+            else:
+                unregistered_references['invalid_document_hrefs'].add(href)
+
             if referenced_resource == None:
                 unregistered_references['document_hrefs'].add(href)
                 unregistered_references['document_types'].add(resource_type)
