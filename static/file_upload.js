@@ -55,6 +55,7 @@ const xmlValidationStates =  {
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
     SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.exceptions.InvalidRootElementNameForMetadataFileException'>",
+    INVALID_RESOURCE_URLS: "<class 'validation.exceptions.InvalidMetadataDocumentUrlException'>",
     UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.exceptions.UnregisteredMetadataDocumentException'>",
     UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.exceptions.UnregisteredOntologyTermException'>",
 }
@@ -117,6 +118,13 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
     } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
         statusElemContent.innerHTML = `
             <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
+        `;
+    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_RESOURCE_URLS) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3">
+            <span class="text-danger">
+                One or multiple resource URLs specified via the xlink:href attribute are invalid.
+            </span>
         `;
     } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_RESOURCES) {
         statusElemContent.innerHTML = `
