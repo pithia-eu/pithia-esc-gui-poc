@@ -46,6 +46,8 @@
                 <div class="col-lg-8">
                     {% include 'register/validation_template.html' %}
                 </div>
+                {% block api_specification %}
+                {% endblock api_specification %}
                 <div class="col-lg-12">
                     <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
                         <button type="submit" class="btn btn-primary" disabled>Submit</button>
