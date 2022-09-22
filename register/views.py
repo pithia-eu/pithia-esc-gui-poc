@@ -1,13 +1,12 @@
 import traceback
 from pyexpat import ExpatError
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import FormView
 from register.register import register_metadata_xml_file
 
-from .forms import UploadFileForm
+from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
 
@@ -171,6 +170,8 @@ class data_collection(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')
+    template_name = 'register/file_upload_data_collection.html'
+    form_class = UploadDataCollectionFileForm
 
     a_or_an = 'a'
     resource_type = 'data collection'
