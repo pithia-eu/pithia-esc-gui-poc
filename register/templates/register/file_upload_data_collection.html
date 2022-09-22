@@ -1,4 +1,10 @@
 {% extends 'register/file_upload.html' %}
+{% load static %}
+{% block scripts %}
+{{ validation_url|json_script:"validation-url" }}
+<script src="{% static "register/register.js" %}" id="register-script" type="module" defer></script>
+<script src="{% static "register/register_data_collection.js" %}" type="module" defer></script>
+{% endblock scripts %}
 {% block api_specification %}
 <div class="col-lg-8">
     <h2 class="fs-5">Execution method</h2>
