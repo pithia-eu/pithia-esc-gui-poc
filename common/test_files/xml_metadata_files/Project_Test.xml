@@ -94,7 +94,7 @@
     <relatedParty>
         <ResponsiblePartyInfo>
             <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/> 
-            <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC"/>
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test"/>
         </ResponsiblePartyInfo>
     </relatedParty>
     <status xlink:href="https://metadata.pithia.eu/ontology/2.2/status/OnGoing"/> 
