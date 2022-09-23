@@ -1,6 +1,11 @@
+import environ
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
+
+# Initialise environment variables
+env = environ.Env()
 
 from common.forms import LoginForm
 
@@ -15,8 +20,12 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            if request.POST.get('password') != env('ESC_PASSWORD'):
+                messages.error(request, 'Password is incorrect.')
+                if request.GET.get('next', '') != '':
+                    return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.GET.get('next', '')))
+                return HttpResponseRedirect(reverse('login'))
             request.session['is_authorised'] = True
-            print("request.GET.get('next', '')", request.GET.get('next', ''))
             if request.GET.get('next', '') != '':
                 return HttpResponseRedirect(request.GET.get('next', ''))
             return HttpResponseRedirect(reverse('home'))
