@@ -14,7 +14,7 @@ class UploadDataCollectionFileForm(forms.Form):
                 'accept': 'application/xml',
                 'class': 'form-control',
             }))
-    execution_method = forms.MultipleChoiceField(choices=EXECUTION_METHOD_CHOICES, widget=forms.CheckboxSelectMultiple(attrs={
+    execution_methods = forms.MultipleChoiceField(choices=EXECUTION_METHOD_CHOICES, widget=forms.CheckboxSelectMultiple(attrs={
                             'class': 'form-check-input'
                         }))
     api_specification_url = forms.CharField(label='Link to API Specification', required=False, disabled=True, widget=forms.TextInput(attrs={
