@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Login' %}
+{% endblock breadcrumbs %}
 {% load static %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-4">
+        <div class="d-flex flex-column">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-center">
                     <form action="{% url 'login' %}{% if 'next' != '' %}?next={{ next }}{% endif %}" method="post">
                         {% csrf_token %}
-                        <div class="row align-items-center gy-3">
-                            <div class="col-lg-8">
-                                {% if messages %}
-                                <div class="registration-alerts">
-                                    {% for message in messages %}
-                                    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                                        {{ message }}
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                            </div>
+                        <div class="row gy-3">
                             <div class="col-lg-12">
                                 {% if form.password.errors %}
                                     <ul>
