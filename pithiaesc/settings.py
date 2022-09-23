@@ -160,6 +160,7 @@ LOGIN_REQUIRED_URLS = (
     r'^(.*)/update/',
     r'^(.*)/delete/',
     r'/register/(.*)$',
+    r'/manage/(.*)$',
 )
 
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
