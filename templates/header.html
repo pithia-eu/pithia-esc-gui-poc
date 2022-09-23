@@ -40,9 +40,14 @@
     </ul>
 
     <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">
+        {% if request.session.is_authorised %}
+        <a href="{% url 'logout' %}" type="button" class="btn btn-outline-primary me-2">
+            Logout
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" type="button" class="btn btn-outline-primary me-2">
             Login
-        </button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+        </a>
+        {% endif %}
     </div>
 </header>
