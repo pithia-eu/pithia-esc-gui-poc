@@ -25,7 +25,7 @@ class LoginMiddleware(object):
         # the view is called.
 
         # No need to process URLs if user already logged in
-        if 'is_authorised' in request and request['is_authorised'] == True:
+        if 'is_authorised' in request.session and request.session['is_authorised'] == True:
             return response
 
         # An exception match should immediately return None
@@ -33,28 +33,9 @@ class LoginMiddleware(object):
             if url.match(request.path):
                 return response
 
-        # Requests matching a restricted URL pattern return the login view.
+        # Requests matching a restricted URL pattern return the login view.=
         for url in self.required:
             if url.match(request.path):
-                print('hello')
-                return HttpResponseRedirect(reverse_lazy('login'))
+                return HttpResponseRedirect('%s?next=%s' % (reverse_lazy('login'), request.get_full_path()))
 
         return response
-
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        # No need to process URLs if user already logged in
-        if 'is_authorised' in request and request['is_authorised'] == True:
-            return None
-
-        # An exception match should immediately return None
-        for url in self.exceptions:
-            if url.match(request.path):
-                return None
-
-        # Requests matching a restricted URL pattern return the login view.
-        for url in self.required:
-            if url.match(request.path):
-                return reverse_lazy('login')
-
-        # Explicitly return None for all non-matching requests
-        return None
