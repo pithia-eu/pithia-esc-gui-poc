@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import FormView
 from register.register import register_metadata_xml_file
+from register.register_api_specification import register_api_specification
 
 from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
@@ -57,6 +58,11 @@ class RegisterResourceFormView(FormView):
                         messages.error(request, f'{xml_file.name} has been registered before.')
                     else:
                         messages.success(request, f'Successfully registered {xml_file.name}.')
+                        if 'execution_method' in request.POST:
+                            execution_methods = request.POST.getlist('execution_method')
+                            if 'API' in execution_methods:
+                                api_specification_url = form.cleaned_data['api_specification_url']
+                                register_api_specification(api_specification_url, registration_results['inserted_id'])
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
