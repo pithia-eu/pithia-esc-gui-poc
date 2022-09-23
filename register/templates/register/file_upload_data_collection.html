@@ -8,17 +8,17 @@
 {% block api_specification %}
 <div class="col-lg-8">
     <h2 class="fs-5">Execution method</h2>
-    {% if form.execution_method.errors %}
+    {% if form.execution_methods.errors %}
         <ul>
-        {% for error in form.execution_method.errors %}
+        {% for error in form.execution_methods.errors %}
             <li>{{ error|escape }}</li>
         {% endfor %}
         </ul>
     {% endif %}
     <div class="d-flex flex-column">
-        {% for radio in form.execution_method %}
+        {% for checkbox in form.execution_methods %}
         <div class="form-check">
-            {{ radio }}
+            {{ checkbox }}
         </div>
         {% endfor %}
     </div>
