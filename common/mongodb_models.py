@@ -19,7 +19,7 @@ InstrumentRevision = db['instrument-revisions']
 OperationRevision = db['operation-revisions']
 AcquisitionRevision = db['acquisition-revisions']
 ComputationRevision = db['computation-revisions']
-ProcessRevision = db['processe-revisions']
+ProcessRevision = db['process-revisions']
 DataCollectionRevision = db['data-collection-revisions']
 
 OriginalMetadataXml = db['original-metadata-xmls']
