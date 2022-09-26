@@ -184,3 +184,8 @@ class data_collection(RegisterResourceFormView):
     resource_type_plural = 'data collections'
     validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Register a {self.resource_type.title()}'
+        return context
