@@ -10,59 +10,9 @@
 <script src="{% static "register/register.js" %}" id="register-script" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row pb-4">
-    <div class="col-xl-9 col-lg-8">
-        <h1>
-            {{ title }}
-        </h1>
-    </div>
-</div>
-<div class="row gy-3">
-    <div class="col-xl-8 col-lg-7">
-        <h2 class="fs-5">
-            {% block file_upload_section_heading_text %}
-            Upload One/Multiple XML Metadata Files
-            {% endblock file_upload_section_heading_text %}
-        </h2>
-        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="register-resource-form">
-            {% csrf_token %}
-            <div class="row gy-4">
-                <div class="col-lg-8">
-                    {% if messages %}
-                    <div class="registration-alerts">
-                        {% for message in messages %}
-                        <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if form.files.errors %}
-                        <ul>
-                        {% for error in form.files.errors %}
-                            <li>{{ error|escape }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {{ form.files.label_tag }}
-                    {{ form.files }}
-                </div>
-                <div class="col-lg-8">
-                    {% include 'register/validation_template.html' %}
-                </div>
-                {% block api_specification %}
-                {% endblock api_specification %}
-                <div class="col-lg-12">
-                    <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
-                        <button type="submit" class="btn btn-primary" disabled>Submit</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-xl-1 col-lg-1"></div>
+<div class="row flex-wrap-reverse gx-5 pb-4">
     <div class="col-xl-3 col-lg-4">
-        <div class="card">
+        <div class="card sticky">
             <div class="card-body">
                 <b class="text-secondary">Register other resources:</b>
                 <ul class="mt-2 mb-0">
@@ -77,6 +27,56 @@
                     <li><a href="{% url 'register:process' %}" class="pithia-blue">Processes</a></li>
                     <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collections</a></li>
                 </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-4">
+        <h1 class="pb-3">{{ title }}</h1>
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="fs-5">
+                    {% block file_upload_section_heading_text %}
+                    Upload One/Multiple XML Metadata Files
+                    {% endblock file_upload_section_heading_text %}
+                </h2>
+                <hr>
+            </div>
+            <div class="col-lg-12">
+                <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="register-resource-form">
+                    {% csrf_token %}
+                    <div class="row gy-5">
+                        <div class="col-lg-8">
+                            {% if messages %}
+                            <div class="registration-alerts">
+                                {% for message in messages %}
+                                <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% if form.files.errors %}
+                                <ul>
+                                {% for error in form.files.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {{ form.files.label_tag }}
+                            {{ form.files }}
+                        </div>
+                        <div class="col-lg-12">
+                            {% include 'register/validation_template.html' %}
+                        </div>
+                        {% block api_specification %}
+                        {% endblock api_specification %}
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
+                                <button type="submit" class="btn btn-primary" disabled>Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
