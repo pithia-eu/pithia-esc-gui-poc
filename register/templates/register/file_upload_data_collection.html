@@ -12,7 +12,7 @@ Upload an XML Metadata File
 <div class="col-lg-12">
     <div class="row">
         <div class="col-lg-12">
-            <h2 class="fs-5">Execution method</h2>
+            <h2 class="fs-5">Interaction methods</h2>
             <hr>
         </div>
         <div class="col-lg-8">
@@ -21,7 +21,7 @@ Upload an XML Metadata File
                     <p class="d-flex flex-column text-muted mb-0">
                         <b>URL in XML Metadata File</b>
                         <small class="mb-0">
-                            An execution link for the data collection can be specified within the XML metadata file.
+                            An interaction link for the data collection can be specified within the XML metadata file.
                         </small>
                     </p>
                 </div>
@@ -32,15 +32,15 @@ Upload an XML Metadata File
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            {% if form.execution_methods.errors %}
+                            {% if form.interaction_methods.errors %}
                                 <ul>
-                                {% for error in form.execution_methods.errors %}
+                                {% for error in form.interaction_methods.errors %}
                                     <li>{{ error|escape }}</li>
                                 {% endfor %}
                                 </ul>
                             {% endif %}
                             <div class="d-flex flex-column">
-                                {% for checkbox in form.execution_methods %}
+                                {% for checkbox in form.interaction_methods %}
                                 <div class="form-check fw-bold">
                                     {{ checkbox }}
                                 </div>
