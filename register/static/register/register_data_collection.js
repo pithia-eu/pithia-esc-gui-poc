@@ -1,4 +1,4 @@
-const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="execution_methods"][value="api"]');
+const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="interaction_methods"][value="api"]');
 const apiSpecificationUrlTextInput = document.querySelector("#id_api_specification_url");
 
 function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
