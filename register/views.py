@@ -58,11 +58,11 @@ class RegisterResourceFormView(FormView):
                         messages.error(request, f'{xml_file.name} has been registered before.')
                     else:
                         messages.success(request, f'Successfully registered {xml_file.name}.')
-                        if 'execution_method' in request.POST:
-                            execution_methods = request.POST.getlist('execution_method')
-                            if 'API' in execution_methods:
-                                api_specification_url = form.cleaned_data['api_specification_url']
-                                register_api_specification(api_specification_url, registration_results['inserted_id'])
+                        if 'interaction_methods' in request.POST:
+                            interaction_methods = request.POST.getlist('interaction_methods')
+                            if 'api' in interaction_methods:
+                                api_specification_url = request.POST['api_specification_url']
+                                register_api_specification(api_specification_url, registration_results.inserted_id)
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
