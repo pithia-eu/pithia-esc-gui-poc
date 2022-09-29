@@ -1,0 +1,25 @@
+{% load project_tags %}
+{% for key, value in resource.items %}
+{% if key != '_id' %}
+<tr>
+    {% if value|get_type == 'dict' %}
+    <td colspan="2">{{ key }}</td>
+    {% for item_key, item_value in value.items %}
+    {% with resource=item_value %}
+    {% include 'browse/detail_resource_property_table_rows.html' %}
+    {% endwith %}
+    {% endfor %}
+    {% elif value|get_type == 'list' %}
+    {% for item in value %}
+    <td colspan="2">{{ key }} {{ forloop.counter }}</td>
+    {% with resource=item %}
+    {% include 'browse/detail_resource_property_table_rows.html' %}
+    {% endwith %}
+    {% endfor %}
+    {% else %}
+    <td>{{ key }}</td>
+    <td>{{ value|urlize }}</td>
+    {% endif %}
+</tr>
+{% endif %}
+{% endfor %}
