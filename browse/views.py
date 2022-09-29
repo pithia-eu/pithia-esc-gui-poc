@@ -276,50 +276,123 @@ def flatten(d):
             out[key] = value
     return out
 
-def resource_detail(request, resource_id, resource_mongodb_model, resource_type_plural, list_resources_of_type_view_name):
-    resource = resource_mongodb_model.find_one({
-        '_id': ObjectId(resource_id)
-    })
-    if resource is None:
-        return HttpResponseNotFound('Resource not found.')
-    resource_flattened = flatten(resource)
-    title = resource['identifier']['PITHIA_Identifier']['localID']
-    if 'name' in resource:
-        title = resource['name']
-    return render(request, 'browse/detail.html', {
-        'title': title,
-        'breadcrumb_item_list_resources_of_type_text': f'{resource_type_plural}',
-        'resource': resource,
-        'resource_flattened': resource_flattened,
-        'list_resources_of_type_view_name': list_resources_of_type_view_name
-    })
+class ResourceDetailView(TemplateView):
+    title = 'Resource Detail'
+    resource = None
+    resource_id = ''
+    resource_mongodb_model = None
+    resource_type_plural = 'Resources'
+    resource_flattened = None
+    list_resources_of_type_view_name = ''
+    template_name = 'browse/detail.html'
 
-def organisation_detail(request, organisation_id):
-    return resource_detail(request, organisation_id, mongodb_models.CurrentOrganisation, 'Organisations', 'browse:list_organisations')
+    def get(self, request, *args, **kwargs):
+        self.resource = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        if self.resource is None:
+            return HttpResponseNotFound('Resource not found.')
+        self.resource_flattened = flatten(self.resource)
+        self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
+        if 'name' in self.resource:
+            self.title = self.resource['name']
+        return super().get(request, *args, **kwargs)
 
-def individual_detail(request, individual_id):
-    return resource_detail(request, individual_id, mongodb_models.CurrentIndividual, 'Individuals', 'browse:list_individuals')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title
+        context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
+        context['resource'] = self.resource
+        context['resource_flattened'] = self.resource_flattened
+        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        return context
 
-def project_detail(request, project_id):
-    return resource_detail(request, project_id, mongodb_models.CurrentProject, 'Projects', 'browse:list_projects')
+class organisation_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentOrganisation
+    resource_type_plural = 'Organisations'
+    list_resources_of_type_view_name = 'browse:list_organisations'
 
-def platform_detail(request, platform_id):
-    return resource_detail(request, platform_id, mongodb_models.CurrentPlatform, 'Platforms', 'browse:list_platforms')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['organisation_id']
+        return super().get(request, *args, **kwargs)
 
-def instrument_detail(request, instrument_id):
-    return resource_detail(request, instrument_id, mongodb_models.CurrentInstrument, 'Instruments', 'browse:list_instruments')
+class individual_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentIndividual
+    resource_type_plural = 'Individuals'
+    list_resources_of_type_view_name = 'browse:list_individuals'
 
-def operation_detail(request, operation_id):
-    return resource_detail(request, operation_id, mongodb_models.CurrentOperation, 'Operations', 'browse:list_operations')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['individual_id']
+        return super().get(request, *args, **kwargs)
 
-def acquisition_detail(request, acquisition_id):
-    return resource_detail(request, acquisition_id, mongodb_models.CurrentAcquisition, 'Acquisitions', 'browse:list_acquisitions')
+class project_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentProject
+    resource_type_plural = 'Projects'
+    list_resources_of_type_view_name = 'browse:list_projects'
 
-def computation_detail(request, computation_id):
-    return resource_detail(request, computation_id, mongodb_models.CurrentComputation, 'Computations', 'browse:list_computations')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['project_id']
+        return super().get(request, *args, **kwargs)
 
-def process_detail(request, process_id):
-    return resource_detail(request, process_id, mongodb_models.CurrentProcess, 'Processes', 'browse:list_processes')
+class platform_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentPlatform
+    resource_type_plural = 'Platforms'
+    list_resources_of_type_view_name = 'browse:list_platforms'
 
-def data_collection_detail(request, data_collection_id):
-    return resource_detail(request, data_collection_id, mongodb_models.CurrentDataCollection, 'Data Collections', 'browse:list_data_collections')
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['platform_id']
+        return super().get(request, *args, **kwargs)
+
+class instrument_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentInstrument
+    resource_type_plural = 'Instruments'
+    list_resources_of_type_view_name = 'browse:list_instruments'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['instrument_id']
+        return super().get(request, *args, **kwargs)
+
+class operation_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentOperation
+    resource_type_plural = 'Operations'
+    list_resources_of_type_view_name = 'browse:list_operations'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['operation_id']
+        return super().get(request, *args, **kwargs)
+
+class acquisition_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentAcquisition
+    resource_type_plural = 'Acquisitions'
+    list_resources_of_type_view_name = 'browse:list_acquisitions'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_id']
+        return super().get(request, *args, **kwargs)
+
+class computation_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentComputation
+    resource_type_plural = 'Computations'
+    list_resources_of_type_view_name = 'browse:list_computations'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_id']
+        return super().get(request, *args, **kwargs)
+
+class process_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentProcess
+    resource_type_plural = 'Processes'
+    list_resources_of_type_view_name = 'browse:list_processes'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['process_id']
+        return super().get(request, *args, **kwargs)
+
+class data_collection_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentDataCollection
+    resource_type_plural = 'Data Collections'
+    list_resources_of_type_view_name = 'browse:list_data_collections'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['data_collection_id']
+        return super().get(request, *args, **kwargs)
