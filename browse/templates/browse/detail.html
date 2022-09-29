@@ -65,7 +65,11 @@
 <div class="row">
     <div class="col-lg-12">
         <section>
-            {% include 'browse/detail_resource_property_table.html' %}
+            {% if resource %}
+            {% with resource=resource heading_level=2 text_opacity=100 %}
+            {% include 'browse/detail_resource_properties.html' %}
+            {% endwith %}
+            {% endif %}
         </section>
     </div>
 </div>
