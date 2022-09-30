@@ -18,7 +18,16 @@
     {% endfor %}
 </div>
 {% endif %}
-<h1 class="pb-3">{{ title }}</h1>
+<div class="row gx-3 mb-3">
+    <div class="col-lg-9">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="col-lg-3">
+        <div class="d-flex justify-content-end">
+            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3">Register New {{ resource_type_plural.title }}</a>
+        </div>
+    </div>
+</div>
 {% if resources_list|length > 0 %}
 <ul class="list-group">
     {% for resource in resources_list|dictsort:'name' %}
