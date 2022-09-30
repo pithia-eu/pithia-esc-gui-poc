@@ -434,13 +434,13 @@ class data_collection_detail(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
-            'data_collection_id': self.resource_id
+            'data_collection_id': ObjectId(self.resource_id)
         })
 
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interaction_methods'] = self.interaction_methods
+        context['interaction_methods'] = list(self.interaction_methods)
         
         return context
