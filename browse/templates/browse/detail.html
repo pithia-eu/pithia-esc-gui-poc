@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item 'Resources' 'browse:resources' %}
+{% breadcrumb_item list_resources_page_title 'browse:resources' %}
 {% breadcrumb_item breadcrumb_item_list_resources_of_type_text list_resources_of_type_view_name %}
 {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
 {% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
