@@ -428,7 +428,19 @@ class data_collection_detail(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
     list_resources_of_type_view_name = 'browse:list_data_collections'
+    template_name = 'browse/detail_interaction_methods.html'
+    interaction_methods = []
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
+        self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
+            'data_collection_id': self.resource_id
+        })
+
         return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['interaction_methods'] = self.interaction_methods
+        
+        return context
