@@ -5,6 +5,8 @@ from common.mongodb_models import CurrentAcquisition, CurrentComputation, Curren
 
 from search.helpers import remove_underscore_from_id_attribute
 
+_INDEX_PAGE_TITLE = 'Manage Data Registrations'
+
 
 # Create your views here.
 def index(request):
@@ -29,7 +31,7 @@ def index(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'title': 'Manage Resources'
+        'title': _INDEX_PAGE_TITLE
     })
 
 class ManageResourcesView(TemplateView):
@@ -40,6 +42,7 @@ class ManageResourcesView(TemplateView):
     resources_list = []
     delete_resource_view_name = ''
     update_resource_view_name = ''
+    register_resource_view_name = ''
 
     def get_resources_list(self):
         resources_list = list(self.resource_mongodb_model.find({}))
@@ -52,6 +55,8 @@ class ManageResourcesView(TemplateView):
         context['resources_list'] = self.get_resources_list()
         context['delete_resource_view_name'] = self.delete_resource_view_name
         context['update_resource_view_name'] = self.update_resource_view_name
+        context['register_resource_view_name'] = self.register_resource_view_name
+        context['index_page_title'] = _INDEX_PAGE_TITLE
         return context
 
 class organisations(ManageResourcesView):
@@ -60,6 +65,7 @@ class organisations(ManageResourcesView):
     resource_type_plural = 'Organisations'
     delete_resource_view_name = 'delete:organisation'
     update_resource_view_name = 'update:organisation'
+    register_resource_view_name = 'register:organisation'
 
 class individuals(ManageResourcesView):
     title = 'Manage Individuals'
@@ -67,6 +73,7 @@ class individuals(ManageResourcesView):
     resource_type_plural = 'Individuals'
     delete_resource_view_name = 'delete:individual'
     update_resource_view_name = 'update:individual'
+    register_resource_view_name = 'register:individual'
 
 class projects(ManageResourcesView):
     title = 'Manage Projects'
@@ -74,6 +81,7 @@ class projects(ManageResourcesView):
     resource_type_plural = 'Projects'
     delete_resource_view_name = 'delete:project'
     update_resource_view_name = 'update:project'
+    register_resource_view_name = 'register:project'
 
 class platforms(ManageResourcesView):
     title = 'Manage Platforms'
@@ -81,6 +89,7 @@ class platforms(ManageResourcesView):
     resource_type_plural = 'PLatforms'
     delete_resource_view_name = 'delete:platform'
     update_resource_view_name = 'update:platform'
+    register_resource_view_name = 'register:platform'
 
 class instruments(ManageResourcesView):
     title = 'Manage Instruments'
@@ -88,6 +97,7 @@ class instruments(ManageResourcesView):
     resource_type_plural = 'Instruments'
     delete_resource_view_name = 'delete:instrument'
     update_resource_view_name = 'update:instrument'
+    register_resource_view_name = 'register:instrument'
 
 class operations(ManageResourcesView):
     title = 'Manage Operations'
@@ -95,6 +105,7 @@ class operations(ManageResourcesView):
     resource_type_plural = 'Operations'
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
+    register_resource_view_name = 'register:operation'
 
 class acquisitions(ManageResourcesView):
     title = 'Manage Acquisitions'
@@ -102,6 +113,7 @@ class acquisitions(ManageResourcesView):
     resource_type_plural = 'Acquisitions'
     delete_resource_view_name = 'delete:acquisition'
     update_resource_view_name = 'update:acquisition'
+    register_resource_view_name = 'register:acquisition'
 
 class computations(ManageResourcesView):
     title = 'Manage Computations'
@@ -109,6 +121,7 @@ class computations(ManageResourcesView):
     resource_type_plural = 'Computations'
     delete_resource_view_name = 'delete:computation'
     update_resource_view_name = 'update:computation'
+    register_resource_view_name = 'register:computation'
 
 class processes(ManageResourcesView):
     title = 'Manage Processes'
@@ -116,6 +129,7 @@ class processes(ManageResourcesView):
     resource_type_plural = 'Processes'
     delete_resource_view_name = 'delete:process'
     update_resource_view_name = 'update:process'
+    register_resource_view_name = 'register:process'
 
 class data_collections(ManageResourcesView):
     title = 'Manage Data Collections'
@@ -123,3 +137,4 @@ class data_collections(ManageResourcesView):
     resource_type_plural = 'Data Collections'
     delete_resource_view_name = 'delete:data_collection'
     update_resource_view_name = 'update:data_collection'
+    register_resource_view_name = 'register:data_collection'

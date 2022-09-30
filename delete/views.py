@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
+from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
 def _create_resource_url(namespace, resource_type, localid):
@@ -202,6 +203,7 @@ class DeleteResourceView(TemplateView):
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
         context['title'] = f'Confirm Resource Deletion'
+        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         context['delete_resource_type_view_name'] = self.delete_resource_type_view_name
