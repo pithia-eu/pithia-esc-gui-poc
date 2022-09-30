@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Resource Management' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">Resource Management</h1>
+<h1 class="pb-3">{{ title }}</h1>
 <p class="lead">
-    Select the type of resource you would like to make changes for below.
+    Add, update and delete data registrations. Select the type of data registrations you would like to change below.
 </p>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
     <div class="col">
