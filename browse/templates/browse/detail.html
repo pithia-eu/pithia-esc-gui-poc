@@ -66,9 +66,26 @@
     <div class="col-lg-12">
         <section>
             {% if resource %}
-            {% with resource=resource heading_level=2 text_opacity=100 %}
-            {% include 'browse/detail_resource_properties.html' %}
-            {% endwith %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Property</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in resource_flattened.items %}
+                        {% if key != '_id' and key|first != '@' %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value|urlize }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% endif %}
         </section>
     </div>
