@@ -13,25 +13,32 @@ from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
+_RESOURCES_PAGE_TITLE = 'Data Registrations'
+_ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
+_XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
+
 # Create your views here.
 def index(request):
     return render(request, 'browse/index.html', {
-        'title': 'Browse'
+        'title': 'Browse',
+        'resources_page_title': _RESOURCES_PAGE_TITLE,
+        'xml_schemas_page_title': _XML_SCHEMAS_PAGE_TITLE,
+        'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
     })
 
 def resources(request):
     return render(request, 'browse/resources.html', {
-        'title': 'Browse Resources'
+        'title': _RESOURCES_PAGE_TITLE
     })
 
 def schemas(request):
     return render(request, 'browse/schemas.html', {
-        'title': 'Browse Schemas'
+        'title': _XML_SCHEMAS_PAGE_TITLE
     })
 
 def ontology(request):
     return render(request, 'browse/ontology.html', {
-        'title': 'Browse PITHIA Ontology'
+        'title': _ONTOLOGY_PAGE_TITLE
     })
 
 def _split_camel_case(string):
@@ -178,7 +185,7 @@ class ListResourcesView(TemplateView):
     template_name = 'browse/list_resources_of_type.html'
     description = ''
     resource_mongodb_model = None
-    resource_type_plural = 'Resources'
+    resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_detail_view_name = ''
     resources_list = []
 
@@ -190,6 +197,7 @@ class ListResourcesView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.resource_type_plural
         context['description'] = self.description
+        context['list_resources_page_title'] = _RESOURCES_PAGE_TITLE
         context['breadcrumb_item_list_resources_of_type_text'] = self.resource_type_plural
         context['resource_type_plural'] = self.resource_type_plural
         context['resource_detail_view_name'] = self.resource_detail_view_name
@@ -281,7 +289,7 @@ class ResourceDetailView(TemplateView):
     resource = None
     resource_id = ''
     resource_mongodb_model = None
-    resource_type_plural = 'Resources'
+    resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_flattened = None
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
@@ -301,6 +309,7 @@ class ResourceDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.title
+        context['list_resources_page_title'] = _RESOURCES_PAGE_TITLE
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
