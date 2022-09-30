@@ -2,80 +2,24 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item_active 'Resources' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">Resources</h1>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_organisations' %}">Organisations</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_individuals' %}">Individuals</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_projects' %}">Projects</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_platforms' %}">Platforms</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_operations' %}">Operations</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_instruments' %}">Instruments</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_acquisitions' %}">Acquisitions</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_computations' %}">Computations</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_processes' %}">Processes</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:list_data_collections' %}">Data Collections</a>
-            </div>
-        </div>
+<h1 class="pb-3">{{ title }}</h1>
+<div class="row">
+    <div class="col-lg-12">
+        <ol class="list-group">
+            <li class="list-group-item"><a href="{% url 'browse:list_organisations' %}">Organisations</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_individuals' %}">Individuals</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_projects' %}">Projects</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_platforms' %}">Platforms</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_operations' %}">Operations</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_instruments' %}">Instruments</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_acquisitions' %}">Acquisitions</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_computations' %}">Computations</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_processes' %}">Processes</a></li>
+            <li class="list-group-item"><a href="{% url 'browse:list_data_collections' %}">Data Collections</a></li>
+        </ol>
     </div>
 </div>
 {% endblock content %}
