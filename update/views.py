@@ -9,6 +9,8 @@ from register.xml_conversion_checks_and_fixes import format_acquisition_dictiona
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedFileForm
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from resource_management.views import _INDEX_PAGE_TITLE
+
 
 # Create your views here.
 class UpdateResourceView(FormView):
@@ -39,6 +41,7 @@ class UpdateResourceView(FormView):
         context['resource_id'] = self.resource_id
         context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
+        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         context['update_resource_type_view_name'] = self.update_resource_type_view_name

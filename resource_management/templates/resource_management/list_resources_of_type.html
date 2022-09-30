@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% load static %}
 {% block breadcrumbs %}
-{% breadcrumb_item 'Resource Management' 'resource_management:index' %}
+{% breadcrumb_item index_page_title 'resource_management:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block scripts %}
@@ -24,7 +24,7 @@
     </div>
     <div class="col-lg-3">
         <div class="d-flex justify-content-end">
-            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3">Register New {{ resource_type_plural.title }}</a>
+            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span class="me-1 fs-5">+</span> Register New {{ resource_type_plural.title }}</a>
         </div>
     </div>
 </div>
