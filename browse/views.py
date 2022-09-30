@@ -191,7 +191,12 @@ def ontology_term_detail(request, category, term_id):
         elif p == 'qualifier':
             resource_predicates_readable[p] = 'Qualifiers'
         else:
-            resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
+            resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title() 
+        category_readable = ' '.join(_split_camel_case(category)).title()
+        if category.lower() == 'crs':
+            category_readable = 'Co-ordinate Reference System'
+        elif category.lower() == 'verticalcrs':
+            category_readable = 'Vertical Co-ordinate Reference System'
     return render(request, 'browse/ontology_term_detail.html', {
         'title': resource_dictionary['prefLabel'],
         'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
@@ -200,7 +205,7 @@ def ontology_term_detail(request, category, term_id):
         'resource_predicates_no_prefix': resource_predicates_no_prefix,
         'resource_predicates_readable': resource_predicates_readable,
         'category': category,
-        'category_readable': ' '.join(_split_camel_case(category)).title(),
+        'category_readable': category_readable,
     })
 
 class ListResourcesView(TemplateView):
