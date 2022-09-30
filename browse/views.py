@@ -82,7 +82,8 @@ def ontology_category_terms_list(request, category):
     title += ' Terms'
     return render(request, 'browse/ontology_category_terms_list.html', {
         'category': category,
-        'title': title
+        'title': title,
+        'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
     })
 
 def ontology_category_terms_list_only(request, category):
@@ -193,6 +194,7 @@ def ontology_term_detail(request, category, term_id):
             resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title()
     return render(request, 'browse/ontology_term_detail.html', {
         'title': resource_dictionary['prefLabel'],
+        'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
         'resource_ontology_url': f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}',
         'resource_dictionary': resource_dictionary,
         'resource_predicates_no_prefix': resource_predicates_no_prefix,
