@@ -5,6 +5,8 @@ from common.mongodb_models import CurrentAcquisition, CurrentComputation, Curren
 
 from search.helpers import remove_underscore_from_id_attribute
 
+_INDEX_PAGE_TITLE = 'Manage Data Registrations'
+
 
 # Create your views here.
 def index(request):
@@ -29,7 +31,7 @@ def index(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'title': 'Manage Data Registrations'
+        'title': _INDEX_PAGE_TITLE
     })
 
 class ManageResourcesView(TemplateView):
@@ -54,6 +56,7 @@ class ManageResourcesView(TemplateView):
         context['delete_resource_view_name'] = self.delete_resource_view_name
         context['update_resource_view_name'] = self.update_resource_view_name
         context['register_resource_view_name'] = self.register_resource_view_name
+        context['index_page_title'] = _INDEX_PAGE_TITLE
         return context
 
 class organisations(ManageResourcesView):
