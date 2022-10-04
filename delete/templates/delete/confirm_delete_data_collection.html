@@ -1,0 +1,8 @@
+{% extends 'delete/confirm_delete_resource.html' %}
+{% load project_tags %}
+{% load static %}
+{% block extra_information %}
+<p class="alert alert-warning">
+    Any interaction methods associated with this data collection will also be deleted.
+</p>
+{% endblock extra_information %}
