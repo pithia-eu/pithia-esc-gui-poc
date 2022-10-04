@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href={% static 'present/index.css' %}>
 
 {% block scripts %}
+{{ api_specification_url|json_script:'api-specification-url' }}
 <script src="{% static "present/swagger-ui-bundle.js" %}" id="swagger-ui-bundle-script" defer></script>
 <script src="{% static "present/swagger-ui-standalone-preset.js" %}" id="swagger-ui-standalone-script" defer></script>
 <script src="{% static "present/swagger-initializer.js" %}" id="swagger-initializer-script" defer></script>
@@ -15,7 +16,7 @@
 {% block content %}
 <div class="row pb-4">
     <div class="col-lg-8">
-        <h1>Model execution</h1>
+        <h1>Data Collection Interaction</h1>
     </div>
 </div>
     <div id="swagger-ui"></div>
