@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
@@ -354,7 +354,23 @@ class data_collection(DeleteResourceView):
     list_resources_of_type_view_page_title = 'Manage Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
     delete_resource_type_view_name = 'delete:data_collection'
+    template_name = 'delete/confirm_delete_data_collection.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Delete current data collection interaction methods
+        # before deleting the actual data collection, not sure
+        # if the order should be changed around...
+        CurrentDataCollectionInteractionMethod.delete_many({
+            'data_collection_id': ObjectId(self.resource_id)
+        })
+        # Delete data collection interaction methods revisions
+        # before deleting the actual data collection, not sure
+        # if the order should be changed around...
+        DataCollectionInteractionMethodRevision.delete_many({
+            'data_collection_id': ObjectId(self.resource_id)
+        })
+        return super().post(request, *args, **kwargs)
