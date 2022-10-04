@@ -34,18 +34,27 @@
                 {% endif %}
             </div>
         </div>
-        {% if other_resources_to_delete|length > 0 %}
-        <section>
-            <h2 class="fs-5 mb-3">There are resources referencing this {{ resource_type }} that will also be deleted. Please review these in the list below.</h2>
-            <ul class="list-group">
-                {% for r in other_resources_to_delete %}
-                {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
-                <li class="list-group-item">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
-                {% endwith %}
-                {% endfor %}
-            </ul>
-        </section>
-        {% endif %}
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                {% block extra_information %}{% endblock extra_information %}
+                {% if other_resources_to_delete|length > 0 %}
+                <div class="alert alert-warning">
+                    <p>There are other registrations referencing this one that will also be deleted upon this registration's deletion. Please review these in the list below before confirming this registration's deletion:</p>
+                    <ul class="list-group mb-0">
+                        {% for r in other_resources_to_delete %}
+                        {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
+                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
+                        {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    This registration is not referred to be any other registration and can be safely deleted without deleting other registrations.
+                </div>
+                {% endif %}
+            </div>
+        </div>
         <form action="{% url delete_resource_type_view_name resource_id %}" method="post" enctype="multipart/form-data" id="update-resource-form">
             {% csrf_token %}
             <div class="row gy-4">
@@ -53,9 +62,9 @@
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
                         <a href="{% url list_resources_of_type_view_name %}" class="btn btn-light me-2">Go Back</a>
                         {% if other_resources_to_delete|length > 0 %}
-                        <button type="submit" class="btn btn-danger">Delete this {{ resource_type }} and the resources referencing it</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }} and the registrations listed above</button>
                         {% else %}
-                        <button type="submit" class="btn btn-danger">Delete this {{ resource_type }}</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }}</button>
                         {% endif %}
                     </div>
                 </div>
