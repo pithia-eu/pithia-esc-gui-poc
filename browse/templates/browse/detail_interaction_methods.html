@@ -1,17 +1,43 @@
 {% extends 'browse/detail.html' %}
+{% block messages %}
+{% if messages %}
+<div class="registration-alerts mb-3">
+    {% for message in messages %}
+    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock messages %}
 {% block interaction_methods %}
 {% if interaction_methods|length > 0 %}
 <section>
     <h2>Interact</h2>
-    {% for method in interaction_methods %}
-    {% if method.interaction_method == 'api' %}
-    <h3 class="text-muted">API</h3>
-    <p>
-        <!-- TODO: Change to link to the /present app instead -->
-        {{ method.interaction_url|urlize }}
-    </p>
-    {% endif %}
-    {% endfor %}
+    <div class="table-responsive">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Interaction Method</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for method in interaction_methods %}
+                {% if method.interaction_method == 'api' %}
+                <tr>
+                    <td>API</td>
+                    <td>
+                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
+                            Go to the API Interface
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 {% endif %}
 {% endblock interaction_methods %}
