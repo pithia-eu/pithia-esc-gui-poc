@@ -442,5 +442,6 @@ class data_collection_detail(ResourceDetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['interaction_methods'] = list(self.interaction_methods)
+        context['data_collection_id'] = self.resource_id
         
         return context
