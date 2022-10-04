@@ -12,11 +12,11 @@
         <h1 class="mb-0">
             {{ title }}
         </h1>
-        <small class="text-muted">
+        <span class="text-muted">
             {% with pithia_identifier=resource_to_delete.identifier.PITHIA_Identifier %}
             Deleting: {{ resource_to_delete.name|default:pithia_identifier.localID }}
             {% endwith %}
-        </small>
+        </span>
     </div>
 </div>
 <div class="row gy-3">
