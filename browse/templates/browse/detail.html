@@ -9,6 +9,7 @@
 {% endwith %}
 {% endblock breadcrumbs %}
 {% block content %}
+{% block messages %}{% endblock messages %}
 <h1>{{ resource.name }}</h1>
 {% if resource.description and resource.description|cut:' ' != '' %}
 <div class="row">
