@@ -16,6 +16,6 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     interaction_methods = forms.MultipleChoiceField(choices=INTERACTION_METHOD_CHOICES, required=False, widget=forms.CheckboxSelectMultiple(attrs={
                             'class': 'form-check-input'
                         }))
-    api_specification_url = forms.CharField(label='Link to API Specification', required=False, disabled=True, widget=forms.TextInput(attrs={
+    api_specification_url = forms.CharField(label='Link to API Specification', required=False, widget=forms.TextInput(attrs={
                             'class': 'form-control'
                         }))
