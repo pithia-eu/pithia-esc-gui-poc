@@ -39,7 +39,7 @@
                 {% block extra_information %}{% endblock extra_information %}
                 {% if other_resources_to_delete|length > 0 %}
                 <div class="alert alert-warning">
-                    <p>There are {{ other_resources_to_delete|length }} other registrations referencing this one that will also be deleted upon deleting this registration. Please review these in the list below before confirming the deletion of this registration:</p>
+                    <p>There are {{ other_resources_to_delete|length }} other data registrations referencing this one that will also be deleted upon deleting this data registration. Please review these in the list below before confirming this deletion:</p>
                     <ul class="list-group mb-0">
                         {% for r in other_resources_to_delete %}
                         {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
@@ -50,7 +50,7 @@
                 </div>
                 {% else %}
                 <div class="alert alert-info">
-                    This registration is not referred to be any other registration and can be safely deleted without deleting other registrations.
+                    This data registration is not referred to be any other data registration and can be safely deleted without deleting other data registrations.
                 </div>
                 {% endif %}
             </div>
