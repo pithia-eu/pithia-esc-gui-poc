@@ -37,5 +37,6 @@ def login(request):
     })
 
 def logout(request):
-    del request.session['is_authorised']
-    return HttpResponseRedirect(reverse('home'))
+    if 'is_authorised' in request.session:
+        del request.session['is_authorised']
+    return HttpResponseRedirect(reverse('login'))
