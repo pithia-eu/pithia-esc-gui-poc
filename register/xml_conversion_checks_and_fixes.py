@@ -34,6 +34,12 @@ def format_data_collection_dictionary(self, dictionary):
         dictionary['om:paramater'] = [dictionary['om:paramater']]
     # Check if nested 'source' property is an
     # array-type property
-    if 'result' in dictionary and 'pithia:CollectionResults' in dictionary['result'] and 'source' in dictionary['result']['pithia:CollectionResults'] and not isinstance(dictionary['result']['pithia:CollectionResults']['source'], list):
-        dictionary['result']['pithia:CollectionResults']['source'] = [dictionary['result']['pithia:CollectionResults']['source']]
+    if 'collectionResults' in dictionary and 'source' in dictionary['collectionResults'] and not isinstance(dictionary['collectionResults']['source'], list):
+        dictionary['collectionResults']['source'] = [dictionary['collectionResults']['source']]
+    # Check if nested 'dataFormat' property is an
+    # array-type property
+    if 'collectionResults' in dictionary and 'source' in dictionary['collectionResults']:
+        for s in dictionary['collectionResults']['source']:
+            if 'dataFormat' in s['OnlineResource'] and not isinstance(s['OnlineResource']['dataFormat'], list):
+                s['OnlineResource']['dataFormat'] = [s['OnlineResource']['dataFormat']]
     return dictionary

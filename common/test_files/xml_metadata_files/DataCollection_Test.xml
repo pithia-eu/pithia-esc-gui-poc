@@ -57,7 +57,7 @@
         <source>
             <OnlineResource>
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
-                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
                 <name>Online Resource 1</name>
                 <protocol>HTTPS</protocol>
@@ -71,7 +71,7 @@
         <source>
             <OnlineResource>
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
-                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
                 <name>Online Resource 2</name>
                 <protocol>HTTPS</protocol>
@@ -85,7 +85,7 @@
         <source>
             <OnlineResource>
                 <!-- The function performed by the online resource is the landing page for the collection provider-->
-                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/WebPortalPage"/> <!-- use the serviceFunction vocabulary -->
+                <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
                 <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
                 <name>Online Resource 3</name>
                 <protocol>HTTPS</protocol>

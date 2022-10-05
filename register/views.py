@@ -10,10 +10,13 @@ from .forms import UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
 
+_INDEX_PAGE_TITLE = 'Metadata Registration'
+
+
 # Create your views here.
 def index(request):
     return render(request, 'register/index.html', {
-        'title': 'Resource Metadata Registration'
+        'title': _INDEX_PAGE_TITLE
     })
 
 class RegisterResourceFormView(FormView):
@@ -32,6 +35,7 @@ class RegisterResourceFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register {self.resource_type_plural.title()}'
+        context['index_page_title'] = _INDEX_PAGE_TITLE
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class

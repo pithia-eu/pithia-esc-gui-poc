@@ -2,10 +2,10 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Browse' 'browse:index' %}
-{% breadcrumb_item_active 'XML Schemas' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1 class="pb-3">XML Schemas</h1>
+<h1 class="pb-3">{{ title }}</h1>
 <p class="lead">
     Interacting with a link below will open a schema in a new tab.
 </p>
