@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
@@ -6,10 +7,10 @@ from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
-def _create_resource_url(namespace, resource_type, localid):
+def _create_resource_url(resource_type, namespace, localid):
     if not localid.startswith(f'{resource_type.capitalize()}_'):
         localid = f'{resource_type.capitalize()}_{localid}'
-    return f'https://metadata.pithia.eu/resources/2.2/{namespace}/{resource_type}/{localid}'
+    return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
 
 def _get_projects_referencing_party_url(party_url):
     return CurrentProject.find({
@@ -47,7 +48,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         '_id': ObjectId(resource_id)
     })
     resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
-    resource_url = _create_resource_url(resource_pithia_identifier['namespace'], resource_type, resource_pithia_identifier['localID'])
+    resource_url = _create_resource_url(resource_type, resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
     if resource_mongodb_model == CurrentOrganisation:
         # Referenced by: Individual, Project, Platform?, Instrument?, Data Collection
         # Individual references it via the organisation prop.
@@ -133,23 +134,23 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     platforms = list(platforms)
     for i in range(len(platforms)):
         platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][2][0]['_id']), 'platform', platforms[i][2]))
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][2][0]['_id']), 'instrument', instruments[i][2]))
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][2][0]['_id']), 'acquisition', acquisitions[i][2]))
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(computations[i][2][0]['_id']), 'computation', computations[i][2]))
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(computations[i][0]['_id']), 'computation', computations[i][2]))
     processes = list(processes)
     for i in range(len(processes)):
         processes[i] = (processes[i], 'process', CurrentProcess, ProcessRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(processes[i][2][0]['_id']), 'process', processes[i][2]))
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(processes[i][0]['_id']), 'process', processes[i][2]))
     data_collections = list(data_collections)
     for i in range(len(data_collections)):
         data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection, DataCollectionRevision)
@@ -161,6 +162,39 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
+    linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
+    def get_weight_of_resource_type(resource_type):
+        if resource_type == 'organisation':
+            return 1
+        elif resource_type == 'individual':
+            return 2
+        elif resource_type == 'project':
+            return 3
+        elif resource_type == 'platform':
+            return 4
+        elif resource_type == 'operation':
+            return 5
+        elif resource_type == 'instrument':
+            return 6
+        elif resource_type == 'acquisition':
+            return 7
+        elif resource_type == 'computation':
+            return 8
+        elif resource_type == 'process':
+            return 9
+        elif resource_type == 'collection':
+            return 10
+        return 10
+    def custom_compare(item1, item2):
+        item1_weight = get_weight_of_resource_type(item1[1])
+        item2_weight = get_weight_of_resource_type(item2[1])
+        if item1_weight < item2_weight:
+            return -1
+        elif item1_weight > item2_weight:
+            return 1
+        else:
+            return 0
+    linked_resources.sort(key=cmp_to_key(custom_compare))
 
     return linked_resources
 
@@ -202,7 +236,7 @@ class DeleteResourceView(TemplateView):
         context['resource_type'] = self.resource_type
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
-        context['title'] = f'Confirm Resource Deletion'
+        context['title'] = f'Confirm Deletion of Data Registration'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
