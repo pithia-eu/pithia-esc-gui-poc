@@ -157,12 +157,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REQUIRED_URLS = (
-    r'^(.*)/update/',
-    r'^(.*)/delete/',
-    r'/register/(.*)$',
-    r'/manage/(.*)$',
+    r'^(.*)/',
 )
 
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
-    r'/browse/(.*)$',
+    r'/login/(.*)$',
+    r'/logout/(.*)$',
 )
