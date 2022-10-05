@@ -11,6 +11,7 @@
 {% endblock scripts %}
 {% block content %}
 <div class="row flex-wrap-reverse gx-5 pb-4">
+    {% block sidemenu %}
     <div class="col-xl-3 col-lg-4">
         <div class="card sticky">
             <div class="card-body">
@@ -30,8 +31,12 @@
             </div>
         </div>
     </div>
+    {% endblock sidemenu %}
     <div class="col-xl-9 col-lg-4">
+        {% block title %}
         <h1 class="pb-3">{{ title }}</h1>
+        {% endblock title %}
+        {% block subtitle %}{% endblock subtitle %}
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="fs-5">
@@ -42,7 +47,7 @@
                 <hr>
             </div>
             <div class="col-lg-12">
-                <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="register-resource-form">
+                <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
                     {% csrf_token %}
                     <div class="row gy-5">
                         <div class="col-lg-8">
