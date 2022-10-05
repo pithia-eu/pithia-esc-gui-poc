@@ -10,6 +10,7 @@
 {{ validation_url|json_script:"validation-url" }}
 {{ resource_id|json_script:"resource-id" }}
 <script src="{% static 'update/update.js' %}" id="update-script" type="module" defer></script>
+<script src="{% static 'update/update_data_collection.js' %}" id="update-data-collection-script" type="module" defer></script>
 {% endblock scripts %}
 {% block sidemenu %}{% endblock sidemenu %}
 {% block title %}
