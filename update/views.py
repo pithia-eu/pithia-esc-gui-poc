@@ -4,6 +4,7 @@ import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
 from bson.objectid import ObjectId
+from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id
 from mongodb import client
 from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
 from register.register_api_specification import move_current_existing_version_of_api_interaction_method_to_revisions, register_api_specification
@@ -266,6 +267,19 @@ class data_collection(UpdateResourceView):
     update_resource_type_view_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        interaction_methods = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        if len(interaction_methods) > 0:
+            form_data = {}
+            form_data['interaction_methods'] = []   
+            for im in interaction_methods:
+                if im['interaction_method'] == 'api':
+                    form_data['interaction_methods'].append('api')
+                    form_data['api_specification_url'] = im['interaction_url']
+            context['form'] = self.form_class(initial=form_data)
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
