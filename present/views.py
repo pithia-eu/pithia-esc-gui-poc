@@ -28,8 +28,6 @@ def interact_with_data_collection_through_api(request, data_collection_id):
         messages.error(request, 'No API interaction method was found for this data collection.')
         return HttpResponseRedirect(reverse('browse:data_collection_detail', kwargs={ 'data_collection_id': data_collection_id }))
 
-    print(api_interaction_method)
-
     return render(request, 'present/index.html', {
         'title': f'Interact with {data_collection["name"]}',
         'api_specification_url': api_interaction_method['interaction_url'],
