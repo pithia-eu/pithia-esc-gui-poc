@@ -44,6 +44,7 @@ class UpdateResourceView(FormView):
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['post_url'] = reverse_lazy(self.update_resource_type_view_name, args=[self.resource_id])
         context['update_resource_type_view_name'] = self.update_resource_type_view_name
         return context
 
