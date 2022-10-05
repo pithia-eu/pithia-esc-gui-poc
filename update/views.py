@@ -30,7 +30,7 @@ class UpdateResourceView(FormView):
     resource_to_update_name = '' # Set in get() function
 
     # Class variables
-    template_name = 'update/detail.html'
+    template_name = 'update/file_upload.html'
     form_class = UploadUpdatedFileForm
     success_url = ''
 
@@ -232,6 +232,7 @@ class data_collection(UpdateResourceView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
+    template_name = 'update/file_upload_data_collection.html'
 
     a_or_an = 'a'
     resource_type = 'Data Collection'
