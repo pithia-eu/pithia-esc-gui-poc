@@ -51,30 +51,36 @@ class UpdateResourceView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        form = self.form_class(request.POST, request.FILES)
         xml_file = request.FILES['files']
         if form.is_valid():
+            converted_xml_file = None
             try:
-                with client.start_session() as s:
-                    def cb(s):
-                        metadata_registration_results = None
-                        api_specification_registration_results = None
+                metadata_move_results = None
+                api_specification_move_results = None
 
-                        metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
-                        if api_specification_registration_results != None:
-                            api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results.inserted_id, CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision, session=s)
+                converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
+                converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+                metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                if metadata_move_results != None:
+                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results.inserted_id, CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
+            except BaseException as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An unexpected error occurred.')
+                return super().post(request, *args, **kwargs)
 
-                        converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-                        converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                        metadata_registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function, session=s)
-                        if 'interaction_methods' in request.POST:
-                            interaction_methods = request.POST.getlist('interaction_methods')
-                            if 'api' in interaction_methods:
-                                api_specification_url = request.POST['api_specification_url']
-                                api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results.inserted_id, session=s)
-                        messages.success(request, f'Successfully updated {xml_file.name}.')
-                    s.with_transaction(cb)
+            try:
+                metadata_registration_results = None
+                api_specification_registration_results = None
+
+                metadata_registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                if 'interaction_methods' in request.POST:
+                    interaction_methods = request.POST.getlist('interaction_methods')
+                    if 'api' in interaction_methods:
+                        api_specification_url = request.POST['api_specification_url']
+                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results.inserted_id)
+                messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
                 print(traceback.format_exc())
@@ -83,6 +89,8 @@ class UpdateResourceView(FormView):
                 print(err)
                 print(traceback.format_exc())
                 messages.error(request, 'An unexpected error occurred.')
+        else:
+            messages.error(request, 'The form submitted was not valid.')
 
         return super().post(request, *args, **kwargs)
 
@@ -110,7 +118,7 @@ class organisation(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
     
 
 class individual(UpdateResourceView):
@@ -127,7 +135,7 @@ class individual(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class project(UpdateResourceView):
     resource_mongodb_model = CurrentProject
@@ -143,7 +151,7 @@ class project(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class platform(UpdateResourceView):
     resource_mongodb_model = CurrentPlatform
@@ -159,7 +167,7 @@ class platform(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class instrument(UpdateResourceView):
     resource_mongodb_model = CurrentInstrument
@@ -175,7 +183,7 @@ class instrument(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class operation(UpdateResourceView):
     resource_mongodb_model = CurrentOperation
@@ -191,7 +199,7 @@ class operation(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class acquisition(UpdateResourceView):
     resource_mongodb_model = CurrentAcquisition
@@ -208,7 +216,7 @@ class acquisition(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class computation(UpdateResourceView):
     resource_mongodb_model = CurrentComputation
@@ -225,7 +233,7 @@ class computation(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class process(UpdateResourceView):
     resource_mongodb_model = CurrentProcess
@@ -242,7 +250,7 @@ class process(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class data_collection(UpdateResourceView):
     resource_mongodb_model = CurrentDataCollection
@@ -261,4 +269,4 @@ class data_collection(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
