@@ -2,6 +2,7 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
+from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
@@ -201,8 +202,21 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
 
     return linked_resources
 
-def _get_interaction_methods_linked_to_data_collection_localid(data_collection_localid):
-    return []
+def _delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id):
+    revision_ids_of_data_collection_id = get_revision_ids_for_resource_id(data_collection_id, CurrentDataCollection, DataCollectionRevision)
+    CurrentDataCollectionInteractionMethod.delete_many({
+        'data_collection_id': ObjectId(data_collection_id)
+    })
+    DataCollectionInteractionMethodRevision.delete_many({
+        'data_collection_id': ObjectId(data_collection_id)
+    })
+    for data_collection_revision_id in revision_ids_of_data_collection_id:
+        CurrentDataCollectionInteractionMethod.delete_many({
+            'data_collection_id': ObjectId(data_collection_revision_id)
+        })
+        DataCollectionInteractionMethodRevision.delete_many({
+            'data_collection_id': ObjectId(data_collection_revision_id)
+        })
 
 def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
     # Find the resource to delete, so it can be referenced later when deleting from
@@ -400,17 +414,14 @@ class data_collection(DeleteResourceView):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        return context
+
     def post(self, request, *args, **kwargs):
-        # Delete current data collection interaction methods
-        # before deleting the actual data collection, not sure
-        # if the order should be changed around...
-        CurrentDataCollectionInteractionMethod.delete_many({
-            'data_collection_id': ObjectId(self.resource_id)
-        })
-        # Delete data collection interaction methods revisions
-        # before deleting the actual data collection, not sure
-        # if the order should be changed around...
-        DataCollectionInteractionMethodRevision.delete_many({
-            'data_collection_id': ObjectId(self.resource_id)
-        })
+        # Delete interaction methods (current versions and
+        # revisions) before deleting the actual data collection,
+        # not sure if the order should be changed around...
+        _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
         return super().post(request, *args, **kwargs)
