@@ -13,23 +13,21 @@
 <div class="row flex-wrap-reverse gx-5 pb-4">
     {% block sidemenu %}
     <div class="col-xl-3 col-lg-4">
-        <div class="card sticky">
-            <div class="card-body">
-                <b class="text-secondary">Register other resources:</b>
-                <ul class="mt-2 mb-0">
-                    <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisations</a></li>
-                    <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individuals</a></li>
-                    <li><a href="{% url 'register:project' %}" class="pithia-blue">Projects</a></li>
-                    <li><a href="{% url 'register:platform' %}" class="pithia-blue">Platforms</a></li>
-                    <li><a href="{% url 'register:operation' %}" class="pithia-blue">Operations</a></li>
-                    <li><a href="{% url 'register:instrument' %}" class="pithia-blue">Instruments</a></li>
-                    <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisitions</a></li>
-                    <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computations</a></li>
-                    <li><a href="{% url 'register:process' %}" class="pithia-blue">Processes</a></li>
-                    <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collections</a></li>
-                </ul>
-            </div>
-        </div>
+        <small>
+            <h2 class="fs-5 mb-3">Go to other metadata types</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">{% if 'organisation' not in title|lower %}<a href="{% url 'register:organisation' %}" class="pithia-blue">{% endif %}Organisations{% if 'organisation' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'individual' not in title|lower %}<a href="{% url 'register:individual' %}" class="pithia-blue">{% endif %}Individuals{% if 'individual' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'project' not in title|lower %}<a href="{% url 'register:project' %}" class="pithia-blue">{% endif %}Projects{% if 'project' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'platform' not in title|lower %}<a href="{% url 'register:platform' %}" class="pithia-blue">{% endif %}Platforms{% if 'platform' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'operation' not in title|lower %}<a href="{% url 'register:operation' %}" class="pithia-blue">{% endif %}Operations{% if 'operation' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'instrument' not in title|lower %}<a href="{% url 'register:instrument' %}" class="pithia-blue">{% endif %}Instruments{% if 'project' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'acquisition' not in title|lower %}<a href="{% url 'register:acquisition' %}" class="pithia-blue">{% endif %}Acquisitions{% if 'acquisition' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'computation' not in title|lower %}<a href="{% url 'register:computation' %}" class="pithia-blue">{% endif %}Computations{% if 'computation' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'process' not in title|lower %}<a href="{% url 'register:process' %}" class="pithia-blue">{% endif %}Processes{% if 'process' not in title|lower %}</a>{% endif %}</li>
+                <li class="list-group-item">{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
+            </ul>
+        </small>
     </div>
     {% endblock sidemenu %}
     <div class="col-xl-9 col-lg-4">
