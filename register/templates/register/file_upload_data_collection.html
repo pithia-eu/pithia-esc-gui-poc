@@ -2,6 +2,7 @@
 {% load static %}
 {% block scripts %}
 {{ validation_url|json_script:'validation-url' }}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
 <script src="{% static 'register/register_data_collection.js' %}" type="module" defer></script>
 <script src="{% static 'js-yaml.min.js' %}"></script>
@@ -65,7 +66,7 @@ Upload an XML Metadata File
                                 {{ form.api_specification_url }}
                             </div>
                         </div>
-                        <div class="col-lg-12 mt-3 api-specification-url-status-validation">
+                        <div class="col-lg-12 mt-3 api-specification-url-status-validation d-none">
                             <ul class="list-group list-group-flush list-group-horizontal">
                                 <li class="list-group-item border border-0 status-invalid-link">
                                     <div class="d-flex file-validation-status">
@@ -73,28 +74,10 @@ Upload an XML Metadata File
                                         <small class="ms-1 fw-bold">Invalid link</small>
                                     </div>
                                 </li>
-                                <li class="list-group-item border border-0 status-syntax status-invalid-json">
-                                    <div class="d-flex file-validation-status">
-                                        <img src="{% static 'register/cross.svg' %}" alt="cross" class="me-3">
-                                        <small class="ms-1 fw-bold">JSON</small>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border border-0 status-syntax status-valid-json">
+                                <li class="list-group-item border border-0 status-valid-link">
                                     <div class="d-flex file-validation-status">
                                         <img src="{% static 'register/tick.svg' %}" alt="tick" class="me-3">
-                                        <small class="ms-1 fw-bold">JSON</small>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border border-0 status-syntax status-invalid-yaml">
-                                    <div class="d-flex file-validation-status">
-                                        <img src="{% static 'register/cross.svg' %}" alt="cross" class="me-3">
-                                        <small class="ms-1 fw-bold">YAML</small>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border border-0 status-syntax status-valid-yaml">
-                                    <div class="d-flex file-validation-status">
-                                        <img src="{% static 'register/tick.svg' %}" alt="tick" class="me-3">
-                                        <small class="ms-1 fw-bold">YAML</small>
+                                        <small class="ms-1 fw-bold">Links to a valid OpenAPI spec</small>
                                     </div>
                                 </li>
                             </ul>
