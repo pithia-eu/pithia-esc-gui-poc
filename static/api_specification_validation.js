@@ -1,6 +1,6 @@
 const apiSpecificationUrlInput = document.getElementById("id_api_specification_url");
-const validationStatusList = document.querySelector('.api-specification-url-status-validation');
-const syntaxStatusElements = document.querySelectorAll(".status-syntax");
+const validationStatusList = document.querySelector(".api-specification-url-status-validation");
+const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
 
 apiSpecificationUrlInput.addEventListener("input", async event => {
     const url = apiSpecificationUrlInput.value;
@@ -9,18 +9,12 @@ apiSpecificationUrlInput.addEventListener("input", async event => {
     }
 
     try {
-        const response = await fetch(url);
-        const responseText = await response.text();
         isValidationStatusListVisibile(true);
-        displayValidLinkResult(true);
-        displayJSONValidationResult(isValidJSON(responseText));
-        displayYAMLValidationResult(isValidYAML(responseText));
+        displayValidLinkResult(isValidOpenAPISpecificationUrl(url));
     } catch (e) {
         console.log(e);
         isValidationStatusListVisibile(true);
         displayValidLinkResult(false);
-        displayJSONValidationResult(false);
-        displayYAMLValidationResult(false);
     }
 });
 
@@ -34,50 +28,19 @@ function isValidationStatusListVisibile(isVisible) {
 function displayValidLinkResult(isLinkValid) {
     if (isLinkValid) {
         document.querySelector(".status-invalid-link").classList.add("d-none");
+        document.querySelector(".status-valid-link").classList.remove("d-none");
     } else {
-        syntaxStatusElements.forEach(e => {
-            e.classList.add("d-none");
-        })
         document.querySelector(".status-invalid-link").classList.remove("d-none");
+        document.querySelector(".status-valid-link").classList.add("d-none");
     }
 }
 
-function displayJSONValidationResult(isValid) {
-    if (isValid) {
-        document.querySelector(".status-invalid-json").classList.add("d-none");
-        document.querySelector(".status-valid-json").classList.remove("d-none");
-    } else {
-        document.querySelector(".status-invalid-json").classList.remove("d-none");
-        document.querySelector(".status-valid-json").classList.add("d-none");
-    }
-}
-
-function displayYAMLValidationResult(isValid) {
-    if (isValid) {
-        document.querySelector(".status-invalid-yaml").classList.add("d-none");
-        document.querySelector(".status-valid-yaml").classList.remove("d-none");
-    } else {
-        document.querySelector(".status-invalid-yaml").classList.remove("d-none");
-        document.querySelector(".status-valid-yaml").classList.add("d-none");
-    }
-}
-
-function isValidYAML(value) {
-    try {
-        jsyaml.load(value);
-        return true;
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
-}
-
-function isValidJSON(value) {
-    try {
-        JSON.parse(value);
-        return true;
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
+async function isValidOpenAPISpecificationUrl(url) {
+    const formData = new FormData();
+    formData.append("api_specification_url", url)
+    response = await fetch(apiSpecificationValidationUrl, {
+        method: "POST",
+        body: formData
+    });
+    return JSON.parse(response).is_valid;
 }
