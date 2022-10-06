@@ -192,4 +192,5 @@ class data_collection(RegisterResourceFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register a {self.resource_type.title()}'
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
