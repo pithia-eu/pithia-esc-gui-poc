@@ -14,7 +14,6 @@
     {% block sidemenu %}
     <div class="col-xl-3 col-lg-4">
         <small>
-            <h2 class="fs-5 mb-3">Go to other metadata types</h2>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{% if 'organisation' not in title|lower %}<a href="{% url 'register:organisation' %}" class="pithia-blue">{% endif %}Organisations{% if 'organisation' not in title|lower %}</a>{% endif %}</li>
                 <li class="list-group-item">{% if 'individual' not in title|lower %}<a href="{% url 'register:individual' %}" class="pithia-blue">{% endif %}Individuals{% if 'individual' not in title|lower %}</a>{% endif %}</li>
