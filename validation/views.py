@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.http import require_POST
 from django.views.generic import View
 from lxml import etree
-from openapi_schema_validator import validate_spec_url
+from openapi_spec_validator import validate_spec_url
 from requests import get
 
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
