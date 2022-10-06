@@ -1,5 +1,6 @@
 const apiSpecificationUrlInput = document.getElementById("id_api_specification_url");
 const validationStatusList = document.querySelector('.api-specification-url-status-validation');
+const syntaxStatusElements = document.querySelectorAll(".status-syntax");
 
 apiSpecificationUrlInput.addEventListener("input", async event => {
     const url = apiSpecificationUrlInput.value;
@@ -11,11 +12,13 @@ apiSpecificationUrlInput.addEventListener("input", async event => {
         const response = await fetch(url);
         const responseText = await response.text();
         isValidationStatusListVisibile(true);
+        displayValidLinkResult(true);
         displayJSONValidationResult(isValidJSON(responseText));
         displayYAMLValidationResult(isValidYAML(responseText));
     } catch (e) {
         console.log(e);
         isValidationStatusListVisibile(true);
+        displayValidLinkResult(false);
         displayJSONValidationResult(false);
         displayYAMLValidationResult(false);
     }
@@ -28,11 +31,14 @@ function isValidationStatusListVisibile(isVisible) {
     return validationStatusList.classList.add("d-none");
 }
 
-function displayInvalidLinkResult(isLinkValid) {
+function displayValidLinkResult(isLinkValid) {
     if (isLinkValid) {
-
+        document.querySelector(".status-invalid-link").classList.add("d-none");
     } else {
-        
+        syntaxStatusElements.forEach(e => {
+            e.classList.add("d-none");
+        })
+        document.querySelector(".status-invalid-link").classList.remove("d-none");
     }
 }
 
