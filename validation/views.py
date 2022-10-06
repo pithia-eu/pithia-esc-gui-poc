@@ -1,9 +1,14 @@
 import json
+import traceback
 from django.http import HttpResponse, HttpResponseServerError
+from django.views.decorators.http import require_POST
 from django.views.generic import View
 from lxml import etree
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from openapi_schema_validator import validate_spec_url
+from requests import get
 
+from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from validation.forms import ApiSpecificationUrlValidationForm
 from validation.metadata_validation import ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
 
 # Create your views here.
@@ -66,3 +71,19 @@ class process(ValidateXmlMetadataFileFormView):
 class data_collection(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+
+@require_POST
+def api_specification_url(request):
+    response_body = {
+        'is_valid': False
+    }
+    form = ApiSpecificationUrlValidationForm(request.POST)
+    if form.is_valid():
+        api_specification_url = form.cleaned_data['api_specification_url']
+        try:
+            validate_spec_url(api_specification_url)
+            response_body['is_valid'] = True
+        except BaseException as err:
+            print(err)
+            print(traceback.format_exc())
+    return HttpResponse(response_body)
