@@ -64,20 +64,18 @@ Upload an XML Metadata File
                             <div class="d-flex flex-column">
                                 {{ form.api_specification_url.label_tag }}
                                 {{ form.api_specification_url }}
+                                <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3 api-specification-url-status-validation d-none">
                             <ul class="list-group list-group-flush list-group-horizontal">
-                                <li class="list-group-item border border-0 status-invalid-link">
-                                    <div class="d-flex file-validation-status">
-                                        <img src="{% static 'register/cross.svg' %}" alt="cross" class="me-3">
-                                        <small class="ms-1 fw-bold">Invalid link</small>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border border-0 status-valid-link">
-                                    <div class="d-flex file-validation-status">
-                                        <img src="{% static 'register/tick.svg' %}" alt="tick" class="me-3">
-                                        <small class="ms-1 fw-bold">Links to a valid OpenAPI spec</small>
+                                <li class="list-group-item border border-0 status-invalid-link d-none">
+                                    <div class="d-flex align-items-start file-validation-status">
+                                        <img src="{% static 'register/cross.svg' %}" alt="cross" class="mt-1 me-3">
+                                        <div class="d-flex flex-column">
+                                            <span class="status-text">Invalid link</span>
+                                            <small class="status-details d-none mt-1"></small>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>

@@ -1,6 +1,7 @@
 const apiSpecificationUrlInput = document.getElementById("id_api_specification_url");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
 const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
+let userInputTimeout;
 
 apiSpecificationUrlInput.addEventListener("input", async event => {
     const url = apiSpecificationUrlInput.value;
@@ -8,14 +9,18 @@ apiSpecificationUrlInput.addEventListener("input", async event => {
         return isValidationStatusListVisibile(false);
     }
 
-    try {
-        isValidationStatusListVisibile(true);
-        displayValidLinkResult(isValidOpenAPISpecificationUrl(url));
-    } catch (e) {
-        console.log(e);
-        isValidationStatusListVisibile(true);
-        displayValidLinkResult(false);
+    displayValidatingSpinner(true);
+    if (userInputTimeout !== undefined) {
+        clearTimeout(userInputTimeout);
     }
+    userInputTimeout = setTimeout(async () => {
+        try {
+            displayValidLinkResult(await validateOpenAPISpecificationUrl(url));
+        } catch (e) {
+            console.log(e);
+            displayValidLinkResult(false);
+        }
+    }, 500);
 });
 
 function isValidationStatusListVisibile(isVisible) {
@@ -25,22 +30,48 @@ function isValidationStatusListVisibile(isVisible) {
     return validationStatusList.classList.add("d-none");
 }
 
-function displayValidLinkResult(isLinkValid) {
-    if (isLinkValid) {
-        document.querySelector(".status-invalid-link").classList.add("d-none");
-        document.querySelector(".status-valid-link").classList.remove("d-none");
+function displayValidatingSpinner(isVisible) {
+    isValidationStatusListVisibile(false);
+    document.querySelector(".status-invalid-link").classList.add("d-none");
+    if (isVisible === true) {
+        document.querySelector(".status-validating-link").classList.remove("d-none");
     } else {
-        document.querySelector(".status-invalid-link").classList.remove("d-none");
-        document.querySelector(".status-valid-link").classList.add("d-none");
+        document.querySelector(".status-validating-link").classList.add("d-none");
     }
 }
 
-async function isValidOpenAPISpecificationUrl(url) {
+function displayValidLinkResult(validationResult) {
+    console.log('validationResult', validationResult)
+    const { valid, error, details } = validationResult;
+    console.log('valid', valid);
+    console.log('error', error);
+    isValidationStatusListVisibile(true);
+    document.querySelector(".status-validating-link").classList.add("d-none");
+    if (valid === true) {
+        isValidationStatusListVisibile(false);
+        document.querySelector(".status-invalid-link").classList.add("d-none");
+    } else {
+        document.querySelector(".status-invalid-link .status-details").classList.add("d-none");
+        document.querySelector(".status-invalid-link").classList.remove("d-none");
+        document.querySelector(".status-invalid-link .status-text").innerHTML = "An unexpected error occurred.";
+        if (error) {
+            document.querySelector(".status-invalid-link .status-text").innerHTML = error;
+        }
+        if (details) {
+            document.querySelector(".status-invalid-link .status-details").innerHTML = details;
+            document.querySelector(".status-invalid-link .status-details").classList.remove("d-none");
+        }
+    }
+}
+
+async function validateOpenAPISpecificationUrl(url) {
     const formData = new FormData();
-    formData.append("api_specification_url", url)
-    response = await fetch(apiSpecificationValidationUrl, {
+    const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
+    formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
+    formData.append("api_specification_url", url);
+    const response = await fetch(apiSpecificationValidationUrl, {
         method: "POST",
         body: formData
     });
-    return JSON.parse(response).is_valid;
+    return await response.json();
 }
