@@ -1,11 +1,11 @@
 import json
 import traceback
+from urllib.error import HTTPError
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.http import require_POST
 from django.views.generic import View
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
-from requests import get
 
 from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.forms import ApiSpecificationUrlValidationForm
@@ -75,15 +75,23 @@ class data_collection(ValidateXmlMetadataFileFormView):
 @require_POST
 def api_specification_url(request):
     response_body = {
-        'is_valid': False
+        'valid': False
     }
     form = ApiSpecificationUrlValidationForm(request.POST)
     if form.is_valid():
-        api_specification_url = form.cleaned_data['api_specification_url']
+        api_specification_url = request.POST['api_specification_url']
         try:
             validate_spec_url(api_specification_url)
-            response_body['is_valid'] = True
+            response_body['valid'] = True
+        except HTTPError as err:
+            print(err)
+            print(traceback.format_exc())
+            response_body['error'] = 'URL not found'
         except BaseException as err:
             print(err)
             print(traceback.format_exc())
-    return HttpResponse(response_body)
+            response_body['error'] = 'URL does not link to a valid OpenAPI specification'
+            response_body['details'] = str(err)
+    else:
+        response_body['error'] = 'Please enter a URL'
+    return HttpResponse(json.dumps(response_body), content_type='application/json')
