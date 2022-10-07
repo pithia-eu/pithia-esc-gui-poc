@@ -15,22 +15,20 @@ Upload an XML Metadata File
 <div class="col-lg-12">
     <div class="row">
         <div class="col-lg-12">
-            <h2 class="fs-5">Interaction methods</h2>
+            <h2 class="fs-3">Interaction methods</h2>
             <hr>
         </div>
         <div class="col-lg-8">
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="d-flex flex-column text-muted mb-0">
-                        <b>URL in XML Metadata File</b>
-                        <small class="mb-0">
-                            An interaction link for the data collection can be specified within the XML metadata file.
-                        </small>
+                    <p class="d-flex flex-column text-muted text-muted mb-0">
+                        <span><b>Link to Data Collection</b> (added inside the XML Metadata File)</span>
+                        <span class="mb-0">
+                            If a URL is put inside a linkage tag, this will provided as a direct link to the Data Collection.
+                        </span>
                     </p>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -48,9 +46,9 @@ Upload an XML Metadata File
                                     {{ checkbox }}
                                 </div>
                                 {% endfor %}
-                                <small class="mb-2">
+                                <span class="mb-2">
                                     A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
-                                </small>
+                                </span>
                             </div>
                         </div>
                         <div class="col-lg-12">
