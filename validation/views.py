@@ -86,11 +86,11 @@ def api_specification_url(request):
         except HTTPError as err:
             print(err)
             print(traceback.format_exc())
-            response_body['error'] = 'URL not found'
+            response_body['error'] = 'The URL was not found'
         except BaseException as err:
             print(err)
             print(traceback.format_exc())
-            response_body['error'] = 'URL does not link to a valid OpenAPI specification'
+            response_body['error'] = 'The URL does not link to a valid OpenAPI specification'
             response_body['details'] = str(err)
     else:
         response_body['error'] = 'Please enter a URL'
