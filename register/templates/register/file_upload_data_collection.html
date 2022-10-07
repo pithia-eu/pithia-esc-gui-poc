@@ -68,14 +68,11 @@ Upload an XML Metadata File
                             </div>
                         </div>
                         <div class="col-lg-12 mt-3 api-specification-url-status-validation d-none">
-                            <ul class="list-group list-group-flush list-group-horizontal">
-                                <li class="list-group-item border border-0 status-invalid-link d-none">
-                                    <div class="d-flex align-items-start file-validation-status">
-                                        <img src="{% static 'register/cross.svg' %}" alt="cross" class="mt-1 me-3">
-                                        <div class="d-flex flex-column">
-                                            <span class="status-text">Invalid link</span>
-                                            <small class="status-details d-none mt-1"></small>
-                                        </div>
+                            <ul class="list-group list-group-flush list-group-horizontal mb-0">
+                                <li class="list-group-item border border-0 status-invalid-link d-none p-0">
+                                    <div class="d-flex flex-column">
+                                        <small class="status-text text-danger">Invalid link</small>
+                                        <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
                                     </div>
                                 </li>
                             </ul>
