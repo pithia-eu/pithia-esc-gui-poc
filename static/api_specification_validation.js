@@ -41,10 +41,7 @@ function displayValidatingSpinner(isVisible) {
 }
 
 function displayValidLinkResult(validationResult) {
-    console.log('validationResult', validationResult)
     const { valid, error, details } = validationResult;
-    console.log('valid', valid);
-    console.log('error', error);
     isValidationStatusListVisibile(true);
     document.querySelector(".status-validating-link").classList.add("d-none");
     if (valid === true) {
