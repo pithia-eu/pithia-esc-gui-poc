@@ -20,14 +20,14 @@ def move_current_version_of_resource_to_revisions(resource_pithia_identifier, cu
     return resource_revision_mongodb_model.insert_one(current_version_of_resource)
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
-    metadata_file_dict = convert_xml_metadata_file_to_dictionary(xml_file)
+    converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
-    metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
-    if not validate_xml_file_is_unique(mongodb_model, converted_xml_file=metadata_file_dict):
+    converted_metadata_file_dictionary = converted_metadata_file_dictionary[(list(converted_metadata_file_dictionary)[0])]
+    if not validate_xml_file_is_unique(mongodb_model, converted_xml_file=converted_metadata_file_dictionary):
         return 'This XML metadata file has been registered before.'
     if xml_conversion_check_and_fix:
-        xml_conversion_check_and_fix(metadata_file_dict)
-    metadata_registration_result = mongodb_model.insert_one(metadata_file_dict)
+        xml_conversion_check_and_fix(converted_metadata_file_dictionary)
+    metadata_registration_result = mongodb_model.insert_one(converted_metadata_file_dictionary)
     xml_file.seek(0)
     xml_file_string = xml_file.read()
     if isinstance(xml_file_string, bytes):
@@ -37,4 +37,4 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
         'value': xml_file_string
     }
     OriginalMetadataXml.insert_one(original_metadata_xml)
-    return metadata_registration_result
+    return converted_metadata_file_dictionary
