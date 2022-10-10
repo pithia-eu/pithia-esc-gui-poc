@@ -1,27 +1,40 @@
+import {
+    isEachFileValid
+} from "/static/file_upload.js";
+
+export let isApiSpecificationLinkValid = false;
 const apiSpecificationUrlInput = document.getElementById("id_api_specification_url");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
 const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
 let userInputTimeout;
 
 apiSpecificationUrlInput.addEventListener("input", async event => {
+    startOpenApiSpecificationUrlValidation();
+});
+
+export function startOpenApiSpecificationUrlValidation() {
     const url = apiSpecificationUrlInput.value;
     if (url.length === 0) {
         return isValidationStatusListVisibile(false);
     }
 
+    document.querySelector("button[type='submit']").disabled = true;
     displayValidatingSpinner(true);
     if (userInputTimeout !== undefined) {
         clearTimeout(userInputTimeout);
     }
     userInputTimeout = setTimeout(async () => {
         try {
-            displayValidLinkResult(await validateOpenAPISpecificationUrl(url));
+            const validationResult = await sendOpenApiSpecificationUrlForValidation(url);
+            const { valid, error, details } = validationResult;
+            displayValidLinkResult(validationResult);
+            document.querySelector("button[type='submit']").disabled = !(valid && isEachFileValid);
         } catch (e) {
             console.log(e);
             displayValidLinkResult(false);
         }
     }, 500);
-});
+}
 
 function isValidationStatusListVisibile(isVisible) {
     if (isVisible) {
@@ -61,7 +74,7 @@ function displayValidLinkResult(validationResult) {
     }
 }
 
-async function validateOpenAPISpecificationUrl(url) {
+async function sendOpenApiSpecificationUrlForValidation(url) {
     const formData = new FormData();
     const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
     formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
