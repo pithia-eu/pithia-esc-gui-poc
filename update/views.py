@@ -80,7 +80,7 @@ class UpdateResourceView(FormView):
                     interaction_methods = request.POST.getlist('interaction_methods')
                     if 'api' in interaction_methods:
                         api_specification_url = request.POST['api_specification_url']
-                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results._id)
+                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['_id'])
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
