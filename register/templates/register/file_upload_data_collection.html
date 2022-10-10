@@ -5,8 +5,7 @@
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
 <script src="{% static 'register/register_data_collection.js' %}" type="module" defer></script>
-<script src="{% static 'js-yaml.min.js' %}"></script>
-<script src="{% static 'api_specification_validation.js' %}" defer></script>
+<script src="{% static 'api_specification_validation.js' %}" type="module" defer></script>
 {% endblock scripts %}
 {% block file_upload_section_heading_text %}
 Upload an XML Metadata File
