@@ -1,21 +1,51 @@
 import {
-    isEachFileValid
-} from "/static/file_upload.js";
+    enableSubmitButtonIfReady
+} from "/static/is_file_upload_ready.js"
 
 export let isApiSpecificationLinkValid = false;
-const apiSpecificationUrlInput = document.getElementById("id_api_specification_url");
+export let isApiSpecificationInputAvailable = false;
+export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="interaction_methods"][value="api"]');
+export const apiSpecificationUrlInput = document.querySelector("#id_api_specification_url");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
 const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
 let userInputTimeout;
 
+apiExecutionMethodCheckbox.addEventListener("change", event => {
+    toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
+    if (apiExecutionMethodCheckbox.checked) {
+        isApiSpecificationLinkValid = false;
+        enableSubmitButtonIfReady();
+        startOpenApiSpecificationUrlValidation();
+    } else {
+        enableSubmitButtonIfReady();
+    }
+});
+
 apiSpecificationUrlInput.addEventListener("input", async event => {
     startOpenApiSpecificationUrlValidation();
+    const url = apiSpecificationUrlInput.value;
+    if (apiExecutionMethodCheckbox.checked && url.trim().length === 0) {
+        isApiSpecificationLinkValid = false;
+        enableSubmitButtonIfReady();
+    }
 });
+
+export function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
+    if (apiExecutionMethodCheckbox.checked) {
+        apiSpecificationUrlInput.disabled = false;
+        apiSpecificationUrlInput.required = true;
+    } else {
+        apiSpecificationUrlInput.disabled = true;
+        apiSpecificationUrlInput.required = false;
+    }
+}
 
 export function startOpenApiSpecificationUrlValidation() {
     const url = apiSpecificationUrlInput.value;
     if (url.length === 0) {
-        return isValidationStatusListVisibile(false);
+        isValidationStatusListVisibile(false);
+        enableSubmitButtonIfReady();
+        return;
     }
 
     document.querySelector("button[type='submit']").disabled = true;
@@ -27,8 +57,9 @@ export function startOpenApiSpecificationUrlValidation() {
         try {
             const validationResult = await sendOpenApiSpecificationUrlForValidation(url);
             const { valid, error, details } = validationResult;
+            isApiSpecificationLinkValid = valid;
             displayValidLinkResult(validationResult);
-            document.querySelector("button[type='submit']").disabled = !(valid && isEachFileValid);
+            enableSubmitButtonIfReady();
         } catch (e) {
             console.log(e);
             displayValidLinkResult(false);
@@ -85,3 +116,7 @@ async function sendOpenApiSpecificationUrlForValidation(url) {
     });
     return await response.json();
 }
+
+window.addEventListener("load", event => {
+    isApiSpecificationInputAvailable = true;
+});
