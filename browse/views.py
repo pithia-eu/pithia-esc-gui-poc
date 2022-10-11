@@ -302,10 +302,12 @@ def flatten(d):
         if isinstance(value, dict):
             value = [value]
         if isinstance(value, list):
+            index = 0
             for subdict in value:
+                index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + '.' + key2: value2 for key2, value2 in deeper
+                    key + '[' + str(index) + '].' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
