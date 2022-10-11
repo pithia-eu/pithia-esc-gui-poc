@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active 'Admin Panel' %}
+{% endblock breadcrumbs %}
+{% load static %}
+{% block content %}
+<h1>PITHIA-NRF e-Science Centre Admin Panel</h1>
+<section>
+    <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{% url 'browse:schemas' %}">
+                        <img src="{% static 'browse.svg' %}" alt="Browse">
+                        <span>Browse Metadata Models</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{% url 'browse:ontology' %}">
+                        <img src="{% static 'browse.svg' %}" alt="Browse">
+                        <span>Browse Space Physics Ontology</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{% url 'register:index' %}">
+                        <img src="{% static 'upload.svg' %}" alt="Register">
+                        <span>Register</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{% url 'resource_management:index' %}">
+                        <img src="{% static 'update.svg' %}" alt="Manage">
+                        <span>Manage</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
