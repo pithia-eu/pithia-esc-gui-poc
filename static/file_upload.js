@@ -1,3 +1,7 @@
+import {
+    enableSubmitButtonIfReady
+} from "/static/is_file_upload_ready.js"
+
 export let isEachFileValid = false; // Variable is exported to work with the API specification URL input
 
 // Source for htmlToElement() function: https://stackoverflow.com/a/35385518
@@ -212,11 +216,10 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining);
             btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
             finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
-            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0);
-            isEachFileValid = !uploadFormSubmitButton.disabled;
+            isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0;
+            enableSubmitButtonIfReady();
         });
         uploadFormSubmitButton.disabled = true;
-        isEachFileValid = !uploadFormSubmitButton.disabled;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
         const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
         const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
@@ -225,12 +228,11 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         }
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (!validationResults.error) {
-            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0);
-            isEachFileValid = !uploadFormSubmitButton.disabled;
+            isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
+            enableSubmitButtonIfReady();
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
             uploadFormSubmitButton.disabled = true;
-            isEachFileValid = !uploadFormSubmitButton.disabled;
             btnRmFileIdsToClick.push(`btn-rm-file-${i}`);
             removeClassNameFromElem(validationStatusErrorElem, "d-none");
             updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
