@@ -8,6 +8,7 @@
 {% block scripts %}
 {{ validation_url|json_script:"validation-url" }}
 <script src="{% static "register/register.js" %}" id="register-script" type="module" defer></script>
+<script src="{% static "is_file_upload_ready.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
 <div class="row flex-wrap-reverse gx-5 pb-4">
