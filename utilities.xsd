@@ -275,7 +275,7 @@ Information about online sources from which the dataset, specification, or commu
         </complexContent>
     </complexType>
     <complexType name="CitationPropertyType">
-        <sequence>
+        <sequence minOccurs="0">
             <element ref="pithia:Citation"/>
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>

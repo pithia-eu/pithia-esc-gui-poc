@@ -40,14 +40,19 @@
                     <documentation>for annimation...</documentation>
                 </annotation>
             </element>
+            <element name="cadence" minOccurs="0" maxOccurs="1" type="gml:TimeIntervalLengthType">
+                <annotation>
+                    <documentation>Temporal resolution of the observations, if regularly repetitive</documentation>
+                </annotation>
+            </element>
             <element name="vectorRepresentation" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>for annimation...</documentation>
+                    <documentation>For those capabilities that are limited in their representation of the vector (i.e., only projections or components)</documentation>
                 </annotation>
             </element>
             <element name="crs" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>for annimation...</documentation>
+                    <documentation>System of coordinates from PITHIA ontology vocabulary</documentation>
                 </annotation>
             </element>
             <element name="units" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
@@ -57,8 +62,8 @@
             </element>
         </sequence>
     </complexType>
-    <complexType name="ProcessCapabilityPropertyType">
-        <sequence minOccurs="0">
+    <complexType name="ProcessCapabilitiesType">
+        <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="pithia:processCapability"/>
         </sequence>
         <attributeGroup ref="gml:AssociationAttributeGroup"/>
@@ -67,7 +72,7 @@
     <!-- end of ProcessCapability -->
     <!--
          P R O C E S S  
-         an abstract element that is parent to Acquisition, Computation, and CompositeProcess 
+         an abstract element that is parent to AcquisitionCapabilities, ComputationCapabilities, and CompositeProcess 
     -->
     <element abstract="true" name="Process" type="pithia:ProcessType">
         <annotation>
@@ -110,7 +115,7 @@ An acquisition type   component  interacts with the feature of interest /samplin
                     </documentation>
                 </annotation>
             </element>
-            <element name="capability" maxOccurs="unbounded" minOccurs="0" type="pithia:ProcessCapabilityPropertyType"/>
+            <element name="capabilities" maxOccurs="1" minOccurs="0" type="pithia:ProcessCapabilitiesType"/>
             <element name="dataLevel" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
                 <annotation>
                     <documentation>-- Definition --
@@ -131,38 +136,23 @@ An acquisition type   component  interacts with the feature of interest /samplin
         </sequence>
         <!-- new end -->      
     </complexType>
-    <complexType name="ProcessPropertyType">
-        <sequence minOccurs="0">
-            <element ref="pithia:Process"/>
-        </sequence>
-        <attributeGroup ref="gml:AssociationAttributeGroup"/>
-        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
-    </complexType>
     <!-- end of Process -->
     <!--
-         A C Q U I S I T I O N      
+         A C Q U I S I T I O N    C A P A B I L I T I E S
     -->
-    <element name="Acquisition" substitutionGroup="pithia:Process" type="pithia:AcquisitionType">
+    <element name="AcquisitionCapabilities" substitutionGroup="pithia:Process" type="pithia:AcquisitionCapabilitiesType">
         <annotation>
             <documentation>-- Definition --
-A process component which interacts with the feature of interest  (e.g. an atmospheric column)  to provide a result. 
+A process component that defines acquisition capabilities of an instrument for observing properties of Mother Nature. 
             </documentation>
         </annotation>
     </element>
-    <complexType name="AcquisitionType">
+    <complexType name="AcquisitionCapabilitiesType">
         <complexContent>
             <extension base="pithia:ProcessType">
                 <sequence>
-                    <element name="instrumentPlatformPairs" maxOccurs="1" minOccurs="0" type="pithia:InstrumentPlatformPairsPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Notification of  the platform and  the mounted on it  instrument for the specified acquisition component. 
-                            </documentation>
-                        </annotation>
-                    </element>
-                    <!-- New  start-->
-                    <element name="instrumentModePairs" maxOccurs="1" minOccurs="0" type="pithia:InstrumentOperationalModePairsPropertyType"/>
-                    <!-- New  end -->
+                    <!-- The InstrumentModePair links capabilities to the instrument -->
+                    <element name="instrumentModePair" maxOccurs="1" minOccurs="0" type="pithia:InstrumentOperationalModePairsPropertyType"/>
                     <element name="outputDescription" maxOccurs="1" minOccurs="0" type="pithia:InputOutputPropertyType">
                         <annotation>
                             <documentation>-- Definition --EE
@@ -179,42 +169,14 @@ Individual or organisation related  to acquisition.
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="instrument" maxOccurs="unbounded" minOccurs="1" type="pithia:InstrumentPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Instrument used in the acquisition component.
-
--- Description --
-
-NOTE Any instance of MO_Acquisition shall have at least one instrument which might be used in more than one acquisitions.
-                             </documentation>
-                        </annotation>
-                    </element>
-                    <element name="platform" maxOccurs="unbounded" minOccurs="0" type="pithia:PlatformPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Platform used in the acquisition component.
-                            </documentation>
-                        </annotation>
-                    </element>
-                    <element name="operation" maxOccurs="unbounded" minOccurs="0" type="pithia:OperationPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-Operation of a platform.
-                            </documentation>
-                        </annotation>
-                    </element>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
-    <complexType name="AcquisitionPropertyType">
-        <sequence minOccurs="0">
-            <element ref="pithia:Acquisition"/>
-        </sequence>
-        <attributeGroup ref="gml:AssociationAttributeGroup"/>
-        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
-    </complexType>
+
+    <!--
+         I N S T R U M E N T   A N D   I T S   M O D E S    O F    O P E R A T I O N
+    -->
     <element name="Instrument" substitutionGroup="gml:AbstractFeature" type="pithia:InstrumentType">
         <annotation>
             <documentation>-- Definition --
@@ -270,10 +232,8 @@ NOTE An instance of Instrument class can be an aggregation of instruments.
                                 Type of instrument from a controlled vocabulary.</documentation>
                         </annotation>
                     </element>  
-                    <!-- new start -->
                     <element name="operationalMode" maxOccurs="unbounded" minOccurs="0" type="pithia:InstrumentOperationalModePropertyType"/>
                     <element name="URL" maxOccurs="unbounded" minOccurs="0" type="gmd:URL_PropertyType"/>     
-                    <!-- new end -->
                     <element name="documentation" maxOccurs="unbounded" minOccurs="0" type="pithia:CitationPropertyType">
                         <annotation>
                             <documentation>-- Definition --
@@ -307,38 +267,40 @@ Member of a group of instruments.
         <attributeGroup ref="gml:AssociationAttributeGroup"/>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>
-    <element name="InstrumentPlatformPair" substitutionGroup="gml:AbstractObject" type="pithia:InstrumentPlatformPairType">
-        <annotation>
-            <documentation>-- Definition --
-A pair consisting of  a platform and an  instrument mounted on this platform. 
-            </documentation>
-        </annotation>
-    </element>
-    <complexType name="InstrumentPlatformPairType">
+    <!-- new start -->
+    <element name="InstrumentOperationalMode" substitutionGroup="gml:AbstractObject" type="pithia:InstrumentOperationalModeType"/>
+    <complexType name="InstrumentOperationalModeType">
         <sequence>
-            <element name="instrument" type="pithia:InstrumentPropertyType">
-                <annotation>
-                    <documentation>-- Definition --
-Instrument mounted on the specified platform.
-                    </documentation>
-                </annotation>
-            </element>
-            <element name="platform" type="pithia:PlatformPropertyType">
-                <annotation>
-                    <documentation>-- Definition --
-Platform hosting the specified instrument.
-                    </documentation>
-                </annotation>
-            </element>
+            <element name="id" type="string"/>
+            <element name="name" type="string"/>
+            <element name="description" type="string"/>
         </sequence>
     </complexType>
-    <complexType name="InstrumentPlatformPairsPropertyType">
+    <complexType name="InstrumentOperationalModePropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:InstrumentOperationalMode"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+    <element name="InstrumentOperationalModePair" substitutionGroup="gml:AbstractObject" type="pithia:InstrumentOperationalModePairType"/>
+    <complexType name="InstrumentOperationalModePairType">
         <sequence>
-            <element ref="pithia:InstrumentPlatformPair"/>
+            <!-- this is the main place where the instrument itself is defined -->
+            <element name="instrument" type="pithia:InstrumentPropertyType"/>
+            <element name="mode" type="pithia:InstrumentOperationalModePropertyType"/>
+        </sequence>
+    </complexType>
+    <complexType name="InstrumentOperationalModePairsPropertyType">
+        <sequence>
+            <element ref="pithia:InstrumentOperationalModePair"/>
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>
-
+    <!-- new end -->      
+    <!--
+         P L A T F O R M    A N D   I T S     O P E R A T I O N 
+    -->
     <element name="Platform" substitutionGroup="gml:AbstractFeature" type="pithia:PlatformType">
         <annotation>
             <documentation>-- Definition --
@@ -373,6 +335,7 @@ NOTE A platform may be a member of a complex of parent  and child platforms.
                     </element> 
                     <!-- new start -->
                     <element name="shortName" type="string"/> 
+                    <element name="standardIdentifier" maxOccurs="unbounded" minOccurs="0" type="pithia:StandardPlatformIdentifierType"/> 
                     <element name="URL" maxOccurs="unbounded" minOccurs="0" type="gmd:URL_PropertyType"/>
                     <!-- new end -->                    
                     <element name="description" maxOccurs="1" minOccurs="0" type="string">
@@ -566,11 +529,105 @@ Geographic description of the location  using text or an identifier.
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>
-    <!-- end of Acquisition and associated Instrument, Platform, and Operation -->
-    <!--     
-         C O M P U T A T I O N      
+    <!-- this type is for standard platform IDs such as the URSI Code -->
+    <complexType name="StandardPlatformIdentifierType">
+        <simpleContent>
+            <extension base="string">
+                <attribute name="authority" type="string" use="required"/>
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <!-- end of AcquisitionCapabilities and associated Instrument, Platform, and Operation -->
+
+    <!--
+         A C Q U I S I T I O N
     -->
-    <element name="Computation" substitutionGroup="pithia:Process" type="pithia:ComputationType">
+    <element name="Acquisition" type="pithia:AcquisitionType">
+        <annotation>
+            <documentation>-- Definition --
+A process component which interacts with the feature of interest  (e.g. an atmospheric column)  to provide a result. 
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="AcquisitionType">
+        <sequence>
+            <element name="identifier" type="pithia:PITHIA_IdentifierPropertyType">
+                <annotation>
+                    <documentation>-- Definition --
+                        External identifier of the process component (acquisition, computation or composite). 
+                    </documentation>
+                </annotation>
+            </element>                
+            <element name="name" type="string">
+                <annotation>
+                    <documentation>-- Definition --
+                        Name of the process component (for internal use within PITHIA system)
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="description" maxOccurs="1" minOccurs="0" type="string">
+                <annotation>
+                <documentation>-- Definition --
+                    Textual description of  the process component (acquisition, computation or composite). 
+                </documentation>
+            </annotation>
+            </element>            
+            <element name="capabilityLinks" maxOccurs="1" minOccurs="0" type="pithia:CapabilityLinksType">
+                <annotation>
+                    <documentation>-- Definition --
+                       Links to the capabilities of this Acquisition, each link connects platform and acquisitionCapabilities
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <!-- AcquisitionPropertyType is used in CompositeProcess to link to the acquisition component -->
+    <complexType name="AcquisitionPropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:Acquisition"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+    <!-- In Acquisition and Computation, this is the list of links to the capabilities of each instrument or computation -->
+    <complexType name="CapabilityLinksType">
+        <sequence minOccurs="1">
+            <element ref="pithia:capabilityLink"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <element name="capabilityLink" substitutionGroup="gml:AbstractObject" type="pithia:CapabilityLinkType">
+        <annotation>
+            <documentation>One link of Acquisition or Computation to the appropriate Capabilities of the process</documentation>
+        </annotation>
+    </element>
+    <complexType name="CapabilityLinkType">
+        <sequence>
+            <!-- this is the main place where the instrument itself is defined -->
+            <element name="platform" minOccurs="0" type="pithia:PlatformPropertyType"/>
+            <element name="standardIdentifier" maxOccurs="unbounded" minOccurs="0" type="pithia:StandardPlatformIdentifierType"/> 
+            <choice>
+                 <element name="acquisitionCapabilities" minOccurs="1" type="pithia:AcquisitionCapabilitiesPropertyType"/>
+                 <element name="computationCapabilities" minOccurs="1" type="pithia:ComputationCapabilitiesPropertyType"/>
+            </choice>
+            <element name="timeSpan" minOccurs="0" type="gml:TimePeriodType"/>
+        </sequence>
+    </complexType>
+    <complexType name="AcquisitionCapabilitiesPropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:AcquisitionCapabilities"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
+    <!--     
+         C O M P U T A T I O N   C A P A B I L I T I E S
+    -->
+    <element name="ComputationCapabilities" substitutionGroup="pithia:Process" type="pithia:ComputationCapabilitiesType">
         <annotation>
             <documentation>-- Definition --
 A process component which involves only numerical computation.
@@ -580,21 +637,21 @@ An instance of Computation  provides a) a  description of a process component   
             </documentation>
         </annotation>
     </element>
-    <complexType name="ComputationType">
+    <complexType name="ComputationCapabilitiesType">
         <complexContent>
             <extension base="pithia:ProcessType">
                 <sequence>     
-                    <element name="version" maxOccurs="1" minOccurs="0" type="string">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Version of the computation component.
-                            </documentation>
-                        </annotation>
-                    </element>    
                     <element name="type" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
                                 Type of computation from a controlled vocabulary.
+                            </documentation>
+                        </annotation>
+                    </element>    
+                    <element name="version" maxOccurs="1" minOccurs="0" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Version of the computation component.
                             </documentation>
                         </annotation>
                     </element>    
@@ -638,13 +695,20 @@ Algorithm(s) on which the computation step is based on.
                             </documentation>
                         </annotation>
                     </element>
+                    <element name="childComputation" maxOccurs="unbounded" minOccurs="0" type="pithia:ComputationCapabilitiesPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+Child platform. </documentation>
+                        </annotation>
+                    </element>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
-    <complexType name="ComputationPropertyType">
+    <!-- ComputationCapabilitiesPropertyType is used in ComputationCapabilities for link to other associated (child) computation capabilities -->
+    <complexType name="ComputationCapabilitiesPropertyType">
         <sequence minOccurs="0">
-            <element ref="pithia:Computation"/>
+            <element ref="pithia:ComputationCapabilities"/>
         </sequence>
         <attributeGroup ref="gml:AssociationAttributeGroup"/>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
@@ -664,6 +728,12 @@ the event of the observation and not to the applied process.
     </element>
     <complexType name="InputOutputType">
         <sequence>
+            <element name="name" maxOccurs="1" minOccurs="0" type="string">
+                <annotation>
+                    <documentation>-- Definition --
+Name  or other identification  of input or output data relevant to a process component.</documentation>
+                </annotation>
+            </element>
             <element name="description" type="mrl:LE_Source_PropertyType">
                 <annotation>
                     <documentation>-- Definition -- 
@@ -671,51 +741,14 @@ Description of  input  or output data relevant to  a process component.
 </documentation>
                 </annotation>
             </element>
-            <element name="name" maxOccurs="1" minOccurs="0" type="string">
-                <annotation>
-                    <documentation>-- Definition --
-Name  or other identification  of input or output   data relevant to a process component.</documentation>
-                </annotation>
-            </element>
         </sequence>
     </complexType>
     <complexType name="InputOutputPropertyType">
-        <sequence>
+        <sequence minOccurs = "0">
             <element ref="pithia:InputOutput"/>
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>
-    
-    <!-- new start -->
-    <element name="InstrumentOperationalMode" substitutionGroup="gml:AbstractObject" type="pithia:InstrumentOperationalModeType"/>
-    <complexType name="InstrumentOperationalModeType">
-        <sequence>
-            <element name="id" type="string"/>
-            <element name="name" type="string"/>
-            <element name="description" type="string"/>
-        </sequence>
-    </complexType>
-    <complexType name="InstrumentOperationalModePropertyType">
-        <sequence minOccurs="0">
-            <element ref="pithia:InstrumentOperationalMode"/>
-        </sequence>
-        <attributeGroup ref="gml:AssociationAttributeGroup"/>
-        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
-    </complexType>
-    <element name="InstrumentOperationalModePair" substitutionGroup="gml:AbstractObject" type="pithia:InstrumentOperationalModePairType"/>
-    <complexType name="InstrumentOperationalModePairType">
-        <sequence>
-            <element name="instrument" type="pithia:InstrumentPropertyType"/>
-            <element name="mode" type="pithia:InstrumentOperationalModePropertyType"/>
-        </sequence>
-    </complexType>
-    <complexType name="InstrumentOperationalModePairsPropertyType">
-        <sequence>
-            <element ref="pithia:InstrumentOperationalModePair"/>
-        </sequence>
-        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
-    </complexType>
-    <!-- new end -->      
     
     <simpleType name="ComputationTypeValueType">
         <union memberTypes="pithia:ComputationTypeValueEnumerationType pithia:ComputationTypeValueOtherType"/>
@@ -728,6 +761,61 @@ Name  or other identification  of input or output   data relevant to a process c
             <pattern value="other: \w{2,}"/>
         </restriction>
     </simpleType>
+    <!-- end of Computation -->
+    <!--     
+         C O M P U T A T I O N
+    -->
+    <element name="Computation" substitutionGroup="gml:AbstractObject" type="pithia:ComputationType">
+        <annotation>
+            <documentation>-- Definition --
+A process component which involves only numerical computation.
+
+-- Description --
+An instance of Computation  provides a) a  description of a process component   which does not interact with the feature of interest and b) description of the anticipated output and required input. 
+            </documentation>
+        </annotation>
+    </element>
+    <complexType name="ComputationType">
+        <sequence>
+            <element name="identifier" type="pithia:PITHIA_IdentifierPropertyType">
+                <annotation>
+                    <documentation>-- Definition --
+                        External identifier of the process component (acquisition, computation or composite). 
+                    </documentation>
+                </annotation>
+            </element>                
+            <element name="name" type="string">
+                <annotation>
+                    <documentation>-- Definition --
+                        Name of the process component (for internal use within PITHIA system)
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="description" maxOccurs="1" minOccurs="0" type="string">
+                <annotation>
+                <documentation>-- Definition --
+                    Textual description of  the process component (acquisition, computation or composite). 
+                </documentation>
+            </annotation>
+            </element>            
+            <element name="capabilityLinks" maxOccurs="1" minOccurs="0" type="pithia:CapabilityLinksType">
+                <annotation>
+                    <documentation>-- Definition --
+                       Links to the capabilities of this Acquisition, each link connects platform and acquisitionCapabilities
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+    <!-- ComputationPropertyType is used in CompositeProcess to link to the computation components -->
+    <complexType name="ComputationPropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:Computation"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+
     <!-- end of Computation -->
     <!--     
          C O M P O S I T E   P R O C E S S 
