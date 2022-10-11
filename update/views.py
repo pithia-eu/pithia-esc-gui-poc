@@ -279,6 +279,7 @@ class data_collection(UpdateResourceView):
                     form_data['interaction_methods'].append('api')
                     form_data['api_specification_url'] = im['interaction_url']
             context['form'] = self.form_class(initial=form_data)
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
     def dispatch(self, request, *args, **kwargs):
