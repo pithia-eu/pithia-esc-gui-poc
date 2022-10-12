@@ -2,9 +2,9 @@ from bson import ObjectId
 from common.mongodb_models import CurrentDataCollectionInteractionMethod
 
 
-def move_current_existing_version_of_api_interaction_method_to_revisions(data_collection_id, current_interaction_method_mongodb_model, interaction_method_revision_mongodb_model):
+def move_current_existing_version_of_api_interaction_method_to_revisions(data_collection_localid, current_interaction_method_mongodb_model, interaction_method_revision_mongodb_model):
     current_version_of_api_interaction_method = current_interaction_method_mongodb_model.find_one({
-        'data_collection_id': ObjectId(data_collection_id),
+        'data_collection_localid': data_collection_localid,
     })
     if current_version_of_api_interaction_method == None:
         return 'No API interaction method for this data collection were found.'
@@ -15,9 +15,9 @@ def move_current_existing_version_of_api_interaction_method_to_revisions(data_co
     })
     interaction_method_revision_mongodb_model.insert_one(current_version_of_api_interaction_method)
 
-def register_api_specification(api_specification_url, data_collection_id):
+def register_api_specification(api_specification_url, data_collection_localid):
     return CurrentDataCollectionInteractionMethod.insert_one({
         'interaction_method': 'api',
         'interaction_url': api_specification_url,
-        'data_collection_id': data_collection_id
+        'data_collection_localid': data_collection_localid
     })

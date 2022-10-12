@@ -324,9 +324,11 @@ class ResourceDetailView(TemplateView):
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.resource = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
+        if self.resource is None:
+            # Extra check done for data_collection() view
+            self.resource = self.resource_mongodb_model.find_one({
+                '_id': ObjectId(self.resource_id)
+            })
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
@@ -435,8 +437,11 @@ class data_collection_detail(ResourceDetailView):
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
+        self.resource = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
         self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
-            'data_collection_id': ObjectId(self.resource_id)
+            'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
         })
 
         return super().get(request, *args, **kwargs)

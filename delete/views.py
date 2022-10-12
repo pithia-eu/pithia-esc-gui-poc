@@ -203,20 +203,15 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     return linked_resources
 
 def _delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id):
-    revision_ids_of_data_collection_id = get_revision_ids_for_resource_id(data_collection_id, CurrentDataCollection, DataCollectionRevision)
+    data_collection_to_delete = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
     CurrentDataCollectionInteractionMethod.delete_many({
-        'data_collection_id': ObjectId(data_collection_id)
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
     })
     DataCollectionInteractionMethodRevision.delete_many({
-        'data_collection_id': ObjectId(data_collection_id)
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
     })
-    for data_collection_revision_id in revision_ids_of_data_collection_id:
-        CurrentDataCollectionInteractionMethod.delete_many({
-            'data_collection_id': ObjectId(data_collection_revision_id)
-        })
-        DataCollectionInteractionMethodRevision.delete_many({
-            'data_collection_id': ObjectId(data_collection_revision_id)
-        })
 
 def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
     # Find the resource to delete, so it can be referenced later when deleting from

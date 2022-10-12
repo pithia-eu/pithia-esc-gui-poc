@@ -64,7 +64,7 @@ class UpdateResourceView(FormView):
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
                 metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
                 if metadata_move_results != None:
-                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results.inserted_id, CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
+                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results['identifier']['PITHIA_Identifier']['localID'], CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
             except BaseException as err:
                 print(err)
                 print(traceback.format_exc())
@@ -80,7 +80,7 @@ class UpdateResourceView(FormView):
                     interaction_methods = request.POST.getlist('interaction_methods')
                     if 'api' in interaction_methods:
                         api_specification_url = request.POST['api_specification_url']
-                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['_id'])
+                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'])
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)

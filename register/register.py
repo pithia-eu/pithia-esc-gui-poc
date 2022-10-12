@@ -17,7 +17,8 @@ def move_current_version_of_resource_to_revisions(resource_pithia_identifier, cu
     current_resource_mongodb_model.delete_one({
         '_id': ObjectId(current_version_of_resource['_id'])
     })
-    return resource_revision_mongodb_model.insert_one(current_version_of_resource)
+    resource_revision_mongodb_model.insert_one(current_version_of_resource)
+    return current_version_of_resource
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)

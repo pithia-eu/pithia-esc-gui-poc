@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from common.mongodb_models import CurrentDataCollectionInteractionMethod
+from common.mongodb_models import CurrentDataCollectionInteractionMethod, CurrentDataCollection
 
 def _map_id_property(resource):
     return resource['_id']
@@ -15,8 +15,11 @@ def get_revision_ids_for_resource_id(resource_id, resource_mongodb_model, resour
     }, projection={ '_id': 1 }))))
 
 def get_interaction_methods_linked_to_data_collection_id(data_collection_id):
+    data_collection = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
     linked_interaction_methods = []
     linked_interaction_methods.extend(list(CurrentDataCollectionInteractionMethod.find({
-        'data_collection_id': ObjectId(data_collection_id)
+        'data_collection_localid': data_collection['identifier']['PITHIA_Identifier']['localID']
     })))
     return linked_interaction_methods

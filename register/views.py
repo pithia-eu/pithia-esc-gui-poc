@@ -66,7 +66,7 @@ class RegisterResourceFormView(FormView):
                             interaction_methods = request.POST.getlist('interaction_methods')
                             if 'api' in interaction_methods:
                                 api_specification_url = request.POST['api_specification_url']
-                                register_api_specification(api_specification_url, registration_results['_id'])
+                                register_api_specification(api_specification_url, registration_results['identifier']['PITHIA_Identifier']['localID'])
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
