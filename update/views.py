@@ -10,6 +10,8 @@ from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_d
 from resource_management.forms import UploadUpdatedFileForm
 from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
+from update.update import update_current_version_of_resource
+from update.version_control import assign_original_xml_file_entry_to_new_resource_id, copy_current_version_of_resource_to_revisions
 
 
 # Create your views here.
@@ -55,8 +57,9 @@ class UpdateResourceView(FormView):
             try:
                 converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
-                register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                copied_resource = copy_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                assign_original_xml_file_entry_to_new_resource_id(self.resource_id, copied_resource['_id'])
+                update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -91,9 +94,9 @@ class organisation(UpdateResourceView):
     validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
     
 
 class individual(UpdateResourceView):
@@ -108,9 +111,9 @@ class individual(UpdateResourceView):
     validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class project(UpdateResourceView):
     resource_mongodb_model = CurrentProject
@@ -124,9 +127,9 @@ class project(UpdateResourceView):
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class platform(UpdateResourceView):
     resource_mongodb_model = CurrentPlatform
@@ -140,9 +143,9 @@ class platform(UpdateResourceView):
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class instrument(UpdateResourceView):
     resource_mongodb_model = CurrentInstrument
@@ -156,9 +159,9 @@ class instrument(UpdateResourceView):
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class operation(UpdateResourceView):
     resource_mongodb_model = CurrentOperation
@@ -172,9 +175,9 @@ class operation(UpdateResourceView):
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class acquisition(UpdateResourceView):
     resource_mongodb_model = CurrentAcquisition
@@ -189,9 +192,9 @@ class acquisition(UpdateResourceView):
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class computation(UpdateResourceView):
     resource_mongodb_model = CurrentComputation
@@ -206,9 +209,9 @@ class computation(UpdateResourceView):
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class process(UpdateResourceView):
     resource_mongodb_model = CurrentProcess
@@ -223,9 +226,9 @@ class process(UpdateResourceView):
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 class data_collection(UpdateResourceView):
     resource_mongodb_model = CurrentDataCollection
@@ -240,6 +243,6 @@ class data_collection(UpdateResourceView):
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
-        return super().get(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
