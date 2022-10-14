@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<h1>PITHIA-NRF e-Science Centre</h1>
 <section class="mb-3">
-    <h1 class="mb-1">PITHIA-NRF e-Science Centre Home</h1>
+    <h2 class="mb-0">Browse & Search</h2>
     <hr>
     <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
         <div class="col">
@@ -20,15 +21,15 @@
                 <div class="card-body">
                     <a href="{% url 'search:index' %}">
                         <img src="{% static 'search.svg' %}" alt="Search">
-                        <span>Search</span>
+                        <span>Search Data Collections</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% comment %} <section>
-    <h2>Admin Functionalities</h2>
+<section>
+    <h2 class="mb-0">Admin Functionalities</h2>
     <hr>
     <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
         <div class="col">
@@ -56,7 +57,7 @@
                 <div class="card-body">
                     <a href="{% url 'register:index' %}">
                         <img src="{% static 'upload.svg' %}" alt="Register">
-                        <span>Register</span>
+                        <span>Register Metadata</span>
                     </a>
                 </div>
             </div>
@@ -66,11 +67,11 @@
                 <div class="card-body">
                     <a href="{% url 'resource_management:index' %}">
                         <img src="{% static 'update.svg' %}" alt="Manage">
-                        <span>Manage</span>
+                        <span>Manage Data Registrations</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-</section> {% endcomment %}
+</section>
 {% endblock content %}
