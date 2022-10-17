@@ -17,15 +17,15 @@
         </li>
         <li class="nav-item dropdown dropdown-menu-end">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                aria-expanded="false">Resources</a>
+                aria-expanded="false">Metadata</a>
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
                     {% url 'browse:index' as resources_url %}
-                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse</a>
+                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search</a>
+                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
                 </li>
             </ul>
         </li>
@@ -34,11 +34,6 @@
                 aria-expanded="false">Admin
             </a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item">
-                    {% url 'home_admin' as admin_home_schemas_url %}
-                    <a href="{{ admin_home_schemas_url }}" class="nav-link px-2 {% if request.path == admin_home_schemas_url %}link-secondary{% endif %}">Admin Panel</a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
                 <li>
                     <h6 class="dropdown-header">
                         Browse
@@ -50,20 +45,16 @@
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:ontology' as browse_ontology_url %}
-                    <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Ontology Terms</a>
+                    <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
                 </li>
                 <li>
                     <h6 class="dropdown-header">
-                        Resource Management
+                        Register & Manage Metadata
                     </h6>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'register:index' as register_url %}
-                    <a href="{{ register_url }}" class="nav-link px-2 {% if request.path == register_url %}link-secondary{% endif %}">Register</a>
-                </li>
-                <li class="dropdown-item">
                     {% url 'resource_management:index' as resource_management_url %}
-                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Manage</a>
+                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
                 </li>
             </ul>
         </li>
