@@ -138,6 +138,17 @@ class operation(RegisterResourceFormView):
     validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
 
+class acquisition_capability(RegisterResourceFormView):
+    resource_mongodb_model = mongodb_models.CurrentAcquisition
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
+    success_url = reverse_lazy('register:acquisition')
+
+    a_or_an = 'an'
+    resource_type = 'acquisition capability'
+    resource_type_plural = 'acquisition capabilities'
+    validation_url = reverse_lazy('validation:acquisition_capability')
+    post_url = reverse_lazy('register:acquisition_capability')
+
 class acquisition(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
