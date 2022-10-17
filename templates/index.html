@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <a href="{% url 'browse:resources' %}">
                         <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Data Registrations</span>
+                        <span>Browse Metadata</span>
                     </a>
                 </div>
             </div>
@@ -55,19 +55,9 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <a href="{% url 'register:index' %}">
-                        <img src="{% static 'upload.svg' %}" alt="Register">
-                        <span>Register Metadata</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
                     <a href="{% url 'resource_management:index' %}">
                         <img src="{% static 'update.svg' %}" alt="Manage">
-                        <span>Manage Data Registrations</span>
+                        <span>Register & Manage Metadata</span>
                     </a>
                 </div>
             </div>
