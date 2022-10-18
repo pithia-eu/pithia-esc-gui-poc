@@ -5,7 +5,7 @@ from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapabili
 
 from search.helpers import remove_underscore_from_id_attribute
 
-_INDEX_PAGE_TITLE = 'Manage Data Registrations'
+_INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 
 
 # Create your views here.
