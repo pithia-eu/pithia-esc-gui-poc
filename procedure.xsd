@@ -57,7 +57,12 @@
             </element>
             <element name="units" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>units of the observed property</documentation>
+                    <documentation>Units of the observed property</documentation>
+                </annotation>
+            </element>
+            <element name="qualifier" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
+                <annotation>
+                    <documentation>Qualifier of the capability to observe the property (dictionary-controlled)</documentation>
                 </annotation>
             </element>
         </sequence>
