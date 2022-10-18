@@ -1,7 +1,7 @@
 from importlib import resources
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
 from search.helpers import remove_underscore_from_id_attribute
 
@@ -16,7 +16,9 @@ def index(request):
     num_current_platforms = CurrentPlatform.count_documents({})
     num_current_instruments = CurrentInstrument.count_documents({})
     num_current_operations = CurrentOperation.count_documents({})
+    num_current_acquisition_capabilities = CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = CurrentAcquisition.count_documents({})
+    num_current_computation_capabilities = CurrentComputationCapability.count_documents({})
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
@@ -27,7 +29,9 @@ def index(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
+        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
         'num_current_acquisitions': num_current_acquisitions,
+        'num_current_computation_capabilities': num_current_computation_capabilities,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
@@ -106,6 +110,22 @@ class operations(ManageResourcesView):
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
     register_resource_view_name = 'register:operation'
+
+class acquisition_capabilities(ManageResourcesView):
+    title = 'Manage Acquisition Capabilities'
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_type_plural = 'Acquisition Capabilities'
+    delete_resource_view_name = 'delete:acquisition_capability'
+    update_resource_view_name = 'update:acquisition_capability'
+    register_resource_view_name = 'register:acquisition_capability'
+
+class computation_capabilities(ManageResourcesView):
+    title = 'Manage Computation Capabilities'
+    resource_mongodb_model = CurrentComputationCapability
+    resource_type_plural = 'Computation Capabilities'
+    delete_resource_view_name = 'delete:computation_capability'
+    update_resource_view_name = 'update:computation_capability'
+    register_resource_view_name = 'register:computation_capability'
 
 class acquisitions(ManageResourcesView):
     title = 'Manage Acquisitions'
