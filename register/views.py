@@ -10,8 +10,7 @@ from register.register import register_metadata_xml_file
 from .forms import UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
-
-_INDEX_PAGE_TITLE = 'Metadata Registration'
+from resource_management.views import _INDEX_PAGE_TITLE
 
 
 # Create your views here.
@@ -32,11 +31,13 @@ class RegisterResourceFormView(FormView):
     resource_type_plural = ''
     validation_url = ''
     post_url = ''
+    index_page_url_name = ''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register {self.resource_type_plural.title()}'
         context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['index_page_url_name'] = self.index_page_url_name
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
@@ -87,6 +88,7 @@ class organisation(RegisterResourceFormView):
     resource_type_plural = 'organisations'
     validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
+    index_page_url_name = 'resource_management:organisations'
 
 class individual(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
@@ -97,6 +99,7 @@ class individual(RegisterResourceFormView):
     resource_type_plural = 'individuals'
     validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
+    index_page_url_name = 'resource_management:individuals'
 
 class project(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentProject
@@ -107,6 +110,7 @@ class project(RegisterResourceFormView):
     resource_type_plural = 'projects'
     validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
+    index_page_url_name = 'resource_management:projects'
 
 class platform(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
@@ -117,6 +121,7 @@ class platform(RegisterResourceFormView):
     resource_type_plural = 'platforms'
     validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
+    index_page_url_name = 'resource_management:platforms'
 
 class instrument(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
@@ -127,6 +132,7 @@ class instrument(RegisterResourceFormView):
     resource_type_plural = 'instruments'
     validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
+    index_page_url_name = 'resource_management:instruments'
 
 class operation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
@@ -137,6 +143,7 @@ class operation(RegisterResourceFormView):
     resource_type_plural = 'operations'
     validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
+    index_page_url_name = 'resource_management:operations'
 
 class acquisition_capability(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
@@ -147,6 +154,7 @@ class acquisition_capability(RegisterResourceFormView):
     resource_type_plural = 'acquisition capabilities'
     validation_url = reverse_lazy('validation:acquisition_capability')
     post_url = reverse_lazy('register:acquisition_capability')
+    index_page_url_name = 'resource_management:acquisition_capabilities'
 
 class acquisition(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
@@ -158,6 +166,7 @@ class acquisition(RegisterResourceFormView):
     resource_type_plural = 'acquisitions'
     validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
+    index_page_url_name = 'resource_management:acquisitions'
 
 class computation_capability(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
@@ -168,6 +177,7 @@ class computation_capability(RegisterResourceFormView):
     resource_type_plural = 'computation capabilities'
     validation_url = reverse_lazy('validation:computation_capability')
     post_url = reverse_lazy('register:computation_capability')
+    index_page_url_name = 'resource_management:computation_capabilities'
 
 class computation(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
@@ -179,6 +189,7 @@ class computation(RegisterResourceFormView):
     resource_type_plural = 'computations'
     validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
+    index_page_url_name = 'resource_management:computations'
 
 class process(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
@@ -190,6 +201,7 @@ class process(RegisterResourceFormView):
     resource_type_plural = 'processes'
     validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
+    index_page_url_name = 'resource_management:processes'
 
 class data_collection(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
@@ -201,3 +213,4 @@ class data_collection(RegisterResourceFormView):
     resource_type_plural = 'data collections'
     validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
+    index_page_url_name = 'resource_management:data_collections'
