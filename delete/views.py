@@ -2,7 +2,7 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
@@ -341,6 +341,19 @@ class operation(DeleteResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
+class acquisition_capability(DeleteResourceView):
+    resource_type = 'acquisition capability'
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
+    list_resources_of_type_view_page_title = 'Manage Acquisition Capabilities'
+    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    delete_resource_type_view_name = 'delete:acquisition_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class acquisition(DeleteResourceView):
     resource_type = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
@@ -352,6 +365,19 @@ class acquisition(DeleteResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class computation_capability(DeleteResourceView):
+    resource_type = 'computation capability'
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:computation_capabilities')
+    list_resources_of_type_view_page_title = 'Manage Computation Capabilities'
+    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    delete_resource_type_view_name = 'delete:computation_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
 class computation(DeleteResourceView):
