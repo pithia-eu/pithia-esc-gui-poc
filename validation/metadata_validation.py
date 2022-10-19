@@ -5,7 +5,7 @@ from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
 from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
 from pathlib import Path
@@ -47,7 +47,12 @@ def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
 
 def _map_string_to_li_element_with_register_link(string):
-    print(string)
+    if string == 'collection':
+        string == 'data_collection'
+    elif string == 'AcquisitionCapabilities':
+        string = 'acquisition_capability'
+    elif string == 'ComputationCapabilities':
+        string = 'computation_capability'
     return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
@@ -184,13 +189,17 @@ def get_mongodb_model_for_resource_type(resource_type):
         return CurrentOperation
     elif resource_type == 'instrument':
         return CurrentInstrument
+    elif resource_type == 'AcquisitionCapabilities':
+        return CurrentAcquisitionCapability
     elif resource_type == 'acquisition':
         return CurrentAcquisition
+    elif resource_type == 'ComputationCapabilities':
+        return CurrentComputationCapability
     elif resource_type == 'computation':
         return CurrentComputation
     elif resource_type == 'process':
         return CurrentProcess
-    elif resource_type == 'data-collection':
+    elif resource_type == 'collection':
         return CurrentDataCollection
     return 'unknown'
 
