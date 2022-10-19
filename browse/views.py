@@ -289,7 +289,7 @@ class list_acquisitions(ListResourcesView):
     description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
 
 class list_computation_capabilities(ListResourcesView):
-    resource_mongodb_model = mongodb_models.CurrentComputation
+    resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
     resource_detail_view_name = 'browse:computation_capability_detail'
     description = ''
