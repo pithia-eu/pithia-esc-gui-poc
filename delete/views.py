@@ -8,7 +8,11 @@ from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
 def _create_resource_url(resource_type, namespace, localid):
-    if not localid.startswith(f'{resource_type.capitalize()}_'):
+    if resource_type.lower() == 'computationcapabilities' and not localid.startswith('ComputationCapabilities_'):
+        localid = f'ComputationCapabilities_{localid}'
+    if resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith('AcquisitionCapabilities_'):
+        localid = f'AcquisitionCapabilities_{localid}'
+    if not resource_type.lower() == 'computationcapabilities' and not resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith(f'{resource_type.capitalize()}_'):
         localid = f'{resource_type.capitalize()}_{localid}'
     return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
 
@@ -183,16 +187,16 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
     acquisition_capabilities = list(acquisition_capabilities)
     for i in range(len(acquisition_capabilities)):
-        acquisition_capabilities[i] = (acquisition_capabilities[i], 'acquisition capability', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisition_capabilities[i][0]['_id']), 'acquisition capability', acquisition_capabilities[i][2]))
+        acquisition_capabilities[i] = (acquisition_capabilities[i], 'AcquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisition_capabilities[i][0]['_id']), 'AcquisitionCapabilities', acquisition_capabilities[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
     computation_capabilities = list(computation_capabilities)
     for i in range(len(computation_capabilities)):
-        computation_capabilities[i] = (computation_capabilities[i], 'computation capability', CurrentComputationCapability, ComputationCapabilityRevision)
-        linked_resources.extend(_get_resources_linked_through_resource_id(str(computation_capabilities[i][0]['_id']), 'computation capability', computation_capabilities[i][2]))
+        computation_capabilities[i] = (computation_capabilities[i], 'ComputationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(computation_capabilities[i][0]['_id']), 'ComputationCapabilities', computation_capabilities[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
@@ -291,6 +295,10 @@ class DeleteResourceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type'] = self.resource_type
+        if self.resource_type.lower() == 'acquisitioncapabilities':
+            context['resource_type'] = 'acquisition capability'
+        if self.resource_type.lower() == 'computationcapabilities':
+            context['resource_type'] = 'computation capability'
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
         context['title'] = f'Confirm Deletion of Data Registration'
@@ -399,7 +407,7 @@ class operation(DeleteResourceView):
         return super().dispatch(request, *args, **kwargs)
 
 class acquisition_capability(DeleteResourceView):
-    resource_type = 'acquisition capability'
+    resource_type = 'AcquisitionCapabilities'
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
@@ -425,7 +433,7 @@ class acquisition(DeleteResourceView):
         return super().dispatch(request, *args, **kwargs)
 
 class computation_capability(DeleteResourceView):
-    resource_type = 'computation capability'
+    resource_type = 'ComputationCapabilities'
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     redirect_url = reverse_lazy('resource_management:computation_capabilities')
