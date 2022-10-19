@@ -81,10 +81,34 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
+                <a href="{% url 'browse:list_acquisition_capabilities' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Acquisition Capabilities</span>
+                        <span class="text-muted">{{ num_current_acquisition_capabilities }}</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
                 <a href="{% url 'browse:list_acquisitions' %}">
                     <div class="d-flex flex-column align-items-center">
                         <span>Acquisitions</span>
                         <span class="text-muted">{{ num_current_acquisitions }}</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:list_computation_capabilities' %}">
+                    <div class="d-flex flex-column align-items-center">
+                        <span>Computation Capabilities</span>
+                        <span class="text-muted">{{ num_current_computation_capabilities }}</span>
                     </div>
                 </a>
             </div>

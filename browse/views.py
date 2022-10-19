@@ -33,7 +33,9 @@ def resources(request):
     num_current_platforms = mongodb_models.CurrentPlatform.count_documents({})
     num_current_instruments = mongodb_models.CurrentInstrument.count_documents({})
     num_current_operations = mongodb_models.CurrentOperation.count_documents({})
+    num_current_acquisition_capabilities = mongodb_models.CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = mongodb_models.CurrentAcquisition.count_documents({})
+    num_current_computation_capabilities = mongodb_models.CurrentComputationCapability.count_documents({})
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
@@ -45,7 +47,9 @@ def resources(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
+        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
         'num_current_acquisitions': num_current_acquisitions,
+        'num_current_computation_capabilities': num_current_computation_capabilities,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
@@ -272,11 +276,23 @@ class list_operations(ListResourcesView):
     resource_detail_view_name = 'browse:operation_detail'
     description = 'Description of how a platform operates in order to support data acquisition by the instrument'
 
+class list_acquisition_capabilities(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
+    resource_type_plural = 'Acquisition Capabilities'
+    resource_detail_view_name = 'browse:acquisition_capability_detail'
+    description = ''
+
 class list_acquisitions(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     resource_detail_view_name = 'browse:acquisition_detail'
     description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
+
+class list_computation_capabilities(ListResourcesView):
+    resource_mongodb_model = mongodb_models.CurrentComputation
+    resource_type_plural = 'Computation Capabilities'
+    resource_detail_view_name = 'browse:computation_capability_detail'
+    description = ''
 
 class list_computations(ListResourcesView):
     resource_mongodb_model = mongodb_models.CurrentComputation
@@ -397,6 +413,15 @@ class operation_detail(ResourceDetailView):
         self.resource_id = self.kwargs['operation_id']
         return super().get(request, *args, **kwargs)
 
+class acquisition_capability_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
+    resource_type_plural = 'Acquisition Capabilities'
+    list_resources_of_type_view_name = 'browse:list_acquisition_capabilities'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().get(request, *args, **kwargs)
+
 class acquisition_detail(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
@@ -404,6 +429,15 @@ class acquisition_detail(ResourceDetailView):
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
+        return super().get(request, *args, **kwargs)
+
+class computation_capability_detail(ResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentComputationCapability
+    resource_type_plural = 'Computation Capabilities'
+    list_resources_of_type_view_name = 'browse:list_computation_capabilities'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
         return super().get(request, *args, **kwargs)
 
 class computation_detail(ResourceDetailView):
