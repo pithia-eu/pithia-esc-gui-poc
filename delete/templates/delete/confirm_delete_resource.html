@@ -39,11 +39,11 @@
                 {% block extra_information %}{% endblock extra_information %}
                 {% if other_resources_to_delete|length > 0 %}
                 <div class="alert alert-warning">
-                    <p>There are {{ other_resources_to_delete|length }} other registrations referencing this one that will also be deleted upon deleting this registration. Please review these in the list below before confirming the deletion of this registration:</p>
+                    <p>There {% if other_resources_to_delete|length > 1 %}are {{ other_resources_to_delete|length }} other registrations{% else %}is {{ other_resources_to_delete|length }} other registration{% endif %} referencing this one that will also be deleted upon deleting this registration. Please review these in the list below before confirming the deletion of this registration:</p>
                     <ul class="list-group mb-0">
                         {% for r in other_resources_to_delete %}
                         {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
-                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
+                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capability{% elif r.1|lower == 'computationcapabilities' %}Computation Capability{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
                         {% endwith %}
                         {% endfor %}
                     </ul>
