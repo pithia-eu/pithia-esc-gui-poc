@@ -8,11 +8,6 @@ from common.mongodb_models import CurrentDataCollection, CurrentDataCollectionIn
 
 # Create your views here.
 
-def index(request):
-    return render(request, 'present/index.html', {
-        'title': 'Model Execution Form',
-    })
-
 def interact_with_data_collection_through_api(request, data_collection_id):
     data_collection = CurrentDataCollection.find_one({
         '_id': ObjectId(data_collection_id)
