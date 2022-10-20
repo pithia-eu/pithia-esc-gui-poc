@@ -16,57 +16,16 @@
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead">{{ resource.description }}</p>
+            <p class="lead mb-0">{{ resource.description }}</p>
         </section>
     </div>
 </div>
 {% endif %}
 {% block interaction_methods %}{% endblock interaction_methods %}
-{% if "result" in resource %}
-<section>
-    <h2 class="mb-3">Online Resources</h2>
-    <div class="accordion" id="accordion-resource">
-        {% with pithia_collection=resource.result|get_key_value:"pithia:CollectionResults" %}
-        {% for s in pithia_collection.source %}
-        {% with online_resource=s.OnlineResource %}
-        <div class="accordion-item">
-            <h3 class="accordion-header" id="or-heading-{{ forloop.counter }}">
-                <button class="accordion-button{% if forloop.counter != 1 %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#or-collapse-{{ forloop.counter }}"
-                    aria-expanded="{% if forloop.counter == 1 %}true{% else %}false{% endif %}" aria-controls="or-collapse-{{ forloop.counter }}">
-                    {{ online_resource.name }}
-                </button>
-            </h3>
-            <div id="or-collapse-{{ forloop.counter }}" class="accordion-collapse collapse{% if forloop.counter == 1 %} show{% endif %}" aria-labelledby="or-heading-{{ forloop.counter }}"
-                data-bs-parent="#accordion-resource">
-                <div class="accordion-body">
-                    <h4>Service Function</h4>
-                    <p><a href="{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}">{{ online_resource.serviceFunction|get_key_value:"@xlink:href" }}</a></p>
-                    <h4>Linkage</h4>
-                    <h5 class="fs-6 fst-italic">URL</h5>
-                    <p><a href="{{ online_resource.linkage.URL|get_key_value:"#text" }}">{{ online_resource.linkage.URL|get_key_value:"#text" }}</a>
-                    </p>
-                    <h5 class="fs-6 fst-italic">XML Namespace</h5>
-                    <p><a href="{{ online_resource.linkage.URL|get_key_value:"@xmlns" }}">{{ online_resource.linkage.URL|get_key_value:"@xmlns" }}</a>
-                    </p>
-                    <h4>Protocol</h4>
-                    <p>{{ online_resource.protocol }}</p>
-                    <h4>Description</h4>
-                    <p>{{ online_resource.description }}</p>
-                    <h4>Data Format</h4>
-                    <p><a href="{{ online_resource.dataFormat|get_key_value:"@xlink:href" }}">{{ online_resource.dataFormat|get_key_value:"@xlink:href" }}</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-        {% endwith %}
-        {% endfor %}
-        {% endwith %}
-    </div>
-</section>
-{% endif %}
 <div class="row">
     <div class="col-lg-12">
         <section>
+            <h2 class="mb-3">Properties</h2>
             {% if resource %}
             <div class="table-responsive">
                 <table class="table table-bordered">
