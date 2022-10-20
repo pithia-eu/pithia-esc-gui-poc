@@ -1,4 +1,5 @@
 {% extends 'browse/detail.html' %}
+{% load project_tags %}
 {% block messages %}
 {% if messages %}
 <div class="registration-alerts mb-3">
@@ -11,25 +12,42 @@
 {% endif %}
 {% endblock messages %}
 {% block interaction_methods %}
-{% if interaction_methods|length > 0 %}
+{% if interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
 <section>
-    <h2>Interact</h2>
+    <h2 class="mb-3">Interact</h2>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Interaction Method</th>
+                    <th>Description</th>
                     <th>Link</th>
                 </tr>
             </thead>
             <tbody>
+                {% for source in link_interaction_methods %}
+                {% with online_resource=source.OnlineResource %}
+                <tr>
+                    <td>Direct Link to Data Collection</td>
+                    <td>
+                        {{ online_resource.description }}
+                    </td>
+                    <td>
+                        <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
+                            Open {{ online_resource.name }} in new tab
+                        </a>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
                 {% for method in interaction_methods %}
                 {% if method.interaction_method == 'api' %}
                 <tr>
                     <td>API</td>
+                    <td><i class="text-muted">None</i></td>
                     <td>
                         <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
-                            Go to the API Interface
+                            Open API Interface in new tab
                         </a>
                     </td>
                 </tr>
