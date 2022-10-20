@@ -26,5 +26,6 @@ def interact_with_data_collection_through_api(request, data_collection_id):
 
     return render(request, 'present/index.html', {
         'title': f'Interact with {data_collection["name"]}',
+        'data_collection': data_collection,
         'api_specification_url': api_interaction_method['interaction_url'],
     })
