@@ -12,9 +12,9 @@
 {% endif %}
 {% endblock messages %}
 {% block interaction_methods %}
-{% if interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
 <section>
     <h2 class="mb-3">Interact</h2>
+    {% if interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -56,6 +56,8 @@
             </tbody>
         </table>
     </div>
+    {% else %}
+    <i class="text-muted">This data collection has no interaction methods.</i>
+    {% endif %}
 </section>
-{% endif %}
 {% endblock interaction_methods %}
