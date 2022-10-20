@@ -434,6 +434,7 @@ class data_collection_detail(ResourceDetailView):
     list_resources_of_type_view_name = 'browse:list_data_collections'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
+    link_interaction_methods = []
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -443,12 +444,16 @@ class data_collection_detail(ResourceDetailView):
         self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
             'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
         })
+        if 'collectionResults' in self.resource:
+            if 'source' in self.resource['collectionResults']:
+                self.link_interaction_methods = self.resource['collectionResults']['source']
 
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['interaction_methods'] = list(self.interaction_methods)
+        context['link_interaction_methods'] = list(self.link_interaction_methods)
         context['data_collection_id'] = self.resource_id
         
         return context
