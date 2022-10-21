@@ -103,17 +103,21 @@ h1 {
 .card-menu a {
     display: flex;
     flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    flex-wrap: wrap;
     width: 100%;
     height: 100%;
-    font-size: 1.5em;
-    padding: 2.25rem 0.25rem;
+    font-size: 1.1em;
+    padding: 1.5rem 0.25rem;
     word-break: break-word;
     hyphens: auto;
     overflow: hidden;
+}
+
+.card-menu a img {
+    margin-bottom: 0.5rem;
 }
 
 /* Register page */

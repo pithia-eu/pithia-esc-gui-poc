@@ -5,7 +5,7 @@ from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
 from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
 from pathlib import Path
@@ -16,7 +16,9 @@ PROJECT_XML_ROOT_TAG_NAME = 'Project'
 PLATFORM_XML_ROOT_TAG_NAME = 'Platform'
 INSTRUMENT_XML_ROOT_TAG_NAME = 'Instrument'
 OPERATION_XML_ROOT_TAG_NAME = 'Operation'
+ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME = 'AcquisitionCapabilities'
 ACQUISITION_XML_ROOT_TAG_NAME = 'Acquisition'
+COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME = 'ComputationCapabilities'
 COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
 PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
 DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
@@ -45,7 +47,12 @@ def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
 
 def _map_string_to_li_element_with_register_link(string):
-    print(string)
+    if string == 'collection':
+        string == 'data_collection'
+    elif string == 'AcquisitionCapabilities':
+        string = 'acquisition_capability'
+    elif string == 'ComputationCapabilities':
+        string = 'computation_capability'
     return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
@@ -105,6 +112,7 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
         unregistered_document_hrefs = unregistered_references['document_hrefs']
         unregistered_document_types = list(set(unregistered_references['document_types']))
         invalid_document_hrefs = list(set(unregistered_references['invalid_document_hrefs']))
+        document_hrefs_with_invalid_op_mode_ids = list(set(unregistered_references['document_hrefs_with_invalid_op_mode_ids']))
         unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
         if len(invalid_document_hrefs) > 0:
             error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
@@ -116,6 +124,10 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
             error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, unregistered_document_types)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
+            return validation_checklist
+        if len(document_hrefs_with_invalid_op_mode_ids) > 0:
+            error_msg = 'The operational mode IDs in these document URLs are invalid: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, document_hrefs_with_invalid_op_mode_ids)))
+            validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), error_msg, None)
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
         if len(unregistered_ontology_term_hrefs) > 0:
@@ -182,13 +194,17 @@ def get_mongodb_model_for_resource_type(resource_type):
         return CurrentOperation
     elif resource_type == 'instrument':
         return CurrentInstrument
+    elif resource_type == 'AcquisitionCapabilities':
+        return CurrentAcquisitionCapability
     elif resource_type == 'acquisition':
         return CurrentAcquisition
+    elif resource_type == 'ComputationCapabilities':
+        return CurrentComputationCapability
     elif resource_type == 'computation':
         return CurrentComputation
     elif resource_type == 'process':
         return CurrentProcess
-    elif resource_type == 'data-collection':
+    elif resource_type == 'collection':
         return CurrentDataCollection
     return 'unknown'
 
@@ -199,6 +215,14 @@ def get_resource_from_xlink_href_components(resource_mongodb_model, localID, nam
     }
     return resource_mongodb_model.find_one(find_dictionary)
 
+def get_instrument_by_operational_mode_id(operational_mode_id):
+    return CurrentInstrument.find_one({
+        'operationalMode.InstrumentOperationalMode.id': operational_mode_id
+    })
+
+def split_xlink_href_by_hashtag(href):
+    return href.split('#')
+
 def split_xlink_href(href):
     return href.split('/')
 
@@ -207,6 +231,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
         'document_hrefs': set(),
         'document_types': set(),
         'invalid_document_hrefs': set(),
+        'document_hrefs_with_invalid_op_mode_ids': set(),
         'ontology_term_hrefs': set(),
     }
     parent = xml_file_parsed.getroot()
@@ -225,7 +250,15 @@ def get_unregistered_references_from_xml(xml_file_parsed):
                 unregistered_references['ontology_term_hrefs'].add(href)
 
         if 'resources' in href:
-            href_components  = split_xlink_href(href)
+            operational_mode_id = None
+            # Storing href in a variable as it may get changed when checking for
+            # hashtags.
+            href_to_check = href
+            href_split_by_hashtag = split_xlink_href_by_hashtag(href_to_check)
+            if len(href_split_by_hashtag) > 1:
+                operational_mode_id = href_split_by_hashtag[-1]
+                href_to_check = href_split_by_hashtag[0]
+            href_components  = split_xlink_href(href_to_check)
             resource_type = href_components[-3]
             namespace = href_components[-2]
             localID = href_components[-1]
@@ -243,6 +276,16 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             if referenced_resource == None:
                 unregistered_references['document_hrefs'].add(href)
                 unregistered_references['document_types'].add(resource_type)
+            else:
+                if operational_mode_id != None:
+                    # The '#' at the end of some resource URLs should only link to Instruments
+                    instrument_retrieved_by_operational_mode_id = get_instrument_by_operational_mode_id(operational_mode_id)
+                    if instrument_retrieved_by_operational_mode_id == None:
+                        hashtag_index = href.index('#')
+                        invalid_href = href[:hashtag_index] + '<b>' + href[hashtag_index:] + '</b>'
+                        unregistered_references['document_hrefs_with_invalid_op_mode_ids'].add(invalid_href)
+
+
     
     for key in unregistered_references:
         unregistered_references[key] = list(unregistered_references[key])

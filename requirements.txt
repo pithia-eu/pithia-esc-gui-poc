@@ -1,6 +1,6 @@
 asgiref==3.5.2
 autopep8==1.7.0
-backports.zoneinfo==0.2.1
+backports.zoneinfo;python_version<"3.9"
 certifi==2022.5.18.1
 charset-normalizer==2.0.12
 Django==4.0.5

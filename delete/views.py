@@ -2,13 +2,17 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
 def _create_resource_url(resource_type, namespace, localid):
-    if not localid.startswith(f'{resource_type.capitalize()}_'):
+    if resource_type.lower() == 'computationcapabilities' and not localid.startswith('ComputationCapabilities_'):
+        localid = f'ComputationCapabilities_{localid}'
+    if resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith('AcquisitionCapabilities_'):
+        localid = f'AcquisitionCapabilities_{localid}'
+    if not resource_type.lower() == 'computationcapabilities' and not resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith(f'{resource_type.capitalize()}_'):
         localid = f'{resource_type.capitalize()}_{localid}'
     return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
 
@@ -19,6 +23,11 @@ def _get_projects_referencing_party_url(party_url):
 
 def _get_platforms_referencing_party_url(party_url):
     return CurrentPlatform.find({
+        'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
+    })
+
+def _get_operations_referencing_party_url(party_url):
+    return CurrentOperation.find({
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
     })
 
@@ -38,7 +47,9 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     platforms = []
     instruments = []
     operations = []
+    acquisition_capabilities = []
     acquisitions = []
+    computation_capabilities = []
     computations = []
     processes = []
     data_collections = []
@@ -63,6 +74,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         })
         projects = _get_projects_referencing_party_url(resource_url)
         platforms = _get_platforms_referencing_party_url(resource_url)
+        operations = _get_operations_referencing_party_url(resource_url)
         instruments = _get_instruments_referencing_party_url(resource_url)
         data_collections = _get_data_collections_referencing_party_url(resource_url)
     elif resource_mongodb_model == CurrentIndividual:
@@ -75,6 +87,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         # Maybe these are mistakes?
         projects = _get_projects_referencing_party_url(resource_url)
         platforms = _get_platforms_referencing_party_url(resource_url)
+        operations = _get_operations_referencing_party_url(resource_url)
         instruments = _get_instruments_referencing_party_url(resource_url)
         data_collections = _get_data_collections_referencing_party_url(resource_url)
     elif resource_mongodb_model == CurrentProject:
@@ -90,10 +103,22 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             'platform.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentInstrument:
-        # Referenced by: Acquisition (from instrument prop
-        # and instrumentModePair.instrument prop)
+        # Referenced by: Acquisition (from instrument prop)
         acquisitions = CurrentAcquisition.find({
             'instrument.@xlink:href': resource_url
+        })
+        # Referenced by: AcquisitionCapability (from
+        # instrumentModePair.InstrumentOperationalModePair.instrument prop and
+        # instrumentModePair.InstrumentOperationalModePair.mode prop)
+        acquisition_capabilities = CurrentAcquisitionCapability.find({
+            '$or': [
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': resource_url
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': resource_url
+                }
+            ]
         })
     # elif resource_mongodb_model == CurrentOperation:
     #     # Operation is part of the Instrument resource
@@ -104,11 +129,28 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     #         'instrumentModePair.mode': resource_url
     #     })
     #     return
+    elif resource_mongodb_model == CurrentAcquisitionCapability:
+        # AcquisitionCapability is referenced by Acquisition via
+        # the acquisitionCapabilities prop.
+        acquisitions = CurrentAcquisition.find({
+            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink.href': resource_url
+        })
     elif resource_mongodb_model == CurrentAcquisition:
         # Acquisition is referenced by Process via
         # the acquisitionComponent prop.
         processes = CurrentProcess.find({
             'acquisitionComponent.@xlink.href': resource_url
+        })
+    elif resource_mongodb_model == CurrentComputationCapability:
+        # ComputationCapability is referenced by Computation via the computationCapabilities
+        # prop.
+        # ComputationCapabilities can reference other ComputationCapabilities via the
+        # childComputation prop.
+        computation_capabilities = CurrentComputationCapability.find({
+            'childComputation.@xlink:href': resource_url
+        })
+        computations = CurrentComputation.find({
+            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentComputation:
         # Referenced by Process via the computationComponent.
@@ -135,14 +177,26 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     for i in range(len(platforms)):
         platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
+    operations = list(operations)
+    for i in range(len(operations)):
+        operations[i] = (operations[i], 'operation', CurrentOperation, OperationRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
+    acquisition_capabilities = list(acquisition_capabilities)
+    for i in range(len(acquisition_capabilities)):
+        acquisition_capabilities[i] = (acquisition_capabilities[i], 'AcquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisition_capabilities[i][0]['_id']), 'AcquisitionCapabilities', acquisition_capabilities[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
+    computation_capabilities = list(computation_capabilities)
+    for i in range(len(computation_capabilities)):
+        computation_capabilities[i] = (computation_capabilities[i], 'ComputationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(computation_capabilities[i][0]['_id']), 'ComputationCapabilities', computation_capabilities[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
@@ -157,8 +211,11 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     linked_resources.extend(individuals)
     linked_resources.extend(projects)
     linked_resources.extend(platforms)
+    linked_resources.extend(operations)
     linked_resources.extend(instruments)
+    linked_resources.extend(acquisition_capabilities)
     linked_resources.extend(acquisitions)
+    linked_resources.extend(computation_capabilities)
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
@@ -176,15 +233,19 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             return 5
         elif resource_type == 'instrument':
             return 6
-        elif resource_type == 'acquisition':
+        elif resource_type == 'acquisition capability':
             return 7
-        elif resource_type == 'computation':
+        elif resource_type == 'acquisition':
             return 8
-        elif resource_type == 'process':
+        elif resource_type == 'computation capability':
             return 9
-        elif resource_type == 'collection':
+        elif resource_type == 'computation':
             return 10
-        return 10
+        elif resource_type == 'process':
+            return 11
+        elif resource_type == 'collection':
+            return 12
+        return 12
     def custom_compare(item1, item2):
         item1_weight = get_weight_of_resource_type(item1[1])
         item2_weight = get_weight_of_resource_type(item2[1])
@@ -234,9 +295,13 @@ class DeleteResourceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type'] = self.resource_type
+        if self.resource_type.lower() == 'acquisitioncapabilities':
+            context['resource_type'] = 'acquisition capability'
+        if self.resource_type.lower() == 'computationcapabilities':
+            context['resource_type'] = 'computation capability'
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
-        context['title'] = f'Confirm Deletion of Data Registration'
+        context['title'] = f'Confirm Deletion of Metadata'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
@@ -341,6 +406,19 @@ class operation(DeleteResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
+class acquisition_capability(DeleteResourceView):
+    resource_type = 'AcquisitionCapabilities'
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
+    list_resources_of_type_view_page_title = 'Manage Acquisition Capabilities'
+    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    delete_resource_type_view_name = 'delete:acquisition_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class acquisition(DeleteResourceView):
     resource_type = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
@@ -352,6 +430,19 @@ class acquisition(DeleteResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class computation_capability(DeleteResourceView):
+    resource_type = 'ComputationCapabilities'
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:computation_capabilities')
+    list_resources_of_type_view_page_title = 'Manage Computation Capabilities'
+    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    delete_resource_type_view_name = 'delete:computation_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
 class computation(DeleteResourceView):

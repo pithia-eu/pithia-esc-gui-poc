@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='home'),
+    path('admin-home/', views.index_admin, name='home_admin'),
     path('', include('browse.urls')),
     path('', include('update.urls')),
     path('', include('delete.urls')),
