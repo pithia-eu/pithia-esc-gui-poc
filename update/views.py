@@ -42,7 +42,7 @@ class UpdateResourceView(FormView):
         context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
+        context['list_resources_of_type_view_page_title'] = f'Register & Manage {self.resource_type_plural}'
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         context['update_resource_type_view_name'] = self.update_resource_type_view_name
         return context

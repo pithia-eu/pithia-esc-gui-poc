@@ -286,7 +286,7 @@ class DeleteResourceView(TemplateView):
     resource_revision_mongodb_model = None
     redirect_url = ''
     template_name = 'delete/confirm_delete_resource.html'
-    list_resources_of_type_view_page_title = 'Manage Resources'
+    list_resources_of_type_view_page_title = 'Register & Manage Resources'
     list_resources_of_type_view_name = 'resource_management:index'
     delete_resource_type_view_name = ''
     resource_to_delete = None
@@ -333,7 +333,7 @@ class organisation(DeleteResourceView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
-    list_resources_of_type_view_page_title = 'Manage Organisations'
+    list_resources_of_type_view_page_title = 'Register & Manage Organisations'
     list_resources_of_type_view_name = 'resource_management:organisations'
     delete_resource_type_view_name = 'delete:organisation'
 
@@ -346,7 +346,7 @@ class individual(DeleteResourceView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
-    list_resources_of_type_view_page_title = 'Manage Individuals'
+    list_resources_of_type_view_page_title = 'Register & Manage Individuals'
     list_resources_of_type_view_name = 'resource_management:individuals'
     delete_resource_type_view_name = 'delete:individual'
 
@@ -359,7 +359,7 @@ class project(DeleteResourceView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
-    list_resources_of_type_view_page_title = 'Manage Projects'
+    list_resources_of_type_view_page_title = 'Register & Manage Projects'
     list_resources_of_type_view_name = 'resource_management:projects'
     delete_resource_type_view_name = 'delete:project'
 
@@ -372,7 +372,7 @@ class platform(DeleteResourceView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
-    list_resources_of_type_view_page_title = 'Manage Platforms'
+    list_resources_of_type_view_page_title = 'Register & Manage Platforms'
     list_resources_of_type_view_name = 'resource_management:platforms'
     delete_resource_type_view_name = 'delete:platform'
 
@@ -385,7 +385,7 @@ class instrument(DeleteResourceView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
-    list_resources_of_type_view_page_title = 'Manage Instruments'
+    list_resources_of_type_view_page_title = 'Register & Manage Instruments'
     list_resources_of_type_view_name = 'resource_management:instruments'
     delete_resource_type_view_name = 'delete:instrument'
 
@@ -398,7 +398,7 @@ class operation(DeleteResourceView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
-    list_resources_of_type_view_page_title = 'Manage Operations'
+    list_resources_of_type_view_page_title = 'Register & Manage Operations'
     list_resources_of_type_view_name = 'resource_management:operations'
     delete_resource_type_view_name = 'delete:operation'
 
@@ -411,7 +411,7 @@ class acquisition_capability(DeleteResourceView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
-    list_resources_of_type_view_page_title = 'Manage Acquisition Capabilities'
+    list_resources_of_type_view_page_title = 'Register & Manage Acquisition Capabilities'
     list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
     delete_resource_type_view_name = 'delete:acquisition_capability'
 
@@ -424,7 +424,7 @@ class acquisition(DeleteResourceView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
-    list_resources_of_type_view_page_title = 'Manage Acquisitions'
+    list_resources_of_type_view_page_title = 'Register & Manage Acquisitions'
     list_resources_of_type_view_name = 'resource_management:acquisitions'
     delete_resource_type_view_name = 'delete:acquisition'
 
@@ -437,7 +437,7 @@ class computation_capability(DeleteResourceView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     redirect_url = reverse_lazy('resource_management:computation_capabilities')
-    list_resources_of_type_view_page_title = 'Manage Computation Capabilities'
+    list_resources_of_type_view_page_title = 'Register & Manage Computation Capabilities'
     list_resources_of_type_view_name = 'resource_management:computation_capabilities'
     delete_resource_type_view_name = 'delete:computation_capability'
 
@@ -450,7 +450,7 @@ class computation(DeleteResourceView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
-    list_resources_of_type_view_page_title = 'Manage Computations'
+    list_resources_of_type_view_page_title = 'Register & Manage Computations'
     list_resources_of_type_view_name = 'resource_management:computations'
     delete_resource_type_view_name = 'delete:computation'
 
@@ -463,7 +463,7 @@ class process(DeleteResourceView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
-    list_resources_of_type_view_page_title = 'Manage Processes'
+    list_resources_of_type_view_page_title = 'Register & Manage Processes'
     list_resources_of_type_view_name = 'resource_management:processes'
     delete_resource_type_view_name = 'delete:process'
 
@@ -476,7 +476,7 @@ class data_collection(DeleteResourceView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
-    list_resources_of_type_view_page_title = 'Manage Data Collections'
+    list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
     delete_resource_type_view_name = 'delete:data_collection'
 
