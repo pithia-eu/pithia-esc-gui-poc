@@ -13,7 +13,7 @@ from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
-_RESOURCES_PAGE_TITLE = 'Data Registrations'
+_RESOURCES_PAGE_TITLE = 'Browse Metadata'
 _ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
