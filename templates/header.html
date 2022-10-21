@@ -24,7 +24,7 @@
                     <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:index' as resources_url %}
+                    {% url 'browse:resources' as resources_url %}
                     <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
             </ul>
@@ -61,9 +61,8 @@
     </ul>
 
     <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">
+        {% comment %} <button type="button" class="btn btn-outline-primary me-2">
             Login
-        </button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+        </button> {% endcomment %}
     </div>
 </header>
