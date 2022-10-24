@@ -70,9 +70,15 @@ h1 {
     margin: 0 0.5rem;
 }
 
-.card-menu img {
+.card-menu .card img {
     width: 3rem;
     filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+    transition: filter 10ms linear;
+}
+
+.card-menu .card:hover img,
+.card-menu .card:focus img {
+    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 .card-menu .card:hover,
@@ -85,11 +91,6 @@ h1 {
 .card-menu .card:hover .text-muted,
 .card-menu .card:focus .text-muted {
     color: white !important;
-}
-
-.card-menu .card:hover img,
-.card-menu .card:focus img {
-    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 .card-menu .card-body {
