@@ -1,3 +1,10 @@
+def format_instrument_dictionary(self, dictionary):
+    # Check if 'operationalMode' property is an
+    # array-type property
+    if 'operationalMode' in dictionary and not isinstance(dictionary['operationalMode'], list):
+        dictionary['operationalMode'] = [dictionary['operationalMode']]
+    return dictionary
+
 def format_acquisition_dictionary(self, dictionary):
     # Check if the 'capability' property is an
     # array-type property
