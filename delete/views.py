@@ -2,20 +2,12 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
+from common.helpers import create_resource_url
 from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
-def _create_resource_url(resource_type, namespace, localid):
-    if resource_type.lower() == 'computationcapabilities' and not localid.startswith('ComputationCapabilities_'):
-        localid = f'ComputationCapabilities_{localid}'
-    if resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith('AcquisitionCapabilities_'):
-        localid = f'AcquisitionCapabilities_{localid}'
-    if not resource_type.lower() == 'computationcapabilities' and not resource_type.lower() == 'acquisitioncapabilities' and not localid.startswith(f'{resource_type.capitalize()}_'):
-        localid = f'{resource_type.capitalize()}_{localid}'
-    return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
-
 def _get_projects_referencing_party_url(party_url):
     return CurrentProject.find({
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
@@ -59,7 +51,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         '_id': ObjectId(resource_id)
     })
     resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
-    resource_url = _create_resource_url(resource_type, resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
+    resource_url = create_resource_url(resource_type, resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
     if resource_mongodb_model == CurrentOrganisation:
         # Referenced by: Individual, Project, Platform?, Instrument?, Data Collection
         # Individual references it via the organisation prop.
