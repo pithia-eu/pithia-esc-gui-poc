@@ -597,7 +597,7 @@ A process component which interacts with the feature of interest  (e.g. an atmos
     </complexType>
     <!-- In Acquisition and Computation, this is the list of links to the capabilities of each instrument or computation -->
     <complexType name="CapabilityLinksType">
-        <sequence minOccurs="1">
+        <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="pithia:capabilityLink"/>
         </sequence>
         <attributeGroup ref="gml:AssociationAttributeGroup"/>
