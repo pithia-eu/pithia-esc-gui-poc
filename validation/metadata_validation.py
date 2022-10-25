@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
-from common.helpers import create_resource_url
+from common.helpers import create_resource_url, get_acquisition_capabilities_referencing_instrument_operational_ids
 from update.views import operation
 from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
@@ -61,6 +61,9 @@ def _map_string_to_li_element_with_register_link(string):
 def _map_etree_element_to_text(element):
     return element.text
 
+def _map_operational_mode_objects_to_id_strings(om):
+    return om['InstrumentOperationalMode']['id']
+
 def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=None, check_file_is_unregistered=False, check_xml_file_localid_matches_existing_resource_localid=False, existing_resource_id=''):
     validation_checklist = {
         'is_root_element_name_valid': False,
@@ -105,15 +108,15 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = True
 
         # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
-        if mongodb_model is not None and mongodb_model == CurrentInstrument:
+        if check_xml_file_localid_matches_existing_resource_localid == True and existing_resource_id != '' and mongodb_model is not None and mongodb_model == CurrentInstrument:
             operational_mode_ids = list(map(_map_etree_element_to_text, xml_file_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')))
             instrument_to_update = CurrentInstrument.find_one({
-                '_id': ObjectId(existing_resource_id)
-            }, { 'operationalMode': True })
-            instrument_to_update_url = create_resource_url('instrument', instrument_to_update['identifier']['PITHIA_Identifier']['namespace'], ['identifier']['PITHIA_Identifier']['localID'])
-            current_acquisition_capabilities_referencing_instrument_to_update = CurrentAcquisitionCapability.find({
-                'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': ''
-            })
+                                        '_id': ObjectId(existing_resource_id)
+                                    }, {
+                                        'operationalMode': True
+                                    })
+            operational_mode_ids_before_update = list(map(_map_operational_mode_objects_to_id_strings, instrument_to_update['operationalMode']))
+            acquisition_capabilities = get_acquisition_capabilities_referencing_instrument_operational_ids(existing_resource_id)
 
         # Matching file name and localID tag text validation
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
