@@ -8,10 +8,10 @@ from common.helpers import get_interaction_methods_linked_to_data_collection_id,
 from mongodb import client
 from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
 from register.register_api_specification import move_current_existing_version_of_api_interaction_method_to_revisions, register_api_specification
-from register.xml_conversion_checks_and_fixes import format_acquisition_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_process_dictionary
+from register.xml_conversion_checks_and_fixes import format_acquisition_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
 
 
@@ -30,7 +30,7 @@ class UpdateResourceView(FormView):
     list_resources_of_type_view_name = ''
     update_resource_type_view_name = ''
     validation_url = ''
-    resource_to_update_name = '' # Set in get() function
+    resource_to_update_name = '' # Set in dispatch() function
 
     # Class variables
     template_name = 'update/file_upload.html'
@@ -45,7 +45,7 @@ class UpdateResourceView(FormView):
         context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
+        context['list_resources_of_type_view_page_title'] = f'Register & Manage {self.resource_type_plural}'
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         context['post_url'] = reverse_lazy(self.update_resource_type_view_name, args=[self.resource_id])
         context['update_resource_type_view_name'] = self.update_resource_type_view_name
@@ -173,6 +173,7 @@ class platform(UpdateResourceView):
 class instrument(UpdateResourceView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
+    resource_conversion_validate_and_correct_function = format_instrument_dictionary
 
     a_or_an = 'an'
     resource_type = 'Instrument'
@@ -202,6 +203,22 @@ class operation(UpdateResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
+class acquisition_capability(UpdateResourceView):
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
+
+    a_or_an = 'an'
+    resource_type = 'Acquisition Capability'
+    resource_type_plural = 'Acquisition Capabilities'
+    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    update_resource_type_view_name = 'update:acquisition_capability'
+    validation_url = reverse_lazy('validation:acquisition_capability')
+    success_url = reverse_lazy('resource_management:acquisition_capabilities')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class acquisition(UpdateResourceView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
@@ -219,6 +236,22 @@ class acquisition(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
+class computation_capability(UpdateResourceView):
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
+
+    a_or_an = 'a'
+    resource_type = 'Computation Capability'
+    resource_type_plural = 'Computation Capabilities'
+    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    update_resource_type_view_name = 'update:computation_capability'
+    validation_url = reverse_lazy('validation:computation_capability')
+    success_url = reverse_lazy('resource_management:computation_capabilities')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+        
 class computation(UpdateResourceView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision

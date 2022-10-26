@@ -1,5 +1,7 @@
 asgiref==3.5.2
 attrs==22.1.0
+autopep8==1.7.0
+backports.zoneinfo;python_version<"3.9"
 certifi==2022.5.18.1
 charset-normalizer==2.0.12
 Django==4.0.5

@@ -1,12 +1,13 @@
-from importlib import resources
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 
 from search.helpers import remove_underscore_from_id_attribute
 
-_INDEX_PAGE_TITLE = 'Manage Data Registrations'
+_INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 
+def _create_manage_resource_page_title(resource_type_plural):
+    return f'Register & Manage {resource_type_plural.title()}'
 
 # Create your views here.
 def index(request):
@@ -16,7 +17,9 @@ def index(request):
     num_current_platforms = CurrentPlatform.count_documents({})
     num_current_instruments = CurrentInstrument.count_documents({})
     num_current_operations = CurrentOperation.count_documents({})
+    num_current_acquisition_capabilities = CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = CurrentAcquisition.count_documents({})
+    num_current_computation_capabilities = CurrentComputationCapability.count_documents({})
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
@@ -27,7 +30,9 @@ def index(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
+        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
         'num_current_acquisitions': num_current_acquisitions,
+        'num_current_computation_capabilities': num_current_computation_capabilities,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
@@ -60,7 +65,7 @@ class ManageResourcesView(TemplateView):
         return context
 
 class organisations(ManageResourcesView):
-    title = 'Manage Organisations'
+    title = _create_manage_resource_page_title('organisations')
     resource_mongodb_model = CurrentOrganisation
     resource_type_plural = 'Organisations'
     delete_resource_view_name = 'delete:organisation'
@@ -68,7 +73,7 @@ class organisations(ManageResourcesView):
     register_resource_view_name = 'register:organisation'
 
 class individuals(ManageResourcesView):
-    title = 'Manage Individuals'
+    title = _create_manage_resource_page_title('individuals')
     resource_mongodb_model = CurrentIndividual
     resource_type_plural = 'Individuals'
     delete_resource_view_name = 'delete:individual'
@@ -76,7 +81,7 @@ class individuals(ManageResourcesView):
     register_resource_view_name = 'register:individual'
 
 class projects(ManageResourcesView):
-    title = 'Manage Projects'
+    title = _create_manage_resource_page_title('projects')
     resource_mongodb_model = CurrentProject
     resource_type_plural = 'Projects'
     delete_resource_view_name = 'delete:project'
@@ -84,7 +89,7 @@ class projects(ManageResourcesView):
     register_resource_view_name = 'register:project'
 
 class platforms(ManageResourcesView):
-    title = 'Manage Platforms'
+    title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
     resource_type_plural = 'PLatforms'
     delete_resource_view_name = 'delete:platform'
@@ -92,7 +97,7 @@ class platforms(ManageResourcesView):
     register_resource_view_name = 'register:platform'
 
 class instruments(ManageResourcesView):
-    title = 'Manage Instruments'
+    title = _create_manage_resource_page_title('instruments')
     resource_mongodb_model = CurrentInstrument
     resource_type_plural = 'Instruments'
     delete_resource_view_name = 'delete:instrument'
@@ -100,23 +105,39 @@ class instruments(ManageResourcesView):
     register_resource_view_name = 'register:instrument'
 
 class operations(ManageResourcesView):
-    title = 'Manage Operations'
+    title = _create_manage_resource_page_title('operations')
     resource_mongodb_model = CurrentOperation
     resource_type_plural = 'Operations'
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
     register_resource_view_name = 'register:operation'
 
+class acquisition_capabilities(ManageResourcesView):
+    title = _create_manage_resource_page_title('acquisition capabilities')
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_type_plural = 'Acquisition Capabilities'
+    delete_resource_view_name = 'delete:acquisition_capability'
+    update_resource_view_name = 'update:acquisition_capability'
+    register_resource_view_name = 'register:acquisition_capability'
+
 class acquisitions(ManageResourcesView):
-    title = 'Manage Acquisitions'
+    title = _create_manage_resource_page_title('acquisitions')
     resource_mongodb_model = CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     delete_resource_view_name = 'delete:acquisition'
     update_resource_view_name = 'update:acquisition'
     register_resource_view_name = 'register:acquisition'
 
+class computation_capabilities(ManageResourcesView):
+    title = _create_manage_resource_page_title('computation capabilities')
+    resource_mongodb_model = CurrentComputationCapability
+    resource_type_plural = 'Computation Capabilities'
+    delete_resource_view_name = 'delete:computation_capability'
+    update_resource_view_name = 'update:computation_capability'
+    register_resource_view_name = 'register:computation_capability'
+
 class computations(ManageResourcesView):
-    title = 'Manage Computations'
+    title = _create_manage_resource_page_title('computations')
     resource_mongodb_model = CurrentComputation
     resource_type_plural = 'Computations'
     delete_resource_view_name = 'delete:computation'
@@ -124,7 +145,7 @@ class computations(ManageResourcesView):
     register_resource_view_name = 'register:computation'
 
 class processes(ManageResourcesView):
-    title = 'Manage Processes'
+    title = _create_manage_resource_page_title('processes')
     resource_mongodb_model = CurrentProcess
     resource_type_plural = 'Processes'
     delete_resource_view_name = 'delete:process'
@@ -132,7 +153,7 @@ class processes(ManageResourcesView):
     register_resource_view_name = 'register:process'
 
 class data_collections(ManageResourcesView):
-    title = 'Manage Data Collections'
+    title = _create_manage_resource_page_title('data collections')
     resource_mongodb_model = CurrentDataCollection
     resource_type_plural = 'Data Collections'
     delete_resource_view_name = 'delete:data_collection'

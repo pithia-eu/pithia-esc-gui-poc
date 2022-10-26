@@ -70,9 +70,15 @@ h1 {
     margin: 0 0.5rem;
 }
 
-.card-menu img {
+.card-menu .card img {
     width: 3rem;
     filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+    transition: filter 10ms linear;
+}
+
+.card-menu .card:hover img,
+.card-menu .card:focus img {
+    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 .card-menu .card:hover,
@@ -87,11 +93,6 @@ h1 {
     color: white !important;
 }
 
-.card-menu .card:hover img,
-.card-menu .card:focus img {
-    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
-}
-
 .card-menu .card-body {
     display: flex;
     flex-direction: column;
@@ -103,17 +104,21 @@ h1 {
 .card-menu a {
     display: flex;
     flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    flex-wrap: wrap;
     width: 100%;
     height: 100%;
-    font-size: 1.5em;
-    padding: 2.25rem 0.25rem;
+    font-size: 1.1em;
+    padding: 1.5rem 0.25rem;
     word-break: break-word;
     hyphens: auto;
     overflow: hidden;
+}
+
+.card-menu a img {
+    margin-bottom: 0.5rem;
 }
 
 /* Register page */

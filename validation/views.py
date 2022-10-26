@@ -7,9 +7,9 @@ from django.views.generic import View
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
 
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.forms import ApiSpecificationUrlValidationForm
-from validation.metadata_validation import ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
+from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
 
 # Create your views here.
 class ValidateXmlMetadataFileFormView(View):
@@ -56,9 +56,17 @@ class operation(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentOperation
     expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
 
+class acquisition_capability(ValidateXmlMetadataFileFormView):
+    mongodb_model = CurrentAcquisitionCapability
+    expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
+
 class acquisition(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentAcquisition
     expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
+
+class computation_capability(ValidateXmlMetadataFileFormView):
+    mongodb_model = CurrentComputationCapability
+    expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
 
 class computation(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentComputation

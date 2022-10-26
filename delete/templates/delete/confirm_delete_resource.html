@@ -39,18 +39,18 @@
                 {% block extra_information %}{% endblock extra_information %}
                 {% if other_resources_to_delete|length > 0 %}
                 <div class="alert alert-warning">
-                    <p>There are {{ other_resources_to_delete|length }} other data registrations referencing this one that will also be deleted upon deleting this data registration. Please review these in the list below before confirming this deletion:</p>
+                    <p>There {% if other_resources_to_delete|length > 1 %}are {{ other_resources_to_delete|length }} other metadata registered{% else %}is {{ other_resources_to_delete|length }} other registration of metadata{% endif %} referencing this one that will also be deleted upon deleting this registration of metadata. Please review these in the list below before confirming this deletion:</p>
                     <ul class="list-group mb-0">
                         {% for r in other_resources_to_delete %}
                         {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
-                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}{{ 'data collection'|title }}{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
+                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capability{% elif r.1|lower == 'computationcapabilities' %}Computation Capability{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
                         {% endwith %}
                         {% endfor %}
                     </ul>
                 </div>
                 {% else %}
                 <div class="alert alert-info">
-                    This data registration is not referred to be any other data registration and can be safely deleted without deleting other data registrations.
+                    This metadata is not referred to by any other metadata and can be safely deleted without deleting other metadata.
                 </div>
                 {% endif %}
             </div>
@@ -62,7 +62,7 @@
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
                         <a href="{% url list_resources_of_type_view_name %}" class="btn btn-light me-2">Go Back</a>
                         {% if other_resources_to_delete|length > 0 %}
-                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }} and the registrations listed above</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }} and the metadata registrations listed above</button>
                         {% else %}
                         <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }}</button>
                         {% endif %}
