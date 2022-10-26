@@ -1,6 +1,6 @@
 import {
     enableSubmitButtonIfReady
-} from "/static/is_file_upload_ready.js"
+} from "/static/is_data_collection_file_upload_ready.js"
 
 export let isApiSpecificationLinkValid = false;
 export let isApiSpecificationInputAvailable = false;
