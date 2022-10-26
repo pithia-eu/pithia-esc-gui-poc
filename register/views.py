@@ -187,6 +187,7 @@ class acquisition(RegisterResourceFormView):
 
 class computation_capability(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_dictionary
     success_url = reverse_lazy('register:computation_capability')
 
     a_or_an = 'a'
