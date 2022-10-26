@@ -130,6 +130,7 @@ class platform(RegisterResourceFormView):
 
 class instrument(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
     success_url = reverse_lazy('register:instrument')
 
     a_or_an = 'an'
