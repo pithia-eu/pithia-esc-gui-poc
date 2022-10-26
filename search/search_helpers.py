@@ -1,7 +1,7 @@
 from mongodb import db
 from search.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentInstrument, CurrentProcess
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
 def find_matching_data_collections(request):
     observed_properties = []
@@ -38,31 +38,38 @@ def find_matching_data_collections(request):
     }))
     instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
 
-    # Fetch Acquisitions/Computations
-    acquisitions = list(CurrentAcquisition.find({
+    # Fetch Acquisition Capabilities/Computation Capabilities
+    acquisition_capabilities = list(CurrentAcquisitionCapability.find({
         '$or': [
             {
-                'capability': {
+                'capabilities': {
                     '$elemMatch': {
-                        'pithia:processCapability.observedProperty.@xlink:href': {
+                        'processCapability.observedProperty.@xlink:href': {
                             '$in': observed_properties
                         }
                     }
                 }
             },
             {
-                'instrument.@xlink:href': {
+                'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
                     '$in': instrument_localids
                 }
-            }
+            },
+            {
+                'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+                    '$in': instrument_localids
+                }
+            },
         ]
     }))
-    computations = list(CurrentComputation.find({
+    acquisition_capability_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in acquisition_capabilities]
+
+    computation_capabilities = list(CurrentComputationCapability.find({
         '$or': [
             {
-                'capability': {
+                'capabilities': {
                     '$elemMatch': {
-                        'observedProperty.@xlink:href': {
+                        'processCapability.observedProperty.@xlink:href': {
                             '$in': observed_properties
                         }
                     }
@@ -74,6 +81,30 @@ def find_matching_data_collections(request):
                 }
             }
         ]
+    }))
+    computation_capability_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in computation_capabilities]
+
+    # Fetch Acquisitions/Computations
+    acquisitions = list(CurrentAcquisition.find({
+        'capabilityLinks.capabilityLink': {
+            '$elemMatch': {
+                'acquisitionCapabilities.@xlink:href': {
+                    '$in': acquisition_capability_localids
+                }
+            }
+        }
+    }))
+
+    computations = list(CurrentComputation.find({
+        {
+            'capabilityLinks.capabilityLink': {
+                '$elemMatch': {
+                    'computationCapabilities.@xlink:href': {
+                        '$in': computation_capability_localids
+                    }
+                }
+            }
+        }
     }))
 
     # Fetch Processes
