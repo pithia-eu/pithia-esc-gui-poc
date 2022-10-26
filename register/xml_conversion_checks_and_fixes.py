@@ -13,10 +13,10 @@ def format_acquisition_capability_dictionary(self, dictionary):
     return dictionary
 
 def format_acquisition_dictionary(self, dictionary):
-    # Check if the 'capability' property is an
+    # Check if the 'capabilityLink' property is an
     # array-type property
-    if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
-        dictionary['capability'] = [dictionary['capability']]
+    if 'capabilityLinks' in dictionary and 'capabilityLink' in dictionary['capabilityLinks'] and not isinstance(dictionary['capabilityLinks']['capabilityLink'], list):
+        dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
 def format_computation_capability_dictionary(self, dictionary):
@@ -31,6 +31,10 @@ def format_computation_dictionary(self, dictionary):
     # array-type property
     if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
         dictionary['capability'] = [dictionary['capability']]
+    # Check if the 'capabilityLink' property is an
+    # array-type property
+    if 'capabilityLinks' in dictionary and 'capabilityLink' in dictionary['capabilityLinks'] and not isinstance(dictionary['capabilityLinks']['capabilityLink'], list):
+        dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
 def format_process_dictionary(self, dictionary):
