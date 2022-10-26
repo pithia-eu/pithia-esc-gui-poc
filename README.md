@@ -29,7 +29,7 @@ UTIL_DB_NAME=django
 
 ### Run the project on your machine
 Now that Django, the MongoDB database and the .env file are set up, you should now be able to run the project on your local machine. To do this, if you are not already in the root project folder in your terminal, first, navigate to the root project folder from your terminal (e.g., `cd ~/Documents/Projects/pithia-esc-gui-poc`), then run the command for your operating system, listed below:
-- **MacOS/Linux**: `python manage.py runserver`
+- **MacOS/Linux**: `python3 manage.py runserver`
 - **Windows**: `py manage.py runserver`
 
 [SOURCE](https://docs.djangoproject.com/en/4.0/intro/tutorial01/#the-development-server)
