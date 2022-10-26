@@ -95,6 +95,16 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             'platform.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentInstrument:
+        # Get the operational mode IDs of the Instrument
+        # so Acquisition Capabilities just referencing the
+        # Instrument's operational mode IDs can also be
+        # deleted.
+        instrument_operational_modes = resource['operationalMode']
+        operational_mode_urls = []
+        for om in instrument_operational_modes:
+            om_id = om['InstrumentOperationalMode']['id']
+            operational_mode_urls.append(f'{resource_url}#{om_id}')
+
         # Referenced by: Acquisition (from instrument prop)
         acquisitions = CurrentAcquisition.find({
             'instrument.@xlink:href': resource_url
@@ -109,7 +119,17 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
                 },
                 {
                     'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': resource_url
-                }
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
+                        '$in': operational_mode_urls
+                    }
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+                        '$in': operational_mode_urls
+                    }
+                },
             ]
         })
     # elif resource_mongodb_model == CurrentOperation:
