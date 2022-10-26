@@ -318,10 +318,12 @@ def flatten(d):
         if isinstance(value, dict):
             value = [value]
         if isinstance(value, list):
+            index = 0
             for subdict in value:
+                index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + '.' + key2: value2 for key2, value2 in deeper
+                    key + '[' + str(index) + '].' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
@@ -338,9 +340,11 @@ class ResourceDetailView(TemplateView):
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.resource = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
+        if self.resource is None:
+            # Extra check done for data_collection() view
+            self.resource = self.resource_mongodb_model.find_one({
+                '_id': ObjectId(self.resource_id)
+            })
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
@@ -462,7 +466,28 @@ class data_collection_detail(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
     list_resources_of_type_view_name = 'browse:list_data_collections'
+    template_name = 'browse/detail_interaction_methods.html'
+    interaction_methods = []
+    link_interaction_methods = []
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
+        self.resource = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
+            'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
+        })
+        if 'collectionResults' in self.resource:
+            if 'source' in self.resource['collectionResults']:
+                self.link_interaction_methods = self.resource['collectionResults']['source']
+
         return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['interaction_methods'] = list(self.interaction_methods)
+        context['link_interaction_methods'] = list(self.link_interaction_methods)
+        context['data_collection_id'] = self.resource_id
+        
+        return context

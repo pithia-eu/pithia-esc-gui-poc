@@ -2,8 +2,8 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
-from common.helpers import create_resource_url
-from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id, create_resource_url
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
@@ -32,6 +32,40 @@ def _get_data_collections_referencing_party_url(party_url):
     return CurrentDataCollection.find({
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
     })
+
+# Custom sorting function to sort resources by their type
+def _get_weight_of_resource_mongodb_model(resource_mongodb_model):
+    if resource_mongodb_model == CurrentOrganisation:
+        return 1
+    elif resource_mongodb_model == CurrentIndividual:
+        return 2
+    elif resource_mongodb_model == CurrentProject:
+        return 3
+    elif resource_mongodb_model == CurrentPlatform:
+        return 4
+    elif resource_mongodb_model == CurrentOperation:
+        return 5
+    elif resource_mongodb_model == CurrentInstrument:
+        return 6
+    elif resource_mongodb_model == CurrentAcquisition:
+        return 7
+    elif resource_mongodb_model == CurrentComputation:
+        return 8
+    elif resource_mongodb_model == CurrentProcess:
+        return 9
+    elif resource_mongodb_model == CurrentDataCollection:
+        return 10
+    return 10
+
+def _custom_compare(item1, item2):
+    item1_weight = _get_weight_of_resource_mongodb_model(item1[2])
+    item2_weight = _get_weight_of_resource_mongodb_model(item2[2])
+    if item1_weight < item2_weight:
+        return -1
+    elif item1_weight > item2_weight:
+        return 1
+    else:
+        return 0
 
 def _get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
@@ -271,6 +305,17 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
 
     return linked_resources
 
+def _delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id):
+    data_collection_to_delete = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
+    CurrentDataCollectionInteractionMethod.delete_many({
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
+    })
+    DataCollectionInteractionMethodRevision.delete_many({
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
+    })
+
 def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
     # Find the resource to delete, so it can be referenced later when deleting from
     # the revisions collection
@@ -491,7 +536,20 @@ class data_collection(DeleteResourceView):
     list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
     delete_resource_type_view_name = 'delete:data_collection'
+    template_name = 'delete/confirm_delete_data_collection.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # Delete interaction methods (current versions and
+        # revisions) before deleting the actual data collection,
+        # not sure if the order should be changed around...
+        _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
+        return super().post(request, *args, **kwargs)

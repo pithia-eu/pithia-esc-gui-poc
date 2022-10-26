@@ -27,3 +27,5 @@ ProcessRevision = db['process-revisions']
 DataCollectionRevision = db['data-collection-revisions']
 
 OriginalMetadataXml = db['original-metadata-xmls']
+CurrentDataCollectionInteractionMethod = db['current-data-collection-interaction-methods']
+DataCollectionInteractionMethodRevision = db['data-collection-interaction-method-revisions']

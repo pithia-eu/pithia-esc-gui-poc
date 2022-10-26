@@ -5,8 +5,9 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import FormView
 from register.register import register_metadata_xml_file
+from register.register_api_specification import register_api_specification
 
-from .forms import UploadFileForm
+from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
 from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource_page_title
@@ -64,6 +65,11 @@ class RegisterResourceFormView(FormView):
                         messages.error(request, f'{xml_file.name} has been registered before.')
                     else:
                         messages.success(request, f'Successfully registered {xml_file.name}.')
+                        if 'interaction_methods' in request.POST:
+                            interaction_methods = request.POST.getlist('interaction_methods')
+                            if 'api' in interaction_methods:
+                                api_specification_url = request.POST['api_specification_url']
+                                register_api_specification(api_specification_url, registration_results['identifier']['PITHIA_Identifier']['localID'])
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
@@ -220,6 +226,8 @@ class data_collection(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')
+    template_name = 'register/file_upload_data_collection.html'
+    form_class = UploadDataCollectionFileForm
 
     a_or_an = 'a'
     resource_type = 'data collection'
@@ -228,3 +236,9 @@ class data_collection(RegisterResourceFormView):
     post_url = reverse_lazy('register:data_collection')
     list_resource_type_page_url_name = 'resource_management:data_collections'
     list_resource_page_title = _create_manage_resource_page_title('data collections')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Register a {self.resource_type.title()}'
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
+        return context

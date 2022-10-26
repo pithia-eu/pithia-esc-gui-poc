@@ -8,20 +8,19 @@
 <link rel="stylesheet" type="text/css" href={% static 'present/index.css' %}>
 
 {% block scripts %}
+{{ api_specification_url|json_script:'api-specification-url' }}
 <script src="{% static "present/swagger-ui-bundle.js" %}" id="swagger-ui-bundle-script" defer></script>
 <script src="{% static "present/swagger-ui-standalone-preset.js" %}" id="swagger-ui-standalone-script" defer></script>
 <script src="{% static "present/swagger-initializer.js" %}" id="swagger-initializer-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row pb-4">
+<div class="row">
     <div class="col-lg-8">
-        <h1>Model execution</h1>
+        <h1 class="mb-0">Interact with Data Collection via API</h1>
+        <span class="text-muted">{{ data_collection.name }}</span>
     </div>
 </div>
     <div id="swagger-ui"></div>
-    <script id="swagger-ui-bundle-script" charset="UTF-8"> </script>
-    <script id="swagger-ui-standalone-preset-script" charset="UTF-8"> </script>
-    <script id="swagger-initializer-script" charset="UTF-8"> </script>
 </div>
 
 {% endblock content %}

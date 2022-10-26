@@ -35,10 +35,17 @@ def format_data_collection_dictionary(self, dictionary):
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
         dictionary['relatedParty'] = [dictionary['relatedParty']]
+    # Check if the 'type' property (which maps to both instrumentTypes and computationTypes)
+    # exists and if it is an array-type property
+    if 'type' in dictionary and not isinstance(dictionary['type'], list):
+        dictionary['type'] = [dictionary['type']]
     # Check if the 'om:parameter' property exists and
     # if it is an array-type property
-    if 'om:paramater' in dictionary and not isinstance(dictionary['om:paramater'], list):
-        dictionary['om:paramater'] = [dictionary['om:paramater']]
+    if 'om:parameter' in dictionary and not isinstance(dictionary['om:parameter'], list):
+        dictionary['om:parameter'] = [dictionary['om:parameter']]
+    # Check if the nested 'namedRegion' property is an array-type property
+    if 'om:featureOfInterest' in dictionary and 'FeatureOfInterest' in dictionary['om:featureOfInterest'] and 'namedRegion' in dictionary['om:featureOfInterest']['FeatureOfInterest'] and not isinstance(dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion'], list):
+        dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion'] = [dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
     # Check if nested 'source' property is an
     # array-type property
     if 'collectionResults' in dictionary and 'source' in dictionary['collectionResults'] and not isinstance(dictionary['collectionResults']['source'], list):
