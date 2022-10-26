@@ -10,7 +10,7 @@
     -->
     <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
     <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
-    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/pithia/CompositeProcess_IonogramDerived_Basic"/>
+    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/oe/CompositeProcess_OE_Fpeak"/>
     <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
     <om:featureOfInterest>
         <FeatureOfInterest>
