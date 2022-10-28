@@ -23,12 +23,8 @@ def find_matching_data_collections(request):
         observed_properties += additional_observed_properties
         observed_properties = list(set(observed_properties))
 
-    # Process is:
-    # Features of interest map to observed properties
-    # Observed properties map to acquisition and computations
-    # Acquisition/Computation maps to
-    # Process maps to
-    # Data Collection, which is what we want
+    # The way in which data collections are found goes according to the
+    # project data model diagram.
 
     # Fetch Instruments
     instruments = list(CurrentInstrument.find({
@@ -42,9 +38,9 @@ def find_matching_data_collections(request):
     acquisition_capabilities = list(CurrentAcquisitionCapability.find({
         '$or': [
             {
-                'capabilities': {
+                'capabilities.processCapability': {
                     '$elemMatch': {
-                        'processCapability.observedProperty.@xlink:href': {
+                        'observedProperty.@xlink:href': {
                             '$in': observed_properties
                         }
                     }
@@ -67,9 +63,9 @@ def find_matching_data_collections(request):
     computation_capabilities = list(CurrentComputationCapability.find({
         '$or': [
             {
-                'capabilities': {
+                'capabilities.processCapability': {
                     '$elemMatch': {
-                        'processCapability.observedProperty.@xlink:href': {
+                        'observedProperty.@xlink:href': {
                             '$in': observed_properties
                         }
                     }
@@ -96,12 +92,10 @@ def find_matching_data_collections(request):
     }))
 
     computations = list(CurrentComputation.find({
-        {
-            'capabilityLinks.capabilityLink': {
-                '$elemMatch': {
-                    'computationCapabilities.@xlink:href': {
-                        '$in': computation_capability_localids
-                    }
+        'capabilityLinks.capabilityLink': {
+            '$elemMatch': {
+                'computationCapabilities.@xlink:href': {
+                    '$in': computation_capability_localids
                 }
             }
         }
