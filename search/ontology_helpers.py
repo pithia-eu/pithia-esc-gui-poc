@@ -154,8 +154,8 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
             if nestedKey in ontology_dictionary:
                 ontology_dictionary[key]['narrowers'][nestedKey] = ontology_dictionary[nestedKey]
                 keys_to_remove_at_top_level.append(nestedKey)
-            else:
-                print(nestedKey)
+            # else:
+            #     print('nested key in ontology dict found', nestedKey)
     
     for key in keys_to_remove_at_top_level:
         ontology_dictionary.pop(key, None)
