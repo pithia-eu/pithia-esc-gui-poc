@@ -5,7 +5,7 @@ from rdflib.namespace import _SKOS
 from rdflib.resource import Resource
 
 ONTOLOGY_SERVER_BASE_URL = 'https://metadata.pithia.eu/ontology/2.2/'
-ESPAS = Namespace('http://ontology.espas-fp7.eu/espasdefinitions#')
+PITHIA = Namespace('https://metadata.pithia.eu/ontology/2.2/')
 
 def get_object_names_from_triple(triple):
     s, p, o = triple
@@ -17,9 +17,9 @@ def get_object_names_from_triple(triple):
         return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}featureOfInterest/', 'featureOfInterest')
 
 def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
-    op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.phenomenon, None))))
-    op_measurands = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.measurand, None))))
-    op_featuresOfInterest = list(map(get_object_names_from_triple, g.triples((op_uri, ESPAS.featureOfInterest, None))))
+    op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.phenomenon, None))))
+    op_measurands = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.measurand, None))))
+    op_featuresOfInterest = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.featureOfInterest, None))))
     op_dict['phenomenons'] = op_phenomenons
     op_dict['measurands'] = op_measurands
     op_dict['featuresOfInterest'] = op_featuresOfInterest
@@ -55,23 +55,23 @@ def get_graph_of_pithia_ontology_component(ontology_component):
 def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
     op_hrefs = []
     g = get_graph_of_pithia_ontology_component('observedProperty')
-    for s, p, o in g.triples((None, ESPAS.featureOfInterest, None)):
+    for s, p, o in g.triples((None, PITHIA.featureOfInterest, None)):
         if any(x in str(o) for x in features_of_interest):
             op_hrefs.append(str(s))
     return op_hrefs
 
 def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, g, feature_of_interest_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.featureOfInterest, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.featureOfInterest, None)):
         feature_of_interest_ids.append(o.split('/')[-1])
     return feature_of_interest_ids
 
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.phenomenon, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.phenomenon, None)):
         phenomenon_ids.append(o.split('/')[-1])
     return phenomenon_ids
 
 def get_measurand_ids_from_observed_property_id(observed_property_id, g, measurand_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), ESPAS.measurand, None)):
+    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.measurand, None)):
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
