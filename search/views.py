@@ -81,7 +81,6 @@ def get_registered_observed_properties():
             }
         }
     ]))
-    print('observed_properties_from_computation_capabilities', observed_properties_from_computation_capabilities)
 
     observed_properties_from_acquisition_capabilities = list(CurrentAcquisitionCapability.aggregate([
         {
@@ -98,7 +97,6 @@ def get_registered_observed_properties():
                 }
             }
     ]))
-    print('observed_properties_from_acquisition_capabilities', observed_properties_from_acquisition_capabilities)
 
     observed_property_ids = []
     if len(observed_properties_from_computation_capabilities) > 0:
