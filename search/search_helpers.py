@@ -1,7 +1,23 @@
+import re
 from mongodb import db
 from search.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentInstrument, CurrentProcess
+
+
+def get_computation_capability_localids_referencing_computation_capabilities_localid(computation_capabilities_localid, cc_localid_set):
+    ccs_referencing_cc = list(CurrentComputationCapability.find({
+        'childComputation.@xlink:href': re.compile(computation_capabilities_localid)
+    }))
+    cc_localids_referencing_cc = [cc['identifier']['PITHIA_Identifier']['localID'] for cc in ccs_referencing_cc]
+    print('computation_capabilities_localid', computation_capabilities_localid)
+    print('cc_localids_referencing_cc', cc_localids_referencing_cc)
+    for cc_localid in cc_localids_referencing_cc:
+        if cc_localid not in cc_localid_set:
+            cc_localid_set.add(cc_localid)
+            get_computation_capability_localids_referencing_computation_capabilities_localid(cc_localid, cc_localid_set)
+
+    return cc_localids_referencing_cc
 
 def find_matching_data_collections(request):
     observed_properties = []
@@ -59,6 +75,7 @@ def find_matching_data_collections(request):
         ]
     }))
     acquisition_capability_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in acquisition_capabilities]
+    acquisition_capability_localids = convert_list_to_regex_list(acquisition_capability_localids)
 
     computation_capabilities = list(CurrentComputationCapability.find({
         '$or': [
@@ -78,7 +95,15 @@ def find_matching_data_collections(request):
             }
         ]
     }))
+    cc_localids_referencing_cc = []
+    for cc in computation_capabilities:
+        cc_localids_referencing_cc.extend(list(get_computation_capability_localids_referencing_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
+        cc_localids_referencing_cc = list(set(cc_localids_referencing_cc))
+
     computation_capability_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in computation_capabilities]
+    computation_capability_localids.extend(cc_localids_referencing_cc)
+    computation_capability_localids = list(set(computation_capability_localids))
+    computation_capability_localids = convert_list_to_regex_list(computation_capability_localids)
 
     # Fetch Acquisitions/Computations
     acquisitions = list(CurrentAcquisition.find({
