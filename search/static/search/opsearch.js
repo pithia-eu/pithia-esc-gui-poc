@@ -12,7 +12,7 @@ import {
 const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
 const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
 const PHENOMENONS_TREE_CONTAINER_ID = "phenomenons-tree-search-container";
-
+const clearObservedPropertiesInputsButton = document.querySelector(".btn-clear-op-inputs");
 
 async function fetchAndSetupSearchFormComponents() {
     const searchFormComponents = await Promise.all([
@@ -21,19 +21,19 @@ async function fetchAndSetupSearchFormComponents() {
         fetchSearchFormComponent("phenomenon"),
     ]);
     setupSearchFormComponent(searchFormComponents[0], OBSERVED_PROPERTIES_TREE_CONTAINER_ID, () => {
-        addTreeContainerIdToClearInputsButton(OBSERVED_PROPERTIES_TREE_CONTAINER_ID);
+        addTreeContainerIdToClearInputsButton(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);
     });
     setupSearchFormComponent(searchFormComponents[1], MEASURANDS_TREE_CONTAINER_ID, () => {
         setupObservedPropertiesTreeFilteringForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
         setupSelectAllButtonForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
         setupDeselectAllButtonForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
-        addTreeContainerIdToClearInputsButton(MEASURANDS_TREE_CONTAINER_ID);
+        addTreeContainerIdToClearInputsButton(MEASURANDS_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);
     });
     setupSearchFormComponent(searchFormComponents[2], PHENOMENONS_TREE_CONTAINER_ID, () => {
         setupObservedPropertiesTreeFilteringForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
         setupSelectAllButtonForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
         setupDeselectAllButtonForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
-        addTreeContainerIdToClearInputsButton(PHENOMENONS_TREE_CONTAINER_ID);
+        addTreeContainerIdToClearInputsButton(PHENOMENONS_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);
     });
 }
 
