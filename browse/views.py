@@ -363,7 +363,7 @@ class ResourceDetailView(TemplateView):
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
-        print('context["resource_creation_date"]', context['resource_creation_date'])
+        context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         return context
 

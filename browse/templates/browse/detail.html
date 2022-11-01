@@ -10,9 +10,9 @@
 {% block content %}
 {% block messages %}{% endblock messages %}
 <h1>{{ resource.name }}</h1>
-<div class="d-flex flex-wrap">
-    <span class="text-muted me-3">Created: {{ resource_creation_date|date:'D d M Y H:i:s e' }}</span>
-    <span class="text-muted">Last Modified: {{ resource.identifier.PITHIA_Identifier.lastModificationDate|date:'D d M Y' }}</span>
+<div class="d-flex flex-column flex-wrap text-muted">
+    <span><b>Created:</b> {{ resource_creation_date|date:'l jS N Y H:i:s.u' }}</span>
+    <span><b>Last Modified:</b> {{ resource_last_modification_date|date:'l jS N Y H:i:s.u' }}</span>
 </div>
 {% if resource.description and resource.description|cut:' ' != '' %}
 <div class="row">
