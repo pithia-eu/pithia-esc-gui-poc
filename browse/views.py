@@ -1,3 +1,5 @@
+from datetime import datetime
+from dateutil.parser import parse
 from django.urls import reverse
 from rdflib import URIRef
 from rdflib.resource import Resource
@@ -360,6 +362,8 @@ class ResourceDetailView(TemplateView):
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
+        context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
+        print('context["resource_creation_date"]', context['resource_creation_date'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         return context
 
