@@ -1,3 +1,4 @@
+import pymongo
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
@@ -89,12 +90,28 @@ class projects(ManageResourcesView):
     register_resource_view_name = 'register:project'
 
 class platforms(ManageResourcesView):
+    template_name = 'resource_management/list_platforms.html'
     title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
     resource_type_plural = 'PLatforms'
     delete_resource_view_name = 'delete:platform'
     update_resource_view_name = 'update:platform'
     register_resource_view_name = 'register:platform'
+
+    def get_resources_list(self):
+        resources_list = list(self.resource_mongodb_model.find({}).sort([
+            ('name', pymongo.ASCENDING)
+        ]))
+        return list(map(remove_underscore_from_id_attribute, resources_list))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pithia_platforms, non_pithia_platforms = [], []
+        for p in context['resources_list']:
+            pithia_platforms.append(p) if p['identifier']['PITHIA_Identifier']['namespace'] == 'pithia' else non_pithia_platforms.append(p)
+        context['pithia_platforms'] = pithia_platforms
+        context['non_pithia_platforms'] = non_pithia_platforms
+        return context
 
 class instruments(ManageResourcesView):
     title = _create_manage_resource_page_title('instruments')
