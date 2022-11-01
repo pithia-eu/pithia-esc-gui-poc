@@ -2,11 +2,11 @@
 {% load project_tags %}
 {% load static %}
 {% block ul_resources_list %}
-<h2>PITHIA Platforms</h2>
+<h2>Platform Networks</h2>
 {% with resources_list=pithia_platforms %}
 {% include 'resource_management/ul_resources_list.html' %}
 {% endwith %}
-<h2 class="mt-5">Non-PITHIA Platforms</h2>
+<h2 class="mt-5">Individual Platforms</h2>
 {% with resources_list=non_pithia_platforms %}
 {% include 'resource_management/ul_resources_list.html' %}
 {% endwith %}
