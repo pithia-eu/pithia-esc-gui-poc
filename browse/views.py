@@ -1,4 +1,4 @@
-from datetime import datetime
+import re
 from dateutil.parser import parse
 from django.urls import reverse
 from rdflib import URIRef
@@ -67,17 +67,9 @@ def ontology(request):
         'title': _ONTOLOGY_PAGE_TITLE
     })
 
+# Credit for _split_camel_case() function: https://stackoverflow.com/a/37697078
 def _split_camel_case(string):
-    current_string = string[0]
-    string_split = []
-    for c in string[1:]:
-        if c.isupper():
-            string_split.append(current_string)
-            current_string = c
-        else:
-            current_string += c
-    string_split.append(current_string)
-    return string_split
+    return re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', string)).split()
 
 def ontology_category_terms_list(request, category):
     title = ' '.join(_split_camel_case(category)).title()
@@ -325,7 +317,7 @@ def flatten(d):
                 index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + '[' + str(index) + '].' + key2: value2 for key2, value2 in deeper
+                    key + ' <b>' + str(index) + '</b>.' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
@@ -338,10 +330,15 @@ class ResourceDetailView(TemplateView):
     resource_mongodb_model = None
     resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_flattened = None
+    resource_human_readable = {}
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
+    hidden_resource_keys = [
+        'contactinfo'
+    ]
 
     def get(self, request, *args, **kwargs):
+        self.resource_human_readable = {}
         if self.resource is None:
             # Extra check done for data_collection() view
             self.resource = self.resource_mongodb_model.find_one({
@@ -350,6 +347,44 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
+        for key in self.resource_flattened:
+            if key.startswith('@') or any(x in key.lower() for x in self.hidden_resource_keys):
+                continue
+            key_split_by_dot = key.split('.')
+            key_split_by_dot_human_readable = []
+            for string in key_split_by_dot:
+                is_only_numbered_key = True
+                if string.endswith('<b>1</b>'):
+                    for key2 in self.resource_flattened:
+                        if string.replace('<b>1</b>', '<b>2</b>') in key2:
+                            is_only_numbered_key = False
+                if is_only_numbered_key:
+                    string = string.replace('<b>1</b>', '')
+                if  string.startswith('#') or string == '@xlink:href':
+                    continue
+                if ':' in string:
+                    index_of_colon = string.index(':')
+                    string = string[index_of_colon + 1:]
+                if '@' in string:
+                    index_of_at_symbol = string.index('@')
+                    string = string[index_of_at_symbol + 1:]
+                if string == '_id' or string.isupper():
+                    key_split_by_dot_human_readable.append(string)
+                elif '_' in string:
+                    human_readable_string = ' '.join(string.split('_'))
+                    human_readable_string = ' '.join(_split_camel_case(human_readable_string))
+                    key_split_by_dot_human_readable.append(human_readable_string)
+                else:
+                    human_readable_string = ' '.join(_split_camel_case(string))
+                    if not human_readable_string[0].isupper():
+                        human_readable_string = human_readable_string.title()
+                    key_split_by_dot_human_readable.append(human_readable_string)
+            key_split_by_dot_human_readable[-1] = f'<b>{key_split_by_dot_human_readable[-1]}</b>'
+            human_readable_key = ' <span class="text-muted">></span> '.join(key_split_by_dot_human_readable)
+            if human_readable_key.startswith('Om:'):
+                human_readable_key = human_readable_key.replace('Om:', '')
+            if human_readable_key != '':
+                self.resource_human_readable[human_readable_key] = self.resource_flattened[key]
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
             self.title = self.resource['name']
@@ -362,6 +397,7 @@ class ResourceDetailView(TemplateView):
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
+        context['resource_human_readable'] = self.resource_human_readable
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name

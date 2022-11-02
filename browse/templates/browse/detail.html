@@ -10,16 +10,17 @@
 {% block content %}
 {% block messages %}{% endblock messages %}
 <h1>{{ resource.name }}</h1>
-<div class="d-flex flex-column flex-wrap text-muted">
-    <span><b>Created:</b> {{ resource_creation_date|date:'l jS N Y H:i:s.u' }}</span>
-    <span><b>Last Modified:</b> {{ resource_last_modification_date|date:'l jS N Y H:i:s.u' }}</span>
+<div class="d-flex flex-wrap text-muted">
+    <span><b>Created:</b> {{ resource_creation_date|date:'l jS N Y, H:i:s' }}</span>
+    <span class="mx-2"></span>
+    <span><b>Last Modified:</b> {{ resource_last_modification_date|date:'l jS N Y, H:i:s' }}</span>
 </div>
 {% if resource.description and resource.description|cut:' ' != '' %}
 <div class="row">
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead mb-0">{{ resource.description }}</p>
+            <p class="lead mb-0">{{ resource.description|urlize }}</p>
         </section>
     </div>
 </div>
@@ -30,26 +31,24 @@
         <section>
             <h2 class="mb-3">Properties</h2>
             {% if resource %}
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">Property</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in resource_flattened.items %}
-                        {% if key != '_id' and key|first != '@' %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value|urlize }}</td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Property</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in resource_human_readable.items %}
+                    {% if '_id' not in key %}
+                    <tr>
+                        <td>{{ key|safe }}</td>
+                        <td>{% if value.strip|length == 0 %}<i class="text-muted">None</i>{% else %}{{ value.strip|urlize }}{% endif %}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endif %}
         </section>
     </div>
