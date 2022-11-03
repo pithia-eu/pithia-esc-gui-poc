@@ -308,6 +308,8 @@ class list_data_collections(ListResourcesView):
 
 def flatten(d):
     out = {}
+    if d is None:
+        return out
     for key, value in d.items():
         if isinstance(value, dict):
             value = [value]
