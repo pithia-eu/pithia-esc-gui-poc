@@ -20,7 +20,7 @@
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead mb-0">{{ resource.description|urlize }}</p>
+            <p class="lead mb-0">{{ resource.description|urlize|url_target_blank }}</p>
         </section>
     </div>
 </div>
@@ -43,7 +43,7 @@
                     {% if '_id' not in key %}
                     <tr>
                         <td>{{ key|safe }}</td>
-                        <td>{% if value.strip|length == 0 %}<i class="text-muted">None</i>{% else %}{{ value.strip|urlize }}{% endif %}</td>
+                        <td>{% if value.strip|length == 0 %}<i class="text-muted">None</i>{% else %}{{ value.strip|urlize|url_target_blank }}{% endif %}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
