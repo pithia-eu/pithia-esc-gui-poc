@@ -325,6 +325,51 @@ def flatten(d):
             out[key] = value
     return out
 
+def _create_human_readable_version_of_flattened_resource(resource_flattened):
+    hidden_resource_keys = [
+        'contactinfo'
+    ]
+    resource_human_readable = {}
+    for key in resource_flattened:
+        if key.startswith('@') or any(x in key.lower() for x in hidden_resource_keys):
+            continue
+        key_split_by_dot = key.split('.')
+        key_split_by_dot_human_readable = []
+        for string in key_split_by_dot:
+            is_only_numbered_key = True
+            if string.endswith('<b>1</b>'):
+                for key2 in resource_flattened:
+                    if string.replace('<b>1</b>', '<b>2</b>') in key2:
+                        is_only_numbered_key = False
+            if is_only_numbered_key:
+                string = string.replace('<b>1</b>', '')
+            if  string.startswith('#') or string == '@xlink:href':
+                continue
+            if ':' in string:
+                index_of_colon = string.index(':')
+                string = string[index_of_colon + 1:]
+            if '@' in string:
+                index_of_at_symbol = string.index('@')
+                string = string[index_of_at_symbol + 1:]
+            if string == '_id' or string.isupper():
+                key_split_by_dot_human_readable.append(string)
+            elif '_' in string:
+                human_readable_string = ' '.join(string.split('_'))
+                human_readable_string = ' '.join(_split_camel_case(human_readable_string))
+                key_split_by_dot_human_readable.append(human_readable_string)
+            else:
+                human_readable_string = ' '.join(_split_camel_case(string))
+                if not human_readable_string[0].isupper():
+                    human_readable_string = human_readable_string.title()
+                key_split_by_dot_human_readable.append(human_readable_string)
+        key_split_by_dot_human_readable[-1] = f'<b>{key_split_by_dot_human_readable[-1]}</b>'
+        human_readable_key = ' <span class="text-muted">></span> '.join(key_split_by_dot_human_readable)
+        if human_readable_key.startswith('Om:'):
+            human_readable_key = human_readable_key.replace('Om:', '')
+        if human_readable_key != '':
+            resource_human_readable[human_readable_key] = resource_flattened[key]
+    return resource_human_readable
+
 class ResourceDetailView(TemplateView):
     title = 'Resource Detail'
     resource = None
@@ -335,9 +380,6 @@ class ResourceDetailView(TemplateView):
     resource_human_readable = {}
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
-    hidden_resource_keys = [
-        'contactinfo'
-    ]
 
     def get(self, request, *args, **kwargs):
         self.resource_human_readable = {}
@@ -349,44 +391,7 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
-        for key in self.resource_flattened:
-            if key.startswith('@') or any(x in key.lower() for x in self.hidden_resource_keys):
-                continue
-            key_split_by_dot = key.split('.')
-            key_split_by_dot_human_readable = []
-            for string in key_split_by_dot:
-                is_only_numbered_key = True
-                if string.endswith('<b>1</b>'):
-                    for key2 in self.resource_flattened:
-                        if string.replace('<b>1</b>', '<b>2</b>') in key2:
-                            is_only_numbered_key = False
-                if is_only_numbered_key:
-                    string = string.replace('<b>1</b>', '')
-                if  string.startswith('#') or string == '@xlink:href':
-                    continue
-                if ':' in string:
-                    index_of_colon = string.index(':')
-                    string = string[index_of_colon + 1:]
-                if '@' in string:
-                    index_of_at_symbol = string.index('@')
-                    string = string[index_of_at_symbol + 1:]
-                if string == '_id' or string.isupper():
-                    key_split_by_dot_human_readable.append(string)
-                elif '_' in string:
-                    human_readable_string = ' '.join(string.split('_'))
-                    human_readable_string = ' '.join(_split_camel_case(human_readable_string))
-                    key_split_by_dot_human_readable.append(human_readable_string)
-                else:
-                    human_readable_string = ' '.join(_split_camel_case(string))
-                    if not human_readable_string[0].isupper():
-                        human_readable_string = human_readable_string.title()
-                    key_split_by_dot_human_readable.append(human_readable_string)
-            key_split_by_dot_human_readable[-1] = f'<b>{key_split_by_dot_human_readable[-1]}</b>'
-            human_readable_key = ' <span class="text-muted">></span> '.join(key_split_by_dot_human_readable)
-            if human_readable_key.startswith('Om:'):
-                human_readable_key = human_readable_key.replace('Om:', '')
-            if human_readable_key != '':
-                self.resource_human_readable[human_readable_key] = self.resource_flattened[key]
+        self.resource_human_readable = _create_human_readable_version_of_flattened_resource(self.resource_flattened)
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
             self.title = self.resource['name']
