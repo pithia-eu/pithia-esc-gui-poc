@@ -126,7 +126,7 @@ h1 {
     width: 20%;
 }
 
-.resource-key-details td {
+.resource-key-details tr td:first-child {
     padding-left: 0;
     padding-right: 0;
 }
