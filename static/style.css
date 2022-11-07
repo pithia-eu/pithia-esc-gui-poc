@@ -121,6 +121,11 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
+/* Resource detail page */
+.resource-property-table td:first-child {
+    width: 20%;
+}
+
 /* Register page */
 .registration-alerts {
     display: flex;

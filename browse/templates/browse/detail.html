@@ -31,7 +31,7 @@
         <section>
             <h2 class="mb-3">Properties</h2>
             {% if resource %}
-            <table class="table table-bordered">
+            <table class="table table-bordered resource-property-table">
                 <thead>
                     <tr>
                         <th scope="col">Property</th>
@@ -39,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in resource_human_readable.items %}
+                    {% for key, value in resource_human_readable.items|dictsort:0 %}
                     {% if '_id' not in key %}
                     <tr>
                         <td>{{ key|safe }}</td>
