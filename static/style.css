@@ -126,6 +126,11 @@ h1 {
     width: 20%;
 }
 
+.resource-key-details td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 /* Register page */
 .registration-alerts {
     display: flex;
