@@ -133,6 +133,11 @@ h1 {
     padding-right: 0;
 }
 
+/* Resource management list page */
+.resource-identifier-short-text {
+    word-break: break-all;
+}
+
 /* Register page */
 .registration-alerts {
     display: flex;
