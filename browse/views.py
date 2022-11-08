@@ -336,19 +336,24 @@ def flatten(d):
     return out
 
 def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
-    hidden_resource_keys = [
+    hidden_keys = [
         '_id',
-        'contactinfo',
         'description',
-        'creationdate',
-        'lastmodificationdate',
-        'name',
-        'localid',
-        'version',
+    ]
+    hidden_key_regex = [
+        re.compile(r'^name'),
+        re.compile(r'^contactinfo'),
+        re.compile(r'^identifier'),
+        re.compile(r'.*onlineresource <b>1</b>\.description'),
+        re.compile(r'.*onlineresource <b>1</b>\.linkage'),
+        # re.compile(r'.*onlineresource <b>1</b>\.name'),
     ]
     resource_human_readable = {}
     for key in resource_flattened:
-        if key.startswith('@') or any(x in key.lower() for x in hidden_resource_keys):
+        print('key', key)
+        print('key.lower()', key.lower())
+        print('any(regex for regex in hidden_key_regex if re.match(regex, key.lower())', any(regex for regex in hidden_key_regex if re.match(regex, key.lower())))
+        if key.startswith('@') or any(x == key.lower() for x in hidden_keys) or any(regex for regex in hidden_key_regex if re.match(regex, key.lower())):
             continue
         key_split_by_dot = key.split('.')
         human_readable_key_strings = []
@@ -425,12 +430,20 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
+        ontology_term_category_graphs = {}
         for key, value in self.resource_flattened.items():
             if isinstance(value, str) and '/ontology/' in value:
                 ontology_term_detail_url = _create_ontology_term_detail_url_from_ontology_term_server_url(value)
                 ontology_term_id = value.split('/')[-1]
                 ontology_term_category = value.split('/')[-2]
-                graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
+                # If the graph for the ontology term has already been fetched,
+                # get the stored version of it to improve page loading times
+                graph_for_ontology_term = None
+                if ontology_term_category in ontology_term_category_graphs:
+                    graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
+                else:
+                    graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
+                    ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
                 self.resource_flattened[key] = _create_anchor_tag_with_ontology_term(ontology_term_id, value, ontology_term_detail_url, graph_for_ontology_term)
             if isinstance(value, str) and '/resources/' in value:
                 referenced_resource_server_url_split = value.split('/')
