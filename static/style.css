@@ -122,6 +122,8 @@ h1 {
 }
 
 /* Resource detail page */
+.interaction-method-table td:first-child,
+.ontology-term-table td:first-child,
 .resource-property-table td:first-child {
     width: 20%;
 }
