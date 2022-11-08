@@ -350,9 +350,6 @@ def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
     ]
     resource_human_readable = {}
     for key in resource_flattened:
-        print('key', key)
-        print('key.lower()', key.lower())
-        print('any(regex for regex in hidden_key_regex if re.match(regex, key.lower())', any(regex for regex in hidden_key_regex if re.match(regex, key.lower())))
         if key.startswith('@') or any(x == key.lower() for x in hidden_keys) or any(regex for regex in hidden_key_regex if re.match(regex, key.lower())):
             continue
         key_split_by_dot = key.split('.')
