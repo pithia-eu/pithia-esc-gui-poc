@@ -1,3 +1,5 @@
+import re
+from dateutil.parser import parse
 from django.urls import reverse
 from rdflib import URIRef
 from rdflib.resource import Resource
@@ -8,6 +10,7 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
+from common.helpers import get_mongodb_model_for_resource_type
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
@@ -65,17 +68,9 @@ def ontology(request):
         'title': _ONTOLOGY_PAGE_TITLE
     })
 
+# Credit for _split_camel_case() function: https://stackoverflow.com/a/37697078
 def _split_camel_case(string):
-    current_string = string[0]
-    string_split = []
-    for c in string[1:]:
-        if c.isupper():
-            string_split.append(current_string)
-            current_string = c
-        else:
-            current_string += c
-    string_split.append(current_string)
-    return string_split
+    return re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', string)).split()
 
 def ontology_category_terms_list(request, category):
     title = ' '.join(_split_camel_case(category)).title()
@@ -128,6 +123,22 @@ def _remove_namespace_prefix_from_predicate(p):
         p_identifier_no_prefix = p.identifier.split('/')[-1]
     return p_identifier_no_prefix
 
+def _create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
+    ontology_term_server_url_split = ontology_term_server_url.split('/')
+    ontology_category = ontology_term_server_url_split[-2]
+    ontology_term_id = ontology_term_server_url_split[-1]
+    return reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])
+
+def _create_anchor_tag_with_ontology_term(ontology_term_readable, ontology_term_ontology_iri, ontology_term_detail_url, graph_for_ontology_term):
+    SKOS = _SKOS.SKOS
+    pref_label_triples = list(graph_for_ontology_term.triples((URIRef(ontology_term_ontology_iri), SKOS.prefLabel, None)))
+    # Not having a prefLabel implies the ontology term doesn't exist
+    if len(pref_label_triples) > 0:
+        ontology_term_readable = str(pref_label_triples[0][2])
+        return f'<a href="{ontology_term_detail_url}">{ontology_term_readable}</a>'
+    else:
+        return ontology_term_readable
+
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
     SKOS = _SKOS.SKOS
@@ -157,17 +168,10 @@ def ontology_term_detail(request, category, term_id):
             for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
                 urls_of_referenced_terms.append(str(o2))
             for u in urls_of_referenced_terms:
-                u_split = u.split('/')
-                ontology_category = u_split[-2]
-                ontology_term_id = u_split[-1]
-                term_pref_label = ontology_term_id
-                pref_label_triples = list(g_other_ontology_term.triples((URIRef(u), SKOS.prefLabel, None)))
-                if len(pref_label_triples) > 0:
-                    term_pref_label = str(pref_label_triples[0][2])
-                if len(pref_label_triples) > 0:
-                    urls_of_referenced_terms_with_preflabels.append(f"<a href=\"{reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])}\">{term_pref_label}</a>")
-                else:
-                    urls_of_referenced_terms_with_preflabels.append(term_pref_label)
+                ontology_term_detail_url_for_referenced_term = _create_ontology_term_detail_url_from_ontology_term_server_url(u)
+                term_pref_label = u.split('/')[-1]
+                anchor_tag_of_term = _create_anchor_tag_with_ontology_term(term_pref_label, u, ontology_term_detail_url_for_referenced_term, g_other_ontology_term)
+                urls_of_referenced_terms_with_preflabels.append(anchor_tag_of_term)
             resource_dictionary[p_identifier_no_prefix]= urls_of_referenced_terms_with_preflabels
         if p_identifier_no_prefix not in resource_dictionary:
             if len(list(g.triples((resource_uriref, p.identifier, None)))) > 1:
@@ -314,6 +318,8 @@ class list_data_collections(ListResourcesView):
 
 def flatten(d):
     out = {}
+    if d is None:
+        return out
     for key, value in d.items():
         if isinstance(value, dict):
             value = [value]
@@ -323,11 +329,85 @@ def flatten(d):
                 index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + '[' + str(index) + '].' + key2: value2 for key2, value2 in deeper
+                    key + ' <b>' + str(index) + '</b>.' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
     return out
+
+def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
+    hidden_keys = [
+        '_id',
+        'description',
+    ]
+    hidden_key_regex = [
+        re.compile(r'^name'),
+        re.compile(r'^contactinfo'),
+        re.compile(r'^identifier'),
+        re.compile(r'.*onlineresource <b>1</b>\.description'),
+        re.compile(r'.*onlineresource <b>1</b>\.linkage'),
+        # re.compile(r'.*onlineresource <b>1</b>\.name'),
+    ]
+    resource_human_readable = {}
+    for key in resource_flattened:
+        print('key', key)
+        print('key.lower()', key.lower())
+        print('any(regex for regex in hidden_key_regex if re.match(regex, key.lower())', any(regex for regex in hidden_key_regex if re.match(regex, key.lower())))
+        if key.startswith('@') or any(x == key.lower() for x in hidden_keys) or any(regex for regex in hidden_key_regex if re.match(regex, key.lower())):
+            continue
+        key_split_by_dot = key.split('.')
+        human_readable_key_strings = []
+        for string in key_split_by_dot:
+            # If there is only one occurrence of a property
+            # doesn't make sense to keep the number suffix
+            is_only_numbered_key = True
+            if string.endswith('<b>1</b>'):
+                for key2 in resource_flattened:
+                    if string.replace('<b>1</b>', '<b>2</b>') in key2:
+                        is_only_numbered_key = False
+            if is_only_numbered_key:
+                string = string.replace('<b>1</b>', '')
+
+            # Skip these strings
+            if  string.startswith('#') or string == '@xlink:href':
+                continue
+
+            # Only keep the part of the key after the ':'
+            if ':' in string:
+                index_of_colon = string.index(':')
+                string = string[index_of_colon + 1:]
+            # Only keep the part of the key after the '@'
+            if '@' in string:
+                index_of_at_symbol = string.index('@')
+                string = string[index_of_at_symbol + 1:]
+
+            # Append the string that the be part of the 
+            # human-readable key
+            if string == '_id' or string.isupper():
+                human_readable_key_strings.append(string)
+            elif '_' in string:
+                human_readable_string = ' '.join(string.split('_'))
+                human_readable_string = ' '.join(_split_camel_case(human_readable_string))
+                human_readable_key_strings.append(human_readable_string)
+            else:
+                human_readable_string = ' '.join(_split_camel_case(string))
+                if not human_readable_string[0].isupper():
+                    human_readable_string = human_readable_string.title()
+                human_readable_key_strings.append(human_readable_string)
+        human_readable_key_strings[-1] = f'<b>{human_readable_key_strings[-1]}</b>'
+        human_readable_key_last_string = human_readable_key_strings[-1]
+        human_readable_key_strings.pop()
+
+        human_readable_key = ' > '.join(human_readable_key_strings).strip()
+        if human_readable_key.startswith('Om:'):
+            human_readable_key = human_readable_key.replace('Om:', '')
+        if len(human_readable_key_strings):
+            human_readable_key = f'{human_readable_key_last_string} <small class="text-muted fst-italic">(from {human_readable_key})</small>'
+        else:
+            human_readable_key = human_readable_key_last_string
+        if human_readable_key != '':
+            resource_human_readable[human_readable_key] = resource_flattened[key]
+    return resource_human_readable
 
 class ResourceDetailView(TemplateView):
     title = 'Resource Detail'
@@ -336,10 +416,12 @@ class ResourceDetailView(TemplateView):
     resource_mongodb_model = None
     resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_flattened = None
+    resource_human_readable = {}
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
+        self.resource_human_readable = {}
         if self.resource is None:
             # Extra check done for data_collection() view
             self.resource = self.resource_mongodb_model.find_one({
@@ -348,6 +430,48 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
+        ontology_term_category_graphs = {}
+        for key, value in self.resource_flattened.items():
+            if isinstance(value, str) and '/ontology/' in value:
+                ontology_term_detail_url = _create_ontology_term_detail_url_from_ontology_term_server_url(value)
+                ontology_term_id = value.split('/')[-1]
+                ontology_term_category = value.split('/')[-2]
+                # If the graph for the ontology term has already been fetched,
+                # get the stored version of it to improve page loading times
+                graph_for_ontology_term = None
+                if ontology_term_category in ontology_term_category_graphs:
+                    graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
+                else:
+                    graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
+                    ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
+                self.resource_flattened[key] = _create_anchor_tag_with_ontology_term(ontology_term_id, value, ontology_term_detail_url, graph_for_ontology_term)
+            if isinstance(value, str) and '/resources/' in value:
+                referenced_resource_server_url_split = value.split('/')
+                referenced_resource_type = referenced_resource_server_url_split[-3]
+                referenced_resource_namespace = referenced_resource_server_url_split[-2]
+                referenced_resource_localid = referenced_resource_server_url_split[-1]
+                referenced_resource_mongodb_model = get_mongodb_model_for_resource_type(referenced_resource_type)
+                if referenced_resource_mongodb_model == 'unknown':
+                    self.resource_flattened[key] = referenced_resource_localid
+                    continue
+                referenced_resource = referenced_resource_mongodb_model.find_one({
+                    'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
+                    'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
+                }, {
+                    '_id': 1,
+                    'name': 1
+                })
+                if referenced_resource is None:
+                    self.resource_flattened[key] = referenced_resource_localid
+                    continue
+                resource_objectid_str = str(referenced_resource['_id'])
+                if referenced_resource_type.lower() == 'computationcapabilities':
+                    referenced_resource_type = 'computation_capability'
+                elif referenced_resource_type.lower() == 'acquisitioncapabilities':
+                    referenced_resource_type = 'acquisition_capability'
+                referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
+                self.resource_flattened[key] = f'<a href="{referenced_resource_detail_url}">{referenced_resource["name"]}</a>'
+        self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
             self.title = self.resource['name']
@@ -360,6 +484,9 @@ class ResourceDetailView(TemplateView):
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
+        context['resource_human_readable'] = self.resource_human_readable
+        context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
+        context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         return context
 

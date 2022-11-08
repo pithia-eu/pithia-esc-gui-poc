@@ -4,9 +4,9 @@ from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from rdflib import Graph, URIRef, RDF, SKOS
-from common.helpers import get_acquisition_capabilities_referencing_instrument_operational_ids
+from common.helpers import get_acquisition_capabilities_referencing_instrument_operational_ids, get_mongodb_model_for_resource_type
 from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentInstrument
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
 from pathlib import Path
@@ -206,33 +206,6 @@ def validate_ontology_term_url(ontology_term_url):
         return (ontology_term, RDF['type'], SKOS['Concept']) in g
     response.raise_for_status()
     return False
-
-def get_mongodb_model_for_resource_type(resource_type):
-    if resource_type == 'organisation':
-        return CurrentOrganisation
-    elif resource_type == 'individual':
-        return CurrentIndividual
-    elif resource_type == 'project':
-        return CurrentProject
-    elif resource_type == 'platform':
-        return CurrentPlatform
-    elif resource_type == 'operation':
-        return CurrentOperation
-    elif resource_type == 'instrument':
-        return CurrentInstrument
-    elif resource_type == 'acquisitionCapabilities':
-        return CurrentAcquisitionCapability
-    elif resource_type == 'acquisition':
-        return CurrentAcquisition
-    elif resource_type == 'computationCapabilities':
-        return CurrentComputationCapability
-    elif resource_type == 'computation':
-        return CurrentComputation
-    elif resource_type == 'process':
-        return CurrentProcess
-    elif resource_type == 'collection':
-        return CurrentDataCollection
-    return 'unknown'
 
 def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace):
     find_dictionary = {

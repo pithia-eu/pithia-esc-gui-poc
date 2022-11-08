@@ -10,44 +10,80 @@
 {% block content %}
 {% block messages %}{% endblock messages %}
 <h1>{{ resource.name }}</h1>
+<div class="row mt-4">
+    <div class="col-lg-8">
+        <table class="table table-borderless resource-key-details">
+            <tbody>
+                <tr>
+                    <td><b>Local ID</b></td>
+                    <td>{{ resource.identifier.PITHIA_Identifier.localID }}</td>
+                </tr>
+                <tr>
+                    <td><b>Namespace</b></td>
+                    <td>{{ resource.identifier.PITHIA_Identifier.namespace }}</td>
+                </tr>
+                <tr>
+                    <td><b>Metadata Version</b></td>
+                    <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                </tr>
+                <tr>
+                    <td><b>Created</b></td>
+                    <td>{{ resource_creation_date|date:'l jS N Y, H:i:s' }}</td>
+                </tr>
+                <tr>
+                    <td><b>Last Modified</b></td>
+                    <td>{{ resource_last_modification_date|date:'l jS N Y, H:i:s' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 {% if resource.description and resource.description|cut:' ' != '' %}
 <div class="row">
     <div class="col-lg-8">
         <section>
             <h2 class="mb-3">Description</h2>
-            <p class="lead mb-0">{{ resource.description }}</p>
+            <p class="lead mb-0">{{ resource.description|urlize|url_target_blank }}</p>
         </section>
     </div>
 </div>
 {% endif %}
 {% block interaction_methods %}{% endblock interaction_methods %}
+{% if resource_human_readable.items|length > 0 %}
 <div class="row">
     <div class="col-lg-12">
         <section>
             <h2 class="mb-3">Properties</h2>
-            {% if resource %}
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">Property</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in resource_flattened.items %}
-                        {% if key != '_id' and key|first != '@' %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value|urlize }}</td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+            <table class="table table-bordered resource-property-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Property</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in resource_human_readable.items %}
+                    {% if '_id' not in key %}
+                    <tr>
+                        <td>{{ key|safe }}</td>
+                        <td>
+                            {% if value.strip|length == 0 %}
+                            <i class="text-muted">None</i>
+                            {% else %}
+                            {% if '<a ' in value %}
+                            {{ value.strip|safe|url_target_blank }}
+                            {% else %}
+                            {{ value.strip|urlize|url_target_blank }}
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </section>
     </div>
 </div>
+{% endif %}
 {% endblock content %}

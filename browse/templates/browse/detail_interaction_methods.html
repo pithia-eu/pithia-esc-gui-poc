@@ -16,7 +16,7 @@
     <h2 class="mb-3">Interact</h2>
     {% if interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered interaction-method-table">
             <thead>
                 <tr>
                     <th>Interaction Method</th>
@@ -32,8 +32,8 @@
                     <td>
                         {{ online_resource.description }}
                     </td>
-                    <td>
-                        <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
+                    <td class="text-center">
+                        <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
                             Open {{ online_resource.name }} in new tab
                         </a>
                     </td>

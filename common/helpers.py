@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from .mongodb_models import CurrentDataCollectionInteractionMethod, CurrentDataCollection, CurrentAcquisitionCapability, CurrentInstrument
+from .mongodb_models import CurrentDataCollectionInteractionMethod, CurrentDataCollection, CurrentAcquisitionCapability, CurrentInstrument, CurrentOrganisation, CurrentIndividual, CurrentProject, CurrentPlatform, CurrentOperation, CurrentAcquisition, CurrentComputationCapability, CurrentComputation, CurrentProcess
 
 def _map_id_property(resource):
     return resource['_id']
@@ -54,3 +54,30 @@ def get_acquisition_capabilities_referencing_instrument_operational_ids(instrume
     }))
 
     return current_acquisition_capabilities_referencing_instrument_operational_ids
+
+def get_mongodb_model_for_resource_type(resource_type):
+    if resource_type == 'organisation':
+        return CurrentOrganisation
+    elif resource_type == 'individual':
+        return CurrentIndividual
+    elif resource_type == 'project':
+        return CurrentProject
+    elif resource_type == 'platform':
+        return CurrentPlatform
+    elif resource_type == 'operation':
+        return CurrentOperation
+    elif resource_type == 'instrument':
+        return CurrentInstrument
+    elif resource_type == 'acquisitionCapabilities':
+        return CurrentAcquisitionCapability
+    elif resource_type == 'acquisition':
+        return CurrentAcquisition
+    elif resource_type == 'computationCapabilities':
+        return CurrentComputationCapability
+    elif resource_type == 'computation':
+        return CurrentComputation
+    elif resource_type == 'process':
+        return CurrentProcess
+    elif resource_type == 'collection':
+        return CurrentDataCollection
+    return 'unknown'
