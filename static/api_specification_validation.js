@@ -6,14 +6,14 @@ export let isApiSpecificationLinkValid = false;
 export let isApiSpecificationInputAvailable = false;
 export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="interaction_methods"][value="api"]');
 export const apiSpecificationUrlInput = document.querySelector("#id_api_specification_url");
-export const apiSpecificationDescriptionTextarea = document.querySelector("#id_api_specification_description");
+export const apiSpecificationDescriptionTextarea = document.querySelector("#id_api_description");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
 const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
 let userInputTimeout;
 
 apiExecutionMethodCheckbox.addEventListener("change", event => {
     toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
-    toggleApiSpecificationDescriptionTextarea(apiExecutionMethodCheckbox);
+    toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
     if (apiExecutionMethodCheckbox.checked) {
         isApiSpecificationLinkValid = false;
         enableSubmitButtonIfReady();
@@ -42,7 +42,7 @@ export function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
     }
 }
 
-export function toggleApiSpecificationDescriptionTextarea(apiExecutionMethodCheckbox) {
+export function toggleApiDescriptionTextarea(apiExecutionMethodCheckbox) {
     if (apiExecutionMethodCheckbox.checked) {
         apiSpecificationDescriptionTextarea.disabled = false;
         apiSpecificationDescriptionTextarea.required = true;
