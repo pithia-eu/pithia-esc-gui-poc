@@ -44,9 +44,15 @@
                 {% if method.interaction_method == 'api' %}
                 <tr>
                     <td>API</td>
-                    <td><i class="text-muted">None</i></td>
                     <td>
-                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer" class="btn btn-light">
+                        {% if 'interaction_method_description' in method %}
+                        {{ method.interaction_method_description }}
+                        {% else %}
+                        <i class="text-muted">None</i>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer">
                             Open API Interface in new tab
                         </a>
                     </td>
