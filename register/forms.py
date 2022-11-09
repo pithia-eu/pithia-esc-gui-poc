@@ -20,3 +20,8 @@ class UploadDataCollectionFileForm(forms.Form):
     api_specification_url = forms.CharField(label='Link to API Specification', required=False, disabled=True, widget=forms.TextInput(attrs={
                             'class': 'form-control'
                         }))
+    api_specification_description = forms.CharField(label='Description', required=False, disabled=True, widget=forms.Textarea(attrs={
+                            'class': 'form-control',
+                            'rows': 3,
+                            'style': 'resize: none;'
+                        }))
