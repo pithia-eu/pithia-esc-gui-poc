@@ -599,6 +599,8 @@ class data_collection_detail(ResourceDetailView):
         self.resource = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
+        if self.resource is None:
+            return HttpResponseNotFound('Resource not found.')
         self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
             'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
         })

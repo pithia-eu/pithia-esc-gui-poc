@@ -51,7 +51,7 @@ Upload an XML Metadata File
                                 </span>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mt-4">
                             {% if form.api_specification_url.errors %}
                                 <ul>
                                 {% for error in form.api_specification_url.errors %}
@@ -74,6 +74,12 @@ Upload an XML Metadata File
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <div class="d-flex flex-column">
+                                {{ form.api_description.label_tag }}
+                                {{ form.api_description }}
+                            </div>
                         </div>
                     </div>
                 </div>

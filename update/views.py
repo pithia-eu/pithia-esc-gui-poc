@@ -80,7 +80,10 @@ class UpdateResourceView(FormView):
                     interaction_methods = request.POST.getlist('interaction_methods')
                     if 'api' in interaction_methods:
                         api_specification_url = request.POST['api_specification_url']
-                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'])
+                        api_description = ''
+                        if 'api_description' in request.POST:
+                            api_description = request.POST['api_description']
+                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'], api_description=api_description)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -313,6 +316,7 @@ class data_collection(UpdateResourceView):
                 if im['interaction_method'] == 'api':
                     form_data['interaction_methods'].append('api')
                     form_data['api_specification_url'] = im['interaction_url']
+                    form_data['api_description'] = im['interaction_method_description']
             context['form'] = self.form_class(initial=form_data)
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context

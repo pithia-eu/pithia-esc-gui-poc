@@ -15,9 +15,10 @@ def move_current_existing_version_of_api_interaction_method_to_revisions(data_co
     })
     interaction_method_revision_mongodb_model.insert_one(current_version_of_api_interaction_method)
 
-def register_api_specification(api_specification_url, data_collection_localid):
+def register_api_specification(api_specification_url, data_collection_localid, api_description=''):
     return CurrentDataCollectionInteractionMethod.insert_one({
         'interaction_method': 'api',
         'interaction_url': api_specification_url,
+        'interaction_method_description': api_description, 
         'data_collection_localid': data_collection_localid
     })
