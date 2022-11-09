@@ -10,7 +10,7 @@
     -->
     <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
     <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
-    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/oe/CompositeProcess_OE_Fpeak"/>
+    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/lgdc/CompositeProcess_DIDBase_EvaluatedAutoscaling"/>
     <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
     <om:featureOfInterest>
         <FeatureOfInterest>
@@ -40,7 +40,7 @@
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
     <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
-    <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/pithia/Project_LGDC_RION"/>
+    <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/lgdc/Project_LGDC_RION"/>
     <relatedParty>
         <ResponsiblePartyInfo>
             <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
