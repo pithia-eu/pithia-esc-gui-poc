@@ -12,30 +12,32 @@
 <h1>{{ resource.name }}</h1>
 <div class="row mt-4">
     <div class="col-lg-8">
-        <table class="table table-borderless resource-key-details">
-            <tbody>
-                <tr>
-                    <td><b>Local ID</b></td>
-                    <td>{{ resource.identifier.PITHIA_Identifier.localID }}</td>
-                </tr>
-                <tr>
-                    <td><b>Namespace</b></td>
-                    <td>{{ resource.identifier.PITHIA_Identifier.namespace }}</td>
-                </tr>
-                <tr>
-                    <td><b>Metadata Version</b></td>
-                    <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
-                </tr>
-                <tr>
-                    <td><b>Created</b></td>
-                    <td>{{ resource_creation_date|date:'l jS N Y, H:i:s' }}</td>
-                </tr>
-                <tr>
-                    <td><b>Last Modified</b></td>
-                    <td>{{ resource_last_modification_date|date:'l jS N Y, H:i:s' }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-borderless resource-key-details">
+                <tbody>
+                    <tr>
+                        <td><b>Local ID</b></td>
+                        <td>{{ resource.identifier.PITHIA_Identifier.localID }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Namespace</b></td>
+                        <td>{{ resource.identifier.PITHIA_Identifier.namespace }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Metadata Version</b></td>
+                        <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Created</b></td>
+                        <td>{{ resource_creation_date|date:'l jS N Y, H:i:s' }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Last Modified</b></td>
+                        <td>{{ resource_last_modification_date|date:'l jS N Y, H:i:s' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% if resource.description and resource.description|cut:' ' != '' %}
