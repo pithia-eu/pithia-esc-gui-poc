@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urltest xmlns:xlink="http://www.w3.org/1999/xlink">
+    <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/>
+    <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/test"/>
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test"/>
+</urltest>

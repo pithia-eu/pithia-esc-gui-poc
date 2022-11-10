@@ -25,6 +25,9 @@ COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
 PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
 DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
 
+PITHIA_METADATA_SERVER_URL_BASE='https://metadata.pithia.eu/resources/2.2'
+SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE='https://metadata.pithia.eu/ontology/2.2'
+
 def parse_xml_file(xml_file):
     # Returns an ElementTree
     return etree.parse(xml_file)
@@ -207,7 +210,7 @@ def validate_ontology_term_url(ontology_term_url):
     response.raise_for_status()
     return False
 
-def get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace):
+def get_resource_from_xlink_href_value_components(resource_mongodb_model, localID, namespace):
     find_dictionary = {
         'identifier.PITHIA_Identifier.localID': localID,
         'identifier.PITHIA_Identifier.namespace': namespace,
@@ -219,11 +222,62 @@ def get_instrument_by_operational_mode_id(operational_mode_id):
         'operationalMode.InstrumentOperationalMode.id': operational_mode_id
     })
 
-def split_xlink_href_by_hashtag(href):
+def split_xlink_href_value_by_hashtag(href):
     return href.split('#')
 
-def split_xlink_href(href):
+def split_xlink_href_value_by_forward_slash(href):
     return href.split('/')
+
+def get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed):
+    invalid_urls = []
+    root = xml_file_parsed.getroot()
+    ontology_urls = root.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    for url in ontology_urls:
+        is_valid_ontology_term = validate_ontology_term_url(url)
+        if is_valid_ontology_term == False:
+            invalid_urls.append(url)
+    return invalid_urls
+
+def get_invalid_resource_urls_from_parsed_xml(xml_file_parsed):
+    invalid_urls = []
+    root = xml_file_parsed.getroot()
+    resource_urls = root.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    for url in resource_urls:
+        # Storing url in a variable as it may get changed when checking for
+        # hashtags.
+        url_copy = url
+        operational_mode_id = None
+        url_split_by_hashtag = split_xlink_href_value_by_hashtag(url_copy)
+        if len(url_split_by_hashtag) > 1:
+            operational_mode_id = url_split_by_hashtag[-1]
+            url_copy = url_split_by_hashtag[0]
+        url_components  = split_xlink_href_value_by_forward_slash(url_copy)
+        resource_type = url_components[-3]
+        namespace = url_components[-2]
+        localID = url_components[-1]
+
+        # If resource_mongodb_model is unknown, the resource type is not yet supported
+        # or some parts of the URL path are in the wrong order:
+        # e.g. https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC (wrong)
+        # instead of https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC (correct)
+        resource_mongodb_model = get_mongodb_model_for_resource_type(resource_type)
+        if resource_mongodb_model == 'unknown':
+            invalid_urls.append((url, 'The URL was formatted incorrectly.'))
+
+        referenced_resource = None
+        referenced_resource = get_resource_from_xlink_href_value_components(resource_mongodb_model, localID, namespace)
+        if referenced_resource == None:
+            invalid_urls.append((url, 'The resource this URL is referencing was not found.', resource_type))
+            continue
+        
+        if operational_mode_id != None:
+            # The '#' at the end of some resource URLs should only link to Instruments
+            instrument_retrieved_by_operational_mode_id = get_instrument_by_operational_mode_id(operational_mode_id)
+            if instrument_retrieved_by_operational_mode_id == None:
+                hashtag_index = url.index('#')
+                invalid_url = url[:hashtag_index] + '<b>' + url[hashtag_index:] + '</b>'
+                invalid_urls.append((invalid_url, 'The operational mode this URL is referencing was not found.'))
+    return invalid_urls
 
 def get_unregistered_references_from_xml(xml_file_parsed):
     unregistered_references = {
@@ -241,7 +295,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
         return unregistered_references
     for href in hrefs:
         if 'ontology' in href:
-            href_components  = split_xlink_href(href)
+            href_components  = split_xlink_href_value_by_forward_slash(href)
             ontology_component = href_components[-2]
             ontology_term_id = href_components[-1]
             is_valid_ontology_term = validate_ontology_term_url(href)
@@ -252,12 +306,12 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             # Storing href in a variable as it may get changed when checking for
             # hashtags.
             href_to_check = href
-            href_split_by_hashtag = split_xlink_href_by_hashtag(href_to_check)
+            href_split_by_hashtag = split_xlink_href_value_by_hashtag(href_to_check)
             operational_mode_id = None
             if len(href_split_by_hashtag) > 1:
                 operational_mode_id = href_split_by_hashtag[-1]
                 href_to_check = href_split_by_hashtag[0]
-            href_components  = split_xlink_href(href_to_check)
+            href_components  = split_xlink_href_value_by_forward_slash(href_to_check)
             resource_type = href_components[-3]
             namespace = href_components[-2]
             localID = href_components[-1]
@@ -268,7 +322,7 @@ def get_unregistered_references_from_xml(xml_file_parsed):
             # e.g. https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC (wrong)
             # instead of https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC (correct)
             if resource_mongodb_model != 'unknown':
-                referenced_resource = get_resource_from_xlink_href_components(resource_mongodb_model, localID, namespace)
+                referenced_resource = get_resource_from_xlink_href_value_components(resource_mongodb_model, localID, namespace)
             else:
                 unregistered_references['invalid_document_hrefs'].add(href)
 
