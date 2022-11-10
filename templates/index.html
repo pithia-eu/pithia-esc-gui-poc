@@ -5,25 +5,21 @@
 <section class="mb-3">
     <h2 class="mb-0">Search & Browse</h2>
     <hr>
-    <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'search:index' %}">
-                        <img src="{% static 'search.svg' %}" alt="Search">
-                        <span>Search Data Collections</span>
-                    </a>
-                </div>
+    <div class="card-menu">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'search:index' %}">
+                    <img src="{% static 'search.svg' %}" alt="Search">
+                    <span>Search Data Collections</span>
+                </a>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'browse:resources' %}">
-                        <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Browse Metadata</span>
-                    </a>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:resources' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    <span>Browse Metadata</span>
+                </a>
             </div>
         </div>
     </div>
@@ -31,35 +27,29 @@
 <section>
     <h2 class="mb-0">Admin Functionalities</h2>
     <hr>
-    <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'resource_management:index' %}">
-                        <img src="{% static 'update.svg' %}" alt="Manage">
-                        <span>Register & Manage Metadata</span>
-                    </a>
-                </div>
+    <div class="card-menu">
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:index' %}">
+                    <img src="{% static 'update.svg' %}" alt="Manage">
+                    <span>Register & Manage Metadata</span>
+                </a>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'browse:schemas' %}">
-                        <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Metadata Models</span>
-                    </a>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:schemas' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    <span>Metadata Models</span>
+                </a>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'browse:ontology' %}">
-                        <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Space Physics Ontology</span>
-                    </a>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'browse:ontology' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    <span>Space Physics Ontology</span>
+                </a>
             </div>
         </div>
     </div>
