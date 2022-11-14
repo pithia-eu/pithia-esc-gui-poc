@@ -77,7 +77,7 @@ class UrlValidationTestCase(SimpleTestCase):
         """
         get_invalid_ontology_urls() returns a list of invalid ontology urls
         """
-        with open(os.path.join(_TEST_FILE_DIR, 'invalid_ontology_urls.xml')) as xml_file:
+        with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
             invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
             self.assertEquals(len(invalid_ontology_urls), 1)
@@ -86,7 +86,7 @@ class UrlValidationTestCase(SimpleTestCase):
         """
         get_invalid_resource_urls() returns a list of invalid resource urls
         """
-        with open(os.path.join(_TEST_FILE_DIR, 'invalid_ontology_urls.xml')) as xml_file:
+        with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
             invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
             print('invalid_resource_urls', invalid_resource_urls)

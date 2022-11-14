@@ -241,7 +241,31 @@ def get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed):
 def get_invalid_resource_urls_from_parsed_xml(xml_file_parsed):
     invalid_urls = []
     root = xml_file_parsed.getroot()
-    resource_urls = root.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    resource_urls = root.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    for url in resource_urls:
+        url_components  = split_xlink_href_value_by_forward_slash(url)
+        resource_type = url_components[-3]
+        namespace = url_components[-2]
+        localID = url_components[-1]
+
+        # If resource_mongodb_model is unknown, the resource type is not yet supported
+        # or some parts of the URL path are in the wrong order:
+        # e.g. https://metadata.pithia.eu/resources/2.2/pithia/organisation/Organisation_LGDC (wrong)
+        # instead of https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC (correct)
+        resource_mongodb_model = get_mongodb_model_for_resource_type(resource_type)
+        if resource_mongodb_model == 'unknown':
+            invalid_urls.append((url, 'The URL was formatted incorrectly.'))
+
+        referenced_resource = None
+        referenced_resource = get_resource_from_xlink_href_value_components(resource_mongodb_model, localID, namespace)
+        if referenced_resource == None:
+            invalid_urls.append((url, 'The resource this URL is referencing was not found.', resource_type))
+    return invalid_urls
+
+def get_unregistered_resources_and_unregistered_op_mode_urls(xml_file_parsed):
+    invalid_urls = []
+    root = xml_file_parsed.getroot()
+    resource_urls = root.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
     for url in resource_urls:
         # Storing url in a variable as it may get changed when checking for
         # hashtags.
