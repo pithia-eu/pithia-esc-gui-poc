@@ -1,11 +1,14 @@
+import validators
 from requests import get
 from rdflib import Graph, URIRef, RDF, SKOS
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from common.mongodb_models import CurrentInstrument
 
 
-PITHIA_METADATA_SERVER_URL_BASE='https://metadata.pithia.eu/resources/2.2'
-SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE='https://metadata.pithia.eu/ontology/2.2'
+PITHIA_METADATA_SERVER_URL_BASE = 'metadata.pithia.eu/resources/2.2'
+SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE = 'metadata.pithia.eu/ontology/2.2'
+PITHIA_METADATA_SERVER_HTTPS_URL_BASE = f'https://{PITHIA_METADATA_SERVER_URL_BASE}'
+SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE = f'https://{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}'
 
 def validate_ontology_term_url(ontology_term_url):
     response = get(ontology_term_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
@@ -32,13 +35,40 @@ def get_instrument_by_operational_mode_id(operational_mode_id):
         'operationalMode.InstrumentOperationalMode.id': operational_mode_id
     })
 
-def check_resource_url_is_valid_and_get_resource_url_identifying_components(resource_url):
-    resource_url_split = resource_url.split('/')
-    resource_type = resource_url_split[-3]
-    namespace = resource_url_split[-2]
-    localID = resource_url_split[-1]
-    
+def is_resource_url_structure_valid(resource_url):
+    if not validators.url(resource_url):
+        return False
+    resource_url_components = divide_resource_url_into_main_components(resource_url)
 
+    is_start_of_localid_equal_to_resource_type = resource_url_components['localID'].startswith(resource_url_components['resource_type'].capitalize())
+    # Exceptions to localID starting with resource_type.capitalize():
+    if resource_url_components['resource_type'] == 'collection':
+        is_start_of_localid_equal_to_resource_type = resource_url_components['localID'].startswith('DataCollection')
+    elif resource_url_components['resource_type'] == 'acquisitionCapabilities':
+        is_start_of_localid_equal_to_resource_type = resource_url_components['localID'].startswith('AcquisitionCapabilities')
+    elif resource_url_components['resource_type'] == 'computationCapabilities':
+        is_start_of_localid_equal_to_resource_type = resource_url_components['localID'].startswith('ComputationCapabilities')
+    elif resource_url_components['resource_type'] == 'process':
+        is_start_of_localid_equal_to_resource_type = resource_url_components['localID'].startswith('CompositeProcess')
+
+    return all([
+        resource_url_components['url_base'].startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE),
+        resource_url.count(PITHIA_METADATA_SERVER_HTTPS_URL_BASE) == 1,
+        resource_url.count(f'/{resource_url_components["resource_type"]}/') == 1,
+        resource_url.count(f'/{resource_url_components["namespace"]}/') == 1,
+        resource_url.count(f'/{resource_url_components["localID"]}') == 1,
+        get_mongodb_model_by_resource_type_from_resource_url(resource_url_components['resource_type']) != 'unknown',
+        is_start_of_localid_equal_to_resource_type,
+    ])
+
+def divide_resource_url_into_main_components(resource_url):
+    resource_url_split = resource_url.split('/')
+    return {
+        'url_base': '/'.join(resource_url_split[:-3]),
+        'resource_type': resource_url_split[-3],
+        'namespace': resource_url_split[-2],
+        'localID': resource_url_split[-1],
+    }
 
 def split_xlink_href_value_by_hashtag(href):
     return href.split('#')
