@@ -8,7 +8,7 @@ from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRo
 from common.mongodb_models import CurrentInstrument
 from validation.registration_validation import validate_xml_file_is_unique
 from validation.update_validation import validate_xml_file_localid_matches_existing_resource_localid
-from .url_validation import get_unregistered_references_from_xml
+from .url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
 from pathlib import Path
 from bson import ObjectId
 
@@ -134,7 +134,10 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
 
         # Relation validation (whether a resource the metadata file
         # is referencing exists in the database or not).
-        unregistered_references = get_unregistered_references_from_xml(xml_file_parsed)
+        invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
+        invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
+        invalid_resource_urls_with_op_mode_ids = get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed)
+        
         unregistered_document_hrefs = unregistered_references['document_hrefs']
         unregistered_document_types = list(set(unregistered_references['document_types']))
         invalid_document_hrefs = list(set(unregistered_references['invalid_document_hrefs']))
