@@ -25,6 +25,6 @@ def divide_resource_url_into_main_components(resource_url):
 def divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id):
     resource_url_with_op_mode_id_split = resource_url_with_op_mode_id.split('#')
     return {
-        'resource_url': resource_url_with_op_mode_id_split[0],
-        'op_mode_id': resource_url_with_op_mode_id_split[1],
+        'resource_url': '#'.join(resource_url_with_op_mode_id_split[:-1]),
+        'op_mode_id': resource_url_with_op_mode_id_split[-1],
     }
