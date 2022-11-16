@@ -134,35 +134,38 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
 
         # Relation validation (whether a resource the metadata file
         # is referencing exists in the database or not).
-        invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
         invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
         invalid_resource_urls_with_op_mode_ids = get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed)
+        resource_urls_with_incorrect_structure = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']]
+        resource_urls_pointing_to_unregistered_resources = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']]
+        types_of_missing_resources = [*invalid_resource_urls['types_of_missing_resources'], *invalid_resource_urls_with_op_mode_ids['types_of_missing_resources']]
+        resource_urls_with_unregistered_op_modes = invalid_resource_urls_with_op_mode_ids['urls_with_unregistered_op_modes']
         
-        unregistered_document_hrefs = unregistered_references['document_hrefs']
-        unregistered_document_types = list(set(unregistered_references['document_types']))
-        invalid_document_hrefs = list(set(unregistered_references['invalid_document_hrefs']))
-        document_hrefs_with_invalid_op_mode_ids = list(set(unregistered_references['document_hrefs_with_invalid_op_mode_ids']))
-        unregistered_ontology_term_hrefs = unregistered_references['ontology_term_hrefs']
-        if len(invalid_document_hrefs) > 0:
-            error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
+        if len(resource_urls_with_incorrect_structure) > 0:
+            error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
             error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
             validation_checklist['error'] = _create_validation_error_details_dict(type(InvalidMetadataDocumentUrlException()), error_msg, None)
             return validation_checklist
-        if len(unregistered_document_hrefs) > 0:
-            error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_document_hrefs)))
+
+        if len(resource_urls_pointing_to_unregistered_resources) > 0:
+            error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, unregistered_document_types)))
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, types_of_missing_resources)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
             return validation_checklist
-        if len(document_hrefs_with_invalid_op_mode_ids) > 0:
-            error_msg = 'The operational mode IDs in these document URLs are invalid: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, document_hrefs_with_invalid_op_mode_ids)))
+
+        if len(resource_urls_with_unregistered_op_modes) > 0:
+            error_msg = 'The operational mode IDs in these document URLs are invalid: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_unregistered_op_modes)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), error_msg, None)
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True
-        if len(unregistered_ontology_term_hrefs) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, unregistered_ontology_term_hrefs))), None)
+
+        invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
+        if len(invalid_ontology_urls) > 0:
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, invalid_ontology_urls))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
+
     except etree.XMLSyntaxError as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
