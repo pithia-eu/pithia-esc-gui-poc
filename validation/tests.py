@@ -5,7 +5,7 @@ from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
 from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id
+from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -74,6 +74,7 @@ class XsdValidationTestCase(SimpleTestCase):
                 self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
 
 class UrlValidationTestCase(SimpleTestCase):
+
     def test_invalid_ontology_urls_are_detected(self):
         """
         get_invalid_ontology_urls() returns a list of invalid ontology urls
@@ -85,13 +86,25 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_invalid_resource_urls_are_detected(self):
         """
-        get_invalid_resource_urls() returns a list of invalid resource urls
+        get_invalid_resource_urls() returns a dict of invalid resource urls
         """
         with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
             invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
             print('invalid_resource_urls', invalid_resource_urls)
-            self.assertEquals(len(invalid_resource_urls), 1)
+            self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 2)
+
+    def test_invalid_resource_urls_with_op_mode_ids_are_detected(self):
+        """
+        get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml() returns a dict of invalid resource urls
+        """
+        with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
+            xml_file_parsed = etree.parse(xml_file)
+            invalid_resource_urls_with_op_mode_ids = get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed)
+            print('invalid_resource_urls_with_op_mode_ids', invalid_resource_urls_with_op_mode_ids)
+            self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
+            self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
+            self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 0)
 
 class UrlStructureValidationTestCase(SimpleTestCase):
     def test_resource_urls_are_divided_correctly(self):
