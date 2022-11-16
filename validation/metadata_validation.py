@@ -139,7 +139,7 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
         resource_urls_with_incorrect_structure = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']]
         resource_urls_pointing_to_unregistered_resources = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']]
         types_of_missing_resources = [*invalid_resource_urls['types_of_missing_resources'], *invalid_resource_urls_with_op_mode_ids['types_of_missing_resources']]
-        resource_urls_with_unregistered_op_modes = invalid_resource_urls_with_op_mode_ids['urls_with_unregistered_op_modes']
+        resource_urls_pointing_to_registered_resources_with_missing_op_modes = invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']
         
         if len(resource_urls_with_incorrect_structure) > 0:
             error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
@@ -154,8 +154,8 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
             return validation_checklist
 
-        if len(resource_urls_with_unregistered_op_modes) > 0:
-            error_msg = 'The operational mode IDs in these document URLs are invalid: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_unregistered_op_modes)))
+        if len(resource_urls_pointing_to_registered_resources_with_missing_op_modes) > 0:
+            error_msg = 'The operational mode IDs in these document URLs are invalid: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_registered_resources_with_missing_op_modes)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), error_msg, None)
             return validation_checklist
         validation_checklist['is_each_document_reference_valid'] = True

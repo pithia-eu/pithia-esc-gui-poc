@@ -108,7 +108,7 @@ def get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed):
     invalid_urls = {
         'urls_with_incorrect_structure': [],
         'urls_pointing_to_unregistered_resources': [],
-        'urls_with_unregistered_op_modes': [],
+        'urls_pointing_to_registered_resources_with_missing_op_modes': [],
         'types_of_missing_resources': [],
     }
     root = xml_file_parsed.getroot()
@@ -123,10 +123,11 @@ def get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed):
             invalid_urls['types_of_missing_resources'].append(type_of_missing_resource)
             invalid_urls['types_of_missing_resources'] = list(set(invalid_urls['types_of_missing_resources']))
             
-        resource_type, namespace, localID = itemgetter('resource_type', 'namespace', 'localID')(divide_resource_url_into_main_components(resource_url))
-        resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type)
-        resource_with_op_mode_id = get_resource_by_pithia_identifier_components_and_op_mode_id(resource_mongodb_model, localID, namespace, op_mode_id)
-        if resource_with_op_mode_id == None:
-            invalid_urls['urls_with_unregistered_op_modes'].append(resource_url_with_op_mode_id)
+        if is_pointing_to_registered_resource:
+            resource_type, namespace, localID = itemgetter('resource_type', 'namespace', 'localID')(divide_resource_url_into_main_components(resource_url))
+            resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type)
+            resource_with_op_mode_id = get_resource_by_pithia_identifier_components_and_op_mode_id(resource_mongodb_model, localID, namespace, op_mode_id)
+            if resource_with_op_mode_id == None:
+                invalid_urls['urls_pointing_to_registered_resources_with_missing_op_modes'].append(resource_url_with_op_mode_id)
             
     return invalid_urls
