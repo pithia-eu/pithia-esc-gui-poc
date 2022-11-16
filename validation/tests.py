@@ -4,7 +4,7 @@ import mongomock
 from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
-from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
+from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
 from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
 from pithiaesc.settings import BASE_DIR
 
@@ -43,6 +43,15 @@ class RegistrationValidationTestCase(SimpleTestCase):
             if 'error' in validation_results:
                 print('error', validation_results['error'])
             self.assertIn('error', validation_results)
+
+    def test_data_collection_registration_validation(self):
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+            client = mongomock.MongoClient()
+            db = client[env('DB_NAME')]['current-data-collections']
+            validation_results = validate_xml_metadata_file(xml_file, DATA_COLLECTION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
+            if 'error' in validation_results:
+                print('error', validation_results['error'])
+            self.assertNotIn('error', validation_results)
 
     def test_multiple_file_validation(self):
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]

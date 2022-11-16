@@ -7,6 +7,7 @@
     <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/test"/>
 
     <!-- Valid resource URLs -->
+    <url xlink:hreef="https://metadata.pithia.eu/resources/2.2/process/eiscat/CompositeProcess_EISCAT_Vector_VHF"/>
 
     <!-- Invalid resource URLs -->
     <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test"/>
