@@ -55,7 +55,7 @@ def get_acquisition_capabilities_referencing_instrument_operational_ids(instrume
 
     return current_acquisition_capabilities_referencing_instrument_operational_ids
 
-def get_mongodb_model_for_resource_type(resource_type):
+def get_mongodb_model_by_resource_type_from_resource_url(resource_type):
     if resource_type == 'organisation':
         return CurrentOrganisation
     elif resource_type == 'individual':

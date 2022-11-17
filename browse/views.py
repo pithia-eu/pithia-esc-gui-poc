@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
-from common.helpers import get_mongodb_model_for_resource_type
+from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
@@ -447,7 +447,7 @@ class ResourceDetailView(TemplateView):
                 referenced_resource_type = referenced_resource_server_url_split[-3]
                 referenced_resource_namespace = referenced_resource_server_url_split[-2]
                 referenced_resource_localid = referenced_resource_server_url_split[-1]
-                referenced_resource_mongodb_model = get_mongodb_model_for_resource_type(referenced_resource_type)
+                referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
                 if referenced_resource_mongodb_model == 'unknown':
                     self.resource_flattened[key] = referenced_resource_localid
                     continue

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urltest xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Valid ontology URLs -->
+    <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/>
+
+    <!-- Invalid ontology URLs -->
+    <url xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/test"/>
+
+    <!-- Valid resource URLs -->
+    <url xlink:hreef="https://metadata.pithia.eu/resources/2.2/process/eiscat/CompositeProcess_EISCAT_Vector_VHF"/>
+
+    <!-- Invalid resource URLs -->
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test"/>
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/individual/pithia/Individual_TEST_Test"/>
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Individual_TEST_Test"/>
+
+    <!-- Invalid resource URLs with operational mode IDs -->
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/collection/pithia/Organisation_Test#Test"/>
+    <url xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_Test#Test"/>
+</urltest>
