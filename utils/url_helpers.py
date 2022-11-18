@@ -1,8 +1,9 @@
 from django.urls import reverse
 from utils.ontology_helpers import get_graph_of_pithia_ontology_component
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
-from validation.url_validation import validate_ontology_term_url
+from validation.url_validation import validate_ontology_term_url, is_resource_url_structure_valid
 from .html_helpers import create_anchor_tag_html_from_ontology_term_details
+from .ontology_helpers import get_pref_label_from_ontology_node_iri
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
     ontology_term_server_url_split = ontology_term_server_url.split('/')
@@ -14,11 +15,12 @@ def convert_ontology_server_urls_to_browse_urls(ontology_server_urls):
     converted_ontology_server_urls = []
     ontology_term_category_graphs = {}
     for ontology_server_url in ontology_server_urls:
-        ontology_node = validate_ontology_term_url(ontology_server_url)
-        if ontology_node == False:
+        is_ontology_server_url_valid = validate_ontology_term_url(ontology_server_url)
+        if is_ontology_server_url_valid == False:
             converted_ontology_server_urls.append({
                 'original_server_url': ontology_server_url,
-                'html': ontology_server_url
+                'converted_url': '',
+                'converted_url_text': ontology_server_url,
             })
             continue
         ontology_term_detail_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
@@ -32,9 +34,13 @@ def convert_ontology_server_urls_to_browse_urls(ontology_server_urls):
         else:
             graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
             ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
+        ontology_term_pref_label = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
+        if ontology_term_pref_label is None:
+            ontology_term_pref_label = ontology_term_id
         converted_ontology_server_urls.append({
             'original_server_url': ontology_server_url,
-            'html': create_anchor_tag_html_from_ontology_term_details(ontology_term_id, ontology_server_url, ontology_term_detail_url, graph_for_ontology_term)
+            'converted_url': ontology_term_detail_url,
+            'converted_url_text': ontology_term_pref_label,
         })
     return converted_ontology_server_urls
 
@@ -49,7 +55,8 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
         if referenced_resource_mongodb_model == 'unknown':
             converted_resource_server_urls.append({
                 'original_server_url': resource_server_url,
-                'html': referenced_resource_localid
+                'converted_url': '',
+                'converted_url_text': referenced_resource_localid,
             })
             continue
         referenced_resource = referenced_resource_mongodb_model.find_one({
@@ -62,7 +69,8 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
         if referenced_resource is None:
             converted_resource_server_urls.append({
                 'original_server_url': resource_server_url,
-                'html': referenced_resource_localid
+                'converted_url': '',
+                'converted_url_text': referenced_resource_localid,
             })
             continue
         resource_objectid_str = str(referenced_resource['_id'])
@@ -73,6 +81,7 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
         referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
         converted_resource_server_urls.append({
             'original_server_url': resource_server_url,
-            'html': f'<a href="{referenced_resource_detail_url}">{referenced_resource["name"]}</a>'
+            'converted_url': referenced_resource_detail_url,
+            'converted_url_text': referenced_resource["name"],
         })
     return converted_resource_server_urls
