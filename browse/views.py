@@ -430,6 +430,7 @@ class ResourceDetailView(TemplateView):
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
         return context
 
 class organisation_detail(ResourceDetailView):

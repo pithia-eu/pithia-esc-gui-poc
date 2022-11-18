@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load project_tags %}
+{% load static %}
+{% block scripts %}
+<script src="{% static 'browse/detail.js' %}" defer></script>
+{{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item list_resources_page_title 'browse:resources' %}
 {% breadcrumb_item breadcrumb_item_list_resources_of_type_text list_resources_of_type_view_name %}
