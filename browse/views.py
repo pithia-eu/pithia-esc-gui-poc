@@ -10,7 +10,9 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
-from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
+from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
+from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
+from common.helpers import get_mongodb_model_for_resource_type
 from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
 from search.helpers import remove_underscore_from_id_attribute
 from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
@@ -123,22 +125,6 @@ def _remove_namespace_prefix_from_predicate(p):
         p_identifier_no_prefix = p.identifier.split('/')[-1]
     return p_identifier_no_prefix
 
-def _create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
-    ontology_term_server_url_split = ontology_term_server_url.split('/')
-    ontology_category = ontology_term_server_url_split[-2]
-    ontology_term_id = ontology_term_server_url_split[-1]
-    return reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])
-
-def _create_anchor_tag_with_ontology_term(ontology_term_readable, ontology_term_ontology_iri, ontology_term_detail_url, graph_for_ontology_term):
-    SKOS = _SKOS.SKOS
-    pref_label_triples = list(graph_for_ontology_term.triples((URIRef(ontology_term_ontology_iri), SKOS.prefLabel, None)))
-    # Not having a prefLabel implies the ontology term doesn't exist
-    if len(pref_label_triples) > 0:
-        ontology_term_readable = str(pref_label_triples[0][2])
-        return f'<a href="{ontology_term_detail_url}">{ontology_term_readable}</a>'
-    else:
-        return ontology_term_readable
-
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
     SKOS = _SKOS.SKOS
@@ -168,9 +154,9 @@ def ontology_term_detail(request, category, term_id):
             for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
                 urls_of_referenced_terms.append(str(o2))
             for u in urls_of_referenced_terms:
-                ontology_term_detail_url_for_referenced_term = _create_ontology_term_detail_url_from_ontology_term_server_url(u)
+                ontology_term_detail_url_for_referenced_term = create_ontology_term_detail_url_from_ontology_term_server_url(u)
                 term_pref_label = u.split('/')[-1]
-                anchor_tag_of_term = _create_anchor_tag_with_ontology_term(term_pref_label, u, ontology_term_detail_url_for_referenced_term, g_other_ontology_term)
+                anchor_tag_of_term = create_anchor_tag_html_from_ontology_term_details(term_pref_label, u, ontology_term_detail_url_for_referenced_term, g_other_ontology_term)
                 urls_of_referenced_terms_with_preflabels.append(anchor_tag_of_term)
             resource_dictionary[p_identifier_no_prefix]= urls_of_referenced_terms_with_preflabels
         if p_identifier_no_prefix not in resource_dictionary:
@@ -427,47 +413,6 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
-        ontology_term_category_graphs = {}
-        for key, value in self.resource_flattened.items():
-            if isinstance(value, str) and '/ontology/' in value:
-                ontology_term_detail_url = _create_ontology_term_detail_url_from_ontology_term_server_url(value)
-                ontology_term_id = value.split('/')[-1]
-                ontology_term_category = value.split('/')[-2]
-                # If the graph for the ontology term has already been fetched,
-                # get the stored version of it to improve page loading times
-                graph_for_ontology_term = None
-                if ontology_term_category in ontology_term_category_graphs:
-                    graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
-                else:
-                    graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
-                    ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
-                self.resource_flattened[key] = _create_anchor_tag_with_ontology_term(ontology_term_id, value, ontology_term_detail_url, graph_for_ontology_term)
-            if isinstance(value, str) and '/resources/' in value:
-                referenced_resource_server_url_split = value.split('/')
-                referenced_resource_type = referenced_resource_server_url_split[-3]
-                referenced_resource_namespace = referenced_resource_server_url_split[-2]
-                referenced_resource_localid = referenced_resource_server_url_split[-1]
-                referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
-                if referenced_resource_mongodb_model == 'unknown':
-                    self.resource_flattened[key] = referenced_resource_localid
-                    continue
-                referenced_resource = referenced_resource_mongodb_model.find_one({
-                    'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
-                    'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
-                }, {
-                    '_id': 1,
-                    'name': 1
-                })
-                if referenced_resource is None:
-                    self.resource_flattened[key] = referenced_resource_localid
-                    continue
-                resource_objectid_str = str(referenced_resource['_id'])
-                if referenced_resource_type.lower() == 'computationcapabilities':
-                    referenced_resource_type = 'computation_capability'
-                elif referenced_resource_type.lower() == 'acquisitioncapabilities':
-                    referenced_resource_type = 'acquisition_capability'
-                referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
-                self.resource_flattened[key] = f'<a href="{referenced_resource_detail_url}">{referenced_resource["name"]}</a>'
         self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
