@@ -14,4 +14,5 @@ urlpatterns = [
     path('validate/', include('validation.urls')),
     path('present/', include('present.urls')),
     path('admin/', admin.site.urls),
+    path('utils/', include('utils.urls')),
 ]
