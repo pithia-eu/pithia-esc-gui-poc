@@ -1,6 +1,6 @@
 import re
 from mongodb import db
-from utils.ontology_helpers import get_localid_from_ontology_node_uri, get_observed_property_hrefs_from_features_of_interest
+from utils.ontology_helpers import get_localid_from_ontology_node_iri, get_observed_property_hrefs_from_features_of_interest
 from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
@@ -35,7 +35,7 @@ def find_matching_data_collections(request):
 
     if 'features_of_interest' in request.session:
         additional_observed_property_hrefs = get_observed_property_hrefs_from_features_of_interest(request.session['features_of_interest'])
-        additional_observed_properties = convert_list_to_regex_list(list(map(get_localid_from_ontology_node_uri, additional_observed_property_hrefs)))
+        additional_observed_properties = convert_list_to_regex_list(list(map(get_localid_from_ontology_node_iri, additional_observed_property_hrefs)))
         observed_properties += additional_observed_properties
         observed_properties = list(set(observed_properties))
 

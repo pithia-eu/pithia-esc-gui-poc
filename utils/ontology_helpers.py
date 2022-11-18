@@ -162,5 +162,5 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
 
     return ontology_dictionary
 
-def get_localid_from_ontology_node_uri(ontology_node_uri):
+def get_localid_from_ontology_node_iri(ontology_node_uri):
     return ontology_node_uri.split('/')[-1]
