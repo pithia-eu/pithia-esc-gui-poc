@@ -28,6 +28,24 @@ function getServerUrlConversionUrl() {
     return serverUrlConversionUrl;
 }
 
+function revealMetadataLink(tag) {
+    setTimeout(() => {
+        tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
+        tag.style.display = "inline";
+    }, 300);
+    setTimeout(() => {
+        tag.style.opacity = "1";
+    }, 350);
+    tag.parentElement.querySelector(".placeholder-wrapper").style.opacity = "0";
+}
+
+function addAnnotationToMetadataLink(text, element) {
+    const smallText = document.createElement("small");
+    smallText.innerHTML = text;
+    smallText.className = "text-muted";
+    element.parentElement.append(smallText);
+}
+
 function convertOntologyServerUrlsAndResourceServerUrls() {
     const fetchParams = { method: "GET" };
     fetch(getServerUrlConversionUrl(), fetchParams)
@@ -41,14 +59,8 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    setTimeout(() => {
-                        tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
-                        tag.style.display = "inline";
-                    }, 300);
-                    setTimeout(() => {
-                        tag.style.opacity = "1";
-                    }, 350);
-                    tag.parentElement.querySelector(".placeholder-wrapper").style.opacity = "0";
+                    addAnnotationToMetadataLink("(ontology definition)", tag.parentElement);
+                    revealMetadataLink(tag);
                 });
             });
 
@@ -57,15 +69,8 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    setTimeout(() => {
-                        tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
-                        tag.style.display = "inline";
-                    }, 300);
-                    setTimeout(() => {
-                        tag.style.display = "inline";
-                        tag.style.opacity = "1";
-                    }, 350);
-                    tag.parentElement.querySelector(".placeholder-wrapper").style.opacity = "0";
+                    addAnnotationToMetadataLink("(metadata)", tag.parentElement);
+                    revealMetadataLink(tag);
                 });
             });
         })

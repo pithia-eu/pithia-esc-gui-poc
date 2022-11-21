@@ -77,8 +77,8 @@
                             {% if value.strip|length == 0 %}
                             <i class="text-muted">None</i>
                             {% else %}
-                            {% if 'https://metadata.pithia.eu/' in value %}
-                            <span class="metadata-url">
+                            {% if value in ontology_server_urls or value in resource_server_urls %}
+                            <span class="metadata-server-url {% if value in ontology_server_urls %}ontology-server-url{% elif value in resource_server_urls %}resource-server-url{% endif %}">
                                 <div class="placeholder-wrapper">
                                     <div class="placeholder-wave">
                                         <span class="placeholder placeholder-sm col-lg-{% random_int 1 3 %} col-md-{% random_int 6 7 %} col-{% random_int 8 10 %} bg-secondary"></span>

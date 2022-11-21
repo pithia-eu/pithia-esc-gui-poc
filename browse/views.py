@@ -12,10 +12,9 @@ from django.views.generic import TemplateView
 
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
-from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
-from utils.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
+from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component, ONTOLOGY_SERVER_BASE_URL
+from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from search.helpers import remove_underscore_from_id_attribute
-from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
 _RESOURCES_PAGE_TITLE = 'Browse Metadata'
@@ -321,6 +320,17 @@ def flatten(d):
             out[key] = value
     return out
 
+def _get_ontology_server_urls_from_flattened_resource(resource_flattened):
+    ontology_server_urls = set()
+    resource_server_urls = set()
+    for key, value in resource_flattened.items():
+        if key.endswith('@xlink:href') and value.startswith(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE):
+            ontology_server_urls.add(value)
+        if key.endswith('@xlink:href') and value.startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE):
+            resource_server_urls.add(value)
+
+    return list(ontology_server_urls), list(resource_server_urls)
+
 def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
     hidden_keys = [
         '_id',
@@ -400,6 +410,8 @@ class ResourceDetailView(TemplateView):
     resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_flattened = None
     resource_human_readable = {}
+    ontology_server_urls = []
+    resource_server_urls = []
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
 
@@ -413,6 +425,7 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
+        self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
         self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
@@ -426,6 +439,8 @@ class ResourceDetailView(TemplateView):
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
+        context['ontology_server_urls'] = self.ontology_server_urls
+        context['resource_server_urls'] = self.resource_server_urls
         context['resource_human_readable'] = self.resource_human_readable
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
