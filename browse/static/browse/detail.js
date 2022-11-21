@@ -28,13 +28,14 @@ function getServerUrlConversionUrl() {
     return serverUrlConversionUrl;
 }
 
-function revealMetadataLink(tag) {
+function revealMetadataLink(tag, annotationText) {
     setTimeout(() => {
         tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
         tag.style.display = "inline";
     }, 300);
     setTimeout(() => {
         tag.style.opacity = "1";
+        addAnnotationToMetadataLink(annotationText, tag.parentElement);
     }, 350);
     tag.parentElement.querySelector(".placeholder-wrapper").style.opacity = "0";
 }
@@ -59,8 +60,7 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    addAnnotationToMetadataLink("(ontology definition)", tag.parentElement);
-                    revealMetadataLink(tag);
+                    revealMetadataLink(tag, "(ontology term)");
                 });
             });
 
@@ -69,8 +69,7 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    addAnnotationToMetadataLink("(metadata)", tag.parentElement);
-                    revealMetadataLink(tag);
+                    revealMetadataLink(tag, "(registered metadata)");
                 });
             });
         })
