@@ -1,4 +1,4 @@
-
+import random
 from django.urls import reverse
 from django import template
 
@@ -29,3 +29,9 @@ def get_type(value):
 @register.filter(is_safe=True)
 def url_target_blank(a_tag_text):
     return a_tag_text.replace('<a ', '<a target="_blank" ')
+
+@register.simple_tag
+def random_int(a, b=None):
+    if b is None:
+        a, b = 1, a
+    return random.randint(a, b)

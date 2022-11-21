@@ -180,6 +180,21 @@ header .dropdown-item:active a {
     width: 1.2rem;
 }
 
+/* Skeleton loading animation for metadata server urls */
+.metadata-url a {
+    opacity: 0;
+    display: none;
+    transition: opacity 0.2s linear;
+}
+
+.metadata-url .placeholder-wrapper .placeholder {
+    border-radius: 12px;
+}
+
+.metadata-url .placeholder-wrapper {
+    transition: opacity 0.3s linear;
+}
+
 /* Search page */
 .observed-properties-tree-search-container-wrapper {
     border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
@@ -320,6 +335,7 @@ ul.tree ul {
 }
 
 .tree-search-terms:empty {
+    cursor: wait;
     width: var(--card-width);
     height: var(--card-height);
     background-image:

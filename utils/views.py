@@ -5,8 +5,12 @@ from django.http import JsonResponse
 # Create your views here.
 
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
-    ontology_server_urls = request.GET['ontology-server-urls'].split(',')
-    resource_server_urls = request.GET['resource-server-urls'].split(',')
+    ontology_server_urls = []
+    resource_server_urls = []
+    if 'ontology-server-urls' in request.GET:
+        ontology_server_urls = request.GET['ontology-server-urls'].split(',')
+    if 'resource-server-urls' in request.GET:
+        resource_server_urls = request.GET['resource-server-urls'].split(',')
     esc_ontology_urls = convert_ontology_server_urls_to_browse_urls(ontology_server_urls)
     esc_resource_urls = convert_resource_server_urls_to_browse_urls(resource_server_urls)
     
