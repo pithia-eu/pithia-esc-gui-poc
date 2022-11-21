@@ -314,7 +314,7 @@ def flatten(d):
                 index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + ' <b>' + str(index) + '</b>.' + key2: value2 for key2, value2 in deeper
+                    key + ' <b>(' + str(index) + '/' + str(len(value)) + ')</b>.' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
@@ -340,8 +340,8 @@ def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
         re.compile(r'^name'),
         re.compile(r'^contactinfo'),
         re.compile(r'^identifier'),
-        re.compile(r'.*onlineresource <b>1</b>\.description'),
-        re.compile(r'.*onlineresource <b>1</b>\.linkage'),
+        re.compile(r'.*onlineresource <b>(1/1)</b>\.description'),
+        re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),
         # re.compile(r'.*onlineresource <b>1</b>\.name'),
     ]
     resource_human_readable = {}
@@ -354,12 +354,12 @@ def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
             # If there is only one occurrence of a property
             # doesn't make sense to keep the number suffix
             is_only_numbered_key = True
-            if string.endswith('<b>1</b>'):
+            if string.endswith('<b>(1/1)</b>'):
                 for key2 in resource_flattened:
-                    if string.replace('<b>1</b>', '<b>2</b>') in key2:
+                    if string.replace('<b>(1/', '<b>(2/') in key2:
                         is_only_numbered_key = False
             if is_only_numbered_key:
-                string = string.replace('<b>1</b>', '')
+                string = string.replace('<b>(1/1)</b>', '')
 
             # Skip these strings
             if  string.startswith('#') or string == '@xlink:href':
