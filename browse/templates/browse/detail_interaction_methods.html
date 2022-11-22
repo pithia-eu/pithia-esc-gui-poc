@@ -21,6 +21,7 @@
                 <tr>
                     <th>Interaction Method</th>
                     <th>Description</th>
+                    <th>Data Format</th>
                     <th>Link</th>
                 </tr>
             </thead>
@@ -31,6 +32,16 @@
                     <td>Direct Link to Data Collection</td>
                     <td>
                         {{ online_resource.description }}
+                    </td>
+                    <td>
+                        <div class="metadata-server-url">
+                            <div class="placeholder-wrapper">
+                                <div class="placeholder-wave">
+                                    <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                </div>
+                            </div>
+                            {{ online_resource.dataFormat.0|get_key_value:'@xlink:href'|urlize|url_target_blank }}
+                        </div>
                     </td>
                     <td class="text-center">
                         <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
@@ -51,6 +62,7 @@
                         <i class="text-muted">None</i>
                         {% endif %}
                     </td>
+                    <td>N/A</td>
                     <td class="text-center">
                         <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer">
                             Open API Interface in new tab

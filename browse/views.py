@@ -10,10 +10,11 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
-from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
-from search.ontology_helpers import ONTOLOGY_SERVER_BASE_URL
+from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
+from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
+from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component, ONTOLOGY_SERVER_BASE_URL
+from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from search.helpers import remove_underscore_from_id_attribute
-from search.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
 _RESOURCES_PAGE_TITLE = 'Browse Metadata'
@@ -123,22 +124,6 @@ def _remove_namespace_prefix_from_predicate(p):
         p_identifier_no_prefix = p.identifier.split('/')[-1]
     return p_identifier_no_prefix
 
-def _create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
-    ontology_term_server_url_split = ontology_term_server_url.split('/')
-    ontology_category = ontology_term_server_url_split[-2]
-    ontology_term_id = ontology_term_server_url_split[-1]
-    return reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])
-
-def _create_anchor_tag_with_ontology_term(ontology_term_readable, ontology_term_ontology_iri, ontology_term_detail_url, graph_for_ontology_term):
-    SKOS = _SKOS.SKOS
-    pref_label_triples = list(graph_for_ontology_term.triples((URIRef(ontology_term_ontology_iri), SKOS.prefLabel, None)))
-    # Not having a prefLabel implies the ontology term doesn't exist
-    if len(pref_label_triples) > 0:
-        ontology_term_readable = str(pref_label_triples[0][2])
-        return f'<a href="{ontology_term_detail_url}">{ontology_term_readable}</a>'
-    else:
-        return ontology_term_readable
-
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
     SKOS = _SKOS.SKOS
@@ -168,9 +153,9 @@ def ontology_term_detail(request, category, term_id):
             for s2, p2, o2 in g.triples((resource_uriref, p.identifier, None)):
                 urls_of_referenced_terms.append(str(o2))
             for u in urls_of_referenced_terms:
-                ontology_term_detail_url_for_referenced_term = _create_ontology_term_detail_url_from_ontology_term_server_url(u)
+                ontology_term_detail_url_for_referenced_term = create_ontology_term_detail_url_from_ontology_term_server_url(u)
                 term_pref_label = u.split('/')[-1]
-                anchor_tag_of_term = _create_anchor_tag_with_ontology_term(term_pref_label, u, ontology_term_detail_url_for_referenced_term, g_other_ontology_term)
+                anchor_tag_of_term = create_anchor_tag_html_from_ontology_term_details(term_pref_label, u, ontology_term_detail_url_for_referenced_term, g_other_ontology_term)
                 urls_of_referenced_terms_with_preflabels.append(anchor_tag_of_term)
             resource_dictionary[p_identifier_no_prefix]= urls_of_referenced_terms_with_preflabels
         if p_identifier_no_prefix not in resource_dictionary:
@@ -329,11 +314,22 @@ def flatten(d):
                 index = int(index) + 1
                 deeper = flatten(subdict).items()
                 out.update({
-                    key + ' <b>' + str(index) + '</b>.' + key2: value2 for key2, value2 in deeper
+                    key + ' <b>(' + str(index) + '/' + str(len(value)) + ')</b>.' + key2: value2 for key2, value2 in deeper
                 })
         else:
             out[key] = value
     return out
+
+def _get_ontology_server_urls_from_flattened_resource(resource_flattened):
+    ontology_server_urls = set()
+    resource_server_urls = set()
+    for key, value in resource_flattened.items():
+        if key.endswith('@xlink:href') and value.startswith(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE):
+            ontology_server_urls.add(value)
+        if key.endswith('@xlink:href') and value.startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE):
+            resource_server_urls.add(value)
+
+    return list(ontology_server_urls), list(resource_server_urls)
 
 def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
     hidden_keys = [
@@ -344,8 +340,8 @@ def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
         re.compile(r'^name'),
         re.compile(r'^contactinfo'),
         re.compile(r'^identifier'),
-        re.compile(r'.*onlineresource <b>1</b>\.description'),
-        re.compile(r'.*onlineresource <b>1</b>\.linkage'),
+        re.compile(r'.*onlineresource <b>(1/1)</b>\.description'),
+        re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),
         # re.compile(r'.*onlineresource <b>1</b>\.name'),
     ]
     resource_human_readable = {}
@@ -358,12 +354,12 @@ def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
             # If there is only one occurrence of a property
             # doesn't make sense to keep the number suffix
             is_only_numbered_key = True
-            if string.endswith('<b>1</b>'):
+            if string.endswith('<b>(1/1)</b>'):
                 for key2 in resource_flattened:
-                    if string.replace('<b>1</b>', '<b>2</b>') in key2:
+                    if string.replace('<b>(1/', '<b>(2/') in key2:
                         is_only_numbered_key = False
             if is_only_numbered_key:
-                string = string.replace('<b>1</b>', '')
+                string = string.replace('<b>(1/1)</b>', '')
 
             # Skip these strings
             if  string.startswith('#') or string == '@xlink:href':
@@ -414,6 +410,8 @@ class ResourceDetailView(TemplateView):
     resource_type_plural = _RESOURCES_PAGE_TITLE
     resource_flattened = None
     resource_human_readable = {}
+    ontology_server_urls = []
+    resource_server_urls = []
     list_resources_of_type_view_name = ''
     template_name = 'browse/detail.html'
 
@@ -427,47 +425,7 @@ class ResourceDetailView(TemplateView):
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
         self.resource_flattened = flatten(self.resource)
-        ontology_term_category_graphs = {}
-        for key, value in self.resource_flattened.items():
-            if isinstance(value, str) and '/ontology/' in value:
-                ontology_term_detail_url = _create_ontology_term_detail_url_from_ontology_term_server_url(value)
-                ontology_term_id = value.split('/')[-1]
-                ontology_term_category = value.split('/')[-2]
-                # If the graph for the ontology term has already been fetched,
-                # get the stored version of it to improve page loading times
-                graph_for_ontology_term = None
-                if ontology_term_category in ontology_term_category_graphs:
-                    graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
-                else:
-                    graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
-                    ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
-                self.resource_flattened[key] = _create_anchor_tag_with_ontology_term(ontology_term_id, value, ontology_term_detail_url, graph_for_ontology_term)
-            if isinstance(value, str) and '/resources/' in value:
-                referenced_resource_server_url_split = value.split('/')
-                referenced_resource_type = referenced_resource_server_url_split[-3]
-                referenced_resource_namespace = referenced_resource_server_url_split[-2]
-                referenced_resource_localid = referenced_resource_server_url_split[-1]
-                referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
-                if referenced_resource_mongodb_model == 'unknown':
-                    self.resource_flattened[key] = referenced_resource_localid
-                    continue
-                referenced_resource = referenced_resource_mongodb_model.find_one({
-                    'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
-                    'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
-                }, {
-                    '_id': 1,
-                    'name': 1
-                })
-                if referenced_resource is None:
-                    self.resource_flattened[key] = referenced_resource_localid
-                    continue
-                resource_objectid_str = str(referenced_resource['_id'])
-                if referenced_resource_type.lower() == 'computationcapabilities':
-                    referenced_resource_type = 'computation_capability'
-                elif referenced_resource_type.lower() == 'acquisitioncapabilities':
-                    referenced_resource_type = 'acquisition_capability'
-                referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
-                self.resource_flattened[key] = f'<a href="{referenced_resource_detail_url}">{referenced_resource["name"]}</a>'
+        self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
         self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
         self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
         if 'name' in self.resource:
@@ -481,10 +439,13 @@ class ResourceDetailView(TemplateView):
         context['breadcrumb_item_list_resources_of_type_text'] = f'{self.resource_type_plural}'
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
+        context['ontology_server_urls'] = self.ontology_server_urls
+        context['resource_server_urls'] = self.resource_server_urls
         context['resource_human_readable'] = self.resource_human_readable
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
         return context
 
 class organisation_detail(ResourceDetailView):

@@ -5,7 +5,7 @@ from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
 from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
+from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -82,8 +82,7 @@ class XsdValidationTestCase(SimpleTestCase):
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
                 self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
 
-class UrlValidationTestCase(SimpleTestCase):
-
+class FileUrlValidationTestCase(SimpleTestCase):
     def test_invalid_ontology_urls_are_detected(self):
         """
         get_invalid_ontology_urls() returns a list of invalid ontology urls
@@ -100,7 +99,6 @@ class UrlValidationTestCase(SimpleTestCase):
         with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
             invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
-            print('invalid_resource_urls', invalid_resource_urls)
             self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 2)
 
     def test_invalid_resource_urls_with_op_mode_ids_are_detected(self):
@@ -115,7 +113,22 @@ class UrlValidationTestCase(SimpleTestCase):
             self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
             self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 0)
 
-class UrlStructureValidationTestCase(SimpleTestCase):
+class UrlValidationTestCase(SimpleTestCase):
+    def test_ontology_url_validation(self):
+        """
+        validate_ontology_term_url() returns an ontology node if valid, False, if not.
+        """
+        valid_ontology_url_1 = 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider'
+        valid_ontology_url_2 = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly'
+        invalid_ontology_url_1 = 'https://metadata.pithia.eu/ontology/2.2/invalid/test'
+        invalid_ontology_url_2 = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/DataProvider'
+
+        print(validate_ontology_term_url(valid_ontology_url_1))
+        self.assertEquals(validate_ontology_term_url(valid_ontology_url_1), True)
+        self.assertEquals(validate_ontology_term_url(valid_ontology_url_2), True)
+        self.assertEquals(validate_ontology_term_url(invalid_ontology_url_1), False)
+        self.assertEquals(validate_ontology_term_url(invalid_ontology_url_2), False)
+
     def test_resource_urls_are_divided_correctly(self):
         """
         divide_resource_url_into_main_components() divides urls as expected

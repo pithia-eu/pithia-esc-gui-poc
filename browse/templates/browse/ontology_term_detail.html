@@ -41,7 +41,7 @@
                             {% elif resource_dictionary|get_key_value:p.strip|length == 0 %}
                             <i class="text-muted">None</i>
                             {% else %}
-                            {{ resource_dictionary|get_key_value:p }}
+                            {{ resource_dictionary|get_key_value:p|safe|urlize }}
                             {% endif %}
                         </td>
                     </tr>

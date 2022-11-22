@@ -180,6 +180,20 @@ header .dropdown-item:active a {
     width: 1.2rem;
 }
 
+/* Skeleton loading animation for metadata server urls */
+.metadata-server-url {
+    opacity: 1;
+    transition: opacity 0.3s linear;
+}
+
+.metadata-server-url a {
+    display: none;
+}
+
+.metadata-server-url .placeholder-wrapper .placeholder {
+    border-radius: 12px;
+}
+
 /* Search page */
 .observed-properties-tree-search-container-wrapper {
     border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
@@ -320,6 +334,459 @@ ul.tree ul {
 }
 
 .tree-search-terms:empty {
+    cursor: wait;
+    width: var(--card-width);
+    height: var(--card-height);
+    background-image:
+        linear-gradient(
+            90deg,
+            transparent, 
+            #fff, 
+            transparent
+        ),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--line-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--circle-skeleton),
+        var(--card-skeleton);
+
+    background-size:
+        var(--blur-size),
+        var(--line-1-width) var(--line-height),
+        var(--line-2-width) var(--line-height),
+        var(--line-3-width) var(--line-height),
+        var(--line-4-width) var(--line-height),
+        var(--line-5-width) var(--line-height),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        var(--circle-size) var(--circle-size),
+        100% 100%;
+
+    background-position:
+        -150% 0,
+        var(--line-1-position),
+        var(--line-2-position),
+        var(--line-3-position),
+        var(--line-4-position),
+        var(--line-5-position),
+        var(--circle-1-position),
+        var(--circle-2-position),
+        var(--circle-3-position),
+        var(--circle-4-position),
+        var(--circle-5-position),
+        0 0;
+    background-repeat: no-repeat;
+    animation: loading 1s infinite;
+}
+
+/* Search results */
+.search-result-description {
+    overflow: hidden;
+} 
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+:root {
+    --tree-search-container-max-height: 26rem;
+    --tree-search-container-in-accordion-max-height: 15.5rem;
+    --tree-search-loading-spinner-height: 16rem;
+    --tree-search-loading-spinner-in-accordion-height: 8rem;
+    --tree-search-container-border-width: 1px;
+    --tree-search-container-padding-y: 1rem;
+    --tree-search-container-padding-x: 1rem;
+    --pithia-blue: #007bb1;
+
+    /* Search page skeleton loader variables */
+    --card-height: calc((var(--line-height) * 6) + (var(--line-spacing) * 5) + var(--card-y-padding));
+    --card-width: 280px;
+    --card-y-padding: 8px;
+    --card-x-padding: 8px;
+    --card-skeleton: linear-gradient(transparent var(--card-height), transparent 0);
+    --skeleton-colour: #ddd;
+
+    --line-height: 12px;
+    --line-spacing: 15px;
+    --line-x-position: calc(var(--line-height) + 8px + var(--card-x-padding));
+    --line-skeleton: linear-gradient(var(--skeleton-colour) var(--line-height), var(--skeleton-colour) 0);
+    
+    --line-1-width: 120px;
+    --line-1-y-position: var(--card-y-padding);
+    --line-1-position: var(--line-x-position) var(--line-1-y-position);;
+
+    --line-2-width: 150px;
+    --line-2-y-position: calc(var(--line-1-y-position) + var(--line-height) + var(--line-spacing));
+    --line-2-position: var(--line-x-position) var(--line-2-y-position);
+
+    --line-3-width: 80px;
+    --line-3-y-position: calc(var(--line-2-y-position) + var(--line-height) + var(--line-spacing));
+    --line-3-position: var(--line-x-position) var(--line-3-y-position);
+
+    --line-4-width: 60px;
+    --line-4-y-position: calc(var(--line-3-y-position) + var(--line-height) + var(--line-spacing));
+    --line-4-position: var(--line-x-position) var(--line-4-y-position);
+
+    --line-5-width: 30px;
+    --line-5-y-position: calc(var(--line-4-y-position) + var(--line-height) + var(--line-spacing));
+    --line-5-position: var(--line-x-position) var(--line-5-y-position);
+
+    --blur-width: 100px;
+    --blur-size: var(--blur-width) var(--card-height);
+
+    --circle-size: var(--line-height);
+    --circle-x-position: var(--card-x-padding);
+    --circle-skeleton: linear-gradient(var(--skeleton-colour) var(--circle-size), var(--skeleton-colour) 0);
+    
+    --circle-1-y-position: var(--card-y-padding);
+    --circle-1-position: var(--circle-x-position) var(--circle-1-y-position);
+    
+    --circle-2-y-position: calc(var(--circle-1-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-2-position: var(--circle-x-position) var(--circle-2-y-position);
+    
+    --circle-3-y-position: calc(var(--circle-2-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-3-position: var(--circle-x-position) var(--circle-3-y-position);
+    
+    --circle-4-y-position: calc(var(--circle-3-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-4-position: var(--circle-x-position) var(--circle-4-y-position);
+    
+    --circle-5-y-position: calc(var(--circle-4-y-position) + var(--line-height) + var(--line-spacing));
+    --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
+}
+
+html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+section {
+    padding: 1rem 0;
+}
+
+.breadcrumb-item a,
+.accordion-button a,
+header .nav-link,
+.card-menu a,
+.list-group-item > a,
+.pithia-blue {
+    text-decoration: none;
+    color: var(--pithia-blue) !important;
+}
+
+a {
+    word-wrap: break-word;
+}
+
+header .nav-item {
+    text-transform: uppercase;
+}
+
+header .dropdown-menu {
+    text-transform: none;
+}
+
+h1 {
+    color: var(--pithia-blue);
+}
+
+/* Colours */
+.pithia-theme {
+    color: white;
+    background-color: var(--pithia-blue);
+}
+
+/* Header class */
+.header-logo {
+    /* This is the same logo width used with the official PITHIA-NRF website */
+    width: 97px;
+}
+
+header .dropdown-item:active a {
+    color: white !important;
+    transition-property: none;
+}
+
+/* Breadcrumb */
+.breadcrumb-wrapper {
+    padding: 0.5em 0;
+    margin-bottom: 2rem;
+    background-color: aliceblue;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+}
+
+/* Home page */
+.card-menu {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    grid-auto-rows: 1fr;
+}
+
+.card-menu .card {
+    border-color: var(--pithia-blue);
+    background-color: white;
+    transition: background-color 250ms linear;
+    height: 10rem;
+}
+
+.card-menu span {
+    margin: 0 0.5rem;
+}
+
+.card-menu a img {
+    margin-bottom: 0.5rem;
+}
+
+.card-menu .card img {
+    width: 3rem;
+    filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+    transition: filter 10ms linear;
+}
+
+.card-menu .card:hover img,
+.card-menu .card:focus img {
+    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+}
+
+.card-menu .card:hover,
+.card-menu .card:focus {
+    background-color: var(--pithia-blue);
+}
+
+.card-menu .card:hover a,
+.card-menu .card:focus a,
+.card-menu .card:hover .text-muted,
+.card-menu .card:focus .text-muted {
+    color: white !important;
+}
+
+.card-menu .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.card-menu a {
+    display: flex;
+    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.1em;
+    padding: 1.5rem 0.25rem;
+    word-break: break-word;
+    hyphens: auto;
+    overflow: hidden;
+}
+
+/* Resource detail page */
+.interaction-method-table td:first-child,
+.ontology-term-table td:first-child,
+.resource-property-table td:first-child {
+    width: 20%;
+}
+
+.resource-key-details tr td:first-child {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Resource management list page */
+.resource-identifier-short-text {
+    word-break: break-all;
+}
+
+/* Register page */
+.registration-alerts {
+    display: flex;
+    flex-direction: column;
+}
+
+.metadata-file-for-reg-name {
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+#file-upload-form label {
+    margin-bottom: 0.5rem;
+}
+
+.card-header img,
+.accordion-button img {
+    width: 1.5rem;
+}
+
+.accordion-button:not(.collapsed) img {
+    filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
+}
+
+.file-validation-status img {
+    width: 1rem;
+}
+
+.file-validation-status img[alt="tick"] {
+    width: 1.2rem;
+}
+
+/* Search page */
+.observed-properties-tree-search-container-wrapper {
+    border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
+    border-radius: 0.3rem;
+}
+
+.tree-search-terms {
+    transition: opacity .3s ease-in-out;
+}
+
+.tree-search-terms .spinner-grow-container {
+    width: 100%;
+    padding: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--bs-gray-300);
+    height: var(--tree-search-loading-spinner-height);
+}
+
+.tree-search-terms li.search-no-match {
+    display: none;
+}
+
+.tree-search-box {
+    margin-bottom: 1rem;
+}
+
+#observed-properties-tree-search-terms li.filter-no-match {
+    display: none;
+}
+
+#accordion-filters .accordion-body {
+    max-height: 100%;
+    padding: 0;
+}
+
+#accordion-filters .tree-search-container {
+    padding: var(--tree-search-container-padding-y) var(--tree-search-container-padding-x);
+}
+
+#accordion-filters .tree-search-terms {
+    border: none;
+}
+
+#accordion-filters .tree-search-terms .spinner-grow-container {
+    height: var(--tree-search-loading-spinner-in-accordion-height);
+}
+
+ul.tree {
+    padding-left: 0.5rem;
+}
+
+ul.tree,
+ul.tree ul {
+    list-style-type: none;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+#search-form-progress {
+    position: relative;
+    pointer-events: none;
+    
+    /* margin-bottom: 30px; */
+}
+
+#search-form-progress-bar {
+    position: absolute;
+    background: var(--pithia-blue);
+    height: 5px;
+    width: 0%;
+    top: 50%;
+    left: 0;
+}
+
+#search-form-progress-num {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+#search-form-progress-num::before {
+    content: "";
+    background-color: lightgrey;
+    position: absolute;
+    top: calc(50% - 2.5px);
+    left: 5px;
+    height: 5px;
+    width: calc(100% - 10px);
+    z-index: -1;
+}
+
+#search-form-progress-num .step {
+    border: 3px solid lightgrey;
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+    line-height: 1.5rem;
+    text-align: center;
+    background-color: white;
+    position: relative;
+    z-index: 1;
+}
+
+#search-form-progress-num .step.active {
+    border-color: var(--pithia-blue);
+    background-color: var(--pithia-blue);
+    color: white;
+}
+
+/* Skeleton loader while search terms are loading */
+@keyframes loading {
+    to {
+        background-position:
+            350% 0,
+            var(--line-1-position),
+            var(--line-2-position),
+            var(--line-3-position),
+            var(--line-4-position),
+            var(--line-5-position),
+            var(--circle-1-position),
+            var(--circle-2-position),
+            var(--circle-3-position),
+            var(--circle-4-position),
+            var(--circle-5-position),
+            0 0;
+    }
+}
+
+.tree-search-terms:empty {
+    cursor: wait;
     width: var(--card-width);
     height: var(--card-height);
     background-image:
