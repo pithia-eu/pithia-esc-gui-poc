@@ -12,7 +12,7 @@ CurrentComputationCapability = db['current-computation-capabilities']
 CurrentComputation = db['current-computations']
 CurrentProcess = db['current-processes']
 CurrentDataCollection = db['current-data-collections']
-CurrentCatalogues = db['current-catalogues']
+CurrentCatalogue = db['current-catalogues']
 
 OrganisationRevision = db['organisation-revisions']
 IndividualRevision = db['individual-revisions']
