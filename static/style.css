@@ -182,21 +182,16 @@ header .dropdown-item:active a {
 
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
-    position: relative;
+    opacity: 1;
+    transition: opacity 0.3s linear;
 }
 
 .metadata-server-url a {
-    opacity: 0;
     display: none;
-    transition: opacity 0.2s linear;
 }
 
 .metadata-server-url .placeholder-wrapper .placeholder {
     border-radius: 12px;
-}
-
-.metadata-server-url .placeholder-wrapper {
-    transition: opacity 0.3s linear;
 }
 
 /* Search page */
@@ -649,26 +644,6 @@ header .dropdown-item:active a {
 
 .file-validation-status img[alt="tick"] {
     width: 1.2rem;
-}
-
-/* Skeleton loading animation for metadata server urls */
-.metadata-server-url {
-    position: relative;
-    box-sizing: border-box;
-}
-
-.metadata-server-url a {
-    opacity: 0;
-    display: none;
-    transition: opacity 0.2s linear;
-}
-
-.metadata-server-url .placeholder-wrapper .placeholder {
-    border-radius: 12px;
-}
-
-.metadata-server-url .placeholder-wrapper {
-    transition: opacity 0.3s linear;
 }
 
 /* Search page */

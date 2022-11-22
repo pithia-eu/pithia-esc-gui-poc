@@ -31,13 +31,13 @@ function getServerUrlConversionUrl() {
 function revealMetadataLink(tag, annotationText) {
     setTimeout(() => {
         tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
+        addAnnotationToMetadataLink(annotationText, tag.parentElement);
         tag.style.display = "inline";
     }, 300);
     setTimeout(() => {
-        tag.style.opacity = "1";
-        addAnnotationToMetadataLink(annotationText, tag.parentElement);
+        tag.parentElement.style.opacity = "1";
     }, 350);
-    tag.parentElement.querySelector(".placeholder-wrapper").style.opacity = "0";
+    tag.parentElement.style.opacity = "0";
 }
 
 function addAnnotationToMetadataLink(text, element) {
@@ -60,7 +60,7 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    revealMetadataLink(tag, "(ontology term)");
+                    revealMetadataLink(tag, "(opens details of the ontology term in a new tab)");
                 });
             });
 
@@ -69,7 +69,7 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = conversionDetails.converted_url;
                     tag.innerHTML = conversionDetails.converted_url_text;
-                    revealMetadataLink(tag, "(registered metadata)");
+                    revealMetadataLink(tag, "(opens details of the metadata in a new tab)");
                 });
             });
         })
