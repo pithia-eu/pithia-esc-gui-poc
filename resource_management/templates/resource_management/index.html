@@ -8,78 +8,92 @@
 <p class="lead">
     Add, update and delete metadata. Select the type of metadata you would like to change below.
 </p>
-<ul class="list-group">
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:organisations' %}">
-            <span>Organisations</span>
-            <span class="text-muted">{{ num_current_organisations }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:individuals' %}">
-            <span>Individuals</span>
-            <span class="text-muted">{{ num_current_individuals }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:projects' %}">
-            <span>Projects</span>
-            <span class="text-muted">{{ num_current_projects }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:platforms' %}">
-            <span>Platforms</span>
-            <span class="text-muted">{{ num_current_platforms }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:operations' %}">
-            <span>Operations</span>
-            <span class="text-muted">{{ num_current_operations }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:instruments' %}">
-            <span>Instruments</span>
-            <span class="text-muted">{{ num_current_instruments }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:acquisition_capabilities' %}">
-            <span>Acquisition Capabilities</span>
-            <span class="text-muted">{{ num_current_acquisition_capabilities }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:acquisitions' %}">
-            <span>Acquisitions</span>
-            <span class="text-muted">{{ num_current_acquisitions }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:computation_capabilities' %}">
-            <span>Computation Capabilities</span>
-            <span class="text-muted">{{ num_current_computation_capabilities }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:computations' %}">
-            <span>Computations</span>
-            <span class="text-muted">{{ num_current_computations }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:processes' %}">
-            <span>Processes</span>
-            <span class="text-muted">{{ num_current_processes }}</span>
-        </a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:data_collections' %}">
-            <span class="text-center">Data Collections</span>
-            <span class="text-muted">{{ num_current_data_collections }}</span>
-        </a>
-    </li>
-</ul>
+<section>
+    <h2 class="fs-5">Catalogues</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="#">
+                <span class="text-center">Catalogues</span>
+                <span class="text-muted">0</span>
+            </a>
+        </li>
+    </ul>
+</section>
+<section>
+    <h2 class="fs-5">12-Step Registration Metadata</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:organisations' %}">
+                <span>Organisations</span>
+                <span class="text-muted">{{ num_current_organisations }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:individuals' %}">
+                <span>Individuals</span>
+                <span class="text-muted">{{ num_current_individuals }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:projects' %}">
+                <span>Projects</span>
+                <span class="text-muted">{{ num_current_projects }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:platforms' %}">
+                <span>Platforms</span>
+                <span class="text-muted">{{ num_current_platforms }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:operations' %}">
+                <span>Operations</span>
+                <span class="text-muted">{{ num_current_operations }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:instruments' %}">
+                <span>Instruments</span>
+                <span class="text-muted">{{ num_current_instruments }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:acquisition_capabilities' %}">
+                <span>Acquisition Capabilities</span>
+                <span class="text-muted">{{ num_current_acquisition_capabilities }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:acquisitions' %}">
+                <span>Acquisitions</span>
+                <span class="text-muted">{{ num_current_acquisitions }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:computation_capabilities' %}">
+                <span>Computation Capabilities</span>
+                <span class="text-muted">{{ num_current_computation_capabilities }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:computations' %}">
+                <span>Computations</span>
+                <span class="text-muted">{{ num_current_computations }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:processes' %}">
+                <span>Processes</span>
+                <span class="text-muted">{{ num_current_processes }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:data_collections' %}">
+                <span class="text-center">Data Collections</span>
+                <span class="text-muted">{{ num_current_data_collections }}</span>
+            </a>
+        </li>
+    </ul>
+</section>
 {% endblock content %}
