@@ -247,3 +247,15 @@ class data_collection(RegisterResourceFormView):
         context['title'] = f'Register a {self.resource_type.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
+
+class catalogue(RegisterResourceFormView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    success_url = reverse_lazy('register:catalogue')
+
+    a_or_an = 'a'
+    resource_type = 'catalogue'
+    resource_type_plural = 'catalogues'
+    validation_url = reverse_lazy('validation:catalogue')
+    post_url = reverse_lazy('register:catalogue')
+    list_resource_type_page_url_name = 'resource_management:catalogues'
+    list_resource_page_title = _create_manage_resource_page_title('catalogues')

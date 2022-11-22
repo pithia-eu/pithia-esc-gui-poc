@@ -24,6 +24,7 @@ COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME = 'ComputationCapabilities'
 COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
 PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
 DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
+CATALOGUE_XML_ROOT_TAG_NAME = 'Catalogue'
 
 def parse_xml_file(xml_file):
     # Returns an ElementTree

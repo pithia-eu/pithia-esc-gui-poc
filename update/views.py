@@ -11,7 +11,7 @@ from register.register_api_specification import move_current_existing_version_of
 from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm
-from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision, CurrentCatalogue, CatalogueRevision
 from resource_management.views import _INDEX_PAGE_TITLE
 
 
@@ -323,4 +323,20 @@ class data_collection(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class catalogue(UpdateResourceView):
+    resource_mongodb_model = CurrentProcess
+    resource_revision_mongodb_model = CatalogueRevision
+
+    a_or_an = 'a'
+    resource_type = 'Catalogue'
+    resource_type_plural = 'Catalogues'
+    list_resources_of_type_view_name = 'resource_management:catalogues'
+    update_resource_type_view_name = 'update:catalogue'
+    validation_url = reverse_lazy('validation:catalogue')
+    success_url = reverse_lazy('resource_management:catalogues')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_id']
         return super().dispatch(request, *args, **kwargs)

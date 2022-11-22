@@ -1,7 +1,7 @@
 import pymongo
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, CurrentCatalogue
 
 from search.helpers import remove_underscore_from_id_attribute
 
@@ -24,6 +24,7 @@ def index(request):
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
+    num_current_catalogues = CurrentCatalogue.count_documents({})
     return render(request, 'resource_management/index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
@@ -37,6 +38,7 @@ def index(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
+        'num_current_catalogues': num_current_catalogues,
         'title': _INDEX_PAGE_TITLE
     })
 
@@ -176,3 +178,11 @@ class data_collections(ManageResourcesView):
     delete_resource_view_name = 'delete:data_collection'
     update_resource_view_name = 'update:data_collection'
     register_resource_view_name = 'register:data_collection'
+
+class catalogues(ManageResourcesView):
+    title = _create_manage_resource_page_title('catalogues')
+    resource_mongodb_model = CurrentCatalogue
+    resource_type_plural = 'Catalogues'
+    delete_resource_view_name = 'delete:catalogue'
+    update_resource_view_name = 'update:catalogue'
+    register_resource_view_name = 'register:catalogue'

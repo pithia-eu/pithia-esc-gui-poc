@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id, create_resource_url
-from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision, CurrentCatalogue, CatalogueRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
@@ -553,3 +553,16 @@ class data_collection(DeleteResourceView):
         # not sure if the order should be changed around...
         _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
         return super().post(request, *args, **kwargs)
+
+class catalogue(DeleteResourceView):
+    resource_type = 'catalogue'
+    resource_mongodb_model = CurrentCatalogue
+    resource_revision_mongodb_model = CatalogueRevision
+    redirect_url = reverse_lazy('resource_management:catalogues')
+    list_resources_of_type_view_page_title = 'Register & Manage Catalogues'
+    list_resources_of_type_view_name = 'resource_management:catalogues'
+    delete_resource_type_view_name = 'delete:catalogue'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_id']
+        return super().dispatch(request, *args, **kwargs)

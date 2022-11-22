@@ -7,9 +7,9 @@ from django.views.generic import View
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
 
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, CurrentCatalogue
 from validation.forms import ApiSpecificationUrlValidationForm
-from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
+from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file, CATALOGUE_XML_ROOT_TAG_NAME
 
 # Create your views here.
 class ValidateXmlMetadataFileFormView(View):
@@ -79,6 +79,10 @@ class process(ValidateXmlMetadataFileFormView):
 class data_collection(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+
+class catalogue(ValidateXmlMetadataFileFormView):
+    mongodb_model = CurrentCatalogue
+    expected_root_tag_name = CATALOGUE_XML_ROOT_TAG_NAME
 
 @require_POST
 def api_specification_url(request):
