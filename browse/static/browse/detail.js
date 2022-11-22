@@ -33,10 +33,8 @@ function revealMetadataLink(tag, annotationText) {
         tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
         addAnnotationToMetadataLink(annotationText, tag.parentElement);
         tag.style.display = "inline";
-    }, 300);
-    setTimeout(() => {
         tag.parentElement.style.opacity = "1";
-    }, 350);
+    }, 300);
     tag.parentElement.style.opacity = "0";
 }
 
