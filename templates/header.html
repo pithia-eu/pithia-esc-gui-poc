@@ -15,34 +15,57 @@
             <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
                 aria-current="page">Home</a>
         </li>
-        <li class="nav-item dropdown dropdown-menu-end">
+        <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                aria-expanded="false">Resources</a>
+                aria-expanded="false">Search & Browse</a>
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
-                    {% url 'browse:index' as resources_url %}
-                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse</a>
-                </li>
-                <li class="dropdown-item">
-                    {% url 'register:index' as register_url %}
-                    <a href="{{ register_url }}" class="nav-link px-2 {% if request.path == register_url %}link-secondary{% endif %}">Register</a>
-                </li>
-                <li class="dropdown-item">
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search</a>
+                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
+                </li>
+                <li class="dropdown-item">
+                    {% url 'browse:resources' as resources_url %}
+                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse Metadata</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                aria-expanded="false">Admin
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <h6 class="dropdown-header">
+                        Register & Manage Metadata
+                    </h6>
                 </li>
                 <li class="dropdown-item">
                     {% url 'resource_management:index' as resource_management_url %}
-                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Manage</a>
+                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="nav-link px-2" target="_blank">Metadata Registration Guide</a>
+                </li>
+                <li>
+                    <h6 class="dropdown-header">
+                        Browse
+                    </h6>
+                </li>
+                <li class="dropdown-item">
+                    {% url 'browse:schemas' as browse_schemas_url %}
+                    <a href="{{ browse_schemas_url }}" class="nav-link px-2 {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
+                </li>
+                <li class="dropdown-item">
+                    {% url 'browse:ontology' as browse_ontology_url %}
+                    <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
                 </li>
             </ul>
         </li>
     </ul>
 
     <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">
+        {% comment %} <button type="button" class="btn btn-outline-primary me-2">
             Login
-        </button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+        </button> {% endcomment %}
     </div>
 </header>

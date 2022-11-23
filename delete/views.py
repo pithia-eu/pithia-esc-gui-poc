@@ -2,16 +2,12 @@ from functools import cmp_to_key
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from bson.objectid import ObjectId
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id, create_resource_url
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
 # Create your views here.
-def _create_resource_url(resource_type, namespace, localid):
-    if not localid.startswith(f'{resource_type.capitalize()}_'):
-        localid = f'{resource_type.capitalize()}_{localid}'
-    return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
-
 def _get_projects_referencing_party_url(party_url):
     return CurrentProject.find({
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
@@ -19,6 +15,11 @@ def _get_projects_referencing_party_url(party_url):
 
 def _get_platforms_referencing_party_url(party_url):
     return CurrentPlatform.find({
+        'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
+    })
+
+def _get_operations_referencing_party_url(party_url):
+    return CurrentOperation.find({
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
     })
 
@@ -32,13 +33,49 @@ def _get_data_collections_referencing_party_url(party_url):
         'relatedParty.ResponsiblePartyInfo.party.@xlink:href': party_url
     })
 
+# Custom sorting function to sort resources by their type
+def _get_weight_of_resource_mongodb_model(resource_mongodb_model):
+    if resource_mongodb_model == CurrentOrganisation:
+        return 1
+    elif resource_mongodb_model == CurrentIndividual:
+        return 2
+    elif resource_mongodb_model == CurrentProject:
+        return 3
+    elif resource_mongodb_model == CurrentPlatform:
+        return 4
+    elif resource_mongodb_model == CurrentOperation:
+        return 5
+    elif resource_mongodb_model == CurrentInstrument:
+        return 6
+    elif resource_mongodb_model == CurrentAcquisition:
+        return 7
+    elif resource_mongodb_model == CurrentComputation:
+        return 8
+    elif resource_mongodb_model == CurrentProcess:
+        return 9
+    elif resource_mongodb_model == CurrentDataCollection:
+        return 10
+    return 10
+
+def _custom_compare(item1, item2):
+    item1_weight = _get_weight_of_resource_mongodb_model(item1[2])
+    item2_weight = _get_weight_of_resource_mongodb_model(item2[2])
+    if item1_weight < item2_weight:
+        return -1
+    elif item1_weight > item2_weight:
+        return 1
+    else:
+        return 0
+
 def _get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
     projects = []
     platforms = []
     instruments = []
     operations = []
+    acquisition_capabilities = []
     acquisitions = []
+    computation_capabilities = []
     computations = []
     processes = []
     data_collections = []
@@ -48,7 +85,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         '_id': ObjectId(resource_id)
     })
     resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
-    resource_url = _create_resource_url(resource_type, resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
+    resource_url = create_resource_url(resource_type, resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
     if resource_mongodb_model == CurrentOrganisation:
         # Referenced by: Individual, Project, Platform?, Instrument?, Data Collection
         # Individual references it via the organisation prop.
@@ -63,6 +100,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         })
         projects = _get_projects_referencing_party_url(resource_url)
         platforms = _get_platforms_referencing_party_url(resource_url)
+        operations = _get_operations_referencing_party_url(resource_url)
         instruments = _get_instruments_referencing_party_url(resource_url)
         data_collections = _get_data_collections_referencing_party_url(resource_url)
     elif resource_mongodb_model == CurrentIndividual:
@@ -75,6 +113,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         # Maybe these are mistakes?
         projects = _get_projects_referencing_party_url(resource_url)
         platforms = _get_platforms_referencing_party_url(resource_url)
+        operations = _get_operations_referencing_party_url(resource_url)
         instruments = _get_instruments_referencing_party_url(resource_url)
         data_collections = _get_data_collections_referencing_party_url(resource_url)
     elif resource_mongodb_model == CurrentProject:
@@ -90,10 +129,42 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             'platform.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentInstrument:
-        # Referenced by: Acquisition (from instrument prop
-        # and instrumentModePair.instrument prop)
+        # Get the operational mode IDs of the Instrument
+        # so Acquisition Capabilities just referencing the
+        # Instrument's operational mode IDs can also be
+        # deleted.
+        instrument_operational_modes = resource['operationalMode']
+        operational_mode_urls = []
+        for om in instrument_operational_modes:
+            om_id = om['InstrumentOperationalMode']['id']
+            operational_mode_urls.append(f'{resource_url}#{om_id}')
+
+        # Referenced by: Acquisition (from instrument prop)
         acquisitions = CurrentAcquisition.find({
             'instrument.@xlink:href': resource_url
+        })
+        # Referenced by: AcquisitionCapability (from
+        # instrumentModePair.InstrumentOperationalModePair.instrument prop and
+        # instrumentModePair.InstrumentOperationalModePair.mode prop)
+        acquisition_capabilities = CurrentAcquisitionCapability.find({
+            '$or': [
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': resource_url
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': resource_url
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
+                        '$in': operational_mode_urls
+                    }
+                },
+                {
+                    'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+                        '$in': operational_mode_urls
+                    }
+                },
+            ]
         })
     # elif resource_mongodb_model == CurrentOperation:
     #     # Operation is part of the Instrument resource
@@ -104,11 +175,28 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     #         'instrumentModePair.mode': resource_url
     #     })
     #     return
+    elif resource_mongodb_model == CurrentAcquisitionCapability:
+        # AcquisitionCapability is referenced by Acquisition via
+        # the acquisitionCapabilities prop.
+        acquisitions = CurrentAcquisition.find({
+            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink.href': resource_url
+        })
     elif resource_mongodb_model == CurrentAcquisition:
         # Acquisition is referenced by Process via
         # the acquisitionComponent prop.
         processes = CurrentProcess.find({
             'acquisitionComponent.@xlink.href': resource_url
+        })
+    elif resource_mongodb_model == CurrentComputationCapability:
+        # ComputationCapability is referenced by Computation via the computationCapabilities
+        # prop.
+        # ComputationCapabilities can reference other ComputationCapabilities via the
+        # childComputation prop.
+        computation_capabilities = CurrentComputationCapability.find({
+            'childComputation.@xlink:href': resource_url
+        })
+        computations = CurrentComputation.find({
+            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentComputation:
         # Referenced by Process via the computationComponent.
@@ -135,14 +223,26 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     for i in range(len(platforms)):
         platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
+    operations = list(operations)
+    for i in range(len(operations)):
+        operations[i] = (operations[i], 'operation', CurrentOperation, OperationRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
+    acquisition_capabilities = list(acquisition_capabilities)
+    for i in range(len(acquisition_capabilities)):
+        acquisition_capabilities[i] = (acquisition_capabilities[i], 'acquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisition_capabilities[i][0]['_id']), 'acquisitionCapabilities', acquisition_capabilities[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
         linked_resources.extend(_get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
+    computation_capabilities = list(computation_capabilities)
+    for i in range(len(computation_capabilities)):
+        computation_capabilities[i] = (computation_capabilities[i], 'computationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
+        linked_resources.extend(_get_resources_linked_through_resource_id(str(computation_capabilities[i][0]['_id']), 'computationCapabilities', computation_capabilities[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
@@ -157,8 +257,11 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     linked_resources.extend(individuals)
     linked_resources.extend(projects)
     linked_resources.extend(platforms)
+    linked_resources.extend(operations)
     linked_resources.extend(instruments)
+    linked_resources.extend(acquisition_capabilities)
     linked_resources.extend(acquisitions)
+    linked_resources.extend(computation_capabilities)
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
@@ -176,15 +279,19 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             return 5
         elif resource_type == 'instrument':
             return 6
-        elif resource_type == 'acquisition':
+        elif resource_type == 'acquisition capability':
             return 7
-        elif resource_type == 'computation':
+        elif resource_type == 'acquisition':
             return 8
-        elif resource_type == 'process':
+        elif resource_type == 'computation capability':
             return 9
-        elif resource_type == 'collection':
+        elif resource_type == 'computation':
             return 10
-        return 10
+        elif resource_type == 'process':
+            return 11
+        elif resource_type == 'collection':
+            return 12
+        return 12
     def custom_compare(item1, item2):
         item1_weight = get_weight_of_resource_type(item1[1])
         item2_weight = get_weight_of_resource_type(item2[1])
@@ -197,6 +304,17 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
     linked_resources.sort(key=cmp_to_key(custom_compare))
 
     return linked_resources
+
+def _delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id):
+    data_collection_to_delete = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
+    CurrentDataCollectionInteractionMethod.delete_many({
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
+    })
+    DataCollectionInteractionMethodRevision.delete_many({
+        'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
+    })
 
 def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
     # Find the resource to delete, so it can be referenced later when deleting from
@@ -225,7 +343,7 @@ class DeleteResourceView(TemplateView):
     resource_revision_mongodb_model = None
     redirect_url = ''
     template_name = 'delete/confirm_delete_resource.html'
-    list_resources_of_type_view_page_title = 'Manage Resources'
+    list_resources_of_type_view_page_title = 'Register & Manage Resources'
     list_resources_of_type_view_name = 'resource_management:index'
     delete_resource_type_view_name = ''
     resource_to_delete = None
@@ -234,9 +352,13 @@ class DeleteResourceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type'] = self.resource_type
+        if self.resource_type.lower() == 'acquisitioncapabilities':
+            context['resource_type'] = 'acquisition capability'
+        if self.resource_type.lower() == 'computationcapabilities':
+            context['resource_type'] = 'computation capability'
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
-        context['title'] = f'Confirm Deletion of Data Registration'
+        context['title'] = f'Confirm Deletion of Metadata'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
@@ -268,7 +390,7 @@ class organisation(DeleteResourceView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
-    list_resources_of_type_view_page_title = 'Manage Organisations'
+    list_resources_of_type_view_page_title = 'Register & Manage Organisations'
     list_resources_of_type_view_name = 'resource_management:organisations'
     delete_resource_type_view_name = 'delete:organisation'
 
@@ -281,7 +403,7 @@ class individual(DeleteResourceView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
-    list_resources_of_type_view_page_title = 'Manage Individuals'
+    list_resources_of_type_view_page_title = 'Register & Manage Individuals'
     list_resources_of_type_view_name = 'resource_management:individuals'
     delete_resource_type_view_name = 'delete:individual'
 
@@ -294,7 +416,7 @@ class project(DeleteResourceView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
-    list_resources_of_type_view_page_title = 'Manage Projects'
+    list_resources_of_type_view_page_title = 'Register & Manage Projects'
     list_resources_of_type_view_name = 'resource_management:projects'
     delete_resource_type_view_name = 'delete:project'
 
@@ -307,7 +429,7 @@ class platform(DeleteResourceView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
-    list_resources_of_type_view_page_title = 'Manage Platforms'
+    list_resources_of_type_view_page_title = 'Register & Manage Platforms'
     list_resources_of_type_view_name = 'resource_management:platforms'
     delete_resource_type_view_name = 'delete:platform'
 
@@ -320,7 +442,7 @@ class instrument(DeleteResourceView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
-    list_resources_of_type_view_page_title = 'Manage Instruments'
+    list_resources_of_type_view_page_title = 'Register & Manage Instruments'
     list_resources_of_type_view_name = 'resource_management:instruments'
     delete_resource_type_view_name = 'delete:instrument'
 
@@ -333,7 +455,7 @@ class operation(DeleteResourceView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
-    list_resources_of_type_view_page_title = 'Manage Operations'
+    list_resources_of_type_view_page_title = 'Register & Manage Operations'
     list_resources_of_type_view_name = 'resource_management:operations'
     delete_resource_type_view_name = 'delete:operation'
 
@@ -341,12 +463,25 @@ class operation(DeleteResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
+class acquisition_capability(DeleteResourceView):
+    resource_type = 'acquisitionCapabilities'
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
+    list_resources_of_type_view_page_title = 'Register & Manage Acquisition Capabilities'
+    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    delete_resource_type_view_name = 'delete:acquisition_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class acquisition(DeleteResourceView):
     resource_type = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
-    list_resources_of_type_view_page_title = 'Manage Acquisitions'
+    list_resources_of_type_view_page_title = 'Register & Manage Acquisitions'
     list_resources_of_type_view_name = 'resource_management:acquisitions'
     delete_resource_type_view_name = 'delete:acquisition'
 
@@ -354,12 +489,25 @@ class acquisition(DeleteResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
+class computation_capability(DeleteResourceView):
+    resource_type = 'computationCapabilities'
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
+    redirect_url = reverse_lazy('resource_management:computation_capabilities')
+    list_resources_of_type_view_page_title = 'Register & Manage Computation Capabilities'
+    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    delete_resource_type_view_name = 'delete:computation_capability'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class computation(DeleteResourceView):
     resource_type = 'computation'
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
-    list_resources_of_type_view_page_title = 'Manage Computations'
+    list_resources_of_type_view_page_title = 'Register & Manage Computations'
     list_resources_of_type_view_name = 'resource_management:computations'
     delete_resource_type_view_name = 'delete:computation'
 
@@ -372,7 +520,7 @@ class process(DeleteResourceView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
-    list_resources_of_type_view_page_title = 'Manage Processes'
+    list_resources_of_type_view_page_title = 'Register & Manage Processes'
     list_resources_of_type_view_name = 'resource_management:processes'
     delete_resource_type_view_name = 'delete:process'
 
@@ -385,10 +533,23 @@ class data_collection(DeleteResourceView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
-    list_resources_of_type_view_page_title = 'Manage Data Collections'
+    list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'
     delete_resource_type_view_name = 'delete:data_collection'
+    template_name = 'delete/confirm_delete_data_collection.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # Delete interaction methods (current versions and
+        # revisions) before deleting the actual data collection,
+        # not sure if the order should be changed around...
+        _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
+        return super().post(request, *args, **kwargs)

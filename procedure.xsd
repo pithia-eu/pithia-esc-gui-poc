@@ -57,7 +57,12 @@
             </element>
             <element name="units" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>units of the observed property</documentation>
+                    <documentation>Units of the observed property</documentation>
+                </annotation>
+            </element>
+            <element name="qualifier" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
+                <annotation>
+                    <documentation>Qualifier of the capability to observe the property (dictionary-controlled)</documentation>
                 </annotation>
             </element>
         </sequence>
@@ -592,7 +597,7 @@ A process component which interacts with the feature of interest  (e.g. an atmos
     </complexType>
     <!-- In Acquisition and Computation, this is the list of links to the capabilities of each instrument or computation -->
     <complexType name="CapabilityLinksType">
-        <sequence minOccurs="1">
+        <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="pithia:capabilityLink"/>
         </sequence>
         <attributeGroup ref="gml:AssociationAttributeGroup"/>

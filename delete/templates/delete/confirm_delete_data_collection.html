@@ -1,0 +1,10 @@
+{% extends 'delete/confirm_delete_resource.html' %}
+{% load project_tags %}
+{% load static %}
+{% block extra_information %}
+{% if linked_interaction_methods|length > 0 %}
+<p class="alert alert-warning">
+    Interaction methods associated with this data collection will be deleted.
+</p>
+{% endif %}
+{% endblock extra_information %}

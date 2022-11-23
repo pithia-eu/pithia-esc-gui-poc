@@ -210,8 +210,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
 
 // Search form setup
 
-export function addTreeContainerIdToClearInputsButton(treeContainerId) {
-    const clearInputsButton = document.querySelector(".btn-clear");
+export function addTreeContainerIdToClearInputsButton(treeContainerId, clearInputsButton) {
     clearInputsButton.addEventListener("click", event => {
         checkAllCheckboxesForTreeContainerId(treeContainerId, false);
         const checkboxFilteredLiNodesForTreeContainerId = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId);

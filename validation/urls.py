@@ -10,8 +10,11 @@ urlpatterns = [
     path('platform/', views.platform.as_view(), name='platform'),
     path('instrument/', views.instrument.as_view(), name='instrument'),
     path('operation/', views.operation.as_view(), name='operation'),
+    path('acquisition-capability/', views.acquisition_capability.as_view(), name='acquisition_capability'),
     path('acquisition/', views.acquisition.as_view(), name='acquisition'),
+    path('computation-capability/', views.computation_capability.as_view(), name='computation_capability'),
     path('computation/', views.computation.as_view(), name='computation'),
     path('process/', views.process.as_view(), name='process'),
     path('data-collection/', views.data_collection.as_view(), name='data_collection'),
+    path('api-specification-url/', views.api_specification_url, name='api_specification_url'),
 ]

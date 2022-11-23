@@ -1,10 +1,15 @@
 import json
+import traceback
+from urllib.error import HTTPError
 from django.http import HttpResponse, HttpResponseServerError
+from django.views.decorators.http import require_POST
 from django.views.generic import View
 from lxml import etree
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from openapi_spec_validator import validate_spec_url
 
-from validation.metadata_validation import ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
+from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from validation.forms import ApiSpecificationUrlValidationForm
+from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
 
 # Create your views here.
 class ValidateXmlMetadataFileFormView(View):
@@ -51,9 +56,17 @@ class operation(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentOperation
     expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
 
+class acquisition_capability(ValidateXmlMetadataFileFormView):
+    mongodb_model = CurrentAcquisitionCapability
+    expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
+
 class acquisition(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentAcquisition
     expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
+
+class computation_capability(ValidateXmlMetadataFileFormView):
+    mongodb_model = CurrentComputationCapability
+    expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
 
 class computation(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentComputation
@@ -66,3 +79,27 @@ class process(ValidateXmlMetadataFileFormView):
 class data_collection(ValidateXmlMetadataFileFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+
+@require_POST
+def api_specification_url(request):
+    response_body = {
+        'valid': False
+    }
+    form = ApiSpecificationUrlValidationForm(request.POST)
+    if form.is_valid():
+        api_specification_url = request.POST['api_specification_url']
+        try:
+            validate_spec_url(api_specification_url)
+            response_body['valid'] = True
+        except HTTPError as err:
+            print(err)
+            print(traceback.format_exc())
+            response_body['error'] = 'The URL was not found'
+        except BaseException as err:
+            print(err)
+            print(traceback.format_exc())
+            response_body['error'] = 'The URL does not link to a valid OpenAPI specification'
+            response_body['details'] = str(err)
+    else:
+        response_body['error'] = 'Please enter a URL'
+    return HttpResponse(json.dumps(response_body), content_type='application/json')

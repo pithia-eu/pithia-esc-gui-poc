@@ -24,35 +24,16 @@
     </div>
     <div class="col-lg-3">
         <div class="d-flex justify-content-end">
-            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span class="me-1 fs-5">+</span> Register New {{ resource_type_plural.title }}</a>
+            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span>+</span><span class="mt-1"> Register</span></a>
         </div>
     </div>
 </div>
 {% if resources_list|length > 0 %}
-<ul class="list-group">
-    {% for resource in resources_list|dictsort:'name' %}
-    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="d-flex flex-column">
-                    <p>
-                        {{ resource.name|default:pithia_identifier.localID }}
-                    </p>
-                    <small class="text-muted">{{ pithia_identifier.namespace }}, {{ pithia_identifier.localID }}</small>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="d-flex justify-content-end align-items-start">
-                    <a href="{% url update_resource_view_name resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
-                    <a href="{% url delete_resource_view_name resource.id %}" role="button" class="btn btn-danger btn-delete">Delete...</a>
-                </div>
-            </div>
-        </div>
-    </li>
-    {% endwith %}
-    {% endfor %}
-</ul>
+{% block ul_resources_list %}
+{% with resources_list=resources_list|dictsort:'name' %}
+{% include 'resource_management/ul_resources_list.html' %}
+{% endwith %}
+{% endblock ul_resources_list %}
 {% else %}
 <p>No {{ resource_type_plural|lower }} have been registered with the e-Science Centre.</p>
 {% endif %}

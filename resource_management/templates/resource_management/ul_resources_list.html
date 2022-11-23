@@ -1,0 +1,24 @@
+<ul class="list-group">
+    {% for resource in resources_list %}
+    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="d-flex flex-column">
+                    <p>
+                        {{ resource.name|default:pithia_identifier.localID }}
+                    </p>
+                    <small class="text-muted w-100 resource-identifier-short-text">{{ pithia_identifier.namespace }}, {{ pithia_identifier.localID }}</small>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-end align-items-start">
+                    <a href="{% url update_resource_view_name resource.id %}" class="btn btn-light ms-auto me-2" role="button">Upload a New XML File</a>
+                    <a href="{% url delete_resource_view_name resource.id %}" role="button" class="btn btn-danger btn-delete">Delete...</a>
+                </div>
+            </div>
+        </div>
+    </li>
+    {% endwith %}
+    {% endfor %}
+</ul>

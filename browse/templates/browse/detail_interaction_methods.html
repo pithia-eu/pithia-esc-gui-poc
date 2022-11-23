@@ -1,0 +1,81 @@
+{% extends 'browse/detail.html' %}
+{% load project_tags %}
+{% block messages %}
+{% if messages %}
+<div class="registration-alerts mb-3">
+    {% for message in messages %}
+    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock messages %}
+{% block interaction_methods %}
+<section>
+    <h2 class="mb-3">Interact</h2>
+    {% if interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
+    <div class="table-responsive">
+        <table class="table table-bordered interaction-method-table">
+            <thead>
+                <tr>
+                    <th>Interaction Method</th>
+                    <th>Description</th>
+                    <th>Data Format</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for source in link_interaction_methods %}
+                {% with online_resource=source.OnlineResource %}
+                <tr>
+                    <td>Direct Link to Data Collection</td>
+                    <td>
+                        {{ online_resource.description }}
+                    </td>
+                    <td>
+                        <div class="metadata-server-url">
+                            <div class="placeholder-wrapper">
+                                <div class="placeholder-wave">
+                                    <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                </div>
+                            </div>
+                            {{ online_resource.dataFormat.0|get_key_value:'@xlink:href'|urlize|url_target_blank }}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
+                            Open {{ online_resource.name }} in new tab
+                        </a>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+                {% for method in interaction_methods %}
+                {% if method.interaction_method == 'api' %}
+                <tr>
+                    <td>API</td>
+                    <td>
+                        {% if 'interaction_method_description' in method %}
+                        {{ method.interaction_method_description }}
+                        {% else %}
+                        <i class="text-muted">None</i>
+                        {% endif %}
+                    </td>
+                    <td>N/A</td>
+                    <td class="text-center">
+                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer">
+                            Open API Interface in new tab
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <i class="text-muted">This data collection has no interaction methods.</i>
+    {% endif %}
+</section>
+{% endblock interaction_methods %}

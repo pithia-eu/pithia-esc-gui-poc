@@ -1,0 +1,90 @@
+{% extends 'register/file_upload.html' %}
+{% load static %}
+{% block scripts %}
+{{ validation_url|json_script:'validation-url' }}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+<script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
+<script src="{% static 'register/register_data_collection.js' %}" type="module" defer></script>
+<script src="{% static 'api_specification_validation.js' %}" type="module" defer></script>
+<script src="{% static "is_data_collection_file_upload_ready.js" %}" type="module" defer></script>
+{% endblock scripts %}
+{% block file_upload_section_heading_text %}
+Upload an XML Metadata File
+{% endblock file_upload_section_heading_text %}
+{% block api_specification %}
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="fs-3">Interaction methods</h2>
+            <hr>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="d-flex flex-column mb-0">
+                        <span><b>Link to Data Collection <small class="text-muted">(added inside the XML Metadata File)</small></b></span>
+                        <span class="mt-1">
+                            If a URL is put inside a linkage tag, this will be provided as a direct link to the Data Collection.
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {% if form.interaction_methods.errors %}
+                                <ul>
+                                {% for error in form.interaction_methods.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <div class="d-flex flex-column">
+                                {% for checkbox in form.interaction_methods %}
+                                <div class="form-check fw-bold">
+                                    {{ checkbox }}
+                                </div>
+                                {% endfor %}
+                                <span class="mb-2">
+                                    A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-4">
+                            {% if form.api_specification_url.errors %}
+                                <ul>
+                                {% for error in form.api_specification_url.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <div class="d-flex flex-column">
+                                {{ form.api_specification_url.label_tag }}
+                                {{ form.api_specification_url }}
+                                <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-3 api-specification-url-status-validation d-none">
+                            <ul class="list-group list-group-flush list-group-horizontal mb-0">
+                                <li class="list-group-item border border-0 status-invalid-link d-none p-0">
+                                    <div class="d-flex flex-column">
+                                        <small class="status-text text-danger">Invalid link</small>
+                                        <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <div class="d-flex flex-column">
+                                {{ form.api_description.label_tag }}
+                                {{ form.api_description }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock api_specification %}

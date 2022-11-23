@@ -4,11 +4,14 @@ import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
 from bson.objectid import ObjectId
+from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id
+from mongodb import client
 from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
-from register.xml_conversion_checks_and_fixes import format_acquisition_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_process_dictionary
+from register.register_api_specification import move_current_existing_version_of_api_interaction_method_to_revisions, register_api_specification
+from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from resource_management.forms import UploadUpdatedFileForm
-from common.mongodb_models import AcquisitionRevision, ComputationRevision, CurrentAcquisition, CurrentComputation, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
+from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm
+from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
 from update.update import update_current_version_of_resource
 from update.version_control import assign_original_xml_file_entry_to_new_resource_id, copy_current_version_of_resource_to_revisions
@@ -29,10 +32,10 @@ class UpdateResourceView(FormView):
     list_resources_of_type_view_name = ''
     update_resource_type_view_name = ''
     validation_url = ''
-    resource_to_update_name = '' # Set in get() function
+    resource_to_update_name = '' # Set in dispatch() function
 
     # Class variables
-    template_name = 'update/detail.html'
+    template_name = 'update/file_upload.html'
     form_class = UploadUpdatedFileForm
     success_url = ''
 
@@ -44,22 +47,49 @@ class UpdateResourceView(FormView):
         context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = f'Manage {self.resource_type_plural}'
+        context['list_resources_of_type_view_page_title'] = f'Register & Manage {self.resource_type_plural}'
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['post_url'] = reverse_lazy(self.update_resource_type_view_name, args=[self.resource_id])
         context['update_resource_type_view_name'] = self.update_resource_type_view_name
         return context
 
     def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        xml_file = request.FILES['file']
+        form = self.form_class(request.POST, request.FILES)
+        xml_file = request.FILES['files']
         if form.is_valid():
+            converted_xml_file = None
             try:
+                metadata_move_results = None
+                api_specification_move_results = None
+
                 converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
                 copied_resource = copy_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
                 assign_original_xml_file_entry_to_new_resource_id(self.resource_id, copied_resource['_id'])
                 update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                
+                metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                if metadata_move_results != None:
+                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results['identifier']['PITHIA_Identifier']['localID'], CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
+            except BaseException as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An unexpected error occurred.')
+                return super().post(request, *args, **kwargs)
+
+            try:
+                metadata_registration_results = None
+                api_specification_registration_results = None
+
+                metadata_registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                if 'interaction_methods' in request.POST:
+                    interaction_methods = request.POST.getlist('interaction_methods')
+                    if 'api' in interaction_methods:
+                        api_specification_url = request.POST['api_specification_url']
+                        api_description = ''
+                        if 'api_description' in request.POST:
+                            api_description = request.POST['api_description']
+                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'], api_description=api_description)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -69,6 +99,8 @@ class UpdateResourceView(FormView):
                 print(err)
                 print(traceback.format_exc())
                 messages.error(request, 'An unexpected error occurred.')
+        else:
+            messages.error(request, 'The form submitted was not valid.')
 
         return super().post(request, *args, **kwargs)
 
@@ -150,6 +182,7 @@ class platform(UpdateResourceView):
 class instrument(UpdateResourceView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
+    resource_conversion_validate_and_correct_function = format_instrument_dictionary
 
     a_or_an = 'an'
     resource_type = 'Instrument'
@@ -179,6 +212,23 @@ class operation(UpdateResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
+class acquisition_capability(UpdateResourceView):
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
+    resource_conversion_validate_and_correct_function = format_acquisition_capability_dictionary
+
+    a_or_an = 'an'
+    resource_type = 'Acquisition Capability'
+    resource_type_plural = 'Acquisition Capabilities'
+    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    update_resource_type_view_name = 'update:acquisition_capability'
+    validation_url = reverse_lazy('validation:acquisition_capability')
+    success_url = reverse_lazy('resource_management:acquisition_capabilities')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['acquisition_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+
 class acquisition(UpdateResourceView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
@@ -196,6 +246,23 @@ class acquisition(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
+class computation_capability(UpdateResourceView):
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
+    resource_conversion_validate_and_correct_function = format_computation_capability_dictionary
+
+    a_or_an = 'a'
+    resource_type = 'Computation Capability'
+    resource_type_plural = 'Computation Capabilities'
+    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    update_resource_type_view_name = 'update:computation_capability'
+    validation_url = reverse_lazy('validation:computation_capability')
+    success_url = reverse_lazy('resource_management:computation_capabilities')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['computation_capability_id']
+        return super().dispatch(request, *args, **kwargs)
+        
 class computation(UpdateResourceView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
@@ -234,6 +301,8 @@ class data_collection(UpdateResourceView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
+    template_name = 'update/file_upload_data_collection.html'
+    form_class = UploadUpdatedDataCollectionFileForm
 
     a_or_an = 'a'
     resource_type = 'Data Collection'
@@ -242,6 +311,21 @@ class data_collection(UpdateResourceView):
     update_resource_type_view_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        interaction_methods = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        if len(interaction_methods) > 0:
+            form_data = {}
+            form_data['interaction_methods'] = []   
+            for im in interaction_methods:
+                if im['interaction_method'] == 'api':
+                    form_data['interaction_methods'].append('api')
+                    form_data['api_specification_url'] = im['interaction_url']
+                    form_data['api_description'] = im['interaction_method_description']
+            context['form'] = self.form_class(initial=form_data)
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
