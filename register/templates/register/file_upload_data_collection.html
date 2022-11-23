@@ -12,5 +12,9 @@
 Upload an XML Metadata File
 {% endblock file_upload_section_heading_text %}
 {% block register_api_specification %}
-{% include 'register/interaction_methods_form.html' %}
+<div class="col-lg-12">
+    <h2 class="fs-3">Interaction methods</h2>
+    <hr>
+    {% include 'register/interaction_methods_form.html' %}
+</div>
 {% endblock register_api_specification %}
