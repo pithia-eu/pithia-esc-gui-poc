@@ -1,4 +1,4 @@
-{% extends 'register/file_upload_data_collection.html' %}
+{% extends 'register/file_upload.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
@@ -27,3 +27,6 @@
 {% block file_upload_section_heading_text %}
 Upload an XML Metadata File
 {% endblock file_upload_section_heading_text %}
+{% block update_api_specification %}
+{% include 'register/interaction_methods_form.html' %}
+{% endblock update_api_specification %}

@@ -4,7 +4,7 @@ import {
 
 export let isApiSpecificationLinkValid = false;
 export let isApiSpecificationInputAvailable = false;
-export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="interaction_methods"][value="api"]');
+export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="api_selected"]');
 export const apiSpecificationUrlInput = document.querySelector("#id_api_specification_url");
 export const apiSpecificationDescriptionTextarea = document.querySelector("#id_api_description");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
