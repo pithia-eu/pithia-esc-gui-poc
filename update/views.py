@@ -67,21 +67,7 @@ class UpdateResourceView(FormView):
                 copied_resource = copy_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
                 assign_original_xml_file_entry_to_new_resource_id(self.resource_id, copied_resource['_id'])
                 update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                
-                metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
-                if metadata_move_results != None:
-                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results['identifier']['PITHIA_Identifier']['localID'], CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
-            except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An unexpected error occurred.')
-                return super().post(request, *args, **kwargs)
 
-            try:
-                metadata_registration_results = None
-                api_specification_registration_results = None
-
-                metadata_registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 if 'interaction_methods' in request.POST:
                     interaction_methods = request.POST.getlist('interaction_methods')
                     if 'api' in interaction_methods:
@@ -89,7 +75,7 @@ class UpdateResourceView(FormView):
                         api_description = ''
                         if 'api_description' in request.POST:
                             api_description = request.POST['api_description']
-                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'], api_description=api_description)
+                        api_specification_registration_results = register_api_specification(api_specification_url, copied_resource['identifier']['PITHIA_Identifier']['localID'], api_description=api_description)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
