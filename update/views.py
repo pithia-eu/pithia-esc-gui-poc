@@ -3,12 +3,12 @@ from pyexpat import ExpatError
 import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import render
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
-from register.register_api_specification import register_api_specification
 from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm
+from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm, UpdateDataCollectionInteractionMethodsForm
 from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
 from update.update import update_current_version_of_resource, update_data_collection_api_interaction_method_specification_url, update_data_collection_api_interaction_method_description
@@ -295,21 +295,28 @@ class data_collection(UpdateResourceView):
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        interaction_methods = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
-        if len(interaction_methods) > 0:
-            form_data = {}
-            form_data['interaction_methods'] = []   
-            for im in interaction_methods:
-                if im['interaction_method'] == 'api':
-                    form_data['interaction_methods'].append('api')
-                    form_data['api_specification_url'] = im['interaction_url']
-                    form_data['api_description'] = im['interaction_method_description']
-            context['form'] = self.form_class(initial=form_data)
-        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
-        return context
-
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+def data_collection_interaction_methods(request, data_collection_id):
+    data_collection = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
+    form = UpdateDataCollectionInteractionMethodsForm()
+    interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
+    if len(interaction_methods) > 0:
+        form_data = {}
+        form_data['interaction_methods'] = []   
+        for im in interaction_methods:
+            if im['interaction_method'] == 'api':
+                form_data['api_selected'] = True
+                form_data['api_specification_url'] = im['interaction_url']
+                form_data['api_description'] = im['interaction_method_description']
+        form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
+    return render(request, 'update/interaction_methods.html', {
+        'data_collection': data_collection,
+        'data_collection_id': str(data_collection['_id']),
+        'form': form,
+        'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
+    })
