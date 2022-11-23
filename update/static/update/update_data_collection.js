@@ -1,5 +1,5 @@
 import {
-    startOpenApiSpecificationUrlValidation,
+    validateOpenApiSpecificationUrl,
     apiExecutionMethodCheckbox,
     toggleApiSpecificationUrlTextInput,
     toggleApiDescriptionTextarea,
@@ -10,6 +10,6 @@ window.addEventListener("load", async event => {
     toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
     toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
     if (apiExecutionMethodCheckbox.checked) {
-        startOpenApiSpecificationUrlValidation();
+        validateOpenApiSpecificationUrl();
     }
 });
