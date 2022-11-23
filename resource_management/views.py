@@ -176,3 +176,8 @@ class data_collections(ManageResourcesView):
     delete_resource_view_name = 'delete:data_collection'
     update_resource_view_name = 'update:data_collection'
     register_resource_view_name = 'register:data_collection'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['update_interaction_methods_view_name'] = 'update:data_collection_interaction_methods'
+        return context
