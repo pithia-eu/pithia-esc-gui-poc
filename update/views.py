@@ -3,7 +3,7 @@ from pyexpat import ExpatError
 import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
@@ -296,20 +296,24 @@ def data_collection_interaction_methods(request, data_collection_id):
     if request.method == 'POST':
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
-            if 'api_selected' in request.POST:
-                api_specification_url = request.POST['api_specification_url']
-                api_description = ''
-                if 'api_description' in request.POST:
-                    api_description = request.POST['api_description']
-                data_collection_local_id = data_collection['identifier']['PITHIA_Identifier']['localID']
-                create_revision_of_data_collection_api_interaction_method(data_collection_local_id)
-                update_data_collection_api_interaction_method_specification_url(data_collection_local_id, api_specification_url)
-                update_data_collection_api_interaction_method_description(data_collection_local_id, api_description)
+            data_collection_localid = data_collection['identifier']['PITHIA_Identifier']['localID']
+            create_revision_of_data_collection_api_interaction_method(data_collection_localid)
+            if 'api_selected' not in request.POST:
+                CurrentDataCollectionInteractionMethod.delete_one({
+                    'data_collection_localid': data_collection_localid,
+                    'interaction_method': 'api',
+                })
+                return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+            api_specification_url = request.POST['api_specification_url']
+            api_description = ''
+            if 'api_description' in request.POST:
+                api_description = request.POST['api_description']
+            update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url)
+            update_data_collection_api_interaction_method_description(data_collection_localid, api_description)
     form = UpdateDataCollectionInteractionMethodsForm()
     interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
     if len(interaction_methods) > 0:
         form_data = {}
-        form_data['interaction_methods'] = []   
         for im in interaction_methods:
             if im['interaction_method'] == 'api':
                 form_data['api_selected'] = True

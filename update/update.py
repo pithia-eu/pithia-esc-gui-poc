@@ -26,7 +26,7 @@ def update_current_version_of_resource(resource_id, xml_file, current_resource_m
 def update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url):
     return CurrentDataCollectionInteractionMethod.update_one(
         {
-            'data_collection_local_id': data_collection_localid,
+            'data_collection_localid': data_collection_localid,
             'interaction_method': 'api',
         },
         {
@@ -39,7 +39,7 @@ def update_data_collection_api_interaction_method_specification_url(data_collect
 def update_data_collection_api_interaction_method_description(data_collection_localid, api_description):
     return CurrentDataCollectionInteractionMethod.update_one(
         {
-            'data_collection_local_id': data_collection_localid,
+            'data_collection_localid': data_collection_localid,
             'interaction_method': 'api',
         },
         {
