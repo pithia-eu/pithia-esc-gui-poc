@@ -1,8 +1,5 @@
-import {
-    enableSubmitButtonIfReady
-} from "/static/is_file_upload_ready.js"
-
 export let isEachFileValid = false; // Variable is exported to work with the API specification URL input
+const fileValidationStatusUpdatedEvent = new Event("fileValidationStatusUpdated");
 
 // Source for htmlToElement() function: https://stackoverflow.com/a/35385518
 function htmlToElement(html) {
@@ -217,7 +214,7 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
             finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
             isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0;
-            enableSubmitButtonIfReady();
+            document.dispatchEvent(fileValidationStatusUpdatedEvent);;
         });
         uploadFormSubmitButton.disabled = true;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
@@ -229,7 +226,7 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (!validationResults.error) {
             isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
-            enableSubmitButtonIfReady();
+            document.dispatchEvent(fileValidationStatusUpdatedEvent);;
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
             uploadFormSubmitButton.disabled = true;

@@ -4,22 +4,6 @@ from common.mongodb_models import OriginalMetadataXml
 from validation.registration_validation import validate_xml_file_is_unique
 
 
-def move_current_version_of_resource_to_revisions(resource_pithia_identifier, current_resource_mongodb_model, resource_revision_mongodb_model):
-    current_version_of_resource = current_resource_mongodb_model.find_one({
-        'identifier.PITHIA_Identifier.localID': resource_pithia_identifier['localID'],
-        'identifier.PITHIA_Identifier.namespace': resource_pithia_identifier['namespace'],
-    })
-    if not current_version_of_resource:
-        print('Resource not found.')
-        return 'Resource not found.'
-    # It's "moving" the resource, so first copy the resource to the revisions
-    # collection, and then delete from the current version collection.
-    current_resource_mongodb_model.delete_one({
-        '_id': ObjectId(current_version_of_resource['_id'])
-    })
-    resource_revision_mongodb_model.insert_one(current_version_of_resource)
-    return current_version_of_resource
-
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example

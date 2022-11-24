@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
+{% breadcrumb_item list_resources_of_type_view_page_title list_resources_of_type_view_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'api_specification_validation.js' %}" type="module" defer></script>
+<script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+{{ data_collection_id|json_script:"resource-id" }}
+{% endblock scripts %}
+{% block content %}
+<h1 class="pb-0">{{ title }}</h1>
+<div class="text-muted mb-4">
+    Data Collection: <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b>
+</div>
+<div class="row mb-3">
+    <div class="col-lg-8">
+        <div class="alert alert-primary">
+            Select and fill out the interaction method details you would like to add for <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b> below, then press <b>Save</b> to save your changes.
+        </div>
+    </div>
+</div>
+<form action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
+    {% csrf_token %}
+    {% include 'register/interaction_methods_form.html' %}
+    <div class="col-lg-12">
+        <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

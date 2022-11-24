@@ -3,16 +3,16 @@ from pyexpat import ExpatError
 import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import render, redirect
 from bson.objectid import ObjectId
-from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id
-from mongodb import client
-from register.register import move_current_version_of_resource_to_revisions, register_metadata_xml_file
-from register.register_api_specification import move_current_existing_version_of_api_interaction_method_to_revisions, register_api_specification
+from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm
+from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm, UpdateDataCollectionInteractionMethodsForm
 from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
+from update.update import update_current_version_of_resource, update_data_collection_api_interaction_method_specification_url, update_data_collection_api_interaction_method_description
+from update.version_control import assign_original_xml_file_entry_to_revision_id, create_revision_of_current_resource_version, create_revision_of_data_collection_api_interaction_method
 
 
 # Create your views here.
@@ -57,33 +57,12 @@ class UpdateResourceView(FormView):
         if form.is_valid():
             converted_xml_file = None
             try:
-                metadata_move_results = None
-                api_specification_move_results = None
-
                 converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                metadata_move_results = move_current_version_of_resource_to_revisions(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
-                if metadata_move_results != None:
-                    api_specification_move_results = move_current_existing_version_of_api_interaction_method_to_revisions(metadata_move_results['identifier']['PITHIA_Identifier']['localID'], CurrentDataCollectionInteractionMethod, DataCollectionInteractionMethodRevision)
-            except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
-                messages.error(request, 'An unexpected error occurred.')
-                return super().post(request, *args, **kwargs)
 
-            try:
-                metadata_registration_results = None
-                api_specification_registration_results = None
-
-                metadata_registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                if 'interaction_methods' in request.POST:
-                    interaction_methods = request.POST.getlist('interaction_methods')
-                    if 'api' in interaction_methods:
-                        api_specification_url = request.POST['api_specification_url']
-                        api_description = ''
-                        if 'api_description' in request.POST:
-                            api_description = request.POST['api_description']
-                        api_specification_registration_results = register_api_specification(api_specification_url, metadata_registration_results['identifier']['PITHIA_Identifier']['localID'], api_description=api_description)
+                resource_revision = create_revision_of_current_resource_version(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                assign_original_xml_file_entry_to_revision_id(self.resource_id, resource_revision['_id'])
+                update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -306,21 +285,48 @@ class data_collection(UpdateResourceView):
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        interaction_methods = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
-        if len(interaction_methods) > 0:
-            form_data = {}
-            form_data['interaction_methods'] = []   
-            for im in interaction_methods:
-                if im['interaction_method'] == 'api':
-                    form_data['interaction_methods'].append('api')
-                    form_data['api_specification_url'] = im['interaction_url']
-                    form_data['api_description'] = im['interaction_method_description']
-            context['form'] = self.form_class(initial=form_data)
-        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
-        return context
-
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+def data_collection_interaction_methods(request, data_collection_id):
+    data_collection = CurrentDataCollection.find_one({
+        '_id': ObjectId(data_collection_id)
+    })
+    if request.method == 'POST':
+        form = UpdateDataCollectionInteractionMethodsForm(request.POST)
+        if form.is_valid():
+            data_collection_localid = data_collection['identifier']['PITHIA_Identifier']['localID']
+            create_revision_of_data_collection_api_interaction_method(data_collection_localid)
+            if 'api_selected' not in request.POST:
+                CurrentDataCollectionInteractionMethod.delete_one({
+                    'data_collection_localid': data_collection_localid,
+                    'interaction_method': 'api',
+                })
+                return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+            api_specification_url = request.POST['api_specification_url']
+            api_description = ''
+            if 'api_description' in request.POST:
+                api_description = request.POST['api_description']
+            update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url)
+            update_data_collection_api_interaction_method_description(data_collection_localid, api_description)
+    form = UpdateDataCollectionInteractionMethodsForm()
+    interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
+    if len(interaction_methods) > 0:
+        form_data = {}
+        for im in interaction_methods:
+            if im['interaction_method'] == 'api':
+                form_data['api_selected'] = True
+                form_data['api_specification_url'] = im['interaction_url']
+                form_data['api_description'] = im['interaction_method_description']
+        form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
+    return render(request, 'update/interaction_methods.html', {
+        'data_collection': data_collection,
+        'data_collection_id': str(data_collection['_id']),
+        'form': form,
+        'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
+        'title': 'Update Interaction Methods',
+        'resource_management_index_page_title': _INDEX_PAGE_TITLE,
+        'list_resources_of_type_view_name': 'resource_management:data_collections',
+        'list_resources_of_type_view_page_title': 'Register & Manage Data Collections'
+    })
