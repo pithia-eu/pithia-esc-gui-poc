@@ -63,16 +63,6 @@ class UpdateResourceView(FormView):
                 resource_revision = create_revision_of_current_resource_version(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
                 assign_original_xml_file_entry_to_revision_id(self.resource_id, resource_revision['_id'])
                 update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-
-                if 'api_selected' in request.POST:
-                    api_specification_url = request.POST['api_specification_url']
-                    api_description = ''
-                    if 'api_description' in request.POST:
-                        api_description = request.POST['api_description']
-                    data_collection_local_id = converted_xml_file['identifier']['PITHIA_Identifier']['localID']
-                    create_revision_of_data_collection_api_interaction_method(data_collection_local_id)
-                    update_data_collection_api_interaction_method_specification_url(data_collection_local_id, api_specification_url)
-                    update_data_collection_api_interaction_method_description(data_collection_local_id, api_description)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -303,6 +293,18 @@ def data_collection_interaction_methods(request, data_collection_id):
     data_collection = CurrentDataCollection.find_one({
         '_id': ObjectId(data_collection_id)
     })
+    if request.method == 'POST':
+        form = UpdateDataCollectionInteractionMethodsForm(request.POST)
+        if form.is_valid():
+            if 'api_selected' in request.POST:
+                api_specification_url = request.POST['api_specification_url']
+                api_description = ''
+                if 'api_description' in request.POST:
+                    api_description = request.POST['api_description']
+                data_collection_local_id = data_collection['identifier']['PITHIA_Identifier']['localID']
+                create_revision_of_data_collection_api_interaction_method(data_collection_local_id)
+                update_data_collection_api_interaction_method_specification_url(data_collection_local_id, api_specification_url)
+                update_data_collection_api_interaction_method_description(data_collection_local_id, api_description)
     form = UpdateDataCollectionInteractionMethodsForm()
     interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
     if len(interaction_methods) > 0:
