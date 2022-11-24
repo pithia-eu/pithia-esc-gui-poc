@@ -325,4 +325,8 @@ def data_collection_interaction_methods(request, data_collection_id):
         'data_collection_id': str(data_collection['_id']),
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
+        'title': 'Update Interaction Methods',
+        'resource_management_index_page_title': _INDEX_PAGE_TITLE,
+        'list_resources_of_type_view_name': 'resource_management:data_collections',
+        'list_resources_of_type_view_page_title': 'Register & Manage Data Collections'
     })

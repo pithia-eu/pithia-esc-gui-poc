@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
+{% breadcrumb_item list_resources_of_type_view_page_title list_resources_of_type_view_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
 {% block scripts %}
 <script src="{% static 'api_specification_validation.js' %}" type="module" defer></script>
 <script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
@@ -7,7 +13,7 @@
 {{ data_collection_id|json_script:"resource-id" }}
 {% endblock scripts %}
 {% block content %}
-<h1 class="pb-0">Update Interaction Methods</h1>
+<h1 class="pb-0">{{ title }}</h1>
 <div class="text-muted mb-4">
     Data Collection: <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b>
 </div>
