@@ -200,8 +200,12 @@ header .dropdown-item:active a {
 
 /* View resource as XML page */
 .xml-display-area {
-    white-space: pre-wrap;
+    white-space: pre;
     overflow-x: scroll;
+}
+
+.xml-file-download-btn img {
+    height: 1.1rem;
 }
 
 /* Search page */
