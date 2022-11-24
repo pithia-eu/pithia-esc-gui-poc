@@ -148,6 +148,10 @@ header .dropdown-item:active a {
     word-break: break-all;
 }
 
+.update-buttons {
+    gap: 0.5rem;
+}
+
 /* Register page */
 .registration-alerts {
     display: flex;
