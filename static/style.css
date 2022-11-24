@@ -198,6 +198,12 @@ header .dropdown-item:active a {
     border-radius: 12px;
 }
 
+/* View resource as XML page */
+.xml-display-area {
+    white-space: pre-wrap;
+    overflow-x: scroll;
+}
+
 /* Search page */
 .observed-properties-tree-search-container-wrapper {
     border: var(--tree-search-container-border-width) solid var(--bs-gray-300);
