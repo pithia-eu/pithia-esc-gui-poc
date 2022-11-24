@@ -14,7 +14,7 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
             }))
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
-    api_selected = forms.BooleanField(label='API', widget=forms.CheckboxInput(attrs={
+    api_selected = forms.BooleanField(label='API', required=False, widget=forms.CheckboxInput(attrs={
         'class': 'form-check-input'
     }))
     api_specification_url = forms.CharField(label='Link to API Specification', required=False, widget=forms.TextInput(attrs={
