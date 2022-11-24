@@ -8,26 +8,6 @@ const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-sp
 let userInputTimeout;
 const apiInteractionMethodModifiedEvent = new Event("apiInteractionMethodModified");
 
-apiExecutionMethodCheckbox.addEventListener("change", event => {
-    toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
-    toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
-    if (!apiExecutionMethodCheckbox.checked) {
-        return document.dispatchEvent(apiInteractionMethodModifiedEvent);
-    }
-    isApiSpecificationLinkValid = false;
-    document.dispatchEvent(apiInteractionMethodModifiedEvent);
-    validateOpenApiSpecificationUrl();
-});
-
-apiSpecificationUrlInput.addEventListener("input", async event => {
-    const url = apiSpecificationUrlInput.value;
-    if (apiExecutionMethodCheckbox.checked && url.trim().length === 0) {
-        isApiSpecificationLinkValid = false;
-        return document.dispatchEvent(apiInteractionMethodModifiedEvent);
-    }
-    validateOpenApiSpecificationUrl();
-});
-
 export function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
     if (apiExecutionMethodCheckbox.checked) {
         apiSpecificationUrlInput.disabled = false;
@@ -67,6 +47,10 @@ export function validateOpenApiSpecificationUrl() {
             const validationResult = await sendOpenApiSpecificationUrlForValidation(url);
             const { valid, error, details } = validationResult;
             isApiSpecificationLinkValid = valid;
+            if (apiSpecificationUrlInput.value.length === 0) {
+                isApiSpecificationLinkValid = false;
+                displayValidLinkResult(isApiSpecificationLinkValid);
+            }
             displayValidLinkResult(validationResult);
             document.dispatchEvent(apiInteractionMethodModifiedEvent);
         } catch (e) {
@@ -133,4 +117,24 @@ window.addEventListener("load", event => {
     if (apiExecutionMethodCheckbox.checked) {
         validateOpenApiSpecificationUrl();
     }
+});
+
+apiExecutionMethodCheckbox.addEventListener("change", event => {
+    toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
+    toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
+    if (!apiExecutionMethodCheckbox.checked) {
+        return document.dispatchEvent(apiInteractionMethodModifiedEvent);
+    }
+    isApiSpecificationLinkValid = false;
+    document.dispatchEvent(apiInteractionMethodModifiedEvent);
+    validateOpenApiSpecificationUrl();
+});
+
+apiSpecificationUrlInput.addEventListener("input", async event => {
+    const url = apiSpecificationUrlInput.value;
+    if (apiExecutionMethodCheckbox.checked && url.trim().length === 0) {
+        isApiSpecificationLinkValid = false;
+        return document.dispatchEvent(apiInteractionMethodModifiedEvent);
+    }
+    validateOpenApiSpecificationUrl();
 });
