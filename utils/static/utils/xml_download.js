@@ -1,6 +1,6 @@
 const xmlDownloadButton = document.querySelector(".xml-file-download-btn");
 const xmlFileContent = document.querySelector(".xml-display-area").textContent;
-const xmlFileName = document.querySelector("#resource-localid").value;
+const xmlFileName = `${document.querySelector("#resource-localid").value}.xml`;
 
 
 function setupXmlFileDownloadLink() {
