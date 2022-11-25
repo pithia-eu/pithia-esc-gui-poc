@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'utils/highlight/github.min.css' %}">
+{% endblock styles %}
+{% block scripts %}
+<script src="{% static 'utils/xml_download.js' %}" type="module" type="text/javascript" defer></script>
+<script src="{% static 'utils/highlight/highlight.min.js' %}"></script>
+<script>hljs.highlightAll();</script>
+{% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
+{% breadcrumb_item list_resources_of_type_view_page_title list_resources_of_type_view_name %}
+{% breadcrumb_item_active resource_name %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>{{ resource_name }}</div>
+            <a class="btn btn-primary xml-file-download-btn disabled" aria-disabled="true">
+                <div class="d-flex align-items-center">
+                    <img src="{% static 'download-white.svg' %}" alt="Download" class="me-1">Download
+                </div>
+            </a>
+            <input type="hidden" id="resource-localid" value="{{ resource_localid }}">
+        </div>
+    </div>
+    <pre class="card-body m-0 py-0 px-1"><code class="language-xml xml-display-area">{{ xml }}</code></pre>
+</div>
+{% endblock content %}

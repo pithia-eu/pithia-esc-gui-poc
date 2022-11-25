@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'present.apps.PresentConfig',
     'validation.apps.ValidationConfig',
     'resource_management.apps.ResourceManagementConfig',
+    'utils.apps.UtilsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

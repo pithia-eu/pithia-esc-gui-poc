@@ -49,6 +49,7 @@ class ManageResourcesView(TemplateView):
     delete_resource_view_name = ''
     update_resource_view_name = ''
     register_resource_view_name = ''
+    view_as_xml_view_name = ''
 
     def get_resources_list(self):
         resources_list = list(self.resource_mongodb_model.find({}))
@@ -63,6 +64,7 @@ class ManageResourcesView(TemplateView):
         context['update_resource_view_name'] = self.update_resource_view_name
         context['register_resource_view_name'] = self.register_resource_view_name
         context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['view_as_xml_view_name'] = self.view_as_xml_view_name
         return context
 
 class organisations(ManageResourcesView):
@@ -72,6 +74,7 @@ class organisations(ManageResourcesView):
     delete_resource_view_name = 'delete:organisation'
     update_resource_view_name = 'update:organisation'
     register_resource_view_name = 'register:organisation'
+    view_as_xml_view_name = 'utils:view_organisation_as_xml'
 
 class individuals(ManageResourcesView):
     title = _create_manage_resource_page_title('individuals')
@@ -80,6 +83,7 @@ class individuals(ManageResourcesView):
     delete_resource_view_name = 'delete:individual'
     update_resource_view_name = 'update:individual'
     register_resource_view_name = 'register:individual'
+    view_as_xml_view_name = 'utils:view_individual_as_xml'
 
 class projects(ManageResourcesView):
     title = _create_manage_resource_page_title('projects')
@@ -88,6 +92,7 @@ class projects(ManageResourcesView):
     delete_resource_view_name = 'delete:project'
     update_resource_view_name = 'update:project'
     register_resource_view_name = 'register:project'
+    view_as_xml_view_name = 'utils:view_project_as_xml'
 
 class platforms(ManageResourcesView):
     template_name = 'resource_management/list_platforms.html'
@@ -97,6 +102,7 @@ class platforms(ManageResourcesView):
     delete_resource_view_name = 'delete:platform'
     update_resource_view_name = 'update:platform'
     register_resource_view_name = 'register:platform'
+    view_as_xml_view_name = 'utils:view_platform_as_xml'
 
     def get_resources_list(self):
         resources_list = list(self.resource_mongodb_model.find({}).sort([
@@ -120,6 +126,7 @@ class instruments(ManageResourcesView):
     delete_resource_view_name = 'delete:instrument'
     update_resource_view_name = 'update:instrument'
     register_resource_view_name = 'register:instrument'
+    view_as_xml_view_name = 'utils:view_operation_as_xml'
 
 class operations(ManageResourcesView):
     title = _create_manage_resource_page_title('operations')
@@ -128,6 +135,7 @@ class operations(ManageResourcesView):
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
     register_resource_view_name = 'register:operation'
+    view_as_xml_view_name = 'utils:view_instrument_as_xml'
 
 class acquisition_capabilities(ManageResourcesView):
     title = _create_manage_resource_page_title('acquisition capabilities')
@@ -136,6 +144,7 @@ class acquisition_capabilities(ManageResourcesView):
     delete_resource_view_name = 'delete:acquisition_capability'
     update_resource_view_name = 'update:acquisition_capability'
     register_resource_view_name = 'register:acquisition_capability'
+    view_as_xml_view_name = 'utils:view_acquisition_capability_as_xml'
 
 class acquisitions(ManageResourcesView):
     title = _create_manage_resource_page_title('acquisitions')
@@ -144,6 +153,7 @@ class acquisitions(ManageResourcesView):
     delete_resource_view_name = 'delete:acquisition'
     update_resource_view_name = 'update:acquisition'
     register_resource_view_name = 'register:acquisition'
+    view_as_xml_view_name = 'utils:view_acquisition_as_xml'
 
 class computation_capabilities(ManageResourcesView):
     title = _create_manage_resource_page_title('computation capabilities')
@@ -152,6 +162,7 @@ class computation_capabilities(ManageResourcesView):
     delete_resource_view_name = 'delete:computation_capability'
     update_resource_view_name = 'update:computation_capability'
     register_resource_view_name = 'register:computation_capability'
+    view_as_xml_view_name = 'utils:view_computation_capability_as_xml'
 
 class computations(ManageResourcesView):
     title = _create_manage_resource_page_title('computations')
@@ -160,6 +171,7 @@ class computations(ManageResourcesView):
     delete_resource_view_name = 'delete:computation'
     update_resource_view_name = 'update:computation'
     register_resource_view_name = 'register:computation'
+    view_as_xml_view_name = 'utils:view_computation_as_xml'
 
 class processes(ManageResourcesView):
     title = _create_manage_resource_page_title('processes')
@@ -168,6 +180,7 @@ class processes(ManageResourcesView):
     delete_resource_view_name = 'delete:process'
     update_resource_view_name = 'update:process'
     register_resource_view_name = 'register:process'
+    view_as_xml_view_name = 'utils:view_process_as_xml'
 
 class data_collections(ManageResourcesView):
     title = _create_manage_resource_page_title('data collections')
@@ -176,6 +189,7 @@ class data_collections(ManageResourcesView):
     delete_resource_view_name = 'delete:data_collection'
     update_resource_view_name = 'update:data_collection'
     register_resource_view_name = 'register:data_collection'
+    view_as_xml_view_name = 'utils:view_data_collection_as_xml'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
