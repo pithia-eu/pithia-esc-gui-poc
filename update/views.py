@@ -8,6 +8,7 @@ from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from register.xml_conversion_checks_and_fixes import format_acquisition_capability_dictionary, format_acquisition_dictionary, format_computation_capability_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+from register.register_api_specification import register_api_specification
 from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm, UpdateDataCollectionInteractionMethodsForm
 from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision
 from resource_management.views import _INDEX_PAGE_TITLE
@@ -308,8 +309,16 @@ def data_collection_interaction_methods(request, data_collection_id):
             api_description = ''
             if 'api_description' in request.POST:
                 api_description = request.POST['api_description']
-            update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url)
-            update_data_collection_api_interaction_method_description(data_collection_localid, api_description)
+            existing_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
+                'data_collection_localid': data_collection_localid
+            })
+            if existing_api_interaction_method is None:
+                register_api_specification(api_specification_url, data_collection_localid, api_description)
+            else:
+                update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url)
+                update_data_collection_api_interaction_method_description(data_collection_localid, api_description)
+            messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
+            return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
     form = UpdateDataCollectionInteractionMethodsForm()
     interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
     if len(interaction_methods) > 0:
