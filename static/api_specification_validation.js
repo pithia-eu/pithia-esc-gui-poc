@@ -21,10 +21,8 @@ export function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
 export function toggleApiDescriptionTextarea(apiExecutionMethodCheckbox) {
     if (apiExecutionMethodCheckbox.checked) {
         apiSpecificationDescriptionTextarea.disabled = false;
-        apiSpecificationDescriptionTextarea.required = true;
     } else {
         apiSpecificationDescriptionTextarea.disabled = true;
-        apiSpecificationDescriptionTextarea.required = false;
     }
 }
 
