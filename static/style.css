@@ -132,15 +132,19 @@ header .dropdown-item:active a {
 }
 
 /* Resource detail page */
+.resource-key-details {
+    font-size: small;
+}
+
+.col-lg-12 .resource-key-details {
+    font-size: medium;
+}
+
+.col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
 .ontology-term-table td:first-child,
 .resource-property-table td:first-child {
     width: 20%;
-}
-
-.resource-key-details tr td:first-child {
-    padding-left: 0;
-    padding-right: 0;
 }
 
 /* Resource management list page */
