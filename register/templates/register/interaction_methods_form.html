@@ -11,15 +11,6 @@
             </div>
         </div>
     </div>
-    {% if form.interaction_methods.errors %}
-    <div class="col-lg-8">
-        <ul>
-        {% for error in form.interaction_methods.errors %}
-            <li>{{ error|escape }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
@@ -34,14 +25,14 @@
                                 A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
                             </span>
                         </div>
-                        {% if form.api_specification_url.errors %}
-                            <ul>
-                            {% for error in form.api_specification_url.errors %}
-                                <li>{{ error|escape }}</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
                         <div class="d-flex flex-column">
+                            {% if form.api_specification_url.errors %}
+                                <ul>
+                                {% for error in form.api_specification_url.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
                             {{ form.api_specification_url.label_tag }}
                             {{ form.api_specification_url }}
                             <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
@@ -55,6 +46,13 @@
                                     </li>
                                 </ul>
                             </div>
+                            {% if form.api_description.errors %}
+                                <ul>
+                                {% for error in form.api_description.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
                             <div class="mt-2">
                                 <div class="d-flex flex-column">
                                     {{ form.api_description.label_tag }}
