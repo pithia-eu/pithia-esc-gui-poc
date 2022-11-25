@@ -200,7 +200,6 @@ header .dropdown-item:active a {
 
 /* View resource as XML page */
 .xml-display-area {
-    white-space: pre;
     overflow-x: scroll;
 }
 
