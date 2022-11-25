@@ -14,10 +14,10 @@
             </div>
             <div class="col-lg-12">
                 <div class="d-flex flex-wrap justify-content-start align-items-center update-buttons">
-                    <a href="{% url view_as_xml_view_name resource.id %}" class="btn btn-outline-secondary" role="button">View as XML</a>
-                    <a href="{% url update_resource_view_name resource.id %}" class="btn btn-outline-secondary" role="button">Upload a New XML File</a>
+                    <a href="{% url view_as_xml_view_name resource.id %}" class="btn btn-outline-secondary" role="button">View</a>
+                    <a href="{% url update_resource_view_name resource.id %}" class="btn btn-outline-dark" role="button">Upload a New XML File</a>
                     {% if update_interaction_methods_view_name %}
-                    <a href="{% url update_interaction_methods_view_name resource.id %}" class="btn btn-outline-secondary" role="button">Update Interaction Methods</a>
+                    <a href="{% url update_interaction_methods_view_name resource.id %}" class="btn btn-outline-dark" role="button">Update Interaction Methods</a>
                     {% endif %}
                 </div>
             </div>
