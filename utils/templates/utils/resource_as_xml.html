@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load project_tags %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'utils/highlight/github.min.css' %}">
 {% endblock styles %}
@@ -8,6 +9,11 @@
 <script src="{% static 'utils/highlight/highlight.min.js' %}"></script>
 <script>hljs.highlightAll();</script>
 {% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
+{% breadcrumb_item list_resources_of_type_view_page_title list_resources_of_type_view_name %}
+{% breadcrumb_item_active 'View '|add:resource_name|add:' as XML' %}
+{% endblock breadcrumbs %}
 {% block content %}
 <div class="card">
     <div class="card-header">
