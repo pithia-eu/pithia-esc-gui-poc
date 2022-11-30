@@ -1,61 +1,11 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Admin Panel' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block content %}
-<h1>Admin Panel</h1>
-<section>
-    <h2>Browse</h2>
-    <hr>
-    <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'browse:schemas' %}">
-                        <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Metadata Models</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'browse:ontology' %}">
-                        <img src="{% static 'browse.svg' %}" alt="Browse">
-                        <span>Space Physics Ontology</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section>
-    <h2>Resource Management</h2>
-    <hr>
-    <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 card-menu">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'register:index' %}">
-                        <img src="{% static 'upload.svg' %}" alt="Register">
-                        <span>Register</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <a href="{% url 'resource_management:index' %}">
-                        <img src="{% static 'update.svg' %}" alt="Manage">
-                        <span>Manage</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<h1>{{ title }}</h1>
+<hr>
+{% include 'index_admin_card_menu.html' %}
 {% endblock content %}

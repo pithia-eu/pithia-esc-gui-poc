@@ -7,5 +7,5 @@ def index(request):
 
 def index_admin(request):
     return render(request, 'index_admin.html', {
-        'title': 'PITHIA e-Science Centre Home - Admin',
+        'title': 'Admin Functionalities',
     })
