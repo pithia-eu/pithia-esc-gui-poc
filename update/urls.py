@@ -16,4 +16,5 @@ urlpatterns = [
     path('computations/<computation_id>/update/', views.computation.as_view(), name='computation'),
     path('processes/<process_id>/update/', views.process.as_view(), name='process'),
     path('data-collections/<data_collection_id>/update/', views.data_collection.as_view(), name='data_collection'),
+    path('data-collections/<data_collection_id>/update/interaction-methods', views.data_collection_interaction_methods, name='data_collection_interaction_methods'),
 ]

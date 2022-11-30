@@ -3,7 +3,7 @@
 {% block content %}
 <h1>PITHIA-NRF e-Science Centre</h1>
 <section class="mb-3">
-    <h2 class="mb-0">Search & Browse</h2>
+    <h2 class="mb-0 fw-normal">Search & Browse</h2>
     <hr>
     <div class="card-menu">
         <div class="card">
@@ -25,41 +25,8 @@
     </div>
 </section>
 <section>
-    <h2 class="mb-0">Admin Functionalities</h2>
+    <h2 class="mb-0 fw-normal">Admin Functionalities</h2>
     <hr>
-    <div class="card-menu">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'resource_management:index' %}">
-                    <img src="{% static 'file_upload.svg' %}" alt="File Upload">
-                    <span>Register & Manage Metadata</span>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
-                    <img src="{% static 'file_info.svg' %}" alt="Info">
-                    <span>Metadata Registration Guide</span>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:schemas' %}">
-                    <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    <span>Metadata Models</span>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:ontology' %}">
-                    <img src="{% static 'ontology.svg' %}" alt="Ontology">
-                    <span>Space Physics Ontology</span>
-                </a>
-            </div>
-        </div>
-    </div>
+    {% include 'index_admin_card_menu.html' %}
 </section>
 {% endblock content %}

@@ -7,12 +7,18 @@ import {
     apiExecutionMethodCheckbox,
 } from "/static/api_specification_validation.js";
 
+document.addEventListener("apiInteractionMethodModified", event => {
+    enableSubmitButtonIfReady();
+});
+
+document.addEventListener("fileValidationStatusUpdated", event => {
+    enableSubmitButtonIfReady();
+});
+
 export function enableSubmitButtonIfReady() {
-    let isFileReadyToSubmit = isEachFileValid;
-    if (isApiSpecificationInputAvailable) {
-        if (apiExecutionMethodCheckbox.checked) {
-            isFileReadyToSubmit = isEachFileValid && isApiSpecificationLinkValid;
-        }
+    if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
+        document.querySelector("button[type='submit']").disabled = !(isEachFileValid && isApiSpecificationLinkValid);
+    } else {
+        document.querySelector("button[type='submit']").disabled = !isEachFileValid;
     }
-    document.querySelector("button[type='submit']").disabled = !isFileReadyToSubmit;
 }

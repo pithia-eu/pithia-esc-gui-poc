@@ -34,6 +34,10 @@
                 aria-expanded="false">Admin
             </a>
             <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    {% url 'home_admin' as admin_home_url %}
+                    <a href="{{ admin_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
+                </li>
                 <li>
                     <h6 class="dropdown-header">
                         Register & Manage Metadata
