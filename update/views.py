@@ -341,7 +341,7 @@ def data_collection_interaction_methods(request, data_collection_id):
     })
 
 class catalogue(UpdateResourceView):
-    resource_mongodb_model = CurrentProcess
+    resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
 
     a_or_an = 'a'
