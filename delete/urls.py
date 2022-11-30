@@ -16,4 +16,5 @@ urlpatterns = [
     path('computations/<computation_id>/delete/', views.computation.as_view(), name='computation'),
     path('processes/<process_id>/delete/', views.process.as_view(), name='process'),
     path('data-collections/<data_collection_id>/delete/', views.data_collection.as_view(), name='data_collection'),
+    path('catalogues/<catalogue_id>/delete/', views.catalogue.as_view(), name='catalogue'),
 ]

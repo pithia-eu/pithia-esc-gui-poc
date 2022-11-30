@@ -20,6 +20,7 @@ urlpatterns = [
     path('computations/', views.list_computations.as_view(), name='list_computations'),
     path('processes/', views.list_processes.as_view(), name='list_processes'),
     path('data-collections/', views.list_data_collections.as_view(), name='list_data_collections'),
+    path('catalogues/', views.list_catalogues.as_view(), name='list_catalogues'),
     path('organisations/<organisation_id>/', views.organisation_detail.as_view(), name='organisation_detail'),
     path('individuals/<individual_id>/', views.individual_detail.as_view(), name='individual_detail'),
     path('projects/<project_id>/', views.project_detail.as_view(), name='project_detail'),
@@ -32,4 +33,5 @@ urlpatterns = [
     path('computations/<computation_id>/', views.computation_detail.as_view(), name='computation_detail'),
     path('processes/<process_id>/', views.process_detail.as_view(), name='process_detail'),
     path('data-collections/<data_collection_id>/', views.data_collection_detail.as_view(), name='data_collection_detail'),
+    path('catalogues/<catalogue_id>/', views.catalogue_detail.as_view(), name='catalogue_detail'),
 ]
