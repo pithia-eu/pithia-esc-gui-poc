@@ -17,4 +17,5 @@ urlpatterns = [
     path('computations/', views.computations.as_view(), name='computations'),
     path('processes/', views.processes.as_view(), name='processes'),
     path('data-collections/', views.data_collections.as_view(), name='data_collections'),
+    path('catalogues/', views.catalogues.as_view(), name='catalogues'),
 ]
