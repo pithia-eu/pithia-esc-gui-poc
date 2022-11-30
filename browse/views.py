@@ -43,6 +43,7 @@ def resources(request):
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
+    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
     return render(request, 'browse/resources.html', {
         'title': _RESOURCES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
@@ -57,6 +58,7 @@ def resources(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
+        'num_current_catalogues': num_current_catalogues,
     })
 
 def schemas(request):
