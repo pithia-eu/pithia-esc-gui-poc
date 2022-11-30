@@ -440,7 +440,7 @@ ul.tree ul {
     
     --line-1-width: 120px;
     --line-1-y-position: var(--card-y-padding);
-    --line-1-position: var(--line-x-position) var(--line-1-y-position);;
+    --line-1-position: var(--line-x-position) var(--line-1-y-position);
 
     --line-2-width: 150px;
     --line-2-y-position: calc(var(--line-1-y-position) + var(--line-height) + var(--line-spacing));
