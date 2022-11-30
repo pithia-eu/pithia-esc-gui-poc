@@ -9,17 +9,6 @@
     Add, update and delete metadata. Select the type of metadata you would like to change below.
 </p>
 <section>
-    <h2 class="fs-5">Catalogues</h2>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:catalogues' %}">
-                <span class="text-center">Catalogues</span>
-                <span class="text-muted">{{ num_current_catalogues }}</span>
-            </a>
-        </li>
-    </ul>
-</section>
-<section>
     <h2 class="fs-5">Metadata from 12-Step Registration</h2>
     <ul class="list-group">
         <li class="list-group-item">
@@ -92,6 +81,12 @@
             <a href="{% url 'resource_management:data_collections' %}">
                 <span class="text-center">Data Collections</span>
                 <span class="text-muted">{{ num_current_data_collections }}</span>
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:catalogues' %}">
+                <span class="text-center">Catalogues</span>
+                <span class="text-muted">{{ num_current_catalogues }}</span>
             </a>
         </li>
     </ul>
