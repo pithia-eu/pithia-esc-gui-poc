@@ -1,6 +1,7 @@
 from functools import cmp_to_key
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id, create_resource_url
 from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision, CurrentCatalogue, CatalogueRevision
@@ -554,15 +555,25 @@ class data_collection(DeleteResourceView):
         _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
         return super().post(request, *args, **kwargs)
 
-class catalogue(DeleteResourceView):
-    resource_type = 'catalogue'
-    resource_mongodb_model = CurrentCatalogue
-    resource_revision_mongodb_model = CatalogueRevision
-    redirect_url = reverse_lazy('resource_management:catalogues')
-    list_resources_of_type_view_page_title = 'Register & Manage Catalogues'
-    list_resources_of_type_view_name = 'resource_management:catalogues'
-    delete_resource_type_view_name = 'delete:catalogue'
+def catalogue(request, catalogue_id):
+    if request.method == 'POST':
+        # Catalogue is not part of 12-step registration, so checking for links to other
+        # resources is not required.
+        _delete_current_version_and_revisions_of_resource_id(catalogue_id, CurrentCatalogue, CatalogueRevision)
+        return HttpResponseRedirect(reverse('resource_management:catalogues'))
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_id']
-        return super().dispatch(request, *args, **kwargs)
+    catalogue_to_delete = CurrentCatalogue.find_one({
+        '_id': ObjectId(catalogue_id)
+    })
+
+    return render(request, 'delete/confirm_delete_resource.html', {
+        'resource_type': 'catalogue',
+        'title': f'Confirm Deletion of Metadata',
+        'resource_management_index_page_title': _INDEX_PAGE_TITLE,
+        'list_resources_of_type_view_page_title': 'Register & Manage Catalogues',
+        'list_resources_of_type_view_name': 'resource_management:catalogues',
+        'delete_resource_type_view_name': 'delete:catalogue',
+        'resource_id': catalogue_id,
+        'resource_to_delete': catalogue_to_delete,
+        'other_resources_to_delete': [],
+    })
