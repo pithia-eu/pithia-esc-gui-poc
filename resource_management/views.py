@@ -205,4 +205,4 @@ class catalogues(ManageResourcesView):
     delete_resource_view_name = 'delete:catalogue'
     update_resource_view_name = 'update:catalogue'
     register_resource_view_name = 'register:catalogue'
-    view_as_xml_view_name = 'utils:catalogues'
+    view_as_xml_view_name = 'utils:view_catalogue_as_xml'
