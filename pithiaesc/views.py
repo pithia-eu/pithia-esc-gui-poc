@@ -6,6 +6,6 @@ def index(request):
     })
 
 def index_admin(request):
-    return render(request, 'index_admin.html', {
-        'title': 'Admin Functionalities',
+    return render(request, 'index.html', {
+        'title': 'Admin Dashboard',
     })
