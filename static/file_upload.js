@@ -36,6 +36,7 @@ function loadFileValidationElemsForFile(file, listElem, index) {
                 <div class="col-lg-10">
                     <div class="row g-2">
                         <div class="col-lg-12 text-truncate">${file.name}</div>
+                        <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
                         <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break">
@@ -197,6 +198,11 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
     const btnRmFileIdsToClick = [];
     const finishedValidating = [];
 
+    function updateIsEachFileValid(finishedValidating) {
+        const numValidFiles = document.querySelectorAll(`input[class="is-file-valid-status"][value="true"]`).length;
+        return isEachFileValid = numValidFiles === fileInput.files.length && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
+    }
+
     const files = Array.from(fileInput.files);
     showFileListEmptyMsgIfFileInputEmpty(files.length);
     files.forEach(async (file, i) => {
@@ -213,7 +219,7 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining);
             btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
             finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
-            isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0;
+            updateIsEachFileValid(finishedValidating);
             document.dispatchEvent(fileValidationStatusUpdatedEvent);
         });
         uploadFormSubmitButton.disabled = true;
@@ -225,7 +231,8 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         }
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (!validationResults.error) {
-            isEachFileValid = btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
+            document.querySelector(`input[id="is-file-${i}-valid"]`).value = "true";
+            updateIsEachFileValid(finishedValidating);
             document.dispatchEvent(fileValidationStatusUpdatedEvent);
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
