@@ -3,7 +3,7 @@ from dateutil.parser import parse
 from django.urls import reverse
 from rdflib import URIRef
 from rdflib.resource import Resource
-from rdflib.namespace import _SKOS
+from rdflib.namespace._SKOS import SKOS
 from common import mongodb_models
 from django.shortcuts import render
 from bson.objectid import ObjectId
@@ -126,7 +126,6 @@ def _remove_namespace_prefix_from_predicate(p):
 
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
-    SKOS = _SKOS.SKOS
     resource = None
     resource_uriref = URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}')
     triples = list(g.triples((None, SKOS.member, resource_uriref)))

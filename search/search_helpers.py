@@ -82,7 +82,7 @@ def find_matching_data_collections(request):
             {
                 'capabilities.processCapability': {
                     '$elemMatch': {
-                        'observedProperty.@xlink:href': {
+                        'processCapability.observedProperty.@xlink:href': {
                             '$in': observed_properties
                         }
                     }
