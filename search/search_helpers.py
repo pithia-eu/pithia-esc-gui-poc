@@ -10,14 +10,53 @@ def get_computation_capability_localids_referencing_computation_capabilities_loc
         'childComputation.@xlink:href': re.compile(computation_capabilities_localid)
     }))
     cc_localids_referencing_cc = [cc['identifier']['PITHIA_Identifier']['localID'] for cc in ccs_referencing_cc]
-    print('computation_capabilities_localid', computation_capabilities_localid)
-    print('cc_localids_referencing_cc', cc_localids_referencing_cc)
     for cc_localid in cc_localids_referencing_cc:
         if cc_localid not in cc_localid_set:
             cc_localid_set.add(cc_localid)
             get_computation_capability_localids_referencing_computation_capabilities_localid(cc_localid, cc_localid_set)
 
     return cc_localids_referencing_cc
+
+def find_instruments_by_instrumentt_types(types):
+    return list(CurrentInstrument.find({
+        'type.@xlink:href': {
+            '$in': types
+        }
+    }))
+
+def find_acquisition_capabilities_by_instrument_localids(instrument_localids):
+    return list(CurrentAcquisitionCapability.find({
+        '$or': [
+            {
+                'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
+                    '$in': instrument_localids
+                }
+            },
+            {
+                'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+                    '$in': instrument_localids
+                }
+            },
+        ]
+    }))
+
+def find_computation_capabilities_by_computation_types(computation_types):
+    return list(CurrentComputationCapability.find({
+        'type.@xlink:href': {
+            '$in': computation_types
+        }
+    }))
+
+def get_observed_property_urls_by_instrument_types(instrument_types):
+    instrument_type_regex_list = convert_list_to_regex_list(instrument_types)
+    instruments = find_instruments_by_instrumentt_types(instrument_type_regex_list)
+    instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
+    instrument_localid_regex_list = convert_list_to_regex_list(instrument_localids)
+    acquisition_capabilities = find_acquisition_capabilities_by_instrument_localids(instrument_localid_regex_list)
+    acquisition_capability_process_capabilities = [ac['capabilities']['processCapability'] for ac in acquisition_capabilities]
+    acquisition_capability_process_capabilities_flattened = [item for sublist in acquisition_capability_process_capabilities for item in sublist]
+    acquisition_capability_observed_property_urls = [pc['observedProperty']['@xlink:href'] for pc in acquisition_capability_process_capabilities_flattened]
+    return acquisition_capability_observed_property_urls
 
 def find_matching_data_collections(request):
     observed_properties = []
@@ -43,11 +82,7 @@ def find_matching_data_collections(request):
     # project data model diagram.
 
     # Fetch Instruments
-    instruments = list(CurrentInstrument.find({
-        'type.@xlink:href': {
-            '$in': instrument_types
-        }
-    }))
+    instruments = find_instruments_by_instrumentt_types(instrument_types)
     instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
 
     # Fetch Acquisition Capabilities/Computation Capabilities
