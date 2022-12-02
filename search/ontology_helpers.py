@@ -1,7 +1,7 @@
 import os
 from requests import get
 from rdflib import Graph, Namespace, URIRef
-from rdflib.namespace import _SKOS
+from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
 
 ONTOLOGY_SERVER_BASE_URL = 'https://metadata.pithia.eu/ontology/2.2/'
@@ -76,7 +76,6 @@ def get_measurand_ids_from_observed_property_id(observed_property_id, g, measura
     return measurand_ids
 
 def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
-    SKOS = _SKOS.SKOS
     for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
@@ -84,7 +83,6 @@ def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_i
 def create_dictionary_from_pithia_ontology_component(ontology_component):
     ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
     g = get_graph_of_pithia_ontology_component(ontology_component)
-    SKOS = _SKOS.SKOS
     ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.member, None)):
         # o_value is the localID after the ontology_component_url
