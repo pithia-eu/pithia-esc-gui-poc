@@ -13,6 +13,11 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     if ontology_component.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
+        if 'computation_types' in request.GET:
+            computation_types = (request.GET['computation_types']).split(',')
+            
+        if 'instrument_types' in request.GET:
+            instrument_types = (request.GET['instrument_types']).split(',')
     elif ontology_component.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
