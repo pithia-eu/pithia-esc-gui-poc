@@ -5,6 +5,8 @@
     {% if node.phenomenon %}data-phenomenons="{{ node.phenomenon|join:" " }}"{% endif %}
     {% if node.measurand %}data-measurands="{{ node.measurand|join:" " }}"{% endif %}
     {% if node.featureOfInterest %}data-features-of-interest="{{ node.featureOfInterest|join:" " }}"{% endif %}
+    {% if node.instrumentType %}data-instrument-types="{{ node.instrumentType|join:" " }}"{% endif %}
+    {% if node.computationType %}data-computation-types="{{ node.computationType|join:" " }}"{% endif %}
     {% if node.value not in registered_ontology_terms %}disabled{% endif %}>
 <label for="{{ node.id }}" {% if registered_ontology_terms and node.value not in registered_ontology_terms %}disabled{% endif %}{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %} class="text-muted"{% endif %}>{{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}</label>
 {% endif %}

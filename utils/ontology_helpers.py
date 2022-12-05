@@ -80,8 +80,7 @@ def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_i
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
 
-def create_dictionary_from_pithia_ontology_component(ontology_component):
-    ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
+def create_dictionary_from_pithia_ontology_component(ontology_component, instrument_types_grouped_by_observed_property={}, computation_types_grouped_by_observed_property={}):
     g = get_graph_of_pithia_ontology_component(ontology_component)
     ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.member, None)):
@@ -142,6 +141,19 @@ def create_dictionary_from_pithia_ontology_component(ontology_component):
                         'value': narrower_o_value,
                         'narrowers': {},
                     }
+
+    if instrument_types_grouped_by_observed_property != {}:
+        for op, value in instrument_types_grouped_by_observed_property.items():
+            if op not in ontology_dictionary:
+                continue
+            ontology_dictionary[op]['instrumentType'] = value
+
+    if computation_types_grouped_by_observed_property != {}:
+        for op, value in computation_types_grouped_by_observed_property.items():
+            if op not in ontology_dictionary:
+                continue
+            ontology_dictionary[op]['computationType'] = value
+
     # Property dictionaries for child terms are nested within
     # the property dictionaries for parent terms, but the keys
     # for the child terms will still be present at the top level

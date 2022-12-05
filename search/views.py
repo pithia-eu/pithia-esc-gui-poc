@@ -7,15 +7,18 @@ from .search_helpers import find_matching_data_collections, group_instrument_typ
 from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument
 
 def get_tree_form_for_ontology_component(request, ontology_component):
-    dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
+    instrument_types_grouped_by_observed_property = {}
+    computation_types_grouped_by_observed_property = {}
+    if ontology_component == 'observedProperty':
+        instruments = CurrentInstrument.find({})
+        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
+    if ontology_component == 'observedProperty':
+            computation_capabilities = CurrentComputationCapability.find({})
+            computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
+    dictionary = create_dictionary_from_pithia_ontology_component(ontology_component, instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property, computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property)
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
-        instruments = CurrentInstrument.find({})
-        computation_capabilities = CurrentComputationCapability.find({})
-        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
-
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
     elif ontology_component.lower() == 'featureofinterest':
