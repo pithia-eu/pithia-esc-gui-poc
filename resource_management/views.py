@@ -119,15 +119,6 @@ class platforms(ManageResourcesView):
         context['non_pithia_platforms'] = non_pithia_platforms
         return context
 
-class instruments(ManageResourcesView):
-    title = _create_manage_resource_page_title('instruments')
-    resource_mongodb_model = CurrentInstrument
-    resource_type_plural = 'Instruments'
-    delete_resource_view_name = 'delete:instrument'
-    update_resource_view_name = 'update:instrument'
-    register_resource_view_name = 'register:instrument'
-    view_as_xml_view_name = 'utils:view_operation_as_xml'
-
 class operations(ManageResourcesView):
     title = _create_manage_resource_page_title('operations')
     resource_mongodb_model = CurrentOperation
@@ -135,6 +126,15 @@ class operations(ManageResourcesView):
     delete_resource_view_name = 'delete:operation'
     update_resource_view_name = 'update:operation'
     register_resource_view_name = 'register:operation'
+    view_as_xml_view_name = 'utils:view_operation_as_xml'
+
+class instruments(ManageResourcesView):
+    title = _create_manage_resource_page_title('instruments')
+    resource_mongodb_model = CurrentInstrument
+    resource_type_plural = 'Instruments'
+    delete_resource_view_name = 'delete:instrument'
+    update_resource_view_name = 'update:instrument'
+    register_resource_view_name = 'register:instrument'
     view_as_xml_view_name = 'utils:view_instrument_as_xml'
 
 class acquisition_capabilities(ManageResourcesView):
