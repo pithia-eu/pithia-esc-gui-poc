@@ -47,6 +47,34 @@ def find_computation_capabilities_by_computation_types(computation_types):
         }
     }))
 
+def group_instrument_types_by_observed_property(instruments):
+    instrument_types_grouped_by_observed_property = {}
+    for i in instruments:
+        observed_property_urls = get_observed_property_urls_from_instruments([i])
+        for url in observed_property_urls:
+            observed_property_id = url.split('/')[-1]
+            if observed_property_id not in instrument_types_grouped_by_observed_property:
+                instrument_types_grouped_by_observed_property[observed_property_id] = []
+            instrument_types_grouped_by_observed_property[observed_property_id].append(i['type']['@xlink:href'].split('/')[-1])
+            instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
+
+    return instrument_types_grouped_by_observed_property
+
+def group_computation_types_by_observed_property(computation_capabilities):
+    computation_types_grouped_by_observed_property = {}
+    for cc in computation_capabilities:
+        observed_property_urls = get_observed_property_urls_from_computation_capabilities([cc])
+        for url in observed_property_urls:
+            observed_property_id = url.split('/')[-1]
+            if observed_property_id not in computation_types_grouped_by_observed_property:
+                computation_types_grouped_by_observed_property[observed_property_id] = []
+            if 'type' not in cc:
+                continue
+            computation_types_grouped_by_observed_property[observed_property_id].append(cc['type']['@xlink:href'].split('/')[-1])
+            computation_types_grouped_by_observed_property[observed_property_id] = list(set(computation_types_grouped_by_observed_property[observed_property_id]))
+
+    return computation_types_grouped_by_observed_property
+
 def get_observed_property_urls_from_instruments(instruments):
     instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
     instrument_localid_regex_list = convert_list_to_regex_list(instrument_localids)
