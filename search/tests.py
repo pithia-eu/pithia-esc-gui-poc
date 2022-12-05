@@ -18,7 +18,7 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
             'InSituRelaxationSounder',
         ]
         observed_property_urls_by_instrument_types = get_observed_property_urls_by_instrument_types(instrument_types)
-        print('observed_property_urls_by_instrument_types', observed_property_urls_by_instrument_types)
+        # print('observed_property_urls_by_instrument_types', observed_property_urls_by_instrument_types)
         self.assertTrue(isinstance(observed_property_urls_by_instrument_types, list))
 
     def test_observed_properties_are_fetched_by_computation_type(self):
@@ -31,7 +31,7 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
             'EmpiricalModel',
         ]
         observed_property_urls_by_computation_types = get_observed_property_urls_by_computation_types(computation_types)
-        print('observed_property_urls_by_computation_types', observed_property_urls_by_computation_types)
+        # print('observed_property_urls_by_computation_types', observed_property_urls_by_computation_types)
         self.assertTrue(isinstance(observed_property_urls_by_computation_types, list))
 
     def test_instrument_types_are_grouped_by_observed_property(self):
@@ -42,6 +42,7 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
         """
         instruments = CurrentInstrument.find({})
         instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
+        # print('instrument_types_grouped_by_observed_property', instrument_types_grouped_by_observed_property)
         self.assertTrue(isinstance(instrument_types_grouped_by_observed_property, dict))
 
     def test_computation_types_are_grouped_by_observed_property(self):
@@ -52,4 +53,5 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
         """
         computation_capabilities = CurrentComputationCapability.find({})
         computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
+        # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
