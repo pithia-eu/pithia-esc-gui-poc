@@ -1,4 +1,8 @@
 import {
+    setupObservedPropertiesTreeFilteringForTreeContainerId,
+} from "/static/search/opsearch.js";
+
+import {
     addTreeContainerIdToClearInputsButton,
     fetchSearchFormComponent,
     setupSearchFormComponent
@@ -16,9 +20,11 @@ async function fetchAndSetupSearchFormComponents() {
     ]);
     setupSearchFormComponent(searchFormComponents[0], COMPUTATION_TYPES_TREE_CONTAINER_ID, () => {
         addTreeContainerIdToClearInputsButton(COMPUTATION_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
+        setupObservedPropertiesTreeFilteringForTreeContainerId(COMPUTATION_TYPES_TREE_CONTAINER_ID);
     });
     setupSearchFormComponent(searchFormComponents[1], INSTRUMENT_TYPES_TREE_CONTAINER_ID, () => {
         addTreeContainerIdToClearInputsButton(INSTRUMENT_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
+        setupObservedPropertiesTreeFilteringForTreeContainerId(INSTRUMENT_TYPES_TREE_CONTAINER_ID);
     });
 }
 

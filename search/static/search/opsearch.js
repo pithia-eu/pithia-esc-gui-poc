@@ -12,6 +12,8 @@ import {
 const OBSERVED_PROPERTIES_TREE_CONTAINER_ID = "observed-properties-tree-search-container";
 const MEASURANDS_TREE_CONTAINER_ID = "measurands-tree-search-container";
 const PHENOMENONS_TREE_CONTAINER_ID = "phenomenons-tree-search-container";
+const INSTRUMENT_TYPES_TREE_CONTAINER_ID = "instrument-types-tree-search-container";
+const COMPUTATION_TYPES_TREE_CONTAINER_ID = "computation-types-tree-search-container";
 const clearObservedPropertiesInputsButton = document.querySelector(".btn-clear-op-inputs");
 
 async function fetchAndSetupSearchFormComponents() {
@@ -42,12 +44,15 @@ function getHTMLDatasetNameFromTreeContainerId(treeContainerId) {
         case MEASURANDS_TREE_CONTAINER_ID: return "measurands";
         case OBSERVED_PROPERTIES_TREE_CONTAINER_ID: return "observedProperties";
         case PHENOMENONS_TREE_CONTAINER_ID: return "phenomenons";
+        case INSTRUMENT_TYPES_TREE_CONTAINER_ID: return "instrumentTypes";
+        case COMPUTATION_TYPES_TREE_CONTAINER_ID: return "computationTypes";
         default: UNKNOWN;
     }
 }
 
 function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, filterTreeContainerId) {
     const checkboxesToFilterBy = document.querySelectorAll(`#${filterTreeContainerId} input[type="checkbox"]:checked`)
+    console.log("checkboxesToFilterBy", checkboxesToFilterBy);
     if (checkboxesToFilterBy.length === 0) {
         const hiddenLisForTreeContainer = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerIdToFilter);
         removeCheckboxFiltersFromLiNodes(hiddenLisForTreeContainer);
@@ -79,7 +84,7 @@ function filterTreeContainerIdByAnotherTreeContainerId(treeContainerIdToFilter, 
     }
 }
 
-function setupObservedPropertiesTreeFilteringForTreeContainerId(treeContainerId) {
+export function setupObservedPropertiesTreeFilteringForTreeContainerId(treeContainerId) {
     const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
     allCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {

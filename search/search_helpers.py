@@ -55,7 +55,7 @@ def group_instrument_types_by_observed_property(instruments):
             observed_property_id = url.split('/')[-1]
             if observed_property_id not in instrument_types_grouped_by_observed_property:
                 instrument_types_grouped_by_observed_property[observed_property_id] = []
-            instrument_types_grouped_by_observed_property[observed_property_id].append(i['type']['@xlink:href'].split('/')[-1])
+            instrument_types_grouped_by_observed_property[observed_property_id].append(f"instrumentType{i['type']['@xlink:href'].split('/')[-1]}")
             instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
 
     return instrument_types_grouped_by_observed_property
@@ -70,7 +70,7 @@ def group_computation_types_by_observed_property(computation_capabilities):
                 computation_types_grouped_by_observed_property[observed_property_id] = []
             if 'type' not in cc:
                 continue
-            computation_types_grouped_by_observed_property[observed_property_id].append(cc['type']['@xlink:href'].split('/')[-1])
+            computation_types_grouped_by_observed_property[observed_property_id].append(f"computationType{cc['type']['@xlink:href'].split('/')[-1]}")
             computation_types_grouped_by_observed_property[observed_property_id] = list(set(computation_types_grouped_by_observed_property[observed_property_id]))
 
     return computation_types_grouped_by_observed_property
