@@ -19,7 +19,7 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link) {
+a:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue) !important;
 }
 
@@ -32,7 +32,8 @@ a:not(.btn, .nav-link):focus {
     text-decoration: underline;
 }
 
-[href^="http"]:not([href*="vm1.pithia.eu"])::after {
+[href^="http"]:not([href*="vm1.pithia.eu"]):not(footer a, .card-menu a)::after,
+.card-menu [href^="http"]:not([href*="vm1.pithia.eu"]) span::after {
     display: inline-block;
     width: 1em;
     height: 1em;
