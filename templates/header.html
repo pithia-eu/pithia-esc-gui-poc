@@ -1,6 +1,6 @@
 <header
     class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+    <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none header-logo-link">
         {% load static %}
         <img src="{% static "pithia-logo.png" %}" alt="PITHIA-NRF e-Science Centre" class="header-logo">
         <div class="d-flex flex-column g-1">
@@ -68,8 +68,8 @@
     </ul>
 
     <div class="col-md-3 text-end">
-        {% comment %} <button type="button" class="btn btn-outline-primary me-2">
+        <a href="{% url 'home_admin' %}" class="btn btn-outline-primary me-2">
             Login
-        </button> {% endcomment %}
+        </a>
     </div>
 </header>
