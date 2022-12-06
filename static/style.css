@@ -7,18 +7,29 @@ section {
     padding: 1rem 0;
 }
 
+.pithia-blue {
+    color: var(--pithia-blue) !important;
+}
+
+a:not(.btn, .header-logo-link) {
+    color: var(--pithia-blue) !important;
+}
+
+header .nav-link,
 .breadcrumb-item a,
 .accordion-button a,
-header .nav-link,
 .card-menu a,
-.list-group-item > a,
-.pithia-blue {
+.list-group-item > a {
     text-decoration: none;
-    color: var(--pithia-blue) !important;
 }
 
 a {
     word-wrap: break-word;
+}
+
+a:not(.btn, .nav-link):hover,
+a:not(.btn, .nav-link):focus {
+    text-decoration: underline;
 }
 
 header .nav-item {
@@ -32,6 +43,11 @@ header .dropdown-menu {
 h1 {
     color: var(--pithia-blue);
     font-weight: bold;
+}
+
+p {
+    font-size: 100%;
+    line-height: 1.5;
 }
 
 /* Colours */
