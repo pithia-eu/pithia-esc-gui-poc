@@ -128,6 +128,11 @@ header .dropdown-item:active a {
     filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
+.card-menu .card:hover [href^="http"]:not([href*="vm1.pithia.eu"]) span::after,
+.card-menu .card:focus [href^="http"]:not([href*="vm1.pithia.eu"]) span::after {
+    background-image: url('/static/external_link_white.svg');
+}
+
 .card-menu .card:hover,
 .card-menu .card:focus {
     background-color: var(--pithia-blue);
