@@ -93,7 +93,7 @@ export function setupObservedPropertiesTreeFilteringForTreeContainerId(treeConta
     });
 }
 
-function setupDeselectAllButtonForTreeContainerId(treeContainerId) {
+export function setupDeselectAllButtonForTreeContainerId(treeContainerId) {
     const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
     deselectAllButtonForTree.addEventListener("click", event => {
         const observedPropertiesTreeContainerLis = document.querySelectorAll(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID} li`);
@@ -101,7 +101,7 @@ function setupDeselectAllButtonForTreeContainerId(treeContainerId) {
     });
 }
 
-function setupSelectAllButtonForTreeContainerId(treeContainerId) {
+export function setupSelectAllButtonForTreeContainerId(treeContainerId) {
     const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
     selectAllButtonForTree.addEventListener("click", event => {
         filterTreeContainerIdByAnotherTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID, treeContainerId);

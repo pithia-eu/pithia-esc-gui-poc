@@ -1,5 +1,7 @@
 import {
     setupObservedPropertiesTreeFilteringForTreeContainerId,
+    setupSelectAllButtonForTreeContainerId,
+    setupDeselectAllButtonForTreeContainerId,
 } from "/static/search/opsearch.js";
 
 import {
@@ -19,12 +21,16 @@ async function fetchAndSetupSearchFormComponents() {
         fetchSearchFormComponent("instrumentType"),
     ]);
     setupSearchFormComponent(searchFormComponents[0], COMPUTATION_TYPES_TREE_CONTAINER_ID, () => {
-        addTreeContainerIdToClearInputsButton(COMPUTATION_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
         setupObservedPropertiesTreeFilteringForTreeContainerId(COMPUTATION_TYPES_TREE_CONTAINER_ID);
+        setupSelectAllButtonForTreeContainerId(COMPUTATION_TYPES_TREE_CONTAINER_ID);
+        setupDeselectAllButtonForTreeContainerId(COMPUTATION_TYPES_TREE_CONTAINER_ID);
+        addTreeContainerIdToClearInputsButton(COMPUTATION_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
     });
     setupSearchFormComponent(searchFormComponents[1], INSTRUMENT_TYPES_TREE_CONTAINER_ID, () => {
-        addTreeContainerIdToClearInputsButton(INSTRUMENT_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
         setupObservedPropertiesTreeFilteringForTreeContainerId(INSTRUMENT_TYPES_TREE_CONTAINER_ID);
+        setupSelectAllButtonForTreeContainerId(INSTRUMENT_TYPES_TREE_CONTAINER_ID);
+        setupDeselectAllButtonForTreeContainerId(INSTRUMENT_TYPES_TREE_CONTAINER_ID);
+        addTreeContainerIdToClearInputsButton(INSTRUMENT_TYPES_TREE_CONTAINER_ID, clearTypeInputsButton);
     });
 }
 
