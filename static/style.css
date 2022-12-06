@@ -11,16 +11,16 @@ section {
     color: var(--pithia-blue) !important;
 }
 
-a:not(.btn, .header-logo-link) {
-    color: var(--pithia-blue) !important;
-}
-
 header .nav-link,
 .breadcrumb-item a,
 .accordion-button a,
 .card-menu a,
 .list-group-item > a {
     text-decoration: none;
+}
+
+a:not(.btn, .header-logo-link) {
+    color: var(--pithia-blue) !important;
 }
 
 a {
@@ -30,6 +30,21 @@ a {
 a:not(.btn, .nav-link):hover,
 a:not(.btn, .nav-link):focus {
     text-decoration: underline;
+}
+
+[href^="http"]:not([href*="vm1.pithia.eu"])::after {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-image: url('/static/external_link.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75% auto;
+    /* alternative text rules */
+    content: '(external link)';
+    overflow: hidden;
+    white-space: nowrap;
+    text-indent: 1em; /* the width of the icon */
 }
 
 header .nav-item {
