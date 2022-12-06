@@ -55,10 +55,8 @@
         <span class="text-muted">{{ num_current_data_collections }}</span>
     </li>
     <li class="list-group-item">
-        <a href="{% url 'browse:list_catalogues' %}">
-            <span class="text-center">Catalogues</span>
-            <span class="text-muted">{{ num_current_catalogues }}</span>
-        </a>
+        <a href="{% url 'browse:list_catalogues' %}">Catalogues</a>
+        <span class="text-muted">{{ num_current_catalogues }}</span>
     </li>
 </ul>
 {% endblock content %}
