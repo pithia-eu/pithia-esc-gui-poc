@@ -32,7 +32,7 @@
     {% endif %}
     {% endblock messages %}
     <div class="col-lg-8">
-        <p>Select and fill out the interaction method details you would like to add for <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b> below, then press <b>Save</b> to save your changes.</p>
+        <p>Select and fill out the interaction method details you would like to add for <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b> below, then click <b>Save</b> to save your changes.</p>
     </div>
 </div>
 <form action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
