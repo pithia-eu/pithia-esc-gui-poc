@@ -4,7 +4,7 @@ from django.urls import reverse
 from .helpers import remove_underscore_from_id_attribute
 from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
 from .search_helpers import find_matching_data_collections, group_instrument_types_by_observed_property, group_computation_types_by_observed_property
-from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument
+from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument, CurrentDataCollection
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     instrument_types_grouped_by_observed_property = {}
@@ -118,7 +118,10 @@ def get_registered_features_of_interest(registered_observed_property_ids):
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
     for id in registered_observed_property_ids:
         get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
-    return feature_of_interest_ids
+    registered_data_collections = list(CurrentDataCollection.find({}, projection={ 'om:featureOfInterest.FeatureOfInterest.namedRegion': 1 }))
+    feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(nr['@xlink:href']) for dc in registered_data_collections for nr in dc['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+    feature_of_interest_ids.extend(feature_of_interest_ids_from_data_collections)
+    return list(set(feature_of_interest_ids))
 
 def get_registered_instrument_types():
     return list(map(extract_localid_from_xlink_href, list(CurrentInstrument.find().distinct('type.@xlink:href'))))

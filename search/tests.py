@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from search.search_helpers import get_observed_property_urls_by_instrument_types, get_observed_property_urls_by_computation_types, group_instrument_types_by_observed_property, group_computation_types_by_observed_property
-from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component
+from search.views import get_registered_observed_properties, get_registered_features_of_interest
 from common.mongodb_models import CurrentInstrument, CurrentComputationCapability
 
 # Create your tests here.
@@ -55,3 +55,25 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
         computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
         # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
+
+class RegisteredResourcesTestCase(SimpleTestCase):
+    def test_get_registered_observed_properties(self):
+        """
+        Test get_registered_observed_properties()
+        returns an accurate list of registered
+        observed properties
+        """
+        registered_observed_properties = get_registered_observed_properties()
+        # print('registered_observed_properties', registered_observed_properties)
+        self.assertTrue(isinstance(registered_observed_properties, list))
+
+    def test_get_registered_features_of_interest(self):
+        """
+        Test get_registered_features_of_interest()
+        returns an accurate list of registered
+        features of interest
+        """
+        registered_observed_property_ids = get_registered_observed_properties()
+        registered_features_of_interest = get_registered_features_of_interest(registered_observed_property_ids)
+        print('registered_features_of_interest', registered_features_of_interest)
+        self.assertTrue(isinstance(registered_features_of_interest, list))
