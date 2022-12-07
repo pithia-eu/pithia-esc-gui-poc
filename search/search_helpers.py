@@ -116,6 +116,7 @@ def find_matching_data_collections(request):
     observed_properties = []
     instrument_types = []
     computation_types = []
+    features_of_interest = []
 
     if 'observed_properties' in request.session:
         observed_properties = convert_list_to_regex_list(request.session['observed_properties'])
@@ -127,6 +128,7 @@ def find_matching_data_collections(request):
         computation_types = convert_list_to_regex_list(request.session['computation_types'])
 
     if 'features_of_interest' in request.session:
+        features_of_interest = convert_list_to_regex_list(request.session['features_of_interest'])
         additional_observed_property_hrefs = get_observed_property_hrefs_from_features_of_interest(request.session['features_of_interest'])
         additional_observed_properties = convert_list_to_regex_list(list(map(get_localid_from_ontology_node_iri, additional_observed_property_hrefs)))
         observed_properties += additional_observed_properties
@@ -241,7 +243,20 @@ def find_matching_data_collections(request):
 
     # Fetch Observation Collections
     return list(CurrentDataCollection.find({
-        'om:procedure.@xlink:href': {
-            '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
-        }
+        '$or': [
+            {
+                'om:procedure.@xlink:href': {
+                    '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
+                }
+            },
+            {
+                'om:featureOfInterest.FeatureOfInterest.namedRegion': {
+                    '$elemMatch': {
+                        '@xlink:href': {
+                            '$in': features_of_interest
+                        }
+                    }
+                }
+            }
+        ]
     }))
