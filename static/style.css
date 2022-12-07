@@ -83,6 +83,10 @@ header .dropdown-item:active a {
     transition-property: none;
 }
 
+.dropdown-item:active {
+    background-color: var(--pithia-blue);
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     padding: 0.5em 0;
