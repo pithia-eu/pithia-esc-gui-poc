@@ -19,7 +19,7 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link) {
+a:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue) !important;
 }
 
@@ -32,7 +32,8 @@ a:not(.btn, .nav-link):focus {
     text-decoration: underline;
 }
 
-[href^="http"]:not([href*="vm1.pithia.eu"])::after {
+[href^="http"]:not([href*="vm1.pithia.eu"]):not(footer a, .card-menu a)::after,
+.card-menu [href^="http"]:not([href*="vm1.pithia.eu"]) span::after {
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -82,6 +83,10 @@ header .dropdown-item:active a {
     transition-property: none;
 }
 
+.dropdown-item:active {
+    background-color: var(--pithia-blue);
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     padding: 0.5em 0;
@@ -125,6 +130,11 @@ header .dropdown-item:active a {
 .card-menu .card:hover img,
 .card-menu .card:focus img {
     filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+}
+
+.card-menu .card:hover [href^="http"]:not([href*="vm1.pithia.eu"]) span::after,
+.card-menu .card:focus [href^="http"]:not([href*="vm1.pithia.eu"]) span::after {
+    background-image: url('/static/external_link_white.svg');
 }
 
 .card-menu .card:hover,

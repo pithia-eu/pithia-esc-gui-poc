@@ -4,7 +4,7 @@
             <legend>
                 <h3 class="fs-5 text-muted mb-0">Observed Properties</h3>
             </legend>
-            {% with ontology_component="observed-properties" %}
+            {% with ontology_component="observed-properties" search_input_col_width="col-lg-7" %}
             {% include "search/ontology_tree_container_template.html" %}
             {% endwith %}
         </fieldset>
@@ -25,7 +25,7 @@
                     <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="phenomenons" %}
+                            {% with ontology_component="phenomenons" search_input_col_width="col-lg-9" %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
@@ -41,7 +41,7 @@
                     <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="measurands" %}
+                            {% with ontology_component="measurands" search_input_col_width="col-lg-9" %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
