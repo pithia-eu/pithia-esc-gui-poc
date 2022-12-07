@@ -10,20 +10,27 @@
 <script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1 class="mb-4">Data Collection Search</h1>
+<h1>Data Collection Search</h1>
 <form action="{% url 'search:index' %}" method="post">
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-8">
-            <h2>Using the search</h2>
             <details class="text-muted">
                 <ul>
-                    <li>Terms associated with resources registered with the e-Science Centre will have a enabled checkbox input next to the non-greyed out term.</li>
-                    <li>Parent terms containing child terms associated with resources registered with the e-Science Centre will have a disabled checkbox next to the non-greyed out term.</li>
-                    <li>Terms not associated with any resources registered with the e-Science Centre will have a disabled checkbox next to the greyed-out term.</li>
+                    <li>
+                        Terms referenced within registered metadata are not greyed out and have an adjacent checkbox input to the left.
+                    </li>
+                    <li>
+                        Parent terms containing child terms referenced within registered metadata are not greyed out but have no adjacent checkbox.
+                    </li>
+                    <li>
+                        Terms not referenced within any registered metadata are greyed out and have no adjacent checkbox.
+                    </li>
                 </ul>
                 <summary>
-                    Fill out the search parameters in the accordion below, then press "Search" at the bottom of the form. Click this summary for more details.
+                    Configure search parameters by selecting from the available
+                    parameters in the <b>Search Parameter Configuration</b>
+                    section below. Click this text for further details.
                 </summary>
             </details>
         </div>
