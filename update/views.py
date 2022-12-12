@@ -10,7 +10,40 @@ from register.xml_conversion_checks_and_fixes import format_acquisition_capabili
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.register_api_specification import register_api_specification
 from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm, UpdateDataCollectionInteractionMethodsForm
-from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision, CurrentCatalogue, CatalogueRevision
+from common.mongodb_models import (
+    AcquisitionCapabilityRevision,
+    AcquisitionRevision,
+    ComputationCapabilityRevision,
+    ComputationRevision,
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentDataCollectionInteractionMethod,
+    CurrentIndividual,
+    CurrentInstrument,
+    CurrentOperation,
+    CurrentOrganisation,
+    CurrentPlatform,
+    CurrentProcess,
+    CurrentProject,
+    DataCollectionInteractionMethodRevision,
+    DataCollectionRevision,
+    IndividualRevision,
+    InstrumentRevision,
+    OperationRevision,
+    OrganisationRevision,
+    PlatformRevision,
+    ProcessRevision,
+    ProjectRevision,
+    CurrentCatalogue,
+    CatalogueRevision,
+    CurrentCatalogueEntry,
+    CatalogueEntryRevision,
+    CurrentCatalogueDataSubset,
+    CatalogueDataSubsetRevision,
+)
 from resource_management.views import _INDEX_PAGE_TITLE
 from update.update import update_current_version_of_resource, update_data_collection_api_interaction_method_specification_url, update_data_collection_api_interaction_method_description
 from update.version_control import assign_original_xml_file_entry_to_revision_id, create_revision_of_current_resource_version, create_revision_of_data_collection_api_interaction_method
@@ -354,4 +387,36 @@ class catalogue(UpdateResourceView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class catalogue_entry(UpdateResourceView):
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_revision_mongodb_model = CatalogueEntryRevision
+
+    a_or_an = 'a'
+    resource_type = 'Catalogue Entry'
+    resource_type_plural = 'Catalogue Entries'
+    list_resources_of_type_view_name = 'resource_management:catalogue_entries'
+    update_resource_type_view_name = 'update:catalogue_entry'
+    validation_url = reverse_lazy('validation:catalogue_entry')
+    success_url = reverse_lazy('resource_management:catalogue_entries')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class catalogue_data_subset(UpdateResourceView):
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_revision_mongodb_model = CatalogueDataSubsetRevision
+
+    a_or_an = 'a'
+    resource_type = 'Catalogue Data Subset'
+    resource_type_plural = 'Catalogue Data Subsets'
+    list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
+    update_resource_type_view_name = 'update:catalogue_data_subset'
+    validation_url = reverse_lazy('validation:catalogue_data_subset')
+    success_url = reverse_lazy('resource_management:catalogue_data_subsets')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
         return super().dispatch(request, *args, **kwargs)

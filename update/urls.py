@@ -18,4 +18,6 @@ urlpatterns = [
     path('data-collections/<data_collection_id>/update/', views.data_collection.as_view(), name='data_collection'),
     path('data-collections/<data_collection_id>/update/interaction-methods', views.data_collection_interaction_methods, name='data_collection_interaction_methods'),
     path('catalogues/<catalogue_id>/update', views.catalogue.as_view(), name='catalogue'),
+    path('catalogues/<catalogue_entry_id>/update', views.catalogue_entry.as_view(), name='catalogue_entry'),
+    path('catalogues/<catalogue_data_subset_id>/update', views.catalogue_data_subset.as_view(), name='catalogue_data_subset'),
 ]
