@@ -249,6 +249,7 @@ class data_collection(RegisterResourceFormView):
 class catalogue(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     success_url = reverse_lazy('register:catalogue')
+    template_name='register/file_upload_catalogue.html'
 
     a_or_an = 'a'
     resource_type = 'catalogue'
@@ -261,6 +262,7 @@ class catalogue(RegisterResourceFormView):
 class catalogue_entry(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
+    template_name='register/file_upload_catalogue.html'
 
     a_or_an = 'a'
     resource_type = 'catalogue entry'
@@ -273,6 +275,7 @@ class catalogue_entry(RegisterResourceFormView):
 class catalogue_data_subset(RegisterResourceFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
+    template_name='register/file_upload_catalogue.html'
 
     a_or_an = 'a'
     resource_type = 'catalogue data subset'

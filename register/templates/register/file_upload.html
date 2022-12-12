@@ -81,9 +81,6 @@
                 <li class="list-group-item">{% if 'computation' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:computation' %}" class="pithia-blue">{% endif %}Computations{% if 'computation' not in title|lower %}</a>{% endif %}</li>
                 <li class="list-group-item">{% if 'process' not in title|lower %}<a href="{% url 'register:process' %}" class="pithia-blue">{% endif %}Processes{% if 'process' not in title|lower %}</a>{% endif %}</li>
                 <li class="list-group-item">{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'catalogue' not in title|lower or 'entries' in title|lower or 'data subset' in title|lower %}<a href="{% url 'register:catalogue' %}" class="pithia-blue">{% endif %}Catalogues{% if 'catalogue' not in title|lower or 'catalogue entries' in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'catalogue entries' not in title|lower %}<a href="{% url 'register:catalogue_entry' %}" class="pithia-blue">{% endif %}Catalogue Entries{% if 'catalogue entries' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'catalogue data subset' not in title|lower %}<a href="{% url 'register:catalogue_data_subset' %}" class="pithia-blue">{% endif %}Catalogue Data Subsets{% if 'catalogue data subset' not in title|lower %}</a>{% endif %}</li>
             </ul>
         </small>
     </div>
