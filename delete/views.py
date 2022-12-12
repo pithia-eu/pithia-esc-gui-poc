@@ -4,7 +4,40 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id, get_revision_ids_for_resource_id, create_resource_url
-from common.mongodb_models import AcquisitionCapabilityRevision, AcquisitionRevision, ComputationCapabilityRevision, ComputationRevision, CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentDataCollectionInteractionMethod, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, DataCollectionInteractionMethodRevision, DataCollectionRevision, IndividualRevision, InstrumentRevision, OperationRevision, OrganisationRevision, PlatformRevision, ProcessRevision, ProjectRevision, CurrentCatalogue, CatalogueRevision
+from common.mongodb_models import (
+    AcquisitionCapabilityRevision,
+    AcquisitionRevision,
+    ComputationCapabilityRevision,
+    ComputationRevision,
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentDataCollectionInteractionMethod,
+    CurrentIndividual,
+    CurrentInstrument,
+    CurrentOperation,
+    CurrentOrganisation,
+    CurrentPlatform,
+    CurrentProcess,
+    CurrentProject,
+    DataCollectionInteractionMethodRevision,
+    DataCollectionRevision,
+    IndividualRevision,
+    InstrumentRevision,
+    OperationRevision,
+    OrganisationRevision,
+    PlatformRevision,
+    ProcessRevision,
+    ProjectRevision,
+    CurrentCatalogue,
+    CatalogueRevision,
+    CurrentCatalogueEntry,
+    CatalogueEntryRevision,
+    CurrentCatalogueDataSubset,
+    CatalogueDataSubsetRevision,
+)
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 
@@ -35,39 +68,6 @@ def _get_data_collections_referencing_party_url(party_url):
     })
 
 # Custom sorting function to sort resources by their type
-def _get_weight_of_resource_mongodb_model(resource_mongodb_model):
-    if resource_mongodb_model == CurrentOrganisation:
-        return 1
-    elif resource_mongodb_model == CurrentIndividual:
-        return 2
-    elif resource_mongodb_model == CurrentProject:
-        return 3
-    elif resource_mongodb_model == CurrentPlatform:
-        return 4
-    elif resource_mongodb_model == CurrentOperation:
-        return 5
-    elif resource_mongodb_model == CurrentInstrument:
-        return 6
-    elif resource_mongodb_model == CurrentAcquisition:
-        return 7
-    elif resource_mongodb_model == CurrentComputation:
-        return 8
-    elif resource_mongodb_model == CurrentProcess:
-        return 9
-    elif resource_mongodb_model == CurrentDataCollection:
-        return 10
-    return 10
-
-def _custom_compare(item1, item2):
-    item1_weight = _get_weight_of_resource_mongodb_model(item1[2])
-    item2_weight = _get_weight_of_resource_mongodb_model(item2[2])
-    if item1_weight < item2_weight:
-        return -1
-    elif item1_weight > item2_weight:
-        return 1
-    else:
-        return 0
-
 def _get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
     projects = []
@@ -385,6 +385,48 @@ class DeleteResourceView(TemplateView):
             _delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return HttpResponseRedirect(self.redirect_url)
 
+class DeleteCatalogueResourceView(TemplateView):
+    resource_id = ''
+    resource_type = ''
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
+    redirect_url = ''
+    template_name = 'delete/confirm_delete_resource.html'
+    list_resources_of_type_view_page_title = 'Register & Manage Resources'
+    list_resources_of_type_view_name = 'resource_management:index'
+    delete_resource_type_view_name = ''
+    resource_to_delete = None
+    other_resources_to_delete = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type'] = self.resource_type
+        context['title'] = f'Confirm Deletion of Metadata'
+        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
+        context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
+        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['delete_resource_type_view_name'] = self.delete_resource_type_view_name
+        context['resource_id'] = self.resource_id
+        context['resource_to_delete'] = self.resource_to_delete
+        context['other_resources_to_delete'] = self.other_resources_to_delete
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.resource_to_delete = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        self.other_resources_to_delete = _get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Delete the resource and resources that are referencing the resource to be deleted. These should not
+        # be able to exist without the resource being deleted.
+        linked_resources = _get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        _delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
+        for r in linked_resources:
+            _delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
+        return HttpResponseRedirect(self.redirect_url)
+
 
 class organisation(DeleteResourceView):
     resource_type = 'organisation'
@@ -555,25 +597,11 @@ class data_collection(DeleteResourceView):
         _delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
         return super().post(request, *args, **kwargs)
 
-def catalogue(request, catalogue_id):
-    if request.method == 'POST':
-        # Catalogue is not part of 12-step registration, so checking for links to other
-        # resources is not required.
-        _delete_current_version_and_revisions_of_resource_id(catalogue_id, CurrentCatalogue, CatalogueRevision)
-        return HttpResponseRedirect(reverse('resource_management:catalogues'))
-
-    catalogue_to_delete = CurrentCatalogue.find_one({
-        '_id': ObjectId(catalogue_id)
-    })
-
-    return render(request, 'delete/confirm_delete_resource.html', {
-        'resource_type': 'catalogue',
-        'title': f'Confirm Deletion of Metadata',
-        'resource_management_index_page_title': _INDEX_PAGE_TITLE,
-        'list_resources_of_type_view_page_title': 'Register & Manage Catalogues',
-        'list_resources_of_type_view_name': 'resource_management:catalogues',
-        'delete_resource_type_view_name': 'delete:catalogue',
-        'resource_id': catalogue_id,
-        'resource_to_delete': catalogue_to_delete,
-        'other_resources_to_delete': [],
-    })
+class catalogue(DeleteCatalogueResourceView):
+    resource_type = 'collection'
+    resource_mongodb_model = CurrentCatalogue
+    resource_revision_mongodb_model = CatalogueRevision
+    redirect_url = reverse_lazy('resource_management:catalogues')
+    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogues'
+    list_resources_of_type_view_name = 'resource_management:catalogues'
+    delete_resource_type_view_name = 'delete:catalogue'
