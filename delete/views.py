@@ -401,6 +401,10 @@ class DeleteCatalogueResourceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type'] = self.resource_type
+        if self.resource_type.lower() == 'catalogueentry':
+            context['resource_type'] = 'catalogue entry'
+        if self.resource_type.lower() == 'cataloguedatasubset':
+            context['resource_type'] = 'catalogue data subset'
         context['title'] = f'Confirm Deletion of Metadata'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
@@ -598,10 +602,28 @@ class data_collection(DeleteResourceView):
         return super().post(request, *args, **kwargs)
 
 class catalogue(DeleteCatalogueResourceView):
-    resource_type = 'collection'
+    resource_type = 'catalogue'
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
     redirect_url = reverse_lazy('resource_management:catalogues')
     list_resources_of_type_view_page_title = 'Register & Manage Data Catalogues'
     list_resources_of_type_view_name = 'resource_management:catalogues'
     delete_resource_type_view_name = 'delete:catalogue'
+
+class catalogue_entry(DeleteCatalogueResourceView):
+    resource_type = 'catalogueentry'
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_revision_mongodb_model = CatalogueEntryRevision
+    redirect_url = reverse_lazy('resource_management:catalogue_entries')
+    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogue Entries'
+    list_resources_of_type_view_name = 'resource_management:catalogue_entries'
+    delete_resource_type_view_name = 'delete:catalogue_entry'
+
+class catalogue_data_subset(DeleteCatalogueResourceView):
+    resource_type = 'cataloguedatasubset'
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_revision_mongodb_model = CatalogueDataSubsetRevision
+    redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
+    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogue Data Subsets'
+    list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
+    delete_resource_type_view_name = 'delete:catalogue_data_subset'
