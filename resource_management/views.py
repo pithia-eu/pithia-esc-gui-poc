@@ -6,12 +6,19 @@ from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapabili
 from search.helpers import remove_underscore_from_id_attribute
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
+_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Register & Manage Data Collection-related Metadata'
+_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Register & Manage Catalogue-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural):
     return f'Register & Manage {resource_type_plural.title()}'
 
 # Create your views here.
 def index(request):
+    return render(request, 'resource_management/index.html', {
+        'title': _INDEX_PAGE_TITLE
+    })
+
+def data_collection_related_registrations_index(request):
     num_current_organsations = CurrentOrganisation.count_documents({})
     num_current_individuals = CurrentIndividual.count_documents({})
     num_current_projects = CurrentProject.count_documents({})
@@ -25,7 +32,7 @@ def index(request):
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
     num_current_catalogues = CurrentCatalogue.count_documents({})
-    return render(request, 'resource_management/index.html', {
+    return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
         'num_current_projects': num_current_projects,
@@ -39,7 +46,12 @@ def index(request):
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
         'num_current_catalogues': num_current_catalogues,
-        'title': _INDEX_PAGE_TITLE
+        'title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+    })
+
+def catalogue_related_registrations_index(request):
+    return render(request, 'resource_management/catalogue_index.html', {
+        'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     })
 
 class ManageResourcesView(TemplateView):
