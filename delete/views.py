@@ -185,7 +185,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         # Acquisition is referenced by Process via
         # the acquisitionComponent prop.
         processes = CurrentProcess.find({
-            'acquisitionComponent.@xlink.href': resource_url
+            'acquisitionComponent.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentComputationCapability:
         # ComputationCapability is referenced by Computation via the computationCapabilities
