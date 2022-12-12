@@ -179,7 +179,7 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
         # AcquisitionCapability is referenced by Acquisition via
         # the acquisitionCapabilities prop.
         acquisitions = CurrentAcquisition.find({
-            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink.href': resource_url
+            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentAcquisition:
         # Acquisition is referenced by Process via
