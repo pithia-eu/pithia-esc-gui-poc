@@ -3,7 +3,24 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.http import HttpResponseNotFound
 from bson import ObjectId
-from common.mongodb_models import OriginalMetadataXml, CurrentOrganisation, CurrentIndividual, CurrentProject, CurrentPlatform, CurrentOperation, CurrentInstrument, CurrentAcquisitionCapability, CurrentAcquisition, CurrentComputationCapability, CurrentComputation, CurrentProcess, CurrentDataCollection, CurrentCatalogue
+from common.mongodb_models import (
+    CurrentOrganisation,
+    CurrentIndividual,
+    CurrentProject,
+    CurrentPlatform,
+    CurrentOperation,
+    CurrentInstrument,
+    CurrentAcquisitionCapability,
+    CurrentAcquisition,
+    CurrentComputationCapability,
+    CurrentComputation,
+    CurrentProcess,
+    CurrentDataCollection,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
+    OriginalMetadataXml,
+)
 from resource_management.views import _INDEX_PAGE_TITLE
 
 
@@ -176,4 +193,22 @@ class view_catalogue_as_xml(ViewResourceAsXmlView):
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class view_catalogue_entry_as_xml(ViewResourceAsXmlView):
+    resource_mongodb_model = CurrentCatalogueEntry
+    list_resources_of_type_view_page_title = 'Register & Manage Catalogue Entries'
+    list_resources_of_type_view_name = 'resource_management:catalogue_entries'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().dispatch(request, *args, **kwargs)
+
+class view_catalogue_data_subset_as_xml(ViewResourceAsXmlView):
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    list_resources_of_type_view_page_title = 'Register & Manage Catalogue Data Subsets'
+    list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
         return super().dispatch(request, *args, **kwargs)

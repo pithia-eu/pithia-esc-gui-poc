@@ -18,4 +18,6 @@ urlpatterns = [
     path('processs/<process_id>/xml', views.view_process_as_xml.as_view(), name='view_process_as_xml'),
     path('data-collections/<data_collection_id>/xml', views.view_data_collection_as_xml.as_view(), name='view_data_collection_as_xml'),
     path('catalogues/<catalogue_id>/xml', views.view_catalogue_as_xml.as_view(), name='view_catalogue_as_xml'),
+    path('catalogues/<catalogue_entry_id>/xml', views.view_catalogue_entry_as_xml.as_view(), name='view_catalogue_entry_as_xml'),
+    path('catalogues/<catalogue_data_subset_id>/xml', views.view_catalogue_data_subset_as_xml.as_view(), name='view_catalogue_data_subset_as_xml'),
 ]
