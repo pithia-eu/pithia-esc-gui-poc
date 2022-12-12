@@ -1,7 +1,23 @@
 import pymongo
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject, CurrentCatalogue
+from common.mongodb_models import (
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentIndividual,
+    CurrentInstrument,
+    CurrentOperation,
+    CurrentOrganisation,
+    CurrentPlatform,
+    CurrentProcess,
+    CurrentProject,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
+)
 
 from search.helpers import remove_underscore_from_id_attribute
 
@@ -31,7 +47,6 @@ def data_collection_related_registrations_index(request):
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
-    num_current_catalogues = CurrentCatalogue.count_documents({})
     return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
@@ -45,13 +60,18 @@ def data_collection_related_registrations_index(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'num_current_catalogues': num_current_catalogues,
-        'title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        'title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     })
 
 def catalogue_related_registrations_index(request):
+    num_current_catalogues = CurrentCatalogue.count_documents({})
+    num_current_catalogue_entries = CurrentCatalogueEntry.count_documents({})
+    num_current_catalogue_data_subsets = CurrentCatalogueDataSubset.count_documents({})
     return render(request, 'resource_management/catalogue_index.html', {
-        'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        'num_current_catalogues': num_current_catalogues,
+        'num_current_catalogue_entries': num_current_catalogue_entries,
+        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+        'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     })
 
 class ManageResourcesView(TemplateView):
@@ -218,3 +238,21 @@ class catalogues(ManageResourcesView):
     update_resource_view_name = 'update:catalogue'
     register_resource_view_name = 'register:catalogue'
     view_as_xml_view_name = 'utils:view_catalogue_as_xml'
+
+class catalogue_entries(ManageResourcesView):
+    title = _create_manage_resource_page_title('catalogue entries')
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_type_plural = 'Catalogue Entries'
+    delete_resource_view_name = 'delete:catalogue_entry'
+    update_resource_view_name = 'update:catalogue_entry'
+    register_resource_view_name = 'register:catalogue_entry'
+    view_as_xml_view_name = 'utils:view_catalogue_entry_as_xml'
+
+class catalogue_data_subsets(ManageResourcesView):
+    title = _create_manage_resource_page_title('catalogue data subsets')
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_type_plural = 'Catalogue Data Subsets'
+    delete_resource_view_name = 'delete:catalogue_data_subset'
+    update_resource_view_name = 'update:catalogue_data_subset'
+    register_resource_view_name = 'register:catalogue_data_subset'
+    view_as_xml_view_name = 'utils:view_catalogue_data_subset_as_xml'
