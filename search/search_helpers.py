@@ -10,8 +10,6 @@ def get_computation_capability_localids_referencing_computation_capabilities_loc
         'childComputation.@xlink:href': re.compile(computation_capabilities_localid)
     }))
     cc_localids_referencing_cc = [cc['identifier']['PITHIA_Identifier']['localID'] for cc in ccs_referencing_cc]
-    print('computation_capabilities_localid', computation_capabilities_localid)
-    print('cc_localids_referencing_cc', cc_localids_referencing_cc)
     for cc_localid in cc_localids_referencing_cc:
         if cc_localid not in cc_localid_set:
             cc_localid_set.add(cc_localid)
@@ -19,10 +17,106 @@ def get_computation_capability_localids_referencing_computation_capabilities_loc
 
     return cc_localids_referencing_cc
 
+def find_instruments_by_instrument_types(types):
+    return list(CurrentInstrument.find({
+        'type.@xlink:href': {
+            '$in': types
+        }
+    }))
+
+def find_acquisition_capabilities_by_instrument_localids(instrument_localids):
+    return list(CurrentAcquisitionCapability.find({
+        '$or': [
+            {
+                'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
+                    '$in': instrument_localids
+                }
+            },
+            {
+                'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+                    '$in': instrument_localids
+                }
+            },
+        ]
+    }))
+
+def find_computation_capabilities_by_computation_types(computation_types):
+    return list(CurrentComputationCapability.find({
+        'type.@xlink:href': {
+            '$in': computation_types
+        }
+    }))
+
+def group_instrument_types_by_observed_property(instruments):
+    instrument_types_grouped_by_observed_property = {}
+    for i in instruments:
+        observed_property_urls = get_observed_property_urls_from_instruments([i])
+        for url in observed_property_urls:
+            observed_property_id = url.split('/')[-1]
+            if observed_property_id not in instrument_types_grouped_by_observed_property:
+                instrument_types_grouped_by_observed_property[observed_property_id] = []
+            instrument_types_grouped_by_observed_property[observed_property_id].append(f"instrumentType{i['type']['@xlink:href'].split('/')[-1]}")
+            instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
+
+    return instrument_types_grouped_by_observed_property
+
+def group_computation_types_by_observed_property(computation_capabilities):
+    computation_types_grouped_by_observed_property = {}
+    for cc in computation_capabilities:
+        observed_property_urls = get_observed_property_urls_from_computation_capabilities([cc])
+        for url in observed_property_urls:
+            observed_property_id = url.split('/')[-1]
+            if observed_property_id not in computation_types_grouped_by_observed_property:
+                computation_types_grouped_by_observed_property[observed_property_id] = []
+            if 'type' not in cc:
+                continue
+            computation_types_grouped_by_observed_property[observed_property_id].append(f"computationType{cc['type']['@xlink:href'].split('/')[-1]}")
+            computation_types_grouped_by_observed_property[observed_property_id] = list(set(computation_types_grouped_by_observed_property[observed_property_id]))
+
+    return computation_types_grouped_by_observed_property
+
+def get_observed_property_urls_from_instruments(instruments):
+    instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
+    instrument_localid_regex_list = convert_list_to_regex_list(instrument_localids)
+    acquisition_capabilities = find_acquisition_capabilities_by_instrument_localids(instrument_localid_regex_list)
+    acquisition_capability_process_capabilities = [ac['capabilities']['processCapability'] for ac in acquisition_capabilities]
+    acquisition_capability_process_capabilities_flattened = [item for sublist in acquisition_capability_process_capabilities for item in sublist]
+    acquisition_capability_observed_property_urls = [pc['observedProperty']['@xlink:href'] for pc in acquisition_capability_process_capabilities_flattened]
+    return acquisition_capability_observed_property_urls
+
+def get_observed_property_urls_from_computation_capabilities(computation_capabilities):
+    computation_capability_observed_property_urls = []
+    for cc in computation_capabilities:
+        if 'capabilities' in cc:
+            computation_capability_observed_property_urls.extend([pc['observedProperty']['@xlink:href'] for pc in cc['capabilities']['processCapability']])
+    return list(set(computation_capability_observed_property_urls))
+
+def get_observed_property_urls_by_instrument_types(instrument_types):
+    instrument_type_regex_list = convert_list_to_regex_list(instrument_types)
+    instruments = find_instruments_by_instrument_types(instrument_type_regex_list)
+    return get_observed_property_urls_from_instruments(instruments)
+
+def get_observed_property_urls_by_computation_types(computation_types):
+    computation_type_regex_list = convert_list_to_regex_list(computation_types)
+    computation_capabilities = find_computation_capabilities_by_computation_types(computation_type_regex_list)
+    cc_localids_referencing_cc = []
+    for cc in computation_capabilities:
+        cc_localids_referencing_cc.extend(list(get_computation_capability_localids_referencing_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
+        cc_localids_referencing_cc = list(set(cc_localids_referencing_cc))
+    cc_localids_referencing_cc_regex_list = convert_list_to_regex_list(cc_localids_referencing_cc)
+    ccs_referencing_cc = CurrentComputationCapability.find({
+        'identifier.PITHIA_Identifier.localID': {
+            '$in': cc_localids_referencing_cc_regex_list
+        }
+    })
+    computation_capabilities.extend(ccs_referencing_cc)
+    return get_observed_property_urls_from_computation_capabilities(computation_capabilities)
+
 def find_matching_data_collections(request):
     observed_properties = []
     instrument_types = []
     computation_types = []
+    features_of_interest = []
 
     if 'observed_properties' in request.session:
         observed_properties = convert_list_to_regex_list(request.session['observed_properties'])
@@ -34,6 +128,7 @@ def find_matching_data_collections(request):
         computation_types = convert_list_to_regex_list(request.session['computation_types'])
 
     if 'features_of_interest' in request.session:
+        features_of_interest = convert_list_to_regex_list(request.session['features_of_interest'])
         additional_observed_property_hrefs = get_observed_property_hrefs_from_features_of_interest(request.session['features_of_interest'])
         additional_observed_properties = convert_list_to_regex_list(list(map(get_localid_from_ontology_node_iri, additional_observed_property_hrefs)))
         observed_properties += additional_observed_properties
@@ -43,11 +138,7 @@ def find_matching_data_collections(request):
     # project data model diagram.
 
     # Fetch Instruments
-    instruments = list(CurrentInstrument.find({
-        'type.@xlink:href': {
-            '$in': instrument_types
-        }
-    }))
+    instruments = find_instruments_by_instrument_types(instrument_types)
     instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
 
     # Fetch Acquisition Capabilities/Computation Capabilities
@@ -152,7 +243,20 @@ def find_matching_data_collections(request):
 
     # Fetch Observation Collections
     return list(CurrentDataCollection.find({
-        'om:procedure.@xlink:href': {
-            '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
-        }
+        '$or': [
+            {
+                'om:procedure.@xlink:href': {
+                    '$in': convert_list_to_regex_list(map_ontology_components_to_local_ids(processes))
+                }
+            },
+            {
+                'om:featureOfInterest.FeatureOfInterest.namedRegion': {
+                    '$elemMatch': {
+                        '@xlink:href': {
+                            '$in': features_of_interest
+                        }
+                    }
+                }
+            }
+        ]
     }))
