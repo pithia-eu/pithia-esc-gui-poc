@@ -8,11 +8,11 @@
     </li>
     <li class="list-group-item">
         <a href="{% url 'resource_management:catalogues' %}">Catalogue Entries</a>
-        <span class="text-muted">{{ num_current_catalogues }}</span>
+        <span class="text-muted">{{ num_current_catalogue_entries }}</span>
     </li>
     <li class="list-group-item">
         <a href="{% url 'resource_management:catalogues' %}">Catalogue Data Subsets</a>
-        <span class="text-muted">{{ num_current_catalogues }}</span>
+        <span class="text-muted">{{ num_current_catalogue_data_subsets }}</span>
     </li>
 </ul>
 {% endblock content %}
