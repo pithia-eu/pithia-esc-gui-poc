@@ -20,4 +20,6 @@ urlpatterns = [
     path('processes/', views.processes.as_view(), name='processes'),
     path('data-collections/', views.data_collections.as_view(), name='data_collections'),
     path('catalogues/', views.catalogues.as_view(), name='catalogues'),
+    path('catalogue-entries/', views.catalogue_entries.as_view(), name='catalogue_entries'),
+    path('catalogue-data-subsets/', views.catalogue_data_subsets.as_view(), name='catalogue_data_subsets'),
 ]
