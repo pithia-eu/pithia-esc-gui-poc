@@ -18,4 +18,6 @@ urlpatterns = [
     path('process/', views.process.as_view(), name='process'),
     path('data-collection/', views.data_collection.as_view(), name='data_collection'),
     path('catalogue/', views.catalogue.as_view(), name='catalogue'),
+    path('catalogue-entry/', views.catalogue_entry.as_view(), name='catalogue_entry'),
+    path('catalogue-data-subset/', views.catalogue_data_subset.as_view(), name='catalogue_data_subset'),
 ]
