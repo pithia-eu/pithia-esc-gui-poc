@@ -1,6 +1,21 @@
 from bson import ObjectId
 
-from .mongodb_models import CurrentDataCollectionInteractionMethod, CurrentDataCollection, CurrentAcquisitionCapability, CurrentInstrument, CurrentOrganisation, CurrentIndividual, CurrentProject, CurrentPlatform, CurrentOperation, CurrentAcquisition, CurrentComputationCapability, CurrentComputation, CurrentProcess
+from .mongodb_models import (
+    CurrentDataCollectionInteractionMethod,
+    CurrentDataCollection,
+    CurrentAcquisitionCapability,
+    CurrentInstrument,
+    CurrentOrganisation,
+    CurrentIndividual,
+    CurrentProject,
+    CurrentPlatform,
+    CurrentOperation,
+    CurrentAcquisition,
+    CurrentComputationCapability,
+    CurrentComputation,
+    CurrentProcess,
+    CurrentCatalogue
+)
 
 def _map_id_property(resource):
     return resource['_id']
@@ -82,4 +97,6 @@ def get_mongodb_model_by_resource_type_from_resource_url(resource_type):
         return CurrentProcess
     elif resource_type == 'collection':
         return CurrentDataCollection
+    elif resource_type == 'catalogue':
+        return CurrentCatalogue
     return 'unknown'
