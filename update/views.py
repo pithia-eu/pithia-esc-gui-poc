@@ -17,7 +17,7 @@ from update.version_control import assign_original_xml_file_entry_to_revision_id
 
 
 # Create your views here.
-class UpdateResourceView(FormView):
+class ResourceUpdateFormView(FormView):
     # Registration variables
     resource_id = ''
     resource_mongodb_model = None
@@ -88,7 +88,7 @@ class UpdateResourceView(FormView):
         self.resource_to_update_name = resource_to_update_name
         return super().get(request, *args, **kwargs)
 
-class organisation(UpdateResourceView):
+class organisation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
 
@@ -105,7 +105,7 @@ class organisation(UpdateResourceView):
         return super().dispatch(request, *args, **kwargs)
     
 
-class individual(UpdateResourceView):
+class individual(ResourceUpdateFormView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
 
@@ -121,7 +121,7 @@ class individual(UpdateResourceView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class project(UpdateResourceView):
+class project(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
 
@@ -137,7 +137,7 @@ class project(UpdateResourceView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class platform(UpdateResourceView):
+class platform(ResourceUpdateFormView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
 
@@ -153,7 +153,7 @@ class platform(UpdateResourceView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class instrument(UpdateResourceView):
+class instrument(ResourceUpdateFormView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     resource_conversion_validate_and_correct_function = format_instrument_dictionary
@@ -170,7 +170,7 @@ class instrument(UpdateResourceView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class operation(UpdateResourceView):
+class operation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
 
@@ -186,7 +186,7 @@ class operation(UpdateResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition_capability(UpdateResourceView):
+class acquisition_capability(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     resource_conversion_validate_and_correct_function = format_acquisition_capability_dictionary
@@ -203,7 +203,7 @@ class acquisition_capability(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition(UpdateResourceView):
+class acquisition(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     resource_conversion_validate_and_correct_function = format_acquisition_dictionary
@@ -220,7 +220,7 @@ class acquisition(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation_capability(UpdateResourceView):
+class computation_capability(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     resource_conversion_validate_and_correct_function = format_computation_capability_dictionary
@@ -237,7 +237,7 @@ class computation_capability(UpdateResourceView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
         
-class computation(UpdateResourceView):
+class computation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     resource_conversion_validate_and_correct_function = format_computation_dictionary
@@ -254,7 +254,7 @@ class computation(UpdateResourceView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class process(UpdateResourceView):
+class process(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     resource_conversion_validate_and_correct_function = format_process_dictionary
@@ -271,7 +271,7 @@ class process(UpdateResourceView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class data_collection(UpdateResourceView):
+class data_collection(ResourceUpdateFormView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
