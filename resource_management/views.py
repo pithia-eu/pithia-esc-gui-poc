@@ -230,7 +230,7 @@ class data_collections(ResourceManagementListView):
         context['update_interaction_methods_view_name'] = 'update:data_collection_interaction_methods'
         return context
 
-class catalogues(ManageResourcesView):
+class catalogues(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogues')
     resource_mongodb_model = CurrentCatalogue
     resource_type_plural = 'Catalogues'
@@ -239,7 +239,7 @@ class catalogues(ManageResourcesView):
     register_resource_view_name = 'register:catalogue'
     view_as_xml_view_name = 'utils:view_catalogue_as_xml'
 
-class catalogue_entries(ManageResourcesView):
+class catalogue_entries(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue entries')
     resource_mongodb_model = CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
@@ -248,7 +248,7 @@ class catalogue_entries(ManageResourcesView):
     register_resource_view_name = 'register:catalogue_entry'
     view_as_xml_view_name = 'utils:view_catalogue_entry_as_xml'
 
-class catalogue_data_subsets(ManageResourcesView):
+class catalogue_data_subsets(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue data subsets')
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'

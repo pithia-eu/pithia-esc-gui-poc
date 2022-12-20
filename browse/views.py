@@ -302,7 +302,7 @@ class list_data_collections(ResourceListView):
     resource_detail_view_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
 
-class list_catalogues(ListResourcesView):
+class list_catalogues(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
     resource_detail_view_name = 'browse:catalogue_detail'

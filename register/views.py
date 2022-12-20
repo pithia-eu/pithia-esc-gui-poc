@@ -246,7 +246,7 @@ class data_collection(ResourceRegisterFormView):
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
-class catalogue(RegisterResourceFormView):
+class catalogue(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     success_url = reverse_lazy('register:catalogue')
     template_name='register/file_upload_catalogue.html'
@@ -259,7 +259,7 @@ class catalogue(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:catalogues'
     list_resource_page_title = _create_manage_resource_page_title('catalogues')
 
-class catalogue_entry(RegisterResourceFormView):
+class catalogue_entry(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
     template_name='register/file_upload_catalogue.html'
@@ -272,7 +272,7 @@ class catalogue_entry(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:catalogue_entries'
     list_resource_page_title = _create_manage_resource_page_title('catalogue entries')
 
-class catalogue_data_subset(RegisterResourceFormView):
+class catalogue_data_subset(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
     template_name='register/file_upload_catalogue.html'

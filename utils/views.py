@@ -186,7 +186,7 @@ class view_data_collection_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_catalogue_as_xml(ViewResourceAsXmlView):
+class view_catalogue_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentCatalogue
     list_resources_of_type_view_page_title = 'Register & Manage Catalogues'
     list_resources_of_type_view_name = 'resource_management:catalogues'
@@ -195,7 +195,7 @@ class view_catalogue_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_catalogue_entry_as_xml(ViewResourceAsXmlView):
+class view_catalogue_entry_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentCatalogueEntry
     list_resources_of_type_view_page_title = 'Register & Manage Catalogue Entries'
     list_resources_of_type_view_name = 'resource_management:catalogue_entries'
@@ -204,7 +204,7 @@ class view_catalogue_entry_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_catalogue_data_subset_as_xml(ViewResourceAsXmlView):
+class view_catalogue_data_subset_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentCatalogueDataSubset
     list_resources_of_type_view_page_title = 'Register & Manage Catalogue Data Subsets'
     list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
