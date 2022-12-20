@@ -41,7 +41,7 @@ def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(requ
         'resource_urls': esc_resource_urls,
     })
 
-class ViewResourceAsXmlView(TemplateView):
+class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
     resource_mongodb_model = None
     resource_name = ''
@@ -78,7 +78,7 @@ class ViewResourceAsXmlView(TemplateView):
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
         return context
 
-class view_organisation_as_xml(ViewResourceAsXmlView):
+class view_organisation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOrganisation
     list_resources_of_type_view_page_title = 'Register & Manage Organisations'
     list_resources_of_type_view_name = 'resource_management:organisations'
@@ -87,7 +87,7 @@ class view_organisation_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['organisation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_individual_as_xml(ViewResourceAsXmlView):
+class view_individual_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentIndividual
     list_resources_of_type_view_page_title = 'Register & Manage Individuals'
     list_resources_of_type_view_name = 'resource_management:individuals'
@@ -96,7 +96,7 @@ class view_individual_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_project_as_xml(ViewResourceAsXmlView):
+class view_project_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProject
     list_resources_of_type_view_page_title = 'Register & Manage Projects'
     list_resources_of_type_view_name = 'resource_management:projects'
@@ -105,7 +105,7 @@ class view_project_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_platform_as_xml(ViewResourceAsXmlView):
+class view_platform_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentPlatform
     list_resources_of_type_view_page_title = 'Register & Manage Platforms'
     list_resources_of_type_view_name = 'resource_management:platforms'
@@ -114,7 +114,7 @@ class view_platform_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_operation_as_xml(ViewResourceAsXmlView):
+class view_operation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOperation
     list_resources_of_type_view_page_title = 'Register & Manage Operations'
     list_resources_of_type_view_name = 'resource_management:operations'
@@ -123,7 +123,7 @@ class view_operation_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_instrument_as_xml(ViewResourceAsXmlView):
+class view_instrument_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentInstrument
     list_resources_of_type_view_page_title = 'Register & Manage Instruments'
     list_resources_of_type_view_name = 'resource_management:instruments'
@@ -132,7 +132,7 @@ class view_instrument_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_acquisition_capability_as_xml(ViewResourceAsXmlView):
+class view_acquisition_capability_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisitionCapability
     list_resources_of_type_view_page_title = 'Register & Manage Acquisition Capabilities'
     list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
@@ -141,7 +141,7 @@ class view_acquisition_capability_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_acquisition_as_xml(ViewResourceAsXmlView):
+class view_acquisition_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisition
     list_resources_of_type_view_page_title = 'Register & Manage Acquisitions'
     list_resources_of_type_view_name = 'resource_management:acquisitions'
@@ -150,7 +150,7 @@ class view_acquisition_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_computation_capability_as_xml(ViewResourceAsXmlView):
+class view_computation_capability_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputationCapability
     list_resources_of_type_view_page_title = 'Register & Manage Computation Capabilities'
     list_resources_of_type_view_name = 'resource_management:computation_capabilities'
@@ -159,7 +159,7 @@ class view_computation_capability_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_computation_as_xml(ViewResourceAsXmlView):
+class view_computation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputation
     list_resources_of_type_view_page_title = 'Register & Manage Computations'
     list_resources_of_type_view_name = 'resource_management:computations'
@@ -168,7 +168,7 @@ class view_computation_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_process_as_xml(ViewResourceAsXmlView):
+class view_process_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProcess
     list_resources_of_type_view_page_title = 'Register & Manage Processes'
     list_resources_of_type_view_name = 'resource_management:processes'
@@ -177,7 +177,7 @@ class view_process_as_xml(ViewResourceAsXmlView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_data_collection_as_xml(ViewResourceAsXmlView):
+class view_data_collection_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentDataCollection
     list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
     list_resources_of_type_view_name = 'resource_management:data_collections'

@@ -337,7 +337,7 @@ def _delete_current_version_and_revisions_of_resource_id(resource_id, resource_m
 
 
 
-class DeleteResourceView(TemplateView):
+class ResourceDeleteView(TemplateView):
     resource_id = ''
     resource_type = ''
     resource_mongodb_model = None
@@ -432,7 +432,7 @@ class DeleteCatalogueResourceView(TemplateView):
         return HttpResponseRedirect(self.redirect_url)
 
 
-class organisation(DeleteResourceView):
+class organisation(ResourceDeleteView):
     resource_type = 'organisation'
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
@@ -445,7 +445,7 @@ class organisation(DeleteResourceView):
         self.resource_id = self.kwargs['organisation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class individual(DeleteResourceView):
+class individual(ResourceDeleteView):
     resource_type = 'individual'
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
@@ -458,7 +458,7 @@ class individual(DeleteResourceView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class project(DeleteResourceView):
+class project(ResourceDeleteView):
     resource_type = 'project'
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
@@ -471,7 +471,7 @@ class project(DeleteResourceView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class platform(DeleteResourceView):
+class platform(ResourceDeleteView):
     resource_type = 'platform'
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
@@ -484,7 +484,7 @@ class platform(DeleteResourceView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class instrument(DeleteResourceView):
+class instrument(ResourceDeleteView):
     resource_type = 'instrument'
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
@@ -497,7 +497,7 @@ class instrument(DeleteResourceView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class operation(DeleteResourceView):
+class operation(ResourceDeleteView):
     resource_type = 'operation'
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
@@ -510,7 +510,7 @@ class operation(DeleteResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition_capability(DeleteResourceView):
+class acquisition_capability(ResourceDeleteView):
     resource_type = 'acquisitionCapabilities'
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
@@ -523,7 +523,7 @@ class acquisition_capability(DeleteResourceView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition(DeleteResourceView):
+class acquisition(ResourceDeleteView):
     resource_type = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
@@ -536,7 +536,7 @@ class acquisition(DeleteResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation_capability(DeleteResourceView):
+class computation_capability(ResourceDeleteView):
     resource_type = 'computationCapabilities'
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
@@ -549,7 +549,7 @@ class computation_capability(DeleteResourceView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation(DeleteResourceView):
+class computation(ResourceDeleteView):
     resource_type = 'computation'
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
@@ -562,7 +562,7 @@ class computation(DeleteResourceView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class process(DeleteResourceView):
+class process(ResourceDeleteView):
     resource_type = 'process'
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
@@ -575,7 +575,7 @@ class process(DeleteResourceView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class data_collection(DeleteResourceView):
+class data_collection(ResourceDeleteView):
     resource_type = 'collection'
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision

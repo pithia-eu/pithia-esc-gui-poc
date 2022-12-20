@@ -19,7 +19,7 @@ def index(request):
         'title': _INDEX_PAGE_TITLE
     })
 
-class RegisterResourceFormView(FormView):
+class ResourceRegisterFormView(FormView):
     resource_mongodb_model = None
     resource_conversion_validate_and_correct_function = None
     success_url = ''
@@ -87,7 +87,7 @@ class RegisterResourceFormView(FormView):
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
 
-class organisation(RegisterResourceFormView):
+class organisation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     success_url = reverse_lazy('register:organisation')
 
@@ -99,7 +99,7 @@ class organisation(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:organisations'
     list_resource_page_title = _create_manage_resource_page_title('organisations')
 
-class individual(RegisterResourceFormView):
+class individual(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     success_url = reverse_lazy('register:individual')
 
@@ -111,7 +111,7 @@ class individual(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:individuals'
     list_resource_page_title = _create_manage_resource_page_title('individuals')
 
-class project(RegisterResourceFormView):
+class project(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProject
     success_url = reverse_lazy('register:project')
 
@@ -123,7 +123,7 @@ class project(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:projects'
     list_resource_page_title = _create_manage_resource_page_title('projects')
 
-class platform(RegisterResourceFormView):
+class platform(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     success_url = reverse_lazy('register:platform')
 
@@ -135,7 +135,7 @@ class platform(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:platforms'
     list_resource_page_title = _create_manage_resource_page_title('platforms')
 
-class instrument(RegisterResourceFormView):
+class instrument(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
     success_url = reverse_lazy('register:instrument')
@@ -148,7 +148,7 @@ class instrument(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:instruments'
     list_resource_page_title = _create_manage_resource_page_title('instruments')
 
-class operation(RegisterResourceFormView):
+class operation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     success_url = reverse_lazy('register:operation')
 
@@ -160,7 +160,7 @@ class operation(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:operations'
     list_resource_page_title = _create_manage_resource_page_title('operations')
 
-class acquisition_capability(RegisterResourceFormView):
+class acquisition_capability(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_dictionary
     success_url = reverse_lazy('register:acquisition_capability')
@@ -173,7 +173,7 @@ class acquisition_capability(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:acquisition_capabilities'
     list_resource_page_title = _create_manage_resource_page_title('acquisition capabilities')
 
-class acquisition(RegisterResourceFormView):
+class acquisition(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
     success_url = reverse_lazy('register:acquisition')
@@ -186,7 +186,7 @@ class acquisition(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:acquisitions'
     list_resource_page_title = _create_manage_resource_page_title('acquisitions')
 
-class computation_capability(RegisterResourceFormView):
+class computation_capability(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_dictionary
     success_url = reverse_lazy('register:computation_capability')
@@ -199,7 +199,7 @@ class computation_capability(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:computation_capabilities'
     list_resource_page_title = _create_manage_resource_page_title('computation capabilities')
 
-class computation(RegisterResourceFormView):
+class computation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
     success_url = reverse_lazy('register:computation')
@@ -212,7 +212,7 @@ class computation(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:computations'
     list_resource_page_title = _create_manage_resource_page_title('computations')
 
-class process(RegisterResourceFormView):
+class process(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
     success_url = reverse_lazy('register:process')
@@ -225,7 +225,7 @@ class process(RegisterResourceFormView):
     list_resource_type_page_url_name = 'resource_management:processes'
     list_resource_page_title = _create_manage_resource_page_title('processes')
 
-class data_collection(RegisterResourceFormView):
+class data_collection(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')

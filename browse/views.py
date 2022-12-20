@@ -202,7 +202,7 @@ def ontology_term_detail(request, category, term_id):
         'category_readable': category_readable,
     })
 
-class ListResourcesView(TemplateView):
+class ResourceListView(TemplateView):
     template_name = 'browse/list_resources_of_type.html'
     description = ''
     resource_mongodb_model = None
@@ -230,73 +230,73 @@ class ListResourcesView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class list_organisations(ListResourcesView):
+class list_organisations(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     resource_type_plural = 'Organisations'
     resource_detail_view_name = 'browse:organisation_detail'
     description = 'Data Provider/Owner organisation'
 
-class list_individuals(ListResourcesView):
+class list_individuals(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     resource_type_plural = 'Individuals'
     resource_detail_view_name = 'browse:individual_detail'
     description = 'An individual, acting in a particular role and associated with an Organisation'
 
-class list_projects(ListResourcesView):
+class list_projects(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentProject
     resource_type_plural = 'Projects'
     resource_detail_view_name = 'browse:project_detail'
     description = 'An identifiable activity designed to accomplish a set of objectives'
 
-class list_platforms(ListResourcesView):
+class list_platforms(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     resource_type_plural = 'Platforms'
     resource_detail_view_name = 'browse:platform_detail'
     description = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory)'
 
-class list_instruments(ListResourcesView):
+class list_instruments(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
     resource_type_plural = 'Instruments'
     resource_detail_view_name = 'browse:instrument_detail'
     description = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values'
 
-class list_operations(ListResourcesView):
+class list_operations(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     resource_type_plural = 'Operations'
     resource_detail_view_name = 'browse:operation_detail'
     description = 'Description of how a platform operates in order to support data acquisition by the instrument'
 
-class list_acquisition_capabilities(ListResourcesView):
+class list_acquisition_capabilities(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
     resource_detail_view_name = 'browse:acquisition_capability_detail'
     description = ''
 
-class list_acquisitions(ListResourcesView):
+class list_acquisitions(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     resource_detail_view_name = 'browse:acquisition_detail'
     description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
 
-class list_computation_capabilities(ListResourcesView):
+class list_computation_capabilities(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
     resource_detail_view_name = 'browse:computation_capability_detail'
     description = ''
 
-class list_computations(ListResourcesView):
+class list_computations(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_type_plural = 'Computations'
     resource_detail_view_name = 'browse:computation_detail'
     description = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output'
 
-class list_processes(ListResourcesView):
+class list_processes(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     resource_type_plural = 'Processes'
     resource_detail_view_name = 'browse:process_detail'
     description = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations'
 
-class list_data_collections(ListResourcesView):
+class list_data_collections(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
     resource_detail_view_name = 'browse:data_collection_detail'
