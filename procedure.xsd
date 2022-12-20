@@ -60,7 +60,7 @@
                     <documentation>Units of the observed property</documentation>
                 </annotation>
             </element>
-            <element name="qualifier" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
+            <element name="qualifier" minOccurs="0" maxOccurs="unbounded" type="gml:ReferenceType">
                 <annotation>
                     <documentation>Qualifier of the capability to observe the property (dictionary-controlled)</documentation>
                 </annotation>
