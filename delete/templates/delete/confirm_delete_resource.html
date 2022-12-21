@@ -69,7 +69,7 @@
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
                         <a href="{% url list_resources_of_type_view_name %}" class="btn btn-light me-2">Go Back</a>
                         {% if other_resources_to_delete|length > 0 %}
-                        <button type="submit" class="btn btn-outline-danger">Delete this metadata and the metadata registrations listed above</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this metadata and metadata referencing it</button>
                         {% else %}
                         <button type="submit" class="btn btn-outline-danger">Delete this metadata</button>
                         {% endif %}
