@@ -57,16 +57,6 @@ def _get_weight_of_resource_mongodb_model(resource_mongodb_model):
         return 10
     return 10
 
-def _custom_compare(item1, item2):
-    item1_weight = _get_weight_of_resource_mongodb_model(item1[2])
-    item2_weight = _get_weight_of_resource_mongodb_model(item2[2])
-    if item1_weight < item2_weight:
-        return -1
-    elif item1_weight > item2_weight:
-        return 1
-    else:
-        return 0
-
 def _get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
     projects = []
