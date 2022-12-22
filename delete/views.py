@@ -123,14 +123,14 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             'project.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentPlatform:
-        # Referenced by: Operation, Acquisition
-        #  Operations references it via the platform.@xlink:href prop.
+        # Referenced by: Operation, other Platforms
+        # Operations references it via the platform.@xlink:href prop.
         # Acquisition references it via the platform prop.
         operations = CurrentOperation.find({
             'platform.@xlink:href': resource_url
         })
-        acquisitions = CurrentAcquisition.find({
-            'platform.@xlink:href': resource_url
+        platforms = CurrentPlatform.find({
+            'childPlatform.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentInstrument:
         # Get the operational mode IDs of the Instrument
