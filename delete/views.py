@@ -41,7 +41,7 @@ from .utils import (
 
 class ResourceDeleteView(TemplateView):
     resource_id = ''
-    resource_type = ''
+    resource_type_in_resource_url = ''
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
     redirect_url = ''
@@ -54,13 +54,6 @@ class ResourceDeleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_type'] = self.resource_type
-        if self.resource_type.lower() == 'acquisitioncapabilities':
-            context['resource_type'] = 'acquisition capability'
-        if self.resource_type.lower() == 'computationcapabilities':
-            context['resource_type'] = 'computation capability'
-        if self.resource_type.lower() == 'collection':
-            context['resource_type'] = 'data collection'
         context['title'] = f'Delete Metadata Confirmation'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
@@ -75,14 +68,14 @@ class ResourceDeleteView(TemplateView):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        self.other_resources_to_delete = get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Delete the resource and resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
-        linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         for r in linked_resources:
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
@@ -90,7 +83,7 @@ class ResourceDeleteView(TemplateView):
 
 
 class organisation(ResourceDeleteView):
-    resource_type = 'organisation'
+    resource_type_in_resource_url = 'organisation'
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
@@ -103,7 +96,7 @@ class organisation(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class individual(ResourceDeleteView):
-    resource_type = 'individual'
+    resource_type_in_resource_url = 'individual'
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
@@ -116,7 +109,7 @@ class individual(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class project(ResourceDeleteView):
-    resource_type = 'project'
+    resource_type_in_resource_url = 'project'
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
@@ -129,7 +122,7 @@ class project(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class platform(ResourceDeleteView):
-    resource_type = 'platform'
+    resource_type_in_resource_url = 'platform'
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
@@ -142,7 +135,7 @@ class platform(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class instrument(ResourceDeleteView):
-    resource_type = 'instrument'
+    resource_type_in_resource_url = 'instrument'
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
@@ -155,7 +148,7 @@ class instrument(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class operation(ResourceDeleteView):
-    resource_type = 'operation'
+    resource_type_in_resource_url = 'operation'
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
@@ -168,7 +161,7 @@ class operation(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class acquisition_capability(ResourceDeleteView):
-    resource_type = 'acquisitionCapabilities'
+    resource_type_in_resource_url = 'acquisitionCapabilities'
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
@@ -181,7 +174,7 @@ class acquisition_capability(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class acquisition(ResourceDeleteView):
-    resource_type = 'acquisition'
+    resource_type_in_resource_url = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
@@ -194,7 +187,7 @@ class acquisition(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class computation_capability(ResourceDeleteView):
-    resource_type = 'computationCapabilities'
+    resource_type_in_resource_url = 'computationCapabilities'
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     redirect_url = reverse_lazy('resource_management:computation_capabilities')
@@ -207,7 +200,7 @@ class computation_capability(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class computation(ResourceDeleteView):
-    resource_type = 'computation'
+    resource_type_in_resource_url = 'computation'
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
@@ -220,7 +213,7 @@ class computation(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class process(ResourceDeleteView):
-    resource_type = 'process'
+    resource_type_in_resource_url = 'process'
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
@@ -233,7 +226,7 @@ class process(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class data_collection(ResourceDeleteView):
-    resource_type = 'collection'
+    resource_type_in_resource_url = 'collection'
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
