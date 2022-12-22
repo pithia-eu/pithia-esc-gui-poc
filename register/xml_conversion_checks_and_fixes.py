@@ -1,3 +1,10 @@
+def format_platform_dictionary(self, dictionary):
+    # Check if childPlatform property is an
+    # array-type property
+    if 'childPlatform' in dictionary and not isinstance(dictionary['childPlatform'], list):
+        dictionary['childPlatform'] = [dictionary['childPlatform']]
+    return dictionary
+
 def format_instrument_dictionary(self, dictionary):
     # Check if 'operationalMode' property is an
     # array-type property
