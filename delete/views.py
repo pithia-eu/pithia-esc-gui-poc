@@ -279,11 +279,11 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             return 5
         elif resource_type == 'instrument':
             return 6
-        elif resource_type == 'acquisition capability':
+        elif resource_type == 'acquisitionCapabilities':
             return 7
         elif resource_type == 'acquisition':
             return 8
-        elif resource_type == 'computation capability':
+        elif resource_type == 'computationCapabilities':
             return 9
         elif resource_type == 'computation':
             return 10
