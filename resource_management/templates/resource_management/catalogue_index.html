@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1 class="pb-3">{{ title }}</h1>
-<ul class="list-group">
+<ul class="list-group list-group-numbered">
     <li class="list-group-item">
         <a href="{% url 'resource_management:catalogues' %}">Catalogues</a>
         <span class="text-muted">{{ num_current_catalogues }}</span>
