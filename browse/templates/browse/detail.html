@@ -6,8 +6,8 @@
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
 {% endblock scripts %}
 {% block breadcrumbs %}
-{% breadcrumb_item list_resources_page_title 'browse:resources' %}
-{% breadcrumb_item breadcrumb_item_list_resources_of_type_text list_resources_of_type_view_name %}
+{% breadcrumb_item resource_type_list_page_breadcrumb_text 'browse:resources' %}
+{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
 {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
 {% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
 {% endwith %}
