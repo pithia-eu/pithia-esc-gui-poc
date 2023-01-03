@@ -124,10 +124,14 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             'project.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentPlatform:
-        # Referenced by: Acquisition
+        # Referenced by: Operation, other Platforms
+        # Operations references it via the platform.@xlink:href prop.
         # Acquisition references it via the platform prop.
-        acquisitions = CurrentAcquisition.find({
+        operations = CurrentOperation.find({
             'platform.@xlink:href': resource_url
+        })
+        platforms = CurrentPlatform.find({
+            'childPlatform.@xlink:href': resource_url
         })
     elif resource_mongodb_model == CurrentInstrument:
         # Get the operational mode IDs of the Instrument
@@ -280,11 +284,11 @@ def _get_resources_linked_through_resource_id(resource_id, resource_type, resour
             return 5
         elif resource_type == 'instrument':
             return 6
-        elif resource_type == 'acquisition capability':
+        elif resource_type == 'acquisitionCapabilities':
             return 7
         elif resource_type == 'acquisition':
             return 8
-        elif resource_type == 'computation capability':
+        elif resource_type == 'computationCapabilities':
             return 9
         elif resource_type == 'computation':
             return 10
@@ -359,7 +363,7 @@ class ResourceDeleteView(TemplateView):
             context['resource_type'] = 'computation capability'
         if self.resource_type.lower() == 'collection':
             context['resource_type'] = 'data collection'
-        context['title'] = f'Confirm Deletion of Metadata'
+        context['title'] = f'Delete Metadata Confirmation'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
         context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
         context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
