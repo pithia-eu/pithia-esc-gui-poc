@@ -1,5 +1,6 @@
 import pymongo
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 from common.mongodb_models import (
     CurrentAcquisition,
@@ -22,8 +23,8 @@ from common.mongodb_models import (
 from search.helpers import remove_underscore_from_id_attribute
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
-_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Register & Manage Data Collection-related Metadata'
-_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Register & Manage Catalogue-related Metadata'
+_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection Registrations'
+_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue Registrations'
 
 def _create_manage_resource_page_title(resource_type_plural):
     return f'Register & Manage {resource_type_plural.title()}'
@@ -61,6 +62,8 @@ def data_collection_related_registrations_index(request):
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
         'title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+        'index_page_url_name_breadcrumb': 'resource_management:index',
+        'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
 def catalogue_related_registrations_index(request):
@@ -72,6 +75,8 @@ def catalogue_related_registrations_index(request):
         'num_current_catalogue_entries': num_current_catalogue_entries,
         'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
         'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+        'index_page_url_name_breadcrumb': 'resource_management:index',
+        'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
 class ResourceManagementListView(TemplateView):
