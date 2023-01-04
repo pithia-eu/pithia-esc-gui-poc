@@ -4,8 +4,9 @@ from . import views
 
 app_name = 'browse'
 urlpatterns = [
-    # path('browse/', views.index, name='index'),
-    path('resources/', views.resources, name='resources'),
+    path('browse-metadata/', views.index, name='index'),
+    path('data-collection-related-metadata/', views.data_collection_related_resource_types, name='data_collection_related_resource_types'),
+    path('catalogue-related-metadata/', views.catalogue_related_resource_types, name='catalogue_related_resource_types'),
     path('ontology/', include('browse.ontology_urls')),
     path('organisations/', views.list_organisations.as_view(), name='list_organisations'),
     path('individuals/', views.list_individuals.as_view(), name='list_individuals'),

@@ -17,20 +17,21 @@ from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPA
 from search.helpers import remove_underscore_from_id_attribute
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
-_RESOURCES_PAGE_TITLE = 'Browse Metadata'
+_INDEX_PAGE_TITLE = 'Browse Metadata'
+_DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
+_CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
 # Create your views here.
 def index(request):
     return render(request, 'browse/index.html', {
-        'title': 'Browse',
-        'resources_page_title': _RESOURCES_PAGE_TITLE,
-        'xml_schemas_page_title': _XML_SCHEMAS_PAGE_TITLE,
-        'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
+        'title': _INDEX_PAGE_TITLE,
+        'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+        'catalogue_related_resource_types_page_title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
     })
 
-def resources(request):
+def data_collection_related_resource_types(request):
     num_current_organsations = mongodb_models.CurrentOrganisation.count_documents({})
     num_current_individuals = mongodb_models.CurrentIndividual.count_documents({})
     num_current_projects = mongodb_models.CurrentProject.count_documents({})
@@ -44,8 +45,8 @@ def resources(request):
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
     num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
-    return render(request, 'browse/resources.html', {
-        'title': _RESOURCES_PAGE_TITLE,
+    return render(request, 'browse/data_collection_related_resource_types.html', {
+        'title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
         'num_current_projects': num_current_projects,
@@ -59,6 +60,19 @@ def resources(request):
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
         'num_current_catalogues': num_current_catalogues,
+        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+    })
+
+def catalogue_related_resource_types(request):
+    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
+    num_current_catalogue_entries = mongodb_models.CurrentCatalogueEntry.count_documents({})
+    num_current_catalogue_data_subsets = mongodb_models.CurrentCatalogueDataSubset.count_documents({})
+    return render(request, 'browse/catalogue_related_resource_types.html', {
+        'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+        'num_current_catalogues': num_current_catalogues,
+        'num_current_catalogue_entries': num_current_catalogue_entries,
+        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
 def schemas(request):
@@ -200,7 +214,7 @@ def ontology_term_detail(request, category, term_id):
     })
 
 class ResourceListView(TemplateView):
-    template_name = 'browse/list_resources_of_type.html'
+    template_name = 'browse/resource_list_by_type.html'
     description = ''
     resource_mongodb_model = None
     resource_type_plural = ''
@@ -218,7 +232,9 @@ class ResourceListView(TemplateView):
         context['resource_list'] = self.get_resource_list()
         context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
-        context['resource_type_list_page_breadcrumb_text'] = _RESOURCES_PAGE_TITLE
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         return context
 
     def get(self, request, *args, **kwargs):
@@ -302,6 +318,12 @@ class list_catalogues(ResourceListView):
     resource_type_plural = 'Catalogues'
     resource_detail_page_url_name = 'browse:catalogue_detail'
     description = ''
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        return context
 
 def flatten(d):
     out = {}
@@ -445,7 +467,9 @@ class ResourceDetailView(TemplateView):
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
-        context['resource_type_list_page_breadcrumb_text'] = _RESOURCES_PAGE_TITLE
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
         context['resource_list_page_breadcrumb_url_name'] = self.list_resources_of_type_url_name
         return context
@@ -589,3 +613,9 @@ class catalogue_detail(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        return context

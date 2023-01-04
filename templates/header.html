@@ -24,8 +24,8 @@
                     <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:resources' as resources_url %}
-                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse Metadata</a>
+                    {% url 'browse:index' as browse_url %}
+                    <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:ontology' as browse_ontology_url %}
