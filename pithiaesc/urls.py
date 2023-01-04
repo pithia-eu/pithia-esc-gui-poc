@@ -8,5 +8,5 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('present/', include('present.urls')),
     path('admin/', admin.site.urls),
-    path('data-provider/', include('pithiaesc.secure_urls')),
+    path('authorised/', include('pithiaesc.secure_urls')),
 ]
