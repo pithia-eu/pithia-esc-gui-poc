@@ -31,18 +31,18 @@ class ResourceRegisterFormView(FormView):
     resource_type_plural = ''
     validation_url = ''
     post_url = ''
-    list_resource_type_page_url_name = ''
-    list_resource_page_title = ''
+    resource_management_list_page_breadcrumb_text = ''
+    resource_management_list_page_breadcrumb_url_name = ''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register {self.resource_type_plural.title()}'
         context['index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resource_type_page_url_name'] = self.list_resource_type_page_url_name
-        context['list_resource_page_title'] = self.list_resource_page_title
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
     def get(self, request, *args, **kwargs):
@@ -96,8 +96,8 @@ class organisation(ResourceRegisterFormView):
     resource_type_plural = 'organisations'
     validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
-    list_resource_type_page_url_name = 'resource_management:organisations'
-    list_resource_page_title = _create_manage_resource_page_title('organisations')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
 
 class individual(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
@@ -108,8 +108,8 @@ class individual(ResourceRegisterFormView):
     resource_type_plural = 'individuals'
     validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
-    list_resource_type_page_url_name = 'resource_management:individuals'
-    list_resource_page_title = _create_manage_resource_page_title('individuals')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
 
 class project(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProject
@@ -120,8 +120,8 @@ class project(ResourceRegisterFormView):
     resource_type_plural = 'projects'
     validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
-    list_resource_type_page_url_name = 'resource_management:projects'
-    list_resource_page_title = _create_manage_resource_page_title('projects')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
 
 class platform(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
@@ -132,8 +132,8 @@ class platform(ResourceRegisterFormView):
     resource_type_plural = 'platforms'
     validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
-    list_resource_type_page_url_name = 'resource_management:platforms'
-    list_resource_page_title = _create_manage_resource_page_title('platforms')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
 
 class instrument(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
@@ -145,8 +145,8 @@ class instrument(ResourceRegisterFormView):
     resource_type_plural = 'instruments'
     validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
-    list_resource_type_page_url_name = 'resource_management:instruments'
-    list_resource_page_title = _create_manage_resource_page_title('instruments')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
 
 class operation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
@@ -157,8 +157,8 @@ class operation(ResourceRegisterFormView):
     resource_type_plural = 'operations'
     validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
-    list_resource_type_page_url_name = 'resource_management:operations'
-    list_resource_page_title = _create_manage_resource_page_title('operations')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
 
 class acquisition_capability(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
@@ -170,8 +170,8 @@ class acquisition_capability(ResourceRegisterFormView):
     resource_type_plural = 'acquisition capabilities'
     validation_url = reverse_lazy('validation:acquisition_capability')
     post_url = reverse_lazy('register:acquisition_capability')
-    list_resource_type_page_url_name = 'resource_management:acquisition_capabilities'
-    list_resource_page_title = _create_manage_resource_page_title('acquisition capabilities')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
 class acquisition(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
@@ -183,8 +183,8 @@ class acquisition(ResourceRegisterFormView):
     resource_type_plural = 'acquisitions'
     validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
-    list_resource_type_page_url_name = 'resource_management:acquisitions'
-    list_resource_page_title = _create_manage_resource_page_title('acquisitions')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
 
 class computation_capability(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
@@ -196,8 +196,8 @@ class computation_capability(ResourceRegisterFormView):
     resource_type_plural = 'computation capabilities'
     validation_url = reverse_lazy('validation:computation_capability')
     post_url = reverse_lazy('register:computation_capability')
-    list_resource_type_page_url_name = 'resource_management:computation_capabilities'
-    list_resource_page_title = _create_manage_resource_page_title('computation capabilities')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
 class computation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
@@ -209,8 +209,8 @@ class computation(ResourceRegisterFormView):
     resource_type_plural = 'computations'
     validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
-    list_resource_type_page_url_name = 'resource_management:computations'
-    list_resource_page_title = _create_manage_resource_page_title('computations')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
 class process(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
@@ -222,8 +222,8 @@ class process(ResourceRegisterFormView):
     resource_type_plural = 'processes'
     validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
-    list_resource_type_page_url_name = 'resource_management:processes'
-    list_resource_page_title = _create_manage_resource_page_title('processes')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
 
 class data_collection(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
@@ -237,8 +237,8 @@ class data_collection(ResourceRegisterFormView):
     resource_type_plural = 'data collections'
     validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
-    list_resource_type_page_url_name = 'resource_management:data_collections'
-    list_resource_page_title = _create_manage_resource_page_title('data collections')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data collections')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

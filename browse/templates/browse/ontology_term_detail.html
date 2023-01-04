@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item ontology_page_title 'browse:ontology' %}
-{% breadcrumb_item category_readable|add:' Terms' 'browse:ontology_category_terms_list' category %}
+{% breadcrumb_item ontology_index_page_breadcrumb_text 'browse:ontology' %}
+{% breadcrumb_item ontology_category_term_list_page_breadcrumb_text 'browse:ontology_category_terms_list' category %}
 {% breadcrumb_item_active resource_dictionary.prefLabel %}
 {% endblock breadcrumbs %}
 {% block content %}
