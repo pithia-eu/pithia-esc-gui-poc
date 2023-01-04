@@ -313,17 +313,30 @@ class list_data_collections(ResourceListView):
     resource_detail_page_url_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
 
-class list_catalogues(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
-    resource_type_plural = 'Catalogues'
-    resource_detail_page_url_name = 'browse:catalogue_detail'
-    description = ''
-    
+class CatalogueRelatedResourceListView(ResourceListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
         return context
+
+class list_catalogues(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_type_plural = 'Catalogues'
+    resource_detail_page_url_name = 'browse:catalogue_detail'
+    description = ''
+
+class list_catalogue_entries(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
+    resource_type_plural = 'Catalogue Entries'
+    resource_detail_page_url_name = 'browse:catalogue_entry_detail'
+    description = ''
+
+class list_catalogue_data_subsets(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
+    resource_type_plural = 'Catalogue Data Subsets'
+    resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    description = ''
 
 def flatten(d):
     out = {}
@@ -605,7 +618,14 @@ class data_collection_detail(ResourceDetailView):
         
         return context
 
-class catalogue_detail(ResourceDetailView):
+class CatalogueRelatedResourceDetailView(ResourceDetailView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        return context
+
+class catalogue_detail(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
     list_resources_of_type_url_name = 'browse:list_catalogues'
@@ -614,8 +634,20 @@ class catalogue_detail(ResourceDetailView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
-        return context
+class catalogue_entry_detail(CatalogueRelatedResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_type_plural = 'Catalogue Entries'
+    list_resources_of_type_url_name = 'browse:list_catalogue_entries'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().get(request, *args, **kwargs)
+
+class catalogue_data_subset_detail(CatalogueRelatedResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_type_plural = 'Catalogue Data Subsets'
+    list_resources_of_type_url_name = 'browse:list_catalogue_data_subsets'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
+        return super().get(request, *args, **kwargs)
