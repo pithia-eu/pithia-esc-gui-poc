@@ -95,9 +95,9 @@ class DeleteCatalogueResourceView(TemplateView):
     resource_revision_mongodb_model = None
     redirect_url = ''
     template_name = 'delete/confirm_delete_resource.html'
-    list_resources_of_type_view_page_title = 'Register & Manage Resources'
-    list_resources_of_type_view_name = 'resource_management:index'
-    delete_resource_type_view_name = ''
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
+    delete_resource_page_breadcrumb_url_name = ''
     resource_to_delete = None
     other_resources_to_delete = []
 
@@ -110,9 +110,9 @@ class DeleteCatalogueResourceView(TemplateView):
             context['resource_type'] = 'catalogue data subset'
         context['title'] = f'Confirm Deletion of Metadata'
         context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
-        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
-        context['delete_resource_type_view_name'] = self.delete_resource_type_view_name
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
         context['resource_id'] = self.resource_id
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
@@ -309,24 +309,24 @@ class catalogue(DeleteCatalogueResourceView):
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
     redirect_url = reverse_lazy('resource_management:catalogues')
-    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogues'
-    list_resources_of_type_view_name = 'resource_management:catalogues'
-    delete_resource_type_view_name = 'delete:catalogue'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogues'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
 class catalogue_entry(DeleteCatalogueResourceView):
     resource_type = 'catalogueentry'
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
     redirect_url = reverse_lazy('resource_management:catalogue_entries')
-    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogue Entries'
-    list_resources_of_type_view_name = 'resource_management:catalogue_entries'
-    delete_resource_type_view_name = 'delete:catalogue_entry'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Entries'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
 class catalogue_data_subset(DeleteCatalogueResourceView):
     resource_type = 'cataloguedatasubset'
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
-    list_resources_of_type_view_page_title = 'Register & Manage Data Catalogue Data Subsets'
-    list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
-    delete_resource_type_view_name = 'delete:catalogue_data_subset'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Data Subsets'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'

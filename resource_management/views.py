@@ -240,25 +240,25 @@ class catalogues(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogues')
     resource_mongodb_model = CurrentCatalogue
     resource_type_plural = 'Catalogues'
-    delete_resource_view_name = 'delete:catalogue'
-    update_resource_view_name = 'update:catalogue'
-    register_resource_view_name = 'register:catalogue'
-    view_as_xml_view_name = 'utils:view_catalogue_as_xml'
+    resource_delete_page_url_name = 'delete:catalogue'
+    resource_update_page_url_name = 'update:catalogue'
+    resource_register_page_url_name = 'register:catalogue'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
 
 class catalogue_entries(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue entries')
     resource_mongodb_model = CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
-    delete_resource_view_name = 'delete:catalogue_entry'
-    update_resource_view_name = 'update:catalogue_entry'
-    register_resource_view_name = 'register:catalogue_entry'
-    view_as_xml_view_name = 'utils:view_catalogue_entry_as_xml'
+    resource_delete_page_url_name = 'delete:catalogue_entry'
+    resource_update_page_url_name = 'update:catalogue_entry'
+    resource_register_page_url_name = 'register:catalogue_entry'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_entry_as_xml'
 
 class catalogue_data_subsets(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue data subsets')
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'
-    delete_resource_view_name = 'delete:catalogue_data_subset'
-    update_resource_view_name = 'update:catalogue_data_subset'
-    register_resource_view_name = 'register:catalogue_data_subset'
-    view_as_xml_view_name = 'utils:view_catalogue_data_subset_as_xml'
+    resource_delete_page_url_name = 'delete:catalogue_data_subset'
+    resource_update_page_url_name = 'update:catalogue_data_subset'
+    resource_register_page_url_name = 'register:catalogue_data_subset'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'

@@ -379,8 +379,8 @@ class catalogue(ResourceUpdateFormView):
     a_or_an = 'a'
     resource_type = 'Catalogue'
     resource_type_plural = 'Catalogues'
-    list_resources_of_type_view_name = 'resource_management:catalogues'
-    update_resource_type_view_name = 'update:catalogue'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    resource_update_page_url_name = 'update:catalogue'
     validation_url = reverse_lazy('validation:catalogue')
     success_url = reverse_lazy('resource_management:catalogues')
 
@@ -395,8 +395,8 @@ class catalogue_entry(ResourceUpdateFormView):
     a_or_an = 'a'
     resource_type = 'Catalogue Entry'
     resource_type_plural = 'Catalogue Entries'
-    list_resources_of_type_view_name = 'resource_management:catalogue_entries'
-    update_resource_type_view_name = 'update:catalogue_entry'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    resource_update_page_url_name = 'update:catalogue_entry'
     validation_url = reverse_lazy('validation:catalogue_entry')
     success_url = reverse_lazy('resource_management:catalogue_entries')
 
@@ -411,8 +411,8 @@ class catalogue_data_subset(ResourceUpdateFormView):
     a_or_an = 'a'
     resource_type = 'Catalogue Data Subset'
     resource_type_plural = 'Catalogue Data Subsets'
-    list_resources_of_type_view_name = 'resource_management:catalogue_data_subsets'
-    update_resource_type_view_name = 'update:catalogue_data_subset'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
 

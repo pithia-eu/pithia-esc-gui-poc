@@ -300,7 +300,7 @@ class list_data_collections(ResourceListView):
 class list_catalogues(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
-    resource_detail_view_name = 'browse:catalogue_detail'
+    resource_detail_page_url_name = 'browse:catalogue_detail'
     description = ''
 
 def flatten(d):
@@ -584,7 +584,7 @@ class data_collection_detail(ResourceDetailView):
 class catalogue_detail(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
-    list_resources_of_type_view_name = 'browse:list_catalogues'
+    list_resources_of_type_url_name = 'browse:list_catalogues'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
