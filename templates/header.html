@@ -39,8 +39,8 @@
             </a>
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
-                    {% url 'home_admin' as admin_home_url %}
-                    <a href="{{ admin_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
+                    {% url 'data_provider_home' as data_provider_home_url %}
+                    <a href="{{ data_provider_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
                 </li>
                 <li>
                     <h6 class="dropdown-header">
@@ -68,7 +68,7 @@
     </ul>
 
     <div class="col-md-3 text-end">
-        <a href="{% url 'home_admin' %}" class="btn btn-outline-primary me-2">
+        <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login
         </a>
     </div>

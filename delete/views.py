@@ -46,22 +46,22 @@ class ResourceDeleteView(TemplateView):
     resource_revision_mongodb_model = None
     redirect_url = ''
     template_name = 'delete/confirm_delete_resource.html'
-    list_resources_of_type_view_page_title = 'Register & Manage Resources'
-    list_resources_of_type_view_name = 'resource_management:index'
-    delete_resource_type_view_name = ''
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:index'
+    delete_resource_page_breadcrumb_url_name = ''
     resource_to_delete = None
     other_resources_to_delete = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Delete Metadata Confirmation'
-        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
-        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
-        context['delete_resource_type_view_name'] = self.delete_resource_type_view_name
         context['resource_id'] = self.resource_id
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breacrumb_url_name'] = self.resource_management_list_page_breacrumb_url_name
+        context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
         return context
 
     def get(self, request, *args, **kwargs):
@@ -87,9 +87,9 @@ class organisation(ResourceDeleteView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
-    list_resources_of_type_view_page_title = 'Register & Manage Organisations'
-    list_resources_of_type_view_name = 'resource_management:organisations'
-    delete_resource_type_view_name = 'delete:organisation'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:organisations'
+    delete_resource_page_breadcrumb_url_name = 'delete:organisation'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -100,9 +100,9 @@ class individual(ResourceDeleteView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
-    list_resources_of_type_view_page_title = 'Register & Manage Individuals'
-    list_resources_of_type_view_name = 'resource_management:individuals'
-    delete_resource_type_view_name = 'delete:individual'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:individuals'
+    delete_resource_page_breadcrumb_url_name = 'delete:individual'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -113,9 +113,9 @@ class project(ResourceDeleteView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
-    list_resources_of_type_view_page_title = 'Register & Manage Projects'
-    list_resources_of_type_view_name = 'resource_management:projects'
-    delete_resource_type_view_name = 'delete:project'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:projects'
+    delete_resource_page_breadcrumb_url_name = 'delete:project'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -126,9 +126,9 @@ class platform(ResourceDeleteView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
-    list_resources_of_type_view_page_title = 'Register & Manage Platforms'
-    list_resources_of_type_view_name = 'resource_management:platforms'
-    delete_resource_type_view_name = 'delete:platform'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:platforms'
+    delete_resource_page_breadcrumb_url_name = 'delete:platform'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -139,9 +139,9 @@ class instrument(ResourceDeleteView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
-    list_resources_of_type_view_page_title = 'Register & Manage Instruments'
-    list_resources_of_type_view_name = 'resource_management:instruments'
-    delete_resource_type_view_name = 'delete:instrument'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:instruments'
+    delete_resource_page_breadcrumb_url_name = 'delete:instrument'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -152,9 +152,9 @@ class operation(ResourceDeleteView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
-    list_resources_of_type_view_page_title = 'Register & Manage Operations'
-    list_resources_of_type_view_name = 'resource_management:operations'
-    delete_resource_type_view_name = 'delete:operation'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:operations'
+    delete_resource_page_breadcrumb_url_name = 'delete:operation'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -165,9 +165,9 @@ class acquisition_capability(ResourceDeleteView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
-    list_resources_of_type_view_page_title = 'Register & Manage Acquisition Capabilities'
-    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
-    delete_resource_type_view_name = 'delete:acquisition_capability'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:acquisition_capabilities'
+    delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_id']
@@ -178,9 +178,9 @@ class acquisition(ResourceDeleteView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
-    list_resources_of_type_view_page_title = 'Register & Manage Acquisitions'
-    list_resources_of_type_view_name = 'resource_management:acquisitions'
-    delete_resource_type_view_name = 'delete:acquisition'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:acquisitions'
+    delete_resource_page_breadcrumb_url_name = 'delete:acquisition'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -191,9 +191,9 @@ class computation_capability(ResourceDeleteView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     redirect_url = reverse_lazy('resource_management:computation_capabilities')
-    list_resources_of_type_view_page_title = 'Register & Manage Computation Capabilities'
-    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
-    delete_resource_type_view_name = 'delete:computation_capability'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:computation_capabilities'
+    delete_resource_page_breadcrumb_url_name = 'delete:computation_capability'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_id']
@@ -204,9 +204,9 @@ class computation(ResourceDeleteView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
-    list_resources_of_type_view_page_title = 'Register & Manage Computations'
-    list_resources_of_type_view_name = 'resource_management:computations'
-    delete_resource_type_view_name = 'delete:computation'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:computations'
+    delete_resource_page_breadcrumb_url_name = 'delete:computation'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -217,9 +217,9 @@ class process(ResourceDeleteView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
-    list_resources_of_type_view_page_title = 'Register & Manage Processes'
-    list_resources_of_type_view_name = 'resource_management:processes'
-    delete_resource_type_view_name = 'delete:process'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:processes'
+    delete_resource_page_breadcrumb_url_name = 'delete:process'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -230,9 +230,9 @@ class data_collection(ResourceDeleteView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
-    list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
-    list_resources_of_type_view_name = 'resource_management:data_collections'
-    delete_resource_type_view_name = 'delete:data_collection'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
+    resource_management_list_page_breacrumb_url_name = 'resource_management:data_collections'
+    delete_resource_page_breadcrumb_url_name = 'delete:data_collection'
     template_name = 'delete/confirm_delete_data_collection.html'
 
     def dispatch(self, request, *args, **kwargs):

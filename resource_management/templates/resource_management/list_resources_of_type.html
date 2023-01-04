@@ -24,17 +24,17 @@
     </div>
     <div class="col-lg-3">
         <div class="d-flex justify-content-end">
-            <a href="{% url register_resource_view_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span>+</span><span class="mt-1"> Register</span></a>
+            <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span>+</span><span class="mt-1"> Register</span></a>
         </div>
     </div>
 </div>
-{% if resources_list|length > 0 %}
-{% block ul_resources_list %}
-{% with resources_list=resources_list|dictsort:'name' %}
-{% include 'resource_management/ul_resources_list.html' %}
+{% if resource_list|length > 0 %}
+{% block ul_resource_list %}
+{% with resource_list=resource_list|dictsort:'name' %}
+{% include 'resource_management/ul_resource_list.html' %}
 {% endwith %}
-{% endblock ul_resources_list %}
+{% endblock ul_resource_list %}
 {% else %}
-<p>No {{ resource_type_plural|lower }} have been registered with the e-Science Centre.</p>
+<p>{{ empty_resource_list_text }}</p>
 {% endif %}
 {% endblock content %}
