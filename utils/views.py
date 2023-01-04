@@ -48,8 +48,8 @@ class ResourceXmlDownloadView(TemplateView):
     resource_localid = ''
     template_name = 'utils/resource_as_xml.html'
     xml = ''
-    list_resources_of_type_view_page_title = ''
-    list_resources_of_type_view_name = ''
+    resource_management_list_page_breadcrumb_text = ''
+    resource_management_list_page_breadcrumb_url_name = ''
 
     def get(self, request, *args, **kwargs):
         original_metadata_xml = OriginalMetadataXml.find_one({
@@ -73,15 +73,15 @@ class ResourceXmlDownloadView(TemplateView):
         context['resource_name'] = self.resource_name
         context['resource_localid'] = self.resource_localid
         context['xml'] = self.xml
-        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = self.list_resources_of_type_view_page_title
-        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
 class view_organisation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOrganisation
-    list_resources_of_type_view_page_title = 'Register & Manage Organisations'
-    list_resources_of_type_view_name = 'resource_management:organisations'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -89,8 +89,8 @@ class view_organisation_as_xml(ResourceXmlDownloadView):
 
 class view_individual_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentIndividual
-    list_resources_of_type_view_page_title = 'Register & Manage Individuals'
-    list_resources_of_type_view_name = 'resource_management:individuals'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -98,8 +98,8 @@ class view_individual_as_xml(ResourceXmlDownloadView):
 
 class view_project_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProject
-    list_resources_of_type_view_page_title = 'Register & Manage Projects'
-    list_resources_of_type_view_name = 'resource_management:projects'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -107,8 +107,8 @@ class view_project_as_xml(ResourceXmlDownloadView):
 
 class view_platform_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentPlatform
-    list_resources_of_type_view_page_title = 'Register & Manage Platforms'
-    list_resources_of_type_view_name = 'resource_management:platforms'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -116,8 +116,8 @@ class view_platform_as_xml(ResourceXmlDownloadView):
 
 class view_operation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOperation
-    list_resources_of_type_view_page_title = 'Register & Manage Operations'
-    list_resources_of_type_view_name = 'resource_management:operations'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -125,8 +125,8 @@ class view_operation_as_xml(ResourceXmlDownloadView):
 
 class view_instrument_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentInstrument
-    list_resources_of_type_view_page_title = 'Register & Manage Instruments'
-    list_resources_of_type_view_name = 'resource_management:instruments'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -134,8 +134,8 @@ class view_instrument_as_xml(ResourceXmlDownloadView):
 
 class view_acquisition_capability_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisitionCapability
-    list_resources_of_type_view_page_title = 'Register & Manage Acquisition Capabilities'
-    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_id']
@@ -143,8 +143,8 @@ class view_acquisition_capability_as_xml(ResourceXmlDownloadView):
 
 class view_acquisition_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisition
-    list_resources_of_type_view_page_title = 'Register & Manage Acquisitions'
-    list_resources_of_type_view_name = 'resource_management:acquisitions'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -152,8 +152,8 @@ class view_acquisition_as_xml(ResourceXmlDownloadView):
 
 class view_computation_capability_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputationCapability
-    list_resources_of_type_view_page_title = 'Register & Manage Computation Capabilities'
-    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_id']
@@ -161,8 +161,8 @@ class view_computation_capability_as_xml(ResourceXmlDownloadView):
 
 class view_computation_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputation
-    list_resources_of_type_view_page_title = 'Register & Manage Computations'
-    list_resources_of_type_view_name = 'resource_management:computations'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -170,8 +170,8 @@ class view_computation_as_xml(ResourceXmlDownloadView):
 
 class view_process_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProcess
-    list_resources_of_type_view_page_title = 'Register & Manage Processes'
-    list_resources_of_type_view_name = 'resource_management:processes'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -179,8 +179,8 @@ class view_process_as_xml(ResourceXmlDownloadView):
 
 class view_data_collection_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentDataCollection
-    list_resources_of_type_view_page_title = 'Register & Manage Data Collections'
-    list_resources_of_type_view_name = 'resource_management:data_collections'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']

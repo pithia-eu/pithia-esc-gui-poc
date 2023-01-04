@@ -6,7 +6,6 @@ app_name = 'browse'
 urlpatterns = [
     # path('browse/', views.index, name='index'),
     path('resources/', views.resources, name='resources'),
-    path('schemas/', views.schemas, name='schemas'),
     path('ontology/', include('browse.ontology_urls')),
     path('organisations/', views.list_organisations.as_view(), name='list_organisations'),
     path('individuals/', views.list_individuals.as_view(), name='list_individuals'),
