@@ -40,158 +40,159 @@ def index(request):
         'title': _INDEX_PAGE_TITLE
     })
 
-class ManageResourcesView(TemplateView):
+class ResourceManagementListView(TemplateView):
     template_name = 'resource_management/list_resources_of_type.html'
     resource_mongodb_model = None
     resource_type_plural = 'Resources'
     title = f'Manage {resource_type_plural}'
-    resources_list = []
-    delete_resource_view_name = ''
-    update_resource_view_name = ''
-    register_resource_view_name = ''
-    view_as_xml_view_name = ''
+    resource_list = []
+    resource_delete_page_url_name = ''
+    resource_update_page_url_name = ''
+    resource_register_page_url_name = ''
+    resource_xml_download_page_url_name = ''
 
-    def get_resources_list(self):
-        resources_list = list(self.resource_mongodb_model.find({}))
-        return list(map(remove_underscore_from_id_attribute, resources_list))
+    def get_resource_list(self):
+        resource_list = list(self.resource_mongodb_model.find({}))
+        return list(map(remove_underscore_from_id_attribute, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.title
         context['resource_type_plural'] = self.resource_type_plural
-        context['resources_list'] = self.get_resources_list()
-        context['delete_resource_view_name'] = self.delete_resource_view_name
-        context['update_resource_view_name'] = self.update_resource_view_name
-        context['register_resource_view_name'] = self.register_resource_view_name
+        context['resource_list'] = self.get_resource_list()
+        context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
         context['index_page_title'] = _INDEX_PAGE_TITLE
-        context['view_as_xml_view_name'] = self.view_as_xml_view_name
+        context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
+        context['resource_update_page_url_name'] = self.resource_update_page_url_name
+        context['resource_register_page_url_name'] = self.resource_register_page_url_name
+        context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
         return context
 
-class organisations(ManageResourcesView):
+class organisations(ResourceManagementListView):
     title = _create_manage_resource_page_title('organisations')
     resource_mongodb_model = CurrentOrganisation
     resource_type_plural = 'Organisations'
-    delete_resource_view_name = 'delete:organisation'
-    update_resource_view_name = 'update:organisation'
-    register_resource_view_name = 'register:organisation'
-    view_as_xml_view_name = 'utils:view_organisation_as_xml'
+    resource_delete_page_url_name = 'delete:organisation'
+    resource_update_page_url_name = 'update:organisation'
+    resource_register_page_url_name = 'register:organisation'
+    resource_xml_download_page_url_name = 'utils:view_organisation_as_xml'
 
-class individuals(ManageResourcesView):
+class individuals(ResourceManagementListView):
     title = _create_manage_resource_page_title('individuals')
     resource_mongodb_model = CurrentIndividual
     resource_type_plural = 'Individuals'
-    delete_resource_view_name = 'delete:individual'
-    update_resource_view_name = 'update:individual'
-    register_resource_view_name = 'register:individual'
-    view_as_xml_view_name = 'utils:view_individual_as_xml'
+    resource_delete_page_url_name = 'delete:individual'
+    resource_update_page_url_name = 'update:individual'
+    resource_register_page_url_name = 'register:individual'
+    resource_xml_download_page_url_name = 'utils:view_individual_as_xml'
 
-class projects(ManageResourcesView):
+class projects(ResourceManagementListView):
     title = _create_manage_resource_page_title('projects')
     resource_mongodb_model = CurrentProject
     resource_type_plural = 'Projects'
-    delete_resource_view_name = 'delete:project'
-    update_resource_view_name = 'update:project'
-    register_resource_view_name = 'register:project'
-    view_as_xml_view_name = 'utils:view_project_as_xml'
+    resource_delete_page_url_name = 'delete:project'
+    resource_update_page_url_name = 'update:project'
+    resource_register_page_url_name = 'register:project'
+    resource_xml_download_page_url_name = 'utils:view_project_as_xml'
 
-class platforms(ManageResourcesView):
+class platforms(ResourceManagementListView):
     template_name = 'resource_management/list_platforms.html'
     title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
-    resource_type_plural = 'PLatforms'
-    delete_resource_view_name = 'delete:platform'
-    update_resource_view_name = 'update:platform'
-    register_resource_view_name = 'register:platform'
-    view_as_xml_view_name = 'utils:view_platform_as_xml'
+    resource_type_plural = 'Platforms'
+    resource_delete_page_url_name = 'delete:platform'
+    resource_update_page_url_name = 'update:platform'
+    resource_register_page_url_name = 'register:platform'
+    resource_xml_download_page_url_name = 'utils:view_platform_as_xml'
 
-    def get_resources_list(self):
-        resources_list = list(self.resource_mongodb_model.find({}).sort([
+    def get_resource_list(self):
+        resource_list = list(self.resource_mongodb_model.find({}).sort([
             ('name', pymongo.ASCENDING)
         ]))
-        return list(map(remove_underscore_from_id_attribute, resources_list))
+        return list(map(remove_underscore_from_id_attribute, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pithia_platforms, non_pithia_platforms = [], []
-        for p in context['resources_list']:
+        for p in context['resource_list']:
             pithia_platforms.append(p) if p['identifier']['PITHIA_Identifier']['namespace'] == 'pithia' else non_pithia_platforms.append(p)
         context['pithia_platforms'] = pithia_platforms
         context['non_pithia_platforms'] = non_pithia_platforms
         return context
 
-class operations(ManageResourcesView):
+class operations(ResourceManagementListView):
     title = _create_manage_resource_page_title('operations')
     resource_mongodb_model = CurrentOperation
     resource_type_plural = 'Operations'
-    delete_resource_view_name = 'delete:operation'
-    update_resource_view_name = 'update:operation'
-    register_resource_view_name = 'register:operation'
-    view_as_xml_view_name = 'utils:view_operation_as_xml'
+    resource_delete_page_url_name = 'delete:operation'
+    resource_update_page_url_name = 'update:operation'
+    resource_register_page_url_name = 'register:operation'
+    resource_xml_download_page_url_name = 'utils:view_operation_as_xml'
 
-class instruments(ManageResourcesView):
+class instruments(ResourceManagementListView):
     title = _create_manage_resource_page_title('instruments')
     resource_mongodb_model = CurrentInstrument
     resource_type_plural = 'Instruments'
-    delete_resource_view_name = 'delete:instrument'
-    update_resource_view_name = 'update:instrument'
-    register_resource_view_name = 'register:instrument'
-    view_as_xml_view_name = 'utils:view_instrument_as_xml'
+    resource_delete_page_url_name = 'delete:instrument'
+    resource_update_page_url_name = 'update:instrument'
+    resource_register_page_url_name = 'register:instrument'
+    resource_xml_download_page_url_name = 'utils:view_instrument_as_xml'
 
-class acquisition_capabilities(ManageResourcesView):
+class acquisition_capabilities(ResourceManagementListView):
     title = _create_manage_resource_page_title('acquisition capabilities')
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    delete_resource_view_name = 'delete:acquisition_capability'
-    update_resource_view_name = 'update:acquisition_capability'
-    register_resource_view_name = 'register:acquisition_capability'
-    view_as_xml_view_name = 'utils:view_acquisition_capability_as_xml'
+    resource_delete_page_url_name = 'delete:acquisition_capability'
+    resource_update_page_url_name = 'update:acquisition_capability'
+    resource_register_page_url_name = 'register:acquisition_capability'
+    resource_xml_download_page_url_name = 'utils:view_acquisition_capability_as_xml'
 
-class acquisitions(ManageResourcesView):
+class acquisitions(ResourceManagementListView):
     title = _create_manage_resource_page_title('acquisitions')
     resource_mongodb_model = CurrentAcquisition
     resource_type_plural = 'Acquisitions'
-    delete_resource_view_name = 'delete:acquisition'
-    update_resource_view_name = 'update:acquisition'
-    register_resource_view_name = 'register:acquisition'
-    view_as_xml_view_name = 'utils:view_acquisition_as_xml'
+    resource_delete_page_url_name = 'delete:acquisition'
+    resource_update_page_url_name = 'update:acquisition'
+    resource_register_page_url_name = 'register:acquisition'
+    resource_xml_download_page_url_name = 'utils:view_acquisition_as_xml'
 
-class computation_capabilities(ManageResourcesView):
+class computation_capabilities(ResourceManagementListView):
     title = _create_manage_resource_page_title('computation capabilities')
     resource_mongodb_model = CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    delete_resource_view_name = 'delete:computation_capability'
-    update_resource_view_name = 'update:computation_capability'
-    register_resource_view_name = 'register:computation_capability'
-    view_as_xml_view_name = 'utils:view_computation_capability_as_xml'
+    resource_delete_page_url_name = 'delete:computation_capability'
+    resource_update_page_url_name = 'update:computation_capability'
+    resource_register_page_url_name = 'register:computation_capability'
+    resource_xml_download_page_url_name = 'utils:view_computation_capability_as_xml'
 
-class computations(ManageResourcesView):
+class computations(ResourceManagementListView):
     title = _create_manage_resource_page_title('computations')
     resource_mongodb_model = CurrentComputation
     resource_type_plural = 'Computations'
-    delete_resource_view_name = 'delete:computation'
-    update_resource_view_name = 'update:computation'
-    register_resource_view_name = 'register:computation'
-    view_as_xml_view_name = 'utils:view_computation_as_xml'
+    resource_delete_page_url_name = 'delete:computation'
+    resource_update_page_url_name = 'update:computation'
+    resource_register_page_url_name = 'register:computation'
+    resource_xml_download_page_url_name = 'utils:view_computation_as_xml'
 
-class processes(ManageResourcesView):
+class processes(ResourceManagementListView):
     title = _create_manage_resource_page_title('processes')
     resource_mongodb_model = CurrentProcess
     resource_type_plural = 'Processes'
-    delete_resource_view_name = 'delete:process'
-    update_resource_view_name = 'update:process'
-    register_resource_view_name = 'register:process'
-    view_as_xml_view_name = 'utils:view_process_as_xml'
+    resource_delete_page_url_name = 'delete:process'
+    resource_update_page_url_name = 'update:process'
+    resource_register_page_url_name = 'register:process'
+    resource_xml_download_page_url_name = 'utils:view_process_as_xml'
 
-class data_collections(ManageResourcesView):
+class data_collections(ResourceManagementListView):
     title = _create_manage_resource_page_title('data collections')
     resource_mongodb_model = CurrentDataCollection
     resource_type_plural = 'Data Collections'
-    delete_resource_view_name = 'delete:data_collection'
-    update_resource_view_name = 'update:data_collection'
-    register_resource_view_name = 'register:data_collection'
-    view_as_xml_view_name = 'utils:view_data_collection_as_xml'
+    resource_delete_page_url_name = 'delete:data_collection'
+    resource_update_page_url_name = 'update:data_collection'
+    resource_register_page_url_name = 'register:data_collection'
+    resource_xml_download_page_url_name = 'utils:view_data_collection_as_xml'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['update_interaction_methods_view_name'] = 'update:data_collection_interaction_methods'
+        context['interaction_method_update_page_url_name'] = 'update:data_collection_interaction_methods'
         return context

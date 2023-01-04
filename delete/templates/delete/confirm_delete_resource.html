@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item resource_management_index_page_title 'resource_management:index' %}
-{% breadcrumb_item list_resources_of_type_view_page_title list_resources_of_type_view_name %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breacrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
+{% block scripts %}
+<script src="{% static 'delete/confirm_delete_resource.js' %}" defer></script>
+{% with pithia_identifier=resource_to_delete.identifier.PITHIA_Identifier %}
+{{ resource_to_delete.name|default:pithia_identifier.localID|json_script:'resource-name' }}
+{% endwith %}
+{% endblock scripts %}
 {% block content %}
-<div class="row pb-4">
-    <div class="col-xl-9 col-lg-8">
+<div class="row gy-3">
+    <div class="col-lg-8">
         <h1 class="mb-0">
             {{ title }}
         </h1>
@@ -18,53 +24,54 @@
             {% endwith %}
         </span>
     </div>
-</div>
-<div class="row gy-3">
-    <div class="col-xl-9 col-lg-8">
-        <div class="row">
-            <div class="col-lg-8">
-                {% if messages %}
-                <div class="registration-alerts">
-                    {% for message in messages %}
-                    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
+    {% if messages %}
+    <div class="col-lg-8">
+        <div class="registration-alerts">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                {{ message }}
             </div>
+            {% endfor %}
         </div>
-        <div class="row mb-4">
-            <div class="col-lg-8">
-                {% block extra_information %}{% endblock extra_information %}
-                {% if other_resources_to_delete|length > 0 %}
-                <div class="alert alert-warning">
-                    <p>There {% if other_resources_to_delete|length > 1 %}are {{ other_resources_to_delete|length }} other metadata registered{% else %}is {{ other_resources_to_delete|length }} other registration of metadata{% endif %} referencing this one that will also be deleted upon deleting this registration of metadata. Please review these in the list below before confirming this deletion:</p>
-                    <ul class="list-group mb-0">
-                        {% for r in other_resources_to_delete %}
-                        {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
-                        <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capability{% elif r.1|lower == 'computationcapabilities' %}Computation Capability{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
-                        {% endwith %}
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    This metadata is not referred to by any other metadata and can be safely deleted without deleting other metadata.
-                </div>
-                {% endif %}
-            </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-8">
+        {% block extra_information %}{% endblock extra_information %}
+        {% if other_resources_to_delete|length > 0 %}
+        <div class="alert alert-warning mb-0">
+            <p>There {% if other_resources_to_delete|length > 1 %}are {{ other_resources_to_delete|length }} other metadata registrations{% else %}is {{ other_resources_to_delete|length }} other metadata registration{% endif %} referencing this metadata that will also be deleted upon deleting this metadata.</p>
+            <p>Please review the mentioned metadata in the list below before confirming deletion:</p>
+            <ul class="list-group mb-0">
+                {% for r in other_resources_to_delete %}
+                {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
+                <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capability{% elif r.1|lower == 'computationcapabilities' %}Computation Capability{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
+                {% endwith %}
+                {% endfor %}
+            </ul>
         </div>
-        <form action="{% url delete_resource_type_view_name resource_id %}" method="post" enctype="multipart/form-data">
+        {% else %}
+        <div class="alert alert-info">
+            This metadata is not referred to by any other metadata and can be deleted without deleting other metadata.
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-5 mt-4">
+        {% with pithia_identifier=resource_to_delete.identifier.PITHIA_Identifier %}
+        <label for="confirm-resource-name">Type <b>{{ resource_to_delete.name|default:pithia_identifier.localID }}</b> to confirm deletion.</label>
+        <input type="text" class="form-control mt-1" id="confirm-resource-name" value="">
+        {% endwith %}
+    </div>
+    <div class="col-lg-8">
+        <form action="{% url delete_resource_page_breadcrumb_url_name resource_id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row gy-4">
                 <div class="col-lg-12">
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
-                        <a href="{% url list_resources_of_type_view_name %}" class="btn btn-light me-2">Go Back</a>
+                        <a href="{% url resource_management_list_page_breacrumb_url_name %}" class="btn btn-light me-2">Go Back</a>
                         {% if other_resources_to_delete|length > 0 %}
-                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }} and the metadata registrations listed above</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this metadata and metadata referencing it</button>
                         {% else %}
-                        <button type="submit" class="btn btn-outline-danger">Delete this {{ resource_type }}</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this metadata</button>
                         {% endif %}
                     </div>
                 </div>

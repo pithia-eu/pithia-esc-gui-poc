@@ -17,7 +17,7 @@ from update.version_control import assign_original_xml_file_entry_to_revision_id
 
 
 # Create your views here.
-class UpdateResourceView(FormView):
+class ResourceUpdateFormView(FormView):
     # Registration variables
     resource_id = ''
     resource_mongodb_model = None
@@ -28,10 +28,10 @@ class UpdateResourceView(FormView):
     a_or_an = 'a'
     resource_type = ''
     resource_type_plural = ''
-    list_resources_of_type_view_name = ''
-    update_resource_type_view_name = ''
+    resource_update_page_url_name = ''
     validation_url = ''
     resource_to_update_name = '' # Set in dispatch() function
+    resource_management_list_page_breadcrumb_url_name = ''
 
     # Class variables
     template_name = 'update/file_upload.html'
@@ -45,11 +45,10 @@ class UpdateResourceView(FormView):
         context['resource_id'] = self.resource_id
         context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
-        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['list_resources_of_type_view_page_title'] = f'Register & Manage {self.resource_type_plural}'
-        context['list_resources_of_type_view_name'] = self.list_resources_of_type_view_name
-        context['post_url'] = reverse_lazy(self.update_resource_type_view_name, args=[self.resource_id])
-        context['update_resource_type_view_name'] = self.update_resource_type_view_name
+        context['post_url'] = reverse_lazy(self.resource_update_page_url_name, args=[self.resource_id])
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.resource_type_plural}'
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
     def post(self, request, *args, **kwargs):
@@ -88,15 +87,15 @@ class UpdateResourceView(FormView):
         self.resource_to_update_name = resource_to_update_name
         return super().get(request, *args, **kwargs)
 
-class organisation(UpdateResourceView):
+class organisation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
 
     a_or_an = 'an'
     resource_type = 'Organisation'
     resource_type_plural = 'Organisations'
-    list_resources_of_type_view_name = 'resource_management:organisations'
-    update_resource_type_view_name = 'update:organisation'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
+    resource_update_page_url_name = 'update:organisation'
     validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
@@ -105,15 +104,15 @@ class organisation(UpdateResourceView):
         return super().dispatch(request, *args, **kwargs)
     
 
-class individual(UpdateResourceView):
+class individual(ResourceUpdateFormView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
 
     a_or_an = 'an'
     resource_type = 'Individual'
     resource_type_plural = 'Individuals'
-    list_resources_of_type_view_name = 'resource_management:individuals'
-    update_resource_type_view_name = 'update:individual'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
+    resource_update_page_url_name = 'update:individual'
     validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
 
@@ -121,15 +120,15 @@ class individual(UpdateResourceView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class project(UpdateResourceView):
+class project(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
 
     a_or_an = 'a'
     resource_type = 'Project'
     resource_type_plural = 'Projects'
-    list_resources_of_type_view_name = 'resource_management:projects'
-    update_resource_type_view_name = 'update:project'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+    resource_update_page_url_name = 'update:project'
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
@@ -137,15 +136,15 @@ class project(UpdateResourceView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class platform(UpdateResourceView):
+class platform(ResourceUpdateFormView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
 
     a_or_an = 'a'
     resource_type = 'Platform'
     resource_type_plural = 'Platforms'
-    list_resources_of_type_view_name = 'resource_management:platforms'
-    update_resource_type_view_name = 'update:platform'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
+    resource_update_page_url_name = 'update:platform'
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
@@ -153,7 +152,7 @@ class platform(UpdateResourceView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class instrument(UpdateResourceView):
+class instrument(ResourceUpdateFormView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     resource_conversion_validate_and_correct_function = format_instrument_dictionary
@@ -161,8 +160,8 @@ class instrument(UpdateResourceView):
     a_or_an = 'an'
     resource_type = 'Instrument'
     resource_type_plural = 'Instruments'
-    list_resources_of_type_view_name = 'resource_management:instruments'
-    update_resource_type_view_name = 'update:instrument'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
+    resource_update_page_url_name = 'update:instrument'
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
 
@@ -170,15 +169,15 @@ class instrument(UpdateResourceView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class operation(UpdateResourceView):
+class operation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
 
     a_or_an = 'an'
     resource_type = 'Operation'
     resource_type_plural = 'Operations'
-    list_resources_of_type_view_name = 'resource_management:operations'
-    update_resource_type_view_name = 'update:operation'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+    resource_update_page_url_name = 'update:operation'
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
 
@@ -186,7 +185,7 @@ class operation(UpdateResourceView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition_capability(UpdateResourceView):
+class acquisition_capability(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     resource_conversion_validate_and_correct_function = format_acquisition_capability_dictionary
@@ -194,8 +193,8 @@ class acquisition_capability(UpdateResourceView):
     a_or_an = 'an'
     resource_type = 'Acquisition Capability'
     resource_type_plural = 'Acquisition Capabilities'
-    list_resources_of_type_view_name = 'resource_management:acquisition_capabilities'
-    update_resource_type_view_name = 'update:acquisition_capability'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
+    resource_update_page_url_name = 'update:acquisition_capability'
     validation_url = reverse_lazy('validation:acquisition_capability')
     success_url = reverse_lazy('resource_management:acquisition_capabilities')
 
@@ -203,7 +202,7 @@ class acquisition_capability(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition(UpdateResourceView):
+class acquisition(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     resource_conversion_validate_and_correct_function = format_acquisition_dictionary
@@ -211,8 +210,8 @@ class acquisition(UpdateResourceView):
     a_or_an = 'an'
     resource_type = 'Acquisition'
     resource_type_plural = 'Acquisitions'
-    list_resources_of_type_view_name = 'resource_management:acquisitions'
-    update_resource_type_view_name = 'update:acquisition'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
+    resource_update_page_url_name = 'update:acquisition'
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
@@ -220,7 +219,7 @@ class acquisition(UpdateResourceView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation_capability(UpdateResourceView):
+class computation_capability(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     resource_conversion_validate_and_correct_function = format_computation_capability_dictionary
@@ -228,8 +227,8 @@ class computation_capability(UpdateResourceView):
     a_or_an = 'a'
     resource_type = 'Computation Capability'
     resource_type_plural = 'Computation Capabilities'
-    list_resources_of_type_view_name = 'resource_management:computation_capabilities'
-    update_resource_type_view_name = 'update:computation_capability'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
+    resource_update_page_url_name = 'update:computation_capability'
     validation_url = reverse_lazy('validation:computation_capability')
     success_url = reverse_lazy('resource_management:computation_capabilities')
 
@@ -237,7 +236,7 @@ class computation_capability(UpdateResourceView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
         
-class computation(UpdateResourceView):
+class computation(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     resource_conversion_validate_and_correct_function = format_computation_dictionary
@@ -245,8 +244,8 @@ class computation(UpdateResourceView):
     a_or_an = 'a'
     resource_type = 'Computation'
     resource_type_plural = 'Computations'
-    list_resources_of_type_view_name = 'resource_management:computations'
-    update_resource_type_view_name = 'update:computation'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
+    resource_update_page_url_name = 'update:computation'
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
@@ -254,7 +253,7 @@ class computation(UpdateResourceView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class process(UpdateResourceView):
+class process(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     resource_conversion_validate_and_correct_function = format_process_dictionary
@@ -262,8 +261,8 @@ class process(UpdateResourceView):
     a_or_an = 'a'
     resource_type = 'Process'
     resource_type_plural = 'Processes'
-    list_resources_of_type_view_name = 'resource_management:processes'
-    update_resource_type_view_name = 'update:process'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+    resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
 
@@ -271,7 +270,7 @@ class process(UpdateResourceView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class data_collection(UpdateResourceView):
+class data_collection(ResourceUpdateFormView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     resource_conversion_validate_and_correct_function = format_data_collection_dictionary
@@ -281,8 +280,8 @@ class data_collection(UpdateResourceView):
     a_or_an = 'a'
     resource_type = 'Data Collection'
     resource_type_plural = 'Data Collections'
-    list_resources_of_type_view_name = 'resource_management:data_collections'
-    update_resource_type_view_name = 'update:data_collection'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+    resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
@@ -335,7 +334,7 @@ def data_collection_interaction_methods(request, data_collection_id):
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
         'title': 'Update Interaction Methods',
-        'resource_management_index_page_title': _INDEX_PAGE_TITLE,
-        'list_resources_of_type_view_name': 'resource_management:data_collections',
-        'list_resources_of_type_view_page_title': 'Register & Manage Data Collections'
+        'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+        'resource_management_list_page_breadcrumb_url_name': 'resource_management:data_collections',
+        'resource_management_list_page_breadcrumb_text': 'Register & Manage Data Collections'
     })

@@ -12,7 +12,7 @@ from validation.forms import ApiSpecificationUrlValidationForm
 from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
 
 # Create your views here.
-class ValidateXmlMetadataFileFormView(View):
+class ResourceXmlMetadataFileValidationFormView(View):
     mongodb_model = None
     expected_root_tag_name = ''
 
@@ -32,51 +32,51 @@ class ValidateXmlMetadataFileFormView(View):
             return HttpResponse(json.dumps({ 'error': validation_results['error'] }), status=422, content_type='application/json')
         return HttpResponseServerError(json.dumps({ 'error': validation_results['error'] }), content_type='application/json')
 
-class organisation(ValidateXmlMetadataFileFormView):
+class organisation(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentOrganisation
     expected_root_tag_name = ORGANISATION_XML_ROOT_TAG_NAME
     
-class individual(ValidateXmlMetadataFileFormView):
+class individual(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentIndividual
     expected_root_tag_name = INDIVIDUAL_XML_ROOT_TAG_NAME
 
-class project(ValidateXmlMetadataFileFormView):
+class project(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentProject
     expected_root_tag_name = PROJECT_XML_ROOT_TAG_NAME
 
-class platform(ValidateXmlMetadataFileFormView):
+class platform(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentPlatform
     expected_root_tag_name = PLATFORM_XML_ROOT_TAG_NAME
 
-class instrument(ValidateXmlMetadataFileFormView):
+class instrument(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentInstrument
     expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
 
-class operation(ValidateXmlMetadataFileFormView):
+class operation(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentOperation
     expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
 
-class acquisition_capability(ValidateXmlMetadataFileFormView):
+class acquisition_capability(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentAcquisitionCapability
     expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
 
-class acquisition(ValidateXmlMetadataFileFormView):
+class acquisition(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentAcquisition
     expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
 
-class computation_capability(ValidateXmlMetadataFileFormView):
+class computation_capability(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentComputationCapability
     expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
 
-class computation(ValidateXmlMetadataFileFormView):
+class computation(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentComputation
     expected_root_tag_name = COMPUTATION_XML_ROOT_TAG_NAME
 
-class process(ValidateXmlMetadataFileFormView):
+class process(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentProcess
     expected_root_tag_name = PROCESS_XML_ROOT_TAG_NAME
 
-class data_collection(ValidateXmlMetadataFileFormView):
+class data_collection(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
 
