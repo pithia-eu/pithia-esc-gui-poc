@@ -256,8 +256,8 @@ class catalogue(ResourceRegisterFormView):
     resource_type_plural = 'catalogues'
     validation_url = reverse_lazy('validation:catalogue')
     post_url = reverse_lazy('register:catalogue')
-    list_resource_type_page_url_name = 'resource_management:catalogues'
-    list_resource_page_title = _create_manage_resource_page_title('catalogues')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
 
 class catalogue_entry(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
@@ -269,8 +269,8 @@ class catalogue_entry(ResourceRegisterFormView):
     resource_type_plural = 'catalogue entries'
     validation_url = reverse_lazy('validation:catalogue_entry')
     post_url = reverse_lazy('register:catalogue_entry')
-    list_resource_type_page_url_name = 'resource_management:catalogue_entries'
-    list_resource_page_title = _create_manage_resource_page_title('catalogue entries')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
 
 class catalogue_data_subset(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
@@ -282,5 +282,5 @@ class catalogue_data_subset(ResourceRegisterFormView):
     resource_type_plural = 'catalogue data subsets'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     post_url = reverse_lazy('register:catalogue_data_subset')
-    list_resource_type_page_url_name = 'resource_management:catalogue_data_subsets'
-    list_resource_page_title = _create_manage_resource_page_title('catalogue data subsets')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
