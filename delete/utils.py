@@ -162,6 +162,9 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
         platforms = CurrentPlatform.find({
             'childPlatform.@xlink:href': resource_url
         })
+
+    # Operations don't seem to be referenced by any other resource.
+
     elif resource_mongodb_model == CurrentInstrument:
         # Get the operational mode IDs of the Instrument
         # so Acquisition Capabilities just referencing the
@@ -200,15 +203,6 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
                 },
             ]
         })
-    # elif resource_mongodb_model == CurrentOperation:
-    #     # Operation is part of the Instrument resource
-    #     # as the operationalMode prop. This prop is referenced by
-    #     # Acquisition via the instrumentModePair.mode
-    #     # prop. Operation is NOT ITS OWN resource.
-    #     acquisitions = CurrentAcquisition.find({
-    #         'instrumentModePair.mode': resource_url
-    #     })
-    #     return
     elif resource_mongodb_model == CurrentAcquisitionCapability:
         # AcquisitionCapability is referenced by Acquisition via
         # the acquisitionCapabilities prop.
