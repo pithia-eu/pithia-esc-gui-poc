@@ -502,7 +502,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     list_resources_of_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().get(request, *args, **kwargs)
 
 class AcquisitionDetailView(ResourceDetailView):
@@ -520,7 +520,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     list_resources_of_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().get(request, *args, **kwargs)
 
 class ComputationDetailView(ResourceDetailView):

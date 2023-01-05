@@ -170,7 +170,7 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionDeleteView(ResourceDeleteView):
@@ -196,7 +196,7 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationDeleteView(ResourceDeleteView):

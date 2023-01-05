@@ -121,7 +121,7 @@ class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
@@ -139,7 +139,7 @@ class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationXmlDownloadView(ResourceXmlDownloadView):

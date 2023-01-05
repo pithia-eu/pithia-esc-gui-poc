@@ -199,7 +199,7 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
@@ -233,7 +233,7 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     success_url = reverse_lazy('resource_management:computation_capability_sets')
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
         
 class ComputationUpdateFormView(ResourceUpdateFormView):
