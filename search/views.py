@@ -6,6 +6,8 @@ from utils.ontology_helpers import create_dictionary_from_pithia_ontology_compon
 from .search_helpers import find_matching_data_collections, group_instrument_types_by_observed_property, group_computation_types_by_observed_property
 from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument, CurrentDataCollection
 
+_INDEX_PAGE_TITLE = 'Search Data Collections'
+
 def get_tree_form_for_ontology_component(request, ontology_component):
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}
@@ -58,7 +60,7 @@ def index(request):
         request.session['observed_properties'] = observed_properties
         return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/index.html', {
-        'title': 'Search Models & Measurements'
+        'title': _INDEX_PAGE_TITLE
     })
 
 def results(request):
@@ -67,7 +69,8 @@ def results(request):
 
     return render(request, 'search/results.html', {
         'title': 'Search results',
-        'results': data_collections
+        'results': data_collections,
+        'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
 def extract_localid_from_xlink_href(xlinkhref):
