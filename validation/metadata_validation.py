@@ -3,7 +3,7 @@ import xmlschema
 from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
-from common.helpers import get_acquisition_capabilities_referencing_instrument_operational_ids
+from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
 from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
 from common.mongodb_models import CurrentInstrument
 from validation.registration_validation import validate_xml_file_is_unique
@@ -55,13 +55,13 @@ def _map_string_to_li_element_with_register_link(string):
     if string == 'collection':
         string == 'data_collection'
     elif string == 'acquisitionCapabilities':
-        string = 'acquisition_capability'
+        string = 'acquisition_capability_set'
     elif string == 'computationCapabilities':
-        string = 'computation_capability'
+        string = 'computation_capability_set'
     return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def _map_acquisition_capability_to_update_link(resource):
-    return f'<li><a href="{reverse_lazy("update:acquisition_capability", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
+    return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
 
 def _map_etree_element_to_text(element):
     return element.text
@@ -123,8 +123,8 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
             operational_mode_ids_of_current_xml = list(map(_map_operational_mode_object_to_id_string, instrument_to_update['operationalMode']))
             operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
             if len(operational_mode_ids_intersection) < len(operational_mode_ids_of_current_xml):
-                acquisition_capabilities = get_acquisition_capabilities_referencing_instrument_operational_ids(existing_resource_id)
-                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'Please remove references to this instrument\'s operational mode IDs from the acquisition capabilities listed below, before updating this instrument: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capabilities))), None)
+                acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(existing_resource_id)
+                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'Please remove references to this instrument\'s operational mode IDs from the acquisition capabilities listed below, before updating this instrument: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets))), None)
                 return validation_checklist
 
         # Matching file name and localID tag text validation

@@ -60,7 +60,7 @@
                     </h6>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:schemas' as browse_schemas_url %}
+                    {% url 'schemas' as browse_schemas_url %}
                     <a href="{{ browse_schemas_url }}" class="nav-link px-2 {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
                 </li>
             </ul>

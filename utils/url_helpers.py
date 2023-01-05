@@ -75,9 +75,9 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
             continue
         resource_objectid_str = str(referenced_resource['_id'])
         if referenced_resource_type.lower() == 'computationcapabilities':
-            referenced_resource_type = 'computation_capability'
+            referenced_resource_type = 'computation_capability_set'
         elif referenced_resource_type.lower() == 'acquisitioncapabilities':
-            referenced_resource_type = 'acquisition_capability'
+            referenced_resource_type = 'acquisition_capability_set'
         referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
         converted_resource_server_urls.append({
             'original_server_url': resource_server_url,

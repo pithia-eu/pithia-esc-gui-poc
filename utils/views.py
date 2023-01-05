@@ -135,10 +135,10 @@ class InstrumentXmlDownloadView(ResourceXmlDownloadView):
 class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
@@ -153,10 +153,10 @@ class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
 class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputationCapability
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationXmlDownloadView(ResourceXmlDownloadView):

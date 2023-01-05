@@ -135,7 +135,7 @@ class DeleteCatalogueResourceView(TemplateView):
         return HttpResponseRedirect(self.redirect_url)
 
 
-class organisation(ResourceDeleteView):
+class OrganisationDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'organisation'
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
@@ -148,7 +148,7 @@ class organisation(ResourceDeleteView):
         self.resource_id = self.kwargs['organisation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class individual(ResourceDeleteView):
+class IndividualDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'individual'
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
@@ -161,7 +161,7 @@ class individual(ResourceDeleteView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class project(ResourceDeleteView):
+class ProjectDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'project'
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
@@ -174,7 +174,7 @@ class project(ResourceDeleteView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class platform(ResourceDeleteView):
+class PlatformDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'platform'
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
@@ -187,7 +187,7 @@ class platform(ResourceDeleteView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class instrument(ResourceDeleteView):
+class InstrumentDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'instrument'
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
@@ -200,7 +200,7 @@ class instrument(ResourceDeleteView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class operation(ResourceDeleteView):
+class OperationDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'operation'
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
@@ -213,20 +213,20 @@ class operation(ResourceDeleteView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition_capability(ResourceDeleteView):
+class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'acquisitionCapabilities'
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
-    redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
+    redirect_url = reverse_lazy('resource_management:acquisition_capability_sets')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
-    delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+    delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
-class acquisition(ResourceDeleteView):
+class AcquisitionDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'acquisition'
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
@@ -239,20 +239,20 @@ class acquisition(ResourceDeleteView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation_capability(ResourceDeleteView):
+class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'computationCapabilities'
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
-    redirect_url = reverse_lazy('resource_management:computation_capabilities')
+    redirect_url = reverse_lazy('resource_management:computation_capability_sets')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
-    delete_resource_page_breadcrumb_url_name = 'delete:computation_capability'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
+    delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
-class computation(ResourceDeleteView):
+class ComputationDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'computation'
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
@@ -265,7 +265,7 @@ class computation(ResourceDeleteView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class process(ResourceDeleteView):
+class ProcessDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'process'
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
@@ -278,7 +278,7 @@ class process(ResourceDeleteView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class data_collection(ResourceDeleteView):
+class DataCollectionDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'collection'
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% block breadcrumbs %}
-{% breadcrumb_item_active 'Data Collection Search' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
 {% block scripts %}
@@ -10,7 +10,7 @@
 <script type="module" src="{% static "search/opsearch.js" %}" id="opsearch-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1>Data Collection Search</h1>
+<h1>{{ title }}</h1>
 <form action="{% url 'search:index' %}" method="post">
     {% csrf_token %}
     <div class="row gy-4">

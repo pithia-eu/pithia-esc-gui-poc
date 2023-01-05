@@ -51,8 +51,8 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
         of computation types grouped by observed property when passed
         in a list of computation capabilities
         """
-        computation_capabilities = CurrentComputationCapability.find({})
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
+        computation_capability_sets = CurrentComputationCapability.find({})
+        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
         # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
 

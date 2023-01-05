@@ -67,51 +67,51 @@ class ResourceXmlMetadataFileValidationFormView(View):
         return HttpResponseServerError(json.dumps({'error': validation_results['error']}), content_type='application/json')
 
 
-class organisation(ResourceXmlMetadataFileValidationFormView):
+class OrganisationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentOrganisation
     expected_root_tag_name = ORGANISATION_XML_ROOT_TAG_NAME
     
-class individual(ResourceXmlMetadataFileValidationFormView):
+class IndividualXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentIndividual
     expected_root_tag_name = INDIVIDUAL_XML_ROOT_TAG_NAME
 
-class project(ResourceXmlMetadataFileValidationFormView):
+class ProjectXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentProject
     expected_root_tag_name = PROJECT_XML_ROOT_TAG_NAME
 
-class platform(ResourceXmlMetadataFileValidationFormView):
+class PlatformXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentPlatform
     expected_root_tag_name = PLATFORM_XML_ROOT_TAG_NAME
 
-class instrument(ResourceXmlMetadataFileValidationFormView):
+class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentInstrument
     expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
 
-class operation(ResourceXmlMetadataFileValidationFormView):
+class OperationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentOperation
     expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
 
-class acquisition_capability(ResourceXmlMetadataFileValidationFormView):
+class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentAcquisitionCapability
     expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
 
-class acquisition(ResourceXmlMetadataFileValidationFormView):
+class AcquisitionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentAcquisition
     expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
 
-class computation_capability(ResourceXmlMetadataFileValidationFormView):
+class ComputationCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentComputationCapability
     expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
 
-class computation(ResourceXmlMetadataFileValidationFormView):
+class ComputationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentComputation
     expected_root_tag_name = COMPUTATION_XML_ROOT_TAG_NAME
 
-class process(ResourceXmlMetadataFileValidationFormView):
+class ProcessXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentProcess
     expected_root_tag_name = PROCESS_XML_ROOT_TAG_NAME
 
-class data_collection(ResourceXmlMetadataFileValidationFormView):
+class DataCollectionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
 

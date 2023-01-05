@@ -38,9 +38,9 @@ def data_collection_related_resource_types(request):
     num_current_platforms = mongodb_models.CurrentPlatform.count_documents({})
     num_current_instruments = mongodb_models.CurrentInstrument.count_documents({})
     num_current_operations = mongodb_models.CurrentOperation.count_documents({})
-    num_current_acquisition_capabilities = mongodb_models.CurrentAcquisitionCapability.count_documents({})
+    num_current_acquisition_capability_sets = mongodb_models.CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = mongodb_models.CurrentAcquisition.count_documents({})
-    num_current_computation_capabilities = mongodb_models.CurrentComputationCapability.count_documents({})
+    num_current_computation_capability_sets = mongodb_models.CurrentComputationCapability.count_documents({})
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
@@ -53,9 +53,9 @@ def data_collection_related_resource_types(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
-        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
+        'num_current_acquisition_capability_sets': num_current_acquisition_capability_sets,
         'num_current_acquisitions': num_current_acquisitions,
-        'num_current_computation_capabilities': num_current_computation_capabilities,
+        'num_current_computation_capability_sets': num_current_computation_capability_sets,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
@@ -280,7 +280,7 @@ class OperationListView(ResourceListView):
 class AcquisitionCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    resource_detail_page_url_name = 'browse:acquisition_capability_detail'
+    resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     description = ''
 
 class AcquisitionListView(ResourceListView):
@@ -292,7 +292,7 @@ class AcquisitionListView(ResourceListView):
 class ComputationCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    resource_detail_page_url_name = 'browse:computation_capability_detail'
+    resource_detail_page_url_name = 'browse:computation_capability_set_detail'
     description = ''
 
 class ComputationListView(ResourceListView):
@@ -544,10 +544,10 @@ class OperationDetailView(ResourceDetailView):
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    list_resources_of_type_url_name = 'browse:list_acquisition_capabilities'
+    list_resources_of_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_id']
+        self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().get(request, *args, **kwargs)
 
 class AcquisitionDetailView(ResourceDetailView):
@@ -562,10 +562,10 @@ class AcquisitionDetailView(ResourceDetailView):
 class ComputationCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    list_resources_of_type_url_name = 'browse:list_computation_capabilities'
+    list_resources_of_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_id']
+        self.resource_id = self.kwargs['computation_capability_set_id']
         return super().get(request, *args, **kwargs)
 
 class ComputationDetailView(ResourceDetailView):
