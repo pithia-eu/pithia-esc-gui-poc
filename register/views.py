@@ -14,11 +14,6 @@ from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource
 
 
 # Create your views here.
-def index(request):
-    return render(request, 'register/index.html', {
-        'title': _INDEX_PAGE_TITLE
-    })
-
 class ResourceRegisterFormView(FormView):
     resource_mongodb_model = None
     resource_conversion_validate_and_correct_function = None
