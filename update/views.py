@@ -190,13 +190,17 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     resource_conversion_validate_and_correct_function = format_acquisition_capability_set_dictionary
 
-    a_or_an = 'an'
-    resource_type = 'Acquisition Capabilities Registration'
+    resource_type = 'Acquisition Capabilities'
     resource_type_plural = 'Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_update_page_url_name = 'update:acquisition_capability_set'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Update {self.resource_type.title()}'
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
@@ -224,13 +228,17 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_revision_mongodb_model = ComputationCapabilityRevision
     resource_conversion_validate_and_correct_function = format_computation_capability_set_dictionary
 
-    a_or_an = 'a '
-    resource_type = 'Computation Capabilities Registration'
+    resource_type = 'Computation Capabilities'
     resource_type_plural = 'Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_update_page_url_name = 'update:computation_capability_set'
     validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Update {self.resource_type.title()}'
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
