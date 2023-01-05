@@ -52,9 +52,9 @@ def _map_string_to_li_element_with_register_link(string):
     if string == 'collection':
         string == 'data_collection'
     elif string == 'acquisitionCapabilities':
-        string = 'acquisition_capability'
+        string = 'acquisition_capability_set'
     elif string == 'computationCapabilities':
-        string = 'computation_capability'
+        string = 'computation_capability_set'
     return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def _map_acquisition_capability_to_update_link(resource):
