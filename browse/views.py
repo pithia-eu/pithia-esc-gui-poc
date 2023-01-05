@@ -37,9 +37,9 @@ def resources(request):
     num_current_platforms = mongodb_models.CurrentPlatform.count_documents({})
     num_current_instruments = mongodb_models.CurrentInstrument.count_documents({})
     num_current_operations = mongodb_models.CurrentOperation.count_documents({})
-    num_current_acquisition_capabilities = mongodb_models.CurrentAcquisitionCapability.count_documents({})
+    num_current_acquisition_capability_sets = mongodb_models.CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = mongodb_models.CurrentAcquisition.count_documents({})
-    num_current_computation_capabilities = mongodb_models.CurrentComputationCapability.count_documents({})
+    num_current_computation_capability_sets = mongodb_models.CurrentComputationCapability.count_documents({})
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
@@ -51,9 +51,9 @@ def resources(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
-        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
+        'num_current_acquisition_capability_sets': num_current_acquisition_capability_sets,
         'num_current_acquisitions': num_current_acquisitions,
-        'num_current_computation_capabilities': num_current_computation_capabilities,
+        'num_current_computation_capability_sets': num_current_computation_capability_sets,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
