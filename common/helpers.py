@@ -35,7 +35,7 @@ def create_resource_url(resource_type, namespace, localid):
         localid = f'{resource_type.capitalize()}_{localid}'
     return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
 
-def get_acquisition_capabilities_referencing_instrument_operational_ids(instrument_id: ObjectId) -> list:
+def get_acquisition_capability_sets_referencing_instrument_operational_ids(instrument_id: ObjectId) -> list:
     instrument = CurrentInstrument.find_one({
         '_id': ObjectId(instrument_id)
     }, {
@@ -49,13 +49,13 @@ def get_acquisition_capabilities_referencing_instrument_operational_ids(instrume
     for om in instrument['operationalMode']:
         iom = om['InstrumentOperationalMode']
         instrument_urls_with_operational_mode_ids.append(f'{instrument_url}#{iom["id"]}')
-    current_acquisition_capabilities_referencing_instrument_operational_ids = list(CurrentAcquisitionCapability.find({
+    current_acquisition_capability_sets_referencing_instrument_operational_ids = list(CurrentAcquisitionCapability.find({
         'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
             '$in': instrument_urls_with_operational_mode_ids
         }
     }))
 
-    return current_acquisition_capabilities_referencing_instrument_operational_ids
+    return current_acquisition_capability_sets_referencing_instrument_operational_ids
 
 def get_mongodb_model_by_resource_type_from_resource_url(resource_type):
     if resource_type == 'organisation':

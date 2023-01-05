@@ -179,8 +179,8 @@ class UrlValidationTestCase(SimpleTestCase):
         http_resource_url_result = is_resource_url_structure_valid('http://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         no_url_protocol_result = is_resource_url_structure_valid('metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         domain_name_duplication_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
-        acquisition_capabilities_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
-        computation_capabilities_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/AcquisitionCapabilities_TEST')
+        acquisition_capability_sets_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
+        computation_capability_sets_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/AcquisitionCapabilities_TEST')
 
         self.assertEquals(blank_string_result, False)
         self.assertEquals(swapped_namespace_and_resource_type_result, False)
@@ -192,8 +192,8 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(http_resource_url_result, False)
         self.assertEquals(no_url_protocol_result, False)
         self.assertEquals(domain_name_duplication_result, False)
-        self.assertEquals(acquisition_capabilities_incorrect_casing_result, False)
-        self.assertEquals(computation_capabilities_incorrect_casing_result, False)
+        self.assertEquals(acquisition_capability_sets_incorrect_casing_result, False)
+        self.assertEquals(computation_capability_sets_incorrect_casing_result, False)
 
     def test_valid_resource_urls_pass_validation(self):
         """
@@ -208,7 +208,7 @@ class UrlValidationTestCase(SimpleTestCase):
         valid_instrument_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_TEST')
         valid_aqcuisition_capabilities_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
         valid_acquisition_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisition/pithia/Acquisition_TEST')
-        valid_computation_capabilities_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_TEST')
+        valid_computation_capability_sets_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_TEST')
         valid_computation_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_TEST')
         valid_process_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/process/pithia/CompositeProcess_TEST')
         valid_data_collection_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
@@ -221,7 +221,7 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(valid_instrument_url_result, True)
         self.assertEquals(valid_aqcuisition_capabilities_url_result, True)
         self.assertEquals(valid_acquisition_url_result, True)
-        self.assertEquals(valid_computation_capabilities_url_result, True)
+        self.assertEquals(valid_computation_capability_sets_url_result, True)
         self.assertEquals(valid_computation_url_result, True)
         self.assertEquals(valid_process_url_result, True)
         self.assertEquals(valid_data_collection_url_result, True)

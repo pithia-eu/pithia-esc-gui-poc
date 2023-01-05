@@ -143,7 +143,7 @@ class OperationRegisterFormView(ResourceRegisterFormView):
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_dictionary
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_set_dictionary
     success_url = reverse_lazy('register:acquisition_capability_set')
 
     resource_type_plural = 'acquisition capabilities'
@@ -165,7 +165,7 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
 
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_dictionary
+    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_set_dictionary
     success_url = reverse_lazy('register:computation_capability_set')
 
     resource_type_plural = 'computation capabilities'

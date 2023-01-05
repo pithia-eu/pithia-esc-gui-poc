@@ -12,7 +12,7 @@ def format_instrument_dictionary(self, dictionary):
         dictionary['operationalMode'] = [dictionary['operationalMode']]
     return dictionary
 
-def format_acquisition_capability_dictionary(self, dictionary):
+def format_acquisition_capability_set_dictionary(self, dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
@@ -26,7 +26,7 @@ def format_acquisition_dictionary(self, dictionary):
         dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
-def format_computation_capability_dictionary(self, dictionary):
+def format_computation_capability_set_dictionary(self, dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
