@@ -18,9 +18,9 @@ def index(request):
     num_current_platforms = CurrentPlatform.count_documents({})
     num_current_instruments = CurrentInstrument.count_documents({})
     num_current_operations = CurrentOperation.count_documents({})
-    num_current_acquisition_capabilities = CurrentAcquisitionCapability.count_documents({})
+    num_current_acquisition_capability_sets = CurrentAcquisitionCapability.count_documents({})
     num_current_acquisitions = CurrentAcquisition.count_documents({})
-    num_current_computation_capabilities = CurrentComputationCapability.count_documents({})
+    num_current_computation_capability_sets = CurrentComputationCapability.count_documents({})
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
@@ -31,9 +31,9 @@ def index(request):
         'num_current_platforms': num_current_platforms,
         'num_current_instruments': num_current_instruments,
         'num_current_operations': num_current_operations,
-        'num_current_acquisition_capabilities': num_current_acquisition_capabilities,
+        'num_current_acquisition_capability_sets': num_current_acquisition_capability_sets,
         'num_current_acquisitions': num_current_acquisitions,
-        'num_current_computation_capabilities': num_current_computation_capabilities,
+        'num_current_computation_capability_sets': num_current_computation_capability_sets,
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
