@@ -32,7 +32,7 @@ class ResourceRegisterFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register {self.resource_type_plural.title()}'
-        context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class

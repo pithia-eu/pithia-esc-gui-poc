@@ -61,7 +61,7 @@ class ResourceManagementListView(TemplateView):
         context['resource_type_plural'] = self.resource_type_plural
         context['resource_list'] = self.get_resource_list()
         context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
-        context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
