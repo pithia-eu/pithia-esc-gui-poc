@@ -5,7 +5,7 @@ from .helpers import convert_list_to_regex_list, map_ontology_components_to_loca
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentInstrument, CurrentProcess
 
 
-def get_computation_capability_localids_referencing_computation_capabilities_localid(computation_capabilities_localid, cc_localid_set):
+def get_list_of_computation_capabilities_localids_referencing_a_computation_capabilities_localid(computation_capabilities_localid, cc_localid_set):
     ccs_referencing_cc = list(CurrentComputationCapability.find({
         'childComputation.@xlink:href': re.compile(computation_capabilities_localid)
     }))
@@ -13,7 +13,7 @@ def get_computation_capability_localids_referencing_computation_capabilities_loc
     for cc_localid in cc_localids_referencing_cc:
         if cc_localid not in cc_localid_set:
             cc_localid_set.add(cc_localid)
-            get_computation_capability_localids_referencing_computation_capabilities_localid(cc_localid, cc_localid_set)
+            get_list_of_computation_capabilities_localids_referencing_a_computation_capabilities_localid(cc_localid, cc_localid_set)
 
     return cc_localids_referencing_cc
 
@@ -63,7 +63,7 @@ def group_instrument_types_by_observed_property(instruments):
 def group_computation_types_by_observed_property(computation_capabilities):
     computation_types_grouped_by_observed_property = {}
     for cc in computation_capabilities:
-        observed_property_urls = get_observed_property_urls_from_computation_capabilities([cc])
+        observed_property_urls = get_observed_property_urls_from_computation_capabilities_list([cc])
         for url in observed_property_urls:
             observed_property_id = url.split('/')[-1]
             if observed_property_id not in computation_types_grouped_by_observed_property:
@@ -84,12 +84,12 @@ def get_observed_property_urls_from_instruments(instruments):
     acquisition_capability_observed_property_urls = [pc['observedProperty']['@xlink:href'] for pc in acquisition_capability_process_capabilities_flattened]
     return acquisition_capability_observed_property_urls
 
-def get_observed_property_urls_from_computation_capabilities(computation_capabilities):
-    computation_capability_observed_property_urls = []
-    for cc in computation_capabilities:
+def get_observed_property_urls_from_computation_capabilities_list(computation_capabilities_list):
+    observed_property_urls_found_in_computation_capabilities_list = []
+    for cc in computation_capabilities_list:
         if 'capabilities' in cc:
-            computation_capability_observed_property_urls.extend([pc['observedProperty']['@xlink:href'] for pc in cc['capabilities']['processCapability']])
-    return list(set(computation_capability_observed_property_urls))
+            observed_property_urls_found_in_computation_capabilities_list.extend([pc['observedProperty']['@xlink:href'] for pc in cc['capabilities']['processCapability']])
+    return list(set(observed_property_urls_found_in_computation_capabilities_list))
 
 def get_observed_property_urls_by_instrument_types(instrument_types):
     instrument_type_regex_list = convert_list_to_regex_list(instrument_types)
@@ -101,7 +101,7 @@ def get_observed_property_urls_by_computation_types(computation_types):
     computation_capabilities = find_computation_capabilities_by_computation_types(computation_type_regex_list)
     cc_localids_referencing_cc = []
     for cc in computation_capabilities:
-        cc_localids_referencing_cc.extend(list(get_computation_capability_localids_referencing_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
+        cc_localids_referencing_cc.extend(list(get_list_of_computation_capabilities_localids_referencing_a_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
         cc_localids_referencing_cc = list(set(cc_localids_referencing_cc))
     cc_localids_referencing_cc_regex_list = convert_list_to_regex_list(cc_localids_referencing_cc)
     ccs_referencing_cc = CurrentComputationCapability.find({
@@ -110,7 +110,7 @@ def get_observed_property_urls_by_computation_types(computation_types):
         }
     })
     computation_capabilities.extend(ccs_referencing_cc)
-    return get_observed_property_urls_from_computation_capabilities(computation_capabilities)
+    return get_observed_property_urls_from_computation_capabilities_list(computation_capabilities)
 
 def find_matching_data_collections(request):
     observed_properties = []
@@ -188,13 +188,13 @@ def find_matching_data_collections(request):
     }))
     cc_localids_referencing_cc = []
     for cc in computation_capabilities:
-        cc_localids_referencing_cc.extend(list(get_computation_capability_localids_referencing_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
+        cc_localids_referencing_cc.extend(list(get_list_of_computation_capabilities_localids_referencing_a_computation_capabilities_localid(cc['identifier']['PITHIA_Identifier']['localID'], set())))
         cc_localids_referencing_cc = list(set(cc_localids_referencing_cc))
 
-    computation_capability_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in computation_capabilities]
-    computation_capability_localids.extend(cc_localids_referencing_cc)
-    computation_capability_localids = list(set(computation_capability_localids))
-    computation_capability_localids = convert_list_to_regex_list(computation_capability_localids)
+    list_of_computation_capabilities_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in computation_capabilities]
+    list_of_computation_capabilities_localids.extend(cc_localids_referencing_cc)
+    list_of_computation_capabilities_localids = list(set(list_of_computation_capabilities_localids))
+    list_of_computation_capabilities_localids = convert_list_to_regex_list(list_of_computation_capabilities_localids)
 
     # Fetch Acquisitions/Computations
     acquisitions = list(CurrentAcquisition.find({
@@ -211,7 +211,7 @@ def find_matching_data_collections(request):
         'capabilityLinks.capabilityLink': {
             '$elemMatch': {
                 'computationCapabilities.@xlink:href': {
-                    '$in': computation_capability_localids
+                    '$in': list_of_computation_capabilities_localids
                 }
             }
         }
