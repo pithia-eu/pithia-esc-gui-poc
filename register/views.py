@@ -149,7 +149,7 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_type_plural = 'acquisition capabilities'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     post_url = reverse_lazy('register:acquisition_capability_set')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
@@ -171,7 +171,7 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_type_plural = 'computation capabilities'
     validation_url = reverse_lazy('validation:computation_capability_set')
     post_url = reverse_lazy('register:computation_capability_set')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
 class ComputationRegisterFormView(ResourceRegisterFormView):

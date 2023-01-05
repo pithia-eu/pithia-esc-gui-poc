@@ -164,9 +164,9 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'acquisitionCapabilities'
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
-    redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
+    redirect_url = reverse_lazy('resource_management:acquisition_capability_sets')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
@@ -190,9 +190,9 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     resource_type_in_resource_url = 'computationCapabilities'
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
-    redirect_url = reverse_lazy('resource_management:computation_capabilities')
+    redirect_url = reverse_lazy('resource_management:computation_capability_sets')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
