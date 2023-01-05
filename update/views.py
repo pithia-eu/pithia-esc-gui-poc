@@ -194,8 +194,8 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_type = 'Acquisition Capabilities Registration'
     resource_type_plural = 'Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
-    resource_update_page_url_name = 'update:acquisition_capability'
-    validation_url = reverse_lazy('validation:acquisition_capability')
+    resource_update_page_url_name = 'update:acquisition_capability_set'
+    validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capabilities')
 
     def dispatch(self, request, *args, **kwargs):
@@ -228,8 +228,8 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_type = 'Computation Capabilities Registration'
     resource_type_plural = 'Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
-    resource_update_page_url_name = 'update:computation_capability'
-    validation_url = reverse_lazy('validation:computation_capability')
+    resource_update_page_url_name = 'update:computation_capability_set'
+    validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capabilities')
 
     def dispatch(self, request, *args, **kwargs):

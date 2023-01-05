@@ -144,11 +144,11 @@ class OperationRegisterFormView(ResourceRegisterFormView):
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_dictionary
-    success_url = reverse_lazy('register:acquisition_capability')
+    success_url = reverse_lazy('register:acquisition_capability_set')
 
     resource_type_plural = 'acquisition capabilities'
-    validation_url = reverse_lazy('validation:acquisition_capability')
-    post_url = reverse_lazy('register:acquisition_capability')
+    validation_url = reverse_lazy('validation:acquisition_capability_set')
+    post_url = reverse_lazy('register:acquisition_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
@@ -166,11 +166,11 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_dictionary
-    success_url = reverse_lazy('register:computation_capability')
+    success_url = reverse_lazy('register:computation_capability_set')
 
     resource_type_plural = 'computation capabilities'
-    validation_url = reverse_lazy('validation:computation_capability')
-    post_url = reverse_lazy('register:computation_capability')
+    validation_url = reverse_lazy('validation:computation_capability_set')
+    post_url = reverse_lazy('register:computation_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 

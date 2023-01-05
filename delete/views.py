@@ -167,7 +167,7 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:acquisition_capabilities')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
-    delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability'
+    delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_id']
@@ -193,7 +193,7 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:computation_capabilities')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
-    delete_resource_page_breadcrumb_url_name = 'delete:computation_capability'
+    delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_id']

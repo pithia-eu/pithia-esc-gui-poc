@@ -58,7 +58,7 @@ def _map_string_to_li_element_with_register_link(string):
     return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
 
 def _map_acquisition_capability_to_update_link(resource):
-    return f'<li><a href="{reverse_lazy("update:acquisition_capability", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
+    return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
 
 def _map_etree_element_to_text(element):
     return element.text

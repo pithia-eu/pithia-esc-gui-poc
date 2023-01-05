@@ -142,9 +142,9 @@ class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('acquisition capabilities')
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    resource_delete_page_url_name = 'delete:acquisition_capability'
-    resource_update_page_url_name = 'update:acquisition_capability'
-    resource_register_page_url_name = 'register:acquisition_capability'
+    resource_delete_page_url_name = 'delete:acquisition_capability_set'
+    resource_update_page_url_name = 'update:acquisition_capability_set'
+    resource_register_page_url_name = 'register:acquisition_capability_set'
     resource_xml_download_page_url_name = 'utils:view_acquisition_capability_as_xml'
 
 class AcquisitionManagementListView(ResourceManagementListView):
@@ -160,9 +160,9 @@ class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('computation capabilities')
     resource_mongodb_model = CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    resource_delete_page_url_name = 'delete:computation_capability'
-    resource_update_page_url_name = 'update:computation_capability'
-    resource_register_page_url_name = 'register:computation_capability'
+    resource_delete_page_url_name = 'delete:computation_capability_set'
+    resource_update_page_url_name = 'update:computation_capability_set'
+    resource_register_page_url_name = 'register:computation_capability_set'
     resource_xml_download_page_url_name = 'utils:view_computation_capability_as_xml'
 
 class ComputationManagementListView(ResourceManagementListView):

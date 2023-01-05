@@ -262,7 +262,7 @@ class OperationListView(ResourceListView):
 class AcquisitionCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    resource_detail_page_url_name = 'browse:acquisition_capability_detail'
+    resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     description = ''
 
 class AcquisitionListView(ResourceListView):
@@ -274,7 +274,7 @@ class AcquisitionListView(ResourceListView):
 class ComputationCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    resource_detail_page_url_name = 'browse:computation_capability_detail'
+    resource_detail_page_url_name = 'browse:computation_capability_set_detail'
     description = ''
 
 class ComputationListView(ResourceListView):
@@ -499,7 +499,7 @@ class OperationDetailView(ResourceDetailView):
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    list_resources_of_type_url_name = 'browse:list_acquisition_capabilities'
+    list_resources_of_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_id']
@@ -517,7 +517,7 @@ class AcquisitionDetailView(ResourceDetailView):
 class ComputationCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    list_resources_of_type_url_name = 'browse:list_computation_capabilities'
+    list_resources_of_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_id']
