@@ -4,7 +4,9 @@ from . import views
 
 app_name = 'resource_management'
 urlpatterns = [
-    path('resources/', views.index, name='index'),
+    path('', views.index, name='index'),
+    path('data-collection-related-metadata/', views.data_collection_related_metadata_index, name='data_collection_related_metadata_index'),
+    path('catalogue-related-metadata/', views.catalogue_related_metadata_index, name='catalogue_related_metadata_index'),
     path('organisations/', views.OrganisationManagementListView.as_view(), name='organisations'),
     path('individuals/', views.IndividualManagementListView.as_view(), name='individuals'),
     path('projects/', views.ProjectManagementListView.as_view(), name='projects'),
