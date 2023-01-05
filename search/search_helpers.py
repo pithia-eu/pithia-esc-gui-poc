@@ -146,6 +146,7 @@ def find_matching_data_collections(request):
     # Fetch Instruments
     instruments = find_instruments_by_instrument_types(instrument_types)
     instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
+    instrument_localids = convert_list_to_regex_list(instrument_localids)
 
     # Fetch Acquisition Capabilities/Computation Capabilities
     acquisition_capability_sets = list(CurrentAcquisitionCapability.find({
