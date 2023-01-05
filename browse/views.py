@@ -223,73 +223,73 @@ class ResourceListView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class list_organisations(ResourceListView):
+class OrganisationListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     resource_type_plural = 'Organisations'
     resource_detail_page_url_name = 'browse:organisation_detail'
     description = 'Data Provider/Owner organisation'
 
-class list_individuals(ResourceListView):
+class IndividualListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     resource_type_plural = 'Individuals'
     resource_detail_page_url_name = 'browse:individual_detail'
     description = 'An individual, acting in a particular role and associated with an Organisation'
 
-class list_projects(ResourceListView):
+class ProjectListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentProject
     resource_type_plural = 'Projects'
     resource_detail_page_url_name = 'browse:project_detail'
     description = 'An identifiable activity designed to accomplish a set of objectives'
 
-class list_platforms(ResourceListView):
+class PlatformListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     resource_type_plural = 'Platforms'
     resource_detail_page_url_name = 'browse:platform_detail'
     description = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory)'
 
-class list_instruments(ResourceListView):
+class InstrumentListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
     resource_type_plural = 'Instruments'
     resource_detail_page_url_name = 'browse:instrument_detail'
     description = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values'
 
-class list_operations(ResourceListView):
+class OperationListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     resource_type_plural = 'Operations'
     resource_detail_page_url_name = 'browse:operation_detail'
     description = 'Description of how a platform operates in order to support data acquisition by the instrument'
 
-class list_acquisition_capabilities(ResourceListView):
+class AcquisitionCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
     resource_detail_page_url_name = 'browse:acquisition_capability_detail'
     description = ''
 
-class list_acquisitions(ResourceListView):
+class AcquisitionListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     resource_detail_page_url_name = 'browse:acquisition_detail'
     description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
 
-class list_computation_capabilities(ResourceListView):
+class ComputationCapabilitiesListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
     resource_detail_page_url_name = 'browse:computation_capability_detail'
     description = ''
 
-class list_computations(ResourceListView):
+class ComputationListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_type_plural = 'Computations'
     resource_detail_page_url_name = 'browse:computation_detail'
     description = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output'
 
-class list_processes(ResourceListView):
+class ProcessListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     resource_type_plural = 'Processes'
     resource_detail_page_url_name = 'browse:process_detail'
     description = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations'
 
-class list_data_collections(ResourceListView):
+class DataCollectionListView(ResourceListView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
     resource_detail_page_url_name = 'browse:data_collection_detail'
@@ -442,7 +442,7 @@ class ResourceDetailView(TemplateView):
         context['resource_list_page_breadcrumb_url_name'] = self.list_resources_of_type_url_name
         return context
 
-class organisation_detail(ResourceDetailView):
+class OrganisationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     resource_type_plural = 'Organisations'
     list_resources_of_type_url_name = 'browse:list_organisations'
@@ -451,7 +451,7 @@ class organisation_detail(ResourceDetailView):
         self.resource_id = self.kwargs['organisation_id']
         return super().get(request, *args, **kwargs)
 
-class individual_detail(ResourceDetailView):
+class IndividualDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     resource_type_plural = 'Individuals'
     list_resources_of_type_url_name = 'browse:list_individuals'
@@ -460,7 +460,7 @@ class individual_detail(ResourceDetailView):
         self.resource_id = self.kwargs['individual_id']
         return super().get(request, *args, **kwargs)
 
-class project_detail(ResourceDetailView):
+class ProjectDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentProject
     resource_type_plural = 'Projects'
     list_resources_of_type_url_name = 'browse:list_projects'
@@ -469,7 +469,7 @@ class project_detail(ResourceDetailView):
         self.resource_id = self.kwargs['project_id']
         return super().get(request, *args, **kwargs)
 
-class platform_detail(ResourceDetailView):
+class PlatformDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     resource_type_plural = 'Platforms'
     list_resources_of_type_url_name = 'browse:list_platforms'
@@ -478,7 +478,7 @@ class platform_detail(ResourceDetailView):
         self.resource_id = self.kwargs['platform_id']
         return super().get(request, *args, **kwargs)
 
-class instrument_detail(ResourceDetailView):
+class InstrumentDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
     resource_type_plural = 'Instruments'
     list_resources_of_type_url_name = 'browse:list_instruments'
@@ -487,7 +487,7 @@ class instrument_detail(ResourceDetailView):
         self.resource_id = self.kwargs['instrument_id']
         return super().get(request, *args, **kwargs)
 
-class operation_detail(ResourceDetailView):
+class OperationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     resource_type_plural = 'Operations'
     list_resources_of_type_url_name = 'browse:list_operations'
@@ -496,7 +496,7 @@ class operation_detail(ResourceDetailView):
         self.resource_id = self.kwargs['operation_id']
         return super().get(request, *args, **kwargs)
 
-class acquisition_capability_detail(ResourceDetailView):
+class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
     list_resources_of_type_url_name = 'browse:list_acquisition_capabilities'
@@ -505,7 +505,7 @@ class acquisition_capability_detail(ResourceDetailView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().get(request, *args, **kwargs)
 
-class acquisition_detail(ResourceDetailView):
+class AcquisitionDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
     list_resources_of_type_url_name = 'browse:list_acquisitions'
@@ -514,7 +514,7 @@ class acquisition_detail(ResourceDetailView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().get(request, *args, **kwargs)
 
-class computation_capability_detail(ResourceDetailView):
+class ComputationCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
     list_resources_of_type_url_name = 'browse:list_computation_capabilities'
@@ -523,7 +523,7 @@ class computation_capability_detail(ResourceDetailView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().get(request, *args, **kwargs)
 
-class computation_detail(ResourceDetailView):
+class ComputationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_type_plural = 'Computations'
     list_resources_of_type_url_name = 'browse:list_computations'
@@ -532,7 +532,7 @@ class computation_detail(ResourceDetailView):
         self.resource_id = self.kwargs['computation_id']
         return super().get(request, *args, **kwargs)
 
-class process_detail(ResourceDetailView):
+class ProcessDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     resource_type_plural = 'Processes'
     list_resources_of_type_url_name = 'browse:list_processes'
@@ -541,7 +541,7 @@ class process_detail(ResourceDetailView):
         self.resource_id = self.kwargs['process_id']
         return super().get(request, *args, **kwargs)
 
-class data_collection_detail(ResourceDetailView):
+class DataCollectionDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
     list_resources_of_type_url_name = 'browse:list_data_collections'
