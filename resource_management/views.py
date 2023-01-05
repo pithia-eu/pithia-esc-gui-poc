@@ -23,8 +23,8 @@ from common.mongodb_models import (
 from search.helpers import remove_underscore_from_id_attribute
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
-_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection Registrations'
-_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue Registrations'
+_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
+_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural):
     return f'Register & Manage {resource_type_plural.title()}'
@@ -35,7 +35,7 @@ def index(request):
         'title': _INDEX_PAGE_TITLE
     })
 
-def data_collection_related_registrations_index(request):
+def data_collection_related_metadata_index(request):
     num_current_organsations = CurrentOrganisation.count_documents({})
     num_current_individuals = CurrentIndividual.count_documents({})
     num_current_projects = CurrentProject.count_documents({})
@@ -66,7 +66,7 @@ def data_collection_related_registrations_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
-def catalogue_related_registrations_index(request):
+def catalogue_related_metadata_index(request):
     num_current_catalogues = CurrentCatalogue.count_documents({})
     num_current_catalogue_entries = CurrentCatalogueEntry.count_documents({})
     num_current_catalogue_data_subsets = CurrentCatalogueDataSubset.count_documents({})
@@ -89,6 +89,8 @@ class ResourceManagementListView(TemplateView):
     resource_update_page_url_name = ''
     resource_register_page_url_name = ''
     resource_xml_download_page_url_name = ''
+    resource_management_category_list_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
@@ -100,11 +102,13 @@ class ResourceManagementListView(TemplateView):
         context['resource_type_plural'] = self.resource_type_plural
         context['resource_list'] = self.get_resource_list()
         context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
-        context['index_page_title'] = _INDEX_PAGE_TITLE
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
+        context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_breadcrumb_text'] = self.resource_management_category_list_breadcrumb_text
+        context['resource_management_category_list_breadcrumb_url_name'] = self.resource_management_category_list_breadcrumb_url_name
         return context
 
 class organisations(ResourceManagementListView):
@@ -244,6 +248,8 @@ class catalogues(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue'
     resource_register_page_url_name = 'register:catalogue'
     resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
+    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
 class catalogue_entries(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue entries')
@@ -253,6 +259,8 @@ class catalogue_entries(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue_entry'
     resource_register_page_url_name = 'register:catalogue_entry'
     resource_xml_download_page_url_name = 'utils:view_catalogue_entry_as_xml'
+    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
 class catalogue_data_subsets(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue data subsets')
@@ -262,3 +270,5 @@ class catalogue_data_subsets(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue_data_subset'
     resource_register_page_url_name = 'register:catalogue_data_subset'
     resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'
+    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'

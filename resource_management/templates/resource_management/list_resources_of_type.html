@@ -3,6 +3,7 @@
 {% load static %}
 {% block breadcrumbs %}
 {% breadcrumb_item index_page_title 'resource_management:index' %}
+{% breadcrumb_item resource_management_category_list_breadcrumb_text resource_management_category_list_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block scripts %}
