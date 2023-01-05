@@ -13,8 +13,8 @@ def get_tree_form_for_ontology_component(request, ontology_component):
         instruments = CurrentInstrument.find({})
         instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
     if ontology_component == 'observedProperty':
-            computation_capabilities = CurrentComputationCapability.find({})
-            computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capabilities)
+            computation_capability_sets = CurrentComputationCapability.find({})
+            computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
     dictionary = create_dictionary_from_pithia_ontology_component(ontology_component, instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property, computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property)
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
@@ -74,7 +74,7 @@ def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
 def get_registered_observed_properties():
-    observed_properties_from_computation_capabilities = list(CurrentComputationCapability.aggregate([
+    observed_properties_from_computation_capability_sets = list(CurrentComputationCapability.aggregate([
         {
             '$unwind': {
                 'path': '$capabilities.processCapability'
@@ -90,7 +90,7 @@ def get_registered_observed_properties():
         }
     ]))
 
-    observed_properties_from_acquisition_capabilities = list(CurrentAcquisitionCapability.aggregate([
+    observed_properties_from_acquisition_capability_sets = list(CurrentAcquisitionCapability.aggregate([
         {
             '$unwind': {
                 'path': '$capabilities.processCapability'
@@ -107,10 +107,10 @@ def get_registered_observed_properties():
     ]))
 
     observed_property_ids = []
-    if len(observed_properties_from_computation_capabilities) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computation_capabilities[0]['xlink_hrefs'])))
-    if len(observed_properties_from_acquisition_capabilities) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisition_capabilities[0]['xlink_hrefs'])))
+    if len(observed_properties_from_computation_capability_sets) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computation_capability_sets[0]['xlink_hrefs'])))
+    if len(observed_properties_from_acquisition_capability_sets) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisition_capability_sets[0]['xlink_hrefs'])))
     return list(set(observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
