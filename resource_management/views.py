@@ -68,7 +68,7 @@ class ResourceManagementListView(TemplateView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         return context
 
-class organisations(ResourceManagementListView):
+class OrganisationManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('organisations')
     resource_mongodb_model = CurrentOrganisation
     resource_type_plural = 'Organisations'
@@ -77,7 +77,7 @@ class organisations(ResourceManagementListView):
     resource_register_page_url_name = 'register:organisation'
     resource_xml_download_page_url_name = 'utils:view_organisation_as_xml'
 
-class individuals(ResourceManagementListView):
+class IndividualManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('individuals')
     resource_mongodb_model = CurrentIndividual
     resource_type_plural = 'Individuals'
@@ -86,7 +86,7 @@ class individuals(ResourceManagementListView):
     resource_register_page_url_name = 'register:individual'
     resource_xml_download_page_url_name = 'utils:view_individual_as_xml'
 
-class projects(ResourceManagementListView):
+class ProjectManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('projects')
     resource_mongodb_model = CurrentProject
     resource_type_plural = 'Projects'
@@ -95,7 +95,7 @@ class projects(ResourceManagementListView):
     resource_register_page_url_name = 'register:project'
     resource_xml_download_page_url_name = 'utils:view_project_as_xml'
 
-class platforms(ResourceManagementListView):
+class PlatformManagementListView(ResourceManagementListView):
     template_name = 'resource_management/list_platforms.html'
     title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
@@ -120,7 +120,7 @@ class platforms(ResourceManagementListView):
         context['non_pithia_platforms'] = non_pithia_platforms
         return context
 
-class operations(ResourceManagementListView):
+class OperationManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('operations')
     resource_mongodb_model = CurrentOperation
     resource_type_plural = 'Operations'
@@ -129,7 +129,7 @@ class operations(ResourceManagementListView):
     resource_register_page_url_name = 'register:operation'
     resource_xml_download_page_url_name = 'utils:view_operation_as_xml'
 
-class instruments(ResourceManagementListView):
+class InstrumentManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('instruments')
     resource_mongodb_model = CurrentInstrument
     resource_type_plural = 'Instruments'
@@ -138,7 +138,7 @@ class instruments(ResourceManagementListView):
     resource_register_page_url_name = 'register:instrument'
     resource_xml_download_page_url_name = 'utils:view_instrument_as_xml'
 
-class acquisition_capabilities(ResourceManagementListView):
+class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('acquisition capabilities')
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
@@ -147,7 +147,7 @@ class acquisition_capabilities(ResourceManagementListView):
     resource_register_page_url_name = 'register:acquisition_capability'
     resource_xml_download_page_url_name = 'utils:view_acquisition_capability_as_xml'
 
-class acquisitions(ResourceManagementListView):
+class AcquisitionManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('acquisitions')
     resource_mongodb_model = CurrentAcquisition
     resource_type_plural = 'Acquisitions'
@@ -156,7 +156,7 @@ class acquisitions(ResourceManagementListView):
     resource_register_page_url_name = 'register:acquisition'
     resource_xml_download_page_url_name = 'utils:view_acquisition_as_xml'
 
-class computation_capabilities(ResourceManagementListView):
+class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('computation capabilities')
     resource_mongodb_model = CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
@@ -165,7 +165,7 @@ class computation_capabilities(ResourceManagementListView):
     resource_register_page_url_name = 'register:computation_capability'
     resource_xml_download_page_url_name = 'utils:view_computation_capability_as_xml'
 
-class computations(ResourceManagementListView):
+class ComputationManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('computations')
     resource_mongodb_model = CurrentComputation
     resource_type_plural = 'Computations'
@@ -174,7 +174,7 @@ class computations(ResourceManagementListView):
     resource_register_page_url_name = 'register:computation'
     resource_xml_download_page_url_name = 'utils:view_computation_as_xml'
 
-class processes(ResourceManagementListView):
+class ProcessManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('processes')
     resource_mongodb_model = CurrentProcess
     resource_type_plural = 'Processes'
@@ -183,7 +183,7 @@ class processes(ResourceManagementListView):
     resource_register_page_url_name = 'register:process'
     resource_xml_download_page_url_name = 'utils:view_process_as_xml'
 
-class data_collections(ResourceManagementListView):
+class DataCollectionManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('data collections')
     resource_mongodb_model = CurrentDataCollection
     resource_type_plural = 'Data Collections'
