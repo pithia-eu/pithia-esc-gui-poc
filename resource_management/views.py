@@ -106,7 +106,7 @@ class ResourceManagementListView(TemplateView):
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
-        context['index_page_title'] = _INDEX_PAGE_TITLE
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_breadcrumb_text'] = self.resource_management_category_list_breadcrumb_text
         context['resource_management_category_list_breadcrumb_url_name'] = self.resource_management_category_list_breadcrumb_url_name
         return context

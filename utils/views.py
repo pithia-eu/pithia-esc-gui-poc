@@ -78,7 +78,7 @@ class ResourceXmlDownloadView(TemplateView):
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
-class view_organisation_as_xml(ResourceXmlDownloadView):
+class OrganisationXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOrganisation
     resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
@@ -87,7 +87,7 @@ class view_organisation_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['organisation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_individual_as_xml(ResourceXmlDownloadView):
+class IndividualXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentIndividual
     resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
@@ -96,7 +96,7 @@ class view_individual_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['individual_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_project_as_xml(ResourceXmlDownloadView):
+class ProjectXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProject
     resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
@@ -105,7 +105,7 @@ class view_project_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_platform_as_xml(ResourceXmlDownloadView):
+class PlatformXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentPlatform
     resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
@@ -114,7 +114,7 @@ class view_platform_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_operation_as_xml(ResourceXmlDownloadView):
+class OperationXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentOperation
     resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
@@ -123,7 +123,7 @@ class view_operation_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_instrument_as_xml(ResourceXmlDownloadView):
+class InstrumentXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentInstrument
     resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
@@ -132,7 +132,7 @@ class view_instrument_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_acquisition_capability_as_xml(ResourceXmlDownloadView):
+class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
@@ -141,7 +141,7 @@ class view_acquisition_capability_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['acquisition_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_acquisition_as_xml(ResourceXmlDownloadView):
+class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentAcquisition
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
@@ -150,7 +150,7 @@ class view_acquisition_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_computation_capability_as_xml(ResourceXmlDownloadView):
+class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputationCapability
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
@@ -159,7 +159,7 @@ class view_computation_capability_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['computation_capability_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_computation_as_xml(ResourceXmlDownloadView):
+class ComputationXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentComputation
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
@@ -168,7 +168,7 @@ class view_computation_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_process_as_xml(ResourceXmlDownloadView):
+class ProcessXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentProcess
     resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
@@ -177,7 +177,7 @@ class view_process_as_xml(ResourceXmlDownloadView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
-class view_data_collection_as_xml(ResourceXmlDownloadView):
+class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentDataCollection
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'

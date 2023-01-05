@@ -14,11 +14,6 @@ from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource
 
 
 # Create your views here.
-def index(request):
-    return render(request, 'register/index.html', {
-        'title': _INDEX_PAGE_TITLE
-    })
-
 class ResourceRegisterFormView(FormView):
     resource_mongodb_model = None
     resource_conversion_validate_and_correct_function = None
@@ -26,8 +21,6 @@ class ResourceRegisterFormView(FormView):
     form_class = UploadFileForm
     template_name = 'register/file_upload.html'
 
-    a_or_an = ''
-    resource_type = ''
     resource_type_plural = ''
     validation_url = ''
     post_url = ''
@@ -37,10 +30,10 @@ class ResourceRegisterFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register {self.resource_type_plural.title()}'
-        context['index_page_title'] = _INDEX_PAGE_TITLE
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
@@ -91,8 +84,6 @@ class organisation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     success_url = reverse_lazy('register:organisation')
 
-    a_or_an = 'an'
-    resource_type = 'organisation'
     resource_type_plural = 'organisations'
     validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
@@ -103,8 +94,6 @@ class individual(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     success_url = reverse_lazy('register:individual')
 
-    a_or_an = 'an'
-    resource_type = 'individual'
     resource_type_plural = 'individuals'
     validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
@@ -115,8 +104,6 @@ class project(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProject
     success_url = reverse_lazy('register:project')
 
-    a_or_an = 'a'
-    resource_type = 'project'
     resource_type_plural = 'projects'
     validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
@@ -127,8 +114,6 @@ class platform(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     success_url = reverse_lazy('register:platform')
 
-    a_or_an = 'a'
-    resource_type = 'platform'
     resource_type_plural = 'platforms'
     validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
@@ -140,8 +125,6 @@ class instrument(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
     success_url = reverse_lazy('register:instrument')
 
-    a_or_an = 'an'
-    resource_type = 'instrument'
     resource_type_plural = 'instruments'
     validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
@@ -152,8 +135,6 @@ class operation(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     success_url = reverse_lazy('register:operation')
 
-    a_or_an = 'an'
-    resource_type = 'operation'
     resource_type_plural = 'operations'
     validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
@@ -165,8 +146,6 @@ class acquisition_capability(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_dictionary
     success_url = reverse_lazy('register:acquisition_capability')
 
-    a_or_an = 'an'
-    resource_type = 'acquisition capability'
     resource_type_plural = 'acquisition capabilities'
     validation_url = reverse_lazy('validation:acquisition_capability')
     post_url = reverse_lazy('register:acquisition_capability')
@@ -178,8 +157,6 @@ class acquisition(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
     success_url = reverse_lazy('register:acquisition')
 
-    a_or_an = 'an'
-    resource_type = 'acquisition'
     resource_type_plural = 'acquisitions'
     validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
@@ -191,8 +168,6 @@ class computation_capability(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_dictionary
     success_url = reverse_lazy('register:computation_capability')
 
-    a_or_an = 'a'
-    resource_type = 'computation capability'
     resource_type_plural = 'computation capabilities'
     validation_url = reverse_lazy('validation:computation_capability')
     post_url = reverse_lazy('register:computation_capability')
@@ -204,8 +179,6 @@ class computation(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
     success_url = reverse_lazy('register:computation')
 
-    a_or_an = 'a'
-    resource_type = 'computation'
     resource_type_plural = 'computations'
     validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
@@ -217,8 +190,6 @@ class process(ResourceRegisterFormView):
     resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
     success_url = reverse_lazy('register:process')
 
-    a_or_an = 'a'
-    resource_type = 'process'
     resource_type_plural = 'processes'
     validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
@@ -232,9 +203,6 @@ class data_collection(ResourceRegisterFormView):
     template_name = 'register/file_upload_data_collection.html'
     form_class = UploadDataCollectionFileForm
 
-    a_or_an = 'a'
-    resource_type = 'data collection'
-    resource_type_plural = 'data collections'
     validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
@@ -242,7 +210,7 @@ class data_collection(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.resource_type.title()}'
+        context['title'] = 'Register a Data Collection'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 

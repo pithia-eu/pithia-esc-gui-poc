@@ -44,7 +44,7 @@
             <ul class="list-group mb-0">
                 {% for r in other_resources_to_delete %}
                 {% with pithia_identifier=r.0.identifier.PITHIA_Identifier %}
-                <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capability{% elif r.1|lower == 'computationcapabilities' %}Computation Capability{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
+                <li class="list-group-item list-group-item-light">{{ r.0.name|default:pithia_identifier.localID }} <small class="text-muted">({% if r.1|lower == 'collection' %}Data Collection{% elif r.1|lower == 'acquisitioncapabilities' %}Acquisition Capabilities{% elif r.1|lower == 'computationcapabilities' %}Computation Capabilities{% else %}{{ r.1|capfirst }}{% endif %})</small></li>
                 {% endwith %}
                 {% endfor %}
             </ul>

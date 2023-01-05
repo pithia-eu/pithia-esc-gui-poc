@@ -224,7 +224,7 @@ class acquisition_capability(ResourceUpdateFormView):
     resource_conversion_validate_and_correct_function = format_acquisition_capability_dictionary
 
     a_or_an = 'an'
-    resource_type = 'Acquisition Capability'
+    resource_type = 'Acquisition Capabilities Registration'
     resource_type_plural = 'Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capabilities'
     resource_update_page_url_name = 'update:acquisition_capability'
@@ -257,8 +257,8 @@ class computation_capability(ResourceUpdateFormView):
     resource_revision_mongodb_model = ComputationCapabilityRevision
     resource_conversion_validate_and_correct_function = format_computation_capability_dictionary
 
-    a_or_an = 'a'
-    resource_type = 'Computation Capability'
+    a_or_an = 'a '
+    resource_type = 'Computation Capabilities Registration'
     resource_type_plural = 'Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capabilities'
     resource_update_page_url_name = 'update:computation_capability'
