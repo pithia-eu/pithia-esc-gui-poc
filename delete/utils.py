@@ -170,11 +170,12 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
         # so Acquisition Capabilities just referencing the
         # Instrument's operational mode IDs can also be
         # deleted.
-        instrument_operational_modes = resource['operationalMode']
         operational_mode_urls = []
-        for om in instrument_operational_modes:
-            om_id = om['InstrumentOperationalMode']['id']
-            operational_mode_urls.append(f'{resource_url}#{om_id}')
+        if 'operationalMode' in resource:
+            instrument_operational_modes = resource['operationalMode']
+            for om in instrument_operational_modes:
+                om_id = om['InstrumentOperationalMode']['id']
+                operational_mode_urls.append(f'{resource_url}#{om_id}')
 
         # Referenced by: Acquisition (from instrument prop)
         acquisitions = CurrentAcquisition.find({
