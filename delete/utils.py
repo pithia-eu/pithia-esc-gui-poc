@@ -103,9 +103,9 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     platforms = []
     instruments = []
     operations = []
-    acquisition_capabilities = []
+    acquisition_capability_sets = []
     acquisitions = []
-    computation_capabilities = []
+    computation_capability_sets = []
     computations = []
     processes = []
     data_collections = []
@@ -183,7 +183,7 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
         # Referenced by: AcquisitionCapability (from
         # instrumentModePair.InstrumentOperationalModePair.instrument prop and
         # instrumentModePair.InstrumentOperationalModePair.mode prop)
-        acquisition_capabilities = CurrentAcquisitionCapability.find({
+        acquisition_capability_sets = CurrentAcquisitionCapability.find({
             '$or': [
                 {
                     'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': resource_url
@@ -220,7 +220,7 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
         # prop.
         # ComputationCapabilities can reference other ComputationCapabilities via the
         # childComputation prop.
-        computation_capabilities = CurrentComputationCapability.find({
+        computation_capability_sets = CurrentComputationCapability.find({
             'childComputation.@xlink:href': resource_url
         })
         computations = CurrentComputation.find({
@@ -259,18 +259,18 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
         linked_resources.extend(get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
-    acquisition_capabilities = list(acquisition_capabilities)
-    for i in range(len(acquisition_capabilities)):
-        acquisition_capabilities[i] = (acquisition_capabilities[i], 'acquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisition_capabilities[i][0]['_id']), 'acquisitionCapabilities', acquisition_capabilities[i][2]))
+    acquisition_capability_sets = list(acquisition_capability_sets)
+    for i in range(len(acquisition_capability_sets)):
+        acquisition_capability_sets[i] = (acquisition_capability_sets[i], 'acquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
+        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisition_capability_sets[i][0]['_id']), 'acquisitionCapabilities', acquisition_capability_sets[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
         linked_resources.extend(get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
-    computation_capabilities = list(computation_capabilities)
-    for i in range(len(computation_capabilities)):
-        computation_capabilities[i] = (computation_capabilities[i], 'computationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(computation_capabilities[i][0]['_id']), 'computationCapabilities', computation_capabilities[i][2]))
+    computation_capability_sets = list(computation_capability_sets)
+    for i in range(len(computation_capability_sets)):
+        computation_capability_sets[i] = (computation_capability_sets[i], 'computationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
+        linked_resources.extend(get_resources_linked_through_resource_id(str(computation_capability_sets[i][0]['_id']), 'computationCapabilities', computation_capability_sets[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
@@ -287,9 +287,9 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     linked_resources.extend(platforms)
     linked_resources.extend(operations)
     linked_resources.extend(instruments)
-    linked_resources.extend(acquisition_capabilities)
+    linked_resources.extend(acquisition_capability_sets)
     linked_resources.extend(acquisitions)
-    linked_resources.extend(computation_capabilities)
+    linked_resources.extend(computation_capability_sets)
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
