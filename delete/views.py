@@ -36,7 +36,7 @@ from common.mongodb_models import (
     CatalogueDataSubsetRevision,
 )
 from django.views.generic import TemplateView
-from resource_management.views import _INDEX_PAGE_TITLE
+from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 from .utils import (
     get_resources_linked_through_resource_id,
     delete_current_version_and_revisions_of_resource_id,
@@ -66,6 +66,8 @@ class ResourceDeleteView(TemplateView):
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
@@ -313,6 +315,12 @@ class catalogue(DeleteCatalogueResourceView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
 class catalogue_entry(DeleteCatalogueResourceView):
     resource_type = 'catalogueentry'
     resource_mongodb_model = CurrentCatalogueEntry
@@ -322,6 +330,12 @@ class catalogue_entry(DeleteCatalogueResourceView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
 class catalogue_data_subset(DeleteCatalogueResourceView):
     resource_type = 'cataloguedatasubset'
     resource_mongodb_model = CurrentCatalogueDataSubset
@@ -330,3 +344,9 @@ class catalogue_data_subset(DeleteCatalogueResourceView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
