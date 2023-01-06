@@ -3,8 +3,8 @@ const metadataServerUrlBase = "https://metadata.pithia.eu";
 function getServerUrlConversionUrl() {
     let serverUrlConversionUrl = JSON.parse(document.getElementById("server-url-conversion-url").textContent);
     const serverUrlAnchorTags = document.querySelectorAll(`a[href^="${metadataServerUrlBase}"]`);
-    const ontologyServerUrls = [];
-    const resourceServerUrls = [];
+    let ontologyServerUrls = [];
+    let resourceServerUrls = [];
     const unknownServerUrls = [];
     serverUrlAnchorTags.forEach(tag => {
         if (tag.href.startsWith(`${metadataServerUrlBase}/ontology/`)) {
@@ -15,14 +15,16 @@ function getServerUrlConversionUrl() {
             unknownServerUrls.push(tag.href);
         }
     });
-    if (ontologyServerUrls.length == 0 && resourceServerUrls.length == 0) {
+    if (ontologyServerUrls.length === 0 && resourceServerUrls.length === 0) {
         return serverUrlConversionUrl;
     }
     serverUrlConversionUrl += "?";
     if (ontologyServerUrls.length > 0) {
+        ontologyServerUrls = ontologyServerUrls.map(url => encodeURIComponent(url));
         serverUrlConversionUrl += `ontology-server-urls=${ontologyServerUrls.join(",")}&`;
     }
     if (resourceServerUrls.length > 0) {
+        resourceServerUrls = resourceServerUrls.map(url => encodeURIComponent(url));
         serverUrlConversionUrl += `resource-server-urls=${resourceServerUrls.join(",")}`;
     }
     return serverUrlConversionUrl;
@@ -31,11 +33,14 @@ function getServerUrlConversionUrl() {
 function revealMetadataLink(tag, annotationText) {
     setTimeout(() => {
         tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
-        addAnnotationToMetadataLink(annotationText, tag.parentElement);
+        if (annotationText) {
+            addAnnotationToMetadataLink(annotationText, tag.parentElement);
+        }
         tag.style.display = "inline";
-        tag.parentElement.style.opacity = "1";
+        tag.parentElement.classList.remove("updating");
+        tag.parentElement.classList.remove("loading");
     }, 300);
-    tag.parentElement.style.opacity = "0";
+    tag.parentElement.classList.add("updating");
 }
 
 function addAnnotationToMetadataLink(text, element) {
@@ -50,23 +55,35 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
     fetch(getServerUrlConversionUrl(), fetchParams)
         .then(response => response.json())
         .then(responseContent => {
-            const convertedOntologyUrls = responseContent.ontology_urls;
-            const convertedResourceUrls = responseContent.resource_urls;
+            const convertedOntologyUrlMappings = responseContent.ontology_urls;
+            const convertedResourceUrlMappings = responseContent.resource_urls;
 
-            convertedOntologyUrls.forEach(conversionDetails => {
-                const anchorTagsWithUrl = document.querySelectorAll(`a[href="${conversionDetails.original_server_url}"]`);
+            // Checking whether some URLs have not been converted
+            // before actually making changes to links in the page.
+            const originalOntologyUrls = responseContent.ontology_urls.map(urlMapping => urlMapping.original_server_url);
+            const originalResourceUrls = responseContent.resource_urls.map(urlMapping => urlMapping.original_server_url);
+
+            const metadataServerAnchorTags = document.querySelectorAll('span.metadata-server-url a');
+            metadataServerAnchorTags.forEach(a => {
+                if (!originalOntologyUrls.includes(a.href) && !originalResourceUrls.includes(a.href)) {
+                    revealMetadataLink(a);
+                }
+            });
+
+            convertedOntologyUrlMappings.forEach(urlMapping => {
+                const anchorTagsWithUrl = document.querySelectorAll(`a[href="${urlMapping.original_server_url}"]`);
                 anchorTagsWithUrl.forEach(tag => {
-                    tag.href = conversionDetails.converted_url;
-                    tag.innerHTML = conversionDetails.converted_url_text;
+                    tag.href = urlMapping.converted_url;
+                    tag.innerHTML = urlMapping.converted_url_text;
                     revealMetadataLink(tag, "(opens details of the ontology term in a new tab)");
                 });
             });
 
-            convertedResourceUrls.forEach(conversionDetails => {
-                const anchorTagsWithUrl = document.querySelectorAll(`a[href="${conversionDetails.original_server_url}"]`);
+            convertedResourceUrlMappings.forEach(urlMapping => {
+                const anchorTagsWithUrl = document.querySelectorAll(`a[href="${urlMapping.original_server_url}"]`);
                 anchorTagsWithUrl.forEach(tag => {
-                    tag.href = conversionDetails.converted_url;
-                    tag.innerHTML = conversionDetails.converted_url_text;
+                    tag.href = urlMapping.converted_url;
+                    tag.innerHTML = urlMapping.converted_url_text;
                     revealMetadataLink(tag, "(opens details of the metadata in a new tab)");
                 });
             });
