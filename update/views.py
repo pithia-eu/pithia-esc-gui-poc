@@ -377,6 +377,8 @@ def data_collection_interaction_methods(request, data_collection_id):
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
         'title': 'Update Interaction Methods',
         'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+        'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
+        'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
         'resource_management_list_page_breadcrumb_url_name': 'resource_management:data_collections',
         'resource_management_list_page_breadcrumb_text': 'Register & Manage Data Collections'
     })
