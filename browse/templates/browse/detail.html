@@ -69,7 +69,7 @@
                     <tbody>
                         {% for key, value in resource_human_readable.items %}
                         {% if '_id' not in key %}
-                        <tr>
+                        <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
                             <td>{{ key|safe }}</td>
                             <td>
                                 {% if value.strip|length == 0 %}
