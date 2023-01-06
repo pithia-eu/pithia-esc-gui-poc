@@ -3,8 +3,8 @@ const metadataServerUrlBase = "https://metadata.pithia.eu";
 function getServerUrlConversionUrl() {
     let serverUrlConversionUrl = JSON.parse(document.getElementById("server-url-conversion-url").textContent);
     const serverUrlAnchorTags = document.querySelectorAll(`a[href^="${metadataServerUrlBase}"]`);
-    const ontologyServerUrls = [];
-    const resourceServerUrls = [];
+    let ontologyServerUrls = [];
+    let resourceServerUrls = [];
     const unknownServerUrls = [];
     serverUrlAnchorTags.forEach(tag => {
         if (tag.href.startsWith(`${metadataServerUrlBase}/ontology/`)) {
@@ -15,14 +15,16 @@ function getServerUrlConversionUrl() {
             unknownServerUrls.push(tag.href);
         }
     });
-    if (ontologyServerUrls.length == 0 && resourceServerUrls.length == 0) {
+    if (ontologyServerUrls.length === 0 && resourceServerUrls.length === 0) {
         return serverUrlConversionUrl;
     }
     serverUrlConversionUrl += "?";
     if (ontologyServerUrls.length > 0) {
+        ontologyServerUrls = ontologyServerUrls.map(url => encodeURIComponent(url));
         serverUrlConversionUrl += `ontology-server-urls=${ontologyServerUrls.join(",")}&`;
     }
     if (resourceServerUrls.length > 0) {
+        resourceServerUrls = resourceServerUrls.map(url => encodeURIComponent(url));
         serverUrlConversionUrl += `resource-server-urls=${resourceServerUrls.join(",")}`;
     }
     return serverUrlConversionUrl;
