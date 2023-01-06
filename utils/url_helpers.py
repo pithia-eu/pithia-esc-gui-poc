@@ -19,7 +19,7 @@ def convert_ontology_server_urls_to_browse_urls(ontology_server_urls):
         if is_ontology_server_url_valid == False:
             converted_ontology_server_urls.append({
                 'original_server_url': ontology_server_url,
-                'converted_url': '',
+                'converted_url': ontology_server_url,
                 'converted_url_text': ontology_server_url,
             })
             continue
