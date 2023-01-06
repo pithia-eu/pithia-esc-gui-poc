@@ -28,7 +28,6 @@ from common.mongodb_models import (
     CurrentPlatform,
     CurrentProcess,
     CurrentProject,
-    DataCollectionInteractionMethodRevision,
     DataCollectionRevision,
     IndividualRevision,
     InstrumentRevision,
