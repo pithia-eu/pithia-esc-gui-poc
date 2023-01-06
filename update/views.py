@@ -43,7 +43,7 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
-from resource_management.views import _INDEX_PAGE_TITLE
+from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 from update.update import update_current_version_of_resource, update_data_collection_api_interaction_method_specification_url, update_data_collection_api_interaction_method_description
 from update.version_control import assign_original_xml_file_entry_to_revision_id, create_revision_of_current_resource_version, create_revision_of_data_collection_api_interaction_method
 
@@ -79,6 +79,8 @@ class ResourceUpdateFormView(FormView):
         context['validation_url'] = self.validation_url
         context['post_url'] = reverse_lazy(self.resource_update_page_url_name, args=[self.resource_id])
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.resource_type_plural}'
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
@@ -391,6 +393,12 @@ class catalogue(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:catalogue')
     success_url = reverse_lazy('resource_management:catalogues')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
         return super().dispatch(request, *args, **kwargs)
@@ -407,6 +415,12 @@ class catalogue_entry(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:catalogue_entry')
     success_url = reverse_lazy('resource_management:catalogue_entries')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().dispatch(request, *args, **kwargs)
@@ -422,6 +436,12 @@ class catalogue_data_subset(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']

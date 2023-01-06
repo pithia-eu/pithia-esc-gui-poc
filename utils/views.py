@@ -21,7 +21,7 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     OriginalMetadataXml,
 )
-from resource_management.views import _INDEX_PAGE_TITLE
+from resource_management.views import _INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
 
 
 # Create your views here.
@@ -74,6 +74,8 @@ class ResourceXmlDownloadView(TemplateView):
         context['resource_localid'] = self.resource_localid
         context['xml'] = self.xml
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
@@ -191,6 +193,12 @@ class view_catalogue_as_xml(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogues'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
         return super().dispatch(request, *args, **kwargs)
@@ -200,6 +208,12 @@ class view_catalogue_entry_as_xml(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().dispatch(request, *args, **kwargs)
@@ -208,6 +222,12 @@ class view_catalogue_data_subset_as_xml(ResourceXmlDownloadView):
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']

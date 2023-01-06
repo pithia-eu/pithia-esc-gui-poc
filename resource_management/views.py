@@ -89,8 +89,8 @@ class ResourceManagementListView(TemplateView):
     resource_update_page_url_name = ''
     resource_register_page_url_name = ''
     resource_xml_download_page_url_name = ''
-    resource_management_category_list_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
@@ -107,8 +107,8 @@ class ResourceManagementListView(TemplateView):
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
-        context['resource_management_category_list_breadcrumb_text'] = self.resource_management_category_list_breadcrumb_text
-        context['resource_management_category_list_breadcrumb_url_name'] = self.resource_management_category_list_breadcrumb_url_name
+        context['resource_management_category_list_page_breadcrumb_text'] = self.resource_management_category_list_page_breadcrumb_text
+        context['resource_management_category_list_page_breadcrumb_url_name'] = self.resource_management_category_list_page_breadcrumb_url_name
         return context
 
 class OrganisationManagementListView(ResourceManagementListView):
@@ -248,8 +248,8 @@ class catalogues(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue'
     resource_register_page_url_name = 'register:catalogue'
     resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
-    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
 class catalogue_entries(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue entries')
@@ -259,8 +259,8 @@ class catalogue_entries(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue_entry'
     resource_register_page_url_name = 'register:catalogue_entry'
     resource_xml_download_page_url_name = 'utils:view_catalogue_entry_as_xml'
-    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
 class catalogue_data_subsets(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue data subsets')
@@ -270,5 +270,5 @@ class catalogue_data_subsets(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue_data_subset'
     resource_register_page_url_name = 'register:catalogue_data_subset'
     resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'
-    resource_management_category_list_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'

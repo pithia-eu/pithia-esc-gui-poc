@@ -10,7 +10,7 @@ from register.register_api_specification import register_api_specification
 from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
-from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource_page_title
+from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE, _create_manage_resource_page_title
 
 
 # Create your views here.
@@ -34,6 +34,8 @@ class ResourceRegisterFormView(FormView):
         context['post_url'] = self.post_url
         context['form'] = self.form_class
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
@@ -227,6 +229,12 @@ class catalogue(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
 class catalogue_entry(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
@@ -240,6 +248,12 @@ class catalogue_entry(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
 class catalogue_data_subset(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
@@ -252,3 +266,9 @@ class catalogue_data_subset(ResourceRegisterFormView):
     post_url = reverse_lazy('register:catalogue_data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
