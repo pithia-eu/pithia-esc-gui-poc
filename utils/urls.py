@@ -17,7 +17,7 @@ urlpatterns = [
     path('computations/<computation_id>/xml', views.ComputationXmlDownloadView.as_view(), name='view_computation_as_xml'),
     path('processs/<process_id>/xml', views.ProcessXmlDownloadView.as_view(), name='view_process_as_xml'),
     path('data-collections/<data_collection_id>/xml', views.DataCollectionXmlDownloadView.as_view(), name='view_data_collection_as_xml'),
-    path('catalogues/<catalogue_id>/xml', views.view_catalogue_as_xml.as_view(), name='view_catalogue_as_xml'),
-    path('catalogues/<catalogue_entry_id>/xml', views.view_catalogue_entry_as_xml.as_view(), name='view_catalogue_entry_as_xml'),
-    path('catalogues/<catalogue_data_subset_id>/xml', views.view_catalogue_data_subset_as_xml.as_view(), name='view_catalogue_data_subset_as_xml'),
+    path('catalogues/<catalogue_id>/xml', views.CatalogueXmlDownloadView.as_view(), name='view_catalogue_as_xml'),
+    path('catalogues/<catalogue_entry_id>/xml', views.CatalogueEntryXmlDownloadView.as_view(), name='view_catalogue_entry_as_xml'),
+    path('catalogues/<catalogue_data_subset_id>/xml', views.CatalogueDataSubsetXmlDownloadView.as_view(), name='view_catalogue_data_subset_as_xml'),
 ]
