@@ -320,19 +320,19 @@ class CatalogueRelatedResourceListView(ResourceListView):
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
         return context
 
-class list_catalogues(CatalogueRelatedResourceListView):
+class CatalogueListView(CatalogueRelatedResourceListView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
     resource_detail_page_url_name = 'browse:catalogue_detail'
     description = ''
 
-class list_catalogue_entries(CatalogueRelatedResourceListView):
+class CatalogueEntryListView(CatalogueRelatedResourceListView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
     resource_detail_page_url_name = 'browse:catalogue_entry_detail'
     description = ''
 
-class list_catalogue_data_subsets(CatalogueRelatedResourceListView):
+class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
@@ -625,7 +625,7 @@ class CatalogueRelatedResourceDetailView(ResourceDetailView):
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
         return context
 
-class catalogue_detail(CatalogueRelatedResourceDetailView):
+class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
     list_resources_of_type_url_name = 'browse:list_catalogues'
@@ -634,7 +634,7 @@ class catalogue_detail(CatalogueRelatedResourceDetailView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
 
-class catalogue_entry_detail(CatalogueRelatedResourceDetailView):
+class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogue Entries'
     list_resources_of_type_url_name = 'browse:list_catalogue_entries'
@@ -643,7 +643,7 @@ class catalogue_entry_detail(CatalogueRelatedResourceDetailView):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().get(request, *args, **kwargs)
 
-class catalogue_data_subset_detail(CatalogueRelatedResourceDetailView):
+class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogue Data Subsets'
     list_resources_of_type_url_name = 'browse:list_catalogue_data_subsets'
