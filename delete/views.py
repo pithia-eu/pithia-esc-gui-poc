@@ -90,7 +90,7 @@ class ResourceDeleteView(TemplateView):
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return HttpResponseRedirect(self.redirect_url)
 
-class DeleteCatalogueResourceView(TemplateView):
+class CatalogueRelatedResourceDeleteView(TemplateView):
     resource_id = ''
     resource_type = ''
     resource_mongodb_model = None
@@ -306,7 +306,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
         delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
         return super().post(request, *args, **kwargs)
 
-class catalogue(DeleteCatalogueResourceView):
+class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     resource_type = 'catalogue'
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
@@ -321,7 +321,7 @@ class catalogue(DeleteCatalogueResourceView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-class catalogue_entry(DeleteCatalogueResourceView):
+class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     resource_type = 'catalogueentry'
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
@@ -336,7 +336,7 @@ class catalogue_entry(DeleteCatalogueResourceView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-class catalogue_data_subset(DeleteCatalogueResourceView):
+class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     resource_type = 'cataloguedatasubset'
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
