@@ -97,7 +97,7 @@ def sort_resource_list(resource_list):
 
 # Gets all resources referencing a given resource id. This changes depending on the type of
 # resource.
-def get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
+def get_data_collection_related_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
     projects = []
     platforms = []
@@ -243,43 +243,43 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     individuals = list(individuals)
     for i in range(len(individuals)):
         individuals[i] = (individuals[i], 'individual', CurrentIndividual, IndividualRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
     projects = list(projects)
     for i in range(len(projects)):
         projects[i] = (projects[i], 'project', CurrentProject, ProjectRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
     platforms = list(platforms)
     for i in range(len(platforms)):
         platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
     operations = list(operations)
     for i in range(len(operations)):
         operations[i] = (operations[i], 'operation', CurrentOperation, OperationRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
     acquisition_capability_sets = list(acquisition_capability_sets)
     for i in range(len(acquisition_capability_sets)):
         acquisition_capability_sets[i] = (acquisition_capability_sets[i], 'acquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisition_capability_sets[i][0]['_id']), 'acquisitionCapabilities', acquisition_capability_sets[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(acquisition_capability_sets[i][0]['_id']), 'acquisitionCapabilities', acquisition_capability_sets[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
     computation_capability_sets = list(computation_capability_sets)
     for i in range(len(computation_capability_sets)):
         computation_capability_sets[i] = (computation_capability_sets[i], 'computationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(computation_capability_sets[i][0]['_id']), 'computationCapabilities', computation_capability_sets[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(computation_capability_sets[i][0]['_id']), 'computationCapabilities', computation_capability_sets[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(computations[i][0]['_id']), 'computation', computations[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(computations[i][0]['_id']), 'computation', computations[i][2]))
     processes = list(processes)
     for i in range(len(processes)):
         processes[i] = (processes[i], 'process', CurrentProcess, ProcessRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(processes[i][0]['_id']), 'process', processes[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(processes[i][0]['_id']), 'process', processes[i][2]))
     data_collections = list(data_collections)
     for i in range(len(data_collections)):
         data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection, DataCollectionRevision)

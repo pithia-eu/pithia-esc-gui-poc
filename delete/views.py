@@ -38,7 +38,7 @@ from common.mongodb_models import (
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 from .utils import (
-    get_resources_linked_through_resource_id,
+    get_data_collection_related_resources_linked_through_resource_id,
     delete_current_version_and_revisions_of_resource_id,
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
@@ -77,14 +77,14 @@ class ResourceDeleteView(TemplateView):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        self.other_resources_to_delete = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Delete the resource and resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
-        linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         for r in linked_resources:
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
@@ -124,13 +124,13 @@ class CatalogueRelatedResourceDeleteView(TemplateView):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        self.other_resources_to_delete = get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Delete the resource and resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
-        linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
         delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         for r in linked_resources:
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
