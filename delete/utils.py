@@ -2,10 +2,16 @@ from functools import cmp_to_key
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
+    CatalogueRevision,
+    CatalogueEntryRevision,
+    CatalogueDataSubsetRevision,
     ComputationCapabilityRevision,
     ComputationRevision,
     CurrentAcquisition,
     CurrentAcquisitionCapability,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
     CurrentComputation,
     CurrentComputationCapability,
     CurrentDataCollection,
@@ -24,9 +30,12 @@ from common.mongodb_models import (
     OperationRevision,
     PlatformRevision,
     ProcessRevision,
-    ProjectRevision
+    ProjectRevision,
 )
-from common.helpers import create_resource_url
+from common.helpers import (
+    create_resource_url,
+    create_catalogue_related_resource_url,
+)
 from bson import ObjectId
 
 # Getters for resources referencing "parties" - Organisations and/or Individuals
@@ -295,6 +304,70 @@ def get_data_collection_related_resources_linked_through_resource_id(resource_id
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
     linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
+
+    return linked_resources
+
+# Catalogue deletion
+
+def get_catalogue_for_catalogue_entry(catalogue_entry):
+    catalogue_identifier_xlink_href = catalogue_entry['catalogueIdentifier']['@xlink:href']
+    catalogue_localid = catalogue_identifier_xlink_href.split('/')[-1]
+    return CurrentCatalogue.find_one({
+        'identifier.PITHIA_Identifier.localID': catalogue_localid
+    })
+
+def get_catalogue_for_catalogue_data_subset(catalogue_data_subset):
+    catalogue_entry_identifier_xlink_href = catalogue_data_subset['entryIdentifier']['@xlink:href']
+    catalogue_entry_localid = catalogue_entry_identifier_xlink_href.split('/')[-1]
+    return CurrentCatalogueEntry.find_one({
+        'identifier.PITHIA_Identifier.localID': catalogue_entry_localid
+    })
+
+def get_catalogue_related_resources_linked_through_resource_id(resource_id, resource_mongodb_model, event=None):
+    catalogues = []
+    catalogue_entries = []
+    catalogue_data_subsets = []
+
+    linked_resources = []
+    resource = resource_mongodb_model.find_one({
+        '_id': ObjectId(resource_id)
+    })
+    resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
+    if event is None:
+        catalogue = None
+        if resource_mongodb_model == CurrentCatalogue:
+            catalogue = resource
+        elif resource_mongodb_model == CurrentCatalogueEntry:
+            catalogue = get_catalogue_for_catalogue_entry(resource)
+        else:
+            catalogue = get_catalogue_for_catalogue_data_subset(resource)
+        event = catalogue['name']
+
+    resource_url = create_catalogue_related_resource_url(resource_pithia_identifier['namespace'], event, resource_pithia_identifier['localID'])
+    if resource_mongodb_model == CurrentCatalogue:
+        # Referenced by Catalogue Entries
+        catalogue_entries = CurrentCatalogueEntry.find({
+            'catalogueIdentifier.@xlink:href': resource_url
+        })
+    elif resource_mongodb_model == CurrentCatalogueEntry:
+        # Referenced by Catalogue Data Subsets
+        catalogue_data_subsets = CurrentCatalogueDataSubset.find({
+            'entryIdentifier.@xlink.href': resource_url
+        })
+    # Catalogue Data Subsets are not included as they
+    # are not referenced by any other resource type.
+    catalogues = list(catalogues)
+    for i in range(len(catalogues)):
+        catalogues[i] = (catalogues[i], 'catalogue', CurrentCatalogue, CatalogueRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogues[i][0]['_id']), catalogues[i][2], event=event))
+    catalogue_entries = list(catalogue_entries)
+    for i in range(len(catalogue_entries)):
+        catalogue_entries[i] = (catalogue_entries[i], 'catalogue entry', CurrentCatalogueEntry, CatalogueEntryRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_entries[i][0]['_id']), catalogue_entries[i][2], event=event))
+    catalogue_data_subsets = list(catalogue_data_subsets)
+    for i in range(len(catalogue_data_subsets)):
+        catalogue_data_subsets[i] = (catalogue_data_subsets[i], 'catalogue data subset', CurrentCatalogueDataSubset, CatalogueDataSubsetRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_data_subsets[i][0]['_id']), catalogue_data_subsets[i][2], event=event))
 
     return linked_resources
 
