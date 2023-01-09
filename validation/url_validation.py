@@ -83,17 +83,17 @@ def validate_resource_url(resource_url):
     }
     resource_type_in_resource_url = ''
     namespace = ''
-    localID = ''
+    localid = ''
     resource_mongodb_model = None
     if not is_resource_url_base_structure_valid(resource_url):
         return validation_details
-    resource_type_in_resource_url, namespace, localID = itemgetter('resource_type', 'namespace', 'localID')(divide_resource_url_into_main_components(resource_url))
+    resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
     resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
-    if not is_data_collection_related_url_structure_valid(resource_url, resource_type_in_resource_url, namespace, localID, resource_mongodb_model):
+    if not is_data_collection_related_url_structure_valid(resource_url, resource_type_in_resource_url, namespace, localid, resource_mongodb_model):
         return validation_details
     validation_details['is_structure_valid'] = True
 
-    referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localID, namespace)
+    referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localid, namespace)
     if referenced_resource == None:
         validation_details['type_of_missing_resource'] = resource_type_in_resource_url
         return validation_details
@@ -140,9 +140,9 @@ def get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed):
             invalid_urls['types_of_missing_resources'] = list(set(invalid_urls['types_of_missing_resources']))
             
         if is_pointing_to_registered_resource:
-            resource_type_in_resource_url, namespace, localID = itemgetter('resource_type', 'namespace', 'localID')(divide_resource_url_into_main_components(resource_url))
+            resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
             resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
-            resource_with_op_mode_id = get_resource_by_pithia_identifier_components_and_op_mode_id(resource_mongodb_model, localID, namespace, op_mode_id)
+            resource_with_op_mode_id = get_resource_by_pithia_identifier_components_and_op_mode_id(resource_mongodb_model, localid, namespace, op_mode_id)
             if resource_with_op_mode_id == None:
                 invalid_urls['urls_pointing_to_registered_resources_with_missing_op_modes'].append(resource_url_with_op_mode_id)
             

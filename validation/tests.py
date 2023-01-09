@@ -140,7 +140,7 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(resource_url_division_1['url_base'], 'https://metadata.pithia.eu/resources/2.2')
         self.assertEquals(resource_url_division_1['resource_type'], 'pithia')
         self.assertEquals(resource_url_division_1['namespace'], 'project')
-        self.assertEquals(resource_url_division_1['localID'], 'Project_TEST')
+        self.assertEquals(resource_url_division_1['localid'], 'Project_TEST')
         self.assertEquals(resource_url_division_2['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2')
         self.assertEquals(resource_url_division_3['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
         self.assertEquals(resource_url_division_3['resource_type'], 'organisation')
