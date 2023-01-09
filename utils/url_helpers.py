@@ -1,8 +1,7 @@
 from django.urls import reverse
 from utils.ontology_helpers import get_graph_of_pithia_ontology_component
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
-from validation.url_validation import validate_ontology_term_url, is_resource_url_structure_valid
-from .html_helpers import create_anchor_tag_html_from_ontology_term_details
+from validation.url_validation import validate_ontology_term_url
 from .ontology_helpers import get_pref_label_from_ontology_node_iri
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
