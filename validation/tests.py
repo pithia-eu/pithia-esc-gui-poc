@@ -5,7 +5,7 @@ from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
 from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
+from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_base_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -166,21 +166,21 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_invalid_resource_url_structures_are_detected(self):
         """
-        is_resource_url_structure_valid() returns False if a resource url is invalid
+        is_resource_url_base_structure_valid() returns False if a resource url is invalid
         """
 
-        blank_string_result = is_resource_url_structure_valid('')
-        swapped_namespace_and_resource_type_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
-        random_string_result_1 = is_resource_url_structure_valid('////')
-        random_string_result_2 = is_resource_url_structure_valid('///')
-        random_string_result_3 = is_resource_url_structure_valid('//')
-        random_string_result_4 = is_resource_url_structure_valid('/')
-        non_resource_url_result = is_resource_url_structure_valid('http://www.google')
-        http_resource_url_result = is_resource_url_structure_valid('http://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
-        no_url_protocol_result = is_resource_url_structure_valid('metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
-        domain_name_duplication_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
-        acquisition_capability_sets_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
-        computation_capability_sets_incorrect_casing_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/AcquisitionCapabilities_TEST')
+        blank_string_result = is_resource_url_base_structure_valid('')
+        swapped_namespace_and_resource_type_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
+        random_string_result_1 = is_resource_url_base_structure_valid('////')
+        random_string_result_2 = is_resource_url_base_structure_valid('///')
+        random_string_result_3 = is_resource_url_base_structure_valid('//')
+        random_string_result_4 = is_resource_url_base_structure_valid('/')
+        non_resource_url_result = is_resource_url_base_structure_valid('http://www.google')
+        http_resource_url_result = is_resource_url_base_structure_valid('http://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
+        no_url_protocol_result = is_resource_url_base_structure_valid('metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
+        domain_name_duplication_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
+        acquisition_capability_sets_incorrect_casing_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
+        computation_capability_sets_incorrect_casing_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/AcquisitionCapabilities_TEST')
 
         self.assertEquals(blank_string_result, False)
         self.assertEquals(swapped_namespace_and_resource_type_result, False)
@@ -197,21 +197,21 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_valid_resource_urls_pass_validation(self):
         """
-        is_resource_url_structure_valid() returns True if a resource url is valid
+        is_resource_url_base_structure_valid() returns True if a resource url is valid
         """
 
-        valid_organisation_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
-        valid_individual_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/individual/pithia/Individual_TEST')
-        valid_project_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
-        valid_platform_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/platform/pithia/Platform_TEST')
-        valid_operation_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/operation/pithia/Operation_TEST')
-        valid_instrument_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_TEST')
-        valid_aqcuisition_capabilities_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
-        valid_acquisition_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisition/pithia/Acquisition_TEST')
-        valid_computation_capability_sets_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_TEST')
-        valid_computation_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_TEST')
-        valid_process_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/process/pithia/CompositeProcess_TEST')
-        valid_data_collection_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
+        valid_organisation_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
+        valid_individual_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/individual/pithia/Individual_TEST')
+        valid_project_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
+        valid_platform_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/platform/pithia/Platform_TEST')
+        valid_operation_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/operation/pithia/Operation_TEST')
+        valid_instrument_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_TEST')
+        valid_aqcuisition_capabilities_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
+        valid_acquisition_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisition/pithia/Acquisition_TEST')
+        valid_computation_capability_sets_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_TEST')
+        valid_computation_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_TEST')
+        valid_process_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/process/pithia/CompositeProcess_TEST')
+        valid_data_collection_url_result = is_resource_url_base_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
 
         self.assertEquals(valid_organisation_url_result, True)
         self.assertEquals(valid_individual_url_result, True)
