@@ -90,7 +90,13 @@ def sort_resource_list(resource_list):
             return 11
         elif resource_type == 'collection':
             return 12
-        return 12
+        elif resource_type == 'catalogue':
+            return 13
+        elif resource_type == 'catalogue entry':
+            return 14
+        elif resource_type == 'catalogue data subset':
+            return 15
+        return 15
     def compare_resource_type_weight(item1, item2):
         item1_weight = get_weight_of_resource_type(item1[1])
         item2_weight = get_weight_of_resource_type(item2[1])
@@ -333,17 +339,27 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
         '_id': ObjectId(resource_id)
     })
     resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
-    if event is None:
-        catalogue = None
-        if resource_mongodb_model == CurrentCatalogue:
-            catalogue = resource
-        elif resource_mongodb_model == CurrentCatalogueEntry:
-            catalogue = get_catalogue_for_catalogue_entry(resource)
-        else:
-            catalogue = get_catalogue_for_catalogue_data_subset(resource)
-        event = catalogue['name']
+    resource_url = None
+    if resource_mongodb_model == CurrentDataCollection:
+        resource_url = create_resource_url('collection', resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
+    else:
+        if event is None:
+            catalogue = None
+            if resource_mongodb_model == CurrentCatalogue:
+                catalogue = resource
+            elif resource_mongodb_model == CurrentCatalogueEntry:
+                catalogue = get_catalogue_for_catalogue_entry(resource)
+            elif resource_mongodb_model == CurrentCatalogueDataSubset:
+                catalogue = get_catalogue_for_catalogue_data_subset(resource)
+            event = catalogue['name']
 
-    resource_url = create_catalogue_related_resource_url(resource_pithia_identifier['namespace'], event, resource_pithia_identifier['localID'])
+        resource_url = create_catalogue_related_resource_url(resource_pithia_identifier['namespace'], event, resource_pithia_identifier['localID'])
+
+    if resource_mongodb_model == CurrentDataCollection:
+        # Referenced by Catalogue Data Subsets
+        catalogue_data_subsets = CurrentCatalogueDataSubset.find({
+            'dataCollection.@xlink:href': resource_url
+        })
     if resource_mongodb_model == CurrentCatalogue:
         # Referenced by Catalogue Entries
         catalogue_entries = CurrentCatalogueEntry.find({
@@ -352,7 +368,7 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
     elif resource_mongodb_model == CurrentCatalogueEntry:
         # Referenced by Catalogue Data Subsets
         catalogue_data_subsets = CurrentCatalogueDataSubset.find({
-            'entryIdentifier.@xlink.href': resource_url
+            'entryIdentifier.@xlink:href': resource_url
         })
     # Catalogue Data Subsets are not included as they
     # are not referenced by any other resource type.
