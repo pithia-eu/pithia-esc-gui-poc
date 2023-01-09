@@ -19,7 +19,7 @@ urlpatterns = [
     path('computations/', views.ComputationManagementListView.as_view(), name='computations'),
     path('processes/', views.ProcessManagementListView.as_view(), name='processes'),
     path('data-collections/', views.DataCollectionManagementListView.as_view(), name='data_collections'),
-    path('catalogues/', views.catalogues.as_view(), name='catalogues'),
-    path('catalogue-entries/', views.catalogue_entries.as_view(), name='catalogue_entries'),
-    path('catalogue-data-subsets/', views.catalogue_data_subsets.as_view(), name='catalogue_data_subsets'),
+    path('catalogues/', views.CatalogueManagementListView.as_view(), name='catalogues'),
+    path('catalogue-entries/', views.CatalogueEntryManagementListView.as_view(), name='catalogue_entries'),
+    path('catalogue-data-subsets/', views.CatalogueDataSubsetManagementListView.as_view(), name='catalogue_data_subsets'),
 ]

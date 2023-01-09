@@ -240,7 +240,7 @@ class DataCollectionManagementListView(ResourceManagementListView):
         context['interaction_method_update_page_url_name'] = 'update:data_collection_interaction_methods'
         return context
 
-class catalogues(ResourceManagementListView):
+class CatalogueManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogues')
     resource_mongodb_model = CurrentCatalogue
     resource_type_plural = 'Catalogues'
@@ -251,7 +251,7 @@ class catalogues(ResourceManagementListView):
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
-class catalogue_entries(ResourceManagementListView):
+class CatalogueEntryManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue entries')
     resource_mongodb_model = CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
@@ -262,7 +262,7 @@ class catalogue_entries(ResourceManagementListView):
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
-class catalogue_data_subsets(ResourceManagementListView):
+class CatalogueDataSubsetManagementListView(ResourceManagementListView):
     title = _create_manage_resource_page_title('catalogue data subsets')
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'
