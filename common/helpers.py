@@ -52,6 +52,9 @@ def create_resource_url(resource_type, namespace, localid):
         localid = f'{resource_type.capitalize()}_{localid}'
     return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
 
+def create_catalogue_related_resource_url(namespace, event, localid):
+    return f'https://metadata.pithia.eu/resources/2.2/catalogue/{namespace}/{event}/{localid}'
+
 def get_acquisition_capability_sets_referencing_instrument_operational_ids(instrument_id: ObjectId) -> list:
     instrument = CurrentInstrument.find_one({
         '_id': ObjectId(instrument_id)
