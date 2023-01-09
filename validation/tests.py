@@ -1,11 +1,26 @@
 import os
 import environ
-import mongomock
 from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
-from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_base_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
+from validation.metadata_validation import (
+    ORGANISATION_XML_ROOT_TAG_NAME,
+    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+    get_schema_location_url_from_parsed_xml_file,
+    is_xml_valid_against_schema_at_url,
+    parse_xml_file,
+    validate_xml_metadata_file
+)
+from validation.url_validation import (
+    get_invalid_ontology_urls_from_parsed_xml,
+    get_invalid_resource_urls_from_parsed_xml,
+    divide_resource_url_into_main_components,
+    is_resource_url_base_structure_valid,
+    divide_resource_url_from_op_mode_id,
+    get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
+    validate_ontology_term_url
+)
+from validation.url_validation_utils import divide_catalogue_related_resource_url_into_main_components
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -225,3 +240,25 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(valid_computation_url_result, True)
         self.assertEquals(valid_process_url_result, True)
         self.assertEquals(valid_data_collection_url_result, True)
+
+class CategoryUrlValidationTestCase(SimpleTestCase):
+    def test_category_url_splitting_function(self):
+        """
+        Test divide_catalogue_related_resource_url_into_main_components
+        returns the expected main URL components.
+        resource type/namespace/Event?/Catalogue metadata type (i.e. Catalogue, CatalogueEntry, CatalogueDataSubset)
+        """
+        catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+        catalogue_resource_url_components = divide_catalogue_related_resource_url_into_main_components(catalogue_resource_url)
+        catalogue_url_base = catalogue_resource_url_components['url_base']
+        catalogue_url_resource_type = catalogue_resource_url_components['resource_type']
+        catalogue_url_namespace = catalogue_resource_url_components['namespace']
+        catalogue_url_event = catalogue_resource_url_components['event']
+        catalogue_url_localid = catalogue_resource_url_components['localid']
+
+        print('catalogue_resource_url_components', catalogue_resource_url_components)
+        self.assertEquals(catalogue_url_base, 'https://metadata.pithia.eu/resources/2.2')
+        self.assertEquals(catalogue_url_resource_type, 'catalogue')
+        self.assertEquals(catalogue_url_namespace, 'pithia')
+        self.assertEquals(catalogue_url_event, 'VolcanoEruption')
+        self.assertEquals(catalogue_url_localid, 'Catalogue_VolcanoEruption')
