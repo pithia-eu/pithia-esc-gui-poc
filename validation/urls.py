@@ -16,8 +16,8 @@ urlpatterns = [
     path('computation/', views.ComputationXmlMetadataFileValidationFormView.as_view(), name='computation'),
     path('process/', views.ProcessXmlMetadataFileValidationFormView.as_view(), name='process'),
     path('data-collection/', views.DataCollectionXmlMetadataFileValidationFormView.as_view(), name='data_collection'),
-    path('catalogue/', views.catalogue.as_view(), name='catalogue'),
-    path('catalogue-entry/', views.catalogue_entry.as_view(), name='catalogue_entry'),
-    path('catalogue-data-subset/', views.catalogue_data_subset.as_view(), name='catalogue_data_subset'),
+    path('catalogue/', views.CatalogueXmlMetadataFileValidationFormView.as_view(), name='catalogue'),
+    path('catalogue-entry/', views.CatalogueEntryXmlMetadataFileValidationFormView.as_view(), name='catalogue_entry'),
+    path('catalogue-data-subset/', views.CatalogueDataSubsetXmlMetadataFileValidationFormView.as_view(), name='catalogue_data_subset'),
     path('api-specification-url/', views.api_specification_url, name='api_specification_url'),
 ]

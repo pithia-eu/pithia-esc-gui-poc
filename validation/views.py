@@ -116,17 +116,17 @@ class DataCollectionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileVal
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
 
 
-class catalogue(ResourceXmlMetadataFileValidationFormView):
+class CatalogueXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentCatalogue
     expected_root_tag_name = CATALOGUE_XML_ROOT_TAG_NAME
 
 
-class catalogue_entry(ResourceXmlMetadataFileValidationFormView):
+class CatalogueEntryXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentCatalogueEntry
     expected_root_tag_name = CATALOGUE_ENTRY_XML_ROOT_TAG_NAME
 
 
-class catalogue_data_subset(ResourceXmlMetadataFileValidationFormView):
+class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentCatalogueDataSubset
     expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
 
