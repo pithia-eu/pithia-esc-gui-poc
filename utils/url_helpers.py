@@ -52,44 +52,32 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
         referenced_resource_namespace = referenced_resource_server_url_split[-2]
         referenced_resource_localid = referenced_resource_server_url_split[-1]
         referenced_op_mode_id = ''
+        url_mapping = {
+            'original_server_url': resource_server_url,
+            'converted_url': resource_server_url,
+            'converted_url_text': referenced_resource_localid,
+        }
         if '#' in referenced_resource_localid:
             referenced_resource_localid_split = referenced_resource_localid.split('#')
             referenced_resource_localid = referenced_resource_localid_split[0]
             referenced_op_mode_id = referenced_resource_localid_split[1]
-            print('referenced_resource_localid', referenced_resource_localid)
-            print('referenced_op_mode_id', referenced_op_mode_id)
         referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
         if referenced_resource_mongodb_model == 'unknown':
-            converted_resource_server_urls.append({
-                'original_server_url': resource_server_url,
-                'converted_url': resource_server_url,
-                'converted_url_text': referenced_resource_localid,
-            })
+            converted_resource_server_urls.append(url_mapping)
             continue
         referenced_resource = None
+        find_params = {
+            'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
+            'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
+        }
         if len(referenced_op_mode_id) > 0:
-            referenced_resource = referenced_resource_mongodb_model.find_one({
-                'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
-                'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
-                'operationalMode.InstrumentOperationalMode.id': referenced_op_mode_id
-            }, {
-                '_id': 1,
-                'name': 1
-            })
-        else:
-            referenced_resource = referenced_resource_mongodb_model.find_one({
-                'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
-                'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
-            }, {
-                '_id': 1,
-                'name': 1
-            })
+            find_params['operationalMode.InstrumentOperationalMode.id'] = referenced_op_mode_id
+        referenced_resource = referenced_resource_mongodb_model.find_one(find_params, {
+            '_id': 1,
+            'name': 1
+        })
         if referenced_resource is None:
-            converted_resource_server_urls.append({
-                'original_server_url': resource_server_url,
-                'converted_url': resource_server_url,
-                'converted_url_text': referenced_resource_localid,
-            })
+            converted_resource_server_urls.append(url_mapping)
             continue
         resource_objectid_str = str(referenced_resource['_id'])
         if referenced_resource_type.lower() == 'computationcapabilities':
@@ -104,6 +92,6 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
         }
         if len(referenced_op_mode_id) > 0:
             url_mapping['converted_url'] = f'{url_mapping["converted_url"]}#{referenced_op_mode_id}'
-            url_mapping['converted_url_text'] = f'{url_mapping["converted_url_text"]}, {referenced_op_mode_id}'
+            url_mapping['converted_url_text'] = f'{url_mapping["converted_url_text"]}#{referenced_op_mode_id}'
         converted_resource_server_urls.append(url_mapping)
     return converted_resource_server_urls
