@@ -105,17 +105,24 @@ def validate_resource_url(resource_url):
     namespace = ''
     localid = ''
     resource_mongodb_model = None
+    referenced_resource = None
     if not is_resource_url_base_structure_valid(resource_url):
         return validation_details
-    elif '/catalogue/' in resource_url and not is_catalogue_related_url_structure_valid(resource_url):
-        return validation_details
-    elif not '/catalogue/' in resource_url and not is_data_collection_related_url_structure_valid(resource_url):
-        return validation_details
+    
+    if '/catalogue/' in resource_url:
+        resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_catalogue_related_resource_url_into_main_components(resource_url))
+        resource_mongodb_model = get_mongodb_model_from_catalogue_related_resource_url(resource_url)
+        if not is_catalogue_related_url_structure_valid(resource_url):
+            return validation_details
+    else:
+        resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
+        resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
+        if not is_data_collection_related_url_structure_valid(resource_url):
+            return validation_details
     validation_details['is_structure_valid'] = True
 
-    resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
-    resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
-    referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localid, namespace)
+    if resource_mongodb_model != 'unknown':
+        referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localid, namespace)
     if referenced_resource == None:
         validation_details['type_of_missing_resource'] = resource_type_in_resource_url
         return validation_details
