@@ -42,6 +42,7 @@ from .utils import (
     delete_current_version_and_revisions_of_resource_id,
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
+    get_catalogue_related_resources_linked_through_resource_id,
 )
 
 # Create your views here.
@@ -90,47 +91,18 @@ class ResourceDeleteView(TemplateView):
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return HttpResponseRedirect(self.redirect_url)
 
-class CatalogueRelatedResourceDeleteView(TemplateView):
-    resource_id = ''
-    resource_type = ''
-    resource_mongodb_model = None
-    resource_revision_mongodb_model = None
-    redirect_url = ''
-    template_name = 'delete/confirm_delete_resource.html'
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
-    delete_resource_page_breadcrumb_url_name = ''
-    resource_to_delete = None
-    other_resources_to_delete = []
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_type'] = self.resource_type
-        if self.resource_type.lower() == 'catalogueentry':
-            context['resource_type'] = 'catalogue entry'
-        if self.resource_type.lower() == 'cataloguedatasubset':
-            context['resource_type'] = 'catalogue data subset'
-        context['title'] = f'Confirm Deletion of Metadata'
-        context['resource_management_index_page_title'] = _INDEX_PAGE_TITLE
-        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
-        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
-        context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
-        context['resource_id'] = self.resource_id
-        context['resource_to_delete'] = self.resource_to_delete
-        context['other_resources_to_delete'] = self.other_resources_to_delete
-        return context
-
+class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
     def get(self, request, *args, **kwargs):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Delete the resource and resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
-        linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type, self.resource_mongodb_model)
+        linked_resources = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
         delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         for r in linked_resources:
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
@@ -315,6 +287,10 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_id']
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -322,13 +298,17 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
         return context
 
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
-    resource_type = 'catalogueentry'
+    resource_type = 'catalogue entry'
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
     redirect_url = reverse_lazy('resource_management:catalogue_entries')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -337,13 +317,17 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
         return context
 
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
-    resource_type = 'cataloguedatasubset'
+    resource_type = 'catalogue data subset'
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
