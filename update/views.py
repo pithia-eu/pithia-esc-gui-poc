@@ -383,7 +383,7 @@ def data_collection_interaction_methods(request, data_collection_id):
         'resource_management_list_page_breadcrumb_text': 'Register & Manage Data Collections'
     })
 
-class catalogue(ResourceUpdateFormView):
+class CatalogueUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
 
@@ -405,7 +405,7 @@ class catalogue(ResourceUpdateFormView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().dispatch(request, *args, **kwargs)
 
-class catalogue_entry(ResourceUpdateFormView):
+class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
 
@@ -427,7 +427,7 @@ class catalogue_entry(ResourceUpdateFormView):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().dispatch(request, *args, **kwargs)
 
-class catalogue_data_subset(ResourceUpdateFormView):
+class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
