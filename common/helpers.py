@@ -14,7 +14,9 @@ from .mongodb_models import (
     CurrentComputationCapability,
     CurrentComputation,
     CurrentProcess,
-    CurrentCatalogue
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
 )
 
 def _map_id_property(resource):
@@ -99,4 +101,14 @@ def get_mongodb_model_by_resource_type_from_resource_url(resource_type):
         return CurrentDataCollection
     elif resource_type == 'catalogue':
         return CurrentCatalogue
+    return 'unknown'
+
+def get_mongodb_model_from_catalogue_related_resource_url(resource_url):
+    localid = resource_url.split('/')[-1]
+    if localid.startswith('Catalogue_'):
+        return CurrentCatalogue
+    elif localid.startswith('CatalogueEntry_'):
+        return CurrentCatalogueEntry
+    elif localid.startswith('CatalogueDataSubset_'):
+        return CurrentCatalogueDataSubset
     return 'unknown'
