@@ -18,7 +18,8 @@ from validation.url_validation import (
     is_resource_url_base_structure_valid,
     divide_resource_url_from_op_mode_id,
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
-    validate_ontology_term_url
+    validate_ontology_term_url,
+    is_catalogue_related_url_structure_valid,
 )
 from validation.url_validation_utils import divide_catalogue_related_resource_url_into_main_components
 from pithiaesc.settings import BASE_DIR
@@ -246,7 +247,7 @@ class CategoryUrlValidationTestCase(SimpleTestCase):
         """
         Test divide_catalogue_related_resource_url_into_main_components
         returns the expected main URL components.
-        resource type/namespace/Event?/Catalogue metadata type (i.e. Catalogue, CatalogueEntry, CatalogueDataSubset)
+        catalogue/namespace/Event?/Catalogue metadata type (i.e. Catalogue, CatalogueEntry, CatalogueDataSubset)
         """
         catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
         catalogue_resource_url_components = divide_catalogue_related_resource_url_into_main_components(catalogue_resource_url)
@@ -262,3 +263,25 @@ class CategoryUrlValidationTestCase(SimpleTestCase):
         self.assertEquals(catalogue_url_namespace, 'pithia')
         self.assertEquals(catalogue_url_event, 'VolcanoEruption')
         self.assertEquals(catalogue_url_localid, 'Catalogue_VolcanoEruption')
+
+    def test_valid_category_related_resource_url_structure_validation(self):
+        """
+        Test is_catalogue_related_url_structure_valid returns
+        True for all the resource urls provided below.
+        """
+        catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+
+        self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url), True)
+
+    def test_invalid_category_related_resource_url_structure_validation(self):
+        """
+        Test is_catalogue_related_url_structure_valid returns
+        True for all the resource urls provided below.
+        """
+        catalogue_resource_url_collection_as_resource_type = 'https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+        catalogue_resource_url_double_namespace = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+        catalogue_resource_url_double_resource_type = 'https://metadata.pithia.eu/resources/2.2/catalogue/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+
+        self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_collection_as_resource_type), False)
+        self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_double_namespace), False)
+        self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_double_resource_type), False)

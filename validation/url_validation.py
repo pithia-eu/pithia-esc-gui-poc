@@ -1,4 +1,5 @@
 import validators
+import re
 from operator import itemgetter
 from requests import get
 from rdflib import Graph, URIRef, RDF, SKOS
@@ -11,6 +12,7 @@ from .url_validation_utils import (
     get_resource_by_pithia_identifier_components_and_op_mode_id,
     divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
+    divide_catalogue_related_resource_url_into_main_components,
 )
 
 
@@ -53,7 +55,10 @@ def is_resource_url_base_structure_valid(resource_url):
         resource_url.count(PITHIA_METADATA_SERVER_HTTPS_URL_BASE) == 1,
     ])
 
-def is_data_collection_related_url_structure_valid(resource_url, resource_type_in_resource_url, namespace, localid, resource_mongodb_model):
+def is_data_collection_related_url_structure_valid(resource_url):
+    url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
+    resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
+    
     localid_base = resource_type_in_resource_url.capitalize()
     # Exceptions to localid starting with resource_type_in_resource_url.capitalize():
     if resource_type_in_resource_url == 'collection':
@@ -68,11 +73,26 @@ def is_data_collection_related_url_structure_valid(resource_url, resource_type_i
 
     return all([
         resource_mongodb_model != 'unknown',
-        resource_url.count(f'/{resource_type_in_resource_url}/') == 1,
-        resource_url.count(f'/{namespace}/') == 1,
-        resource_url.count(f'/{localid}') == 1,
+        url_base == PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+        len(re.findall(f'(?=/{resource_type_in_resource_url}/)', resource_url)) == 1,
+        len(re.findall(f'(?=/{namespace}/)', resource_url)) == 1,
+        len(re.findall(f'(?=/{localid})', resource_url)) == 1,
         resource_url.endswith(localid),
         is_localid_base_matching_resource_type_in_resource_url,
+    ])
+
+def is_catalogue_related_url_structure_valid(resource_url):
+    url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(divide_catalogue_related_resource_url_into_main_components(resource_url))
+    resource_mongodb_model = get_mongodb_model_from_catalogue_related_resource_url(resource_url)
+
+    return all([
+        resource_mongodb_model != 'unknown', # 'unknown' means that the catalogue-metadata type is unsupported
+        url_base == PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+        resource_type_in_resource_url == 'catalogue',
+        len(re.findall(f'(?=/{resource_type_in_resource_url}/)', resource_url)) == 1,
+        len(re.findall(f'(?=/{namespace}/)', resource_url)) == 1,
+        len(re.findall(f'(?=/{localid})', resource_url)) == 1,
+        resource_url.endswith(localid),
     ])
 
 def validate_resource_url(resource_url):
@@ -87,12 +107,14 @@ def validate_resource_url(resource_url):
     resource_mongodb_model = None
     if not is_resource_url_base_structure_valid(resource_url):
         return validation_details
-    resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
-    resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
-    if not is_data_collection_related_url_structure_valid(resource_url, resource_type_in_resource_url, namespace, localid, resource_mongodb_model):
+    elif '/catalogue/' in resource_url and not is_catalogue_related_url_structure_valid(resource_url):
+        return validation_details
+    elif not '/catalogue/' in resource_url and not is_data_collection_related_url_structure_valid(resource_url):
         return validation_details
     validation_details['is_structure_valid'] = True
 
+    resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
+    resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
     referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localid, namespace)
     if referenced_resource == None:
         validation_details['type_of_missing_resource'] = resource_type_in_resource_url
