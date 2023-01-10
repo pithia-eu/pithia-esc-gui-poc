@@ -91,7 +91,32 @@ class ResourceDeleteView(TemplateView):
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return HttpResponseRedirect(self.redirect_url)
 
-class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
+class CatalogueRelatedResourceDeleteView(TemplateView):
+    resource_id = ''
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
+    redirect_url = ''
+    template_name = 'delete/confirm_delete_resource.html'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
+    delete_resource_page_breadcrumb_url_name = ''
+    resource_to_delete = None
+    other_resources_to_delete = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Delete Metadata Confirmation'
+        context['resource_id'] = self.resource_id
+        context['resource_to_delete'] = self.resource_to_delete
+        context['other_resources_to_delete'] = self.other_resources_to_delete
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
+        return context
+
     def get(self, request, *args, **kwargs):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
