@@ -20,12 +20,12 @@ from search.views import (
     get_registered_phenomenons
 )
 
-_ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
+_ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology'
 
 # Create your views here.
 def ontology(request):
     return render(request, 'browse/ontology.html', {
-        'title': _ONTOLOGY_PAGE_TITLE
+        'title': _ONTOLOGY_INDEX_PAGE_TITLE
     })
     
 def _get_ontology_category_term_list_page_title_from_category(category):
@@ -40,7 +40,7 @@ def ontology_category_terms_list(request, category):
     return render(request, 'browse/ontology_category_terms_list.html', {
         'category': category,
         'title': _get_ontology_category_term_list_page_title_from_category(category),
-        'ontology_index_page_breadcrumb_text': _ONTOLOGY_PAGE_TITLE,
+        'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
     })
 
 def ontology_category_terms_list_only(request, category):
@@ -148,6 +148,6 @@ def ontology_term_detail(request, category, term_id):
         'resource_predicates_no_prefix': resource_predicates_no_prefix,
         'resource_predicates_readable': resource_predicates_readable,
         'category': category,
-        'ontology_index_page_breadcrumb_text': _ONTOLOGY_PAGE_TITLE,
+        'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
         'ontology_category_term_list_page_breadcrumb_text': _get_ontology_category_term_list_page_title_from_category(category),
     })
