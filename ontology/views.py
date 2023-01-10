@@ -20,8 +20,9 @@ from search.views import (
     get_registered_phenomenons
 )
 
-# Create your views here.
+_ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
 
+# Create your views here.
 def ontology(request):
     return render(request, 'browse/ontology.html', {
         'title': _ONTOLOGY_PAGE_TITLE

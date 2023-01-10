@@ -11,17 +11,11 @@ from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPA
 from search.helpers import remove_underscore_from_id_attribute
 
 _RESOURCES_PAGE_TITLE = 'Browse Metadata'
-_ONTOLOGY_PAGE_TITLE = 'Space Physics Ontology'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
 # Create your views here.
 def index(request):
-    return render(request, 'browse/index.html', {
-        'title': 'Browse',
-        'resources_page_title': _RESOURCES_PAGE_TITLE,
-        'xml_schemas_page_title': _XML_SCHEMAS_PAGE_TITLE,
-        'ontology_page_title': _ONTOLOGY_PAGE_TITLE,
-    })
+    return render(request, 'browse/index.html', {})
 
 def resources(request):
     num_current_organsations = mongodb_models.CurrentOrganisation.count_documents({})
