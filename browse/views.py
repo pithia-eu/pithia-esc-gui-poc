@@ -13,8 +13,8 @@ from django.views.generic import TemplateView
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
 from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_graph_of_pithia_ontology_component, ONTOLOGY_SERVER_BASE_URL
+from utils.mapping_functions import prepare_resource_for_template
 from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
-from search.helpers import remove_underscore_from_id_attribute
 from search.views import get_parents_of_registered_ontology_terms, get_registered_computation_types, get_registered_features_of_interest, get_registered_instrument_types, get_registered_measurands, get_registered_observed_properties, get_registered_phenomenons
 
 _INDEX_PAGE_TITLE = 'Browse Metadata'
@@ -223,7 +223,7 @@ class ResourceListView(TemplateView):
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -461,6 +461,7 @@ class ResourceDetailView(TemplateView):
             })
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
+        self.resource = prepare_resource_for_template(self.resource)
         self.resource_flattened = flatten(self.resource)
         self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
         self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
@@ -635,7 +636,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
     list_resources_of_type_url_name = 'browse:list_catalogue_entries'
 
@@ -644,7 +645,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'
     list_resources_of_type_url_name = 'browse:list_catalogue_data_subsets'
 
