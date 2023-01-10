@@ -178,14 +178,6 @@ header .dropdown-item:active a {
 }
 
 /* Resource detail page */
-.resource-key-details {
-    font-size: small;
-}
-
-.col-lg-12 .resource-key-details {
-    font-size: medium;
-}
-
 .col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
 .ontology-term-table td:first-child,
