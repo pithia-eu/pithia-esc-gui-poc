@@ -36,7 +36,11 @@ from common.mongodb_models import (
     CatalogueDataSubsetRevision,
 )
 from django.views.generic import TemplateView
-from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+)
 from .utils import (
     get_data_collection_related_resources_linked_through_resource_id,
     delete_current_version_and_revisions_of_resource_id,
@@ -85,9 +89,9 @@ class ResourceDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         # Delete the resource and resources that are referencing the resource to be deleted. These should not
         # be able to exist without the resource being deleted.
-        linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
-        for r in linked_resources:
+        for r in self.other_resources_to_delete:
             delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return HttpResponseRedirect(self.redirect_url)
 
@@ -286,6 +290,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     delete_resource_page_breadcrumb_url_name = 'delete:data_collection'
     template_name = 'delete/confirm_delete_data_collection.html'
+    catalogue_related_resources_to_delete = []
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -293,33 +298,22 @@ class DataCollectionDeleteView(ResourceDeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['other_resources_to_delete'].extend(self.catalogue_related_resources_to_delete)
         context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
         return context
 
     def get(self, request, *args, **kwargs):
-        self.resource_to_delete = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-        catalogue_related_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
-        self.other_resources_to_delete.extend(catalogue_related_resources_to_delete)
-        self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
+        self.catalogue_related_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
         return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        # Delete the resource and resources that are referencing the resource to be deleted. These should not
-        # be able to exist without the resource being deleted.
-        linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-        delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
-        for r in linked_resources:
-            delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
-        return HttpResponseRedirect(self.redirect_url)
 
     def post(self, request, *args, **kwargs):
         # Delete interaction methods (current versions and
         # revisions) before deleting the actual data collection,
         # not sure if the order should be changed around...
         delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
+        self.catalogue_related_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+        for r in self.catalogue_related_resources_to_delete:
+            delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
         return super().post(request, *args, **kwargs)
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
