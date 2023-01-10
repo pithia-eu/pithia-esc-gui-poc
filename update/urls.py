@@ -18,6 +18,6 @@ urlpatterns = [
     path('data-collections/<data_collection_id>/update/', views.DataCollectionUpdateFormView.as_view(), name='data_collection'),
     path('data-collections/<data_collection_id>/update/interaction-methods', views.data_collection_interaction_methods, name='data_collection_interaction_methods'),
     path('catalogues/<catalogue_id>/update', views.CatalogueUpdateFormView.as_view(), name='catalogue'),
-    path('catalogues/<catalogue_entry_id>/update', views.CatalogueEntryUpdateFormView.as_view(), name='catalogue_entry'),
-    path('catalogues/<catalogue_data_subset_id>/update', views.CatalogueDataSubsetUpdateFormView.as_view(), name='catalogue_data_subset'),
+    path('catalogue-entries/<catalogue_entry_id>/update', views.CatalogueEntryUpdateFormView.as_view(), name='catalogue_entry'),
+    path('catalogue-data-subsets/<catalogue_data_subset_id>/update', views.CatalogueDataSubsetUpdateFormView.as_view(), name='catalogue_data_subset'),
 ]
