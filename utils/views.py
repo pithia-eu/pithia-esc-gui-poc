@@ -63,6 +63,8 @@ class ResourceXmlDownloadView(TemplateView):
         }, projection={
             'identifier': 1,
             'name': 1,
+            'entryName': 1,
+            'dataSubsetName': 1,
         })
         resource = prepare_resource_for_template(resource)
         self.resource_localid = resource['identifier']['PITHIA_Identifier']['localID']
