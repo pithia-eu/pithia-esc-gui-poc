@@ -326,9 +326,10 @@ def get_catalogue_for_catalogue_entry(catalogue_entry):
 def get_catalogue_for_catalogue_data_subset(catalogue_data_subset):
     catalogue_entry_identifier_xlink_href = catalogue_data_subset['entryIdentifier']['@xlink:href']
     catalogue_entry_localid = catalogue_entry_identifier_xlink_href.split('/')[-1]
-    return CurrentCatalogueEntry.find_one({
+    catalogue_entry = CurrentCatalogueEntry.find_one({
         'identifier.PITHIA_Identifier.localID': catalogue_entry_localid
     })
+    return get_catalogue_for_catalogue_entry(catalogue_entry)
 
 def get_catalogue_related_resources_linked_through_resource_id(resource_id, resource_mongodb_model, event=None):
     catalogues = []
