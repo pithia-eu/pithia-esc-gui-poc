@@ -9,7 +9,7 @@ def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_
     ontology_term_server_url_split = ontology_term_server_url.split('/')
     ontology_category = ontology_term_server_url_split[-2]
     ontology_term_id = ontology_term_server_url_split[-1]
-    return reverse('browse:ontology_term_detail', args=[ontology_category, ontology_term_id])
+    return reverse('ontology:ontology_term_detail', args=[ontology_category, ontology_term_id])
 
 def convert_ontology_server_urls_to_browse_urls(ontology_server_urls):
     converted_ontology_server_urls = []
