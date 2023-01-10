@@ -22,7 +22,7 @@ from common.mongodb_models import (
     OriginalMetadataXml,
 )
 from resource_management.views import _INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
-
+from .mapping_functions import prepare_resource_for_template
 
 # Create your views here.
 
@@ -64,6 +64,7 @@ class ResourceXmlDownloadView(TemplateView):
             'identifier': 1,
             'name': 1,
         })
+        resource = prepare_resource_for_template(resource)
         self.resource_localid = resource['identifier']['PITHIA_Identifier']['localID']
         self.resource_name = resource['name']
         return super().get(request, *args, **kwargs)

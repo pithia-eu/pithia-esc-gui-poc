@@ -19,8 +19,7 @@ from common.mongodb_models import (
     CurrentCatalogueEntry,
     CurrentCatalogueDataSubset,
 )
-
-from search.helpers import remove_underscore_from_id_attribute
+from utils.mapping_functions import prepare_resource_for_template
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -94,7 +93,7 @@ class ResourceManagementListView(TemplateView):
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,7 +151,7 @@ class PlatformManagementListView(ResourceManagementListView):
         resource_list = list(self.resource_mongodb_model.find({}).sort([
             ('name', pymongo.ASCENDING)
         ]))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
