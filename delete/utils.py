@@ -309,6 +309,7 @@ def get_data_collection_related_resources_linked_through_resource_id(resource_id
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
+    # Following line ensures that each dict in the linked_resources list is unique
     linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
 
     return linked_resources
@@ -384,6 +385,11 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
     for i in range(len(catalogue_data_subsets)):
         catalogue_data_subsets[i] = (catalogue_data_subsets[i], 'catalogue data subset', CurrentCatalogueDataSubset, CatalogueDataSubsetRevision)
         linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_data_subsets[i][0]['_id']), catalogue_data_subsets[i][2], event=event))
+    linked_resources.extend(catalogues)
+    linked_resources.extend(catalogue_entries)
+    linked_resources.extend(catalogue_data_subsets)
+    # Following line ensures that each dict in the linked_resources list is unique
+    linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
 
     return linked_resources
 
