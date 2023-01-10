@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from . import views
 
@@ -6,7 +6,6 @@ app_name = 'browse'
 urlpatterns = [
     # path('browse/', views.index, name='index'),
     path('resources/', views.resources, name='resources'),
-    path('ontology/', include('browse.ontology_urls')),
     path('organisations/', views.OrganisationListView.as_view(), name='list_organisations'),
     path('individuals/', views.IndividualListView.as_view(), name='list_individuals'),
     path('projects/', views.ProjectListView.as_view(), name='list_projects'),
