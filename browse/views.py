@@ -264,7 +264,7 @@ class ResourceDetailView(TemplateView):
     resource_human_readable = {}
     ontology_server_urls = []
     resource_server_urls = []
-    list_resources_of_type_url_name = ''
+    resource_list_by_type_url_name = ''
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -297,13 +297,13 @@ class ResourceDetailView(TemplateView):
         context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
         context['resource_type_list_page_breadcrumb_text'] = _RESOURCES_PAGE_TITLE
         context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
-        context['resource_list_page_breadcrumb_url_name'] = self.list_resources_of_type_url_name
+        context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         return context
 
 class OrganisationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     resource_type_plural = 'Organisations'
-    list_resources_of_type_url_name = 'browse:list_organisations'
+    resource_list_by_type_url_name = 'browse:list_organisations'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -312,7 +312,7 @@ class OrganisationDetailView(ResourceDetailView):
 class IndividualDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentIndividual
     resource_type_plural = 'Individuals'
-    list_resources_of_type_url_name = 'browse:list_individuals'
+    resource_list_by_type_url_name = 'browse:list_individuals'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -321,7 +321,7 @@ class IndividualDetailView(ResourceDetailView):
 class ProjectDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentProject
     resource_type_plural = 'Projects'
-    list_resources_of_type_url_name = 'browse:list_projects'
+    resource_list_by_type_url_name = 'browse:list_projects'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -330,7 +330,7 @@ class ProjectDetailView(ResourceDetailView):
 class PlatformDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     resource_type_plural = 'Platforms'
-    list_resources_of_type_url_name = 'browse:list_platforms'
+    resource_list_by_type_url_name = 'browse:list_platforms'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -339,7 +339,7 @@ class PlatformDetailView(ResourceDetailView):
 class InstrumentDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
     resource_type_plural = 'Instruments'
-    list_resources_of_type_url_name = 'browse:list_instruments'
+    resource_list_by_type_url_name = 'browse:list_instruments'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -348,7 +348,7 @@ class InstrumentDetailView(ResourceDetailView):
 class OperationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentOperation
     resource_type_plural = 'Operations'
-    list_resources_of_type_url_name = 'browse:list_operations'
+    resource_list_by_type_url_name = 'browse:list_operations'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -357,7 +357,7 @@ class OperationDetailView(ResourceDetailView):
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     resource_type_plural = 'Acquisition Capabilities'
-    list_resources_of_type_url_name = 'browse:list_acquisition_capability_sets'
+    resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
@@ -366,7 +366,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
 class AcquisitionDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     resource_type_plural = 'Acquisitions'
-    list_resources_of_type_url_name = 'browse:list_acquisitions'
+    resource_list_by_type_url_name = 'browse:list_acquisitions'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -375,7 +375,7 @@ class AcquisitionDetailView(ResourceDetailView):
 class ComputationCapabilitiesDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     resource_type_plural = 'Computation Capabilities'
-    list_resources_of_type_url_name = 'browse:list_computation_capability_sets'
+    resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
@@ -384,7 +384,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
 class ComputationDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentComputation
     resource_type_plural = 'Computations'
-    list_resources_of_type_url_name = 'browse:list_computations'
+    resource_list_by_type_url_name = 'browse:list_computations'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -393,7 +393,7 @@ class ComputationDetailView(ResourceDetailView):
 class ProcessDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentProcess
     resource_type_plural = 'Processes'
-    list_resources_of_type_url_name = 'browse:list_processes'
+    resource_list_by_type_url_name = 'browse:list_processes'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -402,7 +402,7 @@ class ProcessDetailView(ResourceDetailView):
 class DataCollectionDetailView(ResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     resource_type_plural = 'Data Collections'
-    list_resources_of_type_url_name = 'browse:list_data_collections'
+    resource_list_by_type_url_name = 'browse:list_data_collections'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
     link_interaction_methods = []
