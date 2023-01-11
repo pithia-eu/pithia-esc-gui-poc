@@ -125,6 +125,8 @@ def validate_resource_url(resource_url):
         referenced_resource = get_resource_by_pithia_identifier_components(resource_mongodb_model, localid, namespace)
     if referenced_resource == None:
         validation_details['type_of_missing_resource'] = resource_type_in_resource_url
+        if resource_type_in_resource_url == 'catalogue':
+            validation_details['type_of_missing_resource'] += f'_{localid}'
         return validation_details
     validation_details['is_pointing_to_registered_resource'] = True
 
