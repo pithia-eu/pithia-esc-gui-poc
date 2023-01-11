@@ -83,10 +83,6 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
             referenced_resource_namespace = resource_server_url_components['namespace']
             referenced_resource_localid = resource_server_url_components['localid']
             referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
-
-        print('referenced_resource_mongodb_model', referenced_resource_mongodb_model)
-        print('referenced_resource_namespace', referenced_resource_namespace)
-        print('referenced_resource_localid', referenced_resource_localid)
         if referenced_resource_mongodb_model == 'unknown':
             converted_resource_server_urls.append(url_mapping)
             continue
