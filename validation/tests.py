@@ -1,5 +1,6 @@
 import os
 import environ
+import mongomock
 from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
