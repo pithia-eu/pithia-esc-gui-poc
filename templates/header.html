@@ -28,7 +28,7 @@
                     <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:ontology' as browse_ontology_url %}
+                    {% url 'ontology:index' as browse_ontology_url %}
                     <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
                 </li>
             </ul>

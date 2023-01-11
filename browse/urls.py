@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from . import views
 
@@ -7,7 +7,6 @@ urlpatterns = [
     path('browse-metadata/', views.index, name='index'),
     path('data-collection-related-metadata/', views.data_collection_related_resource_types, name='data_collection_related_resource_types'),
     path('catalogue-related-metadata/', views.catalogue_related_resource_types, name='catalogue_related_resource_types'),
-    path('ontology/', include('browse.ontology_urls')),
     path('organisations/', views.OrganisationListView.as_view(), name='list_organisations'),
     path('individuals/', views.IndividualListView.as_view(), name='list_individuals'),
     path('projects/', views.ProjectListView.as_view(), name='list_projects'),

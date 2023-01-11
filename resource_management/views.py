@@ -79,7 +79,7 @@ def catalogue_related_metadata_index(request):
     })
 
 class ResourceManagementListView(TemplateView):
-    template_name = 'resource_management/list_resources_of_type.html'
+    template_name = 'resource_management/resource_management_list_by_type_outer.html'
     resource_mongodb_model = None
     resource_type_plural = 'Resources'
     title = f'Manage {resource_type_plural}'
@@ -138,7 +138,7 @@ class ProjectManagementListView(ResourceManagementListView):
     resource_xml_download_page_url_name = 'utils:view_project_as_xml'
 
 class PlatformManagementListView(ResourceManagementListView):
-    template_name = 'resource_management/list_platforms.html'
+    template_name = 'resource_management/platform_management_list.html'
     title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
     resource_type_plural = 'Platforms'

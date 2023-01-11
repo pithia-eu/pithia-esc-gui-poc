@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSubset
+    xmlns="https://metadata.pithia.eu/schemas/2.2"
+    xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:om="http://www.opengis.net/om/2.0"
+    xmlns:doi="http://www.doi.org/2010/DOISchema"
+    gml:id="es1">
+
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>DataSubset_Test-2023-01-01_DataCollectionTest</localID>
+            <namespace>teset</namespace>
+            <version>1</version>
+            <creationDate>2022-07-08T09:00:00Z</creationDate>
+            <lastModificationDate>2022-07-08T09:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <entryIdentifier
+        xlink:href="https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/CatalogueEntry_Test-2023-01-01" />
+    <dataSubsetName>Test</dataSubsetName>
+    <dataSubsetDescription>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua.
+    </dataSubsetDescription>
+    <dataCollection
+        xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
+    <resultTime>
+        <gml:TimePeriod gml:id="tp2">
+            <gml:begin>
+                <gml:TimeInstant gml:id="b2">
+                    <gml:timePosition>2022-01-14T00:00:00Z</gml:timePosition>
+                </gml:TimeInstant>
+            </gml:begin>
+            <gml:end>
+                <gml:TimeInstant gml:id="e2">
+                    <gml:timePosition>2022-01-16T00:00:00Z</gml:timePosition>
+                </gml:TimeInstant>
+            </gml:end>
+        </gml:TimePeriod>
+    </resultTime>
+    <!--
+    <doi>
+        <doi:kernelMetadata>
+    <doi:registrationAgencyDoiName>10.1000/ra-5</doi:registrationAgencyDoiName>
+    <doi:issueDate>2015-01-07</doi:issueDate>
+           <doi:issueNumber>7</doi:issueNumber>
+    <doi:referentCreation>
+               <doi:name primaryLanguage="en">
+                  <value>Test</value>
+    <type>Title</type>
+               </doi:name>
+               <doi:identifier>
+    <doi:nonUriValue>10.5240/B94E-F500-7164-57DB-82F5-6</doi:nonUriValue>
+                  <doi:uri
+    returnType="text/html">https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
+    <doi:uri
+    returnType="application/xml">https://doi.org/10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
+    <doi:type>EidrContentID</doi:type>
+               </doi:identifier>
+            </doi:referentCreation>
+    </doi:kernelMetadata>
+    </doi>
+-->
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V" />
+    <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
+    </qualityAssessment>
+</DataSubset>
