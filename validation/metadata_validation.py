@@ -51,14 +51,15 @@ def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
 def _map_string_to_li_element(string):
     return f'<li>{string}</li>'
 
-def _map_string_to_li_element_with_register_link(string):
-    if string == 'collection':
-        string == 'data_collection'
-    elif string == 'acquisitionCapabilities':
-        string = 'acquisition_capability_set'
-    elif string == 'computationCapabilities':
-        string = 'computation_capability_set'
-    return f'<li><a href="{reverse_lazy(f"register:{string}")}" target="_blank" class="alert-link">{string.capitalize()} Metadata Registration</a></li>'
+def _create_li_element_with_register_link_from_resource_type_from_resource_url(resource_type_from_resource_url):
+    url_name = resource_type_from_resource_url
+    if resource_type_from_resource_url == 'collection':
+        url_name = 'data_collection'
+    elif resource_type_from_resource_url == 'acquisitionCapabilities':
+        url_name = 'acquisition_capability_set'
+    elif resource_type_from_resource_url == 'computationCapabilities':
+        url_name = 'computation_capability_set'
+    return f'<li><a href="{reverse_lazy(f"register:{url_name}")}" target="_blank" class="alert-link">{url_name.title()} Metadata Registration</a></li>'
 
 def _map_acquisition_capability_to_update_link(resource):
     return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
@@ -153,7 +154,7 @@ def validate_xml_metadata_file(xml_file, expected_root_localname, mongodb_model=
         if len(resource_urls_pointing_to_unregistered_resources) > 0:
             error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, types_of_missing_resources)))
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_create_li_element_with_register_link_from_resource_type_from_resource_url, types_of_missing_resources)))
             validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
             return validation_checklist
 
