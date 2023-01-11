@@ -3,8 +3,16 @@ from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_pref_label_from_ontology_node_iri,
 )
-from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
+from common.helpers import (
+    get_mongodb_model_by_resource_type_from_resource_url,
+    get_mongodb_model_from_catalogue_related_resource_url,
+)
 from validation.url_validation import validate_ontology_term_url
+from validation.url_validation_utils import (
+    divide_resource_url_into_main_components,
+    divide_resource_url_from_op_mode_id,
+    divide_catalogue_related_resource_url_into_main_components,
+)
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
     ontology_term_server_url_split = ontology_term_server_url.split('/')
@@ -48,21 +56,36 @@ def convert_ontology_server_urls_to_browse_urls(ontology_server_urls):
 def convert_resource_server_urls_to_browse_urls(resource_server_urls):
     converted_resource_server_urls = []
     for resource_server_url in resource_server_urls:
-        referenced_resource_server_url_split = resource_server_url.split('/')
-        referenced_resource_type = referenced_resource_server_url_split[-3]
-        referenced_resource_namespace = referenced_resource_server_url_split[-2]
-        referenced_resource_localid = referenced_resource_server_url_split[-1]
+        referenced_resource_type = ''
+        referenced_resource_namespace = ''
+        referenced_resource_localid = ''
         referenced_op_mode_id = ''
+        referenced_resource_mongodb_model = None
         url_mapping = {
             'original_server_url': resource_server_url,
             'converted_url': resource_server_url,
             'converted_url_text': referenced_resource_localid,
         }
-        if '#' in referenced_resource_localid:
-            referenced_resource_localid_split = referenced_resource_localid.split('#')
-            referenced_resource_localid = referenced_resource_localid_split[0]
-            referenced_op_mode_id = referenced_resource_localid_split[1]
-        referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
+        if '/catalogue/' in resource_server_url:
+            resource_server_url_components = divide_catalogue_related_resource_url_into_main_components(resource_server_url)
+            referenced_resource_type = resource_server_url_components['resource_type']
+            referenced_resource_namespace = resource_server_url_components['namespace']
+            referenced_resource_localid = resource_server_url_components['localid']
+            referenced_resource_mongodb_model = get_mongodb_model_from_catalogue_related_resource_url(resource_server_url)
+        else:
+            if '#' in referenced_resource_localid:
+                components_of_resource_server_url_with_op_mode_id = divide_resource_url_from_op_mode_id(resource_server_url)
+                resource_server_url = components_of_resource_server_url_with_op_mode_id['resource_url']
+                referenced_op_mode_id = components_of_resource_server_url_with_op_mode_id['op_mode_id']
+            resource_server_url_components = divide_resource_url_into_main_components(resource_server_url)
+            referenced_resource_type = resource_server_url_components['resource_type']
+            referenced_resource_namespace = resource_server_url_components['namespace']
+            referenced_resource_localid = resource_server_url_components['localid']
+            referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
+
+        print('referenced_resource_mongodb_model', referenced_resource_mongodb_model)
+        print('referenced_resource_namespace', referenced_resource_namespace)
+        print('referenced_resource_localid', referenced_resource_localid)
         if referenced_resource_mongodb_model == 'unknown':
             converted_resource_server_urls.append(url_mapping)
             continue
