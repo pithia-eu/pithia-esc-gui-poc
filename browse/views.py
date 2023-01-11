@@ -492,7 +492,7 @@ class CatalogueRelatedResourceDetailView(ResourceDetailView):
 class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     resource_type_plural = 'Catalogues'
-    list_resources_of_type_url_name = 'browse:list_catalogues'
+    resource_list_by_type_url_name = 'browse:list_catalogues'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
@@ -501,7 +501,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
 class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     resource_type_plural = 'Catalogue Entries'
-    list_resources_of_type_url_name = 'browse:list_catalogue_entries'
+    resource_list_by_type_url_name = 'browse:list_catalogue_entries'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
@@ -510,7 +510,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
 class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     resource_type_plural = 'Catalogue Data Subsets'
-    list_resources_of_type_url_name = 'browse:list_catalogue_data_subsets'
+    resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
