@@ -23,10 +23,10 @@ def _is_xml_file_xsd_valid(xml_file):
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
 class FileValidationTestCase(SimpleTestCase):
-    """
-    Test the validation pipeline works as expected
-    """
     def test_organisation_registration_validation(self):
+        """
+        The submitted Organisation metadata file do not return an error.
+        """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
             db = client[env('DB_NAME')]['current-organisations']
@@ -36,6 +36,9 @@ class FileValidationTestCase(SimpleTestCase):
             self.assertNotIn('error', validation_results)
 
     def test_invalid_syntax_organisation_registration_validation(self):
+        """
+        The submitted Organisation metadata file do return an error.
+        """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
             client = mongomock.MongoClient()
             db = client[env('DB_NAME')]['current-organisations']
@@ -45,6 +48,9 @@ class FileValidationTestCase(SimpleTestCase):
             self.assertIn('error', validation_results)
 
     def test_data_collection_registration_validation(self):
+        """
+        The submitted Data Collection metadata file do not return an error.
+        """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
             db = client[env('DB_NAME')]['current-data-collections']
@@ -56,6 +62,11 @@ class FileValidationTestCase(SimpleTestCase):
 
 class MultipleFileValidationTestCase(SimpleTestCase):
     def test_multiple_file_validation(self):
+        """
+        Only the Organisation_Test.xml file do not return an error.
+        Simulates multiple files being submitted to the Organisation
+        validation view.
+        """
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
         for fname in xml_file_names:
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
@@ -73,10 +84,11 @@ class MultipleFileValidationTestCase(SimpleTestCase):
 
 
 class XsdValidationTestCase(SimpleTestCase):
-    """
-    Test XSD Schema validation works for all metadata types
-    """
     def test_xml_metadata_files_validate_against_schemas(self):
+        """
+        All XML metadata files used for this test are valid
+        when compared against their XSD files.
+        """
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
         for fname in xml_file_names:
             if fname == 'Organisation_Test_InvalidSyntax.xml':
@@ -88,7 +100,7 @@ class XsdValidationTestCase(SimpleTestCase):
 class UrlsFromFilesValidationTestCase(SimpleTestCase):
     def test_invalid_ontology_urls_are_detected(self):
         """
-        get_invalid_ontology_urls() returns a list of invalid ontology urls
+        get_invalid_ontology_urls() returns a list of invalid ontology urls.
         """
         with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
@@ -97,7 +109,7 @@ class UrlsFromFilesValidationTestCase(SimpleTestCase):
 
     def test_invalid_resource_urls_are_detected(self):
         """
-        get_invalid_resource_urls() returns a dict of invalid resource urls
+        get_invalid_resource_urls() returns a dict of invalid resource urls.
         """
         with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
@@ -106,7 +118,8 @@ class UrlsFromFilesValidationTestCase(SimpleTestCase):
 
     def test_invalid_resource_urls_with_op_mode_ids_are_detected(self):
         """
-        get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml() returns a dict of invalid resource urls
+        get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml()
+        returns a dict of invalid resource urls.
         """
         with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
             xml_file_parsed = etree.parse(xml_file)
@@ -135,7 +148,12 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_resource_urls_are_divided_correctly(self):
         """
-        divide_resource_url_into_main_components() divides urls as expected
+        divide_resource_url_into_main_components() divides resource URLs
+        into their main components:
+        - url_base: e.g., https://metadata.pithia.eu/resources/2.2
+        - resource_type: e.g., organisation
+        - namespace: e.g., pithia
+        - localid: e.g., Organisation_PITHIA
         """
         resource_url_division_1 = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
         resource_url_division_2 = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
@@ -152,7 +170,10 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_resource_urls_with_op_mode_ids_are_divided_correctly(self):
         """
-        divide_resource_url_from_op_mode_id() divides urls as expected
+        divide_resource_url_from_op_mode_id() divides resource URLs into
+        two components:
+        - resource_url: e.g., https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_PITHIA#ionogram
+        - op_mode_id: e.g., https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_PITHIA#ionogram
         """
         resource_url_division_1 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram')
         resource_url_division_2 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST#sweep')
@@ -170,7 +191,8 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_invalid_resource_url_structures_are_detected(self):
         """
-        is_resource_url_structure_valid() returns False if a resource url is invalid
+        is_resource_url_structure_valid() returns False
+        for all URLs provided for this test.
         """
 
         blank_string_result = is_resource_url_structure_valid('')
@@ -201,7 +223,8 @@ class UrlValidationTestCase(SimpleTestCase):
 
     def test_valid_resource_urls_pass_validation(self):
         """
-        is_resource_url_structure_valid() returns True if a resource url is valid
+        is_resource_url_structure_valid() returns True for
+        all URLs provided for this test.
         """
 
         valid_organisation_url_result = is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
