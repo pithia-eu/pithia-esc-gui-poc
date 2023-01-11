@@ -56,7 +56,7 @@ def schemas(request):
     })
 
 class ResourceListView(TemplateView):
-    template_name = 'browse/list_resources_of_type.html'
+    template_name = 'browse/resource_list_by_type.html'
     description = ''
     resource_mongodb_model = None
     resource_type_plural = ''
