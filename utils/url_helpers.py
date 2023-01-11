@@ -7,6 +7,7 @@ from common.helpers import (
     get_mongodb_model_by_resource_type_from_resource_url,
     get_mongodb_model_from_catalogue_related_resource_url,
 )
+from utils.mapping_functions import prepare_resource_for_template
 from validation.url_validation import validate_ontology_term_url
 from validation.url_validation_utils import (
     divide_resource_url_into_main_components,
@@ -98,17 +99,29 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
             find_params['operationalMode.InstrumentOperationalMode.id'] = referenced_op_mode_id
         referenced_resource = referenced_resource_mongodb_model.find_one(find_params, {
             '_id': 1,
-            'name': 1
+            'name': 1,
+            'entryName': 1,
+            'dataSubsetName': 1,
         })
         if referenced_resource is None:
             converted_resource_server_urls.append(url_mapping)
             continue
+        referenced_resource = prepare_resource_for_template(referenced_resource)
         resource_objectid_str = str(referenced_resource['_id'])
+        url_name = referenced_resource_type.lower()
         if referenced_resource_type.lower() == 'computationcapabilities':
-            referenced_resource_type = 'computation_capability_set'
+            url_name = 'computation_capability_set'
         elif referenced_resource_type.lower() == 'acquisitioncapabilities':
-            referenced_resource_type = 'acquisition_capability_set'
-        referenced_resource_detail_url = reverse(f'browse:{referenced_resource_type}_detail', args=[resource_objectid_str])
+            url_name = 'acquisition_capability_set'
+        elif referenced_resource_type.lower() == 'collection':
+            url_name = 'data_collection'
+        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('Catalogue_'):
+            url_name = 'catalogue'
+        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('CatalogueEntry_'):
+            url_name = 'catalogue_entry'
+        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('DataSubset_'):
+            url_name = 'catalogue_data_subset'
+        referenced_resource_detail_url = reverse(f'browse:{url_name}_detail', args=[resource_objectid_str])
         url_mapping = {
             'original_server_url': resource_server_url,
             'converted_url': referenced_resource_detail_url,
