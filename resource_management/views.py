@@ -96,7 +96,7 @@ class ProjectManagementListView(ResourceManagementListView):
     resource_xml_download_page_url_name = 'utils:view_project_as_xml'
 
 class PlatformManagementListView(ResourceManagementListView):
-    template_name = 'resource_management/list_platforms.html'
+    template_name = 'resource_management/platform_list.html'
     title = _create_manage_resource_page_title('platforms')
     resource_mongodb_model = CurrentPlatform
     resource_type_plural = 'Platforms'
