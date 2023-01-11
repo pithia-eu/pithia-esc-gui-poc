@@ -24,7 +24,7 @@ _ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology'
 
 # Create your views here.
 def ontology(request):
-    return render(request, 'browse/ontology.html', {
+    return render(request, 'ontology/index.html', {
         'title': _ONTOLOGY_INDEX_PAGE_TITLE
     })
     
@@ -37,7 +37,7 @@ def _get_ontology_category_term_list_page_title_from_category(category):
     return f'{title_base} Terms'
 
 def ontology_category_terms_list(request, category):
-    return render(request, 'browse/ontology_category_terms_list.html', {
+    return render(request, 'ontology/ontology_category_terms_list.html', {
         'category': category,
         'title': _get_ontology_category_term_list_page_title_from_category(category),
         'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
@@ -68,7 +68,7 @@ def ontology_category_terms_list_only(request, category):
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
-    return render(request, 'browse/ontology_tree_template_outer.html', {
+    return render(request, 'ontology/ontology_tree_template_outer.html', {
         'dictionary': dictionary,
         'category': category,
         'registered_ontology_terms': registered_ontology_terms,
@@ -141,7 +141,7 @@ def ontology_term_detail(request, category, term_id):
             resource_predicates_readable[p] = 'Qualifiers'
         else:
             resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title() 
-    return render(request, 'browse/ontology_term_detail.html', {
+    return render(request, 'ontology/ontology_term_detail.html', {
         'title': resource_dictionary['prefLabel'],
         'resource_ontology_url': f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}',
         'resource_dictionary': resource_dictionary,
