@@ -4,8 +4,19 @@ from ontology.utils import (
     get_localid_from_ontology_node_iri,
     get_observed_property_hrefs_from_features_of_interest
 )
-from .helpers import convert_list_to_regex_list, map_ontology_components_to_local_ids
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentInstrument, CurrentProcess
+from .helpers import (
+    convert_list_to_regex_list,
+    map_ontology_components_to_local_ids
+)
+from common.mongodb_models import (
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentInstrument,
+    CurrentProcess
+)
 
 
 # cc = computation capability
