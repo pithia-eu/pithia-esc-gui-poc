@@ -118,6 +118,6 @@ def get_mongodb_model_from_catalogue_related_resource_url(resource_url):
         return CurrentCatalogue
     elif localid.startswith('CatalogueEntry_'):
         return CurrentCatalogueEntry
-    elif localid.startswith('CatalogueDataSubset_'):
+    elif localid.startswith('DataSubset_'):
         return CurrentCatalogueDataSubset
     return 'unknown'
