@@ -22,7 +22,7 @@ def _is_xml_file_xsd_valid(xml_file):
 # The SimpleTestCase class is used to disable the automatic SQL database
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
-class RegistrationValidationTestCase(SimpleTestCase):
+class FileValidationTestCase(SimpleTestCase):
     """
     Test the validation pipeline works as expected
     """
@@ -53,6 +53,8 @@ class RegistrationValidationTestCase(SimpleTestCase):
                 print('error', validation_results['error'])
             self.assertNotIn('error', validation_results)
 
+
+class MultipleFileValidationTestCase(SimpleTestCase):
     def test_multiple_file_validation(self):
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
         for fname in xml_file_names:
@@ -82,7 +84,8 @@ class XsdValidationTestCase(SimpleTestCase):
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
                 self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
 
-class FileUrlValidationTestCase(SimpleTestCase):
+
+class UrlsFromFilesValidationTestCase(SimpleTestCase):
     def test_invalid_ontology_urls_are_detected(self):
         """
         get_invalid_ontology_urls() returns a list of invalid ontology urls
@@ -112,6 +115,7 @@ class FileUrlValidationTestCase(SimpleTestCase):
             self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
             self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
             self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 0)
+
 
 class UrlValidationTestCase(SimpleTestCase):
     def test_ontology_url_validation(self):
