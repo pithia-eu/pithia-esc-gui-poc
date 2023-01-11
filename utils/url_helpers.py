@@ -131,5 +131,4 @@ def convert_resource_server_urls_to_browse_urls(resource_server_urls):
             url_mapping['converted_url'] = f'{url_mapping["converted_url"]}#{referenced_op_mode_id}'
             url_mapping['converted_url_text'] = f'{url_mapping["converted_url_text"]}#{referenced_op_mode_id}'
         converted_resource_server_urls.append(url_mapping)
-    print('converted_resource_server_urls', converted_resource_server_urls)
     return converted_resource_server_urls
