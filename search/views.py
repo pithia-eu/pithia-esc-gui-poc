@@ -2,7 +2,15 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .helpers import remove_underscore_from_id_attribute
-from utils.ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
+from ontology.utils import (
+    create_dictionary_from_pithia_ontology_component,
+    get_feature_of_interest_ids_from_observed_property_id,
+    get_graph_of_pithia_ontology_component,
+    get_measurand_ids_from_observed_property_id,
+    get_observed_property_hrefs_from_features_of_interest,
+    get_parent_node_ids_of_node_id,
+    get_phenomenon_ids_from_observed_property_id
+)
 from .search_helpers import find_matching_data_collections, group_instrument_types_by_observed_property, group_computation_types_by_observed_property
 from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument, CurrentDataCollection
 

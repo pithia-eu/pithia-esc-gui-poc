@@ -5,7 +5,7 @@ from rdflib.namespace._SKOS import SKOS
 from utils.string_helpers import _split_camel_case
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
-from utils.ontology_helpers import (
+from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     get_graph_of_pithia_ontology_component,
     ONTOLOGY_SERVER_BASE_URL

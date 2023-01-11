@@ -1,8 +1,10 @@
 from django.urls import reverse
-from utils.ontology_helpers import get_graph_of_pithia_ontology_component
+from ontology.utils import (
+    get_graph_of_pithia_ontology_component,
+    get_pref_label_from_ontology_node_iri,
+)
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from validation.url_validation import validate_ontology_term_url
-from .ontology_helpers import get_pref_label_from_ontology_node_iri
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
     ontology_term_server_url_split = ontology_term_server_url.split('/')
