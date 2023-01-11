@@ -22,5 +22,5 @@
     <!-- <catalogueCategory
     xlink:href="https://metadata.pithia.eu/ontology/2.2/catalogCategory/VolcanoEruption"/> -->
     <!-- Remove the following <catalogCategory> when the above URL becomes available -->
-    <catalogueCategory xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/Model/" />
+    <catalogueCategory xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/Model" />
 </Catalogue>
