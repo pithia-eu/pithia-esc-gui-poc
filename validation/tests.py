@@ -25,7 +25,7 @@ def _is_xml_file_xsd_valid(xml_file):
 class FileValidationTestCase(SimpleTestCase):
     def test_organisation_registration_validation(self):
         """
-        The submitted Organisation metadata file do not return an error.
+        The submitted Organisation metadata file does not return an error.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
@@ -37,7 +37,7 @@ class FileValidationTestCase(SimpleTestCase):
 
     def test_invalid_syntax_organisation_registration_validation(self):
         """
-        The submitted Organisation metadata file do return an error.
+        The submitted Organisation metadata file does return an error.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
             client = mongomock.MongoClient()
@@ -49,7 +49,7 @@ class FileValidationTestCase(SimpleTestCase):
 
     def test_data_collection_registration_validation(self):
         """
-        The submitted Data Collection metadata file do not return an error.
+        The submitted Data Collection metadata file does not return an error.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
@@ -63,7 +63,7 @@ class FileValidationTestCase(SimpleTestCase):
 class MultipleFileValidationTestCase(SimpleTestCase):
     def test_multiple_file_validation(self):
         """
-        Only the Organisation_Test.xml file do not return an error.
+        Only the Organisation_Test.xml file does not return an error.
         Simulates multiple files being submitted to the Organisation
         validation view.
         """
