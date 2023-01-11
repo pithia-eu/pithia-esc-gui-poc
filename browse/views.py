@@ -7,8 +7,12 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
-from validation.url_validation import PITHIA_METADATA_SERVER_HTTPS_URL_BASE, SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+from validation.url_validation import (
+    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+)
 from search.helpers import remove_underscore_from_id_attribute
+from utils.string_helpers import _split_camel_case
 
 _RESOURCES_PAGE_TITLE = 'Browse Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
