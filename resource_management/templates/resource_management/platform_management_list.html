@@ -1,0 +1,13 @@
+{% extends 'resource_management/resource_management_list_by_type_outer.html' %}
+{% load project_tags %}
+{% load static %}
+{% block resource_list_inner %}
+<h2>Platform Networks</h2>
+{% with resource_list=pithia_platforms %}
+{% include 'resource_management/resource_management_list_by_type_inner.html' %}
+{% endwith %}
+<h2 class="mt-5">Individual Platforms</h2>
+{% with resource_list=non_pithia_platforms %}
+{% include 'resource_management/resource_management_list_by_type_inner.html' %}
+{% endwith %}
+{% endblock resource_list_inner %}
