@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'validation.apps.ValidationConfig',
     'resource_management.apps.ResourceManagementConfig',
     'utils.apps.UtilsConfig',
+    'ontology.apps.OntologyConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

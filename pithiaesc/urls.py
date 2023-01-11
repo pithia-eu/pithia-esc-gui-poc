@@ -5,8 +5,9 @@ from . import views
 urlpatterns = [
     path('', views.index, name='home'),
     path('', include('browse.urls')),
-    path('search/', include('search.urls')),
+    path('ontology/', include('ontology.urls')),
     path('present/', include('present.urls')),
+    path('search/', include('search.urls')),
     path('admin/', admin.site.urls),
     path('authorised/', include('pithiaesc.secure_urls')),
 ]
