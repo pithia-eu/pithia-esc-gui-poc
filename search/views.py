@@ -7,7 +7,6 @@ from ontology.utils import (
     get_feature_of_interest_ids_from_observed_property_id,
     get_graph_of_pithia_ontology_component,
     get_measurand_ids_from_observed_property_id,
-    get_observed_property_hrefs_from_features_of_interest,
     get_parent_node_ids_of_node_id,
     get_phenomenon_ids_from_observed_property_id
 )
