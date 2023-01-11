@@ -6,6 +6,7 @@ from django.test import SimpleTestCase
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
     DATA_COLLECTION_XML_ROOT_TAG_NAME,
+    CATALOGUE_XML_ROOT_TAG_NAME,
     get_schema_location_url_from_parsed_xml_file,
     is_xml_valid_against_schema_at_url,
     parse_xml_file,
@@ -69,6 +70,20 @@ class RegistrationValidationTestCase(SimpleTestCase):
                 print('error', validation_results['error'])
             self.assertNotIn('error', validation_results)
 
+    def test_catalogue_registration_validation(self):
+        """
+        The submitted Catalogue metadata file does not return an error.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
+            client = mongomock.MongoClient()
+            db = client[env('DB_NAME')]['current-catalogues']
+            validation_results = validate_xml_metadata_file(xml_file, CATALOGUE_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
+            if 'error' in validation_results:
+                print('error', validation_results['error'])
+            self.assertNotIn('error', validation_results)
+
+
+class MultipleFileValidationTestCase(SimpleTestCase):
     def test_multiple_file_validation(self):
         xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
         for fname in xml_file_names:
