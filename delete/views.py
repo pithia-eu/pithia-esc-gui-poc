@@ -28,6 +28,7 @@ from common.mongodb_models import (
     ProcessRevision,
     ProjectRevision
 )
+from django.contrib import messages
 from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 from .utils import (
@@ -36,6 +37,7 @@ from .utils import (
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
 )
+from mongodb import client
 
 # Create your views here.
 
@@ -73,12 +75,22 @@ class ResourceDeleteView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # Delete the resource and resources that are referencing the resource to be deleted. These should not
-        # be able to exist without the resource being deleted.
-        linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-        delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
-        for r in linked_resources:
-            delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
+        try:
+            with client.start_session() as s:
+                def cb(s):
+                    # Delete the resource and resources that are referencing the resource to be deleted. These should not
+                    # be able to exist without the resource being deleted.
+                    linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+                    delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    for r in linked_resources:
+                        delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                    if self.resource_mongodb_model == CurrentDataCollection:
+                        delete_current_versions_and_revisions_of_data_collection_interaction_methods(kwargs['data_collection_id'], session=s)
+                s.with_transaction(cb)
+        except BaseException as e:
+            print(e)
+            messages.error(request, 'An error occurred during resource deletion.')
+
         return HttpResponseRedirect(self.redirect_url)
 
 
@@ -243,10 +255,3 @@ class DataCollectionDeleteView(ResourceDeleteView):
         context = super().get_context_data(**kwargs)
         context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
         return context
-
-    def post(self, request, *args, **kwargs):
-        # Delete interaction methods (current versions and
-        # revisions) before deleting the actual data collection,
-        # not sure if the order should be changed around...
-        delete_current_versions_and_revisions_of_data_collection_interaction_methods(self.resource_id)
-        return super().post(request, *args, **kwargs)
