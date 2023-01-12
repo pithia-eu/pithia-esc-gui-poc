@@ -394,18 +394,18 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
 
     return linked_resources
 
-def delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id):
+def delete_current_versions_and_revisions_of_data_collection_interaction_methods(data_collection_id, session=None):
     data_collection_to_delete = CurrentDataCollection.find_one({
         '_id': ObjectId(data_collection_id)
     })
     CurrentDataCollectionInteractionMethod.delete_many({
         'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
-    })
+    }, session=session)
     DataCollectionInteractionMethodRevision.delete_many({
         'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
-    })
+    }, session=session)
 
-def delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model):
+def delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model, session=None):
     # Find the resource to delete, so it can be referenced later when deleting from
     # the revisions collection
     resource_to_delete = resource_mongodb_model.find_one({
@@ -415,10 +415,10 @@ def delete_current_version_and_revisions_of_resource_id(resource_id, resource_mo
     # Delete the current version of the resource
     resource_mongodb_model.delete_one({
         '_id': ObjectId(resource_id)
-    })
+    }, session=session)
 
     # Delete revisions stored as version control
     resource_revision_mongodb_model.delete_many({
         'identifier.PITHIA_Identifier.localID': resource_to_delete['identifier']['PITHIA_Identifier']['localID'],
         'identifier.PITHIA_Identifier.namespace': resource_to_delete['identifier']['PITHIA_Identifier']['namespace'],
-    })
+    }, session=session)
