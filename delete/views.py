@@ -33,7 +33,7 @@ from django.views.generic import TemplateView
 from resource_management.views import _INDEX_PAGE_TITLE
 from .utils import (
     get_resources_linked_through_resource_id,
-    delete_current_version_and_revisions_of_resource_id,
+    delete_current_version_and_revisions_and_xmls_of_resource_id,
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
 )
@@ -84,9 +84,9 @@ class ResourceDeleteView(TemplateView):
                     # Delete the resource and resources that are referencing the resource to be deleted. These should not
                     # be able to exist without the resource being deleted.
                     linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-                    delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
                     for r in linked_resources:
-                        delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                        delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
                     if self.resource_mongodb_model == CurrentDataCollection:
                         delete_current_versions_and_revisions_of_data_collection_interaction_methods(kwargs['data_collection_id'], session=s)
                 s.with_transaction(cb)
