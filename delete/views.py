@@ -153,9 +153,9 @@ class CatalogueRelatedResourceDeleteView(TemplateView):
                     # Delete the resource and resources that are referencing the resource to be deleted. These should not
                     # be able to exist without the resource being deleted.
                     linked_resources = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
-                    delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
                     for r in linked_resources:
-                        delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                        delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
                 s.with_transaction(cb)
         except BaseException as e:
             print(e)
