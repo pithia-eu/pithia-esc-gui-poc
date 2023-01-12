@@ -44,7 +44,7 @@ from resource_management.views import (
 )
 from .utils import (
     get_data_collection_related_resources_linked_through_resource_id,
-    delete_current_version_and_revisions_of_resource_id,
+    delete_current_version_and_revisions_and_xmls_of_resource_id,
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
     get_catalogue_related_resources_linked_through_resource_id,
@@ -89,6 +89,9 @@ class ResourceDeleteView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.resource_to_delete = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
         try:
             with client.start_session() as s:
                 def cb(s):
@@ -97,12 +100,13 @@ class ResourceDeleteView(TemplateView):
                     linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
                     if 'catalogue_related_resources_to_delete' in kwargs:
                         linked_resources.extend(kwargs['catalogue_related_resources_to_delete'])
-                    delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
                     for r in linked_resources:
-                        delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                        delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
                     if self.resource_mongodb_model == CurrentDataCollection:
                         delete_current_versions_and_revisions_of_data_collection_interaction_methods(kwargs['data_collection_id'], session=s)
                 s.with_transaction(cb)
+            messages.success(request, f'Successfully deleted {self.resource_to_delete["name"]}.')
         except BaseException as e:
             print(e)
             messages.error(request, 'An error occurred during resource deletion.')

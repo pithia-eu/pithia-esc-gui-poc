@@ -31,6 +31,7 @@ from common.mongodb_models import (
     PlatformRevision,
     ProcessRevision,
     ProjectRevision,
+    OriginalMetadataXml,
 )
 from common.helpers import (
     create_resource_url,
@@ -405,12 +406,21 @@ def delete_current_versions_and_revisions_of_data_collection_interaction_methods
         'data_collection_localid': data_collection_to_delete['identifier']['PITHIA_Identifier']['localID']
     }, session=session)
 
-def delete_current_version_and_revisions_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model, session=None):
+def delete_current_version_and_revisions_and_xmls_of_resource_id(resource_id, resource_mongodb_model, resource_revision_mongodb_model, session=None):
     # Find the resource to delete, so it can be referenced later when deleting from
     # the revisions collection
     resource_to_delete = resource_mongodb_model.find_one({
         '_id': ObjectId(resource_id)
     })
+
+    resource_revisions_to_delete = resource_revision_mongodb_model.find({
+        'identifier.PITHIA_Identifier.localID': resource_to_delete['identifier']['PITHIA_Identifier']['localID'],
+        'identifier.PITHIA_Identifier.namespace': resource_to_delete['identifier']['PITHIA_Identifier']['namespace'],
+    })
+
+
+    resource_ids_to_delete = [resource_id] + [resource['_id'] for resource in resource_revisions_to_delete]
+    delete_original_metadata_xmls_of_resource_ids(resource_ids_to_delete, session=session)
 
     # Delete the current version of the resource
     resource_mongodb_model.delete_one({
@@ -421,4 +431,12 @@ def delete_current_version_and_revisions_of_resource_id(resource_id, resource_mo
     resource_revision_mongodb_model.delete_many({
         'identifier.PITHIA_Identifier.localID': resource_to_delete['identifier']['PITHIA_Identifier']['localID'],
         'identifier.PITHIA_Identifier.namespace': resource_to_delete['identifier']['PITHIA_Identifier']['namespace'],
+    }, session=session)
+
+def delete_original_metadata_xmls_of_resource_ids(resource_ids, session=None):
+    resource_ids = [ObjectId(resource_id) for resource_id in resource_ids]
+    return OriginalMetadataXml.delete_many({
+        'resourceId': {
+            '$in': resource_ids
+        }
     }, session=session)
