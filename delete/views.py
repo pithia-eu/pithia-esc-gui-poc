@@ -95,6 +95,8 @@ class ResourceDeleteView(TemplateView):
                     # Delete the resource and resources that are referencing the resource to be deleted. These should not
                     # be able to exist without the resource being deleted.
                     linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+                    if 'catalogue_related_resources_to_delete' in kwargs:
+                        linked_resources.extend(kwargs['catalogue_related_resources_to_delete'])
                     delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
                     for r in linked_resources:
                         delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
@@ -141,12 +143,19 @@ class CatalogueRelatedResourceDeleteView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # Delete the resource and resources that are referencing the resource to be deleted. These should not
-        # be able to exist without the resource being deleted.
-        linked_resources = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
-        delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model)
-        for r in linked_resources:
-            delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
+        try:
+            with client.start_session() as s:
+                def cb(s):
+                    # Delete the resource and resources that are referencing the resource to be deleted. These should not
+                    # be able to exist without the resource being deleted.
+                    linked_resources = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+                    delete_current_version_and_revisions_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    for r in linked_resources:
+                        delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                s.with_transaction(cb)
+        except BaseException as e:
+            print(e)
+            messages.error(request, 'An error occurred during resource deletion.')
         return HttpResponseRedirect(self.redirect_url)
 
 
@@ -319,9 +328,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.catalogue_related_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
-        for r in self.catalogue_related_resources_to_delete:
-            delete_current_version_and_revisions_of_resource_id(r[0]['_id'], r[2], r[3])
+        kwargs['catalogue_related_resources_to_delete'] = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
         return super().post(request, *args, **kwargs)
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
