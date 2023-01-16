@@ -1,8 +1,9 @@
-def _create_validation_error_details_dict(err_type, err_message, extra_details):
+from django.urls import reverse_lazy
+
+def create_validation_details_error(message='An error occurred during validation', details=''):
     return {
-        'type': str(err_type),
-        'message': err_message,
-        'extra_details': extra_details
+        'message': message,
+        'details': details
     }
 
 def _map_string_to_li_element(string):
