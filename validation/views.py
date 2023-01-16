@@ -24,12 +24,10 @@ class ResourceXmlMetadataFileValidationFormView(View):
         if 'resource_id' in request.POST:
             existing_resource_id = request.POST['resource_id']
         validation_results = validate_and_get_validation_details_of_xml_file(xml_file, self.expected_root_tag_name, mongodb_model=self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
-        if 'error' not in validation_results:
+        if validation_results['error'] is None:
             return HttpResponse(json.dumps({
                 'result': 'valid'
             }), content_type='application/json')
-        if validation_results['error']['type'] == etree.DocumentInvalid or validation_results['error']['type'] == etree.XMLSyntaxError:
-            return HttpResponse(json.dumps({ 'error': validation_results['error'] }), status=422, content_type='application/json')
         return HttpResponseServerError(json.dumps({ 'error': validation_results['error'] }), content_type='application/json')
 
 class OrganisationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
