@@ -18,3 +18,6 @@ class InvalidRootElementName(ValidationError):
 
 class FileNameNotMatchingWithLocalID(ValidationError):
     pass
+
+class FileRegisteredBefore(ValidationError):
+    pass
