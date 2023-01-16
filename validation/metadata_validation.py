@@ -4,7 +4,13 @@ from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
-from validation.exceptions import InvalidMetadataDocumentUrlException, InvalidRootElementNameForMetadataFileException, MetadataFileNameAndLocalIDNotMatchingException, UnregisteredOntologyTermException, UnregisteredMetadataDocumentException
+from validation.errors import (
+    InvalidResourceURL,
+    InvalidRootElementName,
+    FileNameNotMatchingWithLocalID,
+    UnregisteredOntologyTermReferenced,
+    UnregisteredResourceReferenced
+)
 from common.mongodb_models import CurrentInstrument
 from .url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
 from pathlib import Path
@@ -179,14 +185,12 @@ def validate_and_get_validation_details_of_xml_file(
 
     try:
         # Syntax validation
-        xml_file_parsed = etree.parse(xml_file)
-        validation_checklist['is_syntax_valid'] = True
+        xml_file_parsed = parse_xml_file(xml_file)
 
         # Root element name validation
         root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
-        validation_checklist['is_root_element_name_valid'] = root_element_name_validation_details['is_root_element_name_valid']
         if not validation_checklist['is_root_element_name_valid']:
-            validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementNameForMetadataFileException, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
+            validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementName, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
             return validation_checklist
 
         # XSD Schema validation
@@ -195,7 +199,8 @@ def validate_and_get_validation_details_of_xml_file(
         validation_checklist['is_valid_against_schema'] = True
 
         # New registration validation
-        if check_file_is_unregistered is True and mongodb_model is not None:
+        if (check_file_is_unregistered is True and
+            mongodb_model is not None):
             validation_checklist['is_new_registration'] = False
             if not is_xml_file_already_registered(mongodb_model, xml_file=xml_file):
                 validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'This XML metadata file has been registered before.', None)
@@ -232,7 +237,7 @@ def validate_and_get_validation_details_of_xml_file(
         localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
         xml_file_name_with_no_extension = Path(xml_file.name).stem
         if localid_tag_text != xml_file_name_with_no_extension:
-            validation_checklist['error'] = _create_validation_error_details_dict(MetadataFileNameAndLocalIDNotMatchingException, f"The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".", None)
+            validation_checklist['error'] = _create_validation_error_details_dict(FileNameNotMatchingWithLocalID, f"The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".", None)
             return validation_checklist
         validation_checklist['is_file_name_matching_with_localid'] = True
 
@@ -250,14 +255,14 @@ def validate_and_get_validation_details_of_xml_file(
         if len(resource_urls_with_incorrect_structure) > 0:
             error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
             error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
-            validation_checklist['error'] = _create_validation_error_details_dict(type(InvalidMetadataDocumentUrlException()), error_msg, None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(InvalidResourceURL()), error_msg, None)
             return validation_checklist
 
         if len(resource_urls_pointing_to_unregistered_resources) > 0:
             error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
             error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, types_of_missing_resources)))
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredMetadataDocumentException()), error_msg, None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredResourceReferenced()), error_msg, None)
             return validation_checklist
 
         if len(resource_urls_pointing_to_registered_resources_with_missing_op_modes) > 0:
@@ -269,7 +274,7 @@ def validate_and_get_validation_details_of_xml_file(
         # Ontology URL validation
         invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
         if len(invalid_ontology_urls) > 0:
-            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermException()), 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, invalid_ontology_urls))), None)
+            validation_checklist['error'] = _create_validation_error_details_dict(type(UnregisteredOntologyTermReferenced()), 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, invalid_ontology_urls))), None)
             return validation_checklist
         validation_checklist['is_each_ontology_reference_valid'] = True
 

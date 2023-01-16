@@ -58,10 +58,10 @@ const xmlValidationStates =  {
     VALID: "valid",
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
-    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.exceptions.InvalidRootElementNameForMetadataFileException'>",
-    INVALID_RESOURCE_URLS: "<class 'validation.exceptions.InvalidMetadataDocumentUrlException'>",
-    UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.exceptions.UnregisteredMetadataDocumentException'>",
-    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.exceptions.UnregisteredOntologyTermException'>",
+    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.errors.InvalidRootElementName'>",
+    INVALID_RESOURCE_URLS: "<class 'validation.errors.InvalidResourceURL'>",
+    UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.errors.UnregisteredResourceReferenced'>",
+    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.errors.UnregisteredOntologyTermReferenced'>",
 }
 
 async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
