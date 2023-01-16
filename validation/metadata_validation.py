@@ -48,18 +48,15 @@ def parse_xml_file(xml_file):
 # Root element name validation
 def validate_xml_root_element_name_equals_expected_name(xml_file, expected_root_localname):
     """
-    Compares an XML file's root element name against a given expected root element name,
-    then returns a dict containing these details along with whether the actual root
-    element name and the expected root element name were matching.
+    Compares an XML file's root element name against a given expected root element name.
     """
     xml_file_parsed = parse_xml_file(xml_file)
     root = xml_file_parsed.getroot()
     root_localname = etree.QName(root).localname # Get the root tag text without the namespace
-    return {
-        'root_element_name': f'{root_localname}',
-        'expected_root_element_name': f'{expected_root_localname}',
-        'is_root_element_name_valid': root_localname == expected_root_localname
-    }
+    if root_localname != expected_root_localname:
+        raise InvalidRootElementName(
+            f'Expected the metadata file to have a root element name of "{expected_root_localname}", but got "{root_localname}".'
+        )
 
 # XSD Schema validation
 def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
@@ -188,15 +185,11 @@ def validate_and_get_validation_details_of_xml_file(
         xml_file_parsed = parse_xml_file(xml_file)
 
         # Root element name validation
-        root_element_name_validation_details = validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
-        if not validation_checklist['is_root_element_name_valid']:
-            validation_checklist['error'] = _create_validation_error_details_dict(InvalidRootElementName, f"Expected the metadata file to have a root element name of \"{root_element_name_validation_details['expected_root_element_name']}\", but got \"{root_element_name_validation_details['root_element_name']}\".", None)
-            return validation_checklist
+        validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
 
         # XSD Schema validation
         schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
         validate_xml_against_schema_at_url(xml_file, schema_url)
-        validation_checklist['is_valid_against_schema'] = True
 
         # New registration validation
         if (check_file_is_unregistered is True and
