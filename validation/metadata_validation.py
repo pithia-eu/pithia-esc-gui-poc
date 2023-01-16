@@ -56,6 +56,7 @@ def validate_xml_root_element_name_equals_expected_name(xml_file, expected_root_
     root_localname = etree.QName(root).localname # Get the root tag text without the namespace
     if root_localname != expected_root_localname:
         raise InvalidRootElementName(
+            'The metadata file submitted is for the wrong resource type.',
             f'Expected the metadata file to have a root element name of "{expected_root_localname}", but got "{root_localname}".'
         )
 
@@ -119,7 +120,10 @@ def validate_xml_file_is_unregistered(mongodb_model, xml_file=None, converted_xm
         'identifier.PITHIA_Identifier.namespace': xml_file_pithia_identifier['namespace'],
     })
     if num_times_uploaded_before > 0:
-        raise FileRegisteredBefore('This XML metadata file has been registered before.')
+        raise FileRegisteredBefore(
+            'This XML metadata file has been registered before.',
+            f'Metadata sharing the same localID of "{xml_file_pithia_identifier["localID"]}" has already been registered with the e-Science Centre.',
+        )
 
 # Update validation
 def is_updated_xml_file_localid_matching_with_current_resource_localid(
@@ -199,12 +203,12 @@ def validate_and_get_validation_details_of_xml_file(
             validate_xml_file_is_unregistered(mongodb_model, xml_file=xml_file)
 
         # localID and namespace of file is the same as the resource to update's validation
-        if check_xml_file_localid_matches_existing_resource_localid == True and mongodb_model is not None and existing_resource_id != '':
-            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = False
+        if (check_xml_file_localid_matches_existing_resource_localid == True and
+            mongodb_model is not None and
+            existing_resource_id != ''):
             if is_updated_xml_file_localid_matching_with_current_resource_localid(xml_file, existing_resource_id, mongodb_model) == False:
                 validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'The localID and namespace must be matching with the resource being updated.', None)
                 return validation_checklist
-            validation_checklist['is_xml_file_localid_matching_with_existing_resource_localid'] = True
 
         # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
         if (check_xml_file_localid_matches_existing_resource_localid == True and
@@ -275,7 +279,7 @@ def validate_and_get_validation_details_of_xml_file(
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
-    except FileRegisteredBefore as err:
+    except (InvalidRootElementName, FileRegisteredBefore) as err:
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
     except BaseException as err:
         print(traceback.format_exc())
