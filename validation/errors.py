@@ -1,14 +1,20 @@
-class InvalidResourceURL(Exception):
+class ValidationError(Exception):
+    def __init__(self, message, details) -> None:
+        super().__init__(message)
+        self.message = message
+        self.details = details
+
+class InvalidResourceURL(ValidationError):
     pass
 
-class UnregisteredResourceReferenced(Exception):
+class UnregisteredResourceReferenced(ValidationError):
     pass
 
-class UnregisteredOntologyTermReferenced(Exception):
+class UnregisteredOntologyTermReferenced(ValidationError):
     pass
 
-class InvalidRootElementName(Exception):
+class InvalidRootElementName(ValidationError):
     pass
 
-class FileNameNotMatchingWithLocalID(Exception):
+class FileNameNotMatchingWithLocalID(ValidationError):
     pass
