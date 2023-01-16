@@ -25,6 +25,7 @@ from .helpers import (
     _map_acquisition_capability_to_update_link,
     _map_operational_mode_object_to_id_string,
 )
+from xmlschema.exceptions import XMLSchemaException
 
 ORGANISATION_XML_ROOT_TAG_NAME = 'Organisation'
 INDIVIDUAL_XML_ROOT_TAG_NAME = 'Individual'
@@ -44,6 +45,7 @@ def parse_xml_file(xml_file):
     """
     Parses an XML file, which also verifies whether the file's syntax is valid or not.
     """
+    xml_file.seek(0)
     return etree.parse(xml_file)
 
 # Root element name validation
@@ -191,7 +193,7 @@ def validate_and_get_validation_details_of_xml_file(
         xml_file_parsed = parse_xml_file(xml_file)
 
         # Root element name validation
-        validate_xml_root_element_name_equals_expected_name(xml_file_parsed, expected_root_localname)
+        validate_xml_root_element_name_equals_expected_name(xml_file, expected_root_localname)
 
         # XSD Schema validation
         schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
@@ -286,7 +288,7 @@ def validate_and_get_validation_details_of_xml_file(
             message='Syntax is invalid.',
             details=str(err),
         )
-    except etree.DocumentInvalid as err:
+    except XMLSchemaException as err:
         print(traceback.format_exc())
         validation_details['error'] = create_validation_details_error(
             message='XML does not conform to the corresponding schema.',
