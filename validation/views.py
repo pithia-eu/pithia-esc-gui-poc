@@ -9,7 +9,7 @@ from openapi_spec_validator import validate_spec_url
 
 from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
 from validation.forms import ApiSpecificationUrlValidationForm
-from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_xml_metadata_file
+from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_and_get_validation_details_of_xml_file
 
 # Create your views here.
 class ResourceXmlMetadataFileValidationFormView(View):
@@ -23,7 +23,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
         existing_resource_id = ''
         if 'resource_id' in request.POST:
             existing_resource_id = request.POST['resource_id']
-        validation_results = validate_xml_metadata_file(xml_file, self.expected_root_tag_name, mongodb_model=self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
+        validation_results = validate_and_get_validation_details_of_xml_file(xml_file, self.expected_root_tag_name, mongodb_model=self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
         if 'error' not in validation_results:
             return HttpResponse(json.dumps({
                 'result': 'valid'
