@@ -117,7 +117,7 @@ def is_xml_file_already_registered(mongodb_model, xml_file=None, converted_xml_f
         'identifier.PITHIA_Identifier.localID': xml_file_pithia_identifier['localID'],
         'identifier.PITHIA_Identifier.namespace': xml_file_pithia_identifier['namespace'],
     })
-    return num_times_uploaded_before == 0
+    return num_times_uploaded_before > 0
 
 # Update validation
 def is_updated_xml_file_localid_matching_with_current_resource_localid(
@@ -195,7 +195,7 @@ def validate_and_get_validation_details_of_xml_file(
         if (check_file_is_unregistered is True and
             mongodb_model is not None):
             validation_checklist['is_new_registration'] = False
-            if not is_xml_file_already_registered(mongodb_model, xml_file=xml_file):
+            if is_xml_file_already_registered(mongodb_model, xml_file=xml_file):
                 validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'This XML metadata file has been registered before.', None)
                 return validation_checklist
             validation_checklist['is_new_registration'] = True
