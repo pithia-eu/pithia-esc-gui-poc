@@ -1,15 +1,14 @@
 from bson import ObjectId
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from common.mongodb_models import OriginalMetadataXml
-from validation.metadata_validation import is_xml_file_already_registered
+from validation.metadata_validation import validate_xml_file_is_unregistered
 
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix):
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     converted_metadata_file_dictionary = converted_metadata_file_dictionary[(list(converted_metadata_file_dictionary)[0])]
-    if is_xml_file_already_registered(mongodb_model, converted_xml_file=converted_metadata_file_dictionary):
-        return 'This XML metadata file has been registered before.'
+    validate_xml_file_is_unregistered(mongodb_model, converted_xml_file=converted_metadata_file_dictionary)
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(converted_metadata_file_dictionary)
     metadata_registration_result = mongodb_model.insert_one(converted_metadata_file_dictionary)

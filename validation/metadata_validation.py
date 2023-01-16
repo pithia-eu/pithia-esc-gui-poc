@@ -9,7 +9,8 @@ from validation.errors import (
     InvalidRootElementName,
     FileNameNotMatchingWithLocalID,
     UnregisteredOntologyTermReferenced,
-    UnregisteredResourceReferenced
+    UnregisteredResourceReferenced,
+    FileRegisteredBefore,
 )
 from common.mongodb_models import CurrentInstrument
 from .url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
@@ -103,7 +104,7 @@ def is_xml_file_name_matching_with_localid(xml_file):
     return localid_tag_text == xml_file_name_with_no_extension
 
 # Registration validation
-def is_xml_file_already_registered(mongodb_model, xml_file=None, converted_xml_file=None):
+def validate_xml_file_is_unregistered(mongodb_model, xml_file=None, converted_xml_file=None):
     """
     Returns whether there is pre-registered metadata with the same localID and namespace
     as the metadata that the user would like to register.
@@ -117,7 +118,8 @@ def is_xml_file_already_registered(mongodb_model, xml_file=None, converted_xml_f
         'identifier.PITHIA_Identifier.localID': xml_file_pithia_identifier['localID'],
         'identifier.PITHIA_Identifier.namespace': xml_file_pithia_identifier['namespace'],
     })
-    return num_times_uploaded_before > 0
+    if num_times_uploaded_before > 0:
+        raise FileRegisteredBefore('This XML metadata file has been registered before.')
 
 # Update validation
 def is_updated_xml_file_localid_matching_with_current_resource_localid(
@@ -194,11 +196,7 @@ def validate_and_get_validation_details_of_xml_file(
         # New registration validation
         if (check_file_is_unregistered is True and
             mongodb_model is not None):
-            validation_checklist['is_new_registration'] = False
-            if is_xml_file_already_registered(mongodb_model, xml_file=xml_file):
-                validation_checklist['error'] = _create_validation_error_details_dict(type(BaseException()), 'This XML metadata file has been registered before.', None)
-                return validation_checklist
-            validation_checklist['is_new_registration'] = True
+            validate_xml_file_is_unregistered(mongodb_model, xml_file=xml_file)
 
         # localID and namespace of file is the same as the resource to update's validation
         if check_xml_file_localid_matches_existing_resource_localid == True and mongodb_model is not None and existing_resource_id != '':
@@ -276,6 +274,8 @@ def validate_and_get_validation_details_of_xml_file(
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
     except etree.DocumentInvalid as err:
         print(traceback.format_exc())
+        validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
+    except FileRegisteredBefore as err:
         validation_checklist['error'] = _create_validation_error_details_dict(type(err), str(err), None)
     except BaseException as err:
         print(traceback.format_exc())

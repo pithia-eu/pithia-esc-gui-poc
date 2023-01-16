@@ -11,6 +11,7 @@ from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
 from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource_page_title
+from validation.errors import FileRegisteredBefore
 
 
 # Create your views here.
@@ -54,8 +55,6 @@ class ResourceRegisterFormView(FormView):
                 # should be implemented.
                 try:
                     registration_results = register_metadata_xml_file(xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
-                    if registration_results == 'This XML metadata file has been registered before.':
-                        messages.error(request, f'{xml_file.name} has been registered before.')
                     else:
                         messages.success(request, f'Successfully registered {xml_file.name}.')
                         if 'api_selected' in request.POST:
@@ -68,6 +67,10 @@ class ResourceRegisterFormView(FormView):
                     print(err)
                     print(traceback.format_exc())
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
+                except FileRegisteredBefore as err:
+                    print(err)
+                    print(traceback.format_exc())
+                    messages.error(request, f'{xml_file.name} has been registered before.')
                 except BaseException as err:
                     print(err)
                     print(traceback.format_exc())
