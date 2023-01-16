@@ -83,9 +83,8 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
     const responseContent = await response.json();
     if (!response.ok) {
         return {
-            state: responseContent.error.type,
-            error: responseContent.error.message,
-            extra_details: responseContent.error.extra_details,
+            state: 'error',
+            error: responseContent.error
         };
     }
     return {
@@ -98,7 +97,11 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
         <div class="d-flex align-items-center">
         </div>
     `);
-    if (fileValidationStatus.state === "validating") {
+    if (fileValidationStatus.error) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">${fileValidationStatus.error.message}</span>
+        `;
+    } else if (fileValidationStatus.state === "validating") {
         statusElemContent.innerHTML = `
             <div class="spinner-grow-container text-muted me-3">
                 <div class="spinner-grow" style="width: 1rem; height: 1rem;" role="status">
@@ -110,43 +113,6 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
     } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
             <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.SUBMITTED_METADATA_NOT_MATCHING_TYPE) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">The metadata file submitted is for the wrong resource type.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SEMANTICS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">XML does not conform to the corresponding schema.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_RESOURCE_URLS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple resource URLs specified via the xlink:href attribute are invalid.
-            </span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_RESOURCES) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.
-            </span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_ONTOLOGY_TERMS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.
-            </span>
-        `;
-    } else {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an error during validation.</span>
         `;
     }
     
@@ -239,14 +205,7 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             uploadFormSubmitButton.disabled = true;
             btnRmFileIdsToClick.push(`btn-rm-file-${i}`);
             removeClassNameFromElem(validationStatusErrorElem, "d-none");
-            updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
-        }
-        if (!validationResults.extra_details) {
-            return;
-        }
-        if (validationResults.extra_details.unregistered_document_types) {
-            const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
-            appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
+            updateXMLFileValidationErrorDetails(validationResults.error.details, validationStatusErrorElem);
         }
     });
 }
