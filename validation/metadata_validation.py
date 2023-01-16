@@ -176,7 +176,7 @@ def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrum
 def validate_and_get_validation_details_of_xml_file(
     xml_file,
     expected_root_localname,
-    mongodb_model=None,
+    mongodb_model,
     check_file_is_unregistered=False,
     check_xml_file_localid_matches_existing_resource_localid=False,
     existing_resource_id=''
@@ -198,13 +198,11 @@ def validate_and_get_validation_details_of_xml_file(
         validate_xml_against_schema_at_url(xml_file, schema_url)
 
         # New registration validation
-        if (check_file_is_unregistered is True and
-            mongodb_model is not None):
+        if (check_file_is_unregistered is True):
             validate_xml_file_is_unregistered(mongodb_model, xml_file=xml_file)
 
         # localID and namespace of file is the same as the resource to update's validation
         if (check_xml_file_localid_matches_existing_resource_localid == True and
-            mongodb_model is not None and
             existing_resource_id != ''):
             if is_updated_xml_file_localid_matching_with_current_resource_localid(xml_file, existing_resource_id, mongodb_model) == False:
                 validation_details['error'] = create_validation_details_error(
@@ -216,7 +214,6 @@ def validate_and_get_validation_details_of_xml_file(
         # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
         if (check_xml_file_localid_matches_existing_resource_localid == True and
             existing_resource_id != '' and
-            mongodb_model is not None and
             mongodb_model == CurrentInstrument):
             operational_mode_ids_of_updated_xml = list(
                 map(_map_etree_element_to_text, xml_file_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}id'))

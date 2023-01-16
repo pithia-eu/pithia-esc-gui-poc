@@ -23,7 +23,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
         existing_resource_id = ''
         if 'resource_id' in request.POST:
             existing_resource_id = request.POST['resource_id']
-        validation_results = validate_and_get_validation_details_of_xml_file(xml_file, self.expected_root_tag_name, mongodb_model=self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
+        validation_results = validate_and_get_validation_details_of_xml_file(xml_file, self.expected_root_tag_name, self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
         if validation_results['error'] is None:
             return HttpResponse(json.dumps({
                 'result': 'valid'
