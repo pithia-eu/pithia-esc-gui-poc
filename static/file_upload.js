@@ -146,14 +146,6 @@ function removeClassNameFromElem(elem, className) {
     return elem.classList.remove(className);
 }
 
-function showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining) {
-    if (numFilesRemaining > 0) {
-        document.querySelector('.file-list-empty-msg').classList.add('d-none');
-    } else {
-        document.querySelector('.file-list-empty-msg').classList.remove('d-none');
-    }
-}
-
 const uploadFormSubmitButton = document.querySelector("form button[type='submit']");
 export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
     if (!validateNotAlreadyRegistered) {
@@ -172,7 +164,6 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
     }
 
     const files = Array.from(fileInput.files);
-    showFileListEmptyMsgIfFileInputEmpty(files.length);
     files.forEach(async (file, i) => {
         loadFileValidationElemsForFile(file, listElem, i);
         const validationStatusElem = document.querySelector(`.file-validation-status-${i}`);
@@ -186,7 +177,6 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             const numFilesRemaining = removeFileFromFileList(clickedBtnRmFileIndex, fileInput);
             const listItemNum = event.target.dataset.listItemNum;
             document.querySelector(`.file-list-group-item-${listItemNum}`).remove();
-            showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining);
             btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
             finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
             updateIsEachFileValid(finishedValidating);
