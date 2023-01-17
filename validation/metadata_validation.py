@@ -235,7 +235,6 @@ def validate_and_get_validation_details_of_xml_file(
                     message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets)))
                 ))
-                return validation_details
 
         # Resource URL validation
         invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
