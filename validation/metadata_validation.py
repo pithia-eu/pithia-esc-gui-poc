@@ -95,6 +95,16 @@ def validate_xml_against_schema_at_url(xml_file, schema_url):
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_schema.validate(xml_file.read())
 
+def validate_xml_against_own_schema(xml_file):
+    """
+    Validates the XML file against its own schema by
+    fetching the schema from the URL specified at the
+    xsi:schemaLocation attribute within the XML file.
+    """
+    xml_file_parsed = parse_xml_file(xml_file)
+    schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
+    validate_xml_against_schema_at_url(xml_file, schema_url)
+
 # Matching file name and localID tag text validation
 def validate_xml_file_name(xml_file):
     """
