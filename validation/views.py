@@ -7,9 +7,36 @@ from django.views.generic import View
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
 
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
+from common.mongodb_models import (
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentIndividual,
+    CurrentInstrument,
+    CurrentOperation,
+    CurrentOrganisation,
+    CurrentPlatform,
+    CurrentProcess,
+    CurrentProject
+)
 from validation.forms import ApiSpecificationUrlValidationForm
-from validation.metadata_validation import ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME, ACQUISITION_XML_ROOT_TAG_NAME, COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME, COMPUTATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, INDIVIDUAL_XML_ROOT_TAG_NAME, INSTRUMENT_XML_ROOT_TAG_NAME, OPERATION_XML_ROOT_TAG_NAME, ORGANISATION_XML_ROOT_TAG_NAME, PLATFORM_XML_ROOT_TAG_NAME, PROCESS_XML_ROOT_TAG_NAME, PROJECT_XML_ROOT_TAG_NAME, validate_and_get_validation_details_of_xml_file
+from validation.metadata_validation import (
+    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
+    ACQUISITION_XML_ROOT_TAG_NAME,
+    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
+    COMPUTATION_XML_ROOT_TAG_NAME,
+    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+    INDIVIDUAL_XML_ROOT_TAG_NAME,
+    INSTRUMENT_XML_ROOT_TAG_NAME,
+    OPERATION_XML_ROOT_TAG_NAME,
+    ORGANISATION_XML_ROOT_TAG_NAME,
+    PLATFORM_XML_ROOT_TAG_NAME,
+    PROCESS_XML_ROOT_TAG_NAME,
+    PROJECT_XML_ROOT_TAG_NAME,
+    validate_and_get_validation_details_of_xml_file
+)
 
 # Create your views here.
 class ResourceXmlMetadataFileValidationFormView(View):
@@ -23,12 +50,28 @@ class ResourceXmlMetadataFileValidationFormView(View):
         existing_resource_id = ''
         if 'resource_id' in request.POST:
             existing_resource_id = request.POST['resource_id']
-        validation_results = validate_and_get_validation_details_of_xml_file(xml_file, self.expected_root_tag_name, self.mongodb_model, check_file_is_unregistered=check_file_is_unregistered, check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid, existing_resource_id=existing_resource_id)
-        if validation_results['error'] is None:
+        validation_results = validate_and_get_validation_details_of_xml_file(
+            xml_file,
+            self.expected_root_tag_name,
+            self.mongodb_model,
+            check_file_is_unregistered=check_file_is_unregistered,
+            check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid,
+            existing_resource_id=existing_resource_id
+        )
+        if validation_results['error'] is None and len(validation_results['warnings']) == 0:
             return HttpResponse(json.dumps({
                 'result': 'valid'
             }), content_type='application/json')
-        return HttpResponseServerError(json.dumps({ 'error': validation_results['error'] }), content_type='application/json')
+
+        response_body = {}
+        if len(validation_results['warnings']) > 0:
+            response_body['warnings'] = validation_results['warnings']
+        if validation_results['error'] != None:
+            response_body['error'] = validation_results['error']
+        return HttpResponseServerError(
+            json.dumps(response_body),
+            content_type='application/json'
+        )
 
 class OrganisationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentOrganisation
