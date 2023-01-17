@@ -31,7 +31,7 @@ function resetFileValidationList(listElem) {
 
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
-        <li class="list-group-item file-list-group-item-${index}">
+        <li class="list-group-item file-list-group-item-${index} pb-3">
             <div class="row g-2">
                 <div class="col-lg-10">
                     <div class="row g-2">
@@ -39,7 +39,11 @@ function loadFileValidationElemsForFile(file, listElem, index) {
                         <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
-                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break">
+                        <div class="col-lg-12 file-validation-warnings file-validation-warnings-${index} text-break d-none">
+                            <ul class="list-group list-group-warning">
+                            </ul>
+                        </div>
+                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break d-none">
                         </div>
                     </div>
                 </div>
@@ -84,7 +88,8 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
     if (!response.ok) {
         return {
             state: 'error',
-            error: responseContent.error
+            error: responseContent.error,
+            warnings: responseContent.warnings,
         };
     }
     return {
@@ -127,17 +132,14 @@ function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
         </div>
     `;
 }
-
-function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
-    const extraDetailsMessage = htmlToElement('<div class="mt-2">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
-    const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
-    unregisteredReferencedResourceTypes.forEach(resourceType => {
-        registrationLinksList.appendChild(htmlToElement(`
-            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} Metadata Registration</a></li>
+function updateXMLFileValidationWarningDetails(warnings, warningListElem) {
+    warnings.forEach(warning => {
+        warningListElem.append(htmlToElement(`
+            <li class="list-group-item list-group-item-warning">
+                ${warning.details}
+            </li>
         `));
     });
-    registrationLinksElem.append(extraDetailsMessage);
-    return registrationLinksElem.append(registrationLinksList);
 }
 
 function removeClassNameFromElem(elem, className) {
@@ -174,6 +176,8 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
     files.forEach(async (file, i) => {
         loadFileValidationElemsForFile(file, listElem, i);
         const validationStatusElem = document.querySelector(`.file-validation-status-${i}`);
+        const validationStatusWarningsElem = document.querySelector(`.file-validation-warnings-${i}`);
+        const validationStatusWarningListElem = document.querySelector(`.file-validation-warnings-${i} .list-group-warning`);
         const validationStatusErrorElem = document.querySelector(`.file-validation-error-${i}`);
         const btnRemoveFile = document.querySelector(`#btn-rm-file-${i}`);
         btnRemoveFile.addEventListener("click", event => {
@@ -200,6 +204,11 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             document.querySelector(`input[id="is-file-${i}-valid"]`).value = "true";
             updateIsEachFileValid(finishedValidating);
             document.dispatchEvent(fileValidationStatusUpdatedEvent);
+        }
+        if (validationResults.warnings.length > 0 && document.querySelector(`.file-list-group-item-${i}`)) {
+            removeClassNameFromElem(validationStatusWarningsElem, "d-none");
+            console.log("validationResults.warnings", validationResults.warnings)
+            updateXMLFileValidationWarningDetails(validationResults.warnings, validationStatusWarningListElem);
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
             uploadFormSubmitButton.disabled = true;
