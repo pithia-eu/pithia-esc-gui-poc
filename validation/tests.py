@@ -9,8 +9,9 @@ from validation.metadata_validation import (
     DATA_COLLECTION_XML_ROOT_TAG_NAME,
     get_schema_location_url_from_parsed_xml_file,
     is_xml_valid_against_schema_at_url,
+    validate_xml_against_own_schema,
     parse_xml_file,
-    validate_and_get_validation_details_of_xml_file
+    validate_and_get_validation_details_of_xml_file,
 )
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -109,7 +110,7 @@ class XsdValidationTestCase(SimpleTestCase):
             if fname == 'Organisation_Test_InvalidSyntax.xml':
                 continue
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
-                self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
+                validate_xml_against_own_schema(xml_file)
 
 
 class UrlsFromFilesValidationTestCase(SimpleTestCase):
