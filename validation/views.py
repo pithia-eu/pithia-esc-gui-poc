@@ -4,7 +4,6 @@ from urllib.error import HTTPError
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.http import require_POST
 from django.views.generic import View
-from lxml import etree
 from openapi_spec_validator import validate_spec_url
 
 from common.mongodb_models import (
