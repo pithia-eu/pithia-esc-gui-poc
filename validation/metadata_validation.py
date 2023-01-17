@@ -141,10 +141,9 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
     Returns whether the localID and namespace of the updated metadata
     is the same as the current version of the metadata.
     """
-    if converted_xml_file is None:
-        converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-        # Remove the top-level tag - this will be just <Organisation>, for example
-        converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+    converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
+    # Remove the top-level tag - this will be just <Organisation>, for example
+    converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
     xml_file_pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
     resource_to_update = mongodb_model.find_one({
         '_id': ObjectId(resource_id)
