@@ -71,7 +71,11 @@
                             {{ form.files }}
                         </div>
                         <div class="col-lg-12">
+                            {% block file_list %}
+                            {% with file_list_title='Uploaded Files' %}
                             {% include 'register/validation_template.html' %}
+                            {% endwith %}
+                            {% endblock file_list %}
                         </div>
                         {% block register_api_specification %}
                         {% endblock register_api_specification %}
