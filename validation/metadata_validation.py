@@ -208,7 +208,7 @@ def validate_and_get_validation_details_of_xml_file(
             if is_updated_xml_file_localid_matching_with_current_resource_localid(xml_file, existing_resource_id, mongodb_model) == False:
                 validation_details['error'] = create_validation_details_error(
                     message='Invalid localID and namespace',
-                    details='The localID and namespace must be matching with the metadata being updated.',
+                    details='The localID and namespace must be matching with the current version of the metadata.',
                 )
                 return validation_details
 
