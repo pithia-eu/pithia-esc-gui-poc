@@ -198,6 +198,9 @@ def validate_and_get_validation_details_of_xml_file(
         schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
         validate_xml_against_schema_at_url(xml_file, schema_url)
 
+        # Matching file name and localID tag text validation
+        validate_xml_file_name(xml_file)
+
         # New registration validation
         if (check_file_is_unregistered is True):
             validate_xml_file_is_unregistered(mongodb_model, xml_file=xml_file)
@@ -233,9 +236,6 @@ def validate_and_get_validation_details_of_xml_file(
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets)))
                 ))
                 return validation_details
-
-        # Matching file name and localID tag text validation
-        validate_xml_file_name(xml_file)
 
         # Resource URL validation
         invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
