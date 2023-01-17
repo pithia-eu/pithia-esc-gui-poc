@@ -4,8 +4,23 @@ import mongomock
 from lxml import etree
 from genericpath import isfile
 from django.test import SimpleTestCase
-from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_and_get_validation_details_of_xml_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
+from validation.metadata_validation import (
+    ORGANISATION_XML_ROOT_TAG_NAME,
+    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+    get_schema_location_url_from_parsed_xml_file,
+    is_xml_valid_against_schema_at_url,
+    parse_xml_file,
+    validate_and_get_validation_details_of_xml_file
+)
+from validation.url_validation import (
+    get_invalid_ontology_urls_from_parsed_xml,
+    get_invalid_resource_urls_from_parsed_xml,
+    divide_resource_url_into_main_components,
+    is_resource_url_structure_valid,
+    divide_resource_url_from_op_mode_id,
+    get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
+    validate_ontology_term_url
+)
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
