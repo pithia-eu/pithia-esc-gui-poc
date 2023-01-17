@@ -195,9 +195,8 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             updateIsEachFileValid(finishedValidating);
             document.dispatchEvent(fileValidationStatusUpdatedEvent);
         }
-        if (validationResults.warnings.length > 0 && document.querySelector(`.file-list-group-item-${i}`)) {
+        if (validationResults.warnings && document.querySelector(`.file-list-group-item-${i}`)) {
             removeClassNameFromElem(validationStatusWarningsElem, "d-none");
-            console.log("validationResults.warnings", validationResults.warnings)
             updateXMLFileValidationWarningDetails(validationResults.warnings, validationStatusWarningListElem);
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
