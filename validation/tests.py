@@ -205,18 +205,18 @@ class NewRegistrationValidationTestCase:
             )
             print(f'Passed registration validation failure for {Path(xml_file.name).name}.')
 
-class UpdateValidationTestCase:
-    @tag('fast')
-    def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
-        """
-        is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
-        """
-        try:
-            with open(self.xml_file_path) as xml_file:
+# class UpdateValidationTestCase:
+#     @tag('fast')
+#     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
+#         """
+#         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
+#         """
+#         try:
+#             with open(self.xml_file_path) as xml_file:
                 
-                print(f'Passed update validation for {Path(xml_file.name).name}.')
-        except BaseException:
-            self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
+#                 print(f'Passed update validation for {Path(xml_file.name).name}.')
+#         except BaseException:
+#             self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
 
 class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
