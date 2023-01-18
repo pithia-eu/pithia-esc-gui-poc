@@ -6,6 +6,7 @@ from lxml.etree import XMLSyntaxError
 from genericpath import isfile
 from pathlib import Path
 from django.test import SimpleTestCase, tag
+from register.register import register_metadata_xml_file
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
     INDIVIDUAL_XML_ROOT_TAG_NAME,
@@ -35,6 +36,7 @@ from validation.url_validation import (
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
     validate_ontology_term_url,
 )
+from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -183,6 +185,25 @@ class NewRegistrationValidationTestCase:
                 print(f'Passed new registration validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
+
+    @tag('fast')
+    def test_invalid_validate_xml_file_is_unregistered(self):
+        """
+        validate_xml_file_is_unregistered() does raises an exception when passed an xml file that has already been registered.
+        """
+        with open(self.xml_file_path) as xml_file:
+            register_metadata_xml_file(
+                xml_file,
+                self.mongodb_model,
+                None
+            )
+            self.assertRaises(
+                FileRegisteredBefore,
+                validate_xml_file_is_unregistered,
+                self.mongodb_model,
+                xml_file
+            )
+            print(f'Passed registration validation failure for {Path(xml_file.name).name}.')
 
 class UpdateValidationTestCase:
     @tag('fast')
