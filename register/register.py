@@ -8,7 +8,7 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     converted_metadata_file_dictionary = converted_metadata_file_dictionary[(list(converted_metadata_file_dictionary)[0])]
-    validate_xml_file_is_unregistered(mongodb_model, converted_xml_file=converted_metadata_file_dictionary)
+    validate_xml_file_is_unregistered(mongodb_model, xml_file)
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(converted_metadata_file_dictionary)
     metadata_registration_result = mongodb_model.insert_one(converted_metadata_file_dictionary)

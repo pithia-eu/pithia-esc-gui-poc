@@ -102,7 +102,8 @@ def validate_xml_file_name(xml_file):
     with the innerText of its <localID> element.
     """
     xml_file_parsed = parse_xml_file(xml_file)
-    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text # There should be only one <localID> tag in the tree
+    # There should be only one <localID> tag in the tree
+    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
     xml_file_name_with_no_extension = Path(xml_file.name).stem
     if localid_tag_text != xml_file_name_with_no_extension:
         raise FileNameNotMatchingWithLocalID(
@@ -111,24 +112,22 @@ def validate_xml_file_name(xml_file):
         )
 
 # Registration validation
-def validate_xml_file_is_unregistered(mongodb_model, xml_file=None, converted_xml_file=None):
+def validate_xml_file_is_unregistered(mongodb_model, xml_file):
     """
     Returns whether there is pre-registered metadata with the same localID and namespace
     as the metadata that the user would like to register.
     """
-    if converted_xml_file is None:
-        converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-        # Remove the top-level tag - this will be just <Organisation>, for example
-        converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-    xml_file_pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
+    xml_file_parsed = parse_xml_file(xml_file)
+    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
+    namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
     num_times_uploaded_before = mongodb_model.count_documents({
-        'identifier.PITHIA_Identifier.localID': xml_file_pithia_identifier['localID'],
-        'identifier.PITHIA_Identifier.namespace': xml_file_pithia_identifier['namespace'],
+        'identifier.PITHIA_Identifier.localID': localid_tag_text,
+        'identifier.PITHIA_Identifier.namespace': namespace_tag_text,
     })
     if num_times_uploaded_before > 0:
         raise FileRegisteredBefore(
             'This XML metadata file has been registered before.',
-            f'Metadata sharing the same localID of "{xml_file_pithia_identifier["localID"]}" has already been registered with the e-Science Centre.',
+            f'Metadata sharing the same localID of "{localid_tag_text}" has already been registered with the e-Science Centre.',
         )
 
 # Update validation
@@ -203,7 +202,7 @@ def validate_and_get_validation_details_of_xml_file(
 
         # New registration validation
         if (check_file_is_unregistered is True):
-            validate_xml_file_is_unregistered(mongodb_model, xml_file=xml_file)
+            validate_xml_file_is_unregistered(mongodb_model, xml_file)
 
         # localID and namespace of file is the same as the resource to update's validation
         if (check_xml_file_localid_matches_existing_resource_localid == True and
