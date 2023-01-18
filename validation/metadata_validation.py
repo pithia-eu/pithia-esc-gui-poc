@@ -1,19 +1,19 @@
 import traceback
 import xmlschema
-from django.urls import reverse_lazy
 from requests import get
 from lxml import etree
 from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
 from validation.errors import (
-    InvalidResourceURL,
     InvalidRootElementName,
     FileNameNotMatchingWithLocalID,
-    UnregisteredOntologyTermReferenced,
-    UnregisteredResourceReferenced,
     FileRegisteredBefore,
 )
 from common.mongodb_models import CurrentInstrument
-from .url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
+from .url_validation import (
+    get_invalid_ontology_urls_from_parsed_xml,
+    get_invalid_resource_urls_from_parsed_xml,
+    get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
+)
 from pathlib import Path
 from bson import ObjectId
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
@@ -312,6 +312,5 @@ def validate_and_get_validation_details_of_xml_file(
         validation_details['error'] = create_validation_details_error(
             details=str(err)
         )
-    
 
     return validation_details
