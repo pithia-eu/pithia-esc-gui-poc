@@ -4,6 +4,7 @@ import mongomock
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 from genericpath import isfile
+from pathlib import Path
 from django.test import SimpleTestCase, tag
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
@@ -23,6 +24,7 @@ from validation.metadata_validation import (
     validate_and_get_validation_details_of_xml_file,
     validate_xml_root_element_name_equals_expected_name,
     validate_xml_file_name,
+    validate_xml_file_is_unregistered,
 )
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -100,8 +102,8 @@ class ProcessFileTestCase(FileTestCase):
 class DataCollectionFileTestCase(FileTestCase):
     xml_file_name = 'DataCollection_Test.xml'
 
-@tag('fast')
 class InvalidSyntaxValidationTestCase(object):
+    @tag('fast')
     def test_file_with_invalid_syntax(self):
         """
         The file causes parse_xml_file() to raise an exception
@@ -113,22 +115,22 @@ class InvalidSyntaxValidationTestCase(object):
                 print('Exception raised, as expected!')
             self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
 
-@tag('fast')
 class SyntaxValidationTestCase(object):
+    @tag('fast')
     def test_file_with_valid_syntax(self):
         """
         The file does not cause parse_xml_file() to raise an exception
         """
         try:
-            with open(self.xml_file_path) as valid_xml_file:
-                parse_xml_file(valid_xml_file)
-                print('No exception raised, as expected!')
+            with open(self.xml_file_path) as xml_file:
+                parse_xml_file(xml_file)
+                print(f'Passed syntax validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('parse_xml_file() raised an exception unexpectedly!')
 
-@tag('fast')
 class RootElementValidationTestCase(object):
     root_element_name = ''
+    @tag('fast')
     def test_file_with_valid_root_element_name(self):
         """
         The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
@@ -136,11 +138,12 @@ class RootElementValidationTestCase(object):
         try:
             with open(self.xml_file_path) as xml_file:
                 validate_xml_root_element_name_equals_expected_name(xml_file, self.root_element_name)
+                print(f'Passed root element validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
 
-@tag('slow')
 class XSDValidationTestCase(object):
+    @tag('slow')
     def test_validate_against_own_schema(self):
         """
         validate_xml_against_own_schema() does not raise an exception when passed a valid xml file.
@@ -148,11 +151,12 @@ class XSDValidationTestCase(object):
         try:
             with open(self.xml_file_path) as xml_file:
                 validate_xml_against_own_schema(xml_file)
+                print(f'Passed XSD validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
-@tag('fast')
 class FileNameValidationTestCase(object):
+    @tag('fast')
     def test_validate_xml_file_name(self):
         """
         validate_xml_file_name() does not raise an exception when passed a valid xml file.
@@ -160,6 +164,23 @@ class FileNameValidationTestCase(object):
         try:
             with open(self.xml_file_path) as xml_file:
                 validate_xml_file_name(xml_file)
+                print(f'Passed file name validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('validate_xml_file_name() raised an exception unexpectedly!')
+
+class NewRegistrationValidationTestCase(object):
+    @tag('fast')
+    def test_validate_xml_file_is_unregistered(self):
+        """
+        validate_xml_file_is_unregistered() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_file_is_unregistered(
+                    self.mongodb_model,
+                    xml_file
+                )
+                print(f'Passed new registration validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
@@ -171,6 +192,11 @@ class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationT
     pass
 class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
     pass
+class OrganisationNewRegistrationValidationTestCase(OrganisationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
+        return super().setUp()
 
 class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
