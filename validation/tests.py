@@ -47,7 +47,7 @@ env = environ.Env()
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
 
-class FileTestCase(object):
+class FileTestCase:
     xml_file_name = ''
 
     def setUp(self) -> None:
@@ -102,7 +102,7 @@ class ProcessFileTestCase(FileTestCase):
 class DataCollectionFileTestCase(FileTestCase):
     xml_file_name = 'DataCollection_Test.xml'
 
-class InvalidSyntaxValidationTestCase(object):
+class InvalidSyntaxValidationTestCase:
     @tag('fast')
     def test_file_with_invalid_syntax(self):
         """
@@ -115,7 +115,7 @@ class InvalidSyntaxValidationTestCase(object):
                 print('Exception raised, as expected!')
             self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
 
-class SyntaxValidationTestCase(object):
+class SyntaxValidationTestCase:
     @tag('fast')
     def test_file_with_valid_syntax(self):
         """
@@ -128,7 +128,7 @@ class SyntaxValidationTestCase(object):
         except BaseException:
             self.fail('parse_xml_file() raised an exception unexpectedly!')
 
-class RootElementValidationTestCase(object):
+class RootElementValidationTestCase:
     root_element_name = ''
     @tag('fast')
     def test_file_with_valid_root_element_name(self):
@@ -142,7 +142,7 @@ class RootElementValidationTestCase(object):
         except BaseException:
             self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
 
-class XSDValidationTestCase(object):
+class XSDValidationTestCase:
     @tag('slow')
     def test_validate_against_own_schema(self):
         """
@@ -155,7 +155,7 @@ class XSDValidationTestCase(object):
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
-class FileNameValidationTestCase(object):
+class FileNameValidationTestCase:
     @tag('fast')
     def test_validate_xml_file_name(self):
         """
@@ -168,7 +168,7 @@ class FileNameValidationTestCase(object):
         except BaseException:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
-class NewRegistrationValidationTestCase(object):
+class NewRegistrationValidationTestCase:
     @tag('fast')
     def test_validate_xml_file_is_unregistered(self):
         """
