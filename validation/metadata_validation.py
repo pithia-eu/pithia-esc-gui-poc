@@ -140,15 +140,17 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
     Returns whether the localID and namespace of the updated metadata
     is the same as the current version of the metadata.
     """
-    converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-    # Remove the top-level tag - this will be just <Organisation>, for example
-    converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-    xml_file_pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
+    xml_file_parsed = parse_xml_file(xml_file)
+    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
+    namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
     resource_to_update = mongodb_model.find_one({
         '_id': ObjectId(resource_id)
     })
     resource_to_update_pithia_identifier = resource_to_update['identifier']['PITHIA_Identifier']
-    return xml_file_pithia_identifier['localID'] == resource_to_update_pithia_identifier['localID'] and xml_file_pithia_identifier['namespace'] == resource_to_update_pithia_identifier['namespace']
+    return all(
+        localid_tag_text == resource_to_update_pithia_identifier['localID'],
+        namespace_tag_text == resource_to_update_pithia_identifier['namespace']
+    )
 
 # Operational mode ID modification check
 def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id):
