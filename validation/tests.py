@@ -7,10 +7,21 @@ from genericpath import isfile
 from django.test import SimpleTestCase
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
+    INDIVIDUAL_XML_ROOT_TAG_NAME,
+    PROJECT_XML_ROOT_TAG_NAME,
+    PLATFORM_XML_ROOT_TAG_NAME,
+    OPERATION_XML_ROOT_TAG_NAME,
+    INSTRUMENT_XML_ROOT_TAG_NAME,
+    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
+    ACQUISITION_XML_ROOT_TAG_NAME,
+    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
+    COMPUTATION_XML_ROOT_TAG_NAME,
+    PROCESS_XML_ROOT_TAG_NAME,
     DATA_COLLECTION_XML_ROOT_TAG_NAME,
     validate_xml_against_own_schema,
     parse_xml_file,
     validate_and_get_validation_details_of_xml_file,
+    validate_xml_root_element_name_equals_expected_name,
 )
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -103,8 +114,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The operation metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as valid_operation_xml_file:
-                validate_xml_against_own_schema(valid_operation_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Operation_Test.xml')) as valid_process_xml_file:
+                validate_xml_against_own_schema(valid_process_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -113,8 +124,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The instrument metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as valid_instrument_xml_file:
-                validate_xml_against_own_schema(valid_instrument_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as valid_data_collection_xml_file:
+                validate_xml_against_own_schema(valid_data_collection_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -123,8 +134,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The acquisition_capabilities metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as valid_acquisition_capabilities_xml_file:
-                validate_xml_against_own_schema(valid_acquisition_capabilities_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as valid_operation_xml_file:
+                validate_xml_against_own_schema(valid_operation_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -133,8 +144,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The acquisition metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as valid_acquisition_xml_file:
-                validate_xml_against_own_schema(valid_acquisition_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as valid_instrument_xml_file:
+                validate_xml_against_own_schema(valid_instrument_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -143,8 +154,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The computation_capabilities metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as valid_computation_capabilities_xml_file:
-                validate_xml_against_own_schema(valid_computation_capabilities_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as valid_acquisition_capabilities_xml_file:
+                validate_xml_against_own_schema(valid_acquisition_capabilities_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -153,8 +164,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The computation metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as valid_computation_xml_file:
-                validate_xml_against_own_schema(valid_computation_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as valid_acquisition_xml_file:
+                validate_xml_against_own_schema(valid_acquisition_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -163,8 +174,8 @@ class XSDValidationTestCase(SimpleTestCase):
         The process metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as valid_process_xml_file:
-                validate_xml_against_own_schema(valid_process_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as valid_computation_capabilities_xml_file:
+                validate_xml_against_own_schema(valid_computation_capabilities_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
@@ -173,10 +184,23 @@ class XSDValidationTestCase(SimpleTestCase):
         The data_collection metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as valid_data_collection_xml_file:
-                validate_xml_against_own_schema(valid_data_collection_xml_file)
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as valid_computation_xml_file:
+                validate_xml_against_own_schema(valid_computation_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
+
+
+class RootElementValidationTestCase(SimpleTestCase):
+    def test_valid_organisation_xml_file(self):
+        """
+        The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
+        """
+        try:
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
+                validate_xml_root_element_name_equals_expected_name(xml_file, ORGANISATION_XML_ROOT_TAG_NAME)
+        except BaseException:
+            self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
+
 
 class ValidationPipelineTestCase(SimpleTestCase):
     def test_organisation_registration_validation(self):
