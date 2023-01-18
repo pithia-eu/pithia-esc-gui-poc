@@ -4,7 +4,7 @@ import mongomock
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 from genericpath import isfile
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, tag
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
     INDIVIDUAL_XML_ROOT_TAG_NAME,
@@ -22,6 +22,7 @@ from validation.metadata_validation import (
     parse_xml_file,
     validate_and_get_validation_details_of_xml_file,
     validate_xml_root_element_name_equals_expected_name,
+    validate_xml_file_name,
 )
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -30,7 +31,7 @@ from validation.url_validation import (
     is_resource_url_structure_valid,
     divide_resource_url_from_op_mode_id,
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
-    validate_ontology_term_url
+    validate_ontology_term_url,
 )
 from pithiaesc.settings import BASE_DIR
 
@@ -44,8 +45,64 @@ env = environ.Env()
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
 
-class SyntaxValidationTestCase(SimpleTestCase):
-    def test_syntax_validation_against_file_with_invalid_syntax(self):
+class FileTestCase(object):
+    xml_file_name = ''
+
+    def setUp(self) -> None:
+        self.xml_file_path = os.path.join(_XML_METADATA_FILE_DIR, self.xml_file_name)
+        return super().setUp()
+
+@tag('organisation')
+class OrganisationFileTestCase(FileTestCase):
+    xml_file_name = 'Organisation_Test.xml'
+
+@tag('individual')
+class IndividualFileTestCase(FileTestCase):
+    xml_file_name = 'Individual_Test.xml'
+
+@tag('project')
+class ProjectFileTestCase(FileTestCase):
+    xml_file_name = 'Project_Test.xml'
+
+@tag('platform')
+class PlatformFileTestCase(FileTestCase):
+    xml_file_name = 'Platform_Test.xml'
+
+@tag('operation')
+class OperationFileTestCase(FileTestCase):
+    xml_file_name = 'Operation_Test.xml'
+
+@tag('instrument')
+class InstrumentFileTestCase(FileTestCase):
+    xml_file_name = 'Instrument_Test.xml'
+
+@tag('acquisition_capabilities')
+class AcquisitionCapabilitiesFileTestCase(FileTestCase):
+    xml_file_name = 'AcquisitionCapabilities_Test.xml'
+
+@tag('acquisition')
+class AcquisitionFileTestCase(FileTestCase):
+    xml_file_name = 'Acquisition_Test.xml'
+
+@tag('computation_capabilities')
+class ComputationCapabilitiesFileTestCase(FileTestCase):
+    xml_file_name = 'ComputationCapabilities_Test.xml'
+
+@tag('computation')
+class ComputationFileTestCase(FileTestCase):
+    xml_file_name = 'Computation_Test.xml'
+
+@tag('process')
+class ProcessFileTestCase(FileTestCase):
+    xml_file_name = 'Composite_Test.xml'
+
+@tag('data_collection')
+class DataCollectionFileTestCase(FileTestCase):
+    xml_file_name = 'DataCollection_Test.xml'
+
+@tag('fast')
+class InvalidSyntaxValidationTestCase(object):
+    def test_file_with_invalid_syntax(self):
         """
         The file causes parse_xml_file() to raise an exception
         """
@@ -56,150 +113,67 @@ class SyntaxValidationTestCase(SimpleTestCase):
                 print('Exception raised, as expected!')
             self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
 
-
-    def test_syntax_validation_against_valid_file(self):
+@tag('fast')
+class SyntaxValidationTestCase(object):
+    def test_file_with_valid_syntax(self):
         """
         The file does not cause parse_xml_file() to raise an exception
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as valid_xml_file:
+            with open(self.xml_file_path) as valid_xml_file:
                 parse_xml_file(valid_xml_file)
                 print('No exception raised, as expected!')
         except BaseException:
             self.fail('parse_xml_file() raised an exception unexpectedly!')
 
-class XSDValidationTestCase(SimpleTestCase):
-    def test_xsd_validation_against_valid_organisation_xml_metadata_file(self):
-        """
-        The organisation metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as valid_organisation_xml_file:
-                validate_xml_against_own_schema(valid_organisation_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_individual_xml_metadata_file(self):
-        """
-        The individual metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as valid_individual_xml_file:
-                validate_xml_against_own_schema(valid_individual_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_individual_xml_metadata_file(self):
-        """
-        The project metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test.xml')) as valid_project_xml_file:
-                validate_xml_against_own_schema(valid_project_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_platform_xml_metadata_file(self):
-        """
-        The platform metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Platform_Test.xml')) as valid_platform_xml_file:
-                validate_xml_against_own_schema(valid_platform_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_operation_xml_metadata_file(self):
-        """
-        The operation metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Operation_Test.xml')) as valid_process_xml_file:
-                validate_xml_against_own_schema(valid_process_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_instrument_xml_metadata_file(self):
-        """
-        The instrument metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as valid_data_collection_xml_file:
-                validate_xml_against_own_schema(valid_data_collection_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_acquisition_capabilities_xml_metadata_file(self):
-        """
-        The acquisition_capabilities metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as valid_operation_xml_file:
-                validate_xml_against_own_schema(valid_operation_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_acquisition_xml_metadata_file(self):
-        """
-        The acquisition metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as valid_instrument_xml_file:
-                validate_xml_against_own_schema(valid_instrument_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_computation_capabilities_xml_metadata_file(self):
-        """
-        The computation_capabilities metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as valid_acquisition_capabilities_xml_file:
-                validate_xml_against_own_schema(valid_acquisition_capabilities_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_computation_xml_metadata_file(self):
-        """
-        The computation metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as valid_acquisition_xml_file:
-                validate_xml_against_own_schema(valid_acquisition_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_process_xml_metadata_file(self):
-        """
-        The process metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as valid_computation_capabilities_xml_file:
-                validate_xml_against_own_schema(valid_computation_capabilities_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-    def test_xsd_validation_against_valid_data_collection_xml_metadata_file(self):
-        """
-        The data_collection metadata file does not raise an exception.
-        """
-        try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as valid_computation_xml_file:
-                validate_xml_against_own_schema(valid_computation_xml_file)
-        except BaseException:
-            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
-
-
-class RootElementValidationTestCase(SimpleTestCase):
-    def test_valid_organisation_xml_file(self):
+@tag('fast')
+class RootElementValidationTestCase(object):
+    root_element_name = ''
+    def test_file_with_valid_root_element_name(self):
         """
         The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-                validate_xml_root_element_name_equals_expected_name(xml_file, ORGANISATION_XML_ROOT_TAG_NAME)
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_root_element_name_equals_expected_name(xml_file, self.root_element_name)
         except BaseException:
             self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
+
+@tag('slow')
+class XSDValidationTestCase(object):
+    def test_validate_against_own_schema(self):
+        """
+        validate_xml_against_own_schema() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_against_own_schema(xml_file)
+        except BaseException:
+            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
+
+@tag('fast')
+class FileNameValidationTestCase(object):
+    def test_validate_xml_file_name(self):
+        """
+        validate_xml_file_name() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_file_name(xml_file)
+        except BaseException:
+            self.fail('validate_xml_file_name() raised an exception unexpectedly!')
+
+class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
+class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+
+class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
 
 
 class ValidationPipelineTestCase(SimpleTestCase):
