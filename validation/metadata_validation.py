@@ -147,10 +147,10 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
         '_id': ObjectId(resource_id)
     })
     resource_to_update_pithia_identifier = resource_to_update['identifier']['PITHIA_Identifier']
-    return all(
+    return all([
         localid_tag_text == resource_to_update_pithia_identifier['localID'],
         namespace_tag_text == resource_to_update_pithia_identifier['namespace']
-    )
+    ])
 
 # Operational mode ID modification check
 def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id):
