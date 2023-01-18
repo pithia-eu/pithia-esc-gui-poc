@@ -2,6 +2,7 @@ import os
 import environ
 import mongomock
 from lxml import etree
+from lxml.etree import XMLSyntaxError
 from genericpath import isfile
 from django.test import SimpleTestCase
 from validation.metadata_validation import (
@@ -38,18 +39,51 @@ def _is_xml_file_xsd_valid(xml_file):
 # The SimpleTestCase class is used to disable the automatic SQL database
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
-class FileValidationTestCase(SimpleTestCase):
+
+class SyntaxValidationTestCase(SimpleTestCase):
+    def test_invalid_file_against_syntax_validation(self):
+        """
+        The organisation metadata file raises an exception
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
+            try:
+                parse_xml_file(xml_file)
+            except:
+                print('Exception raised, as expected!')
+            self.assertRaises(XMLSyntaxError, parse_xml_file, xml_file)
+
+
+    def test_valid_file_against_syntax_validation(self):
+        """
+        The organisation metadata file does not raise an exception
+        """
+        try:
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
+                parse_xml_file(xml_file)
+                print('No exception raised, as expected!')
+        except BaseException:
+            self.fail('parse_xml_file() raised an exception unexpectedly!')
+
+class ValidationPipelineTestCase(SimpleTestCase):
     def test_organisation_registration_validation(self):
         """
         The submitted Organisation metadata file does not return an error.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-organisations']
-            validation_results = validate_and_get_validation_details_of_xml_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertNotIn('error', validation_results)
+            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    ORGANISATION_XML_ROOT_TAG_NAME,
+                    MockCurrentOrganisation,
+                    check_file_is_unregistered=True
+                )
+                if validation_results['error'] is not None:
+                    print('error', validation_results['error'])
+                self.assertEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
 
     def test_invalid_syntax_organisation_registration_validation(self):
         """
@@ -57,11 +91,17 @@ class FileValidationTestCase(SimpleTestCase):
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-organisations']
-            validation_results = validate_and_get_validation_details_of_xml_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertIn('error', validation_results)
+            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    ORGANISATION_XML_ROOT_TAG_NAME,
+                    mongodb_model=MockCurrentOrganisation,
+                    check_file_is_unregistered=True
+                )
+                self.assertNotEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
 
     def test_data_collection_registration_validation(self):
         """
@@ -69,11 +109,20 @@ class FileValidationTestCase(SimpleTestCase):
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-data-collections']
-            validation_results = validate_and_get_validation_details_of_xml_file(xml_file, DATA_COLLECTION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertNotIn('error', validation_results)
+            MockCurrentDataCollection = client[env('DB_NAME')]['current-data-collections']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+                    MockCurrentDataCollection,
+                    check_file_is_unregistered=True
+                )
+                if validation_results['error'] is not None:
+                    print('error', validation_results['error'])
+                self.assertEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
+
 
 
 class MultipleFileValidationTestCase(SimpleTestCase):
