@@ -76,16 +76,6 @@ def get_schema_location_url_from_parsed_xml_file(xml_file_parsed):
         schema_url = urls_with_xsi_ns[1]
     return schema_url
 
-def is_xml_valid_against_schema_at_url(xml_file, schema_url):
-    """
-    Returns whether an XML file is valid against a schema
-    at a URL.
-    """
-    xml_file.seek(0)
-    schema_response = get(schema_url)
-    xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
-    return xml_schema.is_valid(xml_file.read())
-
 def validate_xml_against_schema_at_url(xml_file, schema_url):
     """
     Validates the XML file against a schema hosted at a URL.

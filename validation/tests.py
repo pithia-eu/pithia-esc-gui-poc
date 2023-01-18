@@ -8,8 +8,6 @@ from django.test import SimpleTestCase
 from validation.metadata_validation import (
     ORGANISATION_XML_ROOT_TAG_NAME,
     DATA_COLLECTION_XML_ROOT_TAG_NAME,
-    get_schema_location_url_from_parsed_xml_file,
-    is_xml_valid_against_schema_at_url,
     validate_xml_against_own_schema,
     parse_xml_file,
     validate_and_get_validation_details_of_xml_file,
@@ -29,11 +27,6 @@ _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
 env = environ.Env()
-
-def _is_xml_file_xsd_valid(xml_file):
-    xml_file_parsed = parse_xml_file(xml_file)
-    schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
-    return is_xml_valid_against_schema_at_url(xml_file, schema_url)
 
 # Create your tests here.
 # The SimpleTestCase class is used to disable the automatic SQL database
