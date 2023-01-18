@@ -2,10 +2,39 @@ import os
 import environ
 import mongomock
 from lxml import etree
+from lxml.etree import XMLSyntaxError
 from genericpath import isfile
-from django.test import SimpleTestCase
-from validation.metadata_validation import ORGANISATION_XML_ROOT_TAG_NAME, DATA_COLLECTION_XML_ROOT_TAG_NAME, get_schema_location_url_from_parsed_xml_file, is_xml_valid_against_schema_at_url, parse_xml_file, validate_xml_metadata_file
-from validation.url_validation import get_invalid_ontology_urls_from_parsed_xml, get_invalid_resource_urls_from_parsed_xml, divide_resource_url_into_main_components, is_resource_url_structure_valid, divide_resource_url_from_op_mode_id, get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml, validate_ontology_term_url
+from pathlib import Path
+from django.test import SimpleTestCase, tag
+from validation.metadata_validation import (
+    ORGANISATION_XML_ROOT_TAG_NAME,
+    INDIVIDUAL_XML_ROOT_TAG_NAME,
+    PROJECT_XML_ROOT_TAG_NAME,
+    PLATFORM_XML_ROOT_TAG_NAME,
+    OPERATION_XML_ROOT_TAG_NAME,
+    INSTRUMENT_XML_ROOT_TAG_NAME,
+    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
+    ACQUISITION_XML_ROOT_TAG_NAME,
+    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
+    COMPUTATION_XML_ROOT_TAG_NAME,
+    PROCESS_XML_ROOT_TAG_NAME,
+    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+    validate_xml_against_own_schema,
+    parse_xml_file,
+    validate_and_get_validation_details_of_xml_file,
+    validate_xml_root_element_name_equals_expected_name,
+    validate_xml_file_name,
+    validate_xml_file_is_unregistered,
+)
+from validation.url_validation import (
+    get_invalid_ontology_urls_from_parsed_xml,
+    get_invalid_resource_urls_from_parsed_xml,
+    divide_resource_url_into_main_components,
+    is_resource_url_structure_valid,
+    divide_resource_url_from_op_mode_id,
+    get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
+    validate_ontology_term_url,
+)
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -13,27 +42,199 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 
 env = environ.Env()
 
-def _is_xml_file_xsd_valid(xml_file):
-    xml_file_parsed = parse_xml_file(xml_file)
-    schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
-    return is_xml_valid_against_schema_at_url(xml_file, schema_url)
-
 # Create your tests here.
 # The SimpleTestCase class is used to disable the automatic SQL database
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
-class FileValidationTestCase(SimpleTestCase):
+
+class FileTestCase:
+    xml_file_name = ''
+
+    def setUp(self) -> None:
+        self.xml_file_path = os.path.join(_XML_METADATA_FILE_DIR, self.xml_file_name)
+        return super().setUp()
+
+@tag('organisation')
+class OrganisationFileTestCase(FileTestCase):
+    xml_file_name = 'Organisation_Test.xml'
+
+@tag('individual')
+class IndividualFileTestCase(FileTestCase):
+    xml_file_name = 'Individual_Test.xml'
+
+@tag('project')
+class ProjectFileTestCase(FileTestCase):
+    xml_file_name = 'Project_Test.xml'
+
+@tag('platform')
+class PlatformFileTestCase(FileTestCase):
+    xml_file_name = 'Platform_Test.xml'
+
+@tag('operation')
+class OperationFileTestCase(FileTestCase):
+    xml_file_name = 'Operation_Test.xml'
+
+@tag('instrument')
+class InstrumentFileTestCase(FileTestCase):
+    xml_file_name = 'Instrument_Test.xml'
+
+@tag('acquisition_capabilities')
+class AcquisitionCapabilitiesFileTestCase(FileTestCase):
+    xml_file_name = 'AcquisitionCapabilities_Test.xml'
+
+@tag('acquisition')
+class AcquisitionFileTestCase(FileTestCase):
+    xml_file_name = 'Acquisition_Test.xml'
+
+@tag('computation_capabilities')
+class ComputationCapabilitiesFileTestCase(FileTestCase):
+    xml_file_name = 'ComputationCapabilities_Test.xml'
+
+@tag('computation')
+class ComputationFileTestCase(FileTestCase):
+    xml_file_name = 'Computation_Test.xml'
+
+@tag('process')
+class ProcessFileTestCase(FileTestCase):
+    xml_file_name = 'Composite_Test.xml'
+
+@tag('data_collection')
+class DataCollectionFileTestCase(FileTestCase):
+    xml_file_name = 'DataCollection_Test.xml'
+
+class InvalidSyntaxValidationTestCase:
+    @tag('fast')
+    def test_file_with_invalid_syntax(self):
+        """
+        The file causes parse_xml_file() to raise an exception
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as invalid_xml_file:
+            try:
+                parse_xml_file(invalid_xml_file)
+            except:
+                print('Exception raised, as expected!')
+            self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
+
+class SyntaxValidationTestCase:
+    @tag('fast')
+    def test_file_with_valid_syntax(self):
+        """
+        The file does not cause parse_xml_file() to raise an exception
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                parse_xml_file(xml_file)
+                print(f'Passed syntax validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('parse_xml_file() raised an exception unexpectedly!')
+
+class RootElementValidationTestCase:
+    root_element_name = ''
+    @tag('fast')
+    def test_file_with_valid_root_element_name(self):
+        """
+        The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_root_element_name_equals_expected_name(xml_file, self.root_element_name)
+                print(f'Passed root element validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
+
+class XSDValidationTestCase:
+    @tag('slow')
+    def test_validate_against_own_schema(self):
+        """
+        validate_xml_against_own_schema() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_against_own_schema(xml_file)
+                print(f'Passed XSD validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
+
+class FileNameValidationTestCase:
+    @tag('fast')
+    def test_validate_xml_file_name(self):
+        """
+        validate_xml_file_name() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_file_name(xml_file)
+                print(f'Passed file name validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('validate_xml_file_name() raised an exception unexpectedly!')
+
+class NewRegistrationValidationTestCase:
+    @tag('fast')
+    def test_validate_xml_file_is_unregistered(self):
+        """
+        validate_xml_file_is_unregistered() does not raise an exception when passed a valid xml file.
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                validate_xml_file_is_unregistered(
+                    self.mongodb_model,
+                    xml_file
+                )
+                print(f'Passed new registration validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('validate_xml_file_name() raised an exception unexpectedly!')
+
+class UpdateValidationTestCase:
+    @tag('fast')
+    def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
+        """
+        is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                
+                print(f'Passed update validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
+
+class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
+class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class OrganisationNewRegistrationValidationTestCase(OrganisationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
+        return super().setUp()
+
+class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+
+
+class ValidationPipelineTestCase(SimpleTestCase):
     def test_organisation_registration_validation(self):
         """
         The submitted Organisation metadata file does not return an error.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-organisations']
-            validation_results = validate_xml_metadata_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertNotIn('error', validation_results)
+            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    ORGANISATION_XML_ROOT_TAG_NAME,
+                    MockCurrentOrganisation,
+                    check_file_is_unregistered=True
+                )
+                if validation_results['error'] is not None:
+                    print('error', validation_results['error'])
+                self.assertEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
 
     def test_invalid_syntax_organisation_registration_validation(self):
         """
@@ -41,11 +242,17 @@ class FileValidationTestCase(SimpleTestCase):
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-organisations']
-            validation_results = validate_xml_metadata_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertIn('error', validation_results)
+            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    ORGANISATION_XML_ROOT_TAG_NAME,
+                    mongodb_model=MockCurrentOrganisation,
+                    check_file_is_unregistered=True
+                )
+                self.assertNotEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
 
     def test_data_collection_registration_validation(self):
         """
@@ -53,11 +260,20 @@ class FileValidationTestCase(SimpleTestCase):
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             client = mongomock.MongoClient()
-            db = client[env('DB_NAME')]['current-data-collections']
-            validation_results = validate_xml_metadata_file(xml_file, DATA_COLLECTION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-            if 'error' in validation_results:
-                print('error', validation_results['error'])
-            self.assertNotIn('error', validation_results)
+            MockCurrentDataCollection = client[env('DB_NAME')]['current-data-collections']
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    DATA_COLLECTION_XML_ROOT_TAG_NAME,
+                    MockCurrentDataCollection,
+                    check_file_is_unregistered=True
+                )
+                if validation_results['error'] is not None:
+                    print('error', validation_results['error'])
+                self.assertEqual(validation_results['error'], None)
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
+
 
 
 class MultipleFileValidationTestCase(SimpleTestCase):
@@ -72,7 +288,7 @@ class MultipleFileValidationTestCase(SimpleTestCase):
             with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
                 client = mongomock.MongoClient()
                 db = client[env('DB_NAME')]['current-organisations']
-                validation_results = validate_xml_metadata_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
+                validation_results = validate_and_get_validation_details_of_xml_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
                 if fname == 'Organisation_Test.xml':
                     if 'error' in validation_results:
                         print('error', validation_results['error'])
@@ -81,20 +297,6 @@ class MultipleFileValidationTestCase(SimpleTestCase):
                     if 'error' in validation_results:
                         print('error', validation_results['error'])
                     self.assertIn('error', validation_results)
-
-
-class XsdValidationTestCase(SimpleTestCase):
-    def test_xml_metadata_files_validate_against_schemas(self):
-        """
-        All XML metadata files used for this test are valid
-        when compared against their XSD files.
-        """
-        xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
-        for fname in xml_file_names:
-            if fname == 'Organisation_Test_InvalidSyntax.xml':
-                continue
-            with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
-                self.assertEqual(f'{fname} is valid: {_is_xml_file_xsd_valid(xml_file)}', f'{fname} is valid: {True}')
 
 
 class UrlsFromFilesValidationTestCase(SimpleTestCase):

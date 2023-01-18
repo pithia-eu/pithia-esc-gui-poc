@@ -10,6 +10,9 @@
 {% block file_upload_section_heading_text %}
 Upload an XML Metadata File
 {% endblock file_upload_section_heading_text %}
+{% block file_list %}
+{% include 'register/validation_template.html' %}
+{% endblock file_list %}
 {% block register_api_specification %}
 <div class="col-lg-12">
     <h2 class="fs-3">Interaction methods</h2>
