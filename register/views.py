@@ -83,7 +83,7 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
-                        messages.success(request, f'Successfully registered {xml_file.name}.')
+                    messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
                     print(err)
                     print(traceback.format_exc())
