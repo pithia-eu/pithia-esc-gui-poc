@@ -143,7 +143,7 @@ class XSDValidationTestCase(SimpleTestCase):
         The computation_capabilities metadata file does not raise an exception.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Process_Test.xml')) as valid_computation_capabilities_xml_file:
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as valid_computation_capabilities_xml_file:
                 validate_xml_against_own_schema(valid_computation_capabilities_xml_file)
         except BaseException:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
