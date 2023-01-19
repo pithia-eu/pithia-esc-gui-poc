@@ -187,7 +187,7 @@ class NewRegistrationValidationTestCase:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
     @tag('fast')
-    def test_invalid_validate_xml_file_is_unregistered(self):
+    def test_validate_xml_file_is_unregistered_fails(self):
         """
         validate_xml_file_is_unregistered() does raises an exception when passed an xml file that has already been registered.
         """
