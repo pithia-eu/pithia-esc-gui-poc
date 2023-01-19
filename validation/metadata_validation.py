@@ -223,17 +223,10 @@ def validate_and_get_validation_details_of_xml_file(
         if (check_xml_file_localid_matches_existing_resource_localid == True and
             existing_resource_id != '' and
             mongodb_model == CurrentInstrument):
-            operational_mode_ids_of_updated_xml = list(
-                map(_map_etree_element_to_text, xml_file_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}id'))
-            )
-            instrument_to_update = CurrentInstrument.find_one({
-                                        '_id': ObjectId(existing_resource_id)
-                                    }, {
-                                        'operationalMode': True
-                                    })
-            operational_mode_ids_of_current_xml = list(map(_map_operational_mode_object_to_id_string, instrument_to_update['operationalMode']))
-            operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
-            if len(operational_mode_ids_intersection) < len(operational_mode_ids_of_current_xml):
+            if not is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+                xml_file,
+                existing_resource_id,
+            ):
                 acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(existing_resource_id)
                 validation_details['warnings'].append(create_validation_details_error(
                     message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
