@@ -226,6 +226,10 @@ header .dropdown-item:active a {
     width: 1.2rem;
 }
 
+.file-validation-status-list:empty::before {
+    content: 'None';
+}
+
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
     opacity: 1;

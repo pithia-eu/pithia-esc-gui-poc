@@ -1,10 +1,12 @@
 <div class="row">
     <div class="col-lg-12">
-        <h2 class="fs-3">File Validation</h2>
+        <h2 class="fs-3">
+            {% block file_list_heading %}
+            {{ file_list_title|default:'Uploaded File' }}
+            {% endblock file_list_heading %}
+        </h2>
     </div>
     <div class="col-lg-8">
-        <div class="file-list-empty-msg">File validation will begin upon selecting a file for upload.</div>
-        <ul class="file-validation-status-list list-group">
-        </ul>
+        <ul class="file-validation-status-list list-group"></ul>
     </div>
 </div>

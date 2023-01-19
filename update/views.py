@@ -6,10 +6,23 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
-from register.xml_conversion_checks_and_fixes import format_acquisition_capability_set_dictionary, format_acquisition_dictionary, format_computation_capability_set_dictionary, format_computation_dictionary, format_data_collection_dictionary, format_instrument_dictionary, format_process_dictionary
+from register.register import store_xml_file_as_string_and_map_to_resource_id
+from register.xml_conversion_checks_and_fixes import (
+    format_acquisition_capability_set_dictionary,
+    format_acquisition_dictionary,
+    format_computation_capability_set_dictionary,
+    format_computation_dictionary,
+    format_data_collection_dictionary,
+    format_instrument_dictionary,
+    format_process_dictionary
+)
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.register_api_specification import register_api_specification
-from resource_management.forms import UploadUpdatedDataCollectionFileForm, UploadUpdatedFileForm, UpdateDataCollectionInteractionMethodsForm
+from resource_management.forms import (
+    UploadUpdatedDataCollectionFileForm,
+    UploadUpdatedFileForm,
+    UpdateDataCollectionInteractionMethodsForm
+)
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -43,9 +56,22 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
-from resource_management.views import _INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-from update.update import update_current_version_of_resource, update_data_collection_api_interaction_method_specification_url, update_data_collection_api_interaction_method_description
-from update.version_control import assign_original_xml_file_entry_to_revision_id, create_revision_of_current_resource_version, create_revision_of_data_collection_api_interaction_method
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+)
+from update.update import (
+    update_current_version_of_resource,
+    update_data_collection_api_interaction_method_specification_url,
+    update_data_collection_api_interaction_method_description
+)
+from update.version_control import (
+    assign_original_xml_file_entry_to_revision_id,
+    create_revision_of_current_resource_version,
+    create_revision_of_data_collection_api_interaction_method
+)
+from mongodb import client
 
 
 # Create your views here.
@@ -93,10 +119,32 @@ class ResourceUpdateFormView(FormView):
             try:
                 converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-
-                resource_revision = create_revision_of_current_resource_version(converted_xml_file['identifier']['PITHIA_Identifier'], self.resource_mongodb_model, self.resource_revision_mongodb_model)
-                assign_original_xml_file_entry_to_revision_id(self.resource_id, resource_revision['_id'])
-                update_current_version_of_resource(self.resource_id, xml_file, self.resource_mongodb_model, self.resource_conversion_validate_and_correct_function)
+                with client.start_session() as s:
+                    def cb(s):
+                        resource_revision = create_revision_of_current_resource_version(
+                            converted_xml_file['identifier']['PITHIA_Identifier'],
+                            self.resource_mongodb_model,
+                            self.resource_revision_mongodb_model,
+                            session=s
+                        )
+                        assign_original_xml_file_entry_to_revision_id(
+                            self.resource_id,
+                            resource_revision['_id'],
+                            session=s
+                        )
+                        update_current_version_of_resource(
+                            self.resource_id,
+                            xml_file,
+                            self.resource_mongodb_model,
+                            self.resource_conversion_validate_and_correct_function,
+                            session=s
+                        )
+                        store_xml_file_as_string_and_map_to_resource_id(
+                            xml_file,
+                            self.resource_id,
+                            session=s
+                        )
+                    s.with_transaction(cb)
                 messages.success(request, f'Successfully updated {xml_file.name}.')
             except ExpatError as err:
                 print(err)
@@ -339,26 +387,50 @@ def data_collection_interaction_methods(request, data_collection_id):
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
             data_collection_localid = data_collection['identifier']['PITHIA_Identifier']['localID']
-            create_revision_of_data_collection_api_interaction_method(data_collection_localid)
-            if 'api_selected' not in request.POST:
-                CurrentDataCollectionInteractionMethod.delete_one({
-                    'data_collection_localid': data_collection_localid,
-                    'interaction_method': 'api',
-                })
-                return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
-            api_specification_url = request.POST['api_specification_url']
-            api_description = ''
-            if 'api_description' in request.POST:
-                api_description = request.POST['api_description']
-            existing_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
-                'data_collection_localid': data_collection_localid
-            })
-            if existing_api_interaction_method is None:
-                register_api_specification(api_specification_url, data_collection_localid, api_description)
-            else:
-                update_data_collection_api_interaction_method_specification_url(data_collection_localid, api_specification_url)
-                update_data_collection_api_interaction_method_description(data_collection_localid, api_description)
-            messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
+            try:
+                with client.start_session() as s:
+                    def cb(s):
+                        create_revision_of_data_collection_api_interaction_method(
+                            data_collection_localid,
+                            session=s
+                        )
+                        if 'api_selected' not in request.POST:
+                            CurrentDataCollectionInteractionMethod.delete_one({
+                                'data_collection_localid': data_collection_localid,
+                                'interaction_method': 'api',
+                            }, session=s)
+                            return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+                        api_specification_url = request.POST['api_specification_url']
+                        api_description = ''
+                        if 'api_description' in request.POST:
+                            api_description = request.POST['api_description']
+                        existing_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
+                            'data_collection_localid': data_collection_localid
+                        })
+                        if existing_api_interaction_method is None:
+                            register_api_specification(
+                                api_specification_url,
+                                data_collection_localid,
+                                api_description,
+                                session=s
+                            )
+                        else:
+                            update_data_collection_api_interaction_method_specification_url(
+                                data_collection_localid,
+                                api_specification_url,
+                                session=s
+                            )
+                            update_data_collection_api_interaction_method_description(
+                                data_collection_localid,
+                                api_description,
+                                session=s
+                            )
+                    s.with_transaction(cb)
+                messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
+            except BaseException as err:
+                print(err)
+                print(traceback.format_exc())
+                messages.error(request, 'An unexpected error occurred.')
             return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
     form = UpdateDataCollectionInteractionMethodsForm()
     interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
