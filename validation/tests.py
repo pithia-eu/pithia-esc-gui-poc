@@ -26,6 +26,7 @@ from validation.metadata_validation import (
     validate_xml_root_element_name_equals_expected_name,
     validate_xml_file_name,
     validate_xml_file_is_unregistered,
+    is_updated_xml_file_localid_matching_with_current_resource_localid,
 )
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -37,6 +38,7 @@ from validation.url_validation import (
     validate_ontology_term_url,
 )
 from validation.errors import FileRegisteredBefore
+from bson.errors import InvalidId
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
@@ -189,7 +191,7 @@ class NewRegistrationValidationTestCase:
     @tag('fast')
     def test_validate_xml_file_is_unregistered_fails(self):
         """
-        validate_xml_file_is_unregistered() does raises an exception when passed an xml file that has already been registered.
+        validate_xml_file_is_unregistered() raises an exception when passed an xml file that has already been registered.
         """
         with open(self.xml_file_path) as xml_file:
             register_metadata_xml_file(
@@ -205,18 +207,42 @@ class NewRegistrationValidationTestCase:
             )
             print(f'Passed registration validation failure for {Path(xml_file.name).name}.')
 
-# class UpdateValidationTestCase:
-#     @tag('fast')
-#     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
-#         """
-#         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
-#         """
-#         try:
-#             with open(self.xml_file_path) as xml_file:
-                
-#                 print(f'Passed update validation for {Path(xml_file.name).name}.')
-#         except BaseException:
-#             self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
+class UpdateValidationTestCase:
+    @tag('fast')
+    def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
+        """
+        is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
+        """
+        try:
+            with open(self.xml_file_path) as xml_file:
+                registered_resource = register_metadata_xml_file(
+                    xml_file,
+                    self.mongodb_model,
+                    None,
+                )
+                is_updated_xml_file_localid_matching_with_current_resource_localid(
+                    xml_file,
+                    registered_resource['_id'],
+                    self.mongodb_model,
+                )
+                print(f'Passed update validation for {Path(xml_file.name).name}.')
+        except BaseException:
+            self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
+
+    @tag('fast')
+    def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
+        """
+        is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
+        """
+        with open(self.xml_file_path) as xml_file:
+            self.assertRaises(
+                InvalidId,
+                is_updated_xml_file_localid_matching_with_current_resource_localid,
+                xml_file,
+                '',
+                self.mongodb_model,
+            )
+            print(f'Passed update validation failure for {Path(xml_file.name).name}.')
 
 class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
@@ -227,6 +253,11 @@ class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationT
 class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
     pass
 class OrganisationNewRegistrationValidationTestCase(OrganisationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
+        return super().setUp()
+class OrganisationUpdateValidationTestCase(OrganisationFileTestCase, UpdateValidationTestCase, SimpleTestCase):
     def setUp(self) -> None:
         client = mongomock.MongoClient()
         self.mongodb_model = client[env('DB_NAME')]['current-organisations']
