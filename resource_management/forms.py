@@ -2,13 +2,13 @@ from django import forms
 
 
 class UploadUpdatedFileForm(forms.Form):
-    files = forms.FileField(label='File Upload', widget=forms.ClearableFileInput(attrs={
+    files = forms.FileField(label='Select an XML file', widget=forms.ClearableFileInput(attrs={
                 'accept': 'application/xml',
                 'class': 'form-control'
             }))
 
 class UploadUpdatedDataCollectionFileForm(forms.Form):
-    files = forms.FileField(label='File Upload', widget=forms.ClearableFileInput(attrs={
+    files = forms.FileField(label='Select an XML file', widget=forms.ClearableFileInput(attrs={
                 'accept': 'application/xml',
                 'class': 'form-control',
             }))
