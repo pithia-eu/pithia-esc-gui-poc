@@ -13,3 +13,16 @@
     </small>
 </div>
 {% endblock sidemenu %}
+{% block doi_registration %}
+<h2 class="fs-3">DOI Registration</h2>
+<div class="form-check fw-bold mt-3">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-check fw-bold">
+                {{ form.register_doi }}
+                <label for="{{ form.register_doi.auto_id }}" class="form-check-label mb-0">{{ form.register_doi.label }}</label>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock doi_registration %}

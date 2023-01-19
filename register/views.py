@@ -10,7 +10,11 @@ from register.register import (
 )
 from register.register_api_specification import register_api_specification
 
-from .forms import UploadDataCollectionFileForm, UploadFileForm
+from .forms import (
+    UploadDataCollectionFileForm,
+    UploadFileForm,
+    UploadCatalogueDataSubsetFileForm,
+)
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
 from resource_management.views import (
@@ -287,6 +291,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
     template_name='register/file_upload_catalogue.html'
+    form_class = UploadCatalogueDataSubsetFileForm
 
     a_or_an = 'a'
     resource_type = 'catalogue data subset'
