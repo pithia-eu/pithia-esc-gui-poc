@@ -1,5 +1,5 @@
 from bson import ObjectId
-from common.mongodb_models import OriginalMetadataXml, CurrentDataCollectionInteractionMethod
+from common.mongodb_models import CurrentDataCollectionInteractionMethod
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 
 
