@@ -1,6 +1,5 @@
 import traceback
 from pyexpat import ExpatError
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import FormView
@@ -9,7 +8,10 @@ from register.register import (
     store_xml_file_as_string_and_map_to_resource_id,
 )
 from register.register_api_specification import register_api_specification
-
+from register.doi_registration import (
+    generate_doi,
+    add_doi_to_xml_file,
+)
 from .forms import (
     UploadDataCollectionFileForm,
     UploadFileForm,
@@ -25,7 +27,7 @@ from resource_management.views import (
 )
 from validation.errors import FileRegisteredBefore
 from mongodb import client
-
+from update.update import update_current_version_of_resource
 
 # Create your views here.
 class ResourceRegisterFormView(FormView):
@@ -77,6 +79,25 @@ class ResourceRegisterFormView(FormView):
                                 self.resource_conversion_validate_and_correct_function,
                                 session=s
                             )
+                                
+                            # POST RESOURCE REGISTRATION
+                            # Get the DOI
+                            # Update the actual "xml_file" variable by adding the DOI to the XML
+                            # Perform an update on the resource
+                            # Continue with registration as normal
+                            # if 'register_doi' in request.POST:
+                            #     resource_id = registration_results['_id']
+                            #     doi = generate_doi(f'localhost/<resource-type>/{resource_id}')
+                            #     xml_file_with_doi = add_doi_to_xml_file(xml_file, doi)
+                            #     update_current_version_of_resource(
+                            #         resource_id,
+                            #         xml_file_with_doi,
+                            #         self.resource_mongodb_model,
+                            #         self.resource_conversion_validate_and_correct_function,
+                            #         session=s
+                            #     )
+                            #     xml_file = xml_file_with_doi
+
                             store_xml_file_as_string_and_map_to_resource_id(
                                 xml_file,
                                 registration_results['_id'],
@@ -94,6 +115,7 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
+                    
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
                     print(err)
