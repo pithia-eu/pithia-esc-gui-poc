@@ -244,6 +244,29 @@ class UpdateValidationTestCase:
             )
             print(f'Passed update validation failure for {Path(xml_file.name).name}.')
 
+class ValidationChecklistTestCase:
+    @tag('slow')
+    def test_validate_and_get_validation_details_of_xml_file(self):
+        """
+        The validation results does not contain an error.
+        """
+        with open(self.xml_file_path) as xml_file:
+            try:
+                validation_results = validate_and_get_validation_details_of_xml_file(
+                    xml_file,
+                    self.root_element_name,
+                    self.mongodb_model,
+                    check_file_is_unregistered=True
+                )
+                if validation_results['error'] is not None:
+                    print('error', validation_results['error'])
+                    print(f'Failed validation checklist test for {Path(xml_file.name).name}.')
+                    self.fail('validate_and_get_validation_details_of_xml_file() returned an error.')
+                self.assertEqual(validation_results['error'], None)
+                print(f'Passed validation checklist test for {Path(xml_file.name).name}.')
+            except:
+                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
+
 class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
 class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
@@ -262,93 +285,16 @@ class OrganisationUpdateValidationTestCase(OrganisationFileTestCase, UpdateValid
         client = mongomock.MongoClient()
         self.mongodb_model = client[env('DB_NAME')]['current-organisations']
         return super().setUp()
+class OrganisationValidationChecklistTestCase(OrganisationFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        self.root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
+        return super().setUp()
+
 
 class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
-
-
-class ValidationPipelineTestCase(SimpleTestCase):
-    def test_organisation_registration_validation(self):
-        """
-        The submitted Organisation metadata file does not return an error.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            client = mongomock.MongoClient()
-            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
-            try:
-                validation_results = validate_and_get_validation_details_of_xml_file(
-                    xml_file,
-                    ORGANISATION_XML_ROOT_TAG_NAME,
-                    MockCurrentOrganisation,
-                    check_file_is_unregistered=True
-                )
-                if validation_results['error'] is not None:
-                    print('error', validation_results['error'])
-                self.assertEqual(validation_results['error'], None)
-            except:
-                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
-
-    def test_invalid_syntax_organisation_registration_validation(self):
-        """
-        The submitted Organisation metadata file does return an error.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as xml_file:
-            client = mongomock.MongoClient()
-            MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
-            try:
-                validation_results = validate_and_get_validation_details_of_xml_file(
-                    xml_file,
-                    ORGANISATION_XML_ROOT_TAG_NAME,
-                    mongodb_model=MockCurrentOrganisation,
-                    check_file_is_unregistered=True
-                )
-                self.assertNotEqual(validation_results['error'], None)
-            except:
-                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
-
-    def test_data_collection_registration_validation(self):
-        """
-        The submitted Data Collection metadata file does not return an error.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            client = mongomock.MongoClient()
-            MockCurrentDataCollection = client[env('DB_NAME')]['current-data-collections']
-            try:
-                validation_results = validate_and_get_validation_details_of_xml_file(
-                    xml_file,
-                    DATA_COLLECTION_XML_ROOT_TAG_NAME,
-                    MockCurrentDataCollection,
-                    check_file_is_unregistered=True
-                )
-                if validation_results['error'] is not None:
-                    print('error', validation_results['error'])
-                self.assertEqual(validation_results['error'], None)
-            except:
-                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
-
-
-
-class MultipleFileValidationTestCase(SimpleTestCase):
-    def test_multiple_file_validation(self):
-        """
-        Only the Organisation_Test.xml file does not return an error.
-        Simulates multiple files being submitted to the Organisation
-        validation view.
-        """
-        xml_file_names = [f for f in os.listdir(_XML_METADATA_FILE_DIR) if isfile(os.path.join(_XML_METADATA_FILE_DIR, f))]
-        for fname in xml_file_names:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, fname)) as xml_file:
-                client = mongomock.MongoClient()
-                db = client[env('DB_NAME')]['current-organisations']
-                validation_results = validate_and_get_validation_details_of_xml_file(xml_file, ORGANISATION_XML_ROOT_TAG_NAME, mongodb_model=db, check_file_is_unregistered=True)
-                if fname == 'Organisation_Test.xml':
-                    if 'error' in validation_results:
-                        print('error', validation_results['error'])
-                    self.assertNotIn('error', validation_results)
-                else:
-                    if 'error' in validation_results:
-                        print('error', validation_results['error'])
-                    self.assertIn('error', validation_results)
 
 
 class UrlsFromFilesValidationTestCase(SimpleTestCase):
