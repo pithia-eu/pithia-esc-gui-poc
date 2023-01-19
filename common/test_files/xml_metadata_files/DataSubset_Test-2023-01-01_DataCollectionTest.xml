@@ -41,29 +41,31 @@
             </gml:end>
         </gml:TimePeriod>
     </resultTime>
-    <!--
-    <doi>
+
+    <!-- <doi>
         <doi:kernelMetadata>
-    <doi:registrationAgencyDoiName>10.1000/ra-5</doi:registrationAgencyDoiName>
-    <doi:issueDate>2015-01-07</doi:issueDate>
-           <doi:issueNumber>7</doi:issueNumber>
-    <doi:referentCreation>
-               <doi:name primaryLanguage="en">
-                  <value>Test</value>
-    <type>Title</type>
-               </doi:name>
-               <doi:identifier>
-    <doi:nonUriValue>10.5240/B94E-F500-7164-57DB-82F5-6</doi:nonUriValue>
-                  <doi:uri
-    returnType="text/html">https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
-    <doi:uri
-    returnType="application/xml">https://doi.org/10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
-    <doi:type>EidrContentID</doi:type>
-               </doi:identifier>
+            <doi:registrationAgencyDoiName>10.1000/ra-5</doi:registrationAgencyDoiName>
+            <doi:issueDate>2015-01-07</doi:issueDate>
+            <doi:issueNumber>7</doi:issueNumber>
+            <doi:referentCreation>
+                <doi:name primaryLanguage="en">
+                    <value>Test</value>
+                    <type>Title</type>
+                </doi:name>
+                <doi:identifier>
+                    <doi:nonUriValue>10.5240/B94E-F500-7164-57DB-82F5-6</doi:nonUriValue>
+                    <doi:uri
+                        returnType="text/html">
+                        https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
+                    <doi:uri
+                        returnType="application/xml">
+                        https://doi.org/10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
+                    <doi:type>EidrContentID</doi:type>
+                </doi:identifier>
             </doi:referentCreation>
-    </doi:kernelMetadata>
-    </doi>
--->
+        </doi:kernelMetadata>
+    </doi> -->
+
     <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V" />
     <qualityAssessment>
         <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
