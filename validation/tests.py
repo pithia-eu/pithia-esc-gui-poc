@@ -69,7 +69,7 @@ class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidatio
     pass
 
 
-class InstrumentOperationalModesValidationTestCase(ProjectFileTestCase, OperationalModesValidationTestCase, SimpleTestCase):
+class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, OperationalModesValidationTestCase, SimpleTestCase):
     def setUp(self) -> None:
         client = mongomock.MongoClient()
         self.mongodb_model = client[env('DB_NAME')]['current-instruments']
