@@ -156,7 +156,7 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
     ])
 
 # Operational mode ID modification check
-def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id):
+def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id, mongodb_model=CurrentInstrument):
     xml_file_parsed = parse_xml_file(xml_file)
     operational_mode_ids_of_updated_xml = list(
         map(
@@ -164,7 +164,7 @@ def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrum
             xml_file_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')
         )
     )
-    instrument_to_update = CurrentInstrument.find_one(
+    instrument_to_update = mongodb_model.find_one(
         {
             '_id': ObjectId(current_instrument_id)
         },
