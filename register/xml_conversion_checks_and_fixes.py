@@ -1,39 +1,39 @@
-def format_platform_dictionary(self, dictionary):
+def format_platform_dictionary(dictionary):
     # Check if childPlatform property is an
     # array-type property
     if 'childPlatform' in dictionary and not isinstance(dictionary['childPlatform'], list):
         dictionary['childPlatform'] = [dictionary['childPlatform']]
     return dictionary
 
-def format_instrument_dictionary(self, dictionary):
+def format_instrument_dictionary(dictionary):
     # Check if 'operationalMode' property is an
     # array-type property
     if 'operationalMode' in dictionary and not isinstance(dictionary['operationalMode'], list):
         dictionary['operationalMode'] = [dictionary['operationalMode']]
     return dictionary
 
-def format_acquisition_capability_set_dictionary(self, dictionary):
+def format_acquisition_capability_set_dictionary(dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
         dictionary['capabilities']['processCapability'] = [dictionary['capabilities']['processCapability']]
     return dictionary
 
-def format_acquisition_dictionary(self, dictionary):
+def format_acquisition_dictionary(dictionary):
     # Check if the 'capabilityLink' property is an
     # array-type property
     if 'capabilityLinks' in dictionary and 'capabilityLink' in dictionary['capabilityLinks'] and not isinstance(dictionary['capabilityLinks']['capabilityLink'], list):
         dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
-def format_computation_capability_set_dictionary(self, dictionary):
+def format_computation_capability_set_dictionary(dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
         dictionary['capabilities']['processCapability'] = [dictionary['capabilities']['processCapability']]
     return dictionary
 
-def format_computation_dictionary(self, dictionary):
+def format_computation_dictionary(dictionary):
     # Check if the 'capability' property is an
     # array-type property
     if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
@@ -44,7 +44,7 @@ def format_computation_dictionary(self, dictionary):
         dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
-def format_process_dictionary(self, dictionary):
+def format_process_dictionary(dictionary):
     # Check if the 'acquisitionComponent' property exists and
     # if it is an array-type property
     if 'acquisitionComponent' in dictionary and not isinstance(dictionary['acquisitionComponent'], list):
@@ -55,7 +55,7 @@ def format_process_dictionary(self, dictionary):
         dictionary['computationComponent'] = [dictionary['computationComponent']]
     return dictionary
 
-def format_data_collection_dictionary(self, dictionary):
+def format_data_collection_dictionary(dictionary):
     # Check if the 'relatedParty' property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
