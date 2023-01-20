@@ -58,7 +58,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
     )
 
     register_doi = forms.BooleanField(
-        label='Register for DOI',
+        label='Generate DOI for Data Subset',
         required=False,
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input'
