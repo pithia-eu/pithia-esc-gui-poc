@@ -36,6 +36,10 @@ function loadFileValidationElemsForFile(file, listElem, index) {
                 <div class="col-lg-10">
                     <div class="row g-2">
                         <div class="col-lg-12 text-truncate">${file.name}</div>
+                        <div class="form-check">
+                            <input type="checkbox" name="register_doi" class="form-check-input" id="id_register_doi">
+                            <label for="id_register_doi" class="form-check-label mb-0">Generate DOI for Data Subset</label>
+                        </div>
                         <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
