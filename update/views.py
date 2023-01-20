@@ -71,7 +71,6 @@ class ResourceUpdateFormView(FormView):
     resource_id = ''
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
-    resource_conversion_validate_and_correct_function = None
 
     # Template variables
     a_or_an = 'a'
@@ -106,6 +105,8 @@ class ResourceUpdateFormView(FormView):
         if form.is_valid():
             converted_xml_file = None
             try:
+                if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
+                    self.resource_conversion_validate_and_correct_function = None
                 converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
                 with client.start_session() as s:
@@ -242,7 +243,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
-    resource_conversion_validate_and_correct_function = format_instrument_dictionary
 
     a_or_an = 'an'
     resource_type = 'Instrument'
@@ -256,10 +256,13 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['instrument_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_instrument_dictionary
+        return super().post(request, *args, **kwargs)
+
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
-    resource_conversion_validate_and_correct_function = format_acquisition_capability_set_dictionary
 
     resource_type = 'Acquisition Capabilities'
     resource_type_plural = 'Acquisition Capabilities'
@@ -277,10 +280,13 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_acquisition_capability_set_dictionary
+        return super().post(request, *args, **kwargs)
+
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
-    resource_conversion_validate_and_correct_function = format_acquisition_dictionary
 
     a_or_an = 'an'
     resource_type = 'Acquisition'
@@ -294,10 +300,13 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['acquisition_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_acquisition_dictionary
+        return super().post(request, *args, **kwargs)
+
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
-    resource_conversion_validate_and_correct_function = format_computation_capability_set_dictionary
 
     resource_type = 'Computation Capabilities'
     resource_type_plural = 'Computation Capabilities'
@@ -314,11 +323,14 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_computation_capability_set_dictionary
+        return super().post(request, *args, **kwargs)
         
 class ComputationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
-    resource_conversion_validate_and_correct_function = format_computation_dictionary
 
     a_or_an = 'a'
     resource_type = 'Computation'
@@ -332,10 +344,13 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['computation_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_computation_dictionary
+        return super().post(request, *args, **kwargs)
+
 class ProcessUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
-    resource_conversion_validate_and_correct_function = format_process_dictionary
 
     a_or_an = 'a'
     resource_type = 'Process'
@@ -349,10 +364,13 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['process_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_process_dictionary
+        return super().post(request, *args, **kwargs)
+
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
-    resource_conversion_validate_and_correct_function = format_data_collection_dictionary
     template_name = 'update/file_upload_data_collection.html'
     form_class = UploadUpdatedDataCollectionFileForm
 
@@ -367,6 +385,10 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_data_collection_dictionary
+        return super().post(request, *args, **kwargs)
 
 def data_collection_interaction_methods(request, data_collection_id):
     data_collection = CurrentDataCollection.find_one({

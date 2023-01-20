@@ -21,7 +21,6 @@ from mongodb import client
 # Create your views here.
 class ResourceRegisterFormView(FormView):
     resource_mongodb_model = None
-    resource_conversion_validate_and_correct_function = None
     success_url = ''
     form_class = UploadFileForm
     template_name = 'register/file_upload.html'
@@ -58,6 +57,8 @@ class ResourceRegisterFormView(FormView):
                 # method which verifies validation took place
                 # should be implemented.
                 try:
+                    if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
+                        self.resource_conversion_validate_and_correct_function = None
                     with client.start_session() as s:
                         def cb(s):
                             registration_results = register_metadata_xml_file(
@@ -146,7 +147,6 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
 
 class InstrumentRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
     success_url = reverse_lazy('register:instrument')
 
     resource_type_plural = 'instruments'
@@ -154,6 +154,10 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:instrument')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
+        return super().post(request, *args, **kwargs)
 
 class OperationRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentOperation
@@ -167,7 +171,6 @@ class OperationRegisterFormView(ResourceRegisterFormView):
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_set_dictionary
     success_url = reverse_lazy('register:acquisition_capability_set')
 
     resource_type_plural = 'acquisition capabilities'
@@ -176,9 +179,12 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_set_dictionary
+        return super().post(request, *args, **kwargs)
+
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisition
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
     success_url = reverse_lazy('register:acquisition')
 
     resource_type_plural = 'acquisitions'
@@ -187,9 +193,12 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
+        return super().post(request, *args, **kwargs)
+
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_set_dictionary
     success_url = reverse_lazy('register:computation_capability_set')
 
     resource_type_plural = 'computation capabilities'
@@ -198,9 +207,12 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_set_dictionary
+        return super().post(request, *args, **kwargs)
+
 class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentComputation
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
     success_url = reverse_lazy('register:computation')
 
     resource_type_plural = 'computations'
@@ -209,9 +221,12 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
+        return super().post(request, *args, **kwargs)
+
 class ProcessRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentProcess
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
     success_url = reverse_lazy('register:process')
 
     resource_type_plural = 'processes'
@@ -220,9 +235,12 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
+        return super().post(request, *args, **kwargs)
+
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentDataCollection
-    resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
     success_url = reverse_lazy('register:data_collection')
     template_name = 'register/file_upload_data_collection.html'
     form_class = UploadDataCollectionFileForm
@@ -237,3 +255,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         context['title'] = 'Register a Data Collection'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
+        return super().post(request, *args, **kwargs)
