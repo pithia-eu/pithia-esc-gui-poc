@@ -296,6 +296,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 class CatalogueRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     success_url = reverse_lazy('register:catalogue')
+    template_name='register/file_upload_catalogue.html'
 
     a_or_an = 'a'
     resource_type = 'catalogue'
@@ -314,6 +315,7 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
 class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
+    template_name='register/file_upload_catalogue.html'
 
     a_or_an = 'a'
     resource_type = 'catalogue entry'
