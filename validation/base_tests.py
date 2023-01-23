@@ -141,7 +141,7 @@ class DataCollectionFileTestCase(FileTestCase):
         return super().setUp()
 
 class InvalidSyntaxValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'syntax')
     def test_file_with_invalid_syntax(self):
         """
         The file causes parse_xml_file() to raise an exception
@@ -154,7 +154,7 @@ class InvalidSyntaxValidationTestCase:
             self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
 
 class SyntaxValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'syntax')
     def test_file_with_valid_syntax(self):
         """
         The file does not cause parse_xml_file() to raise an exception
@@ -168,7 +168,7 @@ class SyntaxValidationTestCase:
 
 class RootElementValidationTestCase:
     root_element_name = ''
-    @tag('fast')
+    @tag('fast', 'rootelement')
     def test_file_with_valid_root_element_name(self):
         """
         The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
@@ -181,7 +181,7 @@ class RootElementValidationTestCase:
             self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
 
 class XSDValidationTestCase:
-    @tag('slow')
+    @tag('slow', 'xsd')
     def test_validate_against_own_schema(self):
         """
         validate_xml_against_own_schema() does not raise an exception when passed a valid xml file.
@@ -194,7 +194,7 @@ class XSDValidationTestCase:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
 class FileNameValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'filename')
     def test_validate_xml_file_name(self):
         """
         validate_xml_file_name() does not raise an exception when passed a valid xml file.
@@ -207,7 +207,7 @@ class FileNameValidationTestCase:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
 class NewRegistrationValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'registration')
     def test_validate_xml_file_is_unregistered(self):
         """
         validate_xml_file_is_unregistered() does not raise an exception when passed a valid xml file.
@@ -222,7 +222,7 @@ class NewRegistrationValidationTestCase:
         except BaseException:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
-    @tag('fast')
+    @tag('fast', 'registration')
     def test_validate_xml_file_is_unregistered_fails(self):
         """
         validate_xml_file_is_unregistered() raises an exception when passed an xml file that has already been registered.
@@ -242,7 +242,7 @@ class NewRegistrationValidationTestCase:
             print(f'Passed registration validation failure for {Path(xml_file.name).name}.')
 
 class UpdateValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'update')
     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
         """
         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
@@ -263,7 +263,7 @@ class UpdateValidationTestCase:
         except BaseException:
             self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
 
-    @tag('fast')
+    @tag('fast', 'update')
     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
         """
         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
@@ -279,7 +279,7 @@ class UpdateValidationTestCase:
             print(f'Passed update validation failure for {Path(xml_file.name).name}.')
 
 class OperationalModesValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'opmodes')
     def test_is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(self):
         """
         is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns True.
