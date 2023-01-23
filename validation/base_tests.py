@@ -236,7 +236,7 @@ class OperationalModesValidationTestCase:
             print(f'Passed operational modes test for {Path(xml_file.name).name}.')
 
 class ValidationChecklistTestCase:
-    @tag('slow')
+    @tag('slow', 'checklist')
     def test_validate_and_get_validation_details_of_xml_file(self):
         """
         The validation results does not contain an error.
