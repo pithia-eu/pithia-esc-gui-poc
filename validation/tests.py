@@ -67,6 +67,54 @@ class OrganisationValidationChecklistTestCase(OrganisationFileTestCase, Validati
 
 class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
+class IndividualRootElementValidationTestCase(IndividualFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    root_element_name = INDIVIDUAL_XML_ROOT_TAG_NAME
+class IndividualXSDValidationTestCase(IndividualFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class IndividualFileNameValidationTestCase(IndividualFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class IndividualNewRegistrationValidationTestCase(IndividualFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
+        return super().setUp()
+class IndividualUpdateValidationTestCase(IndividualFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
+        return super().setUp()
+class IndividualValidationChecklistTestCase(IndividualFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        self.root_element_name = INDIVIDUAL_XML_ROOT_TAG_NAME
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
+        return super().setUp()
+
+
+class ProjectSyntaxValidationTestCase(ProjectFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class ProjectRootElementValidationTestCase(ProjectFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    root_element_name = PROJECT_XML_ROOT_TAG_NAME
+class ProjectXSDValidationTestCase(ProjectFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class ProjectFileNameValidationTestCase(ProjectFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class ProjectNewRegistrationValidationTestCase(ProjectFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-projects']
+        return super().setUp()
+class ProjectUpdateValidationTestCase(ProjectFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-projects']
+        return super().setUp()
+class ProjectValidationChecklistTestCase(ProjectFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    def setUp(self) -> None:
+        self.root_element_name = PROJECT_XML_ROOT_TAG_NAME
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')]['current-projects']
+        return super().setUp()
 
 
 class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, OperationalModesValidationTestCase, SimpleTestCase):
