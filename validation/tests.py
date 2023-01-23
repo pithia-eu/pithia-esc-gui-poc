@@ -4,20 +4,6 @@ import mongomock
 from lxml import etree
 from .base_tests import *
 from django.test import SimpleTestCase
-from validation.metadata_validation import (
-    ORGANISATION_XML_ROOT_TAG_NAME,
-    INDIVIDUAL_XML_ROOT_TAG_NAME,
-    PROJECT_XML_ROOT_TAG_NAME,
-    PLATFORM_XML_ROOT_TAG_NAME,
-    OPERATION_XML_ROOT_TAG_NAME,
-    INSTRUMENT_XML_ROOT_TAG_NAME,
-    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
-    ACQUISITION_XML_ROOT_TAG_NAME,
-    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
-    COMPUTATION_XML_ROOT_TAG_NAME,
-    PROCESS_XML_ROOT_TAG_NAME,
-    DATA_COLLECTION_XML_ROOT_TAG_NAME,
-)
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
@@ -42,87 +28,199 @@ env = environ.Env()
 class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
 class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
-    root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
+    pass
 class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
     pass
 class OrganisationNewRegistrationValidationTestCase(OrganisationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
-        return super().setUp()
+    pass
 class OrganisationUpdateValidationTestCase(OrganisationFileTestCase, UpdateValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
-        return super().setUp()
+    pass
 class OrganisationValidationChecklistTestCase(OrganisationFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        self.root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-organisations']
-        return super().setUp()
+    pass
 
 
 class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
 class IndividualRootElementValidationTestCase(IndividualFileTestCase, RootElementValidationTestCase, SimpleTestCase):
-    root_element_name = INDIVIDUAL_XML_ROOT_TAG_NAME
+    pass
 class IndividualXSDValidationTestCase(IndividualFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class IndividualFileNameValidationTestCase(IndividualFileTestCase, FileNameValidationTestCase, SimpleTestCase):
     pass
 class IndividualNewRegistrationValidationTestCase(IndividualFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
-        return super().setUp()
+    pass
 class IndividualUpdateValidationTestCase(IndividualFileTestCase, UpdateValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
-        return super().setUp()
+    pass
 class IndividualValidationChecklistTestCase(IndividualFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        self.root_element_name = INDIVIDUAL_XML_ROOT_TAG_NAME
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-individuals']
-        return super().setUp()
+    pass
 
 
 class ProjectSyntaxValidationTestCase(ProjectFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
     pass
 class ProjectRootElementValidationTestCase(ProjectFileTestCase, RootElementValidationTestCase, SimpleTestCase):
-    root_element_name = PROJECT_XML_ROOT_TAG_NAME
+    pass
 class ProjectXSDValidationTestCase(ProjectFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class ProjectFileNameValidationTestCase(ProjectFileTestCase, FileNameValidationTestCase, SimpleTestCase):
     pass
 class ProjectNewRegistrationValidationTestCase(ProjectFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-projects']
-        return super().setUp()
+    pass
 class ProjectUpdateValidationTestCase(ProjectFileTestCase, UpdateValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-projects']
-        return super().setUp()
+    pass
 class ProjectValidationChecklistTestCase(ProjectFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        self.root_element_name = PROJECT_XML_ROOT_TAG_NAME
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-projects']
-        return super().setUp()
+    pass
 
 
+class PlatformSyntaxValidationTestCase(PlatformFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class PlatformRootElementValidationTestCase(PlatformFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class PlatformXSDValidationTestCase(PlatformFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class PlatformFileNameValidationTestCase(PlatformFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class PlatformNewRegistrationValidationTestCase(PlatformFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class PlatformUpdateValidationTestCase(PlatformFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class PlatformValidationChecklistTestCase(PlatformFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class OperationSyntaxValidationTestCase(OperationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class OperationRootElementValidationTestCase(OperationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class OperationXSDValidationTestCase(OperationFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class OperationFileNameValidationTestCase(OperationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class OperationNewRegistrationValidationTestCase(OperationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class OperationUpdateValidationTestCase(OperationFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class OperationValidationChecklistTestCase(OperationFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class InstrumentSyntaxValidationTestCase(InstrumentFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentRootElementValidationTestCase(InstrumentFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentXSDValidationTestCase(InstrumentFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentFileNameValidationTestCase(InstrumentFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentNewRegistrationValidationTestCase(InstrumentFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentUpdateValidationTestCase(InstrumentFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class InstrumentValidationChecklistTestCase(InstrumentFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
 class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, OperationalModesValidationTestCase, SimpleTestCase):
     def setUp(self) -> None:
         client = mongomock.MongoClient()
         self.mongodb_model = client[env('DB_NAME')]['current-instruments']
         self.fix_conversion_errors_if_any = format_instrument_dictionary
         return super().setUp()
+
+
+class AcquisitionCapabilitiesSyntaxValidationTestCase(AcquisitionCapabilitiesFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesRootElementValidationTestCase(AcquisitionCapabilitiesFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesXSDValidationTestCase(AcquisitionCapabilitiesFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesFileNameValidationTestCase(AcquisitionCapabilitiesFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesNewRegistrationValidationTestCase(AcquisitionCapabilitiesFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesUpdateValidationTestCase(AcquisitionCapabilitiesFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionCapabilitiesValidationChecklistTestCase(AcquisitionCapabilitiesFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class AcquisitionSyntaxValidationTestCase(AcquisitionFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionRootElementValidationTestCase(AcquisitionFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionXSDValidationTestCase(AcquisitionFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionFileNameValidationTestCase(AcquisitionFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionNewRegistrationValidationTestCase(AcquisitionFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionUpdateValidationTestCase(AcquisitionFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class AcquisitionValidationChecklistTestCase(AcquisitionFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class ComputationCapabilitiesSyntaxValidationTestCase(ComputationCapabilitiesFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesRootElementValidationTestCase(ComputationCapabilitiesFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesXSDValidationTestCase(ComputationCapabilitiesFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesFileNameValidationTestCase(ComputationCapabilitiesFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesNewRegistrationValidationTestCase(ComputationCapabilitiesFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesUpdateValidationTestCase(ComputationCapabilitiesFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class ComputationCapabilitiesValidationChecklistTestCase(ComputationCapabilitiesFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class ComputationSyntaxValidationTestCase(ComputationFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class ComputationRootElementValidationTestCase(ComputationFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class ComputationXSDValidationTestCase(ComputationFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class ComputationFileNameValidationTestCase(ComputationFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class ComputationNewRegistrationValidationTestCase(ComputationFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class ComputationUpdateValidationTestCase(ComputationFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class ComputationValidationChecklistTestCase(ComputationFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class ProcessSyntaxValidationTestCase(ProcessFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class ProcessRootElementValidationTestCase(ProcessFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class ProcessXSDValidationTestCase(ProcessFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class ProcessFileNameValidationTestCase(ProcessFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class ProcessNewRegistrationValidationTestCase(ProcessFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class ProcessUpdateValidationTestCase(ProcessFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class ProcessValidationChecklistTestCase(ProcessFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
+
+
+class DataCollectionSyntaxValidationTestCase(DataCollectionFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionRootElementValidationTestCase(DataCollectionFileTestCase, RootElementValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionXSDValidationTestCase(DataCollectionFileTestCase, XSDValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionFileNameValidationTestCase(DataCollectionFileTestCase, FileNameValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionNewRegistrationValidationTestCase(DataCollectionFileTestCase, NewRegistrationValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionUpdateValidationTestCase(DataCollectionFileTestCase, UpdateValidationTestCase, SimpleTestCase):
+    pass
+class DataCollectionValidationChecklistTestCase(DataCollectionFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
+    pass
 
 
 class UrlsFromFilesValidationTestCase(SimpleTestCase):
