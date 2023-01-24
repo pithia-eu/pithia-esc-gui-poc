@@ -68,11 +68,14 @@ class ResourceXmlDownloadView(TemplateView):
         })
         resource = prepare_resource_for_template(resource)
         self.resource_localid = resource['identifier']['PITHIA_Identifier']['localID']
-        self.resource_name = resource['name']
+        self.resource_name = self.resource_localid
+        if 'name' in resource:
+            self.resource_name = resource['name']
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = f'{self.resource_name} XML'
         context['resource_name'] = self.resource_name
         context['resource_localid'] = self.resource_localid
         context['xml'] = self.xml

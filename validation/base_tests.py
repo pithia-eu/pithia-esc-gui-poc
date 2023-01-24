@@ -1,9 +1,11 @@
 import os
 import environ
+import mongomock
 from lxml.etree import XMLSyntaxError
 from pathlib import Path
 from django.test import tag
 from register.register import register_metadata_xml_file
+from register.xml_conversion_checks_and_fixes import format_instrument_dictionary
 from validation.metadata_validation import (
     validate_xml_against_own_schema,
     parse_xml_file,
@@ -13,6 +15,18 @@ from validation.metadata_validation import (
     validate_xml_file_is_unregistered,
     is_updated_xml_file_localid_matching_with_current_resource_localid,
     is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument,
+    ORGANISATION_XML_ROOT_TAG_NAME,
+    INDIVIDUAL_XML_ROOT_TAG_NAME,
+    PROJECT_XML_ROOT_TAG_NAME,
+    PLATFORM_XML_ROOT_TAG_NAME,
+    OPERATION_XML_ROOT_TAG_NAME,
+    INSTRUMENT_XML_ROOT_TAG_NAME,
+    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
+    ACQUISITION_XML_ROOT_TAG_NAME,
+    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
+    COMPUTATION_XML_ROOT_TAG_NAME,
+    PROCESS_XML_ROOT_TAG_NAME,
+    DATA_COLLECTION_XML_ROOT_TAG_NAME,
 )
 from validation.errors import FileRegisteredBefore
 from bson.errors import InvalidId
@@ -27,58 +41,109 @@ class FileTestCase:
 
     def setUp(self) -> None:
         self.xml_file_path = os.path.join(_XML_METADATA_FILE_DIR, self.xml_file_name)
+        client = mongomock.MongoClient()
+        self.mongodb_model = client[env('DB_NAME')][self.test_collection_name]
         return super().setUp()
 
 @tag('organisation')
 class OrganisationFileTestCase(FileTestCase):
-    xml_file_name = 'Organisation_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Organisation_Test.xml'
+        self.root_element_name = ORGANISATION_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-organisations'
+        return super().setUp()
 
 @tag('individual')
 class IndividualFileTestCase(FileTestCase):
-    xml_file_name = 'Individual_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Individual_Test.xml'
+        self.root_element_name = INDIVIDUAL_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-individuals'
+        return super().setUp()
 
 @tag('project')
 class ProjectFileTestCase(FileTestCase):
-    xml_file_name = 'Project_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Project_Test.xml'
+        self.root_element_name = PROJECT_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-projects'
+        return super().setUp()
 
 @tag('platform')
 class PlatformFileTestCase(FileTestCase):
-    xml_file_name = 'Platform_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Platform_Test.xml'
+        self.root_element_name = PLATFORM_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-platforms'
+        return super().setUp()
 
 @tag('operation')
 class OperationFileTestCase(FileTestCase):
-    xml_file_name = 'Operation_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Operation_Test.xml'
+        self.root_element_name = OPERATION_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-operations'
+        return super().setUp()
 
 @tag('instrument')
 class InstrumentFileTestCase(FileTestCase):
-    xml_file_name = 'Instrument_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Instrument_Test.xml'
+        self.root_element_name = INSTRUMENT_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-instruments'
+        self.fix_conversion_errors_if_any = format_instrument_dictionary
+        return super().setUp()
 
 @tag('acquisition_capabilities')
 class AcquisitionCapabilitiesFileTestCase(FileTestCase):
-    xml_file_name = 'AcquisitionCapabilities_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'AcquisitionCapabilities_Test.xml'
+        self.root_element_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-acquisition-capabilities'
+        return super().setUp()
 
 @tag('acquisition')
 class AcquisitionFileTestCase(FileTestCase):
-    xml_file_name = 'Acquisition_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Acquisition_Test.xml'
+        self.root_element_name = ACQUISITION_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-acquisitions'
+        return super().setUp()
 
 @tag('computation_capabilities')
 class ComputationCapabilitiesFileTestCase(FileTestCase):
-    xml_file_name = 'ComputationCapabilities_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'ComputationCapabilities_Test.xml'
+        self.root_element_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-computation-capabilities'
+        return super().setUp()
 
 @tag('computation')
 class ComputationFileTestCase(FileTestCase):
-    xml_file_name = 'Computation_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'Computation_Test.xml'
+        self.root_element_name = COMPUTATION_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-computations'
+        return super().setUp()
 
 @tag('process')
 class ProcessFileTestCase(FileTestCase):
-    xml_file_name = 'Composite_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'CompositeProcess_Test.xml'
+        self.root_element_name = PROCESS_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-processes'
+        return super().setUp()
 
 @tag('data_collection')
 class DataCollectionFileTestCase(FileTestCase):
-    xml_file_name = 'DataCollection_Test.xml'
+    def setUp(self) -> None:
+        self.xml_file_name = 'DataCollection_Test.xml'
+        self.root_element_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+        self.test_collection_name = 'current-data-collections'
+        return super().setUp()
 
 class InvalidSyntaxValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'syntax')
     def test_file_with_invalid_syntax(self):
         """
         The file causes parse_xml_file() to raise an exception
@@ -91,7 +156,7 @@ class InvalidSyntaxValidationTestCase:
             self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
 
 class SyntaxValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'syntax')
     def test_file_with_valid_syntax(self):
         """
         The file does not cause parse_xml_file() to raise an exception
@@ -105,7 +170,7 @@ class SyntaxValidationTestCase:
 
 class RootElementValidationTestCase:
     root_element_name = ''
-    @tag('fast')
+    @tag('fast', 'rootelement')
     def test_file_with_valid_root_element_name(self):
         """
         The organisation metadata file does not cause validate_xml_root_element_name_equals_expected_name() to raise an exception.
@@ -118,7 +183,7 @@ class RootElementValidationTestCase:
             self.fail('validate_xml_root_element_name_equals_expected_name raised an exception unexpectedly!')
 
 class XSDValidationTestCase:
-    @tag('slow')
+    @tag('slow', 'xsd')
     def test_validate_against_own_schema(self):
         """
         validate_xml_against_own_schema() does not raise an exception when passed a valid xml file.
@@ -131,7 +196,7 @@ class XSDValidationTestCase:
             self.fail('validate_xml_against_own_schema() raised an exception unexpectedly!')
 
 class FileNameValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'filename')
     def test_validate_xml_file_name(self):
         """
         validate_xml_file_name() does not raise an exception when passed a valid xml file.
@@ -144,7 +209,7 @@ class FileNameValidationTestCase:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
 class NewRegistrationValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'registration')
     def test_validate_xml_file_is_unregistered(self):
         """
         validate_xml_file_is_unregistered() does not raise an exception when passed a valid xml file.
@@ -159,7 +224,7 @@ class NewRegistrationValidationTestCase:
         except BaseException:
             self.fail('validate_xml_file_name() raised an exception unexpectedly!')
 
-    @tag('fast')
+    @tag('fast', 'registration')
     def test_validate_xml_file_is_unregistered_fails(self):
         """
         validate_xml_file_is_unregistered() raises an exception when passed an xml file that has already been registered.
@@ -179,7 +244,7 @@ class NewRegistrationValidationTestCase:
             print(f'Passed registration validation failure for {Path(xml_file.name).name}.')
 
 class UpdateValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'update')
     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
         """
         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
@@ -200,7 +265,7 @@ class UpdateValidationTestCase:
         except BaseException:
             self.fail('is_updated_xml_file_localid_matching_with_current_resource_localid() raised an exception unexpectedly!')
 
-    @tag('fast')
+    @tag('fast', 'update')
     def test_is_updated_xml_file_localid_matching_with_current_resource_localid(self):
         """
         is_updated_xml_file_localid_matching_with_current_resource_localid() does not raise an exception when passed a valid xml_file
@@ -216,7 +281,7 @@ class UpdateValidationTestCase:
             print(f'Passed update validation failure for {Path(xml_file.name).name}.')
 
 class OperationalModesValidationTestCase:
-    @tag('fast')
+    @tag('fast', 'opmodes')
     def test_is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(self):
         """
         is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns True.
@@ -236,7 +301,7 @@ class OperationalModesValidationTestCase:
             print(f'Passed operational modes test for {Path(xml_file.name).name}.')
 
 class ValidationChecklistTestCase:
-    @tag('slow')
+    @tag('slow', 'checklist')
     def test_validate_and_get_validation_details_of_xml_file(self):
         """
         The validation results does not contain an error.
