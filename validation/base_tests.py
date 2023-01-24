@@ -1,5 +1,4 @@
 import os
-import environ
 import mongomock
 from lxml.etree import XMLSyntaxError
 from pathlib import Path
@@ -34,15 +33,13 @@ from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
-env = environ.Env()
-
 class FileTestCase:
     xml_file_name = ''
 
     def setUp(self) -> None:
         self.xml_file_path = os.path.join(_XML_METADATA_FILE_DIR, self.xml_file_name)
         client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')][self.test_collection_name]
+        self.mongodb_model = client['pithiaesc-test'][self.test_collection_name]
         return super().setUp()
 
 @tag('organisation')
