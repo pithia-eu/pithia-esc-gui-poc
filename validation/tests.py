@@ -1,6 +1,4 @@
 import os
-import environ
-import mongomock
 from lxml import etree
 from .base_tests import *
 from django.test import SimpleTestCase
@@ -13,12 +11,9 @@ from validation.url_validation import (
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
     validate_ontology_term_url,
 )
-from register.xml_conversion_checks_and_fixes import format_instrument_dictionary
 from pithiaesc.settings import BASE_DIR
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
-
-env = environ.Env()
 
 # Create your tests here.
 # The SimpleTestCase class is used to disable the automatic SQL database
@@ -120,11 +115,7 @@ class InstrumentUpdateValidationTestCase(InstrumentFileTestCase, UpdateValidatio
 class InstrumentValidationChecklistTestCase(InstrumentFileTestCase, ValidationChecklistTestCase, SimpleTestCase):
     pass
 class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, OperationalModesValidationTestCase, SimpleTestCase):
-    def setUp(self) -> None:
-        client = mongomock.MongoClient()
-        self.mongodb_model = client[env('DB_NAME')]['current-instruments']
-        self.fix_conversion_errors_if_any = format_instrument_dictionary
-        return super().setUp()
+    pass
 
 
 class AcquisitionCapabilitiesSyntaxValidationTestCase(AcquisitionCapabilitiesFileTestCase, SyntaxValidationTestCase, SimpleTestCase):
