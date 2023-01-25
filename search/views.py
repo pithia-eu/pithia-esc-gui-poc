@@ -15,6 +15,11 @@ from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputati
 
 _INDEX_PAGE_TITLE = 'Search Data Collections'
 
+def get_tree_form_of_observed_properties(request):
+    observed_property_dict = create_dictionary_from_pithia_ontology_component(
+        'observedProperty'
+    )
+
 def get_tree_form_for_ontology_component(request, ontology_component):
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}
@@ -24,7 +29,11 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     if ontology_component == 'observedProperty':
             computation_capability_sets = CurrentComputationCapability.find({})
             computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
-    dictionary = create_dictionary_from_pithia_ontology_component(ontology_component, instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property, computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property)
+    dictionary = create_dictionary_from_pithia_ontology_component(
+        ontology_component,
+        instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
+        computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
+    )
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
