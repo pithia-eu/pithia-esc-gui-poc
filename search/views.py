@@ -26,9 +26,8 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     if ontology_component == 'observedProperty':
         instruments = CurrentInstrument.find({})
         instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
-    if ontology_component == 'observedProperty':
-            computation_capability_sets = CurrentComputationCapability.find({})
-            computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+        computation_capability_sets = CurrentComputationCapability.find({})
+        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
     dictionary = create_dictionary_from_pithia_ontology_component(
         ontology_component,
         instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
