@@ -8,10 +8,20 @@ from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_measurand_ids_from_observed_property_id,
     get_parent_node_ids_of_node_id,
-    get_phenomenon_ids_from_observed_property_id
+    get_phenomenon_ids_from_observed_property_id,
+    categorise_observed_property_dict_by_top_level_phenomenons,
 )
-from .search_helpers import find_matching_data_collections, group_instrument_types_by_observed_property, group_computation_types_by_observed_property
-from common.mongodb_models import CurrentAcquisitionCapability, CurrentComputationCapability, CurrentInstrument, CurrentDataCollection
+from .search_helpers import (
+    find_matching_data_collections,
+    group_instrument_types_by_observed_property,
+    group_computation_types_by_observed_property
+)
+from common.mongodb_models import (
+    CurrentAcquisitionCapability,
+    CurrentComputationCapability,
+    CurrentInstrument,
+    CurrentDataCollection
+)
 
 _INDEX_PAGE_TITLE = 'Search Data Collections'
 
@@ -38,6 +48,12 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     if ontology_component.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
+        return render(request, 'search/observed_property_tree_categories_template.html', {
+            'observed_property_categories': categorise_observed_property_dict_by_top_level_phenomenons(dictionary),
+            'ontology_component_name': ontology_component,
+            'registered_ontology_terms': registered_ontology_terms,
+            'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
+        })
     elif ontology_component.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
