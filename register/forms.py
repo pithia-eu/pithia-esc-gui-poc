@@ -53,7 +53,6 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
-            'multiple': True,
         })
     )
 
