@@ -158,8 +158,8 @@ the result time (with begin and end), and an optional DOI link to the persistent
                         </annotation>
                     </element>   
                     <element name="resultTime" minOccurs="1" type="om:TimeObjectPropertyType"/>
-                    <element name="doi" minOccurs="0" maxOccurs="unbounded" type="doi:kernelMetadata"/>
                     <element name="source" minOccurs="0" maxOccurs="unbounded" type="pithia:OnlineResourcePropertyType"/>
+                    <element name="doi" minOccurs="0" maxOccurs="unbounded" type="doi:kernelMetadata"/>
                     <element name="dataLevel" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
