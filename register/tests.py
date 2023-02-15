@@ -2,11 +2,13 @@ import os
 import environ
 import mongomock
 from bson.objectid import ObjectId
+from django.urls import reverse
 from django.test import SimpleTestCase, tag
 from register.register import register_metadata_xml_file
 from register.doi_registration import (
     generate_doi,
     add_doi_to_xml_file,
+    get_pid,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -43,6 +45,14 @@ class RegisterMetadataTestCase(SimpleTestCase):
 
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
+
+    @tag('fast')
+    def test_get_pid(self):
+        """
+        get_pid() returns a pid.
+        """
+        landing_page_url = reverse('browse:catalogue_data_subset_detail', kwargs={ 'data_collection_id': self.fake_resource_id })
+        pid = get_pid(landing_page_url)
 
     @tag('fast')
     def test_generate_fake_doi(self):
