@@ -8,7 +8,9 @@ from register.register import register_metadata_xml_file
 from register.doi_registration import (
     generate_doi,
     add_doi_to_xml_file,
+    create_pid,
     get_pid,
+    delete_pid,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -46,13 +48,30 @@ class RegisterMetadataTestCase(SimpleTestCase):
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
 
-    @tag('fast')
+    @tag('fast', 'doi', 'create_doi')
+    def test_create_pid(self):
+        """
+        create_pid() adds a pid successfully.
+        """
+        landing_page_url = reverse('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': self.fake_resource_id })
+        put_response = create_pid(landing_page_url)
+        print('put_response.json()', put_response.json())
+
+    @tag('fast', 'doi', 'get_doi')
     def test_get_pid(self):
         """
-        get_pid() returns a pid.
+        get_pid() adds a pid successfully.
         """
-        landing_page_url = reverse('browse:catalogue_data_subset_detail', kwargs={ 'data_collection_id': self.fake_resource_id })
-        pid = get_pid(landing_page_url)
+        get_response = get_pid()
+        print('get_response.json()', get_response.json())
+
+    @tag('fast', 'doi', 'delete_doi')
+    def test_delete_pid(self):
+        """
+        delete_pid() adds a pid successfully.
+        """
+        delete_response = delete_pid()
+        print('delete_response.json()', delete_response.json())
 
     @tag('fast')
     def test_generate_fake_doi(self):
