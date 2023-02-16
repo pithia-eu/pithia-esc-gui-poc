@@ -1,38 +1,62 @@
 from lxml import etree
 from validation.metadata_validation import parse_xml_file
 
+import json
+import requests
+import environ
+
+env = environ.Env()
+
+
+def get_doi_api_endpoint_url():
+    return env('DOI_API_URL')
+
+def get_doi_api_headers():
+    return {
+        'Content-Type': 'application/json'
+    }
+
+def get_doi_api_auth():
+    return (env('DOI_API_USERNAME'), env('DOI_API_PASSWORD'))
+
+def create_pid(landing_page_url):
+    endpoint_url = get_doi_api_endpoint_url()
+    headers = get_doi_api_headers()
+    auth = get_doi_api_auth()
+    data = json.loads(env('DOI_API_PUT_DATA'))
+    data['values'][1]['data'] = landing_page_url
+    print('data', data)
+    response = requests.put(
+        endpoint_url,
+        auth=auth,
+        headers=headers,
+        json=data
+    )
+    return response
+
+def get_pid():
+    endpoint_url = get_doi_api_endpoint_url()
+    headers = get_doi_api_headers()
+    auth = get_doi_api_auth()
+    response = requests.get(
+        endpoint_url,
+        auth=auth,
+        headers=headers
+    )
+    return response
+
+def delete_pid():
+    endpoint_url = get_doi_api_endpoint_url()
+    headers = get_doi_api_headers()
+    auth = get_doi_api_auth()
+    response = requests.delete(
+        endpoint_url,
+        auth=auth,
+        headers=headers
+    )
+    return response
 
 def generate_doi(resource_detail_url):
-    # doi = DoiAPI.create_doi(resource_detail_url)
-    # return doi
-    # doi = {
-    #     'kernelMetadata': {
-    #         'registrationAgencyDoiName': '10.1000/ra-5',
-    #         'issueDate': '2015-01-07',
-    #         'issueNumber': '7',
-    #         'referentCreation': {
-    #             'name': {
-    #                 '@primaryLanguage': 'en',
-    #                 'value': 'Test',
-    #                 'type': 'Title',
-    #             },
-    #             'identifier': {
-    #                 'nonUriValue': '10.5240/B94E-F500-7164-57DB-82F5-6',
-    #                 'uri': [
-    #                     {
-    #                         '@returnType': 'text/html',
-    #                         '#text': 'https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6',
-    #                     },
-    #                     {
-    #                         '@returnType': 'text/html',
-    #                         '#text': 'https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6',
-    #                     }
-    #                 ],
-    #                 'type': 'EidrContentID',
-    #             }
-    #         },
-    #     }
-    # }
     doi = {
         'registrationAgencyDoiName': '10.1000/ra-5',
         'issueDate': '2015-01-07',
