@@ -150,8 +150,8 @@ def categorise_observed_property_dict_by_top_level_phenomenons(observed_property
             else:
                 top_level_phenomenon = path_of_phenomenon[0]
                 add_observed_property_to_category(key, value, top_level_phenomenon)
-    for key in categorised_observed_property_dict:
-        print(key, len(categorised_observed_property_dict[key]))
+    if 'None' in categorised_observed_property_dict and len(categorised_observed_property_dict['None']) == 0:
+        categorised_observed_property_dict.pop('None', None)
     return categorised_observed_property_dict
 
 def create_dictionary_from_pithia_ontology_component(
