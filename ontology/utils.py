@@ -80,7 +80,85 @@ def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_i
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
 
-def create_dictionary_from_pithia_ontology_component(ontology_component, instrument_types_grouped_by_observed_property={}, computation_types_grouped_by_observed_property={}):
+def get_localid_from_ontology_node_iri(ontology_node_iri):
+    return ontology_node_iri.split('/')[-1]
+
+def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
+    if g is None:
+        ontology_term_category = ontology_node_iri.split('/')[-2]
+        g = get_graph_of_pithia_ontology_component(ontology_term_category)
+    return str(g.value(URIRef(ontology_node_iri), SKOS.prefLabel))
+
+# Credit for get_path: https://stackoverflow.com/a/22171182
+def getpath(nested_dict, value, prepath=()):
+    for k, v in nested_dict.items():
+        path = prepath + (k,)
+        if value in v: # found value
+            return path
+        elif hasattr(v, 'items'): # v is a dict
+            p = getpath(v, value, path) # recursive call
+            if p is not None:
+                return p
+
+# Credit for gen_dict_extract: https://stackoverflow.com/a/29652561
+def gen_dict_extract(key, var):
+    if hasattr(var,'items'):
+        for k, v in var.items():
+            if k == key:
+                yield v
+            if isinstance(v, dict):
+                for result in gen_dict_extract(key, v):
+                    yield result
+            elif isinstance(v, list):
+                for d in v:
+                    for result in gen_dict_extract(key, d):
+                        yield result
+
+def get_nested_phenomenons_in_observed_property(observed_property):
+    all_phenomenons_of_observed_property = list(gen_dict_extract('phenomenon', observed_property))
+    # Credit for list flattening code: https://stackoverflow.com/a/952952
+    all_phenomenons_of_observed_property_flattened = [item for sublist in all_phenomenons_of_observed_property for item in sublist]
+    return all_phenomenons_of_observed_property_flattened
+
+def categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict):
+    categorised_observed_property_dict = {}
+    phenomen_dict = create_dictionary_from_pithia_ontology_component('phenomenon')
+    added_observed_properties = []
+
+    def add_observed_property_to_category(key, observed_property, category):
+        if category not in categorised_observed_property_dict:
+            categorised_observed_property_dict[category] = {}
+        if (category != 'None' and
+            'None' in categorised_observed_property_dict and
+            key in categorised_observed_property_dict['None'] and
+            key in added_observed_properties):
+            categorised_observed_property_dict[category][key] = observed_property
+            categorised_observed_property_dict['None'].pop(key)
+        if key not in added_observed_properties:
+            categorised_observed_property_dict[category][key] = observed_property
+            added_observed_properties.append(key)
+
+    for key, value in observed_property_dict.items():
+        all_phenomenons_for_observed_property = get_nested_phenomenons_in_observed_property(value)
+        if len(all_phenomenons_for_observed_property) == 0:
+            add_observed_property_to_category(key, value, 'None')
+            continue
+        for phenomenon in all_phenomenons_for_observed_property:
+            path_of_phenomenon = getpath(phenomen_dict, phenomenon.replace('phenomenon', ''))
+            if path_of_phenomenon is None:
+                add_observed_property_to_category(key, value, 'None')
+            else:
+                top_level_phenomenon = path_of_phenomenon[0]
+                add_observed_property_to_category(key, value, top_level_phenomenon)
+    if 'None' in categorised_observed_property_dict and len(categorised_observed_property_dict['None']) == 0:
+        categorised_observed_property_dict.pop('None', None)
+    return categorised_observed_property_dict
+
+def create_dictionary_from_pithia_ontology_component(
+    ontology_component,
+    instrument_types_grouped_by_observed_property={},
+    computation_types_grouped_by_observed_property={}
+):
     g = get_graph_of_pithia_ontology_component(ontology_component)
     ontology_dictionary = {}
     for s, p, o in g.triples((None, SKOS.member, None)):
@@ -171,12 +249,3 @@ def create_dictionary_from_pithia_ontology_component(ontology_component, instrum
         ontology_dictionary.pop(key, None)
 
     return ontology_dictionary
-
-def get_localid_from_ontology_node_iri(ontology_node_iri):
-    return ontology_node_iri.split('/')[-1]
-
-def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
-    if g is None:
-        ontology_term_category = ontology_node_iri.split('/')[-2]
-        g = get_graph_of_pithia_ontology_component(ontology_term_category)
-    return str(g.value(URIRef(ontology_node_iri), SKOS.prefLabel))
