@@ -94,8 +94,7 @@ export function setupCheckboxesForTreeContainerIdToFilterOPTerms(treeContainerId
 export function activateDeselectAllButtonForTreeContainerId(treeContainerId) {
     const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
     deselectAllButtonForTree.addEventListener("click", event => {
-        const observedPropertiesTreeContainerLis = document.querySelectorAll(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID} li`);
-        removeCheckboxFiltersFromLiNodes(observedPropertiesTreeContainerLis);
+        filterOPTree();
     });
 }
 
