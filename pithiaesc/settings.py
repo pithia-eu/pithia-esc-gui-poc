@@ -160,3 +160,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Sessions
 
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': f'{BASE_DIR}/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
