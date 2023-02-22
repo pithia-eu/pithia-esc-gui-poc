@@ -16,6 +16,14 @@
         </div>
         <div class="card">
             <div class="card-body">
+                <a href="{% url 'browse:list_data_collections' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    <span>Browse Data Collections</span>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
                 <a href="{% url 'browse:resources' %}">
                     <img src="{% static 'browse.svg' %}" alt="Browse">
                     <span>Browse Metadata</span>
