@@ -178,12 +178,16 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'pithiaesc.log'),
-            'formatter': 'custom'
+            'formatter': 'custom',
         },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
     },
     'loggers': {
         '': {
-            'handlers': ['file'],
+            'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,
         },
