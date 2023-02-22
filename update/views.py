@@ -139,7 +139,7 @@ class ResourceUpdateFormView(FormView):
                             session=s
                         )
                     s.with_transaction(cb)
-                messages.success(request, f'Successfully updated {xml_file.name}.')
+                messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
                 messages.error(request, 'An error occurred whilst parsing the XML.')
