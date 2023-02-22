@@ -4,6 +4,10 @@ from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 ONTOLOGY_SERVER_BASE_URL = 'https://metadata.pithia.eu/ontology/2.2/'
 PITHIA = Namespace('https://metadata.pithia.eu/ontology/2.2/')
 
@@ -39,7 +43,7 @@ def get_rdf_text_for_ontology_component(ontology_component):
     try:
         ontology_text = get_rdf_text_remotely(ontology_component)
     except BaseException as err:
-        print(err)
+        logger.exception('Encountered error whilst fetching RDF for ontology category.')
         # Read ontology from file - alt method if connection to ontology server fails
         ontology_text = get_rdf_text_locally(ontology_component)
 
@@ -242,8 +246,6 @@ def create_dictionary_from_pithia_ontology_component(
             if nestedKey in ontology_dictionary:
                 ontology_dictionary[key]['narrowers'][nestedKey] = ontology_dictionary[nestedKey]
                 keys_to_remove_at_top_level.append(nestedKey)
-            # else:
-            #     print('nested key in ontology dict found', nestedKey)
     
     for key in keys_to_remove_at_top_level:
         ontology_dictionary.pop(key, None)

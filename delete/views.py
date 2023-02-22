@@ -39,6 +39,10 @@ from .utils import (
 )
 from mongodb import client
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Create your views here.
 
 class ResourceDeleteView(TemplateView):
@@ -92,7 +96,7 @@ class ResourceDeleteView(TemplateView):
                 s.with_transaction(cb)
             messages.success(request, f'Successfully deleted {self.resource_to_delete["name"]}.')
         except BaseException as e:
-            print(e)
+            logger.exception('An error occurred during resource deletion.')
             messages.error(request, 'An error occurred during resource deletion.')
 
         return HttpResponseRedirect(self.redirect_url)
