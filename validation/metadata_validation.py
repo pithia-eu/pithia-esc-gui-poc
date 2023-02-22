@@ -155,6 +155,7 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
 # Operational mode ID modification check
 def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id, mongodb_model=CurrentInstrument):
     xml_file_parsed = parse_xml_file(xml_file)
+    # Operational mode IDs are the only values enclosed in <id></id> tags
     operational_mode_ids_of_updated_xml = list(
         map(
             _map_etree_element_to_text,
@@ -169,9 +170,11 @@ def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrum
             'operationalMode': True
         }
     )
-    operational_mode_ids_of_current_xml = list(
-        map(_map_operational_mode_object_to_id_string, instrument_to_update['operationalMode'])
-    )
+    operational_mode_ids_of_current_xml = []
+    if 'operationalMode' in instrument_to_update:
+        operational_mode_ids_of_current_xml = list(
+            map(_map_operational_mode_object_to_id_string, instrument_to_update['operationalMode'])
+        )
     operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
     return len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
 
