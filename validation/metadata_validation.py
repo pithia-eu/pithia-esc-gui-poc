@@ -1,4 +1,3 @@
-import traceback
 import xmlschema
 from requests import get
 from lxml import etree
