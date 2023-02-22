@@ -37,6 +37,10 @@ from validation.metadata_validation import (
     validate_and_get_validation_details_of_xml_file
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Create your views here.
 class ResourceXmlMetadataFileValidationFormView(View):
     mongodb_model = None
@@ -132,12 +136,10 @@ def api_specification_url(request):
             validate_spec_url(api_specification_url)
             response_body['valid'] = True
         except HTTPError as err:
-            print(err)
-            print(traceback.format_exc())
+            logger.exception('The provided API specification URL returned an HTTP Error 404: Not Found.')
             response_body['error'] = 'The URL was not found'
         except BaseException as err:
-            print(err)
-            print(traceback.format_exc())
+            logger.exception('The provided API specification URL does not link to a valid OpenAPI specification.')
             response_body['error'] = 'The URL does not link to a valid OpenAPI specification'
             response_body['details'] = str(err)
     else:
