@@ -15,7 +15,6 @@ def interact_with_data_collection_through_api(request, data_collection_id):
     if data_collection == None:
         messages.error(request, 'A data collection matching the specified ID was not found.')
         return HttpResponseRedirect(reverse('browse:list_data_collections'))
-    print(data_collection['identifier']['PITHIA_Identifier']['localID'])
     api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
         'interaction_method': 'api',
         'data_collection_localid': data_collection['identifier']['PITHIA_Identifier']['localID']
