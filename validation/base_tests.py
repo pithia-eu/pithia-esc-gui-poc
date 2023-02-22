@@ -297,6 +297,27 @@ class OperationalModesValidationTestCase:
             self.assertEqual(result, True)
             print(f'Passed operational modes test for {Path(xml_file.name).name}.')
 
+    @tag('fast', 'opmodes')
+    def test_opmode_change_detection_with_none_added_in_current_instrument(self):
+        """
+        is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns True.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test_NoOpModes.xml')) as xml_file:
+            registered_instrument = register_metadata_xml_file(
+                xml_file,
+                self.mongodb_model,
+                self.fix_conversion_errors_if_any,
+            )
+
+        with open(self.xml_file_path) as xml_file:
+            result = is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+                xml_file,
+                registered_instrument['_id'],
+                mongodb_model=self.mongodb_model
+            )
+            self.assertEqual(result, True)
+            print('Passed test_opmode_change_detection_with_none_added_in_current_instrument test.')
+
 class ValidationChecklistTestCase:
     @tag('slow', 'checklist')
     def test_validate_and_get_validation_details_of_xml_file(self):
