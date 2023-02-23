@@ -73,6 +73,10 @@ from update.version_control import (
 )
 from mongodb import client
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 class ResourceUpdateFormView(FormView):
@@ -146,14 +150,12 @@ class ResourceUpdateFormView(FormView):
                             session=s
                         )
                     s.with_transaction(cb)
-                messages.success(request, f'Successfully updated {xml_file.name}.')
+                messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
-                print(err)
-                print(traceback.format_exc())
+                logger.exception('Could not update a resource as there was an error parsing the update XML.')
                 messages.error(request, 'An error occurred whilst parsing the XML.')
             except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
+                logger.exception('An unexpected error occurred whilst attempting to update a resource.')
                 messages.error(request, 'An unexpected error occurred.')
         else:
             messages.error(request, 'The form submitted was not valid.')
@@ -450,8 +452,7 @@ def data_collection_interaction_methods(request, data_collection_id):
                     s.with_transaction(cb)
                 messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
             except BaseException as err:
-                print(err)
-                print(traceback.format_exc())
+                logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
             return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
     form = UpdateDataCollectionInteractionMethodsForm()
