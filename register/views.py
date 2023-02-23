@@ -22,6 +22,10 @@ from resource_management.views import (
 from validation.errors import FileRegisteredBefore
 from mongodb import client
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 class ResourceRegisterFormView(FormView):
@@ -93,16 +97,13 @@ class ResourceRegisterFormView(FormView):
                         s.with_transaction(cb)
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
-                    print(err)
-                    print(traceback.format_exc())
+                    logger.exception('Expat error occurred during registration process.')
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
                 except FileRegisteredBefore as err:
-                    print(err)
-                    print(traceback.format_exc())
+                    logger.exception('The XML file submitted for registration has been registered before.')
                     messages.error(request, f'{xml_file.name} has been registered before.')
                 except BaseException as err:
-                    print(err)
-                    print(traceback.format_exc())
+                    logger.exception('An unexpected error occurred during metadata registration.')
                     messages.error(request, 'An unexpected error occurred.')
                 # validation_results = self.validate_resource(xml_file)
                 # if 'error' not in validation_results:

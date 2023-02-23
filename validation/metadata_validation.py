@@ -1,4 +1,3 @@
-import traceback
 import xmlschema
 from requests import get
 from lxml import etree
@@ -26,6 +25,10 @@ from .helpers import (
     _map_operational_mode_object_to_id_string,
 )
 from xmlschema.exceptions import XMLSchemaException
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 ORGANISATION_XML_ROOT_TAG_NAME = 'Organisation'
 INDIVIDUAL_XML_ROOT_TAG_NAME = 'Individual'
@@ -281,24 +284,25 @@ def validate_and_get_validation_details_of_xml_file(
             )
 
     except etree.XMLSyntaxError as err:
-        print(traceback.format_exc())
+        logger.exception('Error occurred whilst validating XML syntax.')
         validation_details['error'] = create_validation_details_error(
             message='Syntax is invalid.',
             details=str(err),
         )
     except XMLSchemaException as err:
-        print(traceback.format_exc())
+        logger.exception('Error occurred whilst validating XML for schema correctness.')
         validation_details['error'] = create_validation_details_error(
             message='XML does not conform to the corresponding schema.',
             details=str(err),
         )
     except (InvalidRootElementName, FileRegisteredBefore, FileNameNotMatchingWithLocalID) as err:
+        logger.exception('Error occurred whilst validating XML. Please see error message for details.')
         validation_details['error'] = create_validation_details_error(
             err.message,
             err.details
         )
     except BaseException as err:
-        print(traceback.format_exc())
+        logger.exception('An unexpected error occurred whilst validating the XML.')
         validation_details['error'] = create_validation_details_error(
             details=str(err)
         )
