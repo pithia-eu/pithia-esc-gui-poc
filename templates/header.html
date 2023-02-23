@@ -24,6 +24,10 @@
                     <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
                 </li>
                 <li class="dropdown-item">
+                    {% url 'browse:list_data_collections' as data_collections_url %}
+                    <a href="{{ data_collections_url }}" class="nav-link px-2 {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
+                </li>
+                <li class="dropdown-item">
                     {% url 'browse:index' as browse_url %}
                     <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
@@ -43,9 +47,9 @@
                     <a href="{{ data_provider_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
                 </li>
                 <li>
-                    <h6 class="dropdown-header">
+                    <span class="dropdown-header">
                         Register & Manage Metadata
-                    </h6>
+                    </span>
                 </li>
                 <li class="dropdown-item">
                     {% url 'resource_management:index' as resource_management_url %}
@@ -55,9 +59,9 @@
                     <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="nav-link px-2" target="_blank">Metadata Registration Guide</a>
                 </li>
                 <li>
-                    <h6 class="dropdown-header">
+                    <span class="dropdown-header">
                         Browse
-                    </h6>
+                    </span>
                 </li>
                 <li class="dropdown-item">
                     {% url 'schemas' as browse_schemas_url %}
