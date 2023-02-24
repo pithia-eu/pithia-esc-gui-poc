@@ -1,6 +1,6 @@
 import os
 import json
-import etree
+from lxml import etree
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
 from pyhandle.handleexceptions import *
