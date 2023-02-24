@@ -86,7 +86,7 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_result = register_handle(handle, self.VALUE_ORIGINAL, self.client)
         self.assertEqual(register_result, handle)
-        delete_handle(handle, self.client)
+        # delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
@@ -96,7 +96,21 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         handle_record = get_handle_record(handle, self.client)
+        print('handle_record', handle_record)
         self.assertIsInstance(handle_record, dict)
+        delete_handle(handle, self.client)
+
+    @tag('fast', 'handles', 'get_handle_url')
+    def test_get_handle_url(self):
+        """
+        get_handle_url() returns the record for the handle data and raises no exceptions.
+        """
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        handle_url = get_handle_url(handle, self.client)
+        print('handle_url', handle_url)
+        self.assertEqual(handle_url, self.VALUE_ORIGINAL)
+        self.assertIsInstance(handle_url, str)
         delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'delete_handle')
