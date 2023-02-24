@@ -61,6 +61,12 @@ class HandleManagementTestCase(SimpleTestCase):
     VALUE_ORIGINAL = 'https://www.example.com/1'
     VALUE_AFTER = 'https://www.example.com/2'
 
+    def setUp(self) -> None:
+        # Also acts as integration test
+        # for instantiate_client_and_load_credentials() function
+        self.client, self.credentials = instantiate_client_and_load_credentials()
+        return super().setUp()
+
     @tag('fast', 'handles')
     def test_instantiate_client_and_load_credentials(self):
         """
@@ -75,43 +81,38 @@ class HandleManagementTestCase(SimpleTestCase):
         """
         create_handle() returns a string with format "{handle_prefix}/{handle_suffix}"
         """
-        # Also integration test
-        # with instantiate_client_and_load_credentials() function
-        client, credentials = instantiate_client_and_load_credentials()
-        handle = create_handle(credentials, self.TEST_SUFFIX)
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
         self.assertIsInstance(handle, str)
-        self.assertEqual(handle, f'{credentials.get_prefix()}/{self.TEST_SUFFIX}')
+        self.assertEqual(handle, f'{self.credentials.get_prefix()}/{self.TEST_SUFFIX}')
 
-    @tag('fast', 'handles')
+    @tag('fast', 'handles', 'register_handle')
     def test_register_handle(self):
         """
         register_handle() returns the handle data passed into it and raises no exceptions.
         """
-        # Also integration test
-        # with instantiate_client_and_load_credentials() function
-        client, credentials = instantiate_client_and_load_credentials()
-        handle = create_handle(credentials, self.TEST_SUFFIX)
-        register_result = register_handle(handle, self.VALUE_ORIGINAL, client)
-
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_result = register_handle(handle, self.VALUE_ORIGINAL, self.client)
         self.assertEqual(register_result, handle)
+        delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
         """
         get_handle_record() returns the record for the handle data and raises no exceptions.
         """
-        client, credentials = instantiate_client_and_load_credentials()
-        handle = create_handle(credentials, self.TEST_SUFFIX)
-        handle_record = get_handle_record(handle, client)
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        handle_record = get_handle_record(handle, self.client)
+        delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
         """
         delete_handle() raises no exceptions.
         """
-        client, credentials = instantiate_client_and_load_credentials()
-        handle = create_handle(credentials, self.TEST_SUFFIX)
-        delete_result = delete_handle(handle, client)
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        delete_result = delete_handle(handle, self.client)
 
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
