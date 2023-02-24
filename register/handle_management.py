@@ -29,9 +29,9 @@ def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
 
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
     logger.info('Registering handle ', handle)
-    registration_result = client.register_handle(handle, handle_value)
+    register_result = client.register_handle(handle, handle_value)
 
-    if registration_result == handle:
+    if register_result == handle:
         logger.info('OK: Register handle successful.')
     else:
         logger.info('PROBLEM: Register handle returned unexpected response.')
@@ -39,3 +39,31 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
 def delete_handle(handle: str, client: RESTHandleClient):
     delete_result = client.delete_handle(handle)
     logger.info('OK: Delete handle successful.')
+
+def get_handle_url(handle: str, client: RESTHandleClient) -> str:
+    key = 'URL'
+    read_value = client.get_value_from_handle(handle, key)
+
+    return read_value
+
+def get_handle_record(handle: str, client: RESTHandleClient):
+    handle_record= client.retrieve_handle_record(handle)
+
+    if handle_record != None:
+        logger.info('OK: Handle exists.')
+    else:
+        logger.error('PROBLEM: Retrieving handle record returned unexpected response.')
+
+    return handle_record
+
+def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
+    key = 'URL'
+    client.modify_handle_value(handle, **{ key: new_handle_value })
+    get_value_result = client.get_value_from_handle(handle, key)
+
+    if get_value_result == new_handle_value:
+        logger.info('OK: Update handle URL successful.')
+    else:
+        logger.critical('CRITICAL: Modify handle URL returned unexpected value.')
+        logger.info('Expected: ', new_handle_value)
+        logger.info('Returned: ', get_value_result)
