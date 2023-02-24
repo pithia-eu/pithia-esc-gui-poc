@@ -28,7 +28,7 @@ def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
     return f'{credentials.get_prefix()}/{handle_suffix}'
 
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
-    logger.info('Registering handle ', handle)
+    logger.info(f'Registering handle {handle}')
     register_result = client.register_handle(handle, handle_value)
 
     if register_result == handle:
@@ -65,5 +65,5 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
         logger.info('OK: Update handle URL successful.')
     else:
         logger.critical('CRITICAL: Modify handle URL returned unexpected value.')
-        logger.info('Expected: ', new_handle_value)
-        logger.info('Returned: ', get_value_result)
+        logger.info(f'Expected: {new_handle_value}')
+        logger.info(f'Returned: {get_value_result}')
