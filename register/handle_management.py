@@ -49,7 +49,7 @@ def get_handle_url(handle: str, client: RESTHandleClient) -> str:
 
     return read_value
 
-def get_handle_record(handle: str, client: RESTHandleClient):
+def get_handle_record(handle: str, client: RESTHandleClient) -> dict:
     handle_record= client.retrieve_handle_record(handle)
 
     if handle_record != None:
