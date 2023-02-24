@@ -13,7 +13,13 @@ from register.doi_registration_prototype import (
     delete_pid,
 )
 from register.handle_management import (
-    instantiate_client_and_load_credentials
+    instantiate_client_and_load_credentials,
+    create_handle,
+    register_handle,
+    delete_handle,
+    update_handle_url,
+    get_handle_url,
+    get_handle_record,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -60,6 +66,37 @@ class HandleManagementTestCase(SimpleTestCase):
         client, credentials = instantiate_client_and_load_credentials()
         self.assertIsInstance(client, RESTHandleClient)
         self.assertIsInstance(credentials, PIDClientCredentials)
+
+    @tag('fast', 'handles')
+    def test_create_handle(self):
+        # Also integration test
+        # with instantiate_client_and_load_credentials() function
+        client, credentials = instantiate_client_and_load_credentials()
+        handle = create_handle(credentials, self.TEST_SUFFIX)
+        self.assertIsInstance(handle, str)
+        self.assertEqual(handle, f'{credentials.get_prefix()}/{self.TEST_SUFFIX}')
+
+    @tag('fast', 'handles')
+    def test_register_handle(self):
+        # Also integration test
+        # with instantiate_client_and_load_credentials() function
+        client, credentials = instantiate_client_and_load_credentials()
+        handle = create_handle(credentials, self.TEST_SUFFIX)
+        register_result = register_handle(handle, self.VALUE_ORIGINAL, client)
+
+        self.assertEqual(register_result, handle)
+
+    @tag('fast', 'handles', 'get_handle_record')
+    def test_get_handle_record(self):
+        client, credentials = instantiate_client_and_load_credentials()
+        handle = create_handle(credentials, self.TEST_SUFFIX)
+        handle_record = get_handle_record(handle, client)
+
+    @tag('fast', 'handles', 'delete_handle')
+    def test_delete_handle(self):
+        client, credentials = instantiate_client_and_load_credentials()
+        handle = create_handle(credentials, self.TEST_SUFFIX)
+        delete_result = delete_handle(handle, client)
 
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
