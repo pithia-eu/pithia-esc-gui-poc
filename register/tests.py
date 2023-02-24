@@ -12,6 +12,7 @@ from register.handle_management import (
     delete_handle,
     update_handle_url,
     get_handle_url,
+    get_handle_value_by_key,
     get_handle_record,
 )
 from validation.errors import FileRegisteredBefore
@@ -86,7 +87,7 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_result = register_handle(handle, self.VALUE_ORIGINAL, self.client)
         self.assertEqual(register_result, handle)
-        # delete_handle(handle, self.client)
+        delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
@@ -103,7 +104,7 @@ class HandleManagementTestCase(SimpleTestCase):
     @tag('fast', 'handles', 'get_handle_url')
     def test_get_handle_url(self):
         """
-        get_handle_url() returns the record for the handle data and raises no exceptions.
+        get_handle_url() returns the URL for the handle and raises no exceptions.
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
