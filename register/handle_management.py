@@ -3,6 +3,10 @@ from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
 from pyhandle.handleexceptions import *
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClientCredentials]:
     handle_api_url = os.environ['HANDLE_API_ENDPOINT_URL']
     credentials = None
@@ -22,3 +26,12 @@ def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClie
 
 def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
     return f'{credentials.get_prefix()}/{handle_suffix}'
+
+def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
+    logger.info('Registering handle ', handle)
+    registration_result = client.register_handle(handle, handle_value)
+
+    if registration_result == handle:
+        logger.info('OK: Register handle successful.')
+    else:
+        logger.info('PROBLEM: Register handle returned unexpected response.')
