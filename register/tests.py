@@ -63,12 +63,18 @@ class HandleManagementTestCase(SimpleTestCase):
 
     @tag('fast', 'handles')
     def test_instantiate_client_and_load_credentials(self):
+        """
+        instantiate_client_and_load_credentials() returns a tuple containing a client of type "RESTHandleClient "and credentials of type "PIDClientCredentials"
+        """
         client, credentials = instantiate_client_and_load_credentials()
         self.assertIsInstance(client, RESTHandleClient)
         self.assertIsInstance(credentials, PIDClientCredentials)
 
     @tag('fast', 'handles')
     def test_create_handle(self):
+        """
+        create_handle() returns a string with format "{handle_prefix}/{handle_suffix}"
+        """
         # Also integration test
         # with instantiate_client_and_load_credentials() function
         client, credentials = instantiate_client_and_load_credentials()
@@ -78,6 +84,9 @@ class HandleManagementTestCase(SimpleTestCase):
 
     @tag('fast', 'handles')
     def test_register_handle(self):
+        """
+        register_handle() returns the handle data passed into it and raises no exceptions.
+        """
         # Also integration test
         # with instantiate_client_and_load_credentials() function
         client, credentials = instantiate_client_and_load_credentials()
@@ -88,12 +97,18 @@ class HandleManagementTestCase(SimpleTestCase):
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
+        """
+        get_handle_record() returns the record for the handle data and raises no exceptions.
+        """
         client, credentials = instantiate_client_and_load_credentials()
         handle = create_handle(credentials, self.TEST_SUFFIX)
         handle_record = get_handle_record(handle, client)
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
+        """
+        delete_handle() raises no exceptions.
+        """
         client, credentials = instantiate_client_and_load_credentials()
         handle = create_handle(credentials, self.TEST_SUFFIX)
         delete_result = delete_handle(handle, client)
