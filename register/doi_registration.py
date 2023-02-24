@@ -19,3 +19,6 @@ def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClie
     credentials = PIDClientCredentials.load_from_JSON('credentials.json')
     client = PyHandleClient('rest').instantiate_with_credentials(credentials)
     return client, credentials
+
+def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
+    return f'{credentials.get_prefix()}/{handle_suffix}'
