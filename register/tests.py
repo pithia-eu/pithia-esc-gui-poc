@@ -12,7 +12,6 @@ from register.handle_management import (
     delete_handle,
     update_handle_url,
     get_handle_url,
-    get_handle_value_by_key,
     get_handle_record,
 )
 from validation.errors import FileRegisteredBefore
