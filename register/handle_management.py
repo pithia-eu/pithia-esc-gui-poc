@@ -36,9 +36,12 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
     else:
         logger.info('PROBLEM: Register handle returned unexpected response.')
 
+    return register_result
+
 def delete_handle(handle: str, client: RESTHandleClient):
     delete_result = client.delete_handle(handle)
     logger.info('OK: Delete handle successful.')
+    return delete_result
 
 def get_handle_url(handle: str, client: RESTHandleClient) -> str:
     key = 'URL'
