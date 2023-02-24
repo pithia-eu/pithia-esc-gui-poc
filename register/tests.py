@@ -121,13 +121,27 @@ class HandleManagementTestCase(SimpleTestCase):
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
         """
-        delete_handle() raises no exceptions.
+        delete_handle() returns the handle of the deleted record and raises no exceptions.
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         delete_result = delete_handle(handle, self.client)
         self.assertEqual(handle, delete_result)
         print('Passed delete_handle() test.')
+
+    @tag('fast', 'handles', 'update_handle_url')
+    def test_update_handle_url(self):
+        """
+        update_handle_url() raises no exception.
+        """
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        update_result = update_handle_url(handle, self.VALUE_AFTER, self.client)
+        handle_url = get_handle_url(handle, self.client)
+        self.assertEqual(update_result, handle)
+        self.assertEqual(handle_url, self.VALUE_AFTER)
+        delete_handle(handle, self.client)
+        print('Passed update_handle_url() test.')
 
     @tag('fast')
     def test_add_doi_tag_to_xml_file(self):
