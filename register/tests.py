@@ -12,9 +12,14 @@ from register.doi_registration_prototype import (
     get_pid,
     delete_pid,
 )
+from register.handle_management import (
+    instantiate_client_and_load_credentials
+)
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
 from pathlib import Path
+from pyhandle.handleclient import RESTHandleClient
+from pyhandle.clientcredentials import PIDClientCredentials
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
@@ -44,6 +49,17 @@ class RegisterMetadataTestCase(SimpleTestCase):
         except FileRegisteredBefore as err:
             print(err)
             self.fail('register_metadata_xml_file() unexpectedly raised an error!')
+
+class HandleManagementTestCase(SimpleTestCase):
+    TEST_SUFFIX = 'MYTEST-HANDLE'
+    VALUE_ORIGINAL = 'https://www.example.com/1'
+    VALUE_AFTER = 'https://www.example.com/2'
+
+    @tag('fast', 'handles')
+    def test_instantiate_client_and_load_credentials(self):
+        client, credentials = instantiate_client_and_load_credentials()
+        self.assertIsInstance(client, RESTHandleClient)
+        self.assertIsInstance(credentials, PIDClientCredentials)
 
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
