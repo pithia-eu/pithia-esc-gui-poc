@@ -63,7 +63,7 @@ def get_handle_record(handle: str, client: RESTHandleClient) -> dict:
 
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
     key = 'URL'
-    client.modify_handle_value(handle, **{ key: new_handle_value })
+    modify_result = client.modify_handle_value(handle, **{ key: new_handle_value })
     get_value_result = client.get_value_from_handle(handle, key)
 
     if get_value_result == new_handle_value:
@@ -72,6 +72,8 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
         logger.critical('CRITICAL: Modify handle URL returned unexpected value.')
         logger.info(f'Expected: {new_handle_value}')
         logger.info(f'Returned: {get_value_result}')
+    
+    return modify_result
 
 def add_doi_to_xml_file(xml_file, doi):
     # Use lxml to append a new filled in doi element
