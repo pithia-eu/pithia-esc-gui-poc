@@ -8,10 +8,6 @@ from register.register import (
     store_xml_file_as_string_and_map_to_resource_id,
 )
 from register.register_api_specification import register_api_specification
-from register.doi_registration_prototype import (
-    generate_doi,
-    add_doi_to_xml_file,
-)
 from .forms import (
     UploadDataCollectionFileForm,
     UploadFileForm,

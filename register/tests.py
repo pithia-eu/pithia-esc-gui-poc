@@ -5,13 +5,6 @@ from bson.objectid import ObjectId
 from django.urls import reverse
 from django.test import SimpleTestCase, tag
 from register.register import register_metadata_xml_file
-from register.doi_registration_prototype import (
-    generate_doi,
-    add_doi_to_xml_file,
-    create_pid,
-    get_pid,
-    delete_pid,
-)
 from register.handle_management import (
     instantiate_client_and_load_credentials,
     create_handle,
@@ -115,44 +108,6 @@ class HandleManagementTestCase(SimpleTestCase):
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         delete_result = delete_handle(handle, self.client)
         self.assertEqual(handle, delete_result)
-
-class DoiFunctionalityTestCase(SimpleTestCase):
-    fake_resource_id = '85d32cad243eb3953dceca32'
-
-    @tag('fast', 'doi', 'create_doi')
-    def test_create_pid(self):
-        """
-        create_pid() adds a pid successfully.
-        """
-        landing_page_url = reverse('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': self.fake_resource_id })
-        put_response = create_pid(landing_page_url)
-        print('put_response.json()', put_response.json())
-
-    @tag('fast', 'doi', 'get_doi')
-    def test_get_pid(self):
-        """
-        get_pid() adds a pid successfully.
-        """
-        get_response = get_pid()
-        print('get_response.json()', get_response.json())
-
-    @tag('fast', 'doi', 'delete_doi')
-    def test_delete_pid(self):
-        """
-        delete_pid() adds a pid successfully.
-        """
-        delete_response = delete_pid()
-        print('delete_response.json()', delete_response.json())
-
-    @tag('fast')
-    def test_generate_fake_doi(self):
-        """
-        generate_doi() returns a dict representing a DOI object.
-        """
-        doi = generate_doi(self.fake_resource_id)
-        self.assertIsInstance(doi, dict)
-        print('doi', doi)
-        print('Passed DOI generation test!')
 
     @tag('fast')
     def test_add_doi_tag_to_xml_file(self):
