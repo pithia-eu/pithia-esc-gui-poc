@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 from django.urls import reverse
 from django.test import SimpleTestCase, tag
 from register.register import register_metadata_xml_file
-from register.doi_registration import (
+from register.doi_registration_prototype import (
     generate_doi,
     add_doi_to_xml_file,
     create_pid,
