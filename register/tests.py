@@ -69,6 +69,7 @@ class HandleManagementTestCase(SimpleTestCase):
         client, credentials = instantiate_client_and_load_credentials()
         self.assertIsInstance(client, RESTHandleClient)
         self.assertIsInstance(credentials, PIDClientCredentials)
+        print('Passed instantiate_client_and_load_credentials() test.')
 
     @tag('fast', 'handles')
     def test_create_handle(self):
@@ -78,6 +79,7 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         self.assertIsInstance(handle, str)
         self.assertEqual(handle, f'{self.credentials.get_prefix()}/{self.TEST_SUFFIX}')
+        print('Passed create_handle() test.')
 
     @tag('fast', 'handles', 'register_handle')
     def test_register_handle(self):
@@ -88,6 +90,7 @@ class HandleManagementTestCase(SimpleTestCase):
         register_result = register_handle(handle, self.VALUE_ORIGINAL, self.client)
         self.assertEqual(register_result, handle)
         delete_handle(handle, self.client)
+        print('Passed register_handle() test.')
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
@@ -100,6 +103,7 @@ class HandleManagementTestCase(SimpleTestCase):
         print('handle_record', handle_record)
         self.assertIsInstance(handle_record, dict)
         delete_handle(handle, self.client)
+        print('Passed get_handle_record() test.')
 
     @tag('fast', 'handles', 'get_handle_url')
     def test_get_handle_url(self):
@@ -113,6 +117,7 @@ class HandleManagementTestCase(SimpleTestCase):
         self.assertEqual(handle_url, self.VALUE_ORIGINAL)
         self.assertIsInstance(handle_url, str)
         delete_handle(handle, self.client)
+        print('Passed get_handle_url() test.')
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
@@ -123,6 +128,7 @@ class HandleManagementTestCase(SimpleTestCase):
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         delete_result = delete_handle(handle, self.client)
         self.assertEqual(handle, delete_result)
+        print('Passed delete_handle() test.')
 
     @tag('fast')
     def test_add_doi_tag_to_xml_file(self):
