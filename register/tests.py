@@ -67,7 +67,7 @@ class HandleManagementTestCase(SimpleTestCase):
         self.client, self.credentials = instantiate_client_and_load_credentials()
         return super().setUp()
 
-    @tag('fast', 'handles')
+    @tag('fast', 'handles', 'instantiate_client_and_load_credentials')
     def test_instantiate_client_and_load_credentials(self):
         """
         instantiate_client_and_load_credentials() returns a tuple containing a client of type "RESTHandleClient "and credentials of type "PIDClientCredentials"
@@ -103,6 +103,7 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         handle_record = get_handle_record(handle, self.client)
+        self.assertIsInstance(handle_record, dict)
         delete_handle(handle, self.client)
 
     @tag('fast', 'handles', 'delete_handle')
@@ -113,6 +114,7 @@ class HandleManagementTestCase(SimpleTestCase):
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         delete_result = delete_handle(handle, self.client)
+        self.assertEqual(handle, delete_result)
 
 class DoiFunctionalityTestCase(SimpleTestCase):
     fake_resource_id = '85d32cad243eb3953dceca32'
