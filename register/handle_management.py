@@ -69,6 +69,11 @@ def get_handle_raw(handle: str) -> dict:
     handle_raw = response.json()
     return handle_raw
 
+def get_time_handle_was_issued(handle: str) -> str:
+    handle_raw = get_handle_raw(handle)
+    date_issued = handle_raw['values'][0]['timestamp']
+    return date_issued
+
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
     key = 'URL'
     modify_result = client.modify_handle_value(handle, **{ key: new_handle_value })

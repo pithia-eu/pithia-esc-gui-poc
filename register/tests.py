@@ -14,6 +14,7 @@ from register.handle_management import (
     get_handle_url,
     get_handle_record,
     get_handle_raw,
+    get_time_handle_was_issued,
     add_doi_to_xml_file,
     generate_doi,
 )
@@ -133,6 +134,19 @@ class HandleManagementTestCase(SimpleTestCase):
         self.assertIsInstance(handle_raw, dict)
         delete_handle(handle, self.client)
         print('Passed get_handle_raw() test.')
+
+    @tag('fast', 'handles', 'get_time_handle_was_issued')
+    def test_get_time_handle_was_issued(self):
+        """
+        get_time_handle_was_issued() returns the time the handle was issued in str format.
+        """
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        # register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        issue_date = get_time_handle_was_issued(handle)
+        print('issue_date', issue_date)
+        self.assertIsInstance(issue_date, str)
+        # delete_handle(handle, self.client)
+        print('Passed get_time_handle_was_issued() test.')
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
