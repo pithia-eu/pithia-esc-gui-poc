@@ -24,6 +24,13 @@ from resource_management.views import (
 from validation.errors import FileRegisteredBefore
 from mongodb import client
 from update.update import update_current_version_of_resource
+from .handle_management import (
+    map_handle_to_doi,
+    add_doi_to_xml_file,
+    create_handle,
+    instantiate_client_and_load_credentials,
+    register_handle,
+)
 
 import logging
 
@@ -70,6 +77,7 @@ class ResourceRegisterFormView(FormView):
                 # place again, but takes a long time. Another
                 # method which verifies validation took place
                 # should be implemented.
+                resource_id = None
                 try:
                     if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                         self.resource_conversion_validate_and_correct_function = None
@@ -81,24 +89,7 @@ class ResourceRegisterFormView(FormView):
                                 self.resource_conversion_validate_and_correct_function,
                                 session=s
                             )
-                                
-                            # POST RESOURCE REGISTRATION
-                            # Get the DOI
-                            # Update the actual "xml_file" variable by adding the DOI to the XML
-                            # Perform an update on the resource
-                            # Continue with registration as normal
-                            # if 'register_doi' in request.POST:
-                            #     resource_id = registration_results['_id']
-                            #     doi = map_handle_to_doi(f'localhost/<resource-type>/{resource_id}')
-                            #     xml_file_with_doi = add_doi_to_xml_file(xml_file, doi)
-                            #     update_current_version_of_resource(
-                            #         resource_id,
-                            #         xml_file_with_doi,
-                            #         self.resource_mongodb_model,
-                            #         self.resource_conversion_validate_and_correct_function,
-                            #         session=s
-                            #     )
-                            #     xml_file = xml_file_with_doi
+                            resource_id = registration_results['_id']
 
                             store_xml_file_as_string_and_map_to_resource_id(
                                 xml_file,
@@ -117,6 +108,28 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
+                                
+                    # POST RESOURCE REGISTRATION
+                    # Get the DOI
+                    # Update the actual "xml_file" variable by adding the DOI to the XML
+                    # Perform an update on the resource
+                    # Continue with registration as normal
+                    if 'register_doi' in request.POST:
+                        client, credentials = instantiate_client_and_load_credentials()
+                        handle = create_handle(credentials, resource_id)
+                        resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
+                        register_handle(handle, resource_details_page_url, client)
+                        doi = map_handle_to_doi(handle)
+                        xml_file_with_doi = add_doi_to_xml_file(xml_file, doi)
+                        update_current_version_of_resource(
+                            resource_id,
+                            xml_file_with_doi,
+                            self.resource_mongodb_model,
+                            self.resource_conversion_validate_and_correct_function,
+                            session=s
+                        )
+                        
+                        xml_file = xml_file_with_doi
                     
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
