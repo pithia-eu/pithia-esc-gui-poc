@@ -13,6 +13,8 @@ from register.handle_management import (
     update_handle_url,
     get_handle_url,
     get_handle_record,
+    add_doi_to_xml_file,
+    generate_doi,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
