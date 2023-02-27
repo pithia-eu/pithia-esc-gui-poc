@@ -95,24 +95,25 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
     return modify_result
 
 def generate_doi(handle):
+    handle_record = get_handle_record(handle)
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 
     doi = {
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
         'issueDate': handle_issue_date_as_string,
-        'issueNumber': '1',
+        'issueNumber': '0', # issue number is not known
         'name': {
             '@primaryLanguage': 'en',
-            'value': 'Test',
-            'type': 'Title',
+            'value': handle_record['URL'],
+            'type': 'URL',
         },
         'identifier': {
-            'nonUriValue': '10.5240/B94E-F500-7164-57DB-82F5-6',
+            'nonUriValue': handle,
             'uri': {
                 '@returnType': 'text/html',
-                '#text': 'https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6',
+                '#text': f'{os.environ["HANDLE_API_ENDPOINT_URL"]}/api/handles/{handle}',
             },
-            'type': 'EidrContentID',
+            'type': 'epicId',
         }
     }
     return doi
