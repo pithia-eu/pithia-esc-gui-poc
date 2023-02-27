@@ -24,3 +24,16 @@ def store_xml_file_as_string_and_map_to_resource_id(xml_file, resource_id, sessi
         'value': xml_file_string
     }
     OriginalMetadataXml.insert_one(original_metadata_xml, session=session)
+
+def update_original_metadata_xml_string(updated_xml_string, resource_id, session=None):
+    return OriginalMetadataXml.update_one(
+        {
+            '_id': ObjectId(resource_id),
+        },
+        {
+            '$set': {
+                'value': updated_xml_string
+            }
+        },
+        session=session
+    )
