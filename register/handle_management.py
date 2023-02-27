@@ -1,7 +1,7 @@
-import os
 import json
+import os
 import requests
-from datetime import datetime
+from dateutil import parser
 from lxml import etree
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
@@ -69,10 +69,16 @@ def get_handle_raw(handle: str) -> dict:
     handle_raw = response.json()
     return handle_raw
 
-def get_time_handle_was_issued(handle: str) -> str:
+def get_time_handle_was_issued_as_string(handle: str) -> str:
     handle_raw = get_handle_raw(handle)
     date_issued = handle_raw['values'][0]['timestamp']
     return date_issued
+
+def get_date_handle_was_issued_as_string(handle: str) -> str:
+    handle_issue_time_string = get_time_handle_was_issued_as_string(handle)
+    print('handle_issue_time_string', handle_issue_time_string)
+    handle_issue_date = parser.isoparse(handle_issue_time_string).strftime('%Y-%m-%d')
+    return handle_issue_date
 
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
     key = 'URL'
@@ -89,11 +95,11 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
     return modify_result
 
 def generate_doi(handle):
-    current_date = datetime.today().strftime('%Y-%m-%d')
+    handle_issue_date = get_date_handle_was_issued_as_string(handle)
 
     doi = {
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        'issueDate': current_date,
+        'issueDate': handle_issue_date,
         'issueNumber': '1',
         'name': {
             '@primaryLanguage': 'en',

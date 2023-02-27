@@ -14,7 +14,8 @@ from register.handle_management import (
     get_handle_url,
     get_handle_record,
     get_handle_raw,
-    get_time_handle_was_issued,
+    get_time_handle_was_issued_as_string,
+    get_date_handle_was_issued_as_string,
     add_doi_to_xml_file,
     generate_doi,
 )
@@ -135,18 +136,31 @@ class HandleManagementTestCase(SimpleTestCase):
         delete_handle(handle, self.client)
         print('Passed get_handle_raw() test.')
 
-    @tag('fast', 'handles', 'get_time_handle_was_issued')
-    def test_get_time_handle_was_issued(self):
+    @tag('fast', 'handles', 'get_time_handle_was_issued_as_string')
+    def test_get_time_handle_was_issued_as_string(self):
         """
-        get_time_handle_was_issued() returns the time the handle was issued in str format.
+        get_time_handle_was_issued_as_string() returns the time the handle was issued in str format.
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         # register_handle(handle, self.VALUE_ORIGINAL, self.client)
-        issue_date = get_time_handle_was_issued(handle)
-        print('issue_date', issue_date)
-        self.assertIsInstance(issue_date, str)
+        issue_time_string = get_time_handle_was_issued_as_string(handle)
+        print('issue_time_string', issue_time_string)
+        self.assertIsInstance(issue_time_string, str)
         # delete_handle(handle, self.client)
-        print('Passed get_time_handle_was_issued() test.')
+        print('Passed get_time_handle_was_issued_as_string() test.')
+
+    @tag('fast', 'handles', 'get_date_handle_was_issued_as_string')
+    def test_get_date_handle_was_issued_as_string(self):
+        """
+        get_date_handle_was_issued_as_string() returns the date the handle was issued.
+        """
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        # register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        issue_date_as_string = get_date_handle_was_issued_as_string(handle)
+        print('issue_date_as_string', issue_date_as_string)
+        self.assertIsInstance(issue_date_as_string, str)
+        # delete_handle(handle, self.client)
+        print('Passed get_date_handle_was_issued_as_string() test.')
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
