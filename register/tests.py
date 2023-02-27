@@ -13,6 +13,7 @@ from register.handle_management import (
     update_handle_url,
     get_handle_url,
     get_handle_record,
+    get_handle_raw,
     add_doi_to_xml_file,
     generate_doi,
 )
@@ -119,6 +120,19 @@ class HandleManagementTestCase(SimpleTestCase):
         self.assertIsInstance(handle_url, str)
         delete_handle(handle, self.client)
         print('Passed get_handle_url() test.')
+
+    @tag('fast', 'handles', 'get_handle_raw')
+    def test_get_handle_raw(self):
+        """
+        get_handle_raw() returns the handle without being formatted by the API.
+        """
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        handle_raw = get_handle_raw(handle)
+        print('handle_raw', handle_raw)
+        self.assertIsInstance(handle_raw, dict)
+        delete_handle(handle, self.client)
+        print('Passed get_handle_raw() test.')
 
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):

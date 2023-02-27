@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from datetime import datetime
 from lxml import etree
 from pyhandle.clientcredentials import PIDClientCredentials
@@ -61,6 +62,12 @@ def get_handle_record(handle: str, client: RESTHandleClient) -> dict:
         logger.error('PROBLEM: Retrieving handle record returned unexpected response.')
 
     return handle_record
+
+def get_handle_raw(handle: str) -> dict:
+    handle_api_endpoint = os.environ['HANDLE_API_ENDPOINT_URL']
+    response = requests.get(f'{handle_api_endpoint}/api/handles/{handle}')
+    handle_raw = response.json()
+    return handle_raw
 
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
     key = 'URL'
