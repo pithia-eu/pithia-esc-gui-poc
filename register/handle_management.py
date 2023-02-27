@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 from lxml import etree
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
@@ -74,6 +75,29 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
         logger.info(f'Returned: {get_value_result}')
     
     return modify_result
+
+def generate_doi(handle):
+    current_date = datetime.today().strftime('%Y-%m-%d')
+
+    doi = {
+        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
+        'issueDate': current_date,
+        'issueNumber': '1',
+        'name': {
+            '@primaryLanguage': 'en',
+            'value': 'Test',
+            'type': 'Title',
+        },
+        'identifier': {
+            'nonUriValue': '10.5240/B94E-F500-7164-57DB-82F5-6',
+            'uri': {
+                '@returnType': 'text/html',
+                '#text': 'https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6',
+            },
+            'type': 'EidrContentID',
+        }
+    }
+    return doi
 
 def add_doi_to_xml_file(xml_file, doi):
     # Use lxml to append a new filled in doi element
