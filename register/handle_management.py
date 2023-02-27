@@ -95,11 +95,11 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
     return modify_result
 
 def generate_doi(handle):
-    handle_issue_date = get_date_handle_was_issued_as_string(handle)
+    handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 
     doi = {
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        'issueDate': handle_issue_date,
+        'issueDate': handle_issue_date_as_string,
         'issueNumber': '1',
         'name': {
             '@primaryLanguage': 'en',
