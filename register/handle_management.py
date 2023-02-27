@@ -94,7 +94,7 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
     
     return modify_result
 
-def generate_doi(handle):
+def map_handle_to_doi(handle):
     handle_record = get_handle_record(handle)
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 

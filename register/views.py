@@ -89,7 +89,7 @@ class ResourceRegisterFormView(FormView):
                             # Continue with registration as normal
                             # if 'register_doi' in request.POST:
                             #     resource_id = registration_results['_id']
-                            #     doi = generate_doi(f'localhost/<resource-type>/{resource_id}')
+                            #     doi = map_handle_to_doi(f'localhost/<resource-type>/{resource_id}')
                             #     xml_file_with_doi = add_doi_to_xml_file(xml_file, doi)
                             #     update_current_version_of_resource(
                             #         resource_id,

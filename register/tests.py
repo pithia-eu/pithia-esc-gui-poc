@@ -17,7 +17,7 @@ from register.handle_management import (
     get_time_handle_was_issued_as_string,
     get_date_handle_was_issued_as_string,
     add_doi_to_xml_file,
-    generate_doi,
+    map_handle_to_doi,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -192,7 +192,7 @@ class HandleManagementTestCase(SimpleTestCase):
         """
         add_doi_to_xml_file() adds a filled out <doi> element to the XML file.
         """
-        doi = generate_doi(self.fake_resource_id)
+        doi = map_handle_to_doi(self.fake_resource_id)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             updated_xml_file = add_doi_to_xml_file(xml_file, doi)
             print('updated_xml_file', updated_xml_file)
