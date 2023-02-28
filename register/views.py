@@ -23,13 +23,10 @@ from resource_management.views import (
 )
 from validation.errors import FileRegisteredBefore
 from mongodb import client
-from update.update import update_current_version_of_resource
+from update.update import update_original_metadata_xml_string
 from .handle_management import (
-    map_handle_to_doi,
-    add_doi_to_xml_file,
-    create_handle,
-    instantiate_client_and_load_credentials,
-    register_handle,
+    create_and_register_handle_for_resource,
+    add_handle_to_metadata_and_return_updated_xml_string,
 )
 
 import logging
@@ -49,6 +46,7 @@ class ResourceRegisterFormView(FormView):
     post_url = ''
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
+    resource_id = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,7 +75,6 @@ class ResourceRegisterFormView(FormView):
                 # place again, but takes a long time. Another
                 # method which verifies validation took place
                 # should be implemented.
-                resource_id = None
                 try:
                     if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                         self.resource_conversion_validate_and_correct_function = None
@@ -89,7 +86,7 @@ class ResourceRegisterFormView(FormView):
                                 self.resource_conversion_validate_and_correct_function,
                                 session=s
                             )
-                            resource_id = registration_results['_id']
+                            self.resource_id = registration_results['_id']
 
                             store_xml_file_as_string_and_map_to_resource_id(
                                 xml_file,
@@ -115,21 +112,24 @@ class ResourceRegisterFormView(FormView):
                     # Perform an update on the resource
                     # Continue with registration as normal
                     if 'register_doi' in request.POST:
-                        client, credentials = instantiate_client_and_load_credentials()
-                        handle = create_handle(credentials, resource_id)
-                        resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
-                        register_handle(handle, resource_details_page_url, client)
-                        doi = map_handle_to_doi(handle)
-                        xml_file_with_doi = add_doi_to_xml_file(xml_file, doi)
-                        update_current_version_of_resource(
-                            resource_id,
-                            xml_file_with_doi,
-                            self.resource_mongodb_model,
-                            self.resource_conversion_validate_and_correct_function,
-                            session=s
-                        )
-                        
-                        xml_file = xml_file_with_doi
+                        with client.start_session() as s:
+                            def cb(s):
+                                handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
+                                xml_string_with_doi = add_handle_to_metadata_and_return_updated_xml_string(
+                                    handle,
+                                    handle_api_client,
+                                    self.resource_id,
+                                    xml_file,
+                                    self.resource_mongodb_model,
+                                    resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function,
+                                    session=s
+                                )
+                                update_original_metadata_xml_string(
+                                    xml_string_with_doi,
+                                    self.resource_id,
+                                    session=s
+                                )
+                            s.with_transaction(cb)
                     
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
