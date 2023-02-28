@@ -161,7 +161,9 @@ def map_handle_to_doi(handle: str, handle_url: str):
     }
     return doi
 
-def add_doi_to_xml_string(xml_string: bytes, doi: dict) -> str:
+def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
+    if isinstance(xml_string, str):
+        xml_string = xml_string.encode('utf-8')
     # Use lxml to append a new filled in doi element
     parser = etree.XMLParser(remove_blank_text=True, encoding='utf-8')
     root = etree.fromstring(xml_string, parser)
@@ -201,4 +203,5 @@ def add_doi_to_xml_string(xml_string: bytes, doi: dict) -> str:
     root.append(doi_element)
     etree.indent(root, space='    ')
     updated_xml_string = etree.tostring(root, pretty_print=True)
+    updated_xml_string = updated_xml_string.decode('utf-8')
     return updated_xml_string
