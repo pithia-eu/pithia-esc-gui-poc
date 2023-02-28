@@ -59,9 +59,7 @@ def update_data_collection_api_interaction_method_description(
         session=session
     )
 
-def update_original_metadata_xml_string(updated_xml_file, resource_id, session=None):
-    updated_xml_file.seek(0)
-    updated_xml_string = updated_xml_file.read()
+def update_original_metadata_xml_string(updated_xml_string, resource_id, session=None):
     return OriginalMetadataXml.update_one(
         {
             'resourceId': ObjectId(resource_id),
