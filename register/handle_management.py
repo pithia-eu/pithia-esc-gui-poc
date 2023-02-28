@@ -2,10 +2,13 @@ import json
 import os
 import requests
 from dateutil import parser
+from django.urls import reverse_lazy
 from lxml import etree
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
 from pyhandle.handleexceptions import *
+from update.update import update_current_version_of_resource
+import urllib.parse
 
 import logging
 
@@ -41,6 +44,14 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
         logger.info('PROBLEM: Register handle returned unexpected response.')
 
     return register_result
+
+def create_and_register_handle_for_resource(resource_id: str) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
+    client, credentials = instantiate_client_and_load_credentials()
+    handle = create_handle(credentials, resource_id)
+    resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
+    resource_details_page_url_string = str(resource_details_page_url)
+    register_handle(handle, resource_details_page_url_string, client)
+    return handle, client, credentials
 
 def delete_handle(handle: str, client: RESTHandleClient):
     delete_result = client.delete_handle(handle)
@@ -94,8 +105,40 @@ def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClie
     
     return modify_result
 
-def map_handle_to_doi(handle):
-    handle_record = get_handle_record(handle)
+def get_handles_with_prefix(prefix):
+    handle_api_endpoint = os.environ['HANDLE_API_ENDPOINT_URL']
+    response = requests.get(
+        f'{handle_api_endpoint}/api/handles?prefix={prefix}',
+        auth=(urllib.parse.quote_plus(os.environ['HANDLE_API_USERNAME']), os.environ['HANDLE_API_KEY'])
+    )
+    handles_with_prefix = response.json()
+    return handles_with_prefix
+
+def add_handle_to_metadata_and_return_updated_xml_string(
+    handle,
+    client,
+    resource_id,
+    xml_file,
+    resource_mongodb_model,
+    resource_conversion_validate_and_correct_function=None,
+    session=None
+):
+    handle_url = get_handle_url(handle, client)
+    doi = map_handle_to_doi(handle, handle_url)
+    print(type(xml_file))
+    xml_file.seek(0)
+    xml_string = xml_file.read()
+    xml_string_with_doi = add_doi_to_xml_string(xml_string, doi)
+    update_current_version_of_resource(
+        resource_id,
+        xml_string_with_doi,
+        resource_mongodb_model,
+        resource_conversion_validate_and_correct_function,
+        session=session
+    )
+    return xml_string_with_doi
+
+def map_handle_to_doi(handle: str, handle_url: str):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 
     doi = {
@@ -104,7 +147,7 @@ def map_handle_to_doi(handle):
         'issueNumber': '0', # issue number is not known
         'name': {
             '@primaryLanguage': 'en',
-            'value': handle_record['URL'],
+            'value': handle_url,
             'type': 'URL',
         },
         'identifier': {
@@ -118,13 +161,10 @@ def map_handle_to_doi(handle):
     }
     return doi
 
-def add_doi_to_xml_file(xml_file, doi):
+def add_doi_to_xml_string(xml_string: bytes, doi: dict) -> str:
     # Use lxml to append a new filled in doi element
-    # The passed in xml_file should be open in 'wb' mode,
-    # so it can be written to.
-    parser = etree.XMLParser(remove_blank_text=True)
-    xml_file_parsed = etree.parse(xml_file, parser)
-    root = xml_file_parsed.getroot()
+    parser = etree.XMLParser(remove_blank_text=True, encoding='utf-8')
+    root = etree.fromstring(xml_string, parser)
     doi_element_content = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
         <doi:kernelMetadata>
@@ -160,6 +200,5 @@ def add_doi_to_xml_file(xml_file, doi):
     doi_element = etree.fromstring(doi_element_content)
     root.append(doi_element)
     etree.indent(root, space='    ')
-    with open(xml_file.name, 'wb') as xml_file:
-        xml_file_parsed.write(xml_file.name, pretty_print=True)
-    return xml_file
+    updated_xml_string = etree.tostring(root, pretty_print=True)
+    return updated_xml_string

@@ -16,8 +16,11 @@ from register.handle_management import (
     get_handle_raw,
     get_time_handle_was_issued_as_string,
     get_date_handle_was_issued_as_string,
-    add_doi_to_xml_file,
+    add_doi_to_xml_string,
     map_handle_to_doi,
+    create_and_register_handle_for_resource,
+    add_handle_to_metadata_and_return_updated_xml_string,
+    get_handles_with_prefix,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -187,13 +190,48 @@ class HandleManagementTestCase(SimpleTestCase):
         delete_handle(handle, self.client)
         print('Passed update_handle_url() test.')
 
-    @tag('fast')
-    def test_add_doi_tag_to_xml_file(self):
+    @tag('fast', 'register_handle_and_add_to_metadata')
+    def test_register_handle_and_add_to_metadata(self):
         """
-        add_doi_to_xml_file() adds a filled out <doi> element to the XML file.
+        register_handle_and_add_to_metadata() raises no exceptions.
         """
-        doi = map_handle_to_doi(self.fake_resource_id)
+        client = mongomock.MongoClient()
+        MockCurrentCatalogueDataSubset= client[env('DB_NAME')]['current-catalogue-data-subsets']
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            updated_xml_file = add_doi_to_xml_file(xml_file, doi)
-            print('updated_xml_file', updated_xml_file)
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockCurrentCatalogueDataSubset,
+                None
+            )
+            resource_id = registered_resource['_id']
+            handle, client, credentials = create_and_register_handle_for_resource(resource_id)
+            print('xml_file', xml_file)
+            add_handle_to_metadata_and_return_updated_xml_string(
+                handle,
+                client,
+                resource_id,
+                xml_file,
+                MockCurrentCatalogueDataSubset
+            )
+            print(f'Passed handle registration for {Path(xml_file.name).name}.')
+
+    @tag('fast', 'add_doi_to_xml_string')
+    def test_add_doi_to_xml_string(self):
+        """
+        add_doi_to_xml_string() adds a filled out <doi> element to the XML string.
+        """
+        doi = map_handle_to_doi('21.15112/MYTEST-HANDLE', 'https://www.example.com/')
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            xml_string = xml_file.read()
+            updated_xml_string = add_doi_to_xml_string(xml_string, doi)
+            print('updated_xml_string', updated_xml_string)
             print(f'Passed new DOI element addition for {Path(xml_file.name).name}.')
+
+    @tag('fast', 'get_handles_with_prefix')
+    def test_get_handles_with_prefix(self):
+        """
+        get_handles_with_prefix() returns all handles under a given prefix.
+        """
+        prefix = env('HANDLE_PREFIX')
+        handles = get_handles_with_prefix(prefix)
+        print('handles', handles)
