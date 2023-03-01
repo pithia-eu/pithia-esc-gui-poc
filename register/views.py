@@ -47,6 +47,7 @@ class ResourceRegisterFormView(FormView):
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_id = None
+    handle = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -127,6 +128,7 @@ class ResourceRegisterFormView(FormView):
                         with client.start_session() as s:
                             def cb(s):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
+                                self.handle = handle
                                 xml_string_with_doi = add_handle_to_metadata_and_return_updated_xml_string(
                                     handle,
                                     handle_api_client,
@@ -143,7 +145,7 @@ class ResourceRegisterFormView(FormView):
                                 )
                             s.with_transaction(cb)
                     
-                    messages.success(request, f'Successfully registered DOI for {xml_file.name}.')
+                    messages.success(request, f'A DOI with name "{self.handle}" was registered for {xml_file.name}.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during DOI registration process.')
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
