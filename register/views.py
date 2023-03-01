@@ -145,7 +145,7 @@ class ResourceRegisterFormView(FormView):
                                 )
                             s.with_transaction(cb)
                     
-                    messages.success(request, f'A DOI with name "{self.handle}" was registered for {xml_file.name}.')
+                    messages.success(request, f'A DOI with name "{self.handle}" was registered for this data subset.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during DOI registration process.')
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
