@@ -105,7 +105,19 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
-                                
+                    
+                    messages.success(request, f'Successfully registered {xml_file.name}.')
+                except ExpatError as err:
+                    logger.exception('Expat error occurred during registration process.')
+                    messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
+                except FileRegisteredBefore as err:
+                    logger.exception('The XML file submitted for registration has been registered before.')
+                    messages.error(request, f'{xml_file.name} has been registered before.')
+                except BaseException as err:
+                    logger.exception('An unexpected error occurred during metadata registration.')
+                    messages.error(request, 'An unexpected error occurred.')
+
+                try:
                     # POST RESOURCE REGISTRATION
                     # Get the DOI
                     # Update the actual "xml_file" variable by adding the DOI to the XML
@@ -131,20 +143,13 @@ class ResourceRegisterFormView(FormView):
                                 )
                             s.with_transaction(cb)
                     
-                    messages.success(request, f'Successfully registered {xml_file.name}.')
+                    messages.success(request, f'Successfully registered DOI for {xml_file.name}.')
                 except ExpatError as err:
-                    logger.exception('Expat error occurred during registration process.')
-                    messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
-                except FileRegisteredBefore as err:
-                    logger.exception('The XML file submitted for registration has been registered before.')
-                    messages.error(request, f'{xml_file.name} has been registered before.')
+                    logger.exception('Expat error occurred during DOI registration process.')
+                    messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
                 except BaseException as err:
-                    logger.exception('An unexpected error occurred during metadata registration.')
-                    messages.error(request, 'An unexpected error occurred.')
-                # validation_results = self.validate_resource(xml_file)
-                # if 'error' not in validation_results:
-                # else:
-                #     messages.error(request, 'The file submitted was not valid.')
+                    logger.exception('An unexpected error occurred during DOI registration.')
+                    messages.error(request, 'An unexpected error occurred during DOI registration.')
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
