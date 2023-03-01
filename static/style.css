@@ -133,7 +133,7 @@ header .dropdown-item:active a {
 
 .card-menu .card:hover img,
 .card-menu .card:focus img {
-    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
 }
 
 .card-menu .card:hover [href^="http"]:not([href*="pithia.eu"]) span::after,
