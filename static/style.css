@@ -113,7 +113,7 @@ header .dropdown-item:active a {
 .card-menu .card {
     border-color: var(--pithia-blue);
     background-color: white;
-    transition: background-color 250ms linear;
+    transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
 }
 
@@ -127,30 +127,31 @@ header .dropdown-item:active a {
 
 .card-menu .card img {
     width: 3rem;
-    filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%);
+    /* filter: invert(29%) sepia(57%) saturate(2311%) hue-rotate(173deg) brightness(99%) contrast(108%); */
     transition: filter 10ms linear;
 }
 
 .card-menu .card:hover img,
 .card-menu .card:focus img {
-    filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+    /* filter: invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%); */
 }
 
 .card-menu .card:hover [href^="http"]:not([href*="pithia.eu"]) span::after,
 .card-menu .card:focus [href^="http"]:not([href*="pithia.eu"]) span::after {
-    background-image: url('/static/external_link_white.svg');
+    /* background-image: url('/static/external_link_white.svg'); */
 }
 
 .card-menu .card:hover,
 .card-menu .card:focus {
-    background-color: var(--pithia-blue);
+    box-shadow: 0px 0px 0px 1.5px var(--pithia-blue);
+    background-color: rgb(245, 248, 251);
 }
 
 .card-menu .card:hover a,
 .card-menu .card:focus a,
 .card-menu .card:hover .text-muted,
 .card-menu .card:focus .text-muted {
-    color: white !important;
+    /* color: white !important; */
 }
 
 .card-menu .card-body {
