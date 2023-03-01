@@ -148,6 +148,7 @@ class CatalogueRelatedResourceDeleteView(TemplateView):
             '_id': ObjectId(self.resource_id)
         })
         self.other_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+        self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
