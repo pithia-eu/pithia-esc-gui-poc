@@ -1,6 +1,8 @@
 import json
 import os
 import requests
+from bson import ObjectId
+from common.mongodb_models import OriginalMetadataXml
 from dateutil import parser
 from django.urls import reverse_lazy
 from lxml import etree
@@ -125,7 +127,6 @@ def add_handle_to_metadata_and_return_updated_xml_string(
 ):
     handle_url = get_handle_url(handle, client)
     doi = map_handle_to_doi(handle, handle_url)
-    print(type(xml_file))
     xml_file.seek(0)
     xml_string = xml_file.read()
     xml_string_with_doi = add_doi_to_xml_string(xml_string, doi)
@@ -161,11 +162,14 @@ def map_handle_to_doi(handle: str, handle_url: str):
     }
     return doi
 
+def create_lxml_utf8_parser():
+    return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
+
 def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
     if isinstance(xml_string, str):
         xml_string = xml_string.encode('utf-8')
     # Use lxml to append a new filled in doi element
-    parser = etree.XMLParser(remove_blank_text=True, encoding='utf-8')
+    parser = create_lxml_utf8_parser()
     root = etree.fromstring(xml_string, parser)
     doi_element_content = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
@@ -205,3 +209,33 @@ def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
     updated_xml_string = etree.tostring(root, pretty_print=True)
     updated_xml_string = updated_xml_string.decode('utf-8')
     return updated_xml_string
+
+def remove_doi_element_from_xml_string(xml_string):
+    if isinstance(xml_string, str):
+        xml_string = xml_string.encode('utf-8')
+    parser = create_lxml_utf8_parser()
+    root = etree.fromstring(xml_string, parser)
+    for doi in root.findall('.//{https://metadata.pithia.eu/schemas/2.2}doi'):
+        doi.getparent().remove(doi)
+    updated_xml_string = etree.tostring(root, pretty_print=True)
+    updated_xml_string = updated_xml_string.decode('utf-8')
+    return updated_xml_string
+
+def get_doi_element_string_from_xml_string(xml_string):
+    if isinstance(xml_string, str):
+        xml_string = xml_string.encode('utf-8')
+    parser = create_lxml_utf8_parser()
+    root = etree.fromstring(xml_string.encode('utf-8'), parser)
+    doi_element = root.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
+    if doi_element is None:
+        return None
+    doi_element_string = etree.tostring(doi_element, pretty_print=True)
+    doi_element_string = doi_element_string.decode('utf-8')
+    return doi_element_string
+
+def get_doi_element_xml_string_for_resource_id(resource_id):
+    original_metadata_xml = OriginalMetadataXml.find_one({
+        'resourceId': ObjectId(resource_id),
+    }, { 'value': 1 })
+    xml_string = original_metadata_xml['value']
+    return get_doi_element_string_from_xml_string(xml_string)
