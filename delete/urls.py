@@ -16,4 +16,7 @@ urlpatterns = [
     path('computations/<computation_id>/delete/', views.ComputationDeleteView.as_view(), name='computation'),
     path('processes/<process_id>/delete/', views.ProcessDeleteView.as_view(), name='process'),
     path('data-collections/<data_collection_id>/delete/', views.DataCollectionDeleteView.as_view(), name='data_collection'),
+    path('catalogues/<catalogue_id>/delete/', views.CatalogueDeleteView.as_view(), name='catalogue'),
+    path('catalogue-entries/<catalogue_entry_id>/delete/', views.CatalogueEntryDeleteView.as_view(), name='catalogue_entry'),
+    path('catalogue-data-subsets/<catalogue_data_subset_id>/delete/', views.CatalogueDataSubsetDeleteView.as_view(), name='catalogue_data_subset'),
 ]

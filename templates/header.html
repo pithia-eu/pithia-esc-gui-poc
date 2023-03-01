@@ -28,8 +28,12 @@
                     <a href="{{ data_collections_url }}" class="nav-link px-2 {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:resources' as resources_url %}
-                    <a href="{{ resources_url }}" class="nav-link px-2 {% if request.path == resources_url %}link-secondary{% endif %}">Browse Metadata</a>
+                    {% url 'browse:catalogue_related_resource_types' as catalogue_metadata_url %}
+                    <a href="{{ catalogue_metadata_url }}" class="nav-link px-2 {% if request.path == catalogue_metadata_url %}link-secondary{% endif %}">Browse Catalogue-related Metadata</a>
+                </li>
+                <li class="dropdown-item">
+                    {% url 'browse:index' as browse_url %}
+                    <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'ontology:index' as browse_ontology_url %}

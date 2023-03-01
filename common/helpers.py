@@ -1,6 +1,23 @@
 from bson import ObjectId
 
-from .mongodb_models import CurrentDataCollectionInteractionMethod, CurrentDataCollection, CurrentAcquisitionCapability, CurrentInstrument, CurrentOrganisation, CurrentIndividual, CurrentProject, CurrentPlatform, CurrentOperation, CurrentAcquisition, CurrentComputationCapability, CurrentComputation, CurrentProcess
+from .mongodb_models import (
+    CurrentDataCollectionInteractionMethod,
+    CurrentDataCollection,
+    CurrentAcquisitionCapability,
+    CurrentInstrument,
+    CurrentOrganisation,
+    CurrentIndividual,
+    CurrentProject,
+    CurrentPlatform,
+    CurrentOperation,
+    CurrentAcquisition,
+    CurrentComputationCapability,
+    CurrentComputation,
+    CurrentProcess,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
+)
 
 def _map_id_property(resource):
     return resource['_id']
@@ -31,9 +48,18 @@ def create_resource_url(resource_type, namespace, localid):
         localid = f'AcquisitionCapabilities_{localid}'
     if resource_type.lower() == 'process' and not localid.startswith('CompositeProcess_'):
         localid = f'CompositeProcess_{localid}'
-    if not resource_type.lower() == 'computationcapabilities' and not resource_type.lower() == 'acquisitioncapabilities' and not  resource_type.lower() == 'process' and not localid.startswith(f'{resource_type.capitalize()}_'):
+    if resource_type.lower() == 'collection' and not localid.startswith('DataCollection_'):
+        localid = f'DataCollection_{localid}'
+    if (not resource_type.lower() == 'computationcapabilities' and
+        not resource_type.lower() == 'acquisitioncapabilities' and
+        not resource_type.lower() == 'process' and
+        not resource_type.lower() == 'collection' and
+        not localid.startswith(f'{resource_type.capitalize()}_')):
         localid = f'{resource_type.capitalize()}_{localid}'
     return f'https://metadata.pithia.eu/resources/2.2/{resource_type}/{namespace}/{localid}'
+
+def create_catalogue_related_resource_url(namespace, event, localid):
+    return f'https://metadata.pithia.eu/resources/2.2/catalogue/{namespace}/{event}/{localid}'
 
 def get_acquisition_capability_sets_referencing_instrument_operational_ids(instrument_id: ObjectId) -> list:
     instrument = CurrentInstrument.find_one({
@@ -82,4 +108,16 @@ def get_mongodb_model_by_resource_type_from_resource_url(resource_type):
         return CurrentProcess
     elif resource_type == 'collection':
         return CurrentDataCollection
+    elif resource_type == 'catalogue':
+        return CurrentCatalogue
+    return 'unknown'
+
+def get_mongodb_model_from_catalogue_related_resource_url(resource_url):
+    localid = resource_url.split('/')[-1]
+    if localid.startswith('Catalogue_'):
+        return CurrentCatalogue
+    elif localid.startswith('CatalogueEntry_'):
+        return CurrentCatalogueEntry
+    elif localid.startswith('DataSubset_'):
+        return CurrentCatalogueDataSubset
     return 'unknown'

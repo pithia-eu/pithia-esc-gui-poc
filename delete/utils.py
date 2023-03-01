@@ -2,10 +2,16 @@ from functools import cmp_to_key
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
+    CatalogueRevision,
+    CatalogueEntryRevision,
+    CatalogueDataSubsetRevision,
     ComputationCapabilityRevision,
     ComputationRevision,
     CurrentAcquisition,
     CurrentAcquisitionCapability,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
     CurrentComputation,
     CurrentComputationCapability,
     CurrentDataCollection,
@@ -27,7 +33,10 @@ from common.mongodb_models import (
     ProjectRevision,
     OriginalMetadataXml,
 )
-from common.helpers import create_resource_url
+from common.helpers import (
+    create_resource_url,
+    create_catalogue_related_resource_url,
+)
 from bson import ObjectId
 
 # Getters for resources referencing "parties" - Organisations and/or Individuals
@@ -82,7 +91,13 @@ def sort_resource_list(resource_list):
             return 11
         elif resource_type == 'collection':
             return 12
-        return 12
+        elif resource_type == 'catalogue':
+            return 13
+        elif resource_type == 'catalogue entry':
+            return 14
+        elif resource_type == 'catalogue data subset':
+            return 15
+        return 15
     def compare_resource_type_weight(item1, item2):
         item1_weight = get_weight_of_resource_type(item1[1])
         item2_weight = get_weight_of_resource_type(item2[1])
@@ -98,7 +113,7 @@ def sort_resource_list(resource_list):
 
 # Gets all resources referencing a given resource id. This changes depending on the type of
 # resource.
-def get_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
+def get_data_collection_related_resources_linked_through_resource_id(resource_id, resource_type, resource_mongodb_model):
     individuals = []
     projects = []
     platforms = []
@@ -244,43 +259,43 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     individuals = list(individuals)
     for i in range(len(individuals)):
         individuals[i] = (individuals[i], 'individual', CurrentIndividual, IndividualRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(individuals[i][0]['_id']), 'individual', individuals[i][2]))
     projects = list(projects)
     for i in range(len(projects)):
         projects[i] = (projects[i], 'project', CurrentProject, ProjectRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(projects[i][0]['_id']), 'project', projects[i][2]))
     platforms = list(platforms)
     for i in range(len(platforms)):
         platforms[i] = (platforms[i], 'platform', CurrentPlatform, PlatformRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(platforms[i][0]['_id']), 'platform', platforms[i][2]))
     operations = list(operations)
     for i in range(len(operations)):
         operations[i] = (operations[i], 'operation', CurrentOperation, OperationRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(operations[i][0]['_id']), 'operation', operations[i][2]))
     instruments = list(instruments)
     for i in range(len(instruments)):
         instruments[i] = (instruments[i], 'instrument', CurrentInstrument, InstrumentRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(instruments[i][0]['_id']), 'instrument', instruments[i][2]))
     acquisition_capability_sets = list(acquisition_capability_sets)
     for i in range(len(acquisition_capability_sets)):
         acquisition_capability_sets[i] = (acquisition_capability_sets[i], 'acquisitionCapabilities', CurrentAcquisitionCapability, AcquisitionCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisition_capability_sets[i][0]['_id']), 'acquisitionCapabilities', acquisition_capability_sets[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(acquisition_capability_sets[i][0]['_id']), 'acquisitionCapabilities', acquisition_capability_sets[i][2]))
     acquisitions = list(acquisitions)
     for i in range(len(acquisitions)):
         acquisitions[i] = (acquisitions[i], 'acquisition', CurrentAcquisition, AcquisitionRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(acquisitions[i][0]['_id']), 'acquisition', acquisitions[i][2]))
     computation_capability_sets = list(computation_capability_sets)
     for i in range(len(computation_capability_sets)):
         computation_capability_sets[i] = (computation_capability_sets[i], 'computationCapabilities', CurrentComputationCapability, ComputationCapabilityRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(computation_capability_sets[i][0]['_id']), 'computationCapabilities', computation_capability_sets[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(computation_capability_sets[i][0]['_id']), 'computationCapabilities', computation_capability_sets[i][2]))
     computations = list(computations)
     for i in range(len(computations)):
         computations[i] = (computations[i], 'computation', CurrentComputation, ComputationRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(computations[i][0]['_id']), 'computation', computations[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(computations[i][0]['_id']), 'computation', computations[i][2]))
     processes = list(processes)
     for i in range(len(processes)):
         processes[i] = (processes[i], 'process', CurrentProcess, ProcessRevision)
-        linked_resources.extend(get_resources_linked_through_resource_id(str(processes[i][0]['_id']), 'process', processes[i][2]))
+        linked_resources.extend(get_data_collection_related_resources_linked_through_resource_id(str(processes[i][0]['_id']), 'process', processes[i][2]))
     data_collections = list(data_collections)
     for i in range(len(data_collections)):
         data_collections[i] = (data_collections[i], 'collection', CurrentDataCollection, DataCollectionRevision)
@@ -295,6 +310,87 @@ def get_resources_linked_through_resource_id(resource_id, resource_type, resourc
     linked_resources.extend(computations)
     linked_resources.extend(processes)
     linked_resources.extend(data_collections)
+    # Following line ensures that each dict in the linked_resources list is unique
+    linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
+
+    return linked_resources
+
+# Catalogue deletion
+
+def get_catalogue_for_catalogue_entry(catalogue_entry):
+    catalogue_identifier_xlink_href = catalogue_entry['catalogueIdentifier']['@xlink:href']
+    catalogue_localid = catalogue_identifier_xlink_href.split('/')[-1]
+    return CurrentCatalogue.find_one({
+        'identifier.PITHIA_Identifier.localID': catalogue_localid
+    })
+
+def get_catalogue_for_catalogue_data_subset(catalogue_data_subset):
+    catalogue_entry_identifier_xlink_href = catalogue_data_subset['entryIdentifier']['@xlink:href']
+    catalogue_entry_localid = catalogue_entry_identifier_xlink_href.split('/')[-1]
+    catalogue_entry = CurrentCatalogueEntry.find_one({
+        'identifier.PITHIA_Identifier.localID': catalogue_entry_localid
+    })
+    return get_catalogue_for_catalogue_entry(catalogue_entry)
+
+def get_catalogue_related_resources_linked_through_resource_id(resource_id, resource_mongodb_model, event=None):
+    catalogues = []
+    catalogue_entries = []
+    catalogue_data_subsets = []
+
+    linked_resources = []
+    resource = resource_mongodb_model.find_one({
+        '_id': ObjectId(resource_id)
+    })
+    resource_pithia_identifier = resource['identifier']['PITHIA_Identifier']
+    resource_url = None
+    if resource_mongodb_model == CurrentDataCollection:
+        resource_url = create_resource_url('collection', resource_pithia_identifier['namespace'], resource_pithia_identifier['localID'])
+    else:
+        if event is None:
+            catalogue = None
+            if resource_mongodb_model == CurrentCatalogue:
+                catalogue = resource
+            elif resource_mongodb_model == CurrentCatalogueEntry:
+                catalogue = get_catalogue_for_catalogue_entry(resource)
+            elif resource_mongodb_model == CurrentCatalogueDataSubset:
+                catalogue = get_catalogue_for_catalogue_data_subset(resource)
+            event = catalogue['name']
+
+        resource_url = create_catalogue_related_resource_url(resource_pithia_identifier['namespace'], event, resource_pithia_identifier['localID'])
+
+    if resource_mongodb_model == CurrentDataCollection:
+        # Referenced by Catalogue Data Subsets
+        catalogue_data_subsets = CurrentCatalogueDataSubset.find({
+            'dataCollection.@xlink:href': resource_url
+        })
+    if resource_mongodb_model == CurrentCatalogue:
+        # Referenced by Catalogue Entries
+        catalogue_entries = CurrentCatalogueEntry.find({
+            'catalogueIdentifier.@xlink:href': resource_url
+        })
+    elif resource_mongodb_model == CurrentCatalogueEntry:
+        # Referenced by Catalogue Data Subsets
+        catalogue_data_subsets = CurrentCatalogueDataSubset.find({
+            'entryIdentifier.@xlink:href': resource_url
+        })
+    # Catalogue Data Subsets are not included as they
+    # are not referenced by any other resource type.
+    catalogues = list(catalogues)
+    for i in range(len(catalogues)):
+        catalogues[i] = (catalogues[i], 'catalogue', CurrentCatalogue, CatalogueRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogues[i][0]['_id']), catalogues[i][2], event=event))
+    catalogue_entries = list(catalogue_entries)
+    for i in range(len(catalogue_entries)):
+        catalogue_entries[i] = (catalogue_entries[i], 'catalogue entry', CurrentCatalogueEntry, CatalogueEntryRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_entries[i][0]['_id']), catalogue_entries[i][2], event=event))
+    catalogue_data_subsets = list(catalogue_data_subsets)
+    for i in range(len(catalogue_data_subsets)):
+        catalogue_data_subsets[i] = (catalogue_data_subsets[i], 'catalogue data subset', CurrentCatalogueDataSubset, CatalogueDataSubsetRevision)
+        linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_data_subsets[i][0]['_id']), catalogue_data_subsets[i][2], event=event))
+    linked_resources.extend(catalogues)
+    linked_resources.extend(catalogue_entries)
+    linked_resources.extend(catalogue_data_subsets)
+    # Following line ensures that each dict in the linked_resources list is unique
     linked_resources = list({ str(v[0]['_id']):v for v in linked_resources }.values())
 
     return linked_resources

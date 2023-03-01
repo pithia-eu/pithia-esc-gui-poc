@@ -19,7 +19,7 @@ from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_d
 from .helpers import (
     create_validation_details_error,
     _map_string_to_li_element,
-    _map_string_to_li_element_with_register_link,
+    _create_li_element_with_register_link_from_resource_type_from_resource_url,
     _map_etree_element_to_text,
     _map_acquisition_capability_to_update_link,
     _map_operational_mode_object_to_id_string,
@@ -42,6 +42,9 @@ COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME = 'ComputationCapabilities'
 COMPUTATION_XML_ROOT_TAG_NAME = 'Computation'
 PROCESS_XML_ROOT_TAG_NAME = 'CompositeProcess'
 DATA_COLLECTION_XML_ROOT_TAG_NAME = 'DataCollection'
+CATALOGUE_XML_ROOT_TAG_NAME = 'Catalogue'
+CATALOGUE_ENTRY_XML_ROOT_TAG_NAME = 'CatalogueEntry'
+CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME = 'DataSubset'
 
 # Syntax validation
 def parse_xml_file(xml_file):
@@ -256,7 +259,7 @@ def validate_and_get_validation_details_of_xml_file(
         if len(resource_urls_pointing_to_unregistered_resources) > 0:
             error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_map_string_to_li_element_with_register_link, types_of_missing_resources)))
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_create_li_element_with_register_link_from_resource_type_from_resource_url, types_of_missing_resources)))
             validation_details['error'] = create_validation_details_error(
                 message='One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.',
                 details=error_msg

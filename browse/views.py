@@ -7,21 +7,27 @@ from bson.objectid import ObjectId
 from django.http import HttpResponseNotFound
 from django.views.generic import TemplateView
 
+from utils.mapping_functions import prepare_resource_for_template
 from validation.url_validation import (
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
     SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 )
-from search.helpers import remove_underscore_from_id_attribute
 from utils.string_helpers import _split_camel_case
 
-_RESOURCES_PAGE_TITLE = 'Browse Metadata'
+_INDEX_PAGE_TITLE = 'Browse Metadata'
+_DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
+_CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
 # Create your views here.
 def index(request):
-    return render(request, 'browse/index.html', {})
+    return render(request, 'browse/index.html', {
+        'title': _INDEX_PAGE_TITLE,
+        'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+        'catalogue_related_resource_types_page_title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+    })
 
-def resources(request):
+def data_collection_related_resource_types(request):
     num_current_organsations = mongodb_models.CurrentOrganisation.count_documents({})
     num_current_individuals = mongodb_models.CurrentIndividual.count_documents({})
     num_current_projects = mongodb_models.CurrentProject.count_documents({})
@@ -34,8 +40,9 @@ def resources(request):
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
-    return render(request, 'browse/resources.html', {
-        'title': _RESOURCES_PAGE_TITLE,
+    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
+    return render(request, 'browse/data_collection_related_resource_types.html', {
+        'title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
         'num_current_projects': num_current_projects,
@@ -48,6 +55,20 @@ def resources(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
+        'num_current_catalogues': num_current_catalogues,
+        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+    })
+
+def catalogue_related_resource_types(request):
+    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
+    num_current_catalogue_entries = mongodb_models.CurrentCatalogueEntry.count_documents({})
+    num_current_catalogue_data_subsets = mongodb_models.CurrentCatalogueDataSubset.count_documents({})
+    return render(request, 'browse/catalogue_related_resource_types.html', {
+        'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+        'num_current_catalogues': num_current_catalogues,
+        'num_current_catalogue_entries': num_current_catalogue_entries,
+        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
 def schemas(request):
@@ -65,7 +86,7 @@ class ResourceListView(TemplateView):
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,7 +95,9 @@ class ResourceListView(TemplateView):
         context['resource_list'] = self.get_resource_list()
         context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
-        context['resource_type_list_page_breadcrumb_text'] = _RESOURCES_PAGE_TITLE
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         return context
 
     def get(self, request, *args, **kwargs):
@@ -152,6 +175,31 @@ class DataCollectionListView(ResourceListView):
     resource_type_plural = 'Data Collections'
     resource_detail_page_url_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
+
+class CatalogueRelatedResourceListView(ResourceListView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        return context
+
+class CatalogueListView(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_type_plural = 'Catalogues'
+    resource_detail_page_url_name = 'browse:catalogue_detail'
+    description = ''
+
+class CatalogueEntryListView(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
+    resource_type_plural = 'Catalogue Entries'
+    resource_detail_page_url_name = 'browse:catalogue_entry_detail'
+    description = ''
+
+class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
+    resource_type_plural = 'Catalogue Data Subsets'
+    resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    description = ''
 
 def flatten(d):
     out = {}
@@ -276,6 +324,7 @@ class ResourceDetailView(TemplateView):
             })
         if self.resource is None:
             return HttpResponseNotFound('Resource not found.')
+        self.resource = prepare_resource_for_template(self.resource)
         self.resource_flattened = flatten(self.resource)
         self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
         self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
@@ -295,7 +344,9 @@ class ResourceDetailView(TemplateView):
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
-        context['resource_type_list_page_breadcrumb_text'] = _RESOURCES_PAGE_TITLE
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         return context
@@ -430,3 +481,37 @@ class DataCollectionDetailView(ResourceDetailView):
         context['data_collection_id'] = self.resource_id
         
         return context
+
+class CatalogueRelatedResourceDetailView(ResourceDetailView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        return context
+
+class CatalogueDetailView(CatalogueRelatedResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    resource_type_plural = 'Catalogues'
+    resource_list_by_type_url_name = 'browse:list_catalogues'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_id']
+        return super().get(request, *args, **kwargs)
+
+class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
+    resource_type_plural = 'Catalogue Entries'
+    resource_list_by_type_url_name = 'browse:list_catalogue_entries'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().get(request, *args, **kwargs)
+
+class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
+    resource_type_plural = 'Catalogue Data Subsets'
+    resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
+        return super().get(request, *args, **kwargs)

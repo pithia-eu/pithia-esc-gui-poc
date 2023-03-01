@@ -1,17 +1,40 @@
 import pymongo
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
-from common.mongodb_models import CurrentAcquisition, CurrentAcquisitionCapability, CurrentComputation, CurrentComputationCapability, CurrentDataCollection, CurrentIndividual, CurrentInstrument, CurrentOperation, CurrentOrganisation, CurrentPlatform, CurrentProcess, CurrentProject
-
-from search.helpers import remove_underscore_from_id_attribute
+from common.mongodb_models import (
+    CurrentAcquisition,
+    CurrentAcquisitionCapability,
+    CurrentComputation,
+    CurrentComputationCapability,
+    CurrentDataCollection,
+    CurrentIndividual,
+    CurrentInstrument,
+    CurrentOperation,
+    CurrentOrganisation,
+    CurrentPlatform,
+    CurrentProcess,
+    CurrentProject,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
+)
+from utils.mapping_functions import prepare_resource_for_template
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
+_DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
+_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural):
     return f'Register & Manage {resource_type_plural.title()}'
 
 # Create your views here.
 def index(request):
+    return render(request, 'resource_management/index.html', {
+        'title': _INDEX_PAGE_TITLE
+    })
+
+def data_collection_related_metadata_index(request):
     num_current_organsations = CurrentOrganisation.count_documents({})
     num_current_individuals = CurrentIndividual.count_documents({})
     num_current_projects = CurrentProject.count_documents({})
@@ -24,7 +47,7 @@ def index(request):
     num_current_computations = CurrentComputation.count_documents({})
     num_current_processes = CurrentProcess.count_documents({})
     num_current_data_collections = CurrentDataCollection.count_documents({})
-    return render(request, 'resource_management/index.html', {
+    return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
         'num_current_projects': num_current_projects,
@@ -37,7 +60,22 @@ def index(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'title': _INDEX_PAGE_TITLE
+        'title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+        'index_page_url_name_breadcrumb': 'resource_management:index',
+        'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
+    })
+
+def catalogue_related_metadata_index(request):
+    num_current_catalogues = CurrentCatalogue.count_documents({})
+    num_current_catalogue_entries = CurrentCatalogueEntry.count_documents({})
+    num_current_catalogue_data_subsets = CurrentCatalogueDataSubset.count_documents({})
+    return render(request, 'resource_management/catalogue_index.html', {
+        'num_current_catalogues': num_current_catalogues,
+        'num_current_catalogue_entries': num_current_catalogue_entries,
+        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+        'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+        'index_page_url_name_breadcrumb': 'resource_management:index',
+        'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
 class ResourceManagementListView(TemplateView):
@@ -50,10 +88,12 @@ class ResourceManagementListView(TemplateView):
     resource_update_page_url_name = ''
     resource_register_page_url_name = ''
     resource_xml_download_page_url_name = ''
+    resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
     def get_resource_list(self):
         resource_list = list(self.resource_mongodb_model.find({}))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,6 +106,8 @@ class ResourceManagementListView(TemplateView):
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = self.resource_management_category_list_page_breadcrumb_text
+        context['resource_management_category_list_page_breadcrumb_url_name'] = self.resource_management_category_list_page_breadcrumb_url_name
         return context
 
 class OrganisationManagementListView(ResourceManagementListView):
@@ -109,7 +151,7 @@ class PlatformManagementListView(ResourceManagementListView):
         resource_list = list(self.resource_mongodb_model.find({}).sort([
             ('name', pymongo.ASCENDING)
         ]))
-        return list(map(remove_underscore_from_id_attribute, resource_list))
+        return list(map(prepare_resource_for_template, resource_list))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -196,3 +238,36 @@ class DataCollectionManagementListView(ResourceManagementListView):
         context = super().get_context_data(**kwargs)
         context['interaction_method_update_page_url_name'] = 'update:data_collection_interaction_methods'
         return context
+
+class CatalogueManagementListView(ResourceManagementListView):
+    title = _create_manage_resource_page_title('catalogues')
+    resource_mongodb_model = CurrentCatalogue
+    resource_type_plural = 'Catalogues'
+    resource_delete_page_url_name = 'delete:catalogue'
+    resource_update_page_url_name = 'update:catalogue'
+    resource_register_page_url_name = 'register:catalogue'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+
+class CatalogueEntryManagementListView(ResourceManagementListView):
+    title = _create_manage_resource_page_title('catalogue entries')
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_type_plural = 'Catalogue Entries'
+    resource_delete_page_url_name = 'delete:catalogue_entry'
+    resource_update_page_url_name = 'update:catalogue_entry'
+    resource_register_page_url_name = 'register:catalogue_entry'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_entry_as_xml'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+
+class CatalogueDataSubsetManagementListView(ResourceManagementListView):
+    title = _create_manage_resource_page_title('catalogue data subsets')
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_type_plural = 'Catalogue Data Subsets'
+    resource_delete_page_url_name = 'delete:catalogue_data_subset'
+    resource_update_page_url_name = 'update:catalogue_data_subset'
+    resource_register_page_url_name = 'register:catalogue_data_subset'
+    resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'
+    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'

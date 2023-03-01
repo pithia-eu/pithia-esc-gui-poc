@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from common.mongodb_models import (
@@ -26,16 +27,27 @@ from common.mongodb_models import (
     OrganisationRevision,
     PlatformRevision,
     ProcessRevision,
-    ProjectRevision
+    ProjectRevision,
+    CurrentCatalogue,
+    CatalogueRevision,
+    CurrentCatalogueEntry,
+    CatalogueEntryRevision,
+    CurrentCatalogueDataSubset,
+    CatalogueDataSubsetRevision,
 )
 from django.contrib import messages
 from django.views.generic import TemplateView
-from resource_management.views import _INDEX_PAGE_TITLE
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+)
 from .utils import (
-    get_resources_linked_through_resource_id,
+    get_data_collection_related_resources_linked_through_resource_id,
     delete_current_version_and_revisions_and_xmls_of_resource_id,
     delete_current_versions_and_revisions_of_data_collection_interaction_methods,
     sort_resource_list,
+    get_catalogue_related_resources_linked_through_resource_id,
 )
 from mongodb import client
 
@@ -65,6 +77,8 @@ class ResourceDeleteView(TemplateView):
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
@@ -74,7 +88,7 @@ class ResourceDeleteView(TemplateView):
         self.resource_to_delete = self.resource_mongodb_model.find_one({
             '_id': ObjectId(self.resource_id)
         })
-        self.other_resources_to_delete = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
         self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
         return super().get(request, *args, **kwargs)
 
@@ -87,7 +101,9 @@ class ResourceDeleteView(TemplateView):
                 def cb(s):
                     # Delete the resource and resources that are referencing the resource to be deleted. These should not
                     # be able to exist without the resource being deleted.
-                    linked_resources = get_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+                    linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+                    if 'catalogue_related_resources_to_delete' in kwargs:
+                        linked_resources.extend(kwargs['catalogue_related_resources_to_delete'])
                     delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
                     for r in linked_resources:
                         delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
@@ -99,6 +115,56 @@ class ResourceDeleteView(TemplateView):
             logger.exception('An error occurred during resource deletion.')
             messages.error(request, 'An error occurred during resource deletion.')
 
+        return HttpResponseRedirect(self.redirect_url)
+
+class CatalogueRelatedResourceDeleteView(TemplateView):
+    resource_id = ''
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
+    redirect_url = ''
+    template_name = 'delete/confirm_delete_resource.html'
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
+    delete_resource_page_breadcrumb_url_name = ''
+    resource_to_delete = None
+    other_resources_to_delete = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Delete Metadata Confirmation'
+        context['resource_id'] = self.resource_id
+        context['resource_to_delete'] = self.resource_to_delete
+        context['other_resources_to_delete'] = self.other_resources_to_delete
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.resource_to_delete = self.resource_mongodb_model.find_one({
+            '_id': ObjectId(self.resource_id)
+        })
+        self.other_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+        self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            with client.start_session() as s:
+                def cb(s):
+                    # Delete the resource and resources that are referencing the resource to be deleted. These should not
+                    # be able to exist without the resource being deleted.
+                    linked_resources = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+                    delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+                    for r in linked_resources:
+                        delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+                s.with_transaction(cb)
+        except BaseException as e:
+            print(e)
+            messages.error(request, 'An error occurred during resource deletion.')
         return HttpResponseRedirect(self.redirect_url)
 
 
@@ -254,6 +320,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     delete_resource_page_breadcrumb_url_name = 'delete:data_collection'
     template_name = 'delete/confirm_delete_data_collection.html'
+    catalogue_related_resources_to_delete = []
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -261,5 +328,71 @@ class DataCollectionDeleteView(ResourceDeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['other_resources_to_delete'].extend(self.catalogue_related_resources_to_delete)
         context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.catalogue_related_resources_to_delete = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        kwargs['catalogue_related_resources_to_delete'] = get_catalogue_related_resources_linked_through_resource_id(self.resource_id, self.resource_mongodb_model)
+        return super().post(request, *args, **kwargs)
+
+class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
+    resource_type = 'catalogue'
+    resource_mongodb_model = CurrentCatalogue
+    resource_revision_mongodb_model = CatalogueRevision
+    redirect_url = reverse_lazy('resource_management:catalogues')
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogues'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_id']
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
+class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
+    resource_type = 'catalogue entry'
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_revision_mongodb_model = CatalogueEntryRevision
+    redirect_url = reverse_lazy('resource_management:catalogue_entries')
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Entries'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_entry_id']
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
+class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
+    resource_type = 'catalogue data subset'
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_revision_mongodb_model = CatalogueDataSubsetRevision
+    redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
+    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Data Subsets'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['catalogue_data_subset_id']
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context

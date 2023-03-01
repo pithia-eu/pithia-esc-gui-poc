@@ -18,7 +18,10 @@ from common.mongodb_models import (
     CurrentOrganisation,
     CurrentPlatform,
     CurrentProcess,
-    CurrentProject
+    CurrentProject,
+    CurrentCatalogue,
+    CurrentCatalogueEntry,
+    CurrentCatalogueDataSubset,
 )
 from validation.forms import ApiSpecificationUrlValidationForm
 from validation.metadata_validation import (
@@ -34,7 +37,10 @@ from validation.metadata_validation import (
     PLATFORM_XML_ROOT_TAG_NAME,
     PROCESS_XML_ROOT_TAG_NAME,
     PROJECT_XML_ROOT_TAG_NAME,
-    validate_and_get_validation_details_of_xml_file
+    CATALOGUE_XML_ROOT_TAG_NAME,
+    CATALOGUE_ENTRY_XML_ROOT_TAG_NAME,
+    CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME,
+    validate_and_get_validation_details_of_xml_file,
 )
 
 import logging
@@ -123,6 +129,22 @@ class ProcessXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidation
 class DataCollectionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     mongodb_model = CurrentDataCollection
     expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+
+
+class CatalogueXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
+    mongodb_model = CurrentCatalogue
+    expected_root_tag_name = CATALOGUE_XML_ROOT_TAG_NAME
+
+
+class CatalogueEntryXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
+    mongodb_model = CurrentCatalogueEntry
+    expected_root_tag_name = CATALOGUE_ENTRY_XML_ROOT_TAG_NAME
+
+
+class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
+    mongodb_model = CurrentCatalogueDataSubset
+    expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
+
 
 @require_POST
 def api_specification_url(request):

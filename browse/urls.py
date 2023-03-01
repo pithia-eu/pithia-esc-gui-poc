@@ -4,8 +4,9 @@ from . import views
 
 app_name = 'browse'
 urlpatterns = [
-    # path('browse/', views.index, name='index'),
-    path('resources/', views.resources, name='resources'),
+    path('browse-metadata/', views.index, name='index'),
+    path('data-collection-related-metadata/', views.data_collection_related_resource_types, name='data_collection_related_resource_types'),
+    path('catalogue-related-metadata/', views.catalogue_related_resource_types, name='catalogue_related_resource_types'),
     path('organisations/', views.OrganisationListView.as_view(), name='list_organisations'),
     path('individuals/', views.IndividualListView.as_view(), name='list_individuals'),
     path('projects/', views.ProjectListView.as_view(), name='list_projects'),
@@ -18,6 +19,9 @@ urlpatterns = [
     path('computations/', views.ComputationListView.as_view(), name='list_computations'),
     path('processes/', views.ProcessListView.as_view(), name='list_processes'),
     path('data-collections/', views.DataCollectionListView.as_view(), name='list_data_collections'),
+    path('catalogues/', views.CatalogueListView.as_view(), name='list_catalogues'),
+    path('catalogue-entries/', views.CatalogueEntryListView.as_view(), name='list_catalogue_entries'),
+    path('catalogue-data-subsets/', views.CatalogueDataSubsetListView.as_view(), name='list_catalogue_data_subsets'),
     path('organisations/<organisation_id>/', views.OrganisationDetailView.as_view(), name='organisation_detail'),
     path('individuals/<individual_id>/', views.IndividualDetailView.as_view(), name='individual_detail'),
     path('projects/<project_id>/', views.ProjectDetailView.as_view(), name='project_detail'),
@@ -30,4 +34,7 @@ urlpatterns = [
     path('computations/<computation_id>/', views.ComputationDetailView.as_view(), name='computation_detail'),
     path('processes/<process_id>/', views.ProcessDetailView.as_view(), name='process_detail'),
     path('data-collections/<data_collection_id>/', views.DataCollectionDetailView.as_view(), name='data_collection_detail'),
+    path('catalogues/<catalogue_id>/', views.CatalogueDetailView.as_view(), name='catalogue_detail'),
+    path('catalogue-entries/<catalogue_entry_id>/', views.CatalogueEntryDetailView.as_view(), name='catalogue_entry_detail'),
+    path('catalogue-data-subsets/<catalogue_data_subset_id>/', views.CatalogueDataSubsetDetailView.as_view(), name='catalogue_data_subset_detail'),
 ]

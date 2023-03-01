@@ -13,7 +13,12 @@ from register.register_api_specification import register_api_specification
 from .forms import UploadDataCollectionFileForm, UploadFileForm
 from register import xml_conversion_checks_and_fixes
 from common import mongodb_models
-from resource_management.views import _INDEX_PAGE_TITLE, _create_manage_resource_page_title
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _create_manage_resource_page_title
+)
 from validation.errors import FileRegisteredBefore
 from mongodb import client
 
@@ -42,6 +47,8 @@ class ResourceRegisterFormView(FormView):
         context['post_url'] = self.post_url
         context['form'] = self.form_class
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
@@ -256,7 +263,64 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         context['title'] = 'Register a Data Collection'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
-
+        
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
         return super().post(request, *args, **kwargs)
+
+class CatalogueRegisterFormView(ResourceRegisterFormView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogue
+    success_url = reverse_lazy('register:catalogue')
+    template_name='register/file_upload_catalogue.html'
+
+    a_or_an = 'a'
+    resource_type = 'catalogue'
+    resource_type_plural = 'catalogues'
+    validation_url = reverse_lazy('validation:catalogue')
+    post_url = reverse_lazy('register:catalogue')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
+class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
+    success_url = reverse_lazy('register:catalogue_entry')
+    template_name='register/file_upload_catalogue.html'
+
+    a_or_an = 'a'
+    resource_type = 'catalogue entry'
+    resource_type_plural = 'catalogue entries'
+    validation_url = reverse_lazy('validation:catalogue_entry')
+    post_url = reverse_lazy('register:catalogue_entry')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
+
+class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
+    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
+    success_url = reverse_lazy('register:catalogue_data_subset')
+    template_name='register/file_upload_catalogue.html'
+
+    a_or_an = 'a'
+    resource_type = 'catalogue data subset'
+    resource_type_plural = 'catalogue data subsets'
+    validation_url = reverse_lazy('validation:catalogue_data_subset')
+    post_url = reverse_lazy('register:catalogue_data_subset')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        return context
