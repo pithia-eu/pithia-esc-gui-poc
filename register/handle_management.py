@@ -263,7 +263,7 @@ def get_doi_xml_string_from_metadata_xml_string(xml_string):
     if isinstance(xml_string, str):
         xml_string = xml_string.encode('utf-8')
     parser = create_lxml_utf8_parser()
-    root = etree.fromstring(xml_string.encode('utf-8'), parser)
+    root = etree.fromstring(xml_string, parser)
     doi_element = root.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
     if doi_element is None:
         return None
