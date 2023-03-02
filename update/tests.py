@@ -3,8 +3,11 @@ from django.test import SimpleTestCase, tag
 
 from pithiaesc.settings import BASE_DIR
 from register.handle_management import (
-    remove_doi_element_from_metadata_xml_string,
+    add_doi_xml_string_to_metadata_xml_string,
+    create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
+    map_handle_to_doi_dict,
+    remove_doi_element_from_metadata_xml_string,
 )
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
@@ -37,3 +40,17 @@ class DOIManagementTestCase(SimpleTestCase):
             self.assertIsInstance(updated_xml_string, str)
             self.assertLess(len(updated_xml_string), len(xml_string))
             print('Passed remove_doi_element_from_metadata_xml_string() test.')
+
+    @tag('fast', 'replace_doi_element_from_metadata_xml_string')
+    def test_replace_doi_element_from_metadata_xml_string(self):
+        """
+        Replaces all <doi> elements with a new single DOI element.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
+            xml_string = xml_file.read()
+            doiless_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
+            doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
+            doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
+            updated_xml_string = add_doi_xml_string_to_metadata_xml_string(doiless_xml_string, doi_xml_string)
+            print('updated_xml_string', updated_xml_string)
+            print('Passed replace_doi_element_from_metadata_xml_string() test.')
