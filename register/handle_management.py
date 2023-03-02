@@ -146,19 +146,31 @@ def map_handle_to_doi(handle: str, handle_url: str):
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
         'issueDate': handle_issue_date_as_string,
         'issueNumber': '0', # issue number is not known
-        'name': {
-            '@primaryLanguage': 'en',
-            'value': handle_url,
-            'type': 'URL',
-        },
-        'identifier': {
-            'nonUriValue': handle,
-            'uri': {
-                '@returnType': 'text/html',
-                '#text': f'{os.environ["HANDLE_API_ENDPOINT_URL"]}/api/handles/{handle}',
+        'referentCreation': {
+            'name': {
+                '@primaryLanguage': 'en',
+                'value': handle_url,
+                'type': 'URL',
             },
-            'type': 'epicId',
-        }
+            'identifier': {
+                'nonUriValue': handle,
+                'uri': {
+                    '@returnType': 'text/html',
+                    '#text': f'{os.environ["HANDLE_API_ENDPOINT_URL"]}/api/handles/{handle}',
+                },
+                'type': 'epicId',
+            },
+            'structuralType': 'Digital',
+            'mode': 'Visual',
+            'character': 'Image',
+            'type': 'Dataset',
+            'principalAgent': {
+                'name': {
+                    'value': 'Lowell GIRO Data Center',
+                    'type': 'Name',
+                },
+            },
+        },
     }
     return doi
 
@@ -174,33 +186,53 @@ def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
     doi_element_content = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
         <doi:kernelMetadata>
-            <doi:registrationAgencyDoiName>%s</doi:registrationAgencyDoiName>
-            <doi:issueDate>%s</doi:issueDate>
-            <doi:issueNumber>%s</doi:issueNumber>
+            <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
+            <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
+            <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
+            <doi:issueDate>{issueDate}</doi:issueDate>
+            <doi:issueNumber>{issueNumber}</doi:issueNumber>
             <doi:referentCreation>
-                <doi:name primaryLanguage="%s">
-                    <value>%s</value>
-                    <type>%s</type>
+                <doi:name primaryLanguage="{primaryLanguage}">
+                    <doi:value>{nameValue}</doi:value>
+                    <doi:type>{nameType}</doi:type>
                 </doi:name>
                 <doi:identifier>
-                    <doi:nonUriValue>%s</doi:nonUriValue>
-                    <doi:uri returnType="%s">%s</doi:uri>
-                    <doi:type>%s</doi:type>
+                    <doi:nonUriValue>{identifierNonUriValue}</doi:nonUriValue>
+                    <doi:uri returnType="{identifierUriReturnType}">{identifierUriText}</doi:uri>
+                    <doi:type>{identifierType}</doi:type>
                 </doi:identifier>
+                <doi:structuralType>{structuralType}</doi:structuralType>
+                <doi:mode>{mode}</doi:mode>
+                <doi:character>{character}</doi:character>
+                <doi:type>{type}</doi:type>
+                <doi:principalAgent>
+                    <doi:name>
+                        <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
+                        <doi:type>{principalAgentNameType}</doi:type>
+                    </doi:name>
+                </doi:principalAgent>
             </doi:referentCreation>
         </doi:kernelMetadata>
     </doi>
-    ''' % (
-        doi['registrationAgencyDoiName'],
-        doi['issueDate'],
-        doi['issueNumber'],
-        doi['name']['@primaryLanguage'],
-        doi['name']['value'],
-        doi['name']['type'],
-        doi['identifier']['nonUriValue'],
-        doi['identifier']['uri']['@returnType'],
-        doi['identifier']['uri']['#text'],
-        doi['identifier']['type']
+    '''.format(
+        referentDoiName=doi['referentDoiName'],
+        primaryReferentType=doi['primaryReferentType'],
+        registrationAgencyDoiName=doi['registrationAgencyDoiName'],
+        issueDate=doi['issueDate'],
+        issueNumber=doi['issueNumber'],
+        primaryLanguage=doi['referentCreation']['name']['@primaryLanguage'],
+        nameValue=doi['referentCreation']['name']['value'],
+        nameType=doi['referentCreation']['name']['type'],
+        identifierNonUriValue=doi['referentCreation']['identifier']['nonUriValue'],
+        identifierUriReturnType=doi['referentCreation']['identifier']['uri']['@returnType'],
+        identifierUriText=doi['referentCreation']['identifier']['uri']['#text'],
+        identifierType=doi['referentCreation']['identifier']['type'],
+        structuralType=doi['referentCreation']['structuralType'],
+        mode=doi['referentCreation']['mode'],
+        character=doi['referentCreation']['character'],
+        type=doi['referentCreation']['type'],
+        principalAgentNameValue=doi['referentCreation']['principalAgent']['name']['value'],
+        principalAgentNameType=doi['referentCreation']['principalAgent']['name']['type']
     )
     doi_element_content = (' '.join(doi_element_content.split())).replace('> <', '><')
     doi_element = etree.fromstring(doi_element_content)
