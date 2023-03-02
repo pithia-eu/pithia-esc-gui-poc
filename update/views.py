@@ -1,6 +1,5 @@
 from django.views.generic.edit import FormView
 from pyexpat import ExpatError
-import traceback
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -126,6 +125,7 @@ class ResourceUpdateFormView(FormView):
                 converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
                 with client.start_session() as s:
                     def cb(s):
+                        
                         resource_revision = create_revision_of_current_resource_version(
                             converted_xml_file['identifier']['PITHIA_Identifier'],
                             self.resource_mongodb_model,
