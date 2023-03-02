@@ -162,7 +162,7 @@ def map_handle_to_doi_dict(handle: str, handle_url: str):
                 'nonUriValue': handle,
                 'uri': {
                     '@returnType': 'text/html',
-                    '#text': f'{os.environ["HANDLE_API_ENDPOINT_URL"]}/api/handles/{handle}',
+                    '#text': f'https://hdl.handle.net/{handle}',
                 },
                 'type': 'epicId',
             },
