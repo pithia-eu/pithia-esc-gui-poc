@@ -16,9 +16,10 @@ from register.handle_management import (
     get_handle_raw,
     get_time_handle_was_issued_as_string,
     get_date_handle_was_issued_as_string,
-    add_doi_to_xml_string,
-    map_handle_to_doi,
+    add_doi_xml_string_to_metadata_xml_string,
+    map_handle_to_doi_dict,
     create_and_register_handle_for_resource,
+    create_doi_xml_string_from_dict,
     add_handle_to_metadata_and_return_updated_xml_string,
     get_handles_with_prefix,
 )
@@ -145,11 +146,11 @@ class HandleManagementTestCase(SimpleTestCase):
         get_time_handle_was_issued_as_string() returns the time the handle was issued in str format.
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        # register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
         issue_time_string = get_time_handle_was_issued_as_string(handle)
         print('issue_time_string', issue_time_string)
         self.assertIsInstance(issue_time_string, str)
-        # delete_handle(handle, self.client)
+        delete_handle(handle, self.client)
         print('Passed get_time_handle_was_issued_as_string() test.')
 
     @tag('fast', 'handles', 'get_date_handle_was_issued_as_string')
@@ -158,11 +159,11 @@ class HandleManagementTestCase(SimpleTestCase):
         get_date_handle_was_issued_as_string() returns the date the handle was issued.
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        # register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
         issue_date_as_string = get_date_handle_was_issued_as_string(handle)
         print('issue_date_as_string', issue_date_as_string)
         self.assertIsInstance(issue_date_as_string, str)
-        # delete_handle(handle, self.client)
+        delete_handle(handle, self.client)
         print('Passed get_date_handle_was_issued_as_string() test.')
 
     @tag('fast', 'handles', 'delete_handle')
@@ -213,17 +214,19 @@ class HandleManagementTestCase(SimpleTestCase):
                 xml_file,
                 MockCurrentCatalogueDataSubset
             )
+            delete_handle(handle, client)
             print(f'Passed handle registration for {Path(xml_file.name).name}.')
 
-    @tag('fast', 'add_doi_to_xml_string')
-    def test_add_doi_to_xml_string(self):
+    @tag('fast', 'add_doi_xml_string_to_metadata_xml_string')
+    def test_add_doi_xml_string_to_metadata_xml_string(self):
         """
-        add_doi_to_xml_string() adds a filled out <doi> element to the XML string.
+        add_doi_xml_string_to_metadata_xml_string() adds a filled out <doi> element to the XML string.
         """
-        doi = map_handle_to_doi('21.15112/MYTEST-HANDLE', 'https://www.example.com/')
+        doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
+        doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             xml_string = xml_file.read()
-            updated_xml_string = add_doi_to_xml_string(xml_string, doi)
+            updated_xml_string = add_doi_xml_string_to_metadata_xml_string(xml_string, doi_xml_string)
             print('updated_xml_string', updated_xml_string)
             print(f'Passed new DOI element addition for {Path(xml_file.name).name}.')
 

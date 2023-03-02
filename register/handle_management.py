@@ -51,7 +51,7 @@ def create_and_register_handle_for_resource(resource_id: str) -> tuple[str, REST
     client, credentials = instantiate_client_and_load_credentials()
     handle = create_handle(credentials, resource_id)
     resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
-    resource_details_page_url_string = str(resource_details_page_url)
+    resource_details_page_url_string = f'{os.environ["HANDLE_URL_PREFIX"]}{str(resource_details_page_url)}'
     register_handle(handle, resource_details_page_url_string, client)
     return handle, client, credentials
 
@@ -126,10 +126,11 @@ def add_handle_to_metadata_and_return_updated_xml_string(
     session=None
 ):
     handle_url = get_handle_url(handle, client)
-    doi = map_handle_to_doi(handle, handle_url)
+    doi_dict = map_handle_to_doi_dict(handle, handle_url)
+    doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
     xml_file.seek(0)
-    xml_string = xml_file.read()
-    xml_string_with_doi = add_doi_to_xml_string(xml_string, doi)
+    metadata_xml_string = xml_file.read()
+    xml_string_with_doi = add_doi_xml_string_to_metadata_xml_string(metadata_xml_string, doi_xml_string)
     update_current_version_of_resource(
         resource_id,
         xml_string_with_doi,
@@ -139,10 +140,15 @@ def add_handle_to_metadata_and_return_updated_xml_string(
     )
     return xml_string_with_doi
 
-def map_handle_to_doi(handle: str, handle_url: str):
+def create_lxml_utf8_parser():
+    return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
+
+def map_handle_to_doi_dict(handle: str, handle_url: str):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 
     doi = {
+        'referentDoiName': handle,
+        'primaryReferentType': 'Creation',
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
         'issueDate': handle_issue_date_as_string,
         'issueNumber': '0', # issue number is not known
@@ -174,16 +180,8 @@ def map_handle_to_doi(handle: str, handle_url: str):
     }
     return doi
 
-def create_lxml_utf8_parser():
-    return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
-
-def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
-    if isinstance(xml_string, str):
-        xml_string = xml_string.encode('utf-8')
-    # Use lxml to append a new filled in doi element
-    parser = create_lxml_utf8_parser()
-    root = etree.fromstring(xml_string, parser)
-    doi_element_content = '''
+def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
+    doi_xml_string = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
         <doi:kernelMetadata>
             <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
@@ -215,34 +213,42 @@ def add_doi_to_xml_string(xml_string: str, doi: dict) -> str:
         </doi:kernelMetadata>
     </doi>
     '''.format(
-        referentDoiName=doi['referentDoiName'],
-        primaryReferentType=doi['primaryReferentType'],
-        registrationAgencyDoiName=doi['registrationAgencyDoiName'],
-        issueDate=doi['issueDate'],
-        issueNumber=doi['issueNumber'],
-        primaryLanguage=doi['referentCreation']['name']['@primaryLanguage'],
-        nameValue=doi['referentCreation']['name']['value'],
-        nameType=doi['referentCreation']['name']['type'],
-        identifierNonUriValue=doi['referentCreation']['identifier']['nonUriValue'],
-        identifierUriReturnType=doi['referentCreation']['identifier']['uri']['@returnType'],
-        identifierUriText=doi['referentCreation']['identifier']['uri']['#text'],
-        identifierType=doi['referentCreation']['identifier']['type'],
-        structuralType=doi['referentCreation']['structuralType'],
-        mode=doi['referentCreation']['mode'],
-        character=doi['referentCreation']['character'],
-        type=doi['referentCreation']['type'],
-        principalAgentNameValue=doi['referentCreation']['principalAgent']['name']['value'],
-        principalAgentNameType=doi['referentCreation']['principalAgent']['name']['type']
+        referentDoiName=doi_dict['referentDoiName'],
+        primaryReferentType=doi_dict['primaryReferentType'],
+        registrationAgencyDoiName=doi_dict['registrationAgencyDoiName'],
+        issueDate=doi_dict['issueDate'],
+        issueNumber=doi_dict['issueNumber'],
+        primaryLanguage=doi_dict['referentCreation']['name']['@primaryLanguage'],
+        nameValue=doi_dict['referentCreation']['name']['value'],
+        nameType=doi_dict['referentCreation']['name']['type'],
+        identifierNonUriValue=doi_dict['referentCreation']['identifier']['nonUriValue'],
+        identifierUriReturnType=doi_dict['referentCreation']['identifier']['uri']['@returnType'],
+        identifierUriText=doi_dict['referentCreation']['identifier']['uri']['#text'],
+        identifierType=doi_dict['referentCreation']['identifier']['type'],
+        structuralType=doi_dict['referentCreation']['structuralType'],
+        mode=doi_dict['referentCreation']['mode'],
+        character=doi_dict['referentCreation']['character'],
+        type=doi_dict['referentCreation']['type'],
+        principalAgentNameValue=doi_dict['referentCreation']['principalAgent']['name']['value'],
+        principalAgentNameType=doi_dict['referentCreation']['principalAgent']['name']['type']
     )
-    doi_element_content = (' '.join(doi_element_content.split())).replace('> <', '><')
-    doi_element = etree.fromstring(doi_element_content)
-    root.append(doi_element)
+    doi_xml_string = (' '.join(doi_xml_string.split())).replace('> <', '><')
+    return doi_xml_string
+
+def add_doi_xml_string_to_metadata_xml_string(metadata_xml_string: str, doi_xml_string: str) -> str:
+    if isinstance(metadata_xml_string, str):
+        metadata_xml_string = metadata_xml_string.encode('utf-8')
+    # Use lxml to append a new filled in doi element
+    parser = create_lxml_utf8_parser()
+    root = etree.fromstring(metadata_xml_string, parser)
+    doi_xml_string_parsed = etree.fromstring(doi_xml_string)
+    root.append(doi_xml_string_parsed)
     etree.indent(root, space='    ')
     updated_xml_string = etree.tostring(root, pretty_print=True)
     updated_xml_string = updated_xml_string.decode('utf-8')
     return updated_xml_string
 
-def remove_doi_element_from_xml_string(xml_string):
+def remove_doi_element_from_metadata_xml_string(xml_string):
     if isinstance(xml_string, str):
         xml_string = xml_string.encode('utf-8')
     parser = create_lxml_utf8_parser()
@@ -253,7 +259,7 @@ def remove_doi_element_from_xml_string(xml_string):
     updated_xml_string = updated_xml_string.decode('utf-8')
     return updated_xml_string
 
-def get_doi_element_string_from_xml_string(xml_string):
+def get_doi_xml_string_from_metadata_xml_string(xml_string):
     if isinstance(xml_string, str):
         xml_string = xml_string.encode('utf-8')
     parser = create_lxml_utf8_parser()
@@ -265,9 +271,9 @@ def get_doi_element_string_from_xml_string(xml_string):
     doi_element_string = doi_element_string.decode('utf-8')
     return doi_element_string
 
-def get_doi_element_xml_string_for_resource_id(resource_id):
+def get_doi_xml_string_for_resource_id(resource_id):
     original_metadata_xml = OriginalMetadataXml.find_one({
         'resourceId': ObjectId(resource_id),
     }, { 'value': 1 })
     xml_string = original_metadata_xml['value']
-    return get_doi_element_string_from_xml_string(xml_string)
+    return get_doi_xml_string_from_metadata_xml_string(xml_string)
