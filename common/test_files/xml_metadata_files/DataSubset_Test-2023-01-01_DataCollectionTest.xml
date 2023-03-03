@@ -12,7 +12,7 @@
 
     <identifier>
         <PITHIA_Identifier>
-            <localID>DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI</localID>
+            <localID>DataSubset_Test-2023-01-01_DataCollectionTest</localID>
             <namespace>test</namespace>
             <version>1</version>
             <creationDate>2022-07-08T09:00:00Z</creationDate>
