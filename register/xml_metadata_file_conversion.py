@@ -1,11 +1,11 @@
-import io
 import json
-from typing import Union
 import xmltodict
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from typing import Union
 
-def convert_xml_metadata_file_to_dictionary(xml_file_or_string: Union[io.TextIOWrapper, str]) -> dict:
+def convert_xml_metadata_file_to_dictionary(xml_file_or_string: Union[InMemoryUploadedFile, str]) -> dict:
     xml = xml_file_or_string
-    if isinstance(xml_file_or_string, io.TextIOWrapper):
+    if hasattr(xml_file_or_string, 'read'):
         xml_file_or_string.seek(0)
         xml = xml_file_or_string.read()
     xml_as_dict = xmltodict.parse(xml)
