@@ -69,6 +69,7 @@ class ResourceRegisterFormView(FormView):
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
         xml_files = request.FILES.getlist('files')
+        file_registered = False
         if form.is_valid():
             for xml_file in xml_files:
                 # XML should have already been validated at
@@ -107,6 +108,7 @@ class ResourceRegisterFormView(FormView):
                                 )
                         s.with_transaction(cb)
                     
+                    file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during registration process.')
@@ -117,6 +119,9 @@ class ResourceRegisterFormView(FormView):
                 except BaseException as err:
                     logger.exception('An unexpected error occurred during metadata registration.')
                     messages.error(request, 'An unexpected error occurred.')
+                
+                if file_registered == False:
+                    return super().post(request, *args, **kwargs)
 
                 try:
                     # POST RESOURCE REGISTRATION
