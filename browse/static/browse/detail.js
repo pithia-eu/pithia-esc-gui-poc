@@ -1,7 +1,20 @@
 const metadataServerUrlBase = "https://metadata.pithia.eu";
 
-function getServerUrlConversionUrl() {
-    let serverUrlConversionUrl = JSON.parse(document.getElementById("server-url-conversion-url").textContent);
+function getUrlToConvertServerUrlsBase() {
+    return JSON.parse(document.getElementById("server-url-conversion-url").textContent);
+}
+
+function getConversionUrlForOntologyServerUrls(ontologyServerUrls) {
+    const urlToConvertServerUrlsBase = getUrlToConvertServerUrlsBase();
+    return `${urlToConvertServerUrlsBase}?ontology-server-urls=${ontologyServerUrls.join(",")}`;
+}
+
+function getConversionUrlForResourceServerUrls(resourceServerUrls) {
+    const urlToConvertServerUrlsBase = getUrlToConvertServerUrlsBase();
+    return `${urlToConvertServerUrlsBase}?resource-server-urls=${resourceServerUrls.join(",")}`;
+}
+
+function getServerUrlsToConvert() {
     const serverUrlAnchorTags = document.querySelectorAll(`a[href^="${metadataServerUrlBase}"]`);
     let ontologyServerUrls = [];
     let resourceServerUrls = [];
@@ -15,19 +28,47 @@ function getServerUrlConversionUrl() {
             unknownServerUrls.push(tag.href);
         }
     });
-    if (ontologyServerUrls.length === 0 && resourceServerUrls.length === 0) {
-        return serverUrlConversionUrl;
+    return [ontologyServerUrls, resourceServerUrls, unknownServerUrls];
+}
+
+function getConversionUrlsWithFunction(serverUrls, conversionUrlFunction, conversionUrlsAndDetails) {
+    function addConversionUrlAndDetails(conversionUrl, urlsToConvert) {
+        conversionUrlsAndDetails.push({
+            url: conversionUrl,
+            urlsToConvert: urlsToConvert,
+        })
     }
-    serverUrlConversionUrl += "?";
+
+    if (serverUrls.length > 20) {
+        let start = 0;
+        while (start < serverUrls.length) {
+            let end = start + 20;
+            if (end > serverUrls.length) {
+                end = serverUrls.length;
+            }
+            const urlsToConvert = serverUrls.slice(start, end);
+            const conversionUrl = conversionUrlFunction(urlsToConvert);
+            addConversionUrlAndDetails(conversionUrl, urlsToConvert);
+            start += 20;
+        }
+    } else {
+        const conversionUrl = conversionUrlFunction(serverUrls);
+        addConversionUrlAndDetails(conversionUrl, serverUrls);
+    }
+    return conversionUrlsAndDetails;
+}
+
+function divideConversionUrlsForServerUrls(ontologyServerUrls, resourceServerUrls) {
+    const allConversionUrlsAndDetails = [];
     if (ontologyServerUrls.length > 0) {
-        ontologyServerUrls = ontologyServerUrls.map(url => encodeURIComponent(url));
-        serverUrlConversionUrl += `ontology-server-urls=${ontologyServerUrls.join(",")}&`;
+        const encodedOntologyServerUrls = ontologyServerUrls.map(url => encodeURIComponent(url));
+        getConversionUrlsWithFunction(encodedOntologyServerUrls, getConversionUrlForOntologyServerUrls, allConversionUrlsAndDetails);
     }
     if (resourceServerUrls.length > 0) {
-        resourceServerUrls = resourceServerUrls.map(url => encodeURIComponent(url));
-        serverUrlConversionUrl += `resource-server-urls=${resourceServerUrls.join(",")}`;
+        const encodedResourceServerUrls = resourceServerUrls.map(url => encodeURIComponent(url));
+        getConversionUrlsWithFunction(encodedResourceServerUrls, getConversionUrlForResourceServerUrls, allConversionUrlsAndDetails);
     }
-    return serverUrlConversionUrl;
+    return allConversionUrlsAndDetails;
 }
 
 function revealMetadataLink(tag, annotationText) {
@@ -50,9 +91,11 @@ function addAnnotationToMetadataLink(text, element) {
     element.parentElement.append(smallText);
 }
 
-function convertOntologyServerUrlsAndResourceServerUrls() {
+function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDetails) {
+    const conversionUrl = urlConversionDetails.url;
+    const urlsToConvert = urlConversionDetails.urlsToConvert;
     const fetchParams = { method: "GET" };
-    fetch(getServerUrlConversionUrl(), fetchParams)
+    fetch(conversionUrl, fetchParams)
         .then(response => response.json())
         .then(responseContent => {
             const convertedOntologyUrlMappings = responseContent.ontology_urls;
@@ -63,10 +106,13 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
             const originalOntologyUrls = responseContent.ontology_urls.map(urlMapping => urlMapping.original_server_url);
             const originalResourceUrls = responseContent.resource_urls.map(urlMapping => urlMapping.original_server_url);
 
-            const metadataServerAnchorTags = document.querySelectorAll('span.metadata-server-url a');
-            metadataServerAnchorTags.forEach(a => {
-                if (!originalOntologyUrls.includes(a.href) && !originalResourceUrls.includes(a.href)) {
-                    revealMetadataLink(a);
+            urlsToConvert.forEach(encodedUrl => {
+                const decodedUrl = decodeURIComponent(encodedUrl);
+                if (!originalOntologyUrls.includes(decodedUrl) && !originalResourceUrls.includes(decodedUrl)) {
+                    const metadataLinkTag = document.querySelector(`a[href="${decodedUrl}"]`);
+                    if (metadataLinkTag !== null) {
+                        revealMetadataLink(metadataLinkTag);
+                    }
                 }
             });
 
@@ -91,7 +137,25 @@ function convertOntologyServerUrlsAndResourceServerUrls() {
         .catch (error => {
             console.error(`Could not get converted versions of metadata urls.`);
             console.error(error);
+            urlsToConvert.forEach(encodedUrl => {
+                const decodedUrl = decodeURIComponent(encodedUrl);
+                const metadataLinkTags = document.querySelectorAll(`a[href="${decodedUrl}"]:not([style*="display: inline"])`);
+                metadataLinkTags.forEach(metadataLinkTag => {
+                    revealMetadataLink(metadataLinkTag);
+                });
+            });
         });
 }
 
-window.onload = convertOntologyServerUrlsAndResourceServerUrls;
+function convertAllOntologyServerUrlsAndResourceServerUrls() {
+    const [ontologyServerUrls, resourceServerUrls, unknownServerUrls] = getServerUrlsToConvert();
+    if ((ontologyServerUrls.length + resourceServerUrls.length) === 0) {
+        return;
+    }
+    const conversionUrlsAndUrlsToConvert = divideConversionUrlsForServerUrls(ontologyServerUrls, resourceServerUrls);
+    conversionUrlsAndUrlsToConvert.forEach(urlConversionDetails => {
+        convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDetails);
+    });
+}
+
+window.onload = convertAllOntologyServerUrlsAndResourceServerUrls;
