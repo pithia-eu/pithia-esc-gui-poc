@@ -179,9 +179,20 @@ header .dropdown-item:active a {
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
+.interaction-method-table td:nth-child(3),
+.interaction-method-table td:nth-child(4),
 .ontology-term-table td:first-child,
 .resource-property-table td:first-child {
     width: 20%;
+}
+
+.col-lg-4 .resource-key-details {
+    font-size: 0.875rem;
+}
+
+.resource-description {
+    /* font-family: 'Times New Roman', Times, serif; */
+    font-size: 1.1rem;
 }
 
 /* Resource management list page */
