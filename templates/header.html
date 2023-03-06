@@ -28,8 +28,8 @@
                     <a href="{{ data_collections_url }}" class="nav-link px-2 {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
                 </li>
                 <li class="dropdown-item">
-                    {% url 'browse:catalogue_related_resource_types' as catalogue_metadata_url %}
-                    <a href="{{ catalogue_metadata_url }}" class="nav-link px-2 {% if request.path == catalogue_metadata_url %}link-secondary{% endif %}">Browse Catalogue-related Metadata</a>
+                    {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
+                    <a href="{{ catalogues_url }}" class="nav-link px-2 {% if request.path == catalogues_url %}link-secondary{% endif %}">Browse Catalogues</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:index' as browse_url %}
