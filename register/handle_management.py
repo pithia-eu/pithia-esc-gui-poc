@@ -6,6 +6,7 @@ from common.mongodb_models import OriginalMetadataXml
 from dateutil import parser
 from django.urls import reverse_lazy
 from lxml import etree
+from lxml.etree import Element, ElementTree
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
 from pyhandle.handleexceptions import *
@@ -235,6 +236,25 @@ def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
     doi_xml_string = (' '.join(doi_xml_string.split())).replace('> <', '><')
     return doi_xml_string
 
+def parse_xml_string(xml_string: str):
+    if isinstance(xml_string, str):
+        xml_string = xml_string.encode('utf-8')
+    # Use lxml to append a new filled in doi element
+    parser = create_lxml_utf8_parser()
+    return etree.fromstring(xml_string, parser)
+
+def get_last_result_time_element(data_subset_xml_string_parsed: ElementTree) -> Element:
+    result_time_elements_found = data_subset_xml_string_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}resultTime')
+    if len(result_time_elements_found) == 0:
+        return None
+    return result_time_elements_found[-1]
+
+def get_last_source_element(data_subset_xml_string_parsed: ElementTree) -> Element:
+    source_elements_found = data_subset_xml_string_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}source')
+    if len(source_elements_found) == 0:
+        return None
+    return source_elements_found[-1]
+
 def add_doi_xml_string_to_metadata_xml_string(metadata_xml_string: str, doi_xml_string: str) -> str:
     if isinstance(metadata_xml_string, str):
         metadata_xml_string = metadata_xml_string.encode('utf-8')
@@ -242,7 +262,11 @@ def add_doi_xml_string_to_metadata_xml_string(metadata_xml_string: str, doi_xml_
     parser = create_lxml_utf8_parser()
     root = etree.fromstring(metadata_xml_string, parser)
     doi_xml_string_parsed = etree.fromstring(doi_xml_string)
-    root.append(doi_xml_string_parsed)
+    element_to_insert_after = get_last_source_element(root)
+    if element_to_insert_after is None:
+        element_to_insert_after = get_last_result_time_element(root)
+    parent_of_element_to_insert_after = element_to_insert_after.getparent()
+    parent_of_element_to_insert_after.insert(parent_of_element_to_insert_after.index(element_to_insert_after) + 1, doi_xml_string_parsed)
     etree.indent(root, space='    ')
     updated_xml_string = etree.tostring(root, pretty_print=True)
     updated_xml_string = updated_xml_string.decode('utf-8')

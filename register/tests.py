@@ -22,6 +22,9 @@ from register.handle_management import (
     create_doi_xml_string_from_dict,
     add_handle_to_metadata_and_return_updated_xml_string,
     get_handles_with_prefix,
+    get_last_result_time_element,
+    get_last_source_element,
+    parse_xml_string,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -222,6 +225,7 @@ class HandleManagementTestCase(SimpleTestCase):
         """
         add_doi_xml_string_to_metadata_xml_string() adds a filled out <doi> element to the XML string.
         """
+        # This test assumes that this handle exists
         doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
         doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
@@ -238,3 +242,25 @@ class HandleManagementTestCase(SimpleTestCase):
         prefix = env('HANDLE_PREFIX')
         handles = get_handles_with_prefix(prefix)
         print('handles', handles)
+
+    @tag('fast', 'get_last_result_time_element')
+    def test_get_last_result_time_element(self):
+        """
+        Gets the last <resultTime> element in a Data Subset XML string.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            xml_string = xml_file.read()
+            xml_string_parsed = parse_xml_string(xml_string)
+            last_result_time_element = get_last_result_time_element(xml_string_parsed)
+            print('last_result_time_element', last_result_time_element)
+
+    @tag('fast', 'get_last_source_element')
+    def test_get_last_source_element(self):
+        """
+        Gets the last <source> element in a Data Subset XML string.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            xml_string = xml_file.read()
+            xml_string_parsed = parse_xml_string(xml_string)
+            last_source_element = get_last_source_element(xml_string_parsed)
+            print('last_source_element', last_source_element)
