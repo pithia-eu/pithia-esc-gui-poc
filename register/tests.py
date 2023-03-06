@@ -25,6 +25,7 @@ from register.handle_management import (
     get_last_result_time_element,
     get_last_source_element,
     parse_xml_string,
+    is_doi_element_present_in_xml_file,
 )
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
@@ -264,3 +265,23 @@ class HandleManagementTestCase(SimpleTestCase):
             xml_string_parsed = parse_xml_string(xml_string)
             last_source_element = get_last_source_element(xml_string_parsed)
             print('last_source_element', last_source_element)
+
+    @tag('fast', 'doi_element_is_not_present_in_xml_file', 'is_doi_element_present_in_xml_file')
+    def test_doi_element_is_not_present_in_xml_file(self):
+        """
+        is_doi_element_present_in_xml_file() returns False for the given XML file.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            result = is_doi_element_present_in_xml_file(xml_file)
+            print('result', result)
+            self.assertEqual(result, False)
+
+    @tag('fast', 'doi_element_is_present_in_xml_file', 'is_doi_element_present_in_xml_file')
+    def test_doi_element_is_present_in_xml_file(self):
+        """
+        is_doi_element_present_in_xml_file() returns True for the given XML file.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
+            result = is_doi_element_present_in_xml_file(xml_file)
+            print('result', result)
+            self.assertEqual(result, True)

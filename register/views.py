@@ -27,6 +27,7 @@ from update.update import update_original_metadata_xml_string
 from .handle_management import (
     create_and_register_handle_for_resource,
     add_handle_to_metadata_and_return_updated_xml_string,
+    is_doi_element_present_in_xml_file,
 )
 
 import logging
@@ -129,6 +130,11 @@ class ResourceRegisterFormView(FormView):
                     # Update the actual "xml_file" variable by adding the DOI to the XML
                     # Perform an update on the resource
                     # Continue with registration as normal
+                    is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
+                    if is_doi_in_file_already == True:
+                        logger.exception('A DOI has already been issued for this metadata file.')
+                        messages.error(request, f'A DOI has already been issued for this metadata file.')
+                        return super().post(request, *args, **kwargs)
                     if 'register_doi' in request.POST:
                         with client.start_session() as s:
                             def cb(s):

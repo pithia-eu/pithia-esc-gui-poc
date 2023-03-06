@@ -243,6 +243,11 @@ def parse_xml_string(xml_string: str):
     parser = create_lxml_utf8_parser()
     return etree.fromstring(xml_string, parser)
 
+def is_doi_element_present_in_xml_file(xml_file) -> bool:
+    xml_file.seek(0)
+    xml_string_parsed = parse_xml_string(xml_file.read())
+    return xml_string_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}doi') != None
+
 def get_last_result_time_element(data_subset_xml_string_parsed: ElementTree) -> Element:
     result_time_elements_found = data_subset_xml_string_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}resultTime')
     if len(result_time_elements_found) == 0:
