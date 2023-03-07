@@ -130,12 +130,12 @@ class ResourceRegisterFormView(FormView):
                     # Update the actual "xml_file" variable by adding the DOI to the XML
                     # Perform an update on the resource
                     # Continue with registration as normal
-                    is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
-                    if is_doi_in_file_already == True:
-                        logger.exception('A DOI has already been issued for this metadata file.')
-                        messages.error(request, f'A DOI has already been issued for this metadata file.')
-                        return super().post(request, *args, **kwargs)
                     if 'register_doi' in request.POST:
+                        is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
+                        if is_doi_in_file_already == True:
+                            logger.exception('A DOI has already been issued for this metadata file.')
+                            messages.error(request, f'A DOI has already been issued for this metadata file.')
+                            return super().post(request, *args, **kwargs)
                         with client.start_session() as s:
                             def cb(s):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
@@ -156,7 +156,7 @@ class ResourceRegisterFormView(FormView):
                                 )
                             s.with_transaction(cb)
                     
-                    messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
+                        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during DOI registration process.')
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
