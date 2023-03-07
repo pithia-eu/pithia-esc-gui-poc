@@ -162,7 +162,6 @@ header .dropdown-item:active a {
 
 .card-menu a {
     display: flex;
-    flex-direction: row;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -186,7 +185,7 @@ header .dropdown-item:active a {
     width: 20%;
 }
 
-.col-lg-4 .resource-key-details {
+.col-lg-3 .resource-key-details {
     font-size: 0.875rem;
 }
 
