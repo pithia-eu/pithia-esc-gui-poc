@@ -31,7 +31,7 @@
                 <tr>
                     <td>Direct Link to Data Collection</td>
                     <td>
-                        {{ online_resource.description }}
+                        {{ online_resource.description|urlize }}
                     </td>
                     <td>
                         <div class="metadata-server-url">
@@ -57,7 +57,7 @@
                     <td>API</td>
                     <td>
                         {% if 'interaction_method_description' in method %}
-                        {{ method.interaction_method_description }}
+                        {{ method.interaction_method_description|urlize }}
                         {% else %}
                         <i class="text-muted">None</i>
                         {% endif %}

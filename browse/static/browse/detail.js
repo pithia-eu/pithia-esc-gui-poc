@@ -121,7 +121,7 @@ function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDeta
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = urlMapping.converted_url;
                     tag.innerHTML = urlMapping.converted_url_text;
-                    revealMetadataLink(tag, "(opens details of the ontology term in a new tab)");
+                    revealMetadataLink(tag, "(click the link to show information on this ontology term)");
                 });
             });
 
@@ -130,7 +130,7 @@ function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDeta
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = urlMapping.converted_url;
                     tag.innerHTML = urlMapping.converted_url_text;
-                    revealMetadataLink(tag, "(opens details of the metadata in a new tab)");
+                    revealMetadataLink(tag, "(click the link to show information on this metadata registration)");
                 });
             });
         })
