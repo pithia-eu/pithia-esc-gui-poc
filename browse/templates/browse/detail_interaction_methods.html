@@ -59,7 +59,7 @@
                             <td>API</td>
                             <td>
                                 {% if 'interaction_method_description' in method %}
-                                {{ method.interaction_method_description }}
+                                {{ method.interaction_method_description|urlize }}
                                 {% else %}
                                 <i class="text-muted">None</i>
                                 {% endif %}
