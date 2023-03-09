@@ -70,6 +70,23 @@ p {
     line-height: 1.5;
 }
 
+/* Utilities */
+.lead-sm {
+    font-size: 1.1rem;
+}
+
+.list-style-none {
+    list-style: none;
+}
+
+.sidemenu li a {
+    text-decoration: none;
+}
+
+.sidemenu li {
+    margin-bottom: 0.5rem;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;
@@ -237,6 +254,10 @@ header .dropdown-item:active a {
 
 .file-validation-status-list:empty::before {
     content: 'None';
+}
+
+#id_files {
+    width: 100%;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -469,6 +490,13 @@ ul.tree ul {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+@media (min-width: 992px) {
+    #id_files {
+        max-width: 20rem;
+    }
+}
+
 
 :root {
     --tree-search-container-max-height: 26rem;

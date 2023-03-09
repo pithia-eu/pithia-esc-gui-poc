@@ -13,41 +13,23 @@
 <script src="{% static "is_file_upload_ready.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row flex-wrap-reverse gx-4 gy-5 pb-4">
-    {% block sidemenu %}
-    <div class="col-lg-4">
-        <h2>Register Other Types of Metadata</h2>
-        <small>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">{% if 'organisation' not in title|lower %}<a href="{% url 'register:organisation' %}" class="pithia-blue">{% endif %}Organisations{% if 'organisation' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'individual' not in title|lower %}<a href="{% url 'register:individual' %}" class="pithia-blue">{% endif %}Individuals{% if 'individual' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'project' not in title|lower %}<a href="{% url 'register:project' %}" class="pithia-blue">{% endif %}Projects{% if 'project' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'platform' not in title|lower %}<a href="{% url 'register:platform' %}" class="pithia-blue">{% endif %}Platforms{% if 'platform' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'operation' not in title|lower %}<a href="{% url 'register:operation' %}" class="pithia-blue">{% endif %}Operations{% if 'operation' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'instrument' not in title|lower %}<a href="{% url 'register:instrument' %}" class="pithia-blue">{% endif %}Instruments{% if 'project' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'acquisition capabilities' not in title|lower %}<a href="{% url 'register:acquisition_capability_set' %}" class="pithia-blue">{% endif %}Acquisition Capabilities{% if 'acquisition capabilities' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'acquisition' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:acquisition' %}" class="pithia-blue">{% endif %}Acquisitions{% if 'acquisition' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'computation capabilities' not in title|lower %}<a href="{% url 'register:computation_capability_set' %}" class="pithia-blue">{% endif %}Computation Capabilities{% if 'computation capabilities' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'computation' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:computation' %}" class="pithia-blue">{% endif %}Computations{% if 'computation' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'process' not in title|lower %}<a href="{% url 'register:process' %}" class="pithia-blue">{% endif %}Processes{% if 'process' not in title|lower %}</a>{% endif %}</li>
-                <li class="list-group-item">{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
-            </ul>
-        </small>
-    </div>
-    {% endblock sidemenu %}
+<div class="row flex-wrap gx-md-5 gy-5 pb-4">
     <div class="col-lg-8">
         {% block title %}
-        <h1 class="pb-3">{{ title }}</h1>
+        <h1 class="pb-1">{{ title }}</h1>
         {% endblock title %}
         {% block subtitle %}{% endblock subtitle %}
-        <h2 class="fs-3">
-            File Upload
-        </h2>
-        <hr>
+        <p class="lead-sm mb-5">
+            {% block page_description %}
+            Upload the file you want to register with the file input below.
+            This will start the validation process for the file.
+            Once validation finishes, use the submit button to register it with the e-Science Centre.
+            {% endblock page_description %}
+        </p>
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
             {% csrf_token %}
-            <div class="row gy-5">
-                <div class="col-lg-8">
+            <div class="row gy-5 pb-3">
+                <div class="col-lg-7">
                     {% if messages %}
                     <div class="registration-alerts">
                         {% for message in messages %}
@@ -64,8 +46,9 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
-                    {{ form.files.label_tag }}
+                    <h2 class="fs-3">{{ form.files.label_tag }}</h2>
                     {{ form.files }}
+                    <small class="form-text">Accepted file types: xml</small>
                 </div>
                 <div class="col-lg-12">
                     {% block file_list %}
@@ -84,5 +67,29 @@
             </div>
         </form>
     </div>
+    {% block sidemenu %}
+    <div class="col-lg-4">
+        <section class="sidemenu text-secondary">
+            <h2 class="fs-5">Register Other Types of Metadata</h2>
+            <hr class="my-2">
+            <nav>
+                <ul class="list-style-none ps-0">
+                    <li>{% if 'organisation' not in title|lower %}<a href="{% url 'register:organisation' %}" class="pithia-blue">{% endif %}Organisations{% if 'organisation' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'individual' not in title|lower %}<a href="{% url 'register:individual' %}" class="pithia-blue">{% endif %}Individuals{% if 'individual' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'project' not in title|lower %}<a href="{% url 'register:project' %}" class="pithia-blue">{% endif %}Projects{% if 'project' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'platform' not in title|lower %}<a href="{% url 'register:platform' %}" class="pithia-blue">{% endif %}Platforms{% if 'platform' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'operation' not in title|lower %}<a href="{% url 'register:operation' %}" class="pithia-blue">{% endif %}Operations{% if 'operation' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'instrument' not in title|lower %}<a href="{% url 'register:instrument' %}" class="pithia-blue">{% endif %}Instruments{% if 'project' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'acquisition capabilities' not in title|lower %}<a href="{% url 'register:acquisition_capability_set' %}" class="pithia-blue">{% endif %}Acquisition Capabilities{% if 'acquisition capabilities' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'acquisition' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:acquisition' %}" class="pithia-blue">{% endif %}Acquisitions{% if 'acquisition' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'computation capabilities' not in title|lower %}<a href="{% url 'register:computation_capability_set' %}" class="pithia-blue">{% endif %}Computation Capabilities{% if 'computation capabilities' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'computation' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:computation' %}" class="pithia-blue">{% endif %}Computations{% if 'computation' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'process' not in title|lower %}<a href="{% url 'register:process' %}" class="pithia-blue">{% endif %}Processes{% if 'process' not in title|lower %}</a>{% endif %}</li>
+                    <li>{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
+                </ul>
+            </nav>
+        </section>
+    </div>
+    {% endblock sidemenu %}
 </div>
 {% endblock content %}
