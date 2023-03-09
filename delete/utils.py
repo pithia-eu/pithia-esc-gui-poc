@@ -373,6 +373,7 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
         catalogue_data_subsets = CurrentCatalogueDataSubset.find({
             'entryIdentifier.@xlink:href': resource_url
         })
+    
     # Catalogue Data Subsets are not included as they
     # are not referenced by any other resource type.
     catalogues = list(catalogues)
@@ -381,10 +382,14 @@ def get_catalogue_related_resources_linked_through_resource_id(resource_id, reso
         linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogues[i][0]['_id']), catalogues[i][2], event=event))
     catalogue_entries = list(catalogue_entries)
     for i in range(len(catalogue_entries)):
+        if 'entryName' in catalogue_entries[i]:
+            catalogue_entries[i]['name'] = catalogue_entries[i]['entryName']
         catalogue_entries[i] = (catalogue_entries[i], 'catalogue entry', CurrentCatalogueEntry, CatalogueEntryRevision)
         linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_entries[i][0]['_id']), catalogue_entries[i][2], event=event))
     catalogue_data_subsets = list(catalogue_data_subsets)
     for i in range(len(catalogue_data_subsets)):
+        if 'dataSubsetName' in catalogue_data_subsets[i]:
+            catalogue_data_subsets[i]['name'] = catalogue_data_subsets[i]['dataSubsetName']
         catalogue_data_subsets[i] = (catalogue_data_subsets[i], 'catalogue data subset', CurrentCatalogueDataSubset, CatalogueDataSubsetRevision)
         linked_resources.extend(get_catalogue_related_resources_linked_through_resource_id(str(catalogue_data_subsets[i][0]['_id']), catalogue_data_subsets[i][2], event=event))
     linked_resources.extend(catalogues)
