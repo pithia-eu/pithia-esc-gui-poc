@@ -28,6 +28,7 @@ from .handle_management import (
     create_and_register_handle_for_resource,
     add_handle_to_metadata_and_return_updated_xml_string,
     is_doi_element_present_in_xml_file,
+    delete_handle,
 )
 
 import logging
@@ -49,6 +50,7 @@ class ResourceRegisterFormView(FormView):
     resource_management_list_page_breadcrumb_url_name = ''
     resource_id = None
     handle = None
+    handle_api_client = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -139,6 +141,7 @@ class ResourceRegisterFormView(FormView):
                         with client.start_session() as s:
                             def cb(s):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
+                                self.handle_api_client = handle_api_client
                                 self.handle = handle
                                 xml_string_with_doi = add_handle_to_metadata_and_return_updated_xml_string(
                                     handle,
@@ -163,6 +166,13 @@ class ResourceRegisterFormView(FormView):
                 except BaseException as err:
                     logger.exception('An unexpected error occurred during DOI registration.')
                     messages.error(request, 'An unexpected error occurred during DOI registration.')
+                    if self.handle != None:
+                        try:
+                            delete_handle(self.handle, self.handle_api_client)
+                            logger.info(f'Deleted handle {self.handle} due to an error that occurred during DOI registration.')
+                        except BaseException as err:
+                            logger.exception(f'Could not delete handle {self.handle} due to an error.')
+                            
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
