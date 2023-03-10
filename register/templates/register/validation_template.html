@@ -1,12 +1,8 @@
-<div class="row">
-    <div class="col-lg-12">
-        <h2 class="fs-6 fw-normal">
-            {% block file_list_heading %}
-            {{ file_list_title|default:'Uploaded File' }}:
-            {% endblock file_list_heading %}
-        </h2>
-    </div>
-    <div class="col-lg-8">
-        <ul class="file-validation-status-list list-group"></ul>
-    </div>
-</div>
+<section class="file-validation-status-list-section py-0">
+    <h3 class="fs-3 file-validation-status-list-heading">
+        {% block file_list_heading %}
+        {{ file_list_title|default:'Uploaded File' }}
+        {% endblock file_list_heading %}
+    </h3>
+    <ul class="file-validation-status-list list-group"></ul>
+</section>
