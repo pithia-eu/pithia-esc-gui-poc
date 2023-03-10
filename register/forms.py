@@ -15,7 +15,7 @@ class UploadFileForm(forms.Form):
 
 class UploadDataCollectionFileForm(forms.Form):
     files = forms.FileField(
-        label='File Upload',
+        label='Single File Upload',
         label_suffix='',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
@@ -50,7 +50,8 @@ class UploadDataCollectionFileForm(forms.Form):
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
     files = forms.FileField(
-        label='Select an XML File/XML Files',
+        label='Single File Upload',
+        label_suffix='',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
