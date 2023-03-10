@@ -231,6 +231,14 @@ header .dropdown-item:active a {
     font-style: italic;
 }
 
+.file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
+    color: rgb(108, 117, 125);
+}
+
+.file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
+    color: #000;
+}
+
 #file-upload-form label {
     margin-bottom: 0.5rem;
 }
@@ -254,6 +262,8 @@ header .dropdown-item:active a {
 
 .file-validation-status-list:empty::before {
     content: 'None';
+    font-size: 1.25rem;
+    font-weight: 300;
 }
 
 #id_files {
