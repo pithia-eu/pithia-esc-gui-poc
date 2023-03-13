@@ -1,14 +1,14 @@
 import os
 from django.test import SimpleTestCase, tag
 
-from pithiaesc.settings import BASE_DIR
-from handle_management.utils import (
+from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
     map_handle_to_doi_dict,
     remove_doi_element_from_metadata_xml_string,
 )
+from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
