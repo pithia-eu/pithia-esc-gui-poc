@@ -1,28 +1,33 @@
 import environ
 import mongomock
 import os
-from django.test import SimpleTestCase, tag
-from handle_management.utils import (
-    instantiate_client_and_load_credentials,
-    create_handle,
-    register_handle,
-    delete_handle,
-    update_handle_url,
-    get_handle_url,
-    get_handle_record,
-    get_handle_raw,
-    get_time_handle_was_issued_as_string,
-    get_date_handle_was_issued_as_string,
-    add_doi_xml_string_to_metadata_xml_string,
-    map_handle_to_doi_dict,
+from django.test import (
+    SimpleTestCase,
+    tag
+)
+from handle_management.handle_api import (
     create_and_register_handle_for_resource,
-    create_doi_xml_string_from_dict,
-    add_handle_to_metadata_and_return_updated_xml_string,
+    create_handle,
+    delete_handle,
+    get_date_handle_was_issued_as_string,
+    get_handle_raw,
+    get_handle_record,
+    get_handle_url,
     get_handles_with_prefix,
-    get_last_result_time_element,
+    get_time_handle_was_issued_as_string,
+    instantiate_client_and_load_credentials,
+    register_handle,
+    update_handle_url,
+)
+from handle_management.xml_utils import (
+    add_doi_xml_string_to_metadata_xml_string,
+    add_handle_to_metadata_and_return_updated_xml_string,
+    create_doi_xml_string_from_dict,
     get_last_source_element,
-    parse_xml_string,
+    get_last_result_time_element,
     is_doi_element_present_in_xml_file,
+    map_handle_to_doi_dict,
+    parse_xml_string,
 )
 from pathlib import Path
 from pithiaesc.settings import BASE_DIR
