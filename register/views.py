@@ -24,7 +24,7 @@ from resource_management.views import (
 from validation.errors import FileRegisteredBefore
 from mongodb import client
 from update.update import update_original_metadata_xml_string
-from .handle_management import (
+from handle_management.utils import (
     create_and_register_handle_for_resource,
     add_handle_to_metadata_and_return_updated_xml_string,
     is_doi_element_present_in_xml_file,

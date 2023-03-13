@@ -2,7 +2,7 @@ import os
 from django.test import SimpleTestCase, tag
 
 from pithiaesc.settings import BASE_DIR
-from register.handle_management import (
+from handle_management.utils import (
     add_doi_xml_string_to_metadata_xml_string,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,

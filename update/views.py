@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
-from register.handle_management import (
+from handle_management.utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_for_resource_id,
     remove_doi_element_from_metadata_xml_string,
