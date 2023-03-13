@@ -1,8 +1,19 @@
-import traceback
-from pyexpat import ExpatError
-from django.urls import reverse_lazy
+import logging
+from common import mongodb_models
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views.generic import FormView
+from handle_management.handle_api import (
+    create_and_register_handle_for_resource,
+    delete_handle,
+)
+from handle_management.xml_utils import (
+    add_handle_to_metadata_and_return_updated_xml_string,
+    is_doi_element_present_in_xml_file,
+)
+from mongodb import client
+from pyexpat import ExpatError
+from register import xml_conversion_checks_and_fixes
 from register.register import (
     register_metadata_xml_file,
     store_xml_file_as_string_and_map_to_resource_id,
@@ -13,25 +24,15 @@ from .forms import (
     UploadFileForm,
     UploadCatalogueDataSubsetFileForm,
 )
-from register import xml_conversion_checks_and_fixes
-from common import mongodb_models
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title
 )
-from validation.errors import FileRegisteredBefore
-from mongodb import client
 from update.update import update_original_metadata_xml_string
-from handle_management.utils import (
-    create_and_register_handle_for_resource,
-    add_handle_to_metadata_and_return_updated_xml_string,
-    is_doi_element_present_in_xml_file,
-    delete_handle,
-)
+from validation.errors import FileRegisteredBefore
 
-import logging
 
 logger = logging.getLogger(__name__)
 
