@@ -46,6 +46,9 @@ def find_instruments_by_instrument_types(types):
 
 def find_acquisition_capability_sets_by_instrument_localids(instrument_localids):
     return list(CurrentAcquisitionCapability.find({
+        'capabilities': {
+            '$exists': True
+        },
         '$or': [
             {
                 'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
