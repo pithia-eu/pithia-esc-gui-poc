@@ -39,7 +39,7 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 env = environ.Env()
 
 # Create your tests here.
-class HandleManagementTestCase(SimpleTestCase):
+class PyHandleTestCase(SimpleTestCase):
     TEST_SUFFIX = 'MYTEST-HANDLE'
     VALUE_ORIGINAL = 'https://www.example.com/1'
     VALUE_AFTER = 'https://www.example.com/2'
@@ -172,6 +172,7 @@ class HandleManagementTestCase(SimpleTestCase):
         delete_handle(handle, self.client)
         print('Passed update_handle_url() test.')
 
+class DOIElementTestCase(SimpleTestCase):
     @tag('fast', 'register_handle_and_add_to_metadata')
     def test_register_handle_and_add_to_metadata(self):
         """
