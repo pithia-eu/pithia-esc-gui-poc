@@ -263,8 +263,6 @@ header .dropdown-item:active a {
 
 .file-validation-status-list:empty::before {
     content: 'None';
-    font-size: 1.25rem;
-    font-weight: 300;
 }
 
 #id_files {
