@@ -41,7 +41,7 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 env = environ.Env()
 
 # Create your tests here.
-class PyHandleTestCase(SimpleTestCase):
+class PyHandleSetupTestCase(SimpleTestCase):
     TEST_SUFFIX = 'MYTEST-HANDLE'
     VALUE_ORIGINAL = 'https://www.example.com/1'
     VALUE_AFTER = 'https://www.example.com/2'
@@ -52,6 +52,7 @@ class PyHandleTestCase(SimpleTestCase):
         self.client, self.credentials = instantiate_client_and_load_credentials()
         return super().setUp()
 
+class PyHandleTestCase(PyHandleSetupTestCase):
     @tag('fast', 'handles', 'instantiate_client_and_load_credentials')
     def test_instantiate_client_and_load_credentials(self):
         """
@@ -174,7 +175,16 @@ class PyHandleTestCase(SimpleTestCase):
         delete_handle(handle, self.client)
         print('Passed update_handle_url() test.')
 
-class DOIXMLRegistrationTestCase(SimpleTestCase):
+    @tag('fast', 'get_handles_with_prefix')
+    def test_get_handles_with_prefix(self):
+        """
+        get_handles_with_prefix() returns all handles under a given prefix.
+        """
+        prefix = env('HANDLE_PREFIX')
+        handles = get_handles_with_prefix(prefix)
+        print('handles', handles)
+
+class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
     @tag('fast', 'register_handle_and_add_to_metadata')
     def test_register_handle_and_add_to_metadata(self):
         """
@@ -206,23 +216,16 @@ class DOIXMLRegistrationTestCase(SimpleTestCase):
         """
         add_doi_xml_string_to_metadata_xml_string() adds a filled out <doi> element to the XML string.
         """
-        # This test assumes that this handle exists
-        doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        doi_dict = map_handle_to_doi_dict(handle, self.VALUE_ORIGINAL)
         doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             xml_string = xml_file.read()
             updated_xml_string = add_doi_xml_string_to_metadata_xml_string(xml_string, doi_xml_string)
             print('updated_xml_string', updated_xml_string)
+            delete_handle(handle, self.client)
             print(f'Passed new DOI element addition for {Path(xml_file.name).name}.')
-
-    @tag('fast', 'get_handles_with_prefix')
-    def test_get_handles_with_prefix(self):
-        """
-        get_handles_with_prefix() returns all handles under a given prefix.
-        """
-        prefix = env('HANDLE_PREFIX')
-        handles = get_handles_with_prefix(prefix)
-        print('handles', handles)
 
     @tag('fast', 'get_last_result_time_element')
     def test_get_last_result_time_element(self):
@@ -266,7 +269,7 @@ class DOIXMLRegistrationTestCase(SimpleTestCase):
             print('result', result)
             self.assertEqual(result, True)
 
-class DOIXMLUpdateTestCase(SimpleTestCase):
+class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
     @tag('fast', 'get_doi_xml_string_from_metadata_xml_string')
     def test_get_doi_xml_string_from_metadata_xml_string(self):
         """
@@ -301,8 +304,11 @@ class DOIXMLUpdateTestCase(SimpleTestCase):
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
             xml_string = xml_file.read()
             doiless_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
+            handle = create_handle(self.credentials, self.TEST_SUFFIX)
+            register_handle(handle, self.VALUE_ORIGINAL, self.client)
             doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
             doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
             updated_xml_string = add_doi_xml_string_to_metadata_xml_string(doiless_xml_string, doi_xml_string)
             print('updated_xml_string', updated_xml_string)
+            delete_handle(handle, self.client)
             print('Passed replace_doi_element_from_metadata_xml_string() test.')
