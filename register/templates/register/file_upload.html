@@ -28,7 +28,7 @@
         <h1 class="pb-1">{{ title }}</h1>
         {% endblock title %}
         {% block subtitle %}{% endblock subtitle %}
-        <p class="lead-sm mb-5">
+        <p class="lead-sm pb-4">
             {% block page_description %}
             Upload the file you want to register with the file input below.
             This will start the validation process for the file.
@@ -37,7 +37,7 @@
         </p>
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
             {% csrf_token %}
-            <div class="row gy-5 pb-3">
+            <div class="row gy-4">
                 <div class="col-lg-7">
                     <section>
                         {% if form.files.errors %}
@@ -47,7 +47,7 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-                        <h3 class="fs-3">{{ form.files.label_tag }}</h3>
+                        <h2>{{ form.files.label_tag }}</h2>
                         {{ form.files }}
                         <small class="form-text">Accepted file types: xml</small>
                     </section>
@@ -61,7 +61,7 @@
                 </div>
                 {% block register_api_specification %}
                 {% endblock register_api_specification %}
-                <div class="col-lg-12 pt-3">
+                <div class="col-lg-12 pt-5">
                     <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
                         <button type="submit" class="btn btn-primary" disabled>Submit</button>
                     </div>
