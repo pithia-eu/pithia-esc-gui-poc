@@ -2,11 +2,11 @@ import json
 import logging
 import os
 import requests
+import urllib.parse
 from dateutil import parser
 from django.urls import reverse_lazy
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
-import urllib.parse
 
 logger = logging.getLogger(__name__)
 
