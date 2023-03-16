@@ -14,6 +14,67 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# TODO: clarify
+def initialise_doi_kernel_metadata_dict(data_subset_name: str, principal_agent_name_value: str):
+    return {
+        # referentDoiName set after the handle has been registered
+        'referentDoiName': '',
+        # primaryReferentType as 'Creation' seems correct. Could 'Event' also be correct?
+        'primaryReferentType': 'Creation',
+        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
+        # issueDate set after the handle has been registered
+        'issueDate': '',
+        # Not sure what to put for issueNumber
+        'issueNumber': '0',
+        'referentCreation': {
+            'name': {
+                # How to specify this? Should it just be 'en' by default?
+                '@primaryLanguage': 'en',
+                # value should be the data subset name should be the name value
+                'value': data_subset_name,
+                # Either name of title - relates to convention, so probably 'name'
+                'type': 'name',
+            },
+            # localID could be put here? Should be set now and not later.s
+            'identifier': {
+                # Could be the data subset localid? Not sure what to put here.
+                # Is it needed if the identifier has a URI?
+                'nonUriValue': '',
+                'uri': {
+                    # Probably like how a handle/DOI redirects to a webpage.
+                    # So probably 'text/html' is correct.
+                    '@returnType': 'text/html',
+                    # If localID, #text is set to the URI that goes directly to the data subset?
+                    '#text': '',
+                },
+                # Should clarify what this value is. Seems like 'EPICPID' or 'EPICID'?
+                'type': 'epicId',
+            },
+            # 'Digital' for structuralType is probably correct
+            'structuralType': 'Digital',
+            # 'Visual' for mode is probably correct
+            'mode': 'Visual',
+            # Not sure about character - maybe 'Other'?
+            'character': 'Image',
+            # Seems to be 'Dataset'
+            'type': 'Dataset',
+            'principalAgent': {
+                'name': {
+                    # Should be possible withouit manual input after user management has been implemented.
+                    'value': principal_agent_name_value,
+                    # Probably name - the name of the party will likely be the name of an organisation.
+                    'type': 'Name',
+                },
+            },
+        },
+    }
+
+def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
+    handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
+    doi_dict['referentDoiName'] = handle
+    doi_dict['issueDate'] = handle_issue_date_as_string
+    return doi_dict
+
 def add_handle_to_metadata_and_return_updated_xml_string(
     handle,
     client,
@@ -54,7 +115,7 @@ def map_handle_to_doi_dict(handle: str, handle_url: str):
             'name': {
                 '@primaryLanguage': 'en',
                 'value': handle_url,
-                'type': 'URL',
+                'type': 'name',
             },
             'identifier': {
                 'nonUriValue': handle,
