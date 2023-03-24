@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # TODO: clarify
-def initialise_doi_kernel_metadata_dict(data_subset_name: str, principal_agent_name_value: str):
+def initialise_default_doi_kernel_metadata_dict(data_subset_name: str, principal_agent_name_value: str):
     return {
         'referentDoiName': '',
         'primaryReferentType': 'Creation',
