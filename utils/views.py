@@ -1,7 +1,3 @@
-from .url_helpers import convert_ontology_server_urls_to_browse_urls, convert_resource_server_urls_to_browse_urls
-from django.http import JsonResponse
-from django.views.generic import TemplateView
-from django.http import HttpResponseNotFound
 from bson import ObjectId
 from common.mongodb_models import (
     CurrentOrganisation,
@@ -21,25 +17,16 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     OriginalMetadataXml,
 )
-from resource_management.views import _INDEX_PAGE_TITLE, _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE, _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+from django.http import HttpResponseNotFound
+from django.views.generic import TemplateView
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+)
 from .mapping_functions import prepare_resource_for_template
 
 # Create your views here.
-
-def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
-    ontology_server_urls = []
-    resource_server_urls = []
-    if 'ontology-server-urls' in request.GET:
-        ontology_server_urls = request.GET['ontology-server-urls'].split(',')
-    if 'resource-server-urls' in request.GET:
-        resource_server_urls = request.GET['resource-server-urls'].split(',')
-    esc_ontology_urls = convert_ontology_server_urls_to_browse_urls(ontology_server_urls)
-    esc_resource_urls = convert_resource_server_urls_to_browse_urls(resource_server_urls)
-    
-    return JsonResponse({
-        'ontology_urls': esc_ontology_urls,
-        'resource_urls': esc_resource_urls,
-    })
 
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''

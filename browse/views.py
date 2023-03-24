@@ -1,18 +1,26 @@
 import re
-from dateutil.parser import parse
-from django.urls import reverse
-from common import mongodb_models
-from django.shortcuts import render
 from bson.objectid import ObjectId
-from django.http import HttpResponseNotFound
+from common import mongodb_models
+from dateutil.parser import parse
+from django.http import (
+    HttpResponseNotFound,
+    JsonResponse,
+)
+from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 
+from .url_mapping import (
+    convert_ontology_server_urls_to_browse_urls,
+    convert_resource_server_urls_to_browse_urls,
+)
+
 from utils.mapping_functions import prepare_resource_for_template
+from utils.string_helpers import _split_camel_case
 from validation.url_validation import (
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
     SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 )
-from utils.string_helpers import _split_camel_case
 
 _INDEX_PAGE_TITLE = 'Browse Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -343,7 +351,7 @@ class ResourceDetailView(TemplateView):
         context['resource_human_readable'] = self.resource_human_readable
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
-        context['server_url_conversion_url'] = reverse('utils:convert_server_urls')
+        context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
@@ -515,3 +523,18 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         return super().get(request, *args, **kwargs)
+
+def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
+    ontology_server_urls = []
+    resource_server_urls = []
+    if 'ontology-server-urls' in request.GET:
+        ontology_server_urls = request.GET['ontology-server-urls'].split(',')
+    if 'resource-server-urls' in request.GET:
+        resource_server_urls = request.GET['resource-server-urls'].split(',')
+    esc_ontology_urls = convert_ontology_server_urls_to_browse_urls(ontology_server_urls)
+    esc_resource_urls = convert_resource_server_urls_to_browse_urls(resource_server_urls)
+    
+    return JsonResponse({
+        'ontology_urls': esc_ontology_urls,
+        'resource_urls': esc_resource_urls,
+    })
