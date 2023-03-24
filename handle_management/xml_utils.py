@@ -15,17 +15,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 # TODO: clarify
-def initialise_default_doi_kernel_metadata_dict(data_subset_name: str, principal_agent_name_value: str):
+def initialise_default_doi_kernel_metadata_dict():
+    default_key_value = 'Unknown'
     return {
-        'referentDoiName': '',
+        'referentDoiName': default_key_value,
         'primaryReferentType': 'Creation',
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        'issueDate': '',
-        'issueNumber': '0',
+        # Already stored in the handle, can just retrieve it.
+        'issueDate': default_key_value,
+        # issueNumber - Added manually to the handle, then incremented manually as well,
+        # each time the handle is updated.
+        'issueNumber': default_key_value,
         'referentCreation': {
             'name': {
                 '@primaryLanguage': 'en',
-                'value': data_subset_name,
+                'value': default_key_value,
                 'type': 'name',
             },
             'identifier': {
@@ -34,7 +38,7 @@ def initialise_default_doi_kernel_metadata_dict(data_subset_name: str, principal
                     '@returnType': 'text/html',
                     '#text': '',
                 },
-                'type': 'epicId',
+                'type': default_key_value,
             },
             'structuralType': 'Digital',
             'mode': 'Visual',
@@ -42,12 +46,21 @@ def initialise_default_doi_kernel_metadata_dict(data_subset_name: str, principal
             'type': 'Dataset',
             'principalAgent': {
                 'name': {
-                    'value': principal_agent_name_value,
+                    'value': default_key_value,
                     'type': 'Name',
                 },
             },
         },
     }
+
+def add_data_subset_data_to_doi_metadata_kernel_dict(
+    data_subset_name: str,
+    principal_agent_name_value: str,
+    doi_dict: str
+):
+    doi_dict['referentCreation']['name']['value'] = data_subset_name
+    doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
+    return doi_dict
 
 def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
