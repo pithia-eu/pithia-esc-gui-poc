@@ -27,7 +27,7 @@ from handle_management.xml_utils import (
     get_last_source_element,
     get_last_result_time_element,
     is_doi_element_present_in_xml_file,
-    map_handle_to_doi_dict,
+    add_handle_to_doi_dict,
     parse_xml_string,
     remove_doi_element_from_metadata_xml_string,
 )
@@ -218,7 +218,7 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
-        doi_dict = map_handle_to_doi_dict(handle, self.VALUE_ORIGINAL)
+        doi_dict = add_handle_to_doi_dict(handle, self.VALUE_ORIGINAL)
         doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             xml_string = xml_file.read()
@@ -306,7 +306,7 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
             doiless_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
             handle = create_handle(self.credentials, self.TEST_SUFFIX)
             register_handle(handle, self.VALUE_ORIGINAL, self.client)
-            doi_dict = map_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
+            doi_dict = add_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
             doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
             updated_xml_string = add_doi_xml_string_to_metadata_xml_string(doiless_xml_string, doi_xml_string)
             print('updated_xml_string', updated_xml_string)

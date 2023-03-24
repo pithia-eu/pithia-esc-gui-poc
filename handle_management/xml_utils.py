@@ -85,7 +85,7 @@ def add_handle_to_metadata_and_return_updated_xml_string(
     session=None
 ):
     handle_url = get_handle_url(handle, client)
-    doi_dict = map_handle_to_doi_dict(handle, handle_url)
+    doi_dict = add_handle_to_doi_dict(handle, handle_url)
     doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
     xml_file.seek(0)
     metadata_xml_string = xml_file.read()
@@ -102,7 +102,7 @@ def add_handle_to_metadata_and_return_updated_xml_string(
 def create_lxml_utf8_parser():
     return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
 
-def map_handle_to_doi_dict(handle: str, handle_url: str):
+def add_handle_to_doi_dict(handle: str, handle_url: str):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
 
     doi = {
