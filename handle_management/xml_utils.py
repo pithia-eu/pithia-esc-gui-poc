@@ -17,52 +17,32 @@ logger = logging.getLogger(__name__)
 # TODO: clarify
 def initialise_doi_kernel_metadata_dict(data_subset_name: str, principal_agent_name_value: str):
     return {
-        # referentDoiName set after the handle has been registered
         'referentDoiName': '',
-        # primaryReferentType as 'Creation' seems correct. Could 'Event' also be correct?
         'primaryReferentType': 'Creation',
         'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        # issueDate set after the handle has been registered
         'issueDate': '',
-        # Not sure what to put for issueNumber
         'issueNumber': '0',
         'referentCreation': {
             'name': {
-                # How to specify this? Should it just be 'en' by default?
                 '@primaryLanguage': 'en',
-                # value should be the data subset name should be the name value
                 'value': data_subset_name,
-                # Either name of title - relates to convention, so probably 'name'
                 'type': 'name',
             },
-            # localID could be put here? Should be set now and not later.s
             'identifier': {
-                # Could be the data subset localid? Not sure what to put here.
-                # Is it needed if the identifier has a URI?
                 'nonUriValue': '',
                 'uri': {
-                    # Probably like how a handle/DOI redirects to a webpage.
-                    # So probably 'text/html' is correct.
                     '@returnType': 'text/html',
-                    # If localID, #text is set to the URI that goes directly to the data subset?
                     '#text': '',
                 },
-                # Should clarify what this value is. Seems like 'EPICPID' or 'EPICID'?
                 'type': 'epicId',
             },
-            # 'Digital' for structuralType is probably correct
             'structuralType': 'Digital',
-            # 'Visual' for mode is probably correct
             'mode': 'Visual',
-            # Not sure about character - maybe 'Other'?
             'character': 'Image',
-            # Seems to be 'Dataset'
             'type': 'Dataset',
             'principalAgent': {
                 'name': {
-                    # Should be possible withouit manual input after user management has been implemented.
                     'value': principal_agent_name_value,
-                    # Probably name - the name of the party will likely be the name of an organisation.
                     'type': 'Name',
                 },
             },
