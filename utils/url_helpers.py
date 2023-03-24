@@ -1,19 +1,46 @@
+from common.helpers import (
+    get_mongodb_model_by_resource_type_from_resource_url,
+    get_mongodb_model_from_catalogue_related_resource_url,
+)
 from django.urls import reverse
 from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_pref_label_from_ontology_node_iri,
 )
-from common.helpers import (
-    get_mongodb_model_by_resource_type_from_resource_url,
-    get_mongodb_model_from_catalogue_related_resource_url,
-)
 from utils.mapping_functions import prepare_resource_for_template
 from validation.url_validation import validate_ontology_term_url
-from validation.url_validation_utils import (
-    divide_resource_url_into_main_components,
-    divide_resource_url_from_op_mode_id,
-    divide_catalogue_related_resource_url_into_main_components,
-)
+
+
+# Divide resource URLs into workable components
+def divide_resource_url_into_main_components(resource_url):
+    resource_url_split = resource_url.split('/')
+    return {
+        'url_base': '/'.join(resource_url_split[:-3]),
+        'resource_type': resource_url_split[-3],
+        'namespace': resource_url_split[-2],
+        'localid': resource_url_split[-1],
+    }
+
+def divide_catalogue_related_resource_url_into_main_components(resource_url):
+    resource_url_split = resource_url.split('/')
+    return {
+        'url_base': '/'.join(resource_url_split[:-4]),
+        'resource_type': resource_url_split[-4],
+        'namespace': resource_url_split[-3],
+        'event': resource_url_split[-2],
+        'localid': resource_url_split[-1],
+    }
+
+def divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id):
+    resource_url_with_op_mode_id_split = resource_url_with_op_mode_id.split('#')
+    return {
+        'resource_url': '#'.join(resource_url_with_op_mode_id_split[:-1]),
+        'op_mode_id': resource_url_with_op_mode_id_split[-1],
+    }
+
+def get_namespace_and_localid_from_resource_url(resource_url: str) -> tuple[str, str]:
+    resource_server_url_components = divide_resource_url_into_main_components(resource_url)
+    return resource_server_url_components['namespace'], resource_server_url_components['localid']
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
     ontology_term_server_url_split = ontology_term_server_url.split('/')
