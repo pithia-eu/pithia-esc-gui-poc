@@ -1,14 +1,24 @@
 import os
 from bson import ObjectId
-from common.mongodb_models import OriginalMetadataXml
+from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
+from common.mongodb_models import (
+    CurrentCatalogueDataSubset,
+    CurrentDataCollection,
+    OriginalMetadataXml,
+)
 from .handle_api import (
     get_date_handle_was_issued_as_string,
     get_handle_url,
 )
 from lxml import etree
 from lxml.etree import Element, ElementTree
+from operator import itemgetter
 from pyhandle.handleexceptions import *
 from update.update import update_current_version_of_resource
+from utils.url_helpers import (
+    divide_resource_url_into_main_components,
+    get_namespace_and_localid_from_resource_url,
+)
 
 import logging
 
@@ -53,13 +63,39 @@ def initialise_default_doi_kernel_metadata_dict():
         },
     }
 
+def get_first_related_party_name_from_data_collection(data_collection: dict):
+    if 'relatedParty' not in data_collection:
+        return None
+    related_party_url = data_collection['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
+    resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(related_party_url))
+    related_party_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
+    related_party = related_party_mongodb_model.find_one({
+        'identifier.PITHIA_Identifier.namespace': namespace,
+        'identifier.PITHIA_Identifier.localID': localid,
+    })
+    if related_party is None:
+        return None
+    return related_party['name']
+
 def add_data_subset_data_to_doi_metadata_kernel_dict(
-    data_subset_name: str,
-    principal_agent_name_value: str,
+    data_subset_id: str,
     doi_dict: str
 ):
+    data_subset = CurrentCatalogueDataSubset.find_one({
+        '_id': ObjectId(data_subset_id)
+    })
+    data_subset_name = data_subset['dataSubsetName']
     doi_dict['referentCreation']['name']['value'] = data_subset_name
-    doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
+    if 'dataCollection' in data_subset:
+        referenced_data_collection_url = data_subset['dataCollection']['@xlink:href']
+        namespace, localid = get_namespace_and_localid_from_resource_url(referenced_data_collection_url)
+        referenced_data_collection = CurrentDataCollection.find_one({
+            'identifier.PITHIA_Identifier.namespace': namespace,
+            'identifier.PITHIA_Identifier.localID': localid,
+        })
+        principal_agent_name_value = get_first_related_party_name_from_data_collection(referenced_data_collection)
+        if principal_agent_name_value is not None:
+            doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
     return doi_dict
 
 def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
