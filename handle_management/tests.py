@@ -21,7 +21,7 @@ from handle_management.handle_api import (
 )
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
-    add_handle_to_metadata_and_return_updated_xml_string,
+    add_doi_kernel_metadata_to_xml_and_return_updated_string,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
     get_last_source_element,
@@ -201,7 +201,7 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
             resource_id = registered_resource['_id']
             handle, client, credentials = create_and_register_handle_for_resource(resource_id)
             print('xml_file', xml_file)
-            add_handle_to_metadata_and_return_updated_xml_string(
+            add_doi_kernel_metadata_to_xml_and_return_updated_string(
                 handle,
                 client,
                 resource_id,

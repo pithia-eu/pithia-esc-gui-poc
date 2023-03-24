@@ -68,7 +68,7 @@ def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     doi_dict['issueDate'] = handle_issue_date_as_string
     return doi_dict
 
-def add_handle_to_metadata_and_return_updated_xml_string(
+def add_doi_kernel_metadata_to_xml_and_return_updated_string(
     handle,
     client,
     resource_id,

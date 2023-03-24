@@ -8,7 +8,7 @@ from handle_management.handle_api import (
     delete_handle,
 )
 from handle_management.xml_utils import (
-    add_handle_to_metadata_and_return_updated_xml_string,
+    add_doi_kernel_metadata_to_xml_and_return_updated_string,
     is_doi_element_present_in_xml_file,
 )
 from mongodb import client
@@ -144,7 +144,7 @@ class ResourceRegisterFormView(FormView):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
-                                xml_string_with_doi = add_handle_to_metadata_and_return_updated_xml_string(
+                                xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
                                     handle,
                                     handle_api_client,
                                     self.resource_id,
