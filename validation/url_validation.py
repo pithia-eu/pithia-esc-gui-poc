@@ -1,18 +1,25 @@
-import validators
 import re
-from operator import itemgetter
-from requests import get
-from rdflib import Graph, URIRef, RDF, SKOS
+import validators
 from common.helpers import (
     get_mongodb_model_by_resource_type_from_resource_url,
     get_mongodb_model_from_catalogue_related_resource_url,
 )
-from .url_validation_utils import (
-    get_resource_by_pithia_identifier_components,
-    get_resource_by_pithia_identifier_components_and_op_mode_id,
+from operator import itemgetter
+from rdflib import (
+    Graph,
+    URIRef,
+    RDF,
+    SKOS,
+)
+from requests import get
+from utils.url_helpers import (
     divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
     divide_catalogue_related_resource_url_into_main_components,
+)
+from .url_validation_utils import (
+    get_resource_by_pithia_identifier_components,
+    get_resource_by_pithia_identifier_components_and_op_mode_id,
 )
 
 
