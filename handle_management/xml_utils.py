@@ -14,6 +14,7 @@ from lxml import etree
 from lxml.etree import Element, ElementTree
 from operator import itemgetter
 from pyhandle.handleexceptions import *
+from pymongo import collection
 from update.update import update_current_version_of_resource
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
@@ -64,7 +65,7 @@ def initialise_default_doi_kernel_metadata_dict():
     }
 
 def get_first_related_party_name_from_data_collection(data_collection: dict):
-    if 'relatedParty' not in data_collection:
+    if not isinstance(data_collection, dict) or (isinstance(data_collection, dict) and 'relatedParty' not in data_collection):
         return None
     related_party_url = data_collection['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
     resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(related_party_url))
@@ -79,9 +80,10 @@ def get_first_related_party_name_from_data_collection(data_collection: dict):
 
 def add_data_subset_data_to_doi_metadata_kernel_dict(
     data_subset_id: str,
-    doi_dict: str
+    doi_dict: dict,
+    catalogue_data_subset_model: collection = CurrentCatalogueDataSubset
 ):
-    data_subset = CurrentCatalogueDataSubset.find_one({
+    data_subset = catalogue_data_subset_model.find_one({
         '_id': ObjectId(data_subset_id)
     })
     data_subset_name = data_subset['dataSubsetName']
@@ -102,19 +104,18 @@ def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
     doi_dict['referentDoiName'] = handle
     doi_dict['issueDate'] = handle_issue_date_as_string
+    # TODO: Implement issueNumber
+    # TODO: Add handle URL to identifier
     return doi_dict
 
 def add_doi_kernel_metadata_to_xml_and_return_updated_string(
-    handle,
-    client,
+    doi_dict,
     resource_id,
     xml_file,
     resource_mongodb_model,
     resource_conversion_validate_and_correct_function=None,
     session=None
 ):
-    handle_url = get_handle_url(handle, client)
-    doi_dict = add_handle_to_doi_dict(handle, handle_url)
     doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
     xml_file.seek(0)
     metadata_xml_string = xml_file.read()
