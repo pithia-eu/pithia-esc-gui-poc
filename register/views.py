@@ -8,7 +8,10 @@ from handle_management.handle_api import (
     delete_handle,
 )
 from handle_management.xml_utils import (
+    add_data_subset_data_to_doi_metadata_kernel_dict,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
+    add_handle_data_to_doi_metadata_kernel_dict,
+    initialise_default_doi_kernel_metadata_dict,
     is_doi_element_present_in_xml_file,
 )
 from mongodb import client
@@ -141,12 +144,14 @@ class ResourceRegisterFormView(FormView):
                             return super().post(request, *args, **kwargs)
                         with client.start_session() as s:
                             def cb(s):
+                                doi_dict = initialise_default_doi_kernel_metadata_dict()
+                                add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
+                                add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
-                                    handle,
-                                    handle_api_client,
+                                    doi_dict,
                                     self.resource_id,
                                     xml_file,
                                     self.resource_mongodb_model,
