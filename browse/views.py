@@ -40,7 +40,6 @@ def data_collection_related_resource_types(request):
     num_current_computations = mongodb_models.CurrentComputation.count_documents({})
     num_current_processes = mongodb_models.CurrentProcess.count_documents({})
     num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
-    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
     return render(request, 'browse/data_collection_related_resource_types.html', {
         'title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
@@ -55,7 +54,6 @@ def data_collection_related_resource_types(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'num_current_catalogues': num_current_catalogues,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
