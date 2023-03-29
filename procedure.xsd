@@ -612,13 +612,13 @@ A process component which interacts with the feature of interest  (e.g. an atmos
     <complexType name="CapabilityLinkType">
         <sequence>
             <!-- this is the main place where the instrument itself is defined -->
-            <element name="platform" minOccurs="0" type="pithia:PlatformPropertyType"/>
+            <element name="platform" maxOccurs="unbounded" minOccurs="0" type="pithia:PlatformPropertyType"/>
             <element name="standardIdentifier" maxOccurs="unbounded" minOccurs="0" type="pithia:StandardPlatformIdentifierType"/> 
             <choice>
                  <element name="acquisitionCapabilities" minOccurs="1" type="pithia:AcquisitionCapabilitiesPropertyType"/>
                  <element name="computationCapabilities" minOccurs="1" type="pithia:ComputationCapabilitiesPropertyType"/>
             </choice>
-            <element name="timeSpan" minOccurs="0" type="gml:TimePeriodType"/>
+            <element name="timeSpan" maxOccurs="unbounded" minOccurs="0" type="gml:TimePeriodType"/>
         </sequence>
     </complexType>
     <complexType name="AcquisitionCapabilitiesPropertyType">
