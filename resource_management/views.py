@@ -35,18 +35,18 @@ def index(request):
     })
 
 def data_collection_related_metadata_index(request):
-    num_current_organsations = CurrentOrganisation.count_documents({})
-    num_current_individuals = CurrentIndividual.count_documents({})
-    num_current_projects = CurrentProject.count_documents({})
-    num_current_platforms = CurrentPlatform.count_documents({})
-    num_current_instruments = CurrentInstrument.count_documents({})
-    num_current_operations = CurrentOperation.count_documents({})
-    num_current_acquisition_capability_sets = CurrentAcquisitionCapability.count_documents({})
-    num_current_acquisitions = CurrentAcquisition.count_documents({})
-    num_current_computation_capability_sets = CurrentComputationCapability.count_documents({})
-    num_current_computations = CurrentComputation.count_documents({})
-    num_current_processes = CurrentProcess.count_documents({})
-    num_current_data_collections = CurrentDataCollection.count_documents({})
+    num_current_organsations = CurrentOrganisation.estimated_document_count()
+    num_current_individuals = CurrentIndividual.estimated_document_count()
+    num_current_projects = CurrentProject.estimated_document_count()
+    num_current_platforms = CurrentPlatform.estimated_document_count()
+    num_current_instruments = CurrentInstrument.estimated_document_count()
+    num_current_operations = CurrentOperation.estimated_document_count()
+    num_current_acquisition_capability_sets = CurrentAcquisitionCapability.estimated_document_count()
+    num_current_acquisitions = CurrentAcquisition.estimated_document_count()
+    num_current_computation_capability_sets = CurrentComputationCapability.estimated_document_count()
+    num_current_computations = CurrentComputation.estimated_document_count()
+    num_current_processes = CurrentProcess.estimated_document_count()
+    num_current_data_collections = CurrentDataCollection.estimated_document_count()
     return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
@@ -66,9 +66,9 @@ def data_collection_related_metadata_index(request):
     })
 
 def catalogue_related_metadata_index(request):
-    num_current_catalogues = CurrentCatalogue.count_documents({})
-    num_current_catalogue_entries = CurrentCatalogueEntry.count_documents({})
-    num_current_catalogue_data_subsets = CurrentCatalogueDataSubset.count_documents({})
+    num_current_catalogues = CurrentCatalogue.estimated_document_count()
+    num_current_catalogue_entries = CurrentCatalogueEntry.estimated_document_count()
+    num_current_catalogue_data_subsets = CurrentCatalogueDataSubset.estimated_document_count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_catalogue_entries': num_current_catalogue_entries,
