@@ -36,18 +36,18 @@ def index(request):
     })
 
 def data_collection_related_resource_types(request):
-    num_current_organsations = mongodb_models.CurrentOrganisation.count_documents({})
-    num_current_individuals = mongodb_models.CurrentIndividual.count_documents({})
-    num_current_projects = mongodb_models.CurrentProject.count_documents({})
-    num_current_platforms = mongodb_models.CurrentPlatform.count_documents({})
-    num_current_instruments = mongodb_models.CurrentInstrument.count_documents({})
-    num_current_operations = mongodb_models.CurrentOperation.count_documents({})
-    num_current_acquisition_capability_sets = mongodb_models.CurrentAcquisitionCapability.count_documents({})
-    num_current_acquisitions = mongodb_models.CurrentAcquisition.count_documents({})
-    num_current_computation_capability_sets = mongodb_models.CurrentComputationCapability.count_documents({})
-    num_current_computations = mongodb_models.CurrentComputation.count_documents({})
-    num_current_processes = mongodb_models.CurrentProcess.count_documents({})
-    num_current_data_collections = mongodb_models.CurrentDataCollection.count_documents({})
+    num_current_organsations = mongodb_models.CurrentOrganisation.estimated_document_count()
+    num_current_individuals = mongodb_models.CurrentIndividual.estimated_document_count()
+    num_current_projects = mongodb_models.CurrentProject.estimated_document_count()
+    num_current_platforms = mongodb_models.CurrentPlatform.estimated_document_count()
+    num_current_instruments = mongodb_models.CurrentInstrument.estimated_document_count()
+    num_current_operations = mongodb_models.CurrentOperation.estimated_document_count()
+    num_current_acquisition_capability_sets = mongodb_models.CurrentAcquisitionCapability.estimated_document_count()
+    num_current_acquisitions = mongodb_models.CurrentAcquisition.estimated_document_count()
+    num_current_computation_capability_sets = mongodb_models.CurrentComputationCapability.estimated_document_count()
+    num_current_computations = mongodb_models.CurrentComputation.estimated_document_count()
+    num_current_processes = mongodb_models.CurrentProcess.estimated_document_count()
+    num_current_data_collections = mongodb_models.CurrentDataCollection.estimated_document_count()
     return render(request, 'browse/data_collection_related_resource_types.html', {
         'title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
@@ -66,9 +66,9 @@ def data_collection_related_resource_types(request):
     })
 
 def catalogue_related_resource_types(request):
-    num_current_catalogues = mongodb_models.CurrentCatalogue.count_documents({})
-    num_current_catalogue_entries = mongodb_models.CurrentCatalogueEntry.count_documents({})
-    num_current_catalogue_data_subsets = mongodb_models.CurrentCatalogueDataSubset.count_documents({})
+    num_current_catalogues = mongodb_models.CurrentCatalogue.estimated_document_count()
+    num_current_catalogue_entries = mongodb_models.CurrentCatalogueEntry.estimated_document_count()
+    num_current_catalogue_data_subsets = mongodb_models.CurrentCatalogueDataSubset.estimated_document_count()
     return render(request, 'browse/catalogue_related_resource_types.html', {
         'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_catalogues': num_current_catalogues,
