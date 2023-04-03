@@ -158,8 +158,8 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         """
         delete_handle() returns the handle of the deleted record and raises no exceptions.
         """
-        handle = '21.15112/MYTEST-HANDLE'
-        # register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client)
         delete_result = delete_handle(handle, self.client)
         self.assertEqual(handle, delete_result)
         print('Passed delete_handle() test.')
