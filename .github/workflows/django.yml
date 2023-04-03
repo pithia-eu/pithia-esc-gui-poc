@@ -25,6 +25,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Create .env file
+      env:
+        SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
+      run: |
+        touch pithiaesc/.env
     - name: Verify Organisation XSD validation unit test passes
       run: |
         python manage.py test validation.tests.OrganisationXSDValidationTestCase
