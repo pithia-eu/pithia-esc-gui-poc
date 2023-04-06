@@ -204,7 +204,11 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             )
             self.resource_id = registered_resource['_id']
         doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict, MockCurrentCatalogueDataSubset)
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
         add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
         print(doi_dict)
@@ -229,9 +233,9 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
             resource_id = registered_resource['_id']
             handle, client, credentials = create_and_register_handle_for_resource(resource_id)
             print('xml_file', xml_file)
+            doi_dict = add_handle_to_doi_dict(handle, self.VALUE_ORIGINAL)
             add_doi_kernel_metadata_to_xml_and_return_updated_string(
-                handle,
-                client,
+                doi_dict,
                 resource_id,
                 xml_file,
                 MockCurrentCatalogueDataSubset
