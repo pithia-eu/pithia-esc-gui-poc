@@ -10,7 +10,6 @@ from common.mongodb_models import (
 )
 from .handle_api import (
     get_date_handle_was_issued_as_string,
-    get_handle_issue_number,
 )
 from lxml import etree
 from lxml.etree import Element, ElementTree
@@ -39,7 +38,7 @@ def initialise_default_doi_kernel_metadata_dict():
         'issueDate': default_key_value,
         # issueNumber - Added manually to the handle, then incremented manually as well,
         # each time the handle is updated.
-        'issueNumber': default_key_value,
+        'issueNumber': '1',
         'referentCreation': {
             'name': {
                 '@primaryLanguage': 'en',
@@ -121,10 +120,8 @@ def add_data_subset_data_to_doi_metadata_kernel_dict(
 
 def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict, handle_api_client: RESTHandleClient):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
-    handle_issue_number = get_handle_issue_number(handle, handle_api_client)
     doi_dict['referentDoiName'] = handle
     doi_dict['issueDate'] = handle_issue_date_as_string
-    doi_dict['issueNumber'] = handle_issue_number
     doi_dict['referentCreation']['identifier']['nonUriValue'] = handle
     doi_dict['referentCreation']['identifier']['uri']['#text'] = f'https://hdl.handle.net/{handle}'
     return doi_dict
