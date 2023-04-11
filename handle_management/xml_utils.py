@@ -44,7 +44,7 @@ def initialise_default_doi_kernel_metadata_dict():
             'name': {
                 '@primaryLanguage': 'en',
                 'value': default_key_value,
-                'type': 'name',
+                'type': 'Name',
             },
             'identifier': {
                 'nonUriValue': '',
