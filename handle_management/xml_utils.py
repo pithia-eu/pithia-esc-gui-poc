@@ -4,6 +4,8 @@ from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CurrentDataCollection,
+    CurrentIndividual,
+    CurrentOrganisation,
     OriginalMetadataXml,
 )
 from .handle_api import (
@@ -75,6 +77,16 @@ def get_first_related_party_name_from_data_collection(data_collection: dict):
         'identifier.PITHIA_Identifier.namespace': namespace,
         'identifier.PITHIA_Identifier.localID': localid,
     })
+    if related_party is None:
+        return None
+    if related_party_mongodb_model == CurrentIndividual:
+        organisation_url = related_party['organisation']['@xlink:href']
+        organisation_namespace, organisation_localid = itemgetter('namespace', 'localid')(divide_resource_url_into_main_components(organisation_url))
+        organisation = CurrentOrganisation.find_one({
+            'identifier.PITHIA_Identifier.namespace': organisation_namespace,
+            'identifier.PITHIA_Identifier.localID': organisation_localid,
+        })
+        related_party = organisation
     if related_party is None:
         return None
     return related_party['name']
