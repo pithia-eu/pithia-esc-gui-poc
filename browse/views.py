@@ -1,6 +1,5 @@
 import re
 from bson.objectid import ObjectId
-from common import mongodb_models
 from dateutil.parser import parse
 from django.http import (
     HttpResponseNotFound,
@@ -15,6 +14,8 @@ from .url_mapping import (
     convert_resource_server_urls_to_browse_urls,
 )
 
+from common import mongodb_models
+from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
 from utils.string_helpers import _split_camel_case
 from validation.url_validation import (
@@ -206,25 +207,6 @@ class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     resource_type_plural = 'Catalogue Data Subsets'
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     description = ''
-
-def flatten(d):
-    out = {}
-    if d is None:
-        return out
-    for key, value in d.items():
-        if isinstance(value, dict):
-            value = [value]
-        if isinstance(value, list):
-            index = 0
-            for subdict in value:
-                index = int(index) + 1
-                deeper = flatten(subdict).items()
-                out.update({
-                    key + ' <b>(' + str(index) + '/' + str(len(value)) + ')</b>.' + key2: value2 for key2, value2 in deeper
-                })
-        else:
-            out[key] = value
-    return out
 
 def _get_ontology_server_urls_from_flattened_resource(resource_flattened):
     ontology_server_urls = set()
