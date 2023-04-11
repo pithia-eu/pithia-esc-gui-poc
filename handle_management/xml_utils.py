@@ -14,7 +14,6 @@ from .handle_api import (
 from lxml import etree
 from lxml.etree import Element, ElementTree
 from operator import itemgetter
-from pyhandle.handleclient import RESTHandleClient
 from pyhandle.handleexceptions import *
 from pymongo import collection
 from update.update import update_current_version_of_resource
