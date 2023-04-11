@@ -33,7 +33,7 @@ def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
 
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient, initial_doi_dict_values: dict = {}):
     logger.info(f'Registering handle {handle}')
-    flat_initial_doi_dict_values = flatten(initial_doi_dict_values)
+    flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
     register_result = client.register_handle(handle, handle_value, **flat_initial_doi_dict_values)
 
     if register_result == handle:
