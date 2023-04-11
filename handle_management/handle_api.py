@@ -32,7 +32,7 @@ def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
 
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
     logger.info(f'Registering handle {handle}')
-    register_result = client.register_handle(handle, handle_value)
+    register_result = client.register_handle(handle, handle_value, issue_number=1)
 
     if register_result == handle:
         logger.info('OK: Register handle successful.')
@@ -56,6 +56,12 @@ def delete_handle(handle: str, client: RESTHandleClient):
 
 def get_handle_url(handle: str, client: RESTHandleClient) -> str:
     key = 'URL'
+    read_value = client.get_value_from_handle(handle, key)
+
+    return read_value
+
+def get_handle_issue_number(handle: str, client: RESTHandleClient) -> str:
+    key = 'issue_number'
     read_value = client.get_value_from_handle(handle, key)
 
     return read_value
@@ -88,16 +94,27 @@ def get_date_handle_was_issued_as_string(handle: str) -> str:
     return handle_issue_date
 
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
-    key = 'URL'
-    modify_result = client.modify_handle_value(handle, **{ key: new_handle_value })
-    get_value_result = client.get_value_from_handle(handle, key)
+    issue_number_key = 'issue_number'
+    url_key = 'URL'
+    issue_number = client.get_value_from_handle(handle, issue_number_key)
+    new_issue_number = int(issue_number) + 1
+    update_dict = {
+        url_key: new_handle_value,
+        issue_number_key: new_issue_number,
+    }
+    modify_result = client.modify_handle_value(handle, **update_dict)
+    get_url_result = client.get_value_from_handle(handle, url_key)
+    get_issue_number_result = client.get_value_from_handle(handle, issue_number_key)
 
-    if get_value_result == new_handle_value:
+    if (get_url_result == new_handle_value and
+        str(get_issue_number_result) == str(new_issue_number)):
         logger.info('OK: Update handle URL successful.')
     else:
         logger.critical('CRITICAL: Modify handle URL returned unexpected value.')
-        logger.info(f'Expected: {new_handle_value}')
-        logger.info(f'Returned: {get_value_result}')
+        logger.info(f'Expected URL: {new_handle_value}')
+        logger.info(f'Returned URL: {get_url_result}')
+        logger.info(f'Expected issue number: {str(new_issue_number)}')
+        logger.info(f'Returned issue number: {str(get_issue_number_result)}')
     
     return modify_result
 

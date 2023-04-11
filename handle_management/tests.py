@@ -10,6 +10,7 @@ from handle_management.handle_api import (
     create_handle,
     delete_handle,
     get_date_handle_was_issued_as_string,
+    get_handle_issue_number,
     get_handle_raw,
     get_handle_record,
     get_handle_url,
@@ -173,8 +174,12 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
         update_result = update_handle_url(handle, self.VALUE_AFTER, self.client)
         handle_url = get_handle_url(handle, self.client)
+        handle_issue_number = get_handle_issue_number(handle, self.client)
         self.assertEqual(update_result, handle)
         self.assertEqual(handle_url, self.VALUE_AFTER)
+        self.assertEqual(int(handle_issue_number), 2)
+        print('handle_url', handle_url)
+        print('handle_issue_number', handle_issue_number)
         delete_handle(handle, self.client)
         print('Passed update_handle_url() test.')
 
