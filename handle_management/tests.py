@@ -6,6 +6,7 @@ from django.test import (
     tag
 )
 from handle_management.handle_api import (
+    add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource,
     create_handle,
     delete_handle,
@@ -192,6 +193,33 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         prefix = env('HANDLE_PREFIX')
         handles = get_handles_with_prefix(prefix)
         print('handles', handles)
+
+    @tag('fast', 'add_doi_dict_to_handle')
+    def test_add_doi_dict_to_handle(self):
+        """
+        add_doi_metadata_kernel_to_handle() adds the DOI metadata kernel properties to a handle.
+        """
+        mongo_client = mongomock.MongoClient()
+        MockCurrentCatalogueDataSubset = mongo_client[env('DB_NAME')]['current-catalogue-data-subsets']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockCurrentCatalogueDataSubset,
+                None
+            )
+            self.resource_id = registered_resource['_id']
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
+        handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
+        flat_doi_dict = flatten(doi_dict, number_list_items=False)
+        add_doi_metadata_kernel_to_handle(handle, flat_doi_dict, self.client)
+        delete_handle(handle, client)
+        print('Passed DOI dict configuration test.')
         
 class DOIDictTestCase(PyHandleSetupTestCase):
     resource_id = None
