@@ -190,35 +190,33 @@ def add_handle_to_doi_dict(handle: str, handle_url: str):
 def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
     doi_xml_string = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
-        <doi:kernelMetadata>
-            <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
-            <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
-            <!-- The registrationAgencyDoiName used is a placeholder -->
-            <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
-            <doi:issueDate>{issueDate}</doi:issueDate>
-            <doi:issueNumber>{issueNumber}</doi:issueNumber>
-            <doi:referentCreation>
-                <doi:name primaryLanguage="{primaryLanguage}">
-                    <doi:value>{nameValue}</doi:value>
-                    <doi:type>{nameType}</doi:type>
+        <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
+        <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
+        <!-- The registrationAgencyDoiName used is a placeholder -->
+        <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
+        <doi:issueDate>{issueDate}</doi:issueDate>
+        <doi:issueNumber>{issueNumber}</doi:issueNumber>
+        <doi:referentCreation>
+            <doi:name primaryLanguage="{primaryLanguage}">
+                <doi:value>{nameValue}</doi:value>
+                <doi:type>{nameType}</doi:type>
+            </doi:name>
+            <doi:identifier>
+                <doi:nonUriValue>{identifierNonUriValue}</doi:nonUriValue>
+                <doi:uri returnType="{identifierUriReturnType}">{identifierUriText}</doi:uri>
+                <doi:type>{identifierType}</doi:type>
+            </doi:identifier>
+            <doi:structuralType>{structuralType}</doi:structuralType>
+            <doi:mode>{mode}</doi:mode>
+            <doi:character>{character}</doi:character>
+            <doi:type>{type}</doi:type>
+            <doi:principalAgent>
+                <doi:name>
+                    <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
+                    <doi:type>{principalAgentNameType}</doi:type>
                 </doi:name>
-                <doi:identifier>
-                    <doi:nonUriValue>{identifierNonUriValue}</doi:nonUriValue>
-                    <doi:uri returnType="{identifierUriReturnType}">{identifierUriText}</doi:uri>
-                    <doi:type>{identifierType}</doi:type>
-                </doi:identifier>
-                <doi:structuralType>{structuralType}</doi:structuralType>
-                <doi:mode>{mode}</doi:mode>
-                <doi:character>{character}</doi:character>
-                <doi:type>{type}</doi:type>
-                <doi:principalAgent>
-                    <doi:name>
-                        <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
-                        <doi:type>{principalAgentNameType}</doi:type>
-                    </doi:name>
-                </doi:principalAgent>
-            </doi:referentCreation>
-        </doi:kernelMetadata>
+            </doi:principalAgent>
+        </doi:referentCreation>
     </doi>
     '''.format(
         referentDoiName=doi_dict['referentDoiName'],
