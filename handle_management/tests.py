@@ -172,8 +172,10 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         """
         update_handle_url() raises no exception.
         """
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        flat_doi_dict = flatten(doi_dict)
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client, initial_doi_dict_values=flat_doi_dict)
         update_result = update_handle_url(handle, self.VALUE_AFTER, self.client)
         handle_url = get_handle_url(handle, self.client)
         handle_issue_number = get_handle_issue_number(handle, self.client)

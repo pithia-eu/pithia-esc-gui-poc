@@ -7,6 +7,7 @@ from dateutil import parser
 from django.urls import reverse_lazy
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
+from utils.dict_helpers import flatten
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +31,10 @@ def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClie
 def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
     return f'{credentials.get_prefix()}/{handle_suffix}'
 
-def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
+def register_handle(handle: str, handle_value: str, client: RESTHandleClient, initial_doi_dict_values: dict = {}):
     logger.info(f'Registering handle {handle}')
-    register_result = client.register_handle(handle, handle_value)
+    flat_initial_doi_dict_values = flatten(initial_doi_dict_values)
+    register_result = client.register_handle(handle, handle_value, **flat_initial_doi_dict_values)
 
     if register_result == handle:
         logger.info('OK: Register handle successful.')
@@ -41,12 +43,12 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
 
     return register_result
 
-def create_and_register_handle_for_resource(resource_id: str) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
+def create_and_register_handle_for_resource(resource_id: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
     client, credentials = instantiate_client_and_load_credentials()
     handle = create_handle(credentials, resource_id)
     resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
     resource_details_page_url_string = f'{os.environ["HANDLE_URL_PREFIX"]}{str(resource_details_page_url)}'
-    register_handle(handle, resource_details_page_url_string, client)
+    register_handle(handle, resource_details_page_url_string, client, initial_doi_dict_values=initial_doi_dict_values)
     return handle, client, credentials
 
 def delete_handle(handle: str, client: RESTHandleClient):

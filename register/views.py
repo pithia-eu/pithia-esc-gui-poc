@@ -146,7 +146,7 @@ class ResourceRegisterFormView(FormView):
                             def cb(s):
                                 doi_dict = initialise_default_doi_kernel_metadata_dict()
                                 add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
-                                handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
+                                handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id, initial_doi_dict_values=doi_dict)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
                                 add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
