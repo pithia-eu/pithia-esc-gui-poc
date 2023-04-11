@@ -14,13 +14,12 @@
 {% block content %}
 {% block messages %}{% endblock messages %}
 <h1>{{ title }}</h1>
-<p class="mb-5">
-    This resource does not exist.
-</p>
-{% if handle_data %}
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
-        <h2 class="fs-3">{{ handle }} Properties</h2>
+        <p class="mb-5">
+            This resource does not exist.{% if handle_data %} A handle associated with this data subset was found and is described in the table below.{% endif %}
+        </p>
+        {% if handle_data %}
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -37,7 +36,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 </div>
-{% endif %}
 {% endblock content %}
