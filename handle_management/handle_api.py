@@ -32,7 +32,7 @@ def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
 
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient):
     logger.info(f'Registering handle {handle}')
-    register_result = client.register_handle(handle, handle_value, issue_number=1)
+    register_result = client.register_handle(handle, handle_value)
 
     if register_result == handle:
         logger.info('OK: Register handle successful.')
@@ -61,7 +61,7 @@ def get_handle_url(handle: str, client: RESTHandleClient) -> str:
     return read_value
 
 def get_handle_issue_number(handle: str, client: RESTHandleClient) -> str:
-    key = 'issue_number'
+    key = 'issueNumber'
     read_value = client.get_value_from_handle(handle, key)
 
     return read_value
@@ -94,7 +94,7 @@ def get_date_handle_was_issued_as_string(handle: str) -> str:
     return handle_issue_date
 
 def update_handle_url(handle: str, new_handle_value: str, client: RESTHandleClient):
-    issue_number_key = 'issue_number'
+    issue_number_key = 'issueNumber'
     url_key = 'URL'
     issue_number = client.get_value_from_handle(handle, issue_number_key)
     new_issue_number = int(issue_number) + 1
@@ -126,3 +126,7 @@ def get_handles_with_prefix(prefix):
     )
     handles_with_prefix = response.json()
     return handles_with_prefix
+
+def add_doi_metadata_kernel_to_handle(handle: str, doi_dict: dict, client: RESTHandleClient):
+    modify_result = client.modify_handle_value(handle, **doi_dict, add_if_not_exist=True)
+    return modify_result
