@@ -215,7 +215,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
         )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
-        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
         print(doi_dict)
         delete_handle(handle, client)
         print('Passed DOI dict configuration test.')

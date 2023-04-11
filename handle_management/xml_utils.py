@@ -8,11 +8,12 @@ from common.mongodb_models import (
 )
 from .handle_api import (
     get_date_handle_was_issued_as_string,
-    get_handle_url,
+    get_handle_issue_number,
 )
 from lxml import etree
 from lxml.etree import Element, ElementTree
 from operator import itemgetter
+from pyhandle.handleclient import RESTHandleClient
 from pyhandle.handleexceptions import *
 from pymongo import collection
 from update.update import update_current_version_of_resource
@@ -49,7 +50,7 @@ def initialise_default_doi_kernel_metadata_dict():
                     '@returnType': 'text/html',
                     '#text': '',
                 },
-                'type': default_key_value,
+                'type': 'URI',
             },
             'structuralType': 'Digital',
             'mode': 'Visual',
@@ -106,12 +107,14 @@ def add_data_subset_data_to_doi_metadata_kernel_dict(
         doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
     return doi_dict
 
-def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
+def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict, handle_api_client: RESTHandleClient):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
+    handle_issue_number = get_handle_issue_number(handle, handle_api_client)
     doi_dict['referentDoiName'] = handle
     doi_dict['issueDate'] = handle_issue_date_as_string
-    # TODO: Implement issueNumber
-    # TODO: Add handle URL to identifier
+    doi_dict['issueNumber'] = handle_issue_number
+    doi_dict['referentCreation']['identifier']['nonUriValue'] = handle
+    doi_dict['referentCreation']['identifier']['uri']['#text'] = f'https://hdl.handle.net/{handle}'
     return doi_dict
 
 def add_doi_kernel_metadata_to_xml_and_return_updated_string(

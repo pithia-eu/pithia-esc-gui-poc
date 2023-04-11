@@ -149,7 +149,7 @@ class ResourceRegisterFormView(FormView):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
-                                add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                                add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, handle_api_client)
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
                                     doi_dict,
                                     self.resource_id,
