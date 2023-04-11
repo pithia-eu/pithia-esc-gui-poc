@@ -40,6 +40,7 @@ from pithiaesc.settings import BASE_DIR
 from pyhandle.handleclient import RESTHandleClient
 from pyhandle.clientcredentials import PIDClientCredentials
 from register.register import register_metadata_xml_file
+from utils.dict_helpers import flatten
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 env = environ.Env()
@@ -219,6 +220,33 @@ class DOIDictTestCase(PyHandleSetupTestCase):
         print(doi_dict)
         delete_handle(handle, client)
         print('Passed DOI dict configuration test.')
+
+    @tag('fast', 'flatten_doi_dict')
+    def test_flatten_doi_dict(self):
+        """
+        Nested dicts in the DOI dict use dot notation when flattened.
+        """
+        mongo_client = mongomock.MongoClient()
+        MockCurrentCatalogueDataSubset = mongo_client[env('DB_NAME')]['current-catalogue-data-subsets']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockCurrentCatalogueDataSubset,
+                None
+            )
+            self.resource_id = registered_resource['_id']
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
+        handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
+        flat_doi_dict = flatten(doi_dict, number_list_items=False)
+        print('flat_doi_dict', flat_doi_dict)
+        delete_handle(handle, client)
+        print('Passed flatten DOI dict test.')
 
 
 class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
