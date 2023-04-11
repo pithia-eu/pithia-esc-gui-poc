@@ -130,5 +130,6 @@ def get_handles_with_prefix(prefix):
     return handles_with_prefix
 
 def add_doi_metadata_kernel_to_handle(handle: str, doi_dict: dict, client: RESTHandleClient):
-    modify_result = client.modify_handle_value(handle, **doi_dict, add_if_not_exist=True)
+    flat_doi_dict = flatten(doi_dict, number_list_items=False)
+    modify_result = client.modify_handle_value(handle, **flat_doi_dict, add_if_not_exist=True)
     return modify_result

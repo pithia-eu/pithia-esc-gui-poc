@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from handle_management.handle_api import (
+    add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource,
     delete_handle,
 )
@@ -149,7 +150,8 @@ class ResourceRegisterFormView(FormView):
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id, initial_doi_dict_values=doi_dict)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
-                                add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                                doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                                add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
                                     doi_dict,
                                     self.resource_id,
