@@ -33,7 +33,7 @@ def initialise_default_doi_kernel_metadata_dict():
     return {
         'referentDoiName': default_key_value,
         'primaryReferentType': 'Creation',
-        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
+        'registrationAgencyDoiName': '10.1000/0000',
         # Already stored in the handle, can just retrieve it.
         'issueDate': default_key_value,
         # issueNumber - Added manually to the handle, then incremented manually as well,
@@ -193,6 +193,7 @@ def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
         <doi:kernelMetadata>
             <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
             <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
+            <!-- The registrationAgencyDoiName used is a placeholder -->
             <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
             <doi:issueDate>{issueDate}</doi:issueDate>
             <doi:issueNumber>{issueNumber}</doi:issueNumber>
