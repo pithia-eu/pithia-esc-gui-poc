@@ -118,7 +118,7 @@ def add_data_subset_data_to_doi_metadata_kernel_dict(
         doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
     return doi_dict
 
-def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict, handle_api_client: RESTHandleClient):
+def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
     doi_dict['referentDoiName'] = handle
     doi_dict['issueDate'] = handle_issue_date_as_string

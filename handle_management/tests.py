@@ -215,7 +215,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
         )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
-        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
         flat_doi_dict = flatten(doi_dict, number_list_items=False)
         add_doi_metadata_kernel_to_handle(handle, flat_doi_dict, self.client)
         delete_handle(handle, client)
@@ -244,7 +244,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
         )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
-        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
         print(doi_dict)
         delete_handle(handle, client)
         print('Passed DOI dict configuration test.')
@@ -270,7 +270,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
         )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
-        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict, self.client)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
         flat_doi_dict = flatten(doi_dict, number_list_items=False)
         print('flat_doi_dict', flat_doi_dict)
         delete_handle(handle, client)
