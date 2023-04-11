@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block scripts %}
+<script src="{% static 'browse/detail.js' %}" defer></script>
+{{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+{% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
+{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
+{% breadcrumb_item_active 'Not found' %}
+{% endblock breadcrumbs %}
+{% block content %}
+{% block messages %}{% endblock messages %}
+<h1>{{ title }}</h1>
+<p class="mb-5">
+    This resource does not exist.
+</p>
+{% if handle_data %}
+<div class="row gy-4 gx-md-5">
+    <div class="col-lg-9">
+        <h2 class="fs-3">{{ handle }} Properties</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in handle_data.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value|urlize }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
