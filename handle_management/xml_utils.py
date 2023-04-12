@@ -149,43 +149,6 @@ def add_doi_kernel_metadata_to_xml_and_return_updated_string(
 def create_lxml_utf8_parser():
     return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
 
-def add_handle_to_doi_dict(handle: str, handle_url: str):
-    handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
-
-    doi = {
-        'referentDoiName': handle,
-        'primaryReferentType': 'Creation',
-        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        'issueDate': handle_issue_date_as_string,
-        'issueNumber': '0', # issue number is not known
-        'referentCreation': {
-            'name': {
-                '@primaryLanguage': 'en',
-                'value': handle_url,
-                'type': 'name',
-            },
-            'identifier': {
-                'nonUriValue': handle,
-                'uri': {
-                    '@returnType': 'text/html',
-                    '#text': f'https://hdl.handle.net/{handle}',
-                },
-                'type': 'epicId',
-            },
-            'structuralType': 'Digital',
-            'mode': 'Visual',
-            'character': 'Image',
-            'type': 'Dataset',
-            'principalAgent': {
-                'name': {
-                    'value': 'Lowell GIRO Data Center',
-                    'type': 'Name',
-                },
-            },
-        },
-    }
-    return doi
-
 def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
     doi_xml_string = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
