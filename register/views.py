@@ -145,12 +145,16 @@ class ResourceRegisterFormView(FormView):
                             return super().post(request, *args, **kwargs)
                         with client.start_session() as s:
                             def cb(s):
+                                # Create a blank DOI dict first
                                 doi_dict = initialise_default_doi_kernel_metadata_dict()
                                 add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
+                                # Create and register a handle
                                 handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id, initial_doi_dict_values=doi_dict)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
+                                # Add the handle metadata to the DOI dict
                                 doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                                # Add the DOI dict metadata to the handle
                                 add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
                                     doi_dict,
