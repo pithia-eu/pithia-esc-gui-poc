@@ -6,10 +6,12 @@ from django.test import (
     tag
 )
 from handle_management.handle_api import (
+    add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource,
     create_handle,
     delete_handle,
     get_date_handle_was_issued_as_string,
+    get_handle_issue_number,
     get_handle_raw,
     get_handle_record,
     get_handle_url,
@@ -24,7 +26,6 @@ from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
     add_handle_data_to_doi_metadata_kernel_dict,
-    add_handle_to_doi_dict,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
     get_last_source_element,
@@ -39,6 +40,7 @@ from pithiaesc.settings import BASE_DIR
 from pyhandle.handleclient import RESTHandleClient
 from pyhandle.clientcredentials import PIDClientCredentials
 from register.register import register_metadata_xml_file
+from utils.dict_helpers import flatten
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 env = environ.Env()
@@ -169,12 +171,18 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         """
         update_handle_url() raises no exception.
         """
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        flat_doi_dict = flatten(doi_dict)
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        register_handle(handle, self.VALUE_ORIGINAL, self.client)
+        register_handle(handle, self.VALUE_ORIGINAL, self.client, initial_doi_dict_values=flat_doi_dict)
         update_result = update_handle_url(handle, self.VALUE_AFTER, self.client)
         handle_url = get_handle_url(handle, self.client)
+        handle_issue_number = get_handle_issue_number(handle, self.client)
         self.assertEqual(update_result, handle)
         self.assertEqual(handle_url, self.VALUE_AFTER)
+        self.assertEqual(int(handle_issue_number), 2)
+        print('handle_url', handle_url)
+        print('handle_issue_number', handle_issue_number)
         delete_handle(handle, self.client)
         print('Passed update_handle_url() test.')
 
@@ -186,6 +194,33 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         prefix = env('HANDLE_PREFIX')
         handles = get_handles_with_prefix(prefix)
         print('handles', handles)
+
+    @tag('fast', 'add_doi_dict_to_handle')
+    def test_add_doi_dict_to_handle(self):
+        """
+        add_doi_metadata_kernel_to_handle() adds the DOI metadata kernel properties to a handle.
+        """
+        mongo_client = mongomock.MongoClient()
+        MockCurrentCatalogueDataSubset = mongo_client[env('DB_NAME')]['current-catalogue-data-subsets']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockCurrentCatalogueDataSubset,
+                None
+            )
+            self.resource_id = registered_resource['_id']
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
+        handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+        flat_doi_dict = flatten(doi_dict, number_list_items=False)
+        add_doi_metadata_kernel_to_handle(handle, flat_doi_dict, self.client)
+        delete_handle(handle, client)
+        print('Passed DOI dict configuration test.')
         
 class DOIDictTestCase(PyHandleSetupTestCase):
     resource_id = None
@@ -204,12 +239,43 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             )
             self.resource_id = registered_resource['_id']
         doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict, MockCurrentCatalogueDataSubset)
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
         handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
         add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
         print(doi_dict)
         delete_handle(handle, client)
         print('Passed DOI dict configuration test.')
+
+    @tag('fast', 'flatten_doi_dict')
+    def test_flatten_doi_dict(self):
+        """
+        Nested dicts in the DOI dict use dot notation when flattened.
+        """
+        mongo_client = mongomock.MongoClient()
+        MockCurrentCatalogueDataSubset = mongo_client[env('DB_NAME')]['current-catalogue-data-subsets']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockCurrentCatalogueDataSubset,
+                None
+            )
+            self.resource_id = registered_resource['_id']
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        add_data_subset_data_to_doi_metadata_kernel_dict(
+            self.resource_id,
+            doi_dict,
+            catalogue_data_subset_model=MockCurrentCatalogueDataSubset
+        )
+        handle, client, credentials = create_and_register_handle_for_resource(self.resource_id)
+        add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+        flat_doi_dict = flatten(doi_dict, number_list_items=False)
+        print('flat_doi_dict', flat_doi_dict)
+        delete_handle(handle, client)
+        print('Passed flatten DOI dict test.')
 
 
 class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
@@ -229,9 +295,9 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
             resource_id = registered_resource['_id']
             handle, client, credentials = create_and_register_handle_for_resource(resource_id)
             print('xml_file', xml_file)
+            doi_dict = initialise_default_doi_kernel_metadata_dict()
             add_doi_kernel_metadata_to_xml_and_return_updated_string(
-                handle,
-                client,
+                doi_dict,
                 resource_id,
                 xml_file,
                 MockCurrentCatalogueDataSubset
@@ -246,7 +312,7 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
         """
         handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(handle, self.VALUE_ORIGINAL, self.client)
-        doi_dict = add_handle_to_doi_dict(handle, self.VALUE_ORIGINAL)
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
         doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             xml_string = xml_file.read()
@@ -334,7 +400,7 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
             doiless_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
             handle = create_handle(self.credentials, self.TEST_SUFFIX)
             register_handle(handle, self.VALUE_ORIGINAL, self.client)
-            doi_dict = add_handle_to_doi_dict(f'{os.environ["HANDLE_PREFIX"]}/MYTEST-HANDLE', 'https://www.example.com/')
+            doi_dict = initialise_default_doi_kernel_metadata_dict()
             doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
             updated_xml_string = add_doi_xml_string_to_metadata_xml_string(doiless_xml_string, doi_xml_string)
             print('updated_xml_string', updated_xml_string)

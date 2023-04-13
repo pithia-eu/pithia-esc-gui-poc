@@ -1,6 +1,5 @@
 import re
 from bson.objectid import ObjectId
-from common import mongodb_models
 from dateutil.parser import parse
 from django.http import (
     HttpResponseNotFound,
@@ -15,6 +14,13 @@ from .url_mapping import (
     convert_resource_server_urls_to_browse_urls,
 )
 
+from common import mongodb_models
+from handle_management.handle_api import (
+    create_handle,
+    get_handle_record,
+    instantiate_client_and_load_credentials,
+)
+from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
 from utils.string_helpers import _split_camel_case
 from validation.url_validation import (
@@ -207,25 +213,6 @@ class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     description = ''
 
-def flatten(d):
-    out = {}
-    if d is None:
-        return out
-    for key, value in d.items():
-        if isinstance(value, dict):
-            value = [value]
-        if isinstance(value, list):
-            index = 0
-            for subdict in value:
-                index = int(index) + 1
-                deeper = flatten(subdict).items()
-                out.update({
-                    key + ' <b>(' + str(index) + '/' + str(len(value)) + ')</b>.' + key2: value2 for key2, value2 in deeper
-                })
-        else:
-            out[key] = value
-    return out
-
 def _get_ontology_server_urls_from_flattened_resource(resource_flattened):
     ontology_server_urls = set()
     resource_server_urls = set()
@@ -329,7 +316,10 @@ class ResourceDetailView(TemplateView):
                 '_id': ObjectId(self.resource_id)
             })
         if self.resource is None:
-            return HttpResponseNotFound('Resource not found.')
+            self.title = 'Not found'
+            self.template_name = 'browse/detail_404.html'
+            return super().get(request, *args, **kwargs)
+            # return HttpResponseNotFound('Resource not found.')
         self.resource = prepare_resource_for_template(self.resource)
         self.resource_flattened = flatten(self.resource)
         self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
@@ -342,6 +332,13 @@ class ResourceDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.title
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
+        context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
+        context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
+        if self.resource is None:
+            return context
         context['resource'] = self.resource
         context['resource_flattened'] = self.resource_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
@@ -350,11 +347,6 @@ class ResourceDetailView(TemplateView):
         context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
         context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
-        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
-        context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
-        context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         return context
 
 class OrganisationDetailView(ResourceDetailView):
@@ -520,7 +512,16 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
+        self.client, self.credentials = instantiate_client_and_load_credentials()
+        self.handle = create_handle(self.credentials, self.resource_id)
+        self.handle_data = get_handle_record(self.handle, self.client)
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['handle'] = self.handle
+        context['handle_data'] = _update_flattened_resource_keys_to_human_readable_html(self.handle_data)
+        return context
 
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
     ontology_server_urls = []

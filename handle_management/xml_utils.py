@@ -4,11 +4,12 @@ from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CurrentDataCollection,
+    CurrentIndividual,
+    CurrentOrganisation,
     OriginalMetadataXml,
 )
 from .handle_api import (
     get_date_handle_was_issued_as_string,
-    get_handle_url,
 )
 from lxml import etree
 from lxml.etree import Element, ElementTree
@@ -31,17 +32,17 @@ def initialise_default_doi_kernel_metadata_dict():
     return {
         'referentDoiName': default_key_value,
         'primaryReferentType': 'Creation',
-        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
+        'registrationAgencyDoiName': '10.1000/0000',
         # Already stored in the handle, can just retrieve it.
         'issueDate': default_key_value,
         # issueNumber - Added manually to the handle, then incremented manually as well,
         # each time the handle is updated.
-        'issueNumber': default_key_value,
+        'issueNumber': '1',
         'referentCreation': {
             'name': {
                 '@primaryLanguage': 'en',
                 'value': default_key_value,
-                'type': 'name',
+                'type': 'Name',
             },
             'identifier': {
                 'nonUriValue': '',
@@ -49,7 +50,7 @@ def initialise_default_doi_kernel_metadata_dict():
                     '@returnType': 'text/html',
                     '#text': '',
                 },
-                'type': default_key_value,
+                'type': 'URI',
             },
             'structuralType': 'Digital',
             'mode': 'Visual',
@@ -76,36 +77,52 @@ def get_first_related_party_name_from_data_collection(data_collection: dict):
     })
     if related_party is None:
         return None
+    if related_party_mongodb_model == CurrentIndividual:
+        organisation_url = related_party['organisation']['@xlink:href']
+        organisation_namespace, organisation_localid = itemgetter('namespace', 'localid')(divide_resource_url_into_main_components(organisation_url))
+        organisation = CurrentOrganisation.find_one({
+            'identifier.PITHIA_Identifier.namespace': organisation_namespace,
+            'identifier.PITHIA_Identifier.localID': organisation_localid,
+        })
+        related_party = organisation
+    if related_party is None:
+        return None
     return related_party['name']
 
 def add_data_subset_data_to_doi_metadata_kernel_dict(
     data_subset_id: str,
     doi_dict: dict,
+    data_collection_model: collection = CurrentDataCollection,
     catalogue_data_subset_model: collection = CurrentCatalogueDataSubset
 ):
     data_subset = catalogue_data_subset_model.find_one({
         '_id': ObjectId(data_subset_id)
     })
-    data_subset_name = data_subset['dataSubsetName']
-    doi_dict['referentCreation']['name']['value'] = data_subset_name
-    if 'dataCollection' in data_subset:
-        referenced_data_collection_url = data_subset['dataCollection']['@xlink:href']
-        namespace, localid = get_namespace_and_localid_from_resource_url(referenced_data_collection_url)
-        referenced_data_collection = CurrentDataCollection.find_one({
-            'identifier.PITHIA_Identifier.namespace': namespace,
-            'identifier.PITHIA_Identifier.localID': localid,
-        })
-        principal_agent_name_value = get_first_related_party_name_from_data_collection(referenced_data_collection)
-        if principal_agent_name_value is not None:
-            doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
+    if data_subset is None:
+        return doi_dict
+    if 'dataCollection' not in data_subset:
+        return doi_dict
+    referenced_data_collection_url = data_subset['dataCollection']['@xlink:href']
+    namespace, localid = get_namespace_and_localid_from_resource_url(referenced_data_collection_url)
+    referenced_data_collection = data_collection_model.find_one({
+        'identifier.PITHIA_Identifier.namespace': namespace,
+        'identifier.PITHIA_Identifier.localID': localid,
+    })
+    if referenced_data_collection is None:
+        return doi_dict
+    referenced_data_collection_name = referenced_data_collection['name']
+    doi_dict['referentCreation']['name']['value'] = referenced_data_collection_name
+    principal_agent_name_value = get_first_related_party_name_from_data_collection(referenced_data_collection)
+    if principal_agent_name_value is not None:
+        doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
     return doi_dict
 
 def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
     doi_dict['referentDoiName'] = handle
     doi_dict['issueDate'] = handle_issue_date_as_string
-    # TODO: Implement issueNumber
-    # TODO: Add handle URL to identifier
+    doi_dict['referentCreation']['identifier']['nonUriValue'] = handle
+    doi_dict['referentCreation']['identifier']['uri']['#text'] = f'https://hdl.handle.net/{handle}'
     return doi_dict
 
 def add_doi_kernel_metadata_to_xml_and_return_updated_string(
@@ -132,74 +149,36 @@ def add_doi_kernel_metadata_to_xml_and_return_updated_string(
 def create_lxml_utf8_parser():
     return etree.XMLParser(remove_blank_text=True, encoding='utf-8')
 
-def add_handle_to_doi_dict(handle: str, handle_url: str):
-    handle_issue_date_as_string = get_date_handle_was_issued_as_string(handle)
-
-    doi = {
-        'referentDoiName': handle,
-        'primaryReferentType': 'Creation',
-        'registrationAgencyDoiName': os.environ['HANDLE_API_USERNAME'],
-        'issueDate': handle_issue_date_as_string,
-        'issueNumber': '0', # issue number is not known
-        'referentCreation': {
-            'name': {
-                '@primaryLanguage': 'en',
-                'value': handle_url,
-                'type': 'name',
-            },
-            'identifier': {
-                'nonUriValue': handle,
-                'uri': {
-                    '@returnType': 'text/html',
-                    '#text': f'https://hdl.handle.net/{handle}',
-                },
-                'type': 'epicId',
-            },
-            'structuralType': 'Digital',
-            'mode': 'Visual',
-            'character': 'Image',
-            'type': 'Dataset',
-            'principalAgent': {
-                'name': {
-                    'value': 'Lowell GIRO Data Center',
-                    'type': 'Name',
-                },
-            },
-        },
-    }
-    return doi
-
 def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
     doi_xml_string = '''
     <doi xmlns:doi="http://www.doi.org/2010/DOISchema">
-        <doi:kernelMetadata>
-            <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
-            <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
-            <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
-            <doi:issueDate>{issueDate}</doi:issueDate>
-            <doi:issueNumber>{issueNumber}</doi:issueNumber>
-            <doi:referentCreation>
-                <doi:name primaryLanguage="{primaryLanguage}">
-                    <doi:value>{nameValue}</doi:value>
-                    <doi:type>{nameType}</doi:type>
+        <doi:referentDoiName>{referentDoiName}</doi:referentDoiName>
+        <doi:primaryReferentType>{primaryReferentType}</doi:primaryReferentType>
+        <!-- The registrationAgencyDoiName used is a placeholder -->
+        <doi:registrationAgencyDoiName>{registrationAgencyDoiName}</doi:registrationAgencyDoiName>
+        <doi:issueDate>{issueDate}</doi:issueDate>
+        <doi:issueNumber>{issueNumber}</doi:issueNumber>
+        <doi:referentCreation>
+            <doi:name primaryLanguage="{primaryLanguage}">
+                <doi:value>{nameValue}</doi:value>
+                <doi:type>{nameType}</doi:type>
+            </doi:name>
+            <doi:identifier>
+                <doi:nonUriValue>{identifierNonUriValue}</doi:nonUriValue>
+                <doi:uri returnType="{identifierUriReturnType}">{identifierUriText}</doi:uri>
+                <doi:type>{identifierType}</doi:type>
+            </doi:identifier>
+            <doi:structuralType>{structuralType}</doi:structuralType>
+            <doi:mode>{mode}</doi:mode>
+            <doi:character>{character}</doi:character>
+            <doi:type>{type}</doi:type>
+            <doi:principalAgent>
+                <doi:name>
+                    <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
+                    <doi:type>{principalAgentNameType}</doi:type>
                 </doi:name>
-                <doi:identifier>
-                    <doi:nonUriValue>{identifierNonUriValue}</doi:nonUriValue>
-                    <doi:uri returnType="{identifierUriReturnType}">{identifierUriText}</doi:uri>
-                    <doi:type>{identifierType}</doi:type>
-                </doi:identifier>
-                <doi:structuralType>{structuralType}</doi:structuralType>
-                <doi:mode>{mode}</doi:mode>
-                <doi:character>{character}</doi:character>
-                <doi:type>{type}</doi:type>
-                <doi:principalAgent>
-                    <doi:name>
-                        <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
-                        <doi:type>{principalAgentNameType}</doi:type>
-                    </doi:name>
-                </doi:principalAgent>
-            </doi:referentCreation>
-        </doi:kernelMetadata>
+            </doi:principalAgent>
+        </doi:referentCreation>
     </doi>
     '''.format(
         referentDoiName=doi_dict['referentDoiName'],
