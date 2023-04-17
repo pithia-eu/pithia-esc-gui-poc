@@ -84,7 +84,17 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         method: "POST",
         body: formData
     });
-    const responseContent = await response.json();
+    let responseContent = undefined;
+    try {
+        responseContent = await response.json();
+    } catch (error) {
+        console.log(error);
+        return {
+            state: 'error',
+            error: error,
+            warnings: []
+        };
+    }
     if (!response.ok) {
         return {
             state: 'error',
