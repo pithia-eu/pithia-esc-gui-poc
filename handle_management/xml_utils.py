@@ -54,7 +54,7 @@ def initialise_default_doi_kernel_metadata_dict():
             },
             'structuralType': 'Digital',
             'mode': 'Visual',
-            'character': 'Image',
+            'character': 'Language',
             'type': 'Dataset',
             'principalAgent': {
                 'name': {
