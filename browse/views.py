@@ -520,7 +520,9 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['handle'] = self.handle
-        context['handle_data'] = _update_flattened_resource_keys_to_human_readable_html(self.handle_data)
+        context['handle_data'] = None
+        if self.handle_data is not None:
+            context['handle_data'] = _update_flattened_resource_keys_to_human_readable_html(self.handle_data)
         return context
 
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
