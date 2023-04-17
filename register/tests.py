@@ -6,6 +6,7 @@ from django.test import SimpleTestCase, tag
 from register.register import register_metadata_xml_file
 from validation.errors import FileRegisteredBefore
 from pithiaesc.settings import BASE_DIR
+from pathlib import Path
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
@@ -19,8 +20,7 @@ class RegisterMetadataTestCase(SimpleTestCase):
     @tag('fast')
     def test_register_organisation(self):
         """
-        Ensure the organisation registration process doesn't encounter any
-        unexpected errors.
+        register_metadata_xml_file() returns a dict with an auto-generated '_id' property
         """
         try:
             client = mongomock.MongoClient()
@@ -32,6 +32,7 @@ class RegisterMetadataTestCase(SimpleTestCase):
                     None
                 )
                 self.assertIs(ObjectId.is_valid(registered_resource['_id']), True)
+                print(f'Passed registration validation for {Path(xml_file.name).name}.')
         except FileRegisteredBefore as err:
             print(err)
             self.fail('register_metadata_xml_file() unexpectedly raised an error!')

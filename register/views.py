@@ -1,28 +1,42 @@
-import traceback
-from pyexpat import ExpatError
-from django.shortcuts import render
-from django.urls import reverse_lazy
+import logging
+from common import mongodb_models
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views.generic import FormView
+from handle_management.handle_api import (
+    add_doi_metadata_kernel_to_handle,
+    create_and_register_handle_for_resource,
+    delete_handle,
+)
+from handle_management.xml_utils import (
+    add_data_subset_data_to_doi_metadata_kernel_dict,
+    add_doi_kernel_metadata_to_xml_and_return_updated_string,
+    add_handle_data_to_doi_metadata_kernel_dict,
+    initialise_default_doi_kernel_metadata_dict,
+    is_doi_element_present_in_xml_file,
+)
+from mongodb import client
+from pyexpat import ExpatError
+from register import xml_conversion_checks_and_fixes
 from register.register import (
     register_metadata_xml_file,
     store_xml_file_as_string_and_map_to_resource_id,
 )
 from register.register_api_specification import register_api_specification
-
-from .forms import UploadDataCollectionFileForm, UploadFileForm
-from register import xml_conversion_checks_and_fixes
-from common import mongodb_models
+from .forms import (
+    UploadDataCollectionFileForm,
+    UploadFileForm,
+    UploadCatalogueDataSubsetFileForm,
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title
 )
+from update.update import update_original_metadata_xml_string
 from validation.errors import FileRegisteredBefore
-from mongodb import client
 
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +53,9 @@ class ResourceRegisterFormView(FormView):
     post_url = ''
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
+    resource_id = None
+    handle = None
+    handle_api_client = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,6 +77,7 @@ class ResourceRegisterFormView(FormView):
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
         xml_files = request.FILES.getlist('files')
+        file_registered = False
         if form.is_valid():
             for xml_file in xml_files:
                 # XML should have already been validated at
@@ -78,6 +96,8 @@ class ResourceRegisterFormView(FormView):
                                 self.resource_conversion_validate_and_correct_function,
                                 session=s
                             )
+                            self.resource_id = registration_results['_id']
+
                             store_xml_file_as_string_and_map_to_resource_id(
                                 xml_file,
                                 registration_results['_id'],
@@ -95,6 +115,8 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
+                    
+                    file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during registration process.')
@@ -105,10 +127,64 @@ class ResourceRegisterFormView(FormView):
                 except BaseException as err:
                     logger.exception('An unexpected error occurred during metadata registration.')
                     messages.error(request, 'An unexpected error occurred.')
-                # validation_results = self.validate_resource(xml_file)
-                # if 'error' not in validation_results:
-                # else:
-                #     messages.error(request, 'The file submitted was not valid.')
+                
+                if file_registered == False:
+                    return super().post(request, *args, **kwargs)
+
+                try:
+                    # POST RESOURCE REGISTRATION
+                    # Get the DOI
+                    # Update the actual "xml_file" variable by adding the DOI to the XML
+                    # Perform an update on the resource
+                    # Continue with registration as normal
+                    if 'register_doi' in request.POST:
+                        is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
+                        if is_doi_in_file_already == True:
+                            logger.exception('A DOI has already been issued for this metadata file.')
+                            messages.error(request, f'A DOI has already been issued for this metadata file.')
+                            return super().post(request, *args, **kwargs)
+                        with client.start_session() as s:
+                            def cb(s):
+                                # Create a blank DOI dict first
+                                doi_dict = initialise_default_doi_kernel_metadata_dict()
+                                add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
+                                # Create and register a handle
+                                handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id, initial_doi_dict_values=doi_dict)
+                                self.handle_api_client = handle_api_client
+                                self.handle = handle
+                                # Add the handle metadata to the DOI dict
+                                doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                                # Add the DOI dict metadata to the handle
+                                add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
+                                xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
+                                    doi_dict,
+                                    self.resource_id,
+                                    xml_file,
+                                    self.resource_mongodb_model,
+                                    resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function,
+                                    session=s
+                                )
+                                update_original_metadata_xml_string(
+                                    xml_string_with_doi,
+                                    self.resource_id,
+                                    session=s
+                                )
+                            s.with_transaction(cb)
+                    
+                        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
+                except ExpatError as err:
+                    logger.exception('Expat error occurred during DOI registration process.')
+                    messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
+                except BaseException as err:
+                    logger.exception('An unexpected error occurred during DOI registration.')
+                    messages.error(request, 'An unexpected error occurred during DOI registration.')
+                    if self.handle != None:
+                        try:
+                            delete_handle(self.handle, self.handle_api_client)
+                            logger.info(f'Deleted handle {self.handle} due to an error that occurred during DOI registration.')
+                        except BaseException as err:
+                            logger.exception(f'Could not delete handle {self.handle} due to an error.')
+                            
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
@@ -309,7 +385,8 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
 class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
-    template_name='register/file_upload_catalogue.html'
+    template_name='register/file_upload_catalogue_data_subset.html'
+    form_class = UploadCatalogueDataSubsetFileForm
 
     a_or_an = 'a'
     resource_type = 'catalogue data subset'
@@ -321,6 +398,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Register a Catalogue Data Subset'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context

@@ -1,5 +1,8 @@
 from bson import ObjectId
-from common.mongodb_models import CurrentDataCollectionInteractionMethod
+from common.mongodb_models import (
+    CurrentDataCollectionInteractionMethod,
+    OriginalMetadataXml,
+)
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 
 
@@ -51,6 +54,19 @@ def update_data_collection_api_interaction_method_description(
         {
             '$set': {
                 'interaction_method_description': api_description
+            }
+        },
+        session=session
+    )
+
+def update_original_metadata_xml_string(updated_xml_string, resource_id, session=None):
+    return OriginalMetadataXml.update_one(
+        {
+            'resourceId': ObjectId(resource_id),
+        },
+        {
+            '$set': {
+                'value': updated_xml_string
             }
         },
         session=session

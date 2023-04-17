@@ -4,7 +4,6 @@ from . import views
 
 app_name = 'utils'
 urlpatterns = [
-    path('utils/convert/urls', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),
     path('organisations/<organisation_id>/xml', views.OrganisationXmlDownloadView.as_view(), name='view_organisation_as_xml'),
     path('individuals/<individual_id>/xml', views.IndividualXmlDownloadView.as_view(), name='view_individual_as_xml'),
     path('projects/<project_id>/xml', views.ProjectXmlDownloadView.as_view(), name='view_project_as_xml'),
