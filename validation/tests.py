@@ -1,8 +1,9 @@
 import os
 from .base_tests import *
+from django.test import SimpleTestCase
 from lxml import etree
 from pithiaesc.settings import BASE_DIR
-from django.test import SimpleTestCase
+from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
@@ -11,7 +12,6 @@ from validation.url_validation import (
     is_resource_url_base_structure_valid,
     validate_ontology_term_url,
 )
-from validation.url_validation_utils import divide_catalogue_related_resource_url_into_main_components
 
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
 
