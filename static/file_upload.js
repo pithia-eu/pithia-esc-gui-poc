@@ -97,7 +97,7 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         return {
             state: "error",
             error: (responseContent === undefined ? {
-                message: "An unexpected error occurred.",
+                message: "An error occurred whilst checking the validation results.",
                 details: jsonParseError
             } : responseContent.error),
             warnings: (responseContent === undefined ? [] : responseContent.warnings),
