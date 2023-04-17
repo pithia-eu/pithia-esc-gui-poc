@@ -85,22 +85,22 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         body: formData
     });
     let responseContent = undefined;
+    let jsonParseError = undefined;
     try {
         responseContent = await response.json();
     } catch (error) {
-        console.log(response);
+        console.log("response", response);
         console.log(error);
-        return {
-            state: 'error',
-            error: error,
-            warnings: []
-        };
+        jsonParseError = error;
     }
     if (!response.ok) {
         return {
-            state: 'error',
-            error: responseContent.error,
-            warnings: responseContent.warnings,
+            state: "error",
+            error: (responseContent === undefined ? {
+                message: "An unexpected error occurred.",
+                details: jsonParseError
+            } : responseContent.error),
+            warnings: (responseContent === undefined ? [] : responseContent.warnings),
         };
     }
     return {
