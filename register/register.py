@@ -1,6 +1,8 @@
 from bson import ObjectId
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from common.mongodb_models import OriginalMetadataXml
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+from typing import Union
 from validation.metadata_validation import validate_xml_file_is_unregistered
 
 
@@ -14,9 +16,11 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     mongodb_model.insert_one(converted_metadata_file_dictionary, session=session)
     return converted_metadata_file_dictionary
 
-def store_xml_file_as_string_and_map_to_resource_id(xml_file, resource_id, session=None):
-    xml_file.seek(0)
-    xml_file_string = xml_file.read()
+def store_xml_file_as_string_and_map_to_resource_id(xml_file_or_string: Union[InMemoryUploadedFile, str], resource_id, session=None):
+    xml_file_string = xml_file_or_string
+    if hasattr(xml_file_or_string, 'read'):
+        xml_file_or_string.seek(0)
+        xml_file_string = xml_file_or_string.read()
     if isinstance(xml_file_string, bytes):
         xml_file_string = xml_file_string.decode()
     original_metadata_xml = {

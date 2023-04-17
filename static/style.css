@@ -70,6 +70,23 @@ p {
     line-height: 1.5;
 }
 
+/* Utilities */
+.lead-sm {
+    font-size: 1.1rem;
+}
+
+.list-style-none {
+    list-style: none;
+}
+
+.sidemenu li a {
+    text-decoration: none;
+}
+
+.sidemenu li {
+    margin-bottom: 0.5rem;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;
@@ -113,7 +130,7 @@ header .dropdown-item:active a {
 .card-menu .card {
     border-color: var(--pithia-blue);
     background-color: white;
-    transition: background-color 250ms linear;
+    transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
 }
 
@@ -132,24 +149,25 @@ header .dropdown-item:active a {
 
 .card-menu .card:hover img,
 .card-menu .card:focus img {
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%);
+    /* filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%); */
 }
 
 .card-menu .card:hover [href^="http"]:not([href*="pithia.eu"]) span::after,
 .card-menu .card:focus [href^="http"]:not([href*="pithia.eu"]) span::after {
-    background-image: url('/static/external_link_white.svg');
+    /* background-image: url('/static/external_link_white.svg'); */
 }
 
 .card-menu .card:hover,
 .card-menu .card:focus {
-    background-color: var(--pithia-blue);
+    box-shadow: 0px 0px 0px 1.5px var(--pithia-blue);
+    background-color: rgb(245, 248, 251);
 }
 
 .card-menu .card:hover a,
 .card-menu .card:focus a,
 .card-menu .card:hover .text-muted,
 .card-menu .card:focus .text-muted {
-    color: white !important;
+    /* color: white !important; */
 }
 
 .card-menu .card-body {
@@ -214,6 +232,14 @@ header .dropdown-item:active a {
     font-style: italic;
 }
 
+.file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
+    color: rgb(108, 117, 125);
+}
+
+.file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
+    color: #000;
+}
+
 #file-upload-form label {
     margin-bottom: 0.5rem;
 }
@@ -237,6 +263,10 @@ header .dropdown-item:active a {
 
 .file-validation-status-list:empty::before {
     content: 'None';
+}
+
+#id_files {
+    width: 100%;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -469,6 +499,13 @@ ul.tree ul {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
+
+@media (min-width: 992px) {
+    #id_files {
+        max-width: 20rem;
+    }
+}
+
 
 :root {
     --tree-search-container-max-height: 26rem;

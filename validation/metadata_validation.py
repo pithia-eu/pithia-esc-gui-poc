@@ -15,7 +15,6 @@ from .url_validation import (
 )
 from pathlib import Path
 from bson import ObjectId
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from .helpers import (
     create_validation_details_error,
     _map_string_to_li_element,

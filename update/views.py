@@ -1,28 +1,6 @@
-from django.views.generic.edit import FormView
-from pyexpat import ExpatError
-import traceback
-from django.urls import reverse_lazy
-from django.contrib import messages
-from django.shortcuts import render, redirect
+import logging
 from bson.objectid import ObjectId
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
-from register.register import store_xml_file_as_string_and_map_to_resource_id
-from register.xml_conversion_checks_and_fixes import (
-    format_acquisition_capability_set_dictionary,
-    format_acquisition_dictionary,
-    format_computation_capability_set_dictionary,
-    format_computation_dictionary,
-    format_data_collection_dictionary,
-    format_instrument_dictionary,
-    format_process_dictionary
-)
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from register.register_api_specification import register_api_specification
-from resource_management.forms import (
-    UploadUpdatedDataCollectionFileForm,
-    UploadUpdatedFileForm,
-    UpdateDataCollectionInteractionMethodsForm
-)
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -56,6 +34,37 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
+from django.contrib import messages
+from django.shortcuts import (
+    render,
+    redirect
+)
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
+from handle_management.xml_utils import (
+    add_doi_xml_string_to_metadata_xml_string,
+    get_doi_xml_string_for_resource_id,
+    remove_doi_element_from_metadata_xml_string,
+)
+from mongodb import client
+from pyexpat import ExpatError
+from register.register import store_xml_file_as_string_and_map_to_resource_id
+from register.xml_conversion_checks_and_fixes import (
+    format_acquisition_capability_set_dictionary,
+    format_acquisition_dictionary,
+    format_computation_capability_set_dictionary,
+    format_computation_dictionary,
+    format_data_collection_dictionary,
+    format_instrument_dictionary,
+    format_process_dictionary
+)
+from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+from register.register_api_specification import register_api_specification
+from resource_management.forms import (
+    UploadUpdatedDataCollectionFileForm,
+    UploadUpdatedFileForm,
+    UpdateDataCollectionInteractionMethodsForm
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -71,9 +80,7 @@ from update.version_control import (
     create_revision_of_current_resource_version,
     create_revision_of_data_collection_api_interaction_method
 )
-from mongodb import client
 
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -117,17 +124,20 @@ class ResourceUpdateFormView(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         xml_file = request.FILES['files']
+        xml_file_string = None
         if form.is_valid():
-            converted_xml_file = None
             try:
                 if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                     self.resource_conversion_validate_and_correct_function = None
-                converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file)
-                converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
                 with client.start_session() as s:
                     def cb(s):
+                        if self.xml_file_string is None:
+                            self.xml_file_string = xml_file.read()
+                        converted_xml_file = convert_xml_metadata_file_to_dictionary(self.xml_file_string)
+                        converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+                        pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
                         resource_revision = create_revision_of_current_resource_version(
-                            converted_xml_file['identifier']['PITHIA_Identifier'],
+                            pithia_identifier,
                             self.resource_mongodb_model,
                             self.resource_revision_mongodb_model,
                             session=s
@@ -139,13 +149,13 @@ class ResourceUpdateFormView(FormView):
                         )
                         update_current_version_of_resource(
                             self.resource_id,
-                            xml_file,
+                            self.xml_file_string,
                             self.resource_mongodb_model,
                             self.resource_conversion_validate_and_correct_function,
                             session=s
                         )
                         store_xml_file_as_string_and_map_to_resource_id(
-                            xml_file,
+                            self.xml_file_string,
                             self.resource_id,
                             session=s
                         )
@@ -543,3 +553,16 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         return super().dispatch(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        xml_file = request.FILES['files']
+        if form.is_valid():
+            # The DOI stored in the e-Science Centre will always be considered the
+            # "right" version, so we need to replace any DOI that may have been
+            # passed in the updated XML file.
+            resource_doi_xml_string = get_doi_xml_string_for_resource_id(self.resource_id)
+            self.xml_file_string = xml_file.read()
+            self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
+            self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, resource_doi_xml_string)
+        return super().post(request, *args, **kwargs)

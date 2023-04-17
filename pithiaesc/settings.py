@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'resource_management.apps.ResourceManagementConfig',
     'utils.apps.UtilsConfig',
     'ontology.apps.OntologyConfig',
+    'handle_management.apps.HandleManagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
