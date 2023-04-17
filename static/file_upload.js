@@ -194,7 +194,12 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         });
         uploadFormSubmitButton.disabled = true;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-        const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        let fileValidationUrl = '';
+        try {
+            fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        } catch (error) {
+            console.log(error);
+        }
         const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
         if (document.querySelector(`.file-list-group-item-${i}`)) {
             finishedValidating.push(`file${i}`);
