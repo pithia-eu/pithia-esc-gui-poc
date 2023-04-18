@@ -105,6 +105,7 @@ class ResourceUpdateFormView(FormView):
     template_name = 'update/file_upload.html'
     form_class = UploadUpdatedFileForm
     success_url = ''
+    xml_file_string = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -124,7 +125,6 @@ class ResourceUpdateFormView(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         xml_file = request.FILES['files']
-        xml_file_string = None
         if form.is_valid():
             try:
                 if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
@@ -563,6 +563,8 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
             # passed in the updated XML file.
             resource_doi_xml_string = get_doi_xml_string_for_resource_id(self.resource_id)
             self.xml_file_string = xml_file.read()
+            if resource_doi_xml_string is None:
+                return super().post(request, *args, **kwargs)
             self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
             self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, resource_doi_xml_string)
         return super().post(request, *args, **kwargs)
