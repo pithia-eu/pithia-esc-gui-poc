@@ -28,6 +28,7 @@ from handle_management.xml_utils import (
     add_handle_data_to_doi_metadata_kernel_dict,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
+    get_first_related_party_name_from_data_collection,
     get_last_source_element,
     get_last_result_time_element,
     initialise_default_doi_kernel_metadata_dict,
@@ -406,3 +407,25 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
             print('updated_xml_string', updated_xml_string)
             delete_handle(handle, self.client)
             print('Passed replace_doi_element_from_metadata_xml_string() test.')
+
+class PrincipalAgentTestCase(SimpleTestCase):
+    @tag('fast', 'get_first_related_party_name_from_data_collection')
+    def test_get_first_related_party_name_from_data_collection(self):
+        """
+        Returns the name of the organisation (or individual if organisation is
+        not found) responsible for the data collection.
+        """
+        mongo_client = mongomock.MongoClient()
+        MockDataCollection = mongo_client[env('DB_NAME')]['current-data-collections']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+            registered_resource = register_metadata_xml_file(
+                xml_file,
+                MockDataCollection,
+                None
+            )
+            self.resource_id = registered_resource['_id']
+            data_collection = MockDataCollection.find_one({
+                '_id': self.resource_id
+            })
+            principal_agent_name = get_first_related_party_name_from_data_collection(data_collection)
+            print('principal_agent_name', principal_agent_name)
