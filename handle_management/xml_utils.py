@@ -84,9 +84,8 @@ def get_first_related_party_name_from_data_collection(data_collection: dict):
             'identifier.PITHIA_Identifier.namespace': organisation_namespace,
             'identifier.PITHIA_Identifier.localID': organisation_localid,
         })
-        related_party = organisation
-    if related_party is None:
-        return None
+        if organisation is not None:
+            related_party = organisation
     return related_party['name']
 
 def add_data_subset_data_to_doi_metadata_kernel_dict(
