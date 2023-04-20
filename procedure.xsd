@@ -6,7 +6,7 @@
     <import namespace="http://standards.iso.org/iso/19115/-3/mrl/1.0" schemaLocation="https://standards.iso.org/iso/19115/-3/mrl/1.0/mrl.xsd"/>
     <include schemaLocation="utilities.xsd"/>
     <annotation>
-        <documentation>Version 2.2 08/20/2022</documentation>
+        <documentation>Version 2.2 2023.04.18</documentation>
     </annotation>
     <!-- 
            P R O C E S S   C A P A B I L I T Y
@@ -50,9 +50,9 @@
                     <documentation>For those capabilities that are limited in their representation of the vector (i.e., only projections or components)</documentation>
                 </annotation>
             </element>
-            <element name="crs" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
+            <element name="coordinateSystem" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
                 <annotation>
-                    <documentation>System of coordinates from PITHIA ontology vocabulary</documentation>
+                    <documentation>System of coordinates for the vector representations from PITHIA ontology vocabulary</documentation>
                 </annotation>
             </element>
             <element name="units" minOccurs="0" maxOccurs="1" type="gml:ReferenceType">
