@@ -370,3 +370,12 @@ class CategoryUrlValidationTestCase(SimpleTestCase):
         self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_collection_as_resource_type), False)
         self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_double_namespace), False)
         self.assertEquals(is_catalogue_related_url_structure_valid(catalogue_resource_url_double_resource_type), False)
+
+class DoiValidationTestCase(SimpleTestCase):
+    def test_validate_xml_with_doi_against_schema_at_url(self):
+        """
+        Test validate_xml_with_doi_against_schema_at_url modifies any referentDoiName
+        and registrationAgencyDoiName element text to pass DOI XSD validation. The original
+        XML file contents are not modified.
+        """
+        
