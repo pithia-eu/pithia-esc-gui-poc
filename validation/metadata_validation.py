@@ -90,6 +90,18 @@ def validate_xml_against_schema_at_url(xml_file, schema_url):
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_schema.validate(xml_file.read())
 
+def validate_xml_with_doi_against_schema_at_url(xml_file, schema_url):
+    """
+    Validates the XML file with a DOI element against a schema hosted at a URL.
+    """
+    xml_file.seek(0)
+    schema_response = get(schema_url)
+    xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
+    xml_file_string = xml_file.read()
+    xml_file_string_parsed = etree.fromstring(xml_file_string)
+    doi_name_element = xml_file_string_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
+    xml_schema.validate(xml_file_string)
+
 def validate_xml_against_own_schema(xml_file):
     """
     Validates the XML file against its own schema by
@@ -189,7 +201,8 @@ def validate_and_get_validation_details_of_xml_file(
     mongodb_model,
     check_file_is_unregistered=False,
     check_xml_file_localid_matches_existing_resource_localid=False,
-    existing_resource_id=''
+    existing_resource_id='',
+    spoof_doi=False
 ):
     validation_details = {
         'error': None,
