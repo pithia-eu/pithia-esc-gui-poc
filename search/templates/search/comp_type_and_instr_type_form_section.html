@@ -4,7 +4,7 @@
             <legend>
                 <h3 class="fs-5 text-muted mb-0">Computation Types</h3>
             </legend>
-            {% with ontology_component="computation-types" %}
+            {% with ontology_component="computation-types" search_input_col_width="col-lg-7" %}
             {% include "search/ontology_tree_container_template.html" %}
             {% endwith %}
         </fieldset>
@@ -14,12 +14,12 @@
             <legend>
                 <h3 class="fs-5 text-muted mb-0">Instrument Types</h3>
             </legend>
-            {% with ontology_component="instrument-types" %}
+            {% with ontology_component="instrument-types" search_input_col_width="col-lg-7" %}
             {% include "search/ontology_tree_container_template.html" %}
             {% endwith %}
         </fieldset>
     </div>
 </div>
 <div class="d-flex flex-column align-items-lg-end my-3">
-    <button class="btn btn-light btn-clear" type="button">Clear Input Selection</button>
+    <button class="btn btn-light btn-clear-type-inputs" type="button">Clear Input Selection</button>
 </div>

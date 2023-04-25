@@ -1,0 +1,18 @@
+{% extends 'register/file_upload.html' %}
+{% load static %}
+{{ validation_url|json_script:'validation-url' }}
+{% block sidemenu %}
+<div class="col-lg-4">
+    <section class="sidemenu text-secondary">
+        <h2 class="fs-5">Register Other Catalogue Metadata</h2>
+        <hr class="my-2">
+        <nav>
+            <ul class="list-style-none ps-0">
+                <li>{% if 'catalogue' not in title|lower or 'entries' in title|lower or 'data subset' in title|lower %}<a href="{% url 'register:catalogue' %}" class="pithia-blue">{% endif %}Catalogues{% if 'catalogue' not in title|lower or 'catalogue entries' in title|lower %}</a>{% endif %}</li>
+                <li>{% if 'catalogue entries' not in title|lower %}<a href="{% url 'register:catalogue_entry' %}" class="pithia-blue">{% endif %}Catalogue Entries{% if 'catalogue entries' not in title|lower %}</a>{% endif %}</li>
+                <li>{% if 'catalogue data subset' not in title|lower %}<a href="{% url 'register:catalogue_data_subset' %}" class="pithia-blue">{% endif %}Catalogue Data Subsets{% if 'catalogue data subset' not in title|lower %}</a>{% endif %}</li>
+            </ul>
+        </nav>
+    </section>
+</div>
+{% endblock sidemenu %}

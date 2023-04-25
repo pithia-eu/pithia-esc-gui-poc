@@ -12,13 +12,18 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import os
 import environ
 
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env(
-    ALLOWED_HOSTS=('127.0.0.1,localhost')
+    ALLOWED_HOSTS=('127.0.0.1,localhost'),
+    CSRF_TRUSTED_ORIGINS=''
 )
+
+if env('CSRF_TRUSTED_ORIGINS') != '':
+    CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split(',')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,6 +52,9 @@ INSTALLED_APPS = [
     'present.apps.PresentConfig',
     'validation.apps.ValidationConfig',
     'resource_management.apps.ResourceManagementConfig',
+    'utils.apps.UtilsConfig',
+    'ontology.apps.OntologyConfig',
+    'handle_management.apps.HandleManagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -164,3 +172,34 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/login/(.*)$',
     r'/logout/(.*)$',
 )
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'custom': {
+            'format': '[{asctime}] [{levelname}] [{name}]  {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'pithiaesc.log'),
+            'formatter': 'custom',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

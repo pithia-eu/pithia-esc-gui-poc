@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item ontology_index_page_breadcrumb_text 'ontology:index' %}
+{% breadcrumb_item ontology_category_term_list_page_breadcrumb_text 'ontology:ontology_category_terms_list' category %}
+{% breadcrumb_item_active resource_dictionary.prefLabel %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1>{{ resource_dictionary.prefLabel }}</h1>
+<span class="text-muted">Ontology IRI: <a href="{{ resource_ontology_url }}" target="_blank" rel="noopener noreferrer">{{ resource_ontology_url }}</a></span>
+<div class="row mt-3">
+    <div class="col-lg-8">
+        <div class="table-responsive">
+            <table class="table table-bordered ontology-term-table mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Property</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in resource_predicates_no_prefix|dictsort:0 %}
+                    {% if p != 'type' and p != 'versionInfo' and p != 'date' %}
+                    <tr>
+                        <td>{{ resource_predicates_readable|get_key_value:p }}</td>
+                        <td>
+                            {% if resource_dictionary|get_key_value:p|get_type == 'list' %}
+                            <ul class="list-unstyled">
+                                {% for i in resource_dictionary|get_key_value:p %}
+                                {% if p == 'observedProperty' or p == 'phenomenon' or p == 'measurand' or p == 'featureOfInterest' or p == 'propagationMode' or p == 'interaction' or p == 'qualifier' or p == 'narrower' or p == 'broader' %}
+                                <li>
+                                    {% autoescape off %}
+                                    {{ i }}
+                                    {% endautoescape %}
+                                </li> 
+                                {% else %}
+                                <li>{{ i }}</li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% elif resource_dictionary|get_key_value:p.strip|length == 0 %}
+                            <i class="text-muted">None</i>
+                            {% else %}
+                            {{ resource_dictionary|get_key_value:p|safe|urlize }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

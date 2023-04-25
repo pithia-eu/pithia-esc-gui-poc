@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_category_list_page_breadcrumb_text resource_management_category_list_page_breadcrumb_url_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'resource_management/resource_management.js' %}" defer></script>
+{% endblock scripts %}
+{% block content %}
+{% if messages %}
+<div class="registration-alerts">
+    {% for message in messages %}
+    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<div class="row gx-3 mb-3">
+    <div class="col-lg-9">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="col-lg-3">
+        <div class="d-flex justify-content-end">
+            <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span>+</span><span class="mt-1"> Register</span></a>
+        </div>
+    </div>
+</div>
+{% if resource_list|length > 0 %}
+{% block resource_list_inner %}
+{% with resource_list=resource_list|dictsort:'name' %}
+{% include 'resource_management/resource_management_list_by_type_inner.html' %}
+{% endwith %}
+{% endblock resource_list_inner %}
+{% else %}
+<p>{{ empty_resource_list_text }}</p>
+{% endif %}
+{% endblock content %}

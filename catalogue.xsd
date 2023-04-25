@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:om="http://www.opengis.net/om/2.0" xmlns:pithia="https://metadata.pithia.eu/schemas/2.2" targetNamespace="https://metadata.pithia.eu/schemas/2.2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:om="http://www.opengis.net/om/2.0" xmlns:doi="http://www.doi.org/2010/DOISchema" xmlns:pithia="https://metadata.pithia.eu/schemas/2.2" targetNamespace="https://metadata.pithia.eu/schemas/2.2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
     <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
     <import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"/>
     <import namespace="http://www.opengis.net/om/2.0" schemaLocation="http://schemas.opengis.net/om/2.0/observation.xsd"/>
+    <import namespace="http://www.doi.org/2010/iso3166a2" schemaLocation="https://www.doi.org/doi_schemas/iso3166a2.xsd"/>
+    <import namespace="http://www.doi.org/2010/DOISchemaAVS" schemaLocation="https://www.doi.org/doi_schemas/DOIAVS.xsd"/>
+    <import namespace="http://www.doi.org/2010/DOISchema" schemaLocation="https://www.doi.org/doi_schemas/DOIMetadataKernel.xsd"/>
     <include schemaLocation="utilities.xsd"/>
     <annotation>
         <documentation>Version 2.2 08/20/2022</documentation>
@@ -90,33 +93,25 @@ Each catalogue entry includes 1+ registered data subsets.
                             </documentation>
                         </annotation>
                     </element>                    
-                    <element maxOccurs="1" minOccurs="0" name="entryDescription" type="string">
+                    <element name="entryDescription" maxOccurs="1" minOccurs="0" type="string">
                         <annotation>
                             <documentation>-- Definition --
                                  A free-text description of the catalogue entry contents.  
                             </documentation>
                         </annotation>
                     </element>
-                    <element maxOccurs="1" minOccurs="0" name="catalogueIdentifier" type="pithia:CatalogueIdentifierPropertyType">
+                    <element name="catalogueIdentifier" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
                                 A link to the catalogue that this entry belongs to.
                             </documentation>
                         </annotation>
                     </element>   
+                    <element name="phenomenonTime" minOccurs="1" type="om:TimeObjectPropertyType"/>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
-    <complexType name="CatalogueIdentifierPropertyType">
-        <sequence>
-            <element ref="pithia:Catalogue"/>
-        </sequence>
-        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
-    </complexType>
-<!-- 
-
- -->
     <element name="DataSubset" substitutionGroup="gml:AbstractObject" type="pithia:DataSubsetType">
         <annotation>
             <documentation>-- Definition --
@@ -136,6 +131,13 @@ the result time (with begin and end), and an optional DOI link to the persistent
                             </documentation>
                         </annotation>
                     </element>    
+                    <element name="entryIdentifier" maxOccurs="1" minOccurs="1" type="gml:ReferenceType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                A link to the catalogue entry that this data subset belongs to.
+                            </documentation>
+                        </annotation>
+                    </element>   
                     <element name="dataSubsetName" type="string">
                         <annotation>
                             <documentation>-- Definition --
@@ -143,21 +145,24 @@ the result time (with begin and end), and an optional DOI link to the persistent
                             </documentation>
                         </annotation>
                     </element>                    
-                    <element maxOccurs="1" minOccurs="0" name="dataSubsetDescription" type="string">
+                    <element name="dataSubsetDescription" maxOccurs="1" minOccurs="0" type="string">
                         <annotation>
                             <documentation>-- Definition --
                                  A free-text description of the data subset contents.  
                             </documentation>
                         </annotation>
                     </element>
-                    <element maxOccurs="1" minOccurs="0" name="entryIdentifier" type="pithia:CatalogueEntryIdentifierPropertyType">
+                    <element name="dataCollection" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
-                                A link to the catalogue entry that this data subset belongs to.
+                                A link to the PITHIA Data Collection that holds metadata for this subset.
                             </documentation>
                         </annotation>
                     </element>   
-                    <element maxOccurs="1" minOccurs="0" name="dataLevel" type="gml:ReferenceType">
+                    <element name="resultTime" minOccurs="1" type="om:TimeObjectPropertyType"/>
+                    <element name="source" minOccurs="0" maxOccurs="unbounded" type="pithia:OnlineResourcePropertyType"/>
+                    <element name="doi" minOccurs="0" maxOccurs="unbounded" type="doi:kernelMetadata"/>
+                    <element name="dataLevel" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
                                 Data level designation from the vocabulary.

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCollection
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:om="http://www.opengis.net/om/2.0">
+    <!--
+         First report some required elements from ISO standard for Observation
+    -->
+    <om:phenomenonTime /> <!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+    <om:resultTime /> <!-- DO NOT USE, we report result time only in Catalogs -->
+    <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/lgdc/CompositeProcess_DIDBase_EvaluatedAutoscaling" />
+    <om:observedProperty /> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+    <om:featureOfInterest>
+        <FeatureOfInterest>
+            <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside" />
+            <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region" />
+        </FeatureOfInterest>
+    </om:featureOfInterest>
+    <om:result /> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+    <!--
+         Now our Data Collection elements next
+    -->
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>DataCollection_DEMO_Stim</localID>
+            <namespace>demo</namespace>
+            <version>1</version>
+            <creationDate>2022-02-28T15:00:00Z</creationDate>
+            <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>STIM Model API Demo</name>
+    <description>
+        A demo showing the registration of an API for the STIM Model.
+    </description>
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder" />
+    <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/lgdc/Project_LGDC_RION" />
+    <relatedParty>
+        <ResponsiblePartyInfo>
+            <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact" />
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/lgdc/Individual_LGDC_Galkin" />
+        </ResponsiblePartyInfo>
+    </relatedParty>
+    <relatedParty>
+        <ResponsiblePartyInfo>
+            <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider" />
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC" />
+        </ResponsiblePartyInfo>
+    </relatedParty>
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0" />
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1" />
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A" />
+    <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2" />
+    </qualityAssessment>
+    <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies" />
+</DataCollection>

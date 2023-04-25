@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Computation
+    xmlns="https://metadata.pithia.eu/schemas/2.2"
+    xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>Computation_Test</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2022-02-28T10:00:00Z</creationDate>
+            <lastModificationDate>2022-02-28T10:00:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>Computation Test</name>
+    <description>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Non diam phasellus vestibulum lorem sed risus. Aliquet nibh praesent tristique magna sit amet purus.
+        Rutrum quisque non tellus orci ac auctor augue. Sit amet nisl purus in mollis nunc sed id.
+    </description>
+    <capabilityLinks>
+        <capabilityLink>
+            <platform
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+            <standardIdentifier authority="URSI">AT138</standardIdentifier>
+            <computationCapabilities
+                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/lgdc/ComputationCapabilities_IonogramScaling_ARTIST5" />
+        </capabilityLink>
+        <capabilityLink>
+            <platform
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+            <standardIdentifier authority="URSI">AT138</standardIdentifier>
+            <computationCapabilities
+                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/noa/ComputationCapabilities_Ionogram_AT138" />
+        </capabilityLink>
+    </capabilityLinks>
+</Computation>

@@ -82,7 +82,12 @@ The format of the strored result accessible from the online resource. This prope
     </complexType>
     <complexType name="OnlineResourcePropertyType">
         <sequence>
-            <element ref="pithia:OnlineResource"/>
+            <!-- 
+                Allowing missing OnlineResource is a controversial decision; 
+                this applies to PITHIA NRF where access to Data Collection may be arranged
+                using separate registrations independent from this description
+            -->
+            <element minOccurs="0" ref="pithia:OnlineResource"/>
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>

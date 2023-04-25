@@ -1,3 +1,6 @@
+export let isEachFileValid = false; // Variable is exported to work with the API specification URL input
+const fileValidationStatusUpdatedEvent = new Event("fileValidationStatusUpdated");
+
 // Source for htmlToElement() function: https://stackoverflow.com/a/35385518
 function htmlToElement(html) {
     const template = document.createElement("template");
@@ -28,14 +31,19 @@ function resetFileValidationList(listElem) {
 
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
-        <li class="list-group-item file-list-group-item-${index}">
+        <li class="list-group-item file-list-group-item-${index} pb-3">
             <div class="row g-2">
                 <div class="col-lg-10">
                     <div class="row g-2">
                         <div class="col-lg-12 text-truncate">${file.name}</div>
+                        <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
-                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break">
+                        <div class="col-lg-12 file-validation-warnings file-validation-warnings-${index} text-break d-none">
+                            <ul class="list-group list-group-warning">
+                            </ul>
+                        </div>
+                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break d-none">
                         </div>
                     </div>
                 </div>
@@ -54,10 +62,10 @@ const xmlValidationStates =  {
     VALID: "valid",
     INVALID_SEMANTICS: "<class 'lxml.etree.DocumentInvalid'>",
     INVALID_SYNTAX: "<class 'lxml.etree.XMLSyntaxError'>",
-    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.exceptions.InvalidRootElementNameForMetadataFileException'>",
-    INVALID_RESOURCE_URLS: "<class 'validation.exceptions.InvalidMetadataDocumentUrlException'>",
-    UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.exceptions.UnregisteredMetadataDocumentException'>",
-    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.exceptions.UnregisteredOntologyTermException'>",
+    SUBMITTED_METADATA_NOT_MATCHING_TYPE: "<class 'validation.errors.InvalidRootElementName'>",
+    INVALID_RESOURCE_URLS: "<class 'validation.errors.InvalidResourceURL'>",
+    UNREGISTERED_REFERENCED_RESOURCES: "<class 'validation.errors.UnregisteredResourceReferenced'>",
+    UNREGISTERED_REFERENCED_ONTOLOGY_TERMS: "<class 'validation.errors.UnregisteredOntologyTermReferenced'>",
 }
 
 async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
@@ -76,12 +84,23 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         method: "POST",
         body: formData
     });
-    const responseContent = await response.json();
+    let responseContent = undefined;
+    let jsonParseError = undefined;
+    try {
+        responseContent = await response.json();
+    } catch (error) {
+        console.log("response", response);
+        console.log(error);
+        jsonParseError = error;
+    }
     if (!response.ok) {
         return {
-            state: responseContent.error.type,
-            error: responseContent.error.message,
-            extra_details: responseContent.error.extra_details,
+            state: "error",
+            error: (responseContent === undefined ? {
+                message: "An error occurred whilst checking the validation results.",
+                details: jsonParseError
+            } : responseContent.error),
+            warnings: (responseContent === undefined ? [] : responseContent.warnings),
         };
     }
     return {
@@ -94,7 +113,11 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
         <div class="d-flex align-items-center">
         </div>
     `);
-    if (fileValidationStatus.state === "validating") {
+    if (fileValidationStatus.error) {
+        statusElemContent.innerHTML = `
+            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">${fileValidationStatus.error.message}</span>
+        `;
+    } else if (fileValidationStatus.state === "validating") {
         statusElemContent.innerHTML = `
             <div class="spinner-grow-container text-muted me-3">
                 <div class="spinner-grow" style="width: 1rem; height: 1rem;" role="status">
@@ -106,43 +129,6 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
     } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
             <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.SUBMITTED_METADATA_NOT_MATCHING_TYPE) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">The metadata file submitted is for the wrong resource type.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SEMANTICS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">XML does not conform to the corresponding schema.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_SYNTAX) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Syntax is invalid.</span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.INVALID_RESOURCE_URLS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple resource URLs specified via the xlink:href attribute are invalid.
-            </span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_RESOURCES) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.
-            </span>
-        `;
-    } else if (fileValidationStatus.state === xmlValidationStates.UNREGISTERED_REFERENCED_ONTOLOGY_TERMS) {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3">
-            <span class="text-danger">
-                One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.
-            </span>
-        `;
-    } else {
-        statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">Encountered an error during validation.</span>
         `;
     }
     
@@ -157,29 +143,18 @@ function updateXMLFileValidationErrorDetails(errorMsg, errorMsgElem) {
         </div>
     `;
 }
-
-function appendFurtherRegistrationActionsToErrorDetails(unregisteredReferencedResourceTypes, registrationLinksElem) {
-    const extraDetailsMessage = htmlToElement('<div class="mt-2">Please access the links below to register the resources referenced in the submitted metadata file:</div>');
-    const registrationLinksList = htmlToElement(`<ul class="mt-2"></ul>`);
-    unregisteredReferencedResourceTypes.forEach(resourceType => {
-        registrationLinksList.appendChild(htmlToElement(`
-            <li><a href="${window.location.protocol}//${window.location.host}/register/${resourceType}" target="_blank" class="alert-link">${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)} Metadata Registration</a></li>
+function updateXMLFileValidationWarningDetails(warnings, warningListElem) {
+    warnings.forEach(warning => {
+        warningListElem.append(htmlToElement(`
+            <li class="list-group-item list-group-item-warning">
+                ${warning.details}
+            </li>
         `));
     });
-    registrationLinksElem.append(extraDetailsMessage);
-    return registrationLinksElem.append(registrationLinksList);
 }
 
 function removeClassNameFromElem(elem, className) {
     return elem.classList.remove(className);
-}
-
-function showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining) {
-    if (numFilesRemaining > 0) {
-        document.querySelector('.file-list-empty-msg').classList.add('d-none');
-    } else {
-        document.querySelector('.file-list-empty-msg').classList.remove('d-none');
-    }
 }
 
 const uploadFormSubmitButton = document.querySelector("form button[type='submit']");
@@ -194,11 +169,17 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
     const btnRmFileIdsToClick = [];
     const finishedValidating = [];
 
+    function updateIsEachFileValid(finishedValidating) {
+        const numValidFiles = document.querySelectorAll(`input[class="is-file-valid-status"][value="true"]`).length;
+        return isEachFileValid = numValidFiles === fileInput.files.length && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
+    }
+
     const files = Array.from(fileInput.files);
-    showFileListEmptyMsgIfFileInputEmpty(files.length);
     files.forEach(async (file, i) => {
         loadFileValidationElemsForFile(file, listElem, i);
         const validationStatusElem = document.querySelector(`.file-validation-status-${i}`);
+        const validationStatusWarningsElem = document.querySelector(`.file-validation-warnings-${i}`);
+        const validationStatusWarningListElem = document.querySelector(`.file-validation-warnings-${i} .list-group-warning`);
         const validationStatusErrorElem = document.querySelector(`.file-validation-error-${i}`);
         const btnRemoveFile = document.querySelector(`#btn-rm-file-${i}`);
         btnRemoveFile.addEventListener("click", event => {
@@ -207,34 +188,38 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
             const numFilesRemaining = removeFileFromFileList(clickedBtnRmFileIndex, fileInput);
             const listItemNum = event.target.dataset.listItemNum;
             document.querySelector(`.file-list-group-item-${listItemNum}`).remove();
-            showFileListEmptyMsgIfFileInputEmpty(numFilesRemaining);
             btnRmFileIdsToClick.splice(btnRmFileIdsToClick.indexOf(event.target.id), 1);
             finishedValidating.splice(finishedValidating.indexOf(`file${i}`), 1);
-            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && numFilesRemaining > 0);
+            updateIsEachFileValid(finishedValidating);
+            document.dispatchEvent(fileValidationStatusUpdatedEvent);
         });
         uploadFormSubmitButton.disabled = true;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-        const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        let fileValidationUrl = '';
+        try {
+            fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        } catch (error) {
+            console.log(error);
+        }
         const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
         if (document.querySelector(`.file-list-group-item-${i}`)) {
             finishedValidating.push(`file${i}`);
         }
         updateXMLFileValidationStatus(validationResults, validationStatusElem);
         if (!validationResults.error) {
-            uploadFormSubmitButton.disabled = !(btnRmFileIdsToClick.length === 0 && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0);
+            document.querySelector(`input[id="is-file-${i}-valid"]`).value = "true";
+            updateIsEachFileValid(finishedValidating);
+            document.dispatchEvent(fileValidationStatusUpdatedEvent);
+        }
+        if (validationResults.warnings && document.querySelector(`.file-list-group-item-${i}`)) {
+            removeClassNameFromElem(validationStatusWarningsElem, "d-none");
+            updateXMLFileValidationWarningDetails(validationResults.warnings, validationStatusWarningListElem);
         }
         if (validationResults.error && document.querySelector(`.file-list-group-item-${i}`)) {
             uploadFormSubmitButton.disabled = true;
             btnRmFileIdsToClick.push(`btn-rm-file-${i}`);
             removeClassNameFromElem(validationStatusErrorElem, "d-none");
-            updateXMLFileValidationErrorDetails(validationResults.error, validationStatusErrorElem);
-        }
-        if (!validationResults.extra_details) {
-            return;
-        }
-        if (validationResults.extra_details.unregistered_document_types) {
-            const metadataRegistrationLinksElem = document.querySelector(".file-validation-error .alert");
-            appendFurtherRegistrationActionsToErrorDetails(validationResults.extra_details.unregistered_document_types, metadataRegistrationLinksElem);
+            updateXMLFileValidationErrorDetails(validationResults.error.details, validationStatusErrorElem);
         }
     });
 }

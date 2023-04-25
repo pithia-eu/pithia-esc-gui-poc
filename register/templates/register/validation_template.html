@@ -1,4 +1,8 @@
-<h2 class="fs-5">File Validation</h2>
-<div class="file-list-empty-msg">File validation will begin upon selecting a file for upload.</div>
-<ul class="file-validation-status-list list-group">
-</ul>
+<section class="file-validation-status-list-section py-0">
+    <h2 class="file-validation-status-list-heading">
+        {% block file_list_heading %}
+        {{ file_list_title|default:'Uploaded File' }}
+        {% endblock file_list_heading %}
+    </h2>
+    <ul class="file-validation-status-list list-group"></ul>
+</section>

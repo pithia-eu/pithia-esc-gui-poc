@@ -2,17 +2,58 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .helpers import remove_underscore_from_id_attribute
-from .ontology_helpers import create_dictionary_from_pithia_ontology_component, get_feature_of_interest_ids_from_observed_property_id, get_graph_of_pithia_ontology_component, get_measurand_ids_from_observed_property_id, get_observed_property_hrefs_from_features_of_interest, get_parent_node_ids_of_node_id, get_phenomenon_ids_from_observed_property_id
-from .search_helpers import find_matching_data_collections
-from common.mongodb_models import CurrentAcquisition, CurrentComputation, CurrentInstrument
+from ontology.utils import (
+    create_dictionary_from_pithia_ontology_component,
+    get_feature_of_interest_ids_from_observed_property_id,
+    get_graph_of_pithia_ontology_component,
+    get_measurand_ids_from_observed_property_id,
+    get_parent_node_ids_of_node_id,
+    get_phenomenon_ids_from_observed_property_id,
+    categorise_observed_property_dict_by_top_level_phenomenons,
+)
+from .search_helpers import (
+    find_matching_data_collections,
+    group_instrument_types_by_observed_property,
+    group_computation_types_by_observed_property
+)
+from common.mongodb_models import (
+    CurrentAcquisitionCapability,
+    CurrentComputationCapability,
+    CurrentInstrument,
+    CurrentDataCollection
+)
+
+_INDEX_PAGE_TITLE = 'Search Data Collections'
+
+def get_tree_form_of_observed_properties(request):
+    observed_property_dict = create_dictionary_from_pithia_ontology_component(
+        'observedProperty'
+    )
 
 def get_tree_form_for_ontology_component(request, ontology_component):
-    dictionary = create_dictionary_from_pithia_ontology_component(ontology_component)
+    instrument_types_grouped_by_observed_property = {}
+    computation_types_grouped_by_observed_property = {}
+    if ontology_component == 'observedProperty':
+        instruments = CurrentInstrument.find({})
+        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
+        computation_capability_sets = CurrentComputationCapability.find({})
+        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+    dictionary = create_dictionary_from_pithia_ontology_component(
+        ontology_component,
+        instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
+        computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
+    )
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, None, [])
+        return render(request, 'search/observed_property_tree_categories_template.html', {
+            'observed_property_categories': categorise_observed_property_dict_by_top_level_phenomenons(dictionary),
+            'ontology_component_name': ontology_component,
+            'registered_ontology_terms': registered_ontology_terms,
+            'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
+        })
     elif ontology_component.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
@@ -50,7 +91,7 @@ def index(request):
         request.session['observed_properties'] = observed_properties
         return HttpResponseRedirect(reverse('search:results'))
     return render(request, 'search/index.html', {
-        'title': 'Search Models & Measurements'
+        'title': _INDEX_PAGE_TITLE
     })
 
 def results(request):
@@ -59,49 +100,51 @@ def results(request):
 
     return render(request, 'search/results.html', {
         'title': 'Search results',
-        'results': data_collections
+        'results': data_collections,
+        'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
 def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
 def get_registered_observed_properties():
-    observed_properties_from_computations = list(CurrentComputation.aggregate([
+    observed_properties_from_computation_capability_sets = list(CurrentComputationCapability.aggregate([
         {
             '$unwind': {
-                'path': '$capability'
+                'path': '$capabilities.processCapability'
             }
         },
         {
             '$group': {
                 '_id': None,
                 'xlink_hrefs': {
-                    '$addToSet': '$capability.observedProperty.@xlink:href'
+                    '$addToSet': '$capabilities.processCapability.observedProperty.@xlink:href'
                 }
             }
         }
     ]))
 
-    observed_properties_from_acquisitions = list(CurrentAcquisition.aggregate([
+    observed_properties_from_acquisition_capability_sets = list(CurrentAcquisitionCapability.aggregate([
         {
             '$unwind': {
-                'path': '$capability'
+                'path': '$capabilities.processCapability'
             }
         },
             {
                 '$group': {
                     '_id': None,
                     'xlink_hrefs': {
-                        '$addToSet': '$capability.pithia:processCapability.observedProperty.@xlink:href'
+                        '$addToSet': '$capabilities.processCapability.observedProperty.@xlink:href'
                     }
                 }
             }
     ]))
+
     observed_property_ids = []
-    if len(observed_properties_from_computations) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computations[0]['xlink_hrefs'])))
-    if len(observed_properties_from_acquisitions) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisitions[0]['xlink_hrefs'])))
+    if len(observed_properties_from_computation_capability_sets) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computation_capability_sets[0]['xlink_hrefs'])))
+    if len(observed_properties_from_acquisition_capability_sets) > 0:
+        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisition_capability_sets[0]['xlink_hrefs'])))
     return list(set(observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
@@ -109,13 +152,16 @@ def get_registered_features_of_interest(registered_observed_property_ids):
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
     for id in registered_observed_property_ids:
         get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
-    return feature_of_interest_ids
+    registered_data_collections = list(CurrentDataCollection.find({}, projection={ 'om:featureOfInterest.FeatureOfInterest.namedRegion': 1 }))
+    feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(nr['@xlink:href']) for dc in registered_data_collections for nr in dc['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+    feature_of_interest_ids.extend(feature_of_interest_ids_from_data_collections)
+    return list(set(feature_of_interest_ids))
 
 def get_registered_instrument_types():
     return list(map(extract_localid_from_xlink_href, list(CurrentInstrument.find().distinct('type.@xlink:href'))))
 
 def get_registered_computation_types():
-    return list(map(extract_localid_from_xlink_href, list(CurrentComputation.find().distinct('type.@xlink:href'))))
+    return list(map(extract_localid_from_xlink_href, list(CurrentComputationCapability.find().distinct('type.@xlink:href'))))
 
 def get_registered_phenomenons(registered_observed_property_ids):
     phenomenon_ids = []
