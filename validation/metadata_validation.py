@@ -7,7 +7,10 @@ from validation.errors import (
     FileNameNotMatchingWithLocalID,
     FileRegisteredBefore,
 )
-from common.mongodb_models import CurrentInstrument
+from common.mongodb_models import (
+    CurrentCatalogueDataSubset,
+    CurrentInstrument,
+)
 from .url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
@@ -99,7 +102,14 @@ def validate_xml_with_doi_against_schema_at_url(xml_file, schema_url):
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_file_string = xml_file.read()
     xml_file_string_parsed = etree.fromstring(xml_file_string)
-    doi_name_element = xml_file_string_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
+    doi_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}doi')
+    doi_registration_agency_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}doiRegistrationAgencyName')
+    if doi_name_element:
+        print('doi_name_element', doi_name_element)
+        doi_name_element[0].text = '10.000'
+    if doi_registration_agency_name_element:
+        print('doi_registration_agency_name_element', doi_registration_agency_name_element)
+        doi_registration_agency_name_element[0].text = '10.000'
     xml_schema.validate(xml_file_string)
 
 def validate_xml_against_own_schema(xml_file):
@@ -218,6 +228,8 @@ def validate_and_get_validation_details_of_xml_file(
 
         # XSD Schema validation
         schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
+        if mongodb_model == CurrentCatalogueDataSubset:
+            validate_xml_with_doi_against_schema_at_url(xml_file, schema_url)
         validate_xml_against_schema_at_url(xml_file, schema_url)
 
         # Matching file name and localID tag text validation
