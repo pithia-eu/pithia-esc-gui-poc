@@ -54,6 +54,7 @@
         </div>
     </div>
 </section>
+{% if 'is_authorised' in request.session %}
 <section>
     <h2 class="mb-0">Admin Functionalities & Resources</h2>
     <hr>
@@ -84,4 +85,5 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock content %}
