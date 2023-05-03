@@ -4,6 +4,11 @@ from django.test import SimpleTestCase
 from lxml import etree
 from pithiaesc.settings import BASE_DIR
 from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
+from validation.metadata_validation import (
+    parse_xml_file,
+    get_schema_location_url_from_parsed_xml_file,
+    validate_xml_with_doi_against_schema_at_url,
+)
 from validation.url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
@@ -378,4 +383,7 @@ class DoiValidationTestCase(SimpleTestCase):
         and registrationAgencyDoiName element text to pass DOI XSD validation. The original
         XML file contents are not modified.
         """
-        
+        with open(os.path.join(_TEST_FILE_DIR, 'xml_metadata_files', 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
+            parsed_xml_file = parse_xml_file(xml_file)
+            schema_url = get_schema_location_url_from_parsed_xml_file(parsed_xml_file)
+            validate_xml_with_doi_against_schema_at_url(xml_file, schema_url)

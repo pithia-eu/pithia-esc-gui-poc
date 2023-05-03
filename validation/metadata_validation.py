@@ -97,20 +97,20 @@ def validate_xml_with_doi_against_schema_at_url(xml_file, schema_url):
     """
     Validates the XML file with a DOI element against a schema hosted at a URL.
     """
+    valid_doi_name = '10.000/000'
     xml_file.seek(0)
-    schema_response = get(schema_url)
-    xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_file_string = xml_file.read()
     xml_file_string_parsed = etree.fromstring(xml_file_string)
-    doi_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}doi')
-    doi_registration_agency_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}doiRegistrationAgencyName')
-    if doi_name_element:
-        print('doi_name_element', doi_name_element)
-        doi_name_element[0].text = '10.000'
-    if doi_registration_agency_name_element:
-        print('doi_registration_agency_name_element', doi_registration_agency_name_element)
-        doi_registration_agency_name_element[0].text = '10.000'
-    xml_schema.validate(xml_file_string)
+    doi_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}referentDoiName')
+    doi_registration_agency_name_element = xml_file_string_parsed.find('.//{http://www.doi.org/2010/DOISchema}registrationAgencyDoiName')
+    if doi_name_element is not None:
+        doi_name_element.text = valid_doi_name
+    if doi_registration_agency_name_element is not None:
+        doi_registration_agency_name_element.text = valid_doi_name
+    print('etree.tostring(xml_file_string_parsed)', etree.tostring(xml_file_string_parsed))
+    schema_response = get(schema_url)
+    xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
+    xml_schema.validate(etree.tostring(xml_file_string_parsed))
 
 def validate_xml_against_own_schema(xml_file):
     """
@@ -230,7 +230,8 @@ def validate_and_get_validation_details_of_xml_file(
         schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
         if mongodb_model == CurrentCatalogueDataSubset:
             validate_xml_with_doi_against_schema_at_url(xml_file, schema_url)
-        validate_xml_against_schema_at_url(xml_file, schema_url)
+        else:
+            validate_xml_against_schema_at_url(xml_file, schema_url)
 
         # Matching file name and localID tag text validation
         validate_xml_file_name(xml_file)
