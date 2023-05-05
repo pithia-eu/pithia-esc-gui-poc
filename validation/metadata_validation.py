@@ -107,7 +107,6 @@ def validate_xml_with_doi_against_schema_at_url(xml_file, schema_url):
         doi_name_element.text = valid_doi_name
     if doi_registration_agency_name_element is not None:
         doi_registration_agency_name_element.text = valid_doi_name
-    print('etree.tostring(xml_file_string_parsed)', etree.tostring(xml_file_string_parsed))
     schema_response = get(schema_url)
     xml_schema = xmlschema.XMLSchema(schema_response.text.encode())
     xml_schema.validate(etree.tostring(xml_file_string_parsed))
