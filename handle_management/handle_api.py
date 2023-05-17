@@ -31,6 +31,12 @@ def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClie
 def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
     return f'{credentials.get_prefix()}/{handle_suffix}'
 
+def generate_and_register_handle(handle_value: str, credentials: PIDClientCredentials, client: RESTHandleClient, initial_doi_dict_values: dict = {}) -> str:
+    flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
+    new_handle_name = client.generate_and_register_handle(credentials.get_prefix(), handle_value, **flat_initial_doi_dict_values)
+    
+    return new_handle_name
+
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient, initial_doi_dict_values: dict = {}):
     logger.info(f'Registering handle {handle}')
     flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
