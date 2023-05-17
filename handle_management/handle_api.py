@@ -31,6 +31,12 @@ def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClie
 def create_handle(credentials: PIDClientCredentials, handle_suffix: str) -> str:
     return f'{credentials.get_prefix()}/{handle_suffix}'
 
+def generate_and_register_handle(handle_value: str, credentials: PIDClientCredentials, client: RESTHandleClient, initial_doi_dict_values: dict = {}) -> str:
+    flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
+    new_handle_name = client.generate_and_register_handle(credentials.get_prefix(), handle_value, **flat_initial_doi_dict_values)
+    
+    return new_handle_name
+
 def register_handle(handle: str, handle_value: str, client: RESTHandleClient, initial_doi_dict_values: dict = {}):
     logger.info(f'Registering handle {handle}')
     flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
@@ -42,6 +48,11 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient, in
         logger.info('PROBLEM: Register handle returned unexpected response.')
 
     return register_result
+
+def create_and_register_handle_for_resource_url(resource_url: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
+    client, credentials = instantiate_client_and_load_credentials()
+    handle = generate_and_register_handle(resource_url, credentials, client, initial_doi_dict_values=initial_doi_dict_values)
+    return handle, client, credentials
 
 def create_and_register_handle_for_resource(resource_id: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
     client, credentials = instantiate_client_and_load_credentials()
