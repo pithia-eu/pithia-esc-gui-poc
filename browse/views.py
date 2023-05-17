@@ -513,8 +513,14 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.client, self.credentials = instantiate_client_and_load_credentials()
-        self.handle = create_handle(self.credentials, self.resource_id)
-        self.handle_data = get_handle_record(self.handle, self.client)
+        handle_url_mapping = mongodb_models.HandleUrlMapping.find_one({
+            'url': request.build_absolute_uri()
+        })
+        self.handle = None
+        self.handle_data = None
+        if handle_url_mapping is not None:
+            self.handle = handle_url_mapping['handle_name']
+            self.handle_data = get_handle_record(self.handle, self.client)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
