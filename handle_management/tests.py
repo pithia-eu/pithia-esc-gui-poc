@@ -10,6 +10,7 @@ from handle_management.handle_api import (
     create_and_register_handle_for_resource,
     create_handle,
     delete_handle,
+    generate_and_register_handle,
     get_date_handle_was_issued_as_string,
     get_handle_issue_number,
     get_handle_raw,
@@ -222,6 +223,18 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         add_doi_metadata_kernel_to_handle(handle, flat_doi_dict, self.client)
         delete_handle(handle, client)
         print('Passed DOI dict configuration test.')
+
+    @tag('fast', 'generate_and_register_handle')
+    def test_generate_and_register_handle(self):
+        """
+        generate_and_register_handle() returns a handle name
+        with a randomly generated suffix.
+        """
+        handle = generate_and_register_handle('https://www.example.com', self.credentials, self.client)
+        self.assertIsInstance(handle, str)
+        delete_handle(handle, self.client)
+        print('Passed generate and register handle test.')
+
         
 class DOIDictTestCase(PyHandleSetupTestCase):
     resource_id = None
