@@ -51,10 +51,9 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient, in
 
 def create_and_register_handle_for_resource(resource_id: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
     client, credentials = instantiate_client_and_load_credentials()
-    handle = create_handle(credentials, resource_id)
     resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })
     resource_details_page_url_string = f'{os.environ["HANDLE_URL_PREFIX"]}{str(resource_details_page_url)}'
-    register_handle(handle, resource_details_page_url_string, client, initial_doi_dict_values=initial_doi_dict_values)
+    handle = generate_and_register_handle(resource_details_page_url_string, credentials, client, initial_doi_dict_values=initial_doi_dict_values)
     return handle, client, credentials
 
 def delete_handle(handle: str, client: RESTHandleClient):
