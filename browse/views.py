@@ -514,7 +514,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.client, self.credentials = instantiate_client_and_load_credentials()
         handle_url_mapping = mongodb_models.HandleUrlMapping.find_one({
-            'url': request.build_absolute_uri()
+            'url': {'$regex': f'{request.get_full_path()}$'}
         })
         self.handle = None
         self.handle_data = None
