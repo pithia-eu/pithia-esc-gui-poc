@@ -9,9 +9,10 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
-    create_and_register_handle_for_resource,
+    create_and_register_handle_for_resource_url,
     delete_handle,
 )
+from handle_management.utils import add_handle_to_url_mapping
 from handle_management.xml_utils import (
     add_data_subset_data_to_doi_metadata_kernel_dict,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
@@ -39,6 +40,7 @@ from resource_management.views import (
     _create_manage_resource_page_title
 )
 from update.update import update_original_metadata_xml_string
+from utils.url_helpers import create_data_subset_detail_page_url
 from validation.errors import FileRegisteredBefore
 
 
@@ -153,7 +155,8 @@ class ResourceRegisterFormView(FormView):
                                 doi_dict = initialise_default_doi_kernel_metadata_dict()
                                 add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
                                 # Create and register a handle
-                                handle, handle_api_client, credentials = create_and_register_handle_for_resource(self.resource_id, initial_doi_dict_values=doi_dict)
+                                data_subset_url = create_data_subset_detail_page_url(self.resource_id)
+                                handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url, initial_doi_dict_values=doi_dict)
                                 self.handle_api_client = handle_api_client
                                 self.handle = handle
                                 # Add the handle metadata to the DOI dict
@@ -173,8 +176,8 @@ class ResourceRegisterFormView(FormView):
                                     self.resource_id,
                                     session=s
                                 )
+                                add_handle_to_url_mapping(handle, data_subset_url, session=s)
                             s.with_transaction(cb)
-                    
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during DOI registration process.')
