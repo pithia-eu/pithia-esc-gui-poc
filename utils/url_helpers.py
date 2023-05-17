@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from django.urls import reverse
 
 
@@ -39,4 +40,5 @@ def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_
     return reverse('ontology:ontology_term_detail', args=[ontology_category, ontology_term_id])
 
 def create_data_subset_detail_page_url(data_subset_id: str) -> str:
-    return reverse('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': data_subset_id })
+    data_subset_detail_page_reverse = reverse('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': data_subset_id })
+    return HttpRequest.build_absolute_uri(data_subset_detail_page_reverse)
