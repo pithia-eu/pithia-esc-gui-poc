@@ -1,4 +1,5 @@
 import environ
+import hashlib
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -20,7 +21,9 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            if request.POST.get('password') != env('ESC_PASSWORD'):
+            password = request.POST.get('password')
+            hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+            if hashed_password != env('ESC_PASSWORD'):
                 messages.error(request, 'Password is incorrect.')
                 if request.GET.get('next', '') != '':
                     return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.GET.get('next', '')))
