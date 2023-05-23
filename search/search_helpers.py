@@ -86,12 +86,12 @@ def find_acquisition_capability_sets_by_instrument_localids(instrument_localids)
         '$or': [
             {
                 'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
-                    '$all': instrument_localids
+                    '$in': instrument_localids
                 }
             },
             {
                 'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
-                    '$all': instrument_localids
+                    '$in': instrument_localids
                 }
             },
         ]
