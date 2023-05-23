@@ -15,7 +15,6 @@
             <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
                 aria-current="page">Home</a>
         </li>
-        {% if request.session.is_authorised %}
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Search & Browse</a>
@@ -42,6 +41,7 @@
                 </li>
             </ul>
         </li>
+        {% if request.session.is_authorised %}
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Admin
