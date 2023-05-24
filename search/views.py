@@ -25,11 +25,6 @@ from common.mongodb_models import (
 
 _INDEX_PAGE_TITLE = 'Search Data Collections'
 
-def get_tree_form_of_observed_properties(request):
-    observed_property_dict = create_dictionary_from_pithia_ontology_component(
-        'observedProperty'
-    )
-
 def get_tree_form_for_ontology_component(request, ontology_component):
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}
