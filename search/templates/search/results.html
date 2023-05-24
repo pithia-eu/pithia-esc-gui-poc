@@ -10,6 +10,7 @@
 <p>
     <a href="{% url 'search:index' %}">Search again</a>
 </p>
+<p>Found {{ results|length }} results.</p>
 {% if results|length > 0 %}
 <ul class="list-group">
     {% for r in results %}
