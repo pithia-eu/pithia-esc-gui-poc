@@ -87,7 +87,7 @@ def get_measurand_ids_from_observed_property_id(observed_property_id, g, measura
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
-def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
+def get_parent_node_ids_of_node_id(node_id, ontology_component, parent_node_ids, g):
     for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids

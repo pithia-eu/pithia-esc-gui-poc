@@ -1,13 +1,9 @@
 import re
-from mongodb import db
 from ontology.utils import (
-    get_localid_from_ontology_node_iri,
-    get_observed_property_hrefs_from_features_of_interest,
     get_observed_property_urls_from_feature_of_interest_urls,
 )
 from .helpers import (
     convert_list_to_regex_list,
-    map_ontology_components_to_local_ids
 )
 from common.mongodb_models import (
     CurrentAcquisition,
@@ -322,7 +318,7 @@ def find_matching_data_collections(request):
     }
     if len(acquisitions) > 0 and len(computations) > 0:
         processes_query = {
-            '$and': [
+            '$or': [
                 process_acquisitions_query,
                 process_computations_query,
             ]
@@ -337,7 +333,20 @@ def find_matching_data_collections(request):
 
     # Fetch Data Collections
     data_collections = []
-    data_collections_query = None
+    data_collections_query = {
+        '$or': [
+            {
+                'type.@xlink:href': {
+                    '$in': computation_type_urls
+                }
+            },
+            {
+                'type.@xlink:href': {
+                    '$in': instrument_type_urls
+                }
+            }
+        ]
+    }
     dc_features_of_interest_query = {
         'om:featureOfInterest.FeatureOfInterest.namedRegion': {
             '$elemMatch': {
@@ -353,18 +362,13 @@ def find_matching_data_collections(request):
         }
     }
     if len(features_of_interest_urls) > 0 and len(processes) > 0:
-        data_collections_query = {
-            '$or': [
-                dc_processes_query,
-                dc_features_of_interest_query
-            ]
-        }
+        data_collections_query['$or'].append(dc_processes_query)
+        data_collections_query['$or'].append(dc_features_of_interest_query)
     elif len(features_of_interest_urls) > 0:
-        data_collections_query = dc_features_of_interest_query
+        data_collections_query['$or'].append(dc_features_of_interest_query)
     elif len(processes) > 0:
-        data_collections_query = dc_processes_query
+        data_collections_query['$or'].append(dc_processes_query)
     
-    if data_collections_query is not None:
-        data_collections = list(CurrentDataCollection.find(data_collections_query))
+    data_collections = list(CurrentDataCollection.find(data_collections_query))
 
     return data_collections
