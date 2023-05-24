@@ -333,7 +333,20 @@ def find_matching_data_collections(request):
 
     # Fetch Data Collections
     data_collections = []
-    data_collections_query = None
+    data_collections_query = {
+        '$or': [
+            {
+                'type.@xlink:href': {
+                    '$in': computation_type_urls
+                }
+            },
+            {
+                'type.@xlink:href': {
+                    '$in': instrument_type_urls
+                }
+            }
+        ]
+    }
     dc_features_of_interest_query = {
         'om:featureOfInterest.FeatureOfInterest.namedRegion': {
             '$elemMatch': {
@@ -349,18 +362,13 @@ def find_matching_data_collections(request):
         }
     }
     if len(features_of_interest_urls) > 0 and len(processes) > 0:
-        data_collections_query = {
-            '$or': [
-                dc_processes_query,
-                dc_features_of_interest_query
-            ]
-        }
+        data_collections_query['$or'].append(dc_processes_query)
+        data_collections_query['$or'].append(dc_features_of_interest_query)
     elif len(features_of_interest_urls) > 0:
-        data_collections_query = dc_features_of_interest_query
+        data_collections_query['$or'].append(dc_features_of_interest_query)
     elif len(processes) > 0:
-        data_collections_query = dc_processes_query
+        data_collections_query['$or'].append(dc_processes_query)
     
-    if data_collections_query is not None:
-        data_collections = list(CurrentDataCollection.find(data_collections_query))
+    data_collections = list(CurrentDataCollection.find(data_collections_query))
 
     return data_collections
