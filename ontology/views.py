@@ -49,25 +49,25 @@ def ontology_category_terms_list_only(request, category):
     parents_of_registered_ontology_terms = []
     if category.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'featureofinterest':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'instrumenttype':
         registered_ontology_terms = get_registered_instrument_types()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'computationtype':
         registered_ontology_terms = get_registered_computation_types()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'phenomenon':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     elif category.lower() == 'measurand':
         registered_observed_property_ids = get_registered_observed_properties()
         registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, None, [])
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, category, [])
     return render(request, 'ontology/ontology_tree_template_outer.html', {
         'dictionary': dictionary,
         'category': category,
