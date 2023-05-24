@@ -322,7 +322,7 @@ def find_matching_data_collections(request):
     }
     if len(acquisitions) > 0 and len(computations) > 0:
         processes_query = {
-            '$and': [
+            '$or': [
                 process_acquisitions_query,
                 process_computations_query,
             ]
