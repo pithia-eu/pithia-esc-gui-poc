@@ -2,8 +2,43 @@ from django.db import models
 
 # Create your models here.
 class ScientificMetadata(models.Model):
+    ORGANISATION = 'organisation'
+    INDIVIDUAL = 'individual'
+    PROJECT = 'project'
+    PLATFORM = 'platform'
+    OPERATION = 'operation'
+    INSTRUMENT = 'instrument'
+    ACQUISITION_CAPABILITIES = 'acquisition_capabilities'
+    ACQUISITION = 'acquisition'
+    COMPUTATION_CAPABILITIES = 'computation_capabilities'
+    COMPUTATION = 'computation'
+    PROCESS = 'process'
+    DATA_COLLECTION = 'data_collection'
+    CATALOGUE = 'catalogue'
+    CATALOGUE_ENTRY = 'catalogue_entry'
+    CATALOGUE_DATA_SUBSET = 'catalogue_data_subset'
+    RESOURCE_TYPE_CHOICES = [
+        (ORGANISATION, 'Organisation'),
+        (INDIVIDUAL, 'Individual'),
+        (PROJECT, 'Project'),
+        (PLATFORM, 'Platform'),
+        (OPERATION, 'Operation'),
+        (INSTRUMENT, 'Instrument'),
+        (ACQUISITION_CAPABILITIES, 'Acquisition Capabilities'),
+        (ACQUISITION, 'Acquisition'),
+        (COMPUTATION_CAPABILITIES, 'Computation Capabilities'),
+        (COMPUTATION, 'Computation'),
+        (PROCESS, 'Process'),
+        (DATA_COLLECTION, 'Data Collection'),
+        (CATALOGUE, 'Catalogue'),
+        (CATALOGUE_ENTRY, 'Catalogue Entry'),
+        (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
+    ]
     registration_id = models.CharField(max_length=200)
-    resource_type = models.CharField(max_length=100)
+    resource_type = models.CharField(
+        max_length=100,
+        choices=RESOURCE_TYPE_CHOICES
+    )
     xml = models.TextField()
     json = models.JSONField()
     # institution_id = models.ForeignKey()
