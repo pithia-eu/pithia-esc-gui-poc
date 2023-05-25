@@ -7,7 +7,7 @@ class ScientificMetadata(models.Model):
     date_added = models.DateTimeField()
     date_modified = models.DateTimeField()
     # institution_id = models.ForeignKey()
-    uploader_id = models.CharField(max_length=100)
+    user_id = models.CharField()
     xml = models.TextField()
     json = models.JSONField()
 
@@ -26,6 +26,7 @@ class TechnicalMetadata(models.Model):
         default=API
     )
     institution_id = models.ForeignKey()
+    user_id = models.CharField()
     date_added = models.DateTimeField()
     date_modified = models.DateTimeField()
     json = models.JSONField()
