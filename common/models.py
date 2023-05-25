@@ -4,12 +4,12 @@ from django.db import models
 class ScientificMetadata(models.Model):
     registration_id = models.CharField(max_length=200)
     resource_type = models.CharField(max_length=100)
-    date_added = models.DateTimeField()
-    date_modified = models.DateTimeField()
-    # institution_id = models.ForeignKey()
-    user_id = models.CharField()
     xml = models.TextField()
     json = models.JSONField()
+    # institution_id = models.ForeignKey()
+    # registrant_id = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class TechnicalMetadata(models.Model):
     API = 'api'
@@ -25,13 +25,13 @@ class TechnicalMetadata(models.Model):
         choices=INTERACTION_METHOD_CHOICES,
         default=API
     )
-    institution_id = models.ForeignKey()
-    user_id = models.CharField()
-    date_added = models.DateTimeField()
-    date_modified = models.DateTimeField()
     json = models.JSONField()
+    # institution_id = models.ForeignKey()
+    # registrant_id = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Institution(models.Model):
     institution_name = models.CharField(max_length=200)
-    date_added = models.DateTimeField()
-    date_modified = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
