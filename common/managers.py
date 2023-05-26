@@ -47,13 +47,13 @@ class ScientificMetadataManager(models.Manager):
         except (UnicodeDecodeError, AttributeError):
             pass
 
-        metadata_registration = self.create(
+        scientific_metadata = self.create(
             resource_type=resource_type,
             xml=xml_string,
             json=xml_as_dict,
         )
 
-        return metadata_registration
+        return scientific_metadata
 
     def update_from_xml_string(self, pk, xml_string: str):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
@@ -70,3 +70,7 @@ class ScientificMetadataManager(models.Manager):
     
     class Meta:
         abstract = True
+
+class OrganisationManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.ORGANISATION)
