@@ -80,10 +80,11 @@ class TechnicalMetadata(models.Model):
         (MICADO, 'MiCADO'),
         (DOWNLOAD, 'Download'),
     ]
-    data_collection_id = models.ForeignKey()
+    # data_collection_id = models.ForeignKey()
     interaction_method = models.CharField(
         choices=INTERACTION_METHOD_CHOICES,
-        default=API
+        default=API,
+        max_length=100
     )
     json = models.JSONField()
     # institution_id = models.ForeignKey()
