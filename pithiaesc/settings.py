@@ -72,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.middleware.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'
@@ -164,6 +165,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_SAVE_EVERY_REQUEST = True
 
+LOGIN_REQUIRED_URLS = (
+    r'/authorised/',
+)
+
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/login/(.*)$',
+    r'/logout/(.*)$',
+)
 # Logging
 
 LOGGING = {
