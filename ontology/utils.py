@@ -64,6 +64,14 @@ def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
             op_hrefs.append(str(s))
     return op_hrefs
 
+def get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls):
+    op_urls = []
+    g = get_graph_of_pithia_ontology_component('observedProperty')
+    for s, p, o in g.triples((None, PITHIA.featureOfInterest, None)):
+        if any(x in str(o) for x in feature_of_interest_urls):
+            op_urls.append(str(s))
+    return op_urls
+
 def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, g, feature_of_interest_ids):
     for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.featureOfInterest, None)):
         feature_of_interest_ids.append(o.split('/')[-1])
@@ -79,7 +87,7 @@ def get_measurand_ids_from_observed_property_id(observed_property_id, g, measura
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
-def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
+def get_parent_node_ids_of_node_id(node_id, ontology_component, parent_node_ids, g):
     for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
