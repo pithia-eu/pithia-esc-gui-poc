@@ -39,7 +39,7 @@ class ScientificMetadataManager(models.Manager):
             json__identifier__PITHIA_Identifier__localID__in=localids
         )
     
-    def create_from_xml_string(self, xml_string: str, resource_type: str):
+    def _create_from_xml_string(self, xml_string: str, resource_type: str):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
         
         try:
@@ -54,6 +54,10 @@ class ScientificMetadataManager(models.Manager):
         )
 
         return scientific_metadata
+
+
+    def create_from_xml_string(self, xml_string: str):
+        pass
 
     def update_from_xml_string(self, pk, xml_string: str):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
@@ -74,3 +78,104 @@ class ScientificMetadataManager(models.Manager):
 class OrganisationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(resource_type=self.model.ORGANISATION)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.ORGANISATION)
+
+class IndividualManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.INDIVIDUAL)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.INDIVIDUAL)
+
+class ProjectManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.PROJECT)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.PROJECT)
+
+class PlatformManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.PLATFORM)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.PLATFORM)
+
+class OperationManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.OPERATION)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.OPERATION)
+
+class InstrumentManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.INSTRUMENT)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.INSTRUMENT)
+
+class AcquisitionCapabilitiesManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.ACQUISITION_CAPABILITIES)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION_CAPABILITIES)
+
+class AcquisitionManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.ACQUISITION)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION)
+
+class ComputationCapabilitiesManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.COMPUTATION_CAPABILITIES)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION_CAPABILITIES)
+
+class ComputationManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.COMPUTATION)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION)
+
+class ProcessManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.PROCESS)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.PROCESS)
+
+class DataCollectionManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.DATA_COLLECTION)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.DATA_COLLECTION)
+
+class CatalogueManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.CATALOGUE)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE)
+
+class CatalogueEntryManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.CATALOGUE_ENTRY)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_ENTRY)
+
+class CatalogueDataSubsetManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(resource_type=self.model.CATALOGUE_DATA_SUBSET)
+
+    def create_from_xml_string(self, xml_string: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET)
