@@ -1,12 +1,10 @@
-import traceback
-from pyexpat import ExpatError
-from django.shortcuts import render
-from django.urls import reverse_lazy
 import logging
-from common import mongodb_models
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView
+from pyexpat import ExpatError
+
+from common import models, mongodb_models
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource_url,
@@ -21,18 +19,12 @@ from handle_management.xml_utils import (
     is_doi_element_present_in_xml_file,
 )
 from mongodb import client
-from pyexpat import ExpatError
 from register import xml_conversion_checks_and_fixes
 from register.register import (
     register_metadata_xml_file,
     store_xml_file_as_string_and_map_to_resource_id,
 )
 from register.register_api_specification import register_api_specification
-from .forms import (
-    UploadDataCollectionFileForm,
-    UploadFileForm,
-    UploadCatalogueDataSubsetFileForm,
-)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -42,6 +34,12 @@ from resource_management.views import (
 from update.update import update_original_metadata_xml_string
 from utils.url_helpers import create_data_subset_detail_page_url
 from validation.errors import FileRegisteredBefore
+
+from .forms import (
+    UploadDataCollectionFileForm,
+    UploadFileForm,
+    UploadCatalogueDataSubsetFileForm,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -54,7 +52,6 @@ class ResourceRegisterFormView(FormView):
     form_class = UploadFileForm
     template_name = 'register/file_upload.html'
 
-    resource_type_plural = ''
     validation_url = ''
     post_url = ''
     resource_management_list_page_breadcrumb_text = ''
@@ -65,7 +62,7 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register {self.resource_type_plural.title()}'
+        context['title'] = f'Register {self.model.type_plural_readable.title()}'
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
@@ -197,50 +194,60 @@ class ResourceRegisterFormView(FormView):
         return super().post(request, *args, **kwargs)
 
 class OrganisationRegisterFormView(ResourceRegisterFormView):
+    model = models.Organisation
     resource_mongodb_model = mongodb_models.CurrentOrganisation
     success_url = reverse_lazy('register:organisation')
 
-    resource_type_plural = 'organisations'
     validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
 
 class IndividualRegisterFormView(ResourceRegisterFormView):
+    model = models.Individual
     resource_mongodb_model = mongodb_models.CurrentIndividual
     success_url = reverse_lazy('register:individual')
 
-    resource_type_plural = 'individuals'
     validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
 
 class ProjectRegisterFormView(ResourceRegisterFormView):
+    model = models.Project
     resource_mongodb_model = mongodb_models.CurrentProject
     success_url = reverse_lazy('register:project')
 
-    resource_type_plural = 'projects'
     validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
 
 class PlatformRegisterFormView(ResourceRegisterFormView):
+    model = models.Platform
     resource_mongodb_model = mongodb_models.CurrentPlatform
     success_url = reverse_lazy('register:platform')
 
-    resource_type_plural = 'platforms'
     validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
 
+class OperationRegisterFormView(ResourceRegisterFormView):
+    model = models.Operation
+    resource_mongodb_model = mongodb_models.CurrentOperation
+    success_url = reverse_lazy('register:operation')
+
+    validation_url = reverse_lazy('validation:operation')
+    post_url = reverse_lazy('register:operation')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
+
 class InstrumentRegisterFormView(ResourceRegisterFormView):
+    model = models.Instrument
     resource_mongodb_model = mongodb_models.CurrentInstrument
     success_url = reverse_lazy('register:instrument')
 
-    resource_type_plural = 'instruments'
     validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
@@ -250,21 +257,11 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
         self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
         return super().post(request, *args, **kwargs)
 
-class OperationRegisterFormView(ResourceRegisterFormView):
-    resource_mongodb_model = mongodb_models.CurrentOperation
-    success_url = reverse_lazy('register:operation')
-
-    resource_type_plural = 'operations'
-    validation_url = reverse_lazy('validation:operation')
-    post_url = reverse_lazy('register:operation')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
-
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
+    model = models.AcquisitionCapabilities
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
     success_url = reverse_lazy('register:acquisition_capability_set')
 
-    resource_type_plural = 'acquisition capabilities'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     post_url = reverse_lazy('register:acquisition_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
@@ -275,10 +272,10 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
+    model = models.Acquisition
     resource_mongodb_model = mongodb_models.CurrentAcquisition
     success_url = reverse_lazy('register:acquisition')
 
-    resource_type_plural = 'acquisitions'
     validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
@@ -289,10 +286,10 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
+    model = models.ComputationCapabilities
     resource_mongodb_model = mongodb_models.CurrentComputationCapability
     success_url = reverse_lazy('register:computation_capability_set')
 
-    resource_type_plural = 'computation capabilities'
     validation_url = reverse_lazy('validation:computation_capability_set')
     post_url = reverse_lazy('register:computation_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
@@ -303,10 +300,10 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class ComputationRegisterFormView(ResourceRegisterFormView):
+    model = models.Computation
     resource_mongodb_model = mongodb_models.CurrentComputation
     success_url = reverse_lazy('register:computation')
 
-    resource_type_plural = 'computations'
     validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
@@ -317,10 +314,10 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class ProcessRegisterFormView(ResourceRegisterFormView):
+    model = models.Process
     resource_mongodb_model = mongodb_models.CurrentProcess
     success_url = reverse_lazy('register:process')
 
-    resource_type_plural = 'processes'
     validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
@@ -331,6 +328,7 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
+    model = models.DataCollection
     resource_mongodb_model = mongodb_models.CurrentDataCollection
     success_url = reverse_lazy('register:data_collection')
     template_name = 'register/file_upload_data_collection.html'
@@ -352,6 +350,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         return super().post(request, *args, **kwargs)
 
 class CatalogueRegisterFormView(ResourceRegisterFormView):
+    model = models.Catalogue
     resource_mongodb_model = mongodb_models.CurrentCatalogue
     success_url = reverse_lazy('register:catalogue')
     template_name='register/file_upload_catalogue.html'
@@ -371,6 +370,7 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
         return context
 
 class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
+    model = models.CatalogueEntry
     resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
     template_name='register/file_upload_catalogue.html'
@@ -390,6 +390,7 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
         return context
 
 class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
+    model = models.CatalogueDataSubset
     resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
     template_name='register/file_upload_catalogue_data_subset.html'
