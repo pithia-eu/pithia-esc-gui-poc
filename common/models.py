@@ -1,4 +1,5 @@
 from django.db import models
+from .managers import OrganisationManager
 
 # Create your models here.
 class ScientificMetadata(models.Model):
@@ -46,6 +47,30 @@ class ScientificMetadata(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def identifier(self):
+        return self.json['identifier']
+
+    @property
+    def pithia_identifier(self):
+        return self.identifier['PITHIA_Identifier']
+
+    @property
+    def namespace(self):
+        return self.pithia_identifier['namespace']
+
+    @property
+    def localid(self):
+        return self.pithia_identifier['localid']
+
+    @property
+    def _metadata_server_url_base(self):
+        return 'https://metadata.pithia.eu/resources/2.2'
+
+    @property
+    def metadata_server_url(self):
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+
 class TechnicalMetadata(models.Model):
     API = 'api'
     MICADO = 'micado'
@@ -70,3 +95,66 @@ class Institution(models.Model):
     institution_name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+# Proxy models
+class Organisation(ScientificMetadata):
+    objects = OrganisationManager()
+
+    class Meta:
+        proxy = True
+
+class Individual(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Project (ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Platform(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Operation(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Instrument(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class AcquisitionCapabilities(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Acquisition(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class ComputationCapabilities(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Computation(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Process(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class DataCollection(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class Catalogue(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class CatalogueEntry(ScientificMetadata):
+    class Meta:
+        proxy = True
+
+class CatalogueDataSubset(ScientificMetadata):
+    class Meta:
+        proxy = True
