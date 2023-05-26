@@ -101,6 +101,10 @@ class Institution(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class HandleURLMapping(models.Model):
+    data_subset_url = models.URLField()
+    handle_name = models.CharField(max_length=100)
+
 # Proxy models
 class Organisation(ScientificMetadata):
     type_in_metadata_server_url = 'organisation'
