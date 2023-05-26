@@ -61,7 +61,11 @@ class ScientificMetadata(models.Model):
 
     @property
     def localid(self):
-        return self.pithia_identifier['localid']
+        return self.pithia_identifier['localID']
+
+    @property
+    def type_in_metadata_server_url(self):
+        pass
 
     @property
     def _metadata_server_url_base(self):
@@ -99,6 +103,12 @@ class Institution(models.Model):
 
 # Proxy models
 class Organisation(ScientificMetadata):
+    type_in_metadata_server_url = 'organisation'
+    weight = 1
+    type_readable = 'organisation'
+    type_plural_readable = 'organisations'
+    a_or_an = 'an'
+
     objects = OrganisationManager()
 
     class Meta:
