@@ -172,10 +172,18 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
     @abstractclassmethod
-    def referencing_process_urls_or_feature_of_interest_urls(self, process_urls: list, feature_of_interest_urls: list):
+    def referencing_process_urls(self, process_urls: list):
         """
-        Data Collections referencing any of the given
-        Processes or features of interest by URL.
+        Data Collections referencing at least one URL
+        from a list of Process URLs.
+        """
+        pass
+
+    @abstractclassmethod
+    def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
+        """
+        Data Collections referencing at least one URL
+        from a list of Feature of Interest URLs.
         """
         pass
 
