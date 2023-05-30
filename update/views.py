@@ -1,5 +1,6 @@
 import logging
 from bson.objectid import ObjectId
+from common import models
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
@@ -127,6 +128,9 @@ class ResourceUpdateFormView(FormView):
         xml_file = request.FILES['files']
         if form.is_valid():
             try:
+                self.model.objects.update_from_xml_string(self.resource_id, xml_file.read())
+                
+                # Old code
                 if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                     self.resource_conversion_validate_and_correct_function = None
                 with client.start_session() as s:
@@ -183,6 +187,7 @@ class ResourceUpdateFormView(FormView):
         return super().get(request, *args, **kwargs)
 
 class OrganisationUpdateFormView(ResourceUpdateFormView):
+    model = models.Organisation
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
 
@@ -200,6 +205,7 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
     
 
 class IndividualUpdateFormView(ResourceUpdateFormView):
+    model = models.Individual
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
 
@@ -216,6 +222,7 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProjectUpdateFormView(ResourceUpdateFormView):
+    model = models.Project
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
 
@@ -232,6 +239,7 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class PlatformUpdateFormView(ResourceUpdateFormView):
+    model = models.Platform
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
 
@@ -248,6 +256,7 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class OperationUpdateFormView(ResourceUpdateFormView):
+    model = models.Operation
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
 
@@ -264,6 +273,7 @@ class OperationUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
+    model = models.Instrument
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
 
@@ -284,6 +294,7 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
+    model = models.AcquisitionCapabilities
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
@@ -308,6 +319,7 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
+    model = models.Acquisition
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
 
@@ -328,6 +340,7 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
+    model = models.ComputationCapabilities
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
 
@@ -352,6 +365,7 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
         
 class ComputationUpdateFormView(ResourceUpdateFormView):
+    model = models.Computation
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
 
@@ -372,6 +386,7 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class ProcessUpdateFormView(ResourceUpdateFormView):
+    model = models.Process
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
 
@@ -392,6 +407,7 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
+    model = models.DataCollection
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     template_name = 'update/file_upload_data_collection.html'
@@ -489,6 +505,7 @@ def data_collection_interaction_methods(request, data_collection_id):
     })
 
 class CatalogueUpdateFormView(ResourceUpdateFormView):
+    model = models.Catalogue
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
 
@@ -511,6 +528,7 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
+    model = models.CatalogueEntry
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
 
@@ -533,6 +551,7 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
+    model = models.CatalogueDataSubset
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
