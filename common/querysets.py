@@ -4,7 +4,6 @@ from django.db.models import Q
 from .core import *
 
 class OrganisationQuerySet(models.QuerySet, AbstractOrganisationDatabaseQueries):
-    
     pass
 
 class IndividualQuerySet(models.QuerySet, AbstractIndividualDatabaseQueries):
