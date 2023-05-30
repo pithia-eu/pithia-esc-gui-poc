@@ -79,6 +79,15 @@ class ScientificMetadata(models.Model):
     @property
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+    
+    @property
+    def converted_xml_correction_function(self):
+        return None
+
+    def save(self, *args, **kwargs):
+        if self.converted_xml_correction_function is not None:
+            self.json = self.converted_xml_correction_function(self.scientific_metadata)
+        super().save(*args, **kwargs)
 
 class TechnicalMetadata(models.Model):
     API = 'api'

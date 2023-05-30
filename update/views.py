@@ -51,13 +51,13 @@ from mongodb import client
 from pyexpat import ExpatError
 from register.register import store_xml_file_as_string_and_map_to_resource_id
 from register.xml_conversion_checks_and_fixes import (
-    format_acquisition_capability_set_dictionary,
-    format_acquisition_dictionary,
-    format_computation_capability_set_dictionary,
-    format_computation_dictionary,
-    format_data_collection_dictionary,
-    format_instrument_dictionary,
-    format_process_dictionary
+    correct_acquisition_capability_set_xml_converted_to_dict,
+    correct_acquisition_xml_converted_to_dict,
+    correct_computation_capability_set_xml_converted_to_dict,
+    correct_computation_xml_converted_to_dict,
+    correct_data_collection_xml_converted_to_dict,
+    correct_instrument_xml_converted_to_dict,
+    correct_process_xml_converted_to_dict
 )
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.register_api_specification import register_api_specification
@@ -290,7 +290,7 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_instrument_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_instrument_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
@@ -315,7 +315,7 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_acquisition_capability_set_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_acquisition_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
@@ -336,7 +336,7 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_acquisition_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_acquisition_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
@@ -361,7 +361,7 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_computation_capability_set_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_computation_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
         
 class ComputationUpdateFormView(ResourceUpdateFormView):
@@ -382,7 +382,7 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_computation_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_computation_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class ProcessUpdateFormView(ResourceUpdateFormView):
@@ -403,7 +403,7 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_process_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_process_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
@@ -426,7 +426,7 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = format_data_collection_dictionary
+        self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 def data_collection_interaction_methods(request, data_collection_id):

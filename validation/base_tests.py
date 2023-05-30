@@ -4,7 +4,7 @@ from lxml.etree import XMLSyntaxError
 from pathlib import Path
 from django.test import tag
 from register.register import register_metadata_xml_file
-from register.xml_conversion_checks_and_fixes import format_instrument_dictionary
+from register.xml_conversion_checks_and_fixes import correct_instrument_xml_converted_to_dict
 from validation.metadata_validation import (
     validate_xml_against_own_schema,
     parse_xml_file,
@@ -88,7 +88,7 @@ class InstrumentFileTestCase(FileTestCase):
         self.xml_file_name = 'Instrument_Test.xml'
         self.root_element_name = INSTRUMENT_XML_ROOT_TAG_NAME
         self.test_collection_name = 'current-instruments'
-        self.fix_conversion_errors_if_any = format_instrument_dictionary
+        self.fix_conversion_errors_if_any = correct_instrument_xml_converted_to_dict
         return super().setUp()
 
 @tag('acquisition_capabilities')

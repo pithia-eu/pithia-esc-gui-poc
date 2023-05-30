@@ -272,7 +272,7 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_instrument_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_instrument_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
@@ -286,7 +286,7 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_capability_set_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
@@ -300,7 +300,7 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_acquisition_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
@@ -314,7 +314,7 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_capability_set_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class ComputationRegisterFormView(ResourceRegisterFormView):
@@ -328,7 +328,7 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_computation_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class ProcessRegisterFormView(ResourceRegisterFormView):
@@ -342,7 +342,7 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_process_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_process_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
@@ -364,7 +364,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         return context
         
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_data_collection_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_data_collection_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class CatalogueRegisterFormView(ResourceRegisterFormView):
