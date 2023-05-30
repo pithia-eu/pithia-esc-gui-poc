@@ -1,5 +1,6 @@
 from django.db import models
 from .managers import *
+from .querysets import *
 
 # Create your models here.
 class ScientificMetadata(models.Model):
@@ -113,7 +114,7 @@ class Organisation(ScientificMetadata):
     type_plural_readable = 'organisations'
     a_or_an = 'an'
 
-    objects = OrganisationManager()
+    objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
     class Meta:
         proxy = True
@@ -125,7 +126,7 @@ class Individual(ScientificMetadata):
     type_plural_readable = 'individuals'
     a_or_an = 'an'
 
-    objects = IndividualManager()
+    objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
     class Meta:
         proxy = True
@@ -137,7 +138,7 @@ class Project (ScientificMetadata):
     type_plural_readable = 'projects'
     a_or_an = 'a'
 
-    objects = ProjectManager()
+    objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
     class Meta:
         proxy = True
@@ -149,7 +150,7 @@ class Platform(ScientificMetadata):
     type_plural_readable = 'platforms'
     a_or_an = 'a'
 
-    objects = PlatformManager()
+    objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
     class Meta:
         proxy = True
@@ -161,7 +162,7 @@ class Operation(ScientificMetadata):
     type_plural_readable = 'operations'
     a_or_an = 'an'
 
-    objects = OperationManager()
+    objects = OperationManager.from_queryset(OperationQuerySet)()
 
     class Meta:
         proxy = True
@@ -173,7 +174,7 @@ class Instrument(ScientificMetadata):
     type_plural_readable = 'instruments'
     a_or_an = 'an'
 
-    objects = InstrumentManager()
+    objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
     class Meta:
         proxy = True
@@ -185,7 +186,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     type_plural_readable = 'acquisition capabilities'
     a_or_an = 'an'
 
-    objects = AcquisitionCapabilitiesManager()
+    objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
     class Meta:
         proxy = True
@@ -197,7 +198,7 @@ class Acquisition(ScientificMetadata):
     type_plural_readable = 'acquisitions'
     a_or_an = 'an'
 
-    objects = AcquisitionManager()
+    objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
     class Meta:
         proxy = True
@@ -209,7 +210,7 @@ class ComputationCapabilities(ScientificMetadata):
     type_plural_readable = 'computation capabilities'
     a_or_an = 'a'
 
-    objects = ComputationCapabilitiesManager()
+    objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
     class Meta:
         proxy = True
@@ -221,7 +222,7 @@ class Computation(ScientificMetadata):
     type_plural_readable = 'computations'
     a_or_an = 'a'
 
-    objects = ComputationManager()
+    objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
     class Meta:
         proxy = True
@@ -233,7 +234,7 @@ class Process(ScientificMetadata):
     type_plural_readable = 'processes'
     a_or_an = 'a'
 
-    objects = ProcessManager()
+    objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
     class Meta:
         proxy = True
@@ -245,7 +246,7 @@ class DataCollection(ScientificMetadata):
     type_plural_readable = 'data collections'
     a_or_an = 'a'
 
-    objects = DataCollectionManager()
+    objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
     class Meta:
         proxy = True
@@ -257,7 +258,7 @@ class Catalogue(ScientificMetadata):
     type_plural_readable = 'catalogues'
     a_or_an = 'a'
 
-    objects = CatalogueManager()
+    objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
     class Meta:
         proxy = True
@@ -269,7 +270,7 @@ class CatalogueEntry(ScientificMetadata):
     type_plural_readable = 'catalogue entries'
     a_or_an = 'a'
 
-    objects = CatalogueEntryManager()
+    objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
 
     class Meta:
         proxy = True
@@ -281,7 +282,7 @@ class CatalogueDataSubset(ScientificMetadata):
     type_plural_readable = 'catalogue data subsets'
     a_or_an = 'a'
 
-    objects = CatalogueDataSubsetManager()
+    objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
 
     class Meta:
         proxy = True
