@@ -52,8 +52,8 @@
     <!-- Instrument that has these acquisition capabilities -->
     <instrumentModePair>
         <InstrumentOperationalModePair>
-            <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/ldi/Instrument_Ionosonde_Digisonde256"/>
-            <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/ldi/Instrument_Ionosonde_DPS1#ionogram"/>
+            <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test"/>
+            <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#test"/>
         </InstrumentOperationalModePair>
     </instrumentModePair>    
 </AcquisitionCapabilities>
