@@ -63,6 +63,10 @@ class ScientificMetadata(models.Model):
     @property
     def localid(self):
         return self.pithia_identifier['localID']
+    
+    @property
+    def name(self):
+        return self.json['name']
 
     @property
     def type_in_metadata_server_url(self):
@@ -246,6 +250,10 @@ class DataCollection(ScientificMetadata):
     type_plural_readable = 'data collections'
     a_or_an = 'a'
 
+    @property
+    def first_related_party_url(self):
+        return self.scientific_metadata['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
+
     objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
     class Meta:
@@ -281,6 +289,10 @@ class CatalogueDataSubset(ScientificMetadata):
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
     a_or_an = 'a'
+
+    @property
+    def data_collection_url(self):
+        return self.json['dataCollection']['@xlink:href']
 
     objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
 
