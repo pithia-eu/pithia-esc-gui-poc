@@ -130,7 +130,7 @@ class ResourceUpdateFormView(FormView):
             try:
                 self.model.objects.update_from_xml_string(self.resource_id, xml_file.read())
                 
-                # Old code
+                # TODO: remove old code
                 if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                     self.resource_conversion_validate_and_correct_function = None
                 with client.start_session() as s:
