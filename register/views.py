@@ -95,9 +95,9 @@ class ResourceRegisterFormView(FormView):
                 # method which verifies validation took place
                 # should be implemented.
                 try:
-                    self.new_registration = self.model.create_from_xml_string(xml_file.read())
+                    self.new_registration = self.model.objects.create_from_xml_string(xml_file.read())
 
-                    # Old code
+                    # TODO: remove old code
                     if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                         self.resource_conversion_validate_and_correct_function = None
                     with client.start_session() as s:
@@ -159,7 +159,7 @@ class ResourceRegisterFormView(FormView):
                         # Create a blank DOI dict first
                         doi_dict = initialise_default_doi_kernel_metadata_dict()
                         add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
-                        # Old code
+                        # TODO: remove old code
                         # add_data_subset_data_to_doi_metadata_kernel_dict_old(self.resource_id, doi_dict)
                         # Create and register a handle
                         data_subset_url = create_data_subset_detail_page_url(self.resource_id)
@@ -174,7 +174,7 @@ class ResourceRegisterFormView(FormView):
                         add_doi_metadata_kernel_to_data_subset(self.resource_id, doi_dict, xml_file.read())
                         add_handle_to_url_mapping(handle, data_subset_url)
 
-                        # Old code
+                        # TODO: remove old code
                         with client.start_session() as s:
                             def cb(s):
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
@@ -359,7 +359,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register a Data Collection'
+        context['title'] = f'Register a {self.model.type_readable.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
         
@@ -373,9 +373,6 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
     success_url = reverse_lazy('register:catalogue')
     template_name='register/file_upload_catalogue.html'
 
-    a_or_an = 'a'
-    resource_type = 'catalogue'
-    resource_type_plural = 'catalogues'
     validation_url = reverse_lazy('validation:catalogue')
     post_url = reverse_lazy('register:catalogue')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
@@ -393,9 +390,6 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     success_url = reverse_lazy('register:catalogue_entry')
     template_name='register/file_upload_catalogue.html'
 
-    a_or_an = 'a'
-    resource_type = 'catalogue entry'
-    resource_type_plural = 'catalogue entries'
     validation_url = reverse_lazy('validation:catalogue_entry')
     post_url = reverse_lazy('register:catalogue_entry')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
@@ -414,9 +408,6 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     template_name='register/file_upload_catalogue_data_subset.html'
     form_class = UploadCatalogueDataSubsetFileForm
 
-    a_or_an = 'a'
-    resource_type = 'catalogue data subset'
-    resource_type_plural = 'catalogue data subsets'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     post_url = reverse_lazy('register:catalogue_data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
