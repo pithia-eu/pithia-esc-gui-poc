@@ -1,6 +1,8 @@
 from django.db import models
+
 from .managers import *
 from .querysets import *
+from .converted_xml_correction_functions import *
 
 # Create your models here.
 class ScientificMetadata(models.Model):
@@ -162,6 +164,7 @@ class Platform(ScientificMetadata):
     type_readable = 'platform'
     type_plural_readable = 'platforms'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_platform_xml_converted_to_dict
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -186,6 +189,7 @@ class Instrument(ScientificMetadata):
     type_readable = 'instrument'
     type_plural_readable = 'instruments'
     a_or_an = 'an'
+    converted_xml_correction_function = correct_instrument_xml_converted_to_dict
 
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
@@ -198,6 +202,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     type_readable = 'acquisition capabilities'
     type_plural_readable = 'acquisition capabilities'
     a_or_an = 'an'
+    converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -210,6 +215,7 @@ class Acquisition(ScientificMetadata):
     type_readable = 'acquisition'
     type_plural_readable = 'acquisitions'
     a_or_an = 'an'
+    converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -222,6 +228,7 @@ class ComputationCapabilities(ScientificMetadata):
     type_readable = 'computation capabilities'
     type_plural_readable = 'computation capabilities'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
@@ -234,6 +241,7 @@ class Computation(ScientificMetadata):
     type_readable = 'computation'
     type_plural_readable = 'computations'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_computation_xml_converted_to_dict
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
@@ -246,6 +254,7 @@ class Process(ScientificMetadata):
     type_readable = 'process'
     type_plural_readable = 'processes'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_process_xml_converted_to_dict
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -258,6 +267,7 @@ class DataCollection(ScientificMetadata):
     type_readable = 'data collection'
     type_plural_readable = 'data collections'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
 
     @property
     def first_related_party_url(self):
