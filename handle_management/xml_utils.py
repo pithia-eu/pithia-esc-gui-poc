@@ -1,6 +1,11 @@
-import os
 from bson import ObjectId
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
+from common.models import (
+    CatalogueDataSubset,
+    DataCollection,
+    Individual,
+    Organisation,
+)
 from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CurrentDataCollection,
@@ -65,7 +70,7 @@ def initialise_default_doi_kernel_metadata_dict():
         },
     }
 
-def get_first_related_party_name_from_data_collection(data_collection: dict):
+def get_first_related_party_name_from_data_collection_old(data_collection: dict):
     if not isinstance(data_collection, dict) or (isinstance(data_collection, dict) and 'relatedParty' not in data_collection):
         return None
     related_party_url = data_collection['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
@@ -88,7 +93,7 @@ def get_first_related_party_name_from_data_collection(data_collection: dict):
             related_party = organisation
     return related_party['name']
 
-def add_data_subset_data_to_doi_metadata_kernel_dict(
+def add_data_subset_data_to_doi_metadata_kernel_dict_old(
     data_subset_id: str,
     doi_dict: dict,
     data_collection_model: collection = CurrentDataCollection,
@@ -111,6 +116,55 @@ def add_data_subset_data_to_doi_metadata_kernel_dict(
         return doi_dict
     referenced_data_collection_name = referenced_data_collection['name']
     doi_dict['referentCreation']['name']['value'] = referenced_data_collection_name
+    principal_agent_name_value = get_first_related_party_name_from_data_collection_old(referenced_data_collection)
+    if principal_agent_name_value is not None:
+        doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
+    return doi_dict
+
+def get_first_related_party_name_from_data_collection(
+        data_collection,
+        organisation_model=Organisation,
+        individual_model=Individual
+    ):
+    try:
+        related_party_url = data_collection.first_related_party_url
+    except KeyError:
+        return None
+    
+    try:
+        return organisation_model.objects.get_by_metadata_server_url(related_party_url).scientific_metadata_name
+    except organisation_model.DoesNotExist:
+        pass
+    
+    try:
+        individual = individual_model.objects.get_by_metadata_server_url(related_party_url).scientific_metadata_name
+    except individual_model.DoesNotExist:
+        return None
+    organisation_url = individual.organisation_url
+    
+    try:
+        return organisation_model.objects.get_by_metadata_server_url(organisation_url)
+    except organisation_model.DoesNotExist:
+        pass
+    return None
+
+def add_data_subset_data_to_doi_metadata_kernel_dict(
+    data_subset,
+    doi_dict: dict,
+    data_collection_model=DataCollection
+):
+    
+    try:
+        referenced_data_collection_url = data_subset.data_collection_url
+    except KeyError:
+        return doi_dict
+    
+    try:
+        referenced_data_collection = data_collection_model.objects.get_by_metadata_server_url(referenced_data_collection_url)
+    except data_collection_model.DoesNotExist:
+        return doi_dict
+    
+    doi_dict['referentCreation']['name']['value'] = referenced_data_collection.name
     principal_agent_name_value = get_first_related_party_name_from_data_collection(referenced_data_collection)
     if principal_agent_name_value is not None:
         doi_dict['referentCreation']['principalAgent']['name']['value'] = principal_agent_name_value
@@ -123,6 +177,12 @@ def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     doi_dict['referentCreation']['identifier']['nonUriValue'] = handle
     doi_dict['referentCreation']['identifier']['uri']['#text'] = f'https://hdl.handle.net/{handle}'
     return doi_dict
+
+def add_doi_metadata_kernel_to_data_subset(resource_id, doi_dict: dict, metadata_file_xml_string: str):
+    doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
+    xml_string_with_doi = add_doi_xml_string_to_metadata_xml_string(metadata_file_xml_string, doi_xml_string)
+    CatalogueDataSubset.objects.update_from_xml_string(resource_id, xml_string_with_doi)
+    return xml_string_with_doi
 
 def add_doi_kernel_metadata_to_xml_and_return_updated_string(
     doi_dict,

@@ -23,13 +23,13 @@ from handle_management.handle_api import (
     update_handle_url,
 )
 from handle_management.xml_utils import (
-    add_data_subset_data_to_doi_metadata_kernel_dict,
+    add_data_subset_data_to_doi_metadata_kernel_dict_old,
     add_doi_xml_string_to_metadata_xml_string,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
     add_handle_data_to_doi_metadata_kernel_dict,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
-    get_first_related_party_name_from_data_collection,
+    get_first_related_party_name_from_data_collection_old,
     get_last_source_element,
     get_last_result_time_element,
     initialise_default_doi_kernel_metadata_dict,
@@ -212,7 +212,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
             )
             self.resource_id = registered_resource['_id']
         doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
+        add_data_subset_data_to_doi_metadata_kernel_dict_old(
             self.resource_id,
             doi_dict,
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
@@ -253,7 +253,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             )
             self.resource_id = registered_resource['_id']
         doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
+        add_data_subset_data_to_doi_metadata_kernel_dict_old(
             self.resource_id,
             doi_dict,
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
@@ -279,7 +279,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
             )
             self.resource_id = registered_resource['_id']
         doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
+        add_data_subset_data_to_doi_metadata_kernel_dict_old(
             self.resource_id,
             doi_dict,
             catalogue_data_subset_model=MockCurrentCatalogueDataSubset
@@ -422,8 +422,8 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
             print('Passed replace_doi_element_from_metadata_xml_string() test.')
 
 class PrincipalAgentTestCase(SimpleTestCase):
-    @tag('fast', 'get_first_related_party_name_from_data_collection')
-    def test_get_first_related_party_name_from_data_collection(self):
+    @tag('fast', 'get_first_related_party_name_from_data_collection_old')
+    def test_get_first_related_party_name_from_data_collection_old(self):
         """
         Returns the name of the organisation (or individual if organisation is
         not found) responsible for the data collection.
@@ -440,5 +440,5 @@ class PrincipalAgentTestCase(SimpleTestCase):
             data_collection = MockDataCollection.find_one({
                 '_id': self.resource_id
             })
-            principal_agent_name = get_first_related_party_name_from_data_collection(data_collection)
+            principal_agent_name = get_first_related_party_name_from_data_collection_old(data_collection)
             print('principal_agent_name', principal_agent_name)

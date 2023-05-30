@@ -10,9 +10,14 @@ from handle_management.handle_api import (
     create_and_register_handle_for_resource_url,
     delete_handle,
 )
-from handle_management.utils import add_handle_to_url_mapping
+from handle_management.utils import (
+    add_handle_to_url_mapping,
+    add_handle_to_url_mapping_old,
+)
 from handle_management.xml_utils import (
     add_data_subset_data_to_doi_metadata_kernel_dict,
+    add_data_subset_data_to_doi_metadata_kernel_dict_old,
+    add_doi_metadata_kernel_to_data_subset,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
     add_handle_data_to_doi_metadata_kernel_dict,
     initialise_default_doi_kernel_metadata_dict,
@@ -57,6 +62,7 @@ class ResourceRegisterFormView(FormView):
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_id = None
+    new_registration = None
     handle = None
     handle_api_client = None
 
@@ -89,6 +95,9 @@ class ResourceRegisterFormView(FormView):
                 # method which verifies validation took place
                 # should be implemented.
                 try:
+                    self.new_registration = self.model.create_from_xml_string(xml_file.read())
+
+                    # Old code
                     if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
                         self.resource_conversion_validate_and_correct_function = None
                     with client.start_session() as s:
@@ -118,6 +127,7 @@ class ResourceRegisterFormView(FormView):
                                     session=s
                                 )
                         s.with_transaction(cb)
+                    # End of old code
                     
                     file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
@@ -146,20 +156,27 @@ class ResourceRegisterFormView(FormView):
                             logger.exception('A DOI has already been issued for this metadata file.')
                             messages.error(request, f'A DOI has already been issued for this metadata file.')
                             return super().post(request, *args, **kwargs)
+                        # Create a blank DOI dict first
+                        doi_dict = initialise_default_doi_kernel_metadata_dict()
+                        add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
+                        # Old code
+                        # add_data_subset_data_to_doi_metadata_kernel_dict_old(self.resource_id, doi_dict)
+                        # Create and register a handle
+                        data_subset_url = create_data_subset_detail_page_url(self.resource_id)
+                        handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url, initial_doi_dict_values=doi_dict)
+                        self.handle_api_client = handle_api_client
+                        self.handle = handle
+                        # Add the handle metadata to the DOI dict
+                        doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                        # Add the DOI dict metadata to the handle
+                        add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
+                        
+                        add_doi_metadata_kernel_to_data_subset(self.resource_id, doi_dict, xml_file.read())
+                        add_handle_to_url_mapping(handle, data_subset_url)
+
+                        # Old code
                         with client.start_session() as s:
                             def cb(s):
-                                # Create a blank DOI dict first
-                                doi_dict = initialise_default_doi_kernel_metadata_dict()
-                                add_data_subset_data_to_doi_metadata_kernel_dict(self.resource_id, doi_dict)
-                                # Create and register a handle
-                                data_subset_url = create_data_subset_detail_page_url(self.resource_id)
-                                handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url, initial_doi_dict_values=doi_dict)
-                                self.handle_api_client = handle_api_client
-                                self.handle = handle
-                                # Add the handle metadata to the DOI dict
-                                doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
-                                # Add the DOI dict metadata to the handle
-                                add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
                                 xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
                                     doi_dict,
                                     self.resource_id,
@@ -173,8 +190,9 @@ class ResourceRegisterFormView(FormView):
                                     self.resource_id,
                                     session=s
                                 )
-                                add_handle_to_url_mapping(handle, data_subset_url, session=s)
+                                add_handle_to_url_mapping_old(handle, data_subset_url, session=s)
                             s.with_transaction(cb)
+                        # End of old code
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
                     logger.exception('Expat error occurred during DOI registration process.')
