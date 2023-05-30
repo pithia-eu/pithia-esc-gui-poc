@@ -29,13 +29,13 @@
         </div>
     </div>
 </div>
-{% if resource_list|length > 0 %}
+{% if not resources %}
+<p>{{ empty_resource_list_text }}</p>
+{% else %}
 {% block resource_list_inner %}
-{% with resource_list=resource_list|dictsort:'name' %}
+{% with resource_list=resources %}
 {% include 'resource_management/resource_management_list_by_type_inner.html' %}
 {% endwith %}
 {% endblock resource_list_inner %}
-{% else %}
-<p>{{ empty_resource_list_text }}</p>
 {% endif %}
 {% endblock content %}
