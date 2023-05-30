@@ -1,24 +1,36 @@
 from django.db import models
 from django.db.models import Q
+from operator import itemgetter
 
 from .core import *
 
-class OrganisationQuerySet(models.QuerySet, AbstractOrganisationDatabaseQueries):
+from utils.url_helpers import get_namespace_and_localid_from_resource_url
+
+class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
+    def _get_by_namespace_and_localid(self, namespace: str, localid: str):
+        return self.get(namespace=namespace, localid=localid)
+
+    def get_by_metadata_server_url(self, metadata_server_url: str):
+        namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(metadata_server_url))
+        return self._get_by_namespace_and_localid(namespace, localid)
+
+
+class OrganisationQuerySet(MetadataQuerySet, AbstractOrganisationDatabaseQueries):
     pass
 
-class IndividualQuerySet(models.QuerySet, AbstractIndividualDatabaseQueries):
+class IndividualQuerySet(MetadataQuerySet, AbstractIndividualDatabaseQueries):
     pass
 
-class ProjectQuerySet(models.QuerySet, AbstractProjectDatabaseQueries):
+class ProjectQuerySet(MetadataQuerySet, AbstractProjectDatabaseQueries):
     pass
 
-class PlatformQuerySet(models.QuerySet, AbstractPlatformDatabaseQueries):
+class PlatformQuerySet(MetadataQuerySet, AbstractPlatformDatabaseQueries):
     pass
 
-class OperationQuerySet(models.QuerySet, AbstractOperationDatabaseQueries):
+class OperationQuerySet(MetadataQuerySet, AbstractOperationDatabaseQueries):
     pass
 
-class InstrumentQuerySet(models.QuerySet, AbstractInstrumentDatabaseQueries):
+class InstrumentQuerySet(MetadataQuerySet, AbstractInstrumentDatabaseQueries):
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         query = Q()
         for url in instrument_type_urls:
@@ -28,7 +40,7 @@ class InstrumentQuerySet(models.QuerySet, AbstractInstrumentDatabaseQueries):
     def for_search(self, instrument_type_urls: list):
         return self.referencing_instrument_type_urls(instrument_type_urls)
 
-class AcquisitionCapabilitiesQuerySet(models.QuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
+class AcquisitionCapabilitiesQuerySet(MetadataQuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
     def referencing_instrument_urls(self, instrument_urls: list):
         query = Q()
         for url in instrument_urls:
@@ -44,7 +56,7 @@ class AcquisitionCapabilitiesQuerySet(models.QuerySet, AbstractAcquisitionCapabi
     def for_search(self, instrument_urls: list, observed_property_urls: list):
         return self.referencing_instrument_urls(instrument_urls) & self.referencing_observed_property_urls(observed_property_urls)
 
-class AcquisitionQuerySet(models.QuerySet, AbstractAcquisitionDatabaseQueries):
+class AcquisitionQuerySet(MetadataQuerySet, AbstractAcquisitionDatabaseQueries):
     def referencing_acquisition_capability_set_urls(self, acquisition_capability_set_urls: list):
         query = Q()
         for url in acquisition_capability_set_urls:
@@ -54,7 +66,7 @@ class AcquisitionQuerySet(models.QuerySet, AbstractAcquisitionDatabaseQueries):
     def for_search(self, acquisition_capability_set_urls: list):
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
 
-class ComputationCapabilitiesQuerySet(models.QuerySet, AbstractComputationCapabilitiesDatabaseQueries):
+class ComputationCapabilitiesQuerySet(MetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
         query = Q()
         for url in computation_type_urls:
@@ -70,7 +82,7 @@ class ComputationCapabilitiesQuerySet(models.QuerySet, AbstractComputationCapabi
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         return self.referencing_computation_type_urls(computation_type_urls) & self.referencing_observed_property_urls(observed_property_urls)
 
-class ComputationQuerySet(models.QuerySet, AbstractComputationDatabaseQueries):
+class ComputationQuerySet(MetadataQuerySet, AbstractComputationDatabaseQueries):
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):
         query = Q()
         for url in computation_capability_set_urls:
@@ -80,7 +92,7 @@ class ComputationQuerySet(models.QuerySet, AbstractComputationDatabaseQueries):
     def for_search(self, computation_capability_set_urls: list):
         return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
 
-class ProcessQuerySet(models.QuerySet, AbstractProcessDatabaseQueries):
+class ProcessQuerySet(MetadataQuerySet, AbstractProcessDatabaseQueries):
     def referencing_acquisition_urls(self, acquisition_urls: list):
         query = Q()
         for url in acquisition_urls:
@@ -96,7 +108,7 @@ class ProcessQuerySet(models.QuerySet, AbstractProcessDatabaseQueries):
     def for_search(self, acquisition_urls: list, computation_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) | self.referencing_computation_urls(computation_urls)
 
-class DataCollectionQuerySet(models.QuerySet, AbstractDataCollectionDatabaseQueries):
+class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQueries):
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         query = Q()
         for url in instrument_type_urls:
@@ -133,11 +145,11 @@ class DataCollectionQuerySet(models.QuerySet, AbstractDataCollectionDatabaseQuer
             | self.referencing_computation_type_urls(computation_type_urls) \
             | self.referencing_feature_of_interest_urls(feature_of_interest_urls)
 
-class CatalogueQuerySet(models.QuerySet, AbstractCatalogueDatabaseQueries):
+class CatalogueQuerySet(MetadataQuerySet, AbstractCatalogueDatabaseQueries):
     pass
 
-class CatalogueEntryQuerySet(models.QuerySet, AbstractCatalogueEntryDatabaseQueries):
+class CatalogueEntryQuerySet(MetadataQuerySet, AbstractCatalogueEntryDatabaseQueries):
     pass
 
-class CatalogueDataSubsetQuerySet(models.QuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
+class CatalogueDataSubsetQuerySet(MetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
     pass
