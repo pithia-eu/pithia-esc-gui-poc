@@ -85,6 +85,22 @@ class ScientificMetadata(models.Model):
     @property
     def converted_xml_correction_function(self):
         return None
+    
+    organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()
+    individuals = IndividualManager.from_queryset(IndividualQuerySet)()
+    projects = ProjectManager.from_queryset(ProjectQuerySet)()
+    platforms = PlatformManager.from_queryset(PlatformQuerySet)()
+    operations = OperationManager.from_queryset(OperationQuerySet)()
+    instruments = InstrumentManager.from_queryset(InstrumentQuerySet)()
+    acquisition_capability_sets = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
+    acquisitions = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
+    computation_capability_sets = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
+    computations = ComputationManager.from_queryset(ComputationQuerySet)()
+    processes = ProcessManager.from_queryset(ProcessQuerySet)()
+    data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
+    catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
+    catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
+    catalogue_data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
 
     def save(self, *args, **kwargs):
         if self.converted_xml_correction_function is not None:
