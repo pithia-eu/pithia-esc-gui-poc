@@ -1,5 +1,22 @@
 from abc import ABC, abstractclassmethod
 
+class AbstractMetadataDatabaseQueries(ABC):
+    @abstractclassmethod
+    def _get_by_namespace_and_localid(self, namespace: str, localid: str):
+        """
+        A metadata registration using the passed in
+        namespace and localID.
+        """
+        pass
+    
+    @abstractclassmethod
+    def get_by_metadata_server_url(self, metadata_server_url: str):
+        """
+        A metadata registration corresponding to the
+        metadata server URL passed in.
+        """
+        pass
+
 class AbstractOrganisationDatabaseQueries(ABC):
     pass
 
