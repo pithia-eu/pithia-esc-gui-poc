@@ -121,7 +121,7 @@ class ScientificMetadata(models.Model):
 
     def save(self, *args, **kwargs):
         if self.converted_xml_correction_function is not None:
-            self.json = self.converted_xml_correction_function(self.scientific_metadata)
+            self.json = self.converted_xml_correction_function(self.json)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
