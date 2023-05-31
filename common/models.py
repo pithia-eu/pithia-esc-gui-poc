@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from .managers import *
 from .querysets import *
@@ -69,6 +70,18 @@ class ScientificMetadata(models.Model):
     @property
     def name(self):
         return self.json['name']
+    
+    @property
+    def description(self):
+        return self.json['description']
+    
+    @property
+    def creation_date_json(self):
+        return self.pithia_identifier['creationDate']
+    
+    @property
+    def last_modification_date_json(self):
+        return self.pithia_identifier['lastModificationDate']
 
     @property
     def type_in_metadata_server_url(self):
@@ -84,6 +97,10 @@ class ScientificMetadata(models.Model):
     
     @property
     def converted_xml_correction_function(self):
+        return None
+    
+    @property
+    def _browse_detail_page_url_name(self):
         return None
     
     organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()
@@ -106,6 +123,9 @@ class ScientificMetadata(models.Model):
         if self.converted_xml_correction_function is not None:
             self.json = self.converted_xml_correction_function(self.scientific_metadata)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
 
 class TechnicalMetadata(models.Model):
     API = 'api'
@@ -144,6 +164,7 @@ class Organisation(ScientificMetadata):
     type_readable = 'organisation'
     type_plural_readable = 'organisations'
     a_or_an = 'an'
+    _browse_detail_page_url_name = 'browse:organisation_detail'
 
     objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
@@ -156,6 +177,7 @@ class Individual(ScientificMetadata):
     type_readable = 'individual'
     type_plural_readable = 'individuals'
     a_or_an = 'an'
+    _browse_detail_page_url_name = 'browse:individual_detail'
 
     objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
@@ -168,6 +190,7 @@ class Project (ScientificMetadata):
     type_readable = 'project'
     type_plural_readable = 'projects'
     a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:project_detail'
 
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
@@ -181,6 +204,7 @@ class Platform(ScientificMetadata):
     type_plural_readable = 'platforms'
     a_or_an = 'a'
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:platform_detail'
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -193,6 +217,7 @@ class Operation(ScientificMetadata):
     type_readable = 'operation'
     type_plural_readable = 'operations'
     a_or_an = 'an'
+    _browse_detail_page_url_name = 'browse:operation_detail'
 
     objects = OperationManager.from_queryset(OperationQuerySet)()
 
@@ -206,6 +231,7 @@ class Instrument(ScientificMetadata):
     type_plural_readable = 'instruments'
     a_or_an = 'an'
     converted_xml_correction_function = correct_instrument_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:instrument_detail'
 
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
@@ -219,6 +245,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     type_plural_readable = 'acquisition capabilities'
     a_or_an = 'an'
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -232,6 +259,7 @@ class Acquisition(ScientificMetadata):
     type_plural_readable = 'acquisitions'
     a_or_an = 'an'
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:acquisition_detail'
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -245,6 +273,7 @@ class ComputationCapabilities(ScientificMetadata):
     type_plural_readable = 'computation capabilities'
     a_or_an = 'a'
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
@@ -258,6 +287,7 @@ class Computation(ScientificMetadata):
     type_plural_readable = 'computations'
     a_or_an = 'a'
     converted_xml_correction_function = correct_computation_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:computation_detail'
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
@@ -271,6 +301,7 @@ class Process(ScientificMetadata):
     type_plural_readable = 'processes'
     a_or_an = 'a'
     converted_xml_correction_function = correct_process_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:process_detail'
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -284,6 +315,7 @@ class DataCollection(ScientificMetadata):
     type_plural_readable = 'data collections'
     a_or_an = 'a'
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
+    _browse_detail_page_url_name = 'browse:data_collection_detail'
 
     @property
     def first_related_party_url(self):
@@ -300,6 +332,7 @@ class Catalogue(ScientificMetadata):
     type_readable = 'catalogue'
     type_plural_readable = 'catalogues'
     a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:catalogue_detail'
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -312,6 +345,7 @@ class CatalogueEntry(ScientificMetadata):
     type_readable = 'catalogue entry'
     type_plural_readable = 'catalogue entries'
     a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
 
     objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
 
@@ -324,6 +358,7 @@ class CatalogueDataSubset(ScientificMetadata):
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
     a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
 
     @property
     def data_collection_url(self):
