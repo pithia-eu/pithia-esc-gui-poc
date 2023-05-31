@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ComputationCapabilities
+    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+The computation process that produces observed properties from its input data.
+Input data may be an acquisition or some other computatation, not listed here yet. TODO: add input specification
+Each newly computed observed property that this computation can produce is defined as its *capability*.
+The list of capabilities is all-inclusive, even though not every computation can engage all capabilities.
+    -->
+    <identifier>
+        <PITHIA_Identifier>
+            <localID>ComputationCapabilities_Test_4</localID>
+            <namespace>test</namespace>
+            <version>1</version>
+            <creationDate>2022-08-16T07:55:00Z</creationDate>
+            <lastModificationDate>2022-08-16T07:55:00Z</lastModificationDate>
+        </PITHIA_Identifier>
+    </identifier>
+    <name>Computation Capabilities Test</name>
+    <description>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </description>
+    <!-- There are no new capabilities here to list, this is manual verification to produce L2V data -->
+    <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V" />
+    <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
+    </qualityAssessment>
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual" />
+    <version />
+    <softwareReference />
+    <processingInput />
+    <algorithm />
+    <childComputation xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test_3"/>
+</ComputationCapabilities>
