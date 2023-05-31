@@ -32,7 +32,7 @@ This is a composite process that includes all data acquisitions and data computa
     </qualityAssessment>
 
     <!-- describe the Composite Process from which components is consisted of. You can put more than one computationComponent and more than one acquisitionComponent -->
-    <acquisitionComponent xlink:href="https://metadata.pithia.eu/resources/2.2/acquisition/lgdc/Acquisition_Ionogram_GIRO"/>
-    <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/lgdc/Computation_IonogramScaling_Automatic_GIRO"/>
+    <acquisitionComponent xlink:href="https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test"/>
+    <computationComponent xlink:href="https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test"/>
     
 </CompositeProcess>

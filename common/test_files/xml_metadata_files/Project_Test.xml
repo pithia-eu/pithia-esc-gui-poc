@@ -88,13 +88,13 @@
     <relatedParty>
         <ResponsiblePartyInfo>
             <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
-            <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/lgdc/Individual_LGDC_Galkin"/> <!-- NB changed namespace from pithia to lgdc -->
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/> <!-- NB changed namespace from pithia to lgdc -->
         </ResponsiblePartyInfo>
     </relatedParty>
     <relatedParty>
         <ResponsiblePartyInfo>
             <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/> 
-            <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC"/>
+            <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"/>
         </ResponsiblePartyInfo>
     </relatedParty>
     <status xlink:href="https://metadata.pithia.eu/ontology/2.2/status/OnGoing"/> 
