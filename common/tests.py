@@ -4,7 +4,8 @@ from pithiaesc.settings import BASE_DIR
 
 from .models import (
     Organisation,
-    AcquisitionCapabilities
+    AcquisitionCapabilities,
+    ComputationCapabilities,
 )
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
@@ -48,3 +49,33 @@ class AcquisitionCapabilitiesQuerySetTestCase(TestCase):
         self.assertTrue(len(acquisition_capability_sets_empty) == 0)
         print('acquisition_capability_sets_empty', acquisition_capability_sets_empty)
         print('Passed AcquisitionCapabilitiesQuerySetTestCase.test_for_search().')
+
+class ComputationCapabilitiesQuerySetTestCase(TestCase):
+    def test_all_computation_capability_set_referers(self):
+        """
+        ComputationCapabilities.objects.all_computation_capability_set_referers()
+        returns a list of Computation Capabilities registrations that reference a
+        given Computation Capabilities registration.
+        """
+        # Register the Computation Capabilities XML files
+        test_computation_capability_set = None
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
+            test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_2.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_3.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4a.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+        
+        # Execute all_computation_capability_set_referers()
+        ccs_referers = ComputationCapabilities.objects.all_computation_capability_set_referers(test_computation_capability_set)
+        print('ccs_referers', [r.localid for r in ccs_referers])
+        print('len(ccs_referers)', len(ccs_referers))
+        self.assertTrue(len(ccs_referers) > 0)

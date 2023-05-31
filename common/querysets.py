@@ -8,11 +8,18 @@ from utils.url_helpers import get_namespace_and_localid_from_resource_url
 
 class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
     def _get_by_namespace_and_localid(self, namespace: str, localid: str):
-        return self.get(namespace=namespace, localid=localid)
+        return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localid=localid)
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
         namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(metadata_server_url))
         return self._get_by_namespace_and_localid(namespace, localid)
+    
+    def get_by_metadata_server_urls(self, metadata_server_urls: list):
+        query = Q()
+        for url in metadata_server_urls:
+            namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(url))
+            query |= Q(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
+        return self.get_by_metadata_server_url(query)
 
 
 class OrganisationQuerySet(MetadataQuerySet, AbstractOrganisationDatabaseQueries):
@@ -78,6 +85,34 @@ class ComputationCapabilitiesQuerySet(MetadataQuerySet, AbstractComputationCapab
         for url in observed_property_urls:
             query |= Q(**{'json__capabilities__processCapability__contains': [{'observedProperty': {'@xlink:href': url}}]})
         return self.filter(query)
+    
+    def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
+        return self.filter(json__childComputation__contains={'@xlink:href': computation_capability_set_url})
+    
+    def _immediate_computation_capability_set_referers(self, computation_capability_set):
+        return self.referencing_computation_capability_set_url(computation_capability_set.metadata_server_url)
+    
+    def all_computation_capability_set_referers(self, computation_capability_set, initial_referers_list=[]):
+        all_referers = initial_referers_list
+        immediate_referers = list(self._immediate_computation_capability_set_referers(computation_capability_set))
+        for ir in immediate_referers:
+            if not any(str(ir.pk) == str(r.pk) for r in all_referers):
+                all_referers.append(ir)
+                all_referers += self.all_computation_capability_set_referers(ir)
+        return list({str(r.pk): r for r in all_referers}.values())
+    
+    def _immediate_child_computations(self, computation_capability_set):
+        child_computation_urls = [child_computation['@xlink:href'] for child_computation in computation_capability_set.json['childComputation']]
+        return self.get_by_metadata_server_urls(child_computation_urls)
+    
+    def all_child_computations(self, computation_capability_set, initial_child_computation_list=[]):
+        all_child_computations = initial_child_computation_list
+        immediate_child_computations = list(self._immediate_child_computations(computation_capability_set))
+        for icc in immediate_child_computations:
+            if not any(icc.pk == cc.pk for cc in all_child_computations):
+                all_child_computations.append(icc)
+                self.all_child_computations(icc, all_child_computations)
+        return all_child_computations
 
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         return self.referencing_computation_type_urls(computation_type_urls) & self.referencing_observed_property_urls(observed_property_urls)
