@@ -17,13 +17,9 @@ from common.models import (
     Process,
 )
 from common.mongodb_models import (
-    CurrentAcquisition,
     CurrentAcquisitionCapability,
-    CurrentComputation,
     CurrentComputationCapability,
-    CurrentDataCollection,
     CurrentInstrument,
-    CurrentProcess
 )
 
 BASE_ONTOLOGY_URL = 'https://metadata.pithia.eu/ontology/2.2'
