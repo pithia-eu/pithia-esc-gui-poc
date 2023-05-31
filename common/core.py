@@ -17,6 +17,14 @@ class AbstractMetadataDatabaseQueries(ABC):
         """
         pass
 
+    @abstractclassmethod
+    def get_by_metadata_server_urls(self, metadata_server_urls: list):
+        """
+        Metadata registrations corresponding to at least
+        one of the URLs from a list of metadata server URLs.
+        """
+        pass
+
 class AbstractOrganisationDatabaseQueries(ABC):
     pass
 
@@ -101,15 +109,58 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
     @abstractclassmethod
     def referencing_computation_type_urls(self, computation_type_urls: list):
         """
-        Computation Capabilities matching at least one URL from a
+        Computation Capabilities referencing at least one URL from a
         list of Computation Type URLs.
+        """
+        pass
+
+    @abstractclassmethod
+    def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
+        """
+        Computation Capabilities referencing the passed in
+        Computation Capabilities URL.
+        """
+        pass
+
+    @abstractclassmethod
+    def _immediate_computation_capability_set_referers(self, computation_capability_set):
+        """
+        Computation Capabilities registrations referencing a given
+        Computation Capabilities registration.
+        """
+        pass
+
+    @abstractclassmethod
+    def all_computation_capability_set_referers(self, computation_capability_set, initial_referers_list=[]):
+        """
+        Computation Capabilities registrations referencing the passed
+        in Computation Capabilities registration, in addition to
+        recursively performing the same process on each referer.
+        """
+        pass
+
+    @abstractclassmethod
+    def _immediate_child_computations(self, computation_capability_set):
+        """
+        Child Computation Capabilities registrations of a given Computation Capabilities
+        registration.
+        """
+        pass
+
+    @abstractclassmethod
+    def all_child_computations(self, computation_capability_set, initial_child_computation_list=[]):
+        """
+        Child computation Capabilities registrations referencing the passed
+        in Computation Capabilities registration, in addition to
+        recursively performing the same process on each child Computation
+        Capabilities registration.
         """
         pass
 
     @abstractclassmethod
     def referencing_observed_property_urls(self, observed_property_urls: list):
         """
-        Computation Capabilities matching at least one URL from a
+        Computation Capabilities referencing at least one URL from a
         list of Observed Property URLs.
         """
         pass
