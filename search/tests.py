@@ -1,13 +1,29 @@
-from django.test import SimpleTestCase
-from search.search_helpers import (
+import os
+from django.test import (
+    SimpleTestCase,
+    TestCase,
+)
+
+from .search_helpers import (
     get_observed_property_urls_by_instrument_types,
     get_observed_property_urls_by_computation_types,
     group_instrument_types_by_observed_property,
     group_computation_types_by_observed_property,
 )
-from search.views import (
+from .services import find_matching_data_collections
+from .views import (
     get_registered_observed_properties,
     get_registered_features_of_interest
+)
+
+from common.models import (
+    Instrument,
+    AcquisitionCapabilities,
+    Acquisition,
+    ComputationCapabilities,
+    Computation,
+    Process,
+    DataCollection,
 )
 from common.mongodb_models import (
     CurrentInstrument,
@@ -18,8 +34,68 @@ from ontology.utils import (
     categorise_observed_property_dict_by_top_level_phenomenons,
     get_nested_phenomenons_in_observed_property,
 )
+from pithiaesc.settings import BASE_DIR
+
+_XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
 # Create your tests here.
+
+class SearchTestCase(TestCase):
+    def setUp(self) -> None:
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
+            Instrument.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
+            AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
+            Acquisition.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
+            Computation.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
+            Process.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+            DataCollection.objects.create_from_xml_string(xml_file.read())
+
+        return super().setUp()
+
+    instrument_type_urls = [
+        'https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder',
+    ]
+    computation_type_urls = [
+        'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+    ]
+    observed_property_urls = [
+        'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+        'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Polarization',
+        'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_DopplerFrequencyShift',
+        'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction',
+    ]
+    feature_of_interest_urls = [
+        'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside',
+        'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region',
+    ]
+    def test_find_matching_data_collections_with_instrument_types(self):
+        """
+        find_matching_data_collections() returns a list of
+        data collections when passing in just instrument
+        types.
+        """
+        # Register XML files
+        # Pass in instrument types
+        data_collections = find_matching_data_collections(feature_of_interest_urls=self.feature_of_interest_urls)
+        # Pass in computation types
+        # Pass in observed properties
+        print('data_collections', data_collections)
+        print('len(data_collections)', len(data_collections))
+        self.assertTrue(len(data_collections) > 0)
+
 
 class ObservedPropertyCategorisationTestCase(SimpleTestCase):
     def test_get_all_phenomenons_of_observed_property(self):
