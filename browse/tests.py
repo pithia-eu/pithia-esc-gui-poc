@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
-from .url_mapping import (
-    convert_ontology_server_urls_to_browse_urls,
-    convert_resource_server_urls_to_browse_urls,
+from .services import (
+    map_ontology_server_urls_to_browse_urls,
+    map_metadata_server_urls_to_browse_urls,
 )
 
 # Create your tests here.
@@ -9,7 +9,7 @@ from .url_mapping import (
 class UrlConversionTestCase(SimpleTestCase):
     def test_ontology_url_conversion(self):
         """
-        convert_ontology_server_urls_to_browse_urls returns a list of dicts
+        map_ontology_server_urls_to_browse_urls returns a list of dicts
         mapping the old url to an ontology term detail page url
         """
         ontology_server_urls = [
@@ -19,7 +19,7 @@ class UrlConversionTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
             'https://metadata.pithia.eu/ontology/2.2/test/test',
         ]
-        converted_ontology_server_urls = convert_ontology_server_urls_to_browse_urls(ontology_server_urls)
+        converted_ontology_server_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
         self.assertNotEqual(converted_ontology_server_urls[0]['original_server_url'], converted_ontology_server_urls[0]['converted_url'])
         self.assertNotEqual(converted_ontology_server_urls[1]['original_server_url'], converted_ontology_server_urls[1]['converted_url'])
         self.assertNotEqual(converted_ontology_server_urls[2]['original_server_url'], converted_ontology_server_urls[2]['converted_url'])
@@ -28,7 +28,7 @@ class UrlConversionTestCase(SimpleTestCase):
 
     def test_resource_url_conversion(self):
         """
-        convert_ontology_server_urls_to_browse_urls returns a list of dicts
+        map_ontology_server_urls_to_browse_urls returns a list of dicts
         mapping the old url to an ontology term detail page url
         """
         resource_server_urls = [
@@ -38,7 +38,7 @@ class UrlConversionTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC',
             'https://metadata.pithia.eu/ontology/2.2/test/test',
         ]
-        converted_resource_server_urls = convert_resource_server_urls_to_browse_urls(resource_server_urls)
+        converted_resource_server_urls = map_metadata_server_urls_to_browse_urls(resource_server_urls)
         self.assertNotEqual(converted_resource_server_urls[0]['original_server_url'], converted_resource_server_urls[0]['converted_url'])
         self.assertNotEqual(converted_resource_server_urls[1]['original_server_url'], converted_resource_server_urls[1]['converted_url'])
         self.assertNotEqual(converted_resource_server_urls[2]['original_server_url'], converted_resource_server_urls[2]['converted_url'])
@@ -54,9 +54,9 @@ class UrlConversionTestCase(SimpleTestCase):
         instrument_resource_url_with_op_mode = 'https://metadata.pithia.eu/resources/2.2/instrument/noa/Instrument_Ionosonde_DPS4D_AT138#scanning'
         catalogue_related_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/DataSubset_HungaTonga-2022-01-15_DIDBaseIonograms'
 
-        converted_data_collection_related_resource_url = convert_resource_server_urls_to_browse_urls([data_collection_related_resource_url])[0]
-        converted_instrument_resource_url_with_op_mode = convert_resource_server_urls_to_browse_urls([instrument_resource_url_with_op_mode])[0]
-        converted_catalogue_related_resource_url = convert_resource_server_urls_to_browse_urls([catalogue_related_resource_url])[0]
+        converted_data_collection_related_resource_url = map_metadata_server_urls_to_browse_urls([data_collection_related_resource_url])[0]
+        converted_instrument_resource_url_with_op_mode = map_metadata_server_urls_to_browse_urls([instrument_resource_url_with_op_mode])[0]
+        converted_catalogue_related_resource_url = map_metadata_server_urls_to_browse_urls([catalogue_related_resource_url])[0]
 
         # converted_data_collection_related_resource_url
         self.assertNotEqual(converted_data_collection_related_resource_url['original_server_url'], '')
