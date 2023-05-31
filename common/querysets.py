@@ -125,13 +125,13 @@ class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQue
         query = Q()
         for url in process_urls:
             query |= Q(**{'json__om:procedure__@xlink:href': url})
-        self.filter(query)
+        return self.filter(query)
 
     def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
         query = Q()
         for url in feature_of_interest_urls:
             query |= Q(**{'json__om:featureOfInterest__FeatureOfInterest__namedRegion__contains': [{'@xlink:href': url}]})
-        self.filter(query)
+        return self.filter(query)
 
     def for_search(
         self,
