@@ -35,24 +35,28 @@ from validation.errors import (
 logger = logging.getLogger(__name__)
 
 class XMLMetadataFile:
-    def __init__(self, file) -> None:
-        file.seek(0)
-        self._file_contents = file.read()
-        file.seek(0)
-        self._parsed_file = etree.parse(file)
+    def __init__(self, xml_file) -> None:
+        xml_file.seek(0)
+        self._xml_file_contents = xml_file.read()
+        xml_file.seek(0)
+        self._parsed_xml_file = self._parse_xml_file(xml_file)
 
-    @classmethod
-    def from_string(cls, file_string) -> None:
-        cls._file_contents = file_string
-        cls._parsed_file = etree.fromstring(file_string)
+    def _parse_xml_file(self, xml_file):
+        return etree.parse(xml_file)
+
+    def _parse_xml_string(self, xml_string: str):
+        try:
+            return etree.fromstring(xml_string)
+        except ValueError:
+            return etree.fromstring(xml_string.encode('utf-8'))
 
     @property
     def contents(self):
-        return self._file_contents
+        return self._xml_file_contents
     
     @property
     def contents_with_spoofed_doi(self):
-        parsed_file_copy = self._parsed_file.copy()
+        parsed_file_copy = self._parse_xml_string(self._xml_file_contents)
         valid_doi_name = '10.000/000'
         doi_name_element = parsed_file_copy.find('.//{http://www.doi.org/2010/DOISchema}referentDoiName')
         doi_registration_agency_name_element = parsed_file_copy.find('.//{http://www.doi.org/2010/DOISchema}registrationAgencyDoiName')
@@ -60,18 +64,23 @@ class XMLMetadataFile:
             doi_name_element.text = valid_doi_name
         if doi_registration_agency_name_element is not None:
             doi_registration_agency_name_element.text = valid_doi_name
-        return etree.tostring(parsed_file_copy)
+        contents_with_spoofed_doi = etree.tostring(parsed_file_copy).decode()
+        try:
+            contents_with_spoofed_doi = contents_with_spoofed_doi.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
+        return contents_with_spoofed_doi
 
     @property
     def root_element_name(self):
-        root = self._parsed_file.getroot()
+        root = self._parsed_xml_file.getroot()
         # Get the root tag text without the namespace
         root_localname = etree.QName(root).localname
         return root_localname
     
     @property
     def schema_url(self):
-        root = self._parsed_file.getroot()
+        root = self._parsed_xml_file.getroot()
         urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
         urls_with_xsi_ns = urls_with_xsi_ns[0].split()
         schema_url = urls_with_xsi_ns[0]
@@ -115,7 +124,7 @@ class MetadataFileXSDValidator:
         schema_response = get(xml_file_schema_url)
         schema = schema_response.text.encode()
         if xml_file.root_element_name == CatalogueDataSubset.root_element_name:
-            return self._validate_data_subset_file_against_schema(xml_file.contents, schema)
+            return self._validate_data_subset_file_against_schema(xml_file.contents_with_spoofed_doi, schema)
         return self._validate_xml_file_string_against_schema(xml_file.contents, schema)
 
 
