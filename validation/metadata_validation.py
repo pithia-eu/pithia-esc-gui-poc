@@ -213,6 +213,29 @@ def validate_and_get_validation_details_of_xml_file(
     existing_resource_id='',
     spoof_doi=False
 ):
+    """
+    Validates an XML metadata file for:
+    * Syntax-correctness
+    * Root element name-correctness
+    * XSD-compliance
+    * Matching file name (without the extension)
+      with the metadata's localID
+    * Situational checks
+    * Corresponding e-Science Centre registrations
+      to the metadata server URLs that the submitted
+      file uses.
+    * Corresponding ontology terms to the ontology
+      server URLs that the file uses.
+    
+    Situational checks:
+    * If registering the file, a check is done on
+      whether the file has been registered before.
+
+    * If submitting the file for an update, a check
+      is done that the submitted file's namespace
+      and localID is the same as the file registered
+      with the e-Science Centre.
+    """
     validation_details = {
         'error': None,
         'warnings': [],
