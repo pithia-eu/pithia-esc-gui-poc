@@ -208,17 +208,7 @@ def find_matching_data_collections(feature_of_interest_urls: list = [], instrume
         computation_type_urls,
         observed_property_urls
     )
-    
-    # cc_set_urls_referencing_other_cc_set_urls = []
-    # for cc_set in computation_capability_sets:
-    #     cc_set_urls_referencing_other_cc_set_urls.extend(list(get_cc_set_urls_referencing_another_cc_set_url(create_metadata_url(BASE_COMPUTATION_CAPABILITIES_URL, cc_set), set())))
-    #     cc_set_urls_referencing_other_cc_set_urls = list(set(cc_set_urls_referencing_other_cc_set_urls))
-
-    # computation_capability_set_urls = [create_metadata_url(BASE_COMPUTATION_CAPABILITIES_URL, cc) for cc in computation_capability_sets]
-    # computation_capability_set_urls.extend(cc_set_urls_referencing_other_cc_set_urls)
-    # computation_capability_set_urls = list(set(computation_capability_set_urls))
     computation_capability_set_urls = [cc.metadata_server_url for cc in computation_capability_sets]
-    print('computation_capability_set_urls', computation_capability_set_urls)
 
 
     # Fetch Acquisitions/Computations
