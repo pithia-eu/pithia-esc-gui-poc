@@ -7,7 +7,7 @@ from register.register import register_metadata_xml_file
 from register.xml_conversion_checks_and_fixes import correct_instrument_xml_converted_to_dict
 from validation.metadata_validation import (
     validate_xml_against_own_schema,
-    parse_xml_file,
+    validate_and_parse_xml_file,
     validate_and_get_validation_details_of_xml_file,
     validate_xml_root_element_name_equals_expected_name,
     validate_xml_file_name,
@@ -143,27 +143,27 @@ class InvalidSyntaxValidationTestCase:
     @tag('fast', 'syntax')
     def test_file_with_invalid_syntax(self):
         """
-        The file causes parse_xml_file() to raise an exception
+        The file causes validate_and_parse_xml_file() to raise an exception
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as invalid_xml_file:
             try:
-                parse_xml_file(invalid_xml_file)
+                validate_and_parse_xml_file(invalid_xml_file)
             except:
                 print('Exception raised, as expected!')
-            self.assertRaises(XMLSyntaxError, parse_xml_file, invalid_xml_file)
+            self.assertRaises(XMLSyntaxError, validate_and_parse_xml_file, invalid_xml_file)
 
 class SyntaxValidationTestCase:
     @tag('fast', 'syntax')
     def test_file_with_valid_syntax(self):
         """
-        The file does not cause parse_xml_file() to raise an exception
+        The file does not cause validate_and_parse_xml_file() to raise an exception
         """
         try:
             with open(self.xml_file_path) as xml_file:
-                parse_xml_file(xml_file)
+                validate_and_parse_xml_file(xml_file)
                 print(f'Passed syntax validation for {Path(xml_file.name).name}.')
         except BaseException:
-            self.fail('parse_xml_file() raised an exception unexpectedly!')
+            self.fail('validate_and_parse_xml_file() raised an exception unexpectedly!')
 
 class RootElementValidationTestCase:
     root_element_name = ''

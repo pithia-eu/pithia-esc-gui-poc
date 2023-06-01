@@ -49,7 +49,7 @@ CATALOGUE_ENTRY_XML_ROOT_TAG_NAME = 'CatalogueEntry'
 CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME = 'DataSubset'
 
 # Syntax validation
-def parse_xml_file(xml_file):
+def validate_and_parse_xml_file(xml_file):
     """
     Parses an XML file, which also verifies whether the file's syntax is valid or not.
     """
@@ -61,7 +61,7 @@ def validate_xml_root_element_name_equals_expected_name(xml_file, expected_root_
     """
     Compares an XML file's root element name against a given expected root element name.
     """
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     root = xml_file_parsed.getroot()
     root_localname = etree.QName(root).localname # Get the root tag text without the namespace
     if root_localname != expected_root_localname:
@@ -117,7 +117,7 @@ def validate_xml_against_own_schema(xml_file):
     fetching the schema from the URL specified at the
     xsi:schemaLocation attribute within the XML file.
     """
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
     validate_xml_against_schema_at_url(xml_file, schema_url)
 
@@ -127,7 +127,7 @@ def validate_xml_file_name(xml_file):
     Returns whether the name for an XML file matches
     with the innerText of its <localID> element.
     """
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     # There should be only one <localID> tag in the tree
     localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
     xml_file_name_with_no_extension = Path(xml_file.name).stem
@@ -143,7 +143,7 @@ def validate_xml_file_is_unregistered(mongodb_model, xml_file):
     Returns whether there is pre-registered metadata with the same localID and namespace
     as the metadata that the user would like to register.
     """
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
     namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
     num_times_uploaded_before = mongodb_model.count_documents({
@@ -166,7 +166,7 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
     Returns whether the localID and namespace of the updated metadata
     is the same as the current version of the metadata.
     """
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
     namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
     resource_to_update = mongodb_model.find_one({
@@ -180,7 +180,7 @@ def is_updated_xml_file_localid_matching_with_current_resource_localid(
 
 # Operational mode ID modification check
 def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id, mongodb_model=CurrentInstrument):
-    xml_file_parsed = parse_xml_file(xml_file)
+    xml_file_parsed = validate_and_parse_xml_file(xml_file)
     # Operational mode IDs are the only values enclosed in <id></id> tags
     operational_mode_ids_of_updated_xml = list(
         map(
@@ -243,7 +243,7 @@ def validate_and_get_validation_details_of_xml_file(
 
     try:
         # Syntax validation
-        xml_file_parsed = parse_xml_file(xml_file)
+        xml_file_parsed = validate_and_parse_xml_file(xml_file)
 
         # Root element name validation
         validate_xml_root_element_name_equals_expected_name(xml_file, expected_root_localname)
