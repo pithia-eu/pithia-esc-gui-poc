@@ -27,7 +27,7 @@ The list of capabilities is all-inclusive, even though not every computation can
     <qualityAssessment>
         <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
     </qualityAssessment>
-    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual" />
+    <type xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/Test" />
     <version />
     <softwareReference />
     <processingInput />
