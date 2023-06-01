@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Q
 from operator import itemgetter
 
-from .core import *
+from .abstract_classes import *
 
 from utils.url_helpers import get_namespace_and_localid_from_resource_url
 
