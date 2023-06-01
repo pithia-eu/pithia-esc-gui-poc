@@ -1,5 +1,4 @@
 import json
-import traceback
 from urllib.error import HTTPError
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.http import require_POST
