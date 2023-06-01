@@ -94,9 +94,6 @@ class ResourceUpdateFormView(FormView):
     resource_revision_mongodb_model = None
 
     # Template variables
-    a_or_an = 'a'
-    resource_type = ''
-    resource_type_plural = ''
     resource_update_page_url_name = ''
     validation_url = ''
     resource_to_update_name = '' # Set in dispatch() function
@@ -110,7 +107,7 @@ class ResourceUpdateFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Update {self.a_or_an} {self.resource_type.title()}'
+        context['title'] = f'Update {self.model.a_or_an} {self.model.type_readable.title()}'
         context['form'] = self.form_class
         context['resource_id'] = self.resource_id
         context['resource_to_update_name'] = self.resource_to_update_name
@@ -119,7 +116,7 @@ class ResourceUpdateFormView(FormView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.resource_type_plural}'
+        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.model.type_plural_readable}'
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
@@ -191,9 +188,6 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
 
-    a_or_an = 'an'
-    resource_type = 'Organisation'
-    resource_type_plural = 'Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_update_page_url_name = 'update:organisation'
     validation_url = reverse_lazy('validation:organisation')
@@ -209,9 +203,6 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
 
-    a_or_an = 'an'
-    resource_type = 'Individual'
-    resource_type_plural = 'Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_update_page_url_name = 'update:individual'
     validation_url = reverse_lazy('validation:individual')
@@ -226,9 +217,6 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
 
-    a_or_an = 'a'
-    resource_type = 'Project'
-    resource_type_plural = 'Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_update_page_url_name = 'update:project'
     validation_url = reverse_lazy('validation:project')
@@ -243,9 +231,6 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
 
-    a_or_an = 'a'
-    resource_type = 'Platform'
-    resource_type_plural = 'Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_update_page_url_name = 'update:platform'
     validation_url = reverse_lazy('validation:platform')
@@ -260,9 +245,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
 
-    a_or_an = 'an'
-    resource_type = 'Operation'
-    resource_type_plural = 'Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_update_page_url_name = 'update:operation'
     validation_url = reverse_lazy('validation:operation')
@@ -277,9 +259,6 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
 
-    a_or_an = 'an'
-    resource_type = 'Instrument'
-    resource_type_plural = 'Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_update_page_url_name = 'update:instrument'
     validation_url = reverse_lazy('validation:instrument')
@@ -298,8 +277,6 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
-    resource_type = 'Acquisition Capabilities'
-    resource_type_plural = 'Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_update_page_url_name = 'update:acquisition_capability_set'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
@@ -307,7 +284,7 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Update {self.resource_type.title()}'
+        context['title'] = f'Update {self.model.type_readable.title()}'
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -323,9 +300,6 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
 
-    a_or_an = 'an'
-    resource_type = 'Acquisition'
-    resource_type_plural = 'Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_update_page_url_name = 'update:acquisition'
     validation_url = reverse_lazy('validation:acquisition')
@@ -344,8 +318,6 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
 
-    resource_type = 'Computation Capabilities'
-    resource_type_plural = 'Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_update_page_url_name = 'update:computation_capability_set'
     validation_url = reverse_lazy('validation:computation_capability_set')
@@ -353,7 +325,7 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Update {self.resource_type.title()}'
+        context['title'] = f'Update {self.model.type_readable.title()}'
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -369,9 +341,6 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
 
-    a_or_an = 'a'
-    resource_type = 'Computation'
-    resource_type_plural = 'Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_update_page_url_name = 'update:computation'
     validation_url = reverse_lazy('validation:computation')
@@ -390,9 +359,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
 
-    a_or_an = 'a'
-    resource_type = 'Process'
-    resource_type_plural = 'Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
@@ -413,9 +379,6 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     template_name = 'update/file_upload_data_collection.html'
     form_class = UploadUpdatedDataCollectionFileForm
 
-    a_or_an = 'a'
-    resource_type = 'Data Collection'
-    resource_type_plural = 'Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
@@ -509,9 +472,6 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
 
-    a_or_an = 'a'
-    resource_type = 'Catalogue'
-    resource_type_plural = 'Catalogues'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_update_page_url_name = 'update:catalogue'
     validation_url = reverse_lazy('validation:catalogue')
@@ -532,9 +492,6 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
 
-    a_or_an = 'a'
-    resource_type = 'Catalogue Entry'
-    resource_type_plural = 'Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_update_page_url_name = 'update:catalogue_entry'
     validation_url = reverse_lazy('validation:catalogue_entry')
@@ -555,9 +512,6 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
-    a_or_an = 'a'
-    resource_type = 'Catalogue Data Subset'
-    resource_type_plural = 'Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
