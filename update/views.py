@@ -89,6 +89,7 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 class ResourceUpdateFormView(FormView):
     # Registration variables
+    resource = None
     resource_id = ''
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
@@ -96,7 +97,7 @@ class ResourceUpdateFormView(FormView):
     # Template variables
     resource_update_page_url_name = ''
     validation_url = ''
-    resource_to_update_name = '' # Set in dispatch() function
+    # resource_to_update_name = '' # Set in dispatch() function
     resource_management_list_page_breadcrumb_url_name = ''
 
     # Class variables
@@ -109,8 +110,9 @@ class ResourceUpdateFormView(FormView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Update {self.model.a_or_an} {self.model.type_readable.title()}'
         context['form'] = self.form_class
+        context['resource'] = self.resource
         context['resource_id'] = self.resource_id
-        context['resource_to_update_name'] = self.resource_to_update_name
+        # context['resource_to_update_name'] = self.resource_to_update_name
         context['validation_url'] = self.validation_url
         context['post_url'] = reverse_lazy(self.resource_update_page_url_name, args=[self.resource_id])
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
@@ -174,13 +176,14 @@ class ResourceUpdateFormView(FormView):
         return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        resource_to_update = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-        resource_to_update_name = resource_to_update['identifier']['PITHIA_Identifier']['localID']
-        if 'name' in resource_to_update:
-            resource_to_update_name = resource_to_update['name']
-        self.resource_to_update_name = resource_to_update_name
+        self.resource = self.model.objects.get(pk=self.resource_id)
+        # resource_to_update = self.resource_mongodb_model.find_one({
+        #     '_id': ObjectId(self.resource_id)
+        # })
+        # resource_to_update_name = resource_to_update['identifier']['PITHIA_Identifier']['localID']
+        # if 'name' in resource_to_update:
+        #     resource_to_update_name = resource_to_update['name']
+        # self.resource_to_update_name = resource_to_update_name
         return super().get(request, *args, **kwargs)
 
 class OrganisationUpdateFormView(ResourceUpdateFormView):
