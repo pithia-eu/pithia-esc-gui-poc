@@ -347,6 +347,14 @@ class CatalogueEntry(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
 
+    @property
+    def name(self):
+        return self.json['entryName']
+
+    @property
+    def description(self):
+        return self.json['entryDescription']
+
     objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
 
     class Meta:
@@ -360,6 +368,14 @@ class CatalogueDataSubset(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
 
+    @property
+    def name(self):
+        return self.json['dataSubsetName']
+
+    @property
+    def description(self):
+        return self.json['dataSubsetDescription']
+    
     @property
     def data_collection_url(self):
         return self.json['dataCollection']['@xlink:href']
