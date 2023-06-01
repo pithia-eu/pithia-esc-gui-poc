@@ -51,6 +51,7 @@ class ScientificMetadata(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # JSON field properties
     @property
     def identifier(self):
         return self.json['identifier']
@@ -83,6 +84,7 @@ class ScientificMetadata(models.Model):
     def last_modification_date_json(self):
         return self.pithia_identifier['lastModificationDate']
 
+    # Helper properties
     @property
     def type_in_metadata_server_url(self):
         pass
@@ -101,6 +103,10 @@ class ScientificMetadata(models.Model):
     
     @property
     def _browse_detail_page_url_name(self):
+        return None
+    
+    @property
+    def root_element_name(self):
         return None
     
     organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()
@@ -165,6 +171,7 @@ class Organisation(ScientificMetadata):
     type_plural_readable = 'organisations'
     a_or_an = 'an'
     _browse_detail_page_url_name = 'browse:organisation_detail'
+    root_element_name = 'Organisation'
 
     objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
@@ -178,6 +185,7 @@ class Individual(ScientificMetadata):
     type_plural_readable = 'individuals'
     a_or_an = 'an'
     _browse_detail_page_url_name = 'browse:individual_detail'
+    root_element_name = 'Individual'
 
     objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
@@ -191,6 +199,7 @@ class Project (ScientificMetadata):
     type_plural_readable = 'projects'
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:project_detail'
+    root_element_name = 'Project'
 
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
@@ -205,6 +214,7 @@ class Platform(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:platform_detail'
+    root_element_name = 'Platform'
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -218,6 +228,7 @@ class Operation(ScientificMetadata):
     type_plural_readable = 'operations'
     a_or_an = 'an'
     _browse_detail_page_url_name = 'browse:operation_detail'
+    root_element_name = 'Operation'
 
     objects = OperationManager.from_queryset(OperationQuerySet)()
 
@@ -232,6 +243,7 @@ class Instrument(ScientificMetadata):
     a_or_an = 'an'
     converted_xml_correction_function = correct_instrument_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:instrument_detail'
+    root_element_name = 'Instrument'
 
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
@@ -246,6 +258,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     a_or_an = 'an'
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
+    root_element_name = 'AcquisitionCapabilities'
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -260,6 +273,7 @@ class Acquisition(ScientificMetadata):
     a_or_an = 'an'
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_detail'
+    root_element_name = 'Acquisition'
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -274,6 +288,7 @@ class ComputationCapabilities(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
+    root_element_name = 'ComputationCapabilities'
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
@@ -288,6 +303,7 @@ class Computation(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_computation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_detail'
+    root_element_name = 'Computation'
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
@@ -302,6 +318,7 @@ class Process(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
+    root_element_name = 'Process'
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -316,6 +333,7 @@ class DataCollection(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:data_collection_detail'
+    root_element_name = 'DataCollection'
 
     @property
     def first_related_party_url(self):
@@ -333,6 +351,7 @@ class Catalogue(ScientificMetadata):
     type_plural_readable = 'catalogues'
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
+    root_element_name = 'Catalogue'
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -346,6 +365,7 @@ class CatalogueEntry(ScientificMetadata):
     type_plural_readable = 'catalogue entries'
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
+    root_element_name = 'CatalogueEntry'
 
     @property
     def name(self):
@@ -367,6 +387,7 @@ class CatalogueDataSubset(ScientificMetadata):
     type_plural_readable = 'catalogue data subsets'
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    root_element_name = 'DataSubset'
 
     @property
     def name(self):
