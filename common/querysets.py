@@ -115,7 +115,22 @@ class ComputationCapabilitiesQuerySet(MetadataQuerySet, AbstractComputationCapab
         return all_child_computations
 
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
-        return self.referencing_computation_type_urls(computation_type_urls) & self.referencing_observed_property_urls(observed_property_urls)
+        # Find Computation Capabilities registrations by Computation Types
+        # and Observed Properties
+        referencing_computation_type_urls_and_observed_property_urls = list(self.referencing_computation_type_urls(computation_type_urls) & self.referencing_observed_property_urls(observed_property_urls))
+
+        # Find the Computation Capabilities referencing to the found
+        # registrations.
+        related_computation_capability_sets = []
+        for cc in referencing_computation_type_urls_and_observed_property_urls:
+            related_computation_capability_sets += self.all_computation_capability_set_referers(cc, initial_referers_list=[])
+
+        # Merge all results into a list of primary keys
+        merged_list = referencing_computation_type_urls_and_observed_property_urls + related_computation_capability_sets
+        merged_list = list(set(cc.pk for cc in merged_list))
+
+        # Convert everything back to QuerySets
+        return self.filter(pk__in=merged_list)
 
 class ComputationQuerySet(MetadataQuerySet, AbstractComputationDatabaseQueries):
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):

@@ -79,3 +79,42 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
         print('ccs_referers', [r.localid for r in ccs_referers])
         print('len(ccs_referers)', len(ccs_referers))
         self.assertTrue(len(ccs_referers) > 0)
+
+    def test_for_search(self):
+        """
+        ComputationCapabilities.objects.for_search() returns
+        a QuerySet of Computation Capabilities registrations.
+        """
+        computation_type_urls = [
+            'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+        ]
+        computation_type_urls_2 = [
+            'https://metadata.pithia.eu/ontology/2.2/computationType/Test',
+        ]
+
+        # Register the Computation Capabilities XML files
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_2.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_3.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4a.xml')) as xml_file:
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+
+        search_results = ComputationCapabilities.objects.for_search(computation_type_urls, [])
+        print('search_results', search_results)
+        print('len(search_results)', len(search_results))
+        self.assertTrue(len(search_results) > 0)
+
+        print('Start of test 2')
+        search_results_2 = ComputationCapabilities.objects.for_search(computation_type_urls_2, [])
+        print('search_results_2', [sr.localid for sr in search_results_2])
+        print('len(search_results_2)', len(search_results_2))
+        self.assertTrue(len(search_results_2) > 0)
