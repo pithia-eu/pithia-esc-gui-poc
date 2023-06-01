@@ -1,15 +1,16 @@
 import os
-from .base_tests import *
+
 from django.test import SimpleTestCase
 from lxml import etree
-from pithiaesc.settings import BASE_DIR
-from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
-from validation.metadata_validation import (
+
+from .base_tests import *
+from .metadata_validation import (
     validate_and_parse_xml_file,
     get_schema_location_url_from_parsed_xml_file,
     validate_xml_with_doi_against_schema_at_url,
 )
-from validation.url_validation import (
+from .services import XMLMetadataFile
+from .url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml,
@@ -18,7 +19,11 @@ from validation.url_validation import (
     validate_ontology_term_url,
 )
 
+from pithiaesc.settings import BASE_DIR
+from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
+
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
+_XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
 # Create your tests here.
 # The SimpleTestCase class is used to disable the automatic SQL database
@@ -387,3 +392,10 @@ class DoiValidationTestCase(SimpleTestCase):
             parsed_xml_file = validate_and_parse_xml_file(xml_file)
             schema_url = get_schema_location_url_from_parsed_xml_file(parsed_xml_file)
             validate_xml_with_doi_against_schema_at_url(xml_file, schema_url)
+
+class XMLMetadataFileTestCase(SimpleTestCase):
+    def test_contents_with_spoofed_doi(self):
+        xml_file = None
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
+            xml_file = XMLMetadataFile(test_file)
+        print('xml_file.contents_with_spoofed_doi', xml_file.contents_with_spoofed_doi)
