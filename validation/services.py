@@ -25,7 +25,6 @@ from .url_validation import (
 
 from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
 from common.models import (
-    CatalogueDataSubset,
     Instrument,
     ScientificMetadata,
 )
@@ -39,12 +38,15 @@ class XMLMetadataFile:
     accessing certain properties and hides
     complexity behind functions.
     """
-    def __init__(self, xml_file) -> None:
-        self._xml_file_name = xml_file.name
+    def __init__(self, xml_file_string, xml_file_name) -> None:
+        self._xml_file_name = xml_file_name
+        self._xml_file_contents = xml_file_string
+        self._parsed_xml_file = self._parse_xml_string(self._xml_file_contents)
+
+    @classmethod
+    def from_file(cls, xml_file):
         xml_file.seek(0)
-        self._xml_file_contents = xml_file.read()
-        xml_file.seek(0)
-        self._parsed_xml_file = self._parse_xml_file(xml_file)
+        cls(xml_file.read(), xml_file.name)
 
     def _parse_xml_file(self, xml_file):
         return etree.parse(xml_file)
@@ -92,17 +94,21 @@ class XMLMetadataFile:
         return root_localname
 
 class DataSubsetXMLMetadataFile(XMLMetadataFile):
+    def __init__(self, xml_file_string, xml_file_name) -> None:
+        xml_file_string = self._xml_string_with_spoofed_doi(xml_file_string)
+        super().__init__(xml_file_string, xml_file_name)
+
     @property
-    def contents_with_spoofed_doi(self):
-        parsed_file_copy = self._parse_xml_string(self._xml_file_contents)
+    def _xml_string_with_spoofed_doi(self, xml_string):
+        parsed_xml_string = self._parse_xml_string(xml_string)
         valid_doi_name = '10.000/000'
-        doi_name_element = parsed_file_copy.find('.//{http://www.doi.org/2010/DOISchema}referentDoiName')
-        doi_registration_agency_name_element = parsed_file_copy.find('.//{http://www.doi.org/2010/DOISchema}registrationAgencyDoiName')
+        doi_name_element = parsed_xml_string.find('.//{http://www.doi.org/2010/DOISchema}referentDoiName')
+        doi_registration_agency_name_element = parsed_xml_string.find('.//{http://www.doi.org/2010/DOISchema}registrationAgencyDoiName')
         if doi_name_element is not None:
             doi_name_element.text = valid_doi_name
         if doi_registration_agency_name_element is not None:
             doi_registration_agency_name_element.text = valid_doi_name
-        contents_with_spoofed_doi = etree.tostring(parsed_file_copy).decode()
+        contents_with_spoofed_doi = etree.tostring(parsed_xml_string).decode()
         try:
             contents_with_spoofed_doi = contents_with_spoofed_doi.decode()
         except (UnicodeDecodeError, AttributeError):
@@ -154,8 +160,6 @@ class MetadataFileXSDValidator:
         xml_file_schema_url = xml_file.schema_url
         schema_response = get(xml_file_schema_url)
         schema = schema_response.text.encode()
-        if xml_file.root_element_name == CatalogueDataSubset.root_element_name:
-            return cls._validate_data_subset_file_against_schema(xml_file.contents_with_spoofed_doi, schema)
         return cls._validate_xml_file_string_against_schema(xml_file.contents, schema)
 
 
