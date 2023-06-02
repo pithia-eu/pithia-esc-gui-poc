@@ -68,7 +68,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
     expected_root_tag_name = ''
 
     def prepare_xml_metadata_file(xml_file):
-        return XMLMetadataFile(xml_file)
+        return XMLMetadataFile.from_file(xml_file)
 
     def post(self, request, *args, **kwargs):
         # Extract content from request
@@ -179,7 +179,7 @@ class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidat
     # expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
 
     def prepare_xml_metadata_file(xml_file):
-        return InstrumentXMLMetadataFile(xml_file)
+        return InstrumentXMLMetadataFile.from_file(xml_file)
 
 class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     model = models.AcquisitionCapabilities
@@ -239,7 +239,7 @@ class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFi
     # expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
 
     def prepare_xml_metadata_file(xml_file):
-        return DataSubsetXMLMetadataFile(xml_file)
+        return DataSubsetXMLMetadataFile.from_file(xml_file)
 
 
 @require_POST
