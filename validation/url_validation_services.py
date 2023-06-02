@@ -20,10 +20,6 @@ from common.models import (
     Instrument,
     ScientificMetadata,
 )
-from common.helpers import (
-    get_mongodb_model_by_resource_type_from_resource_url,
-    get_mongodb_model_from_catalogue_related_resource_url,
-)
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
