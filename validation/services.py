@@ -245,12 +245,9 @@ class MetadataFileOntologyURLReferencesValidator:
 
 def validate_xml_file_and_return_summary(
     xml_file,
-    expected_root_localname,
-    mongodb_model,
-    check_file_is_unregistered=False,
-    check_xml_file_localid_matches_existing_resource_localid=False,
-    existing_resource_id='',
-    spoof_doi=False
+    model: ScientificMetadata,
+    validate_for_registration=False,
+    metadata_id_to_validate_for_update=''
 ):
     """
     Validates an XML metadata file for:
