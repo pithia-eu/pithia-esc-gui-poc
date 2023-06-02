@@ -24,6 +24,10 @@ from .url_validation import (
     get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
 )
 
+from common.constants import (
+    PITHIA_METADATA_SERVER_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
+)
 from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
 from common.models import (
     Instrument,
@@ -66,11 +70,15 @@ class XMLMetadataFile:
     @property
     def localid(self):
         # There should be only one <localID> tag in the tree
-        return self._parse_xml_file.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
+        return self._parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
 
     @property
     def namespace(self):
-        return self._parse_xml_file.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
+        return self._parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
+    
+    @property
+    def ontology_urls(self):
+        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
 
     # Helper properties
     @property
@@ -117,7 +125,7 @@ class InstrumentXMLMetadataFile(XMLMetadataFile):
     @property
     def operational_mode_ids(self):
         # Operational mode IDs are the only values enclosed in <id></id> tags
-        return [om_element.text for om_element in self._parse_xml_file.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')]
+        return [om_element.text for om_element in self._parsed_xml.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')]
 
 
 class MetadataRootElementNameValidator:
@@ -196,6 +204,12 @@ class MetadataFileUpdateValidator:
         current_instrument_id,
         model: Instrument
     ):
+        """
+        Checks whether each Operational Mode ID present in
+        the Instrument that is currently registered is also
+        within the updated XML metadata file for that
+        Instrument.
+        """
         operational_mode_ids_of_updated_xml = xml_file.operational_mode_ids
         instrument_to_update = model.objects.get(pk=current_instrument_id)
         operational_mode_ids_of_current_xml = instrument_to_update.operational_mode_ids
