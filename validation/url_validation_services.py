@@ -60,7 +60,7 @@ class MetadataFileOntologyURLReferencesValidator:
         return False
     
     @classmethod
-    def is_each_url_valid(cls, xml_file: XMLMetadataFile) -> Optional(list[str]):
+    def is_each_ontology_url_valid(cls, xml_file: XMLMetadataFile) -> Optional(list[str]):
         """
         Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
@@ -136,8 +136,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
         return validation_summary_for_metadata_server_url
 
-    @classmethod
-    def is_each_url_valid(cls, xml_file: XMLMetadataFile) -> Optional(list[str]):
+    def _is_each_resource_url_valid(self, resource_urls: list[str]) -> dict:
         """
         Checks that each metadata server URL is well-formed and that each URL
         corresponds with a metadata registration in the e-Science Centre.
@@ -147,7 +146,6 @@ class MetadataFileMetadataURLReferencesValidator:
             'urls_pointing_to_unregistered_resources': [],
             'types_of_missing_resources': [],
         }
-        resource_urls = xml_file.metadata_urls
         for resource_url in resource_urls:
             is_structure_valid, is_pointing_to_registered_resource, type_of_missing_resource = itemgetter('is_structure_valid', 'is_pointing_to_registered_resource', 'type_of_missing_resource')(cls._is_resource_url_valid(resource_url))
             if not is_structure_valid:
@@ -157,37 +155,32 @@ class MetadataFileMetadataURLReferencesValidator:
                 invalid_urls_dict['types_of_missing_resources'].append(type_of_missing_resource)
                 invalid_urls_dict['types_of_missing_resources'] = list(set(invalid_urls_dict['types_of_missing_resources']))
 
-        if any(len(l) > 0 for l in invalid_urls_dict.values()):
-            return invalid_urls_dict
+        return invalid_urls_dict
 
     @classmethod
-    def is_each_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> Optional(list[str]):
+    def is_each_resource_url_valid(cls, xml_file: XMLMetadataFile) -> dict:
+        """
+        Checks that each metadata server URL is valid by
+        meeting a specified set of criteria.
+        """
+        resource_urls = xml_file.metadata_urls
+        return cls._is_each_resource_url_valid(resource_urls)
+
+    @classmethod
+    def is_each_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
         """
         Checks that each operational mode URL is well-formed and that
         each URL corresponds with a metadata registration in the
         e-Science Centre.
         """
-        invalid_urls_dict = {
-            'urls_with_incorrect_structure': [],
-            'urls_pointing_to_unregistered_resources': [],
-            'urls_pointing_to_registered_resources_with_missing_op_modes': [],
-            'types_of_missing_resources': [],
-        }
         resource_urls_with_op_mode_ids = xml_file.operational_mode_urls
-        for resource_url_with_op_mode_id in resource_urls_with_op_mode_ids:
-            resource_url, op_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id))
-            is_structure_valid, is_pointing_to_registered_resource, type_of_missing_resource = itemgetter('is_structure_valid', 'is_pointing_to_registered_resource', 'type_of_missing_resource')(cls._is_resource_url_valid(resource_url))
-            if not is_structure_valid:
-                invalid_urls_dict['urls_with_incorrect_structure'].append(resource_url_with_op_mode_id)
-            elif not is_pointing_to_registered_resource:
-                invalid_urls_dict['urls_pointing_to_unregistered_resources'].append(resource_url_with_op_mode_id)
-                invalid_urls_dict['types_of_missing_resources'].append(type_of_missing_resource)
-                invalid_urls_dict['types_of_missing_resources'] = list(set(invalid_urls_dict['types_of_missing_resources']))
-                
-            if is_pointing_to_registered_resource:
-                resource_with_op_mode_id = Instrument.objects.get_by_operational_mode_url(resource_url_with_op_mode_id)
-                if resource_with_op_mode_id == None:
-                    invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(resource_url_with_op_mode_id)
+        resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
+        invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
+
+        for url in resource_urls_with_op_mode_ids:
+            try:
+                Instrument.objects.get_by_operational_mode_url(url)
+            except ObjectDoesNotExist:
+                invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(url)
         
-        if any(len(l) > 0 for l in invalid_urls_dict.values()):
-            return invalid_urls_dict
+        return invalid_urls_dict
