@@ -18,10 +18,9 @@ from .helpers import (
     _create_li_element_with_register_link_from_resource_type_from_resource_url,
     _map_acquisition_capability_to_update_link,
 )
-from .url_validation import (
-    get_invalid_ontology_urls_from_parsed_xml,
-    get_invalid_resource_urls_from_parsed_xml,
-    get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml
+from .url_validation_services import (
+    MetadataFileMetadataURLReferencesValidator,
+    MetadataFileOntologyURLReferencesValidator,
 )
 
 from common.constants import (
@@ -363,12 +362,16 @@ def validate_xml_file_and_return_summary(
             pass
 
     # Resource URL validation
-    invalid_resource_urls = get_invalid_resource_urls_from_parsed_xml(xml_file_parsed)
-    invalid_resource_urls_with_op_mode_ids = get_invalid_resource_urls_with_op_mode_ids_from_parsed_xml(xml_file_parsed)
-    resource_urls_with_incorrect_structure = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']]
-    resource_urls_pointing_to_unregistered_resources = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']]
-    types_of_missing_resources = [*invalid_resource_urls['types_of_missing_resources'], *invalid_resource_urls_with_op_mode_ids['types_of_missing_resources']]
-    resource_urls_pointing_to_registered_resources_with_missing_op_modes = invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']
+    # Check which resource URLs are valid and return
+    # the invalid ones.
+    invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(xml_metadata_file)
+    invalid_operational_mode_urls = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(xml_metadata_file)
+
+    # Process the returned invalid resource URLs.
+    resource_urls_with_incorrect_structure = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_operational_mode_urls['urls_with_incorrect_structure']]
+    resource_urls_pointing_to_unregistered_resources = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_operational_mode_urls['urls_pointing_to_unregistered_resources']]
+    types_of_missing_resources = [*invalid_resource_urls['types_of_missing_resources'], *invalid_operational_mode_urls['types_of_missing_resources']]
+    resource_urls_pointing_to_registered_resources_with_missing_op_modes = invalid_operational_mode_urls['urls_pointing_to_registered_resources_with_missing_op_modes']
     
     if len(resource_urls_with_incorrect_structure) > 0:
         error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
@@ -398,7 +401,7 @@ def validate_xml_file_and_return_summary(
         return validation_summary
 
     # Ontology URL validation
-    invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
+    invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid(xml_metadata_file)
     if len(invalid_ontology_urls) > 0:
         error_msg = 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, invalid_ontology_urls)))
         validation_summary['error'] = create_validation_summary_error(
