@@ -8,6 +8,7 @@ from rdflib import (
     SKOS,
 )
 from requests import get
+from typing import Optional
 
 from .services import XMLMetadataFile
 from .url_validation_utils import (
@@ -39,32 +40,45 @@ class MetadataFileMetadataURLReferencesValidator:
 
 class MetadataFileOntologyURLReferencesValidator:
     @classmethod
-    def validate(cls, xml_file: XMLMetadataFile):
-        pass
+    def _validate_ontology_term_url(self, ontology_term_url: str):
+        """
+        Checks that the provided Space Physics Ontology URL
+        has a valid HTTP response and that the response
+        content is as expected.
 
-# Ontology url validation
-def validate_ontology_term_url(ontology_term_url):
-    response = get(ontology_term_url) # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
-    if response.status_code == 404:
+        If the HTTP response code is 404 Not Found, the
+        ontology term URL is treated as invalid.
+
+        Any other HTTP response error code is treated
+        as unexpected.
+        """
+        # e.g. http://ontology.espas-fp7.eu/relatedPartyRole/Operator
+        response = get(ontology_term_url)
+        if response.status_code == 404:
+            return False
+        if response.ok:
+            response_text = response.text
+            g = Graph()
+            g.parse(data=response_text, format='application/rdf+xml')
+            ontology_term = URIRef(ontology_term_url)
+            return (ontology_term, RDF['type'], SKOS['Concept']) in g
+        response.raise_for_status()
         return False
-    if response.ok:
-        response_text = response.text
-        g = Graph()
-        g.parse(data=response_text, format='application/rdf+xml')
-        ontology_term = URIRef(ontology_term_url)
-        return (ontology_term, RDF['type'], SKOS['Concept']) in g
-    response.raise_for_status()
-    return False
-
-def get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed):
-    invalid_urls = []
-    root = xml_file_parsed.getroot()
-    ontology_urls = root.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
-    for url in ontology_urls:
-        is_valid_ontology_term = validate_ontology_term_url(url)
-        if is_valid_ontology_term == False:
-            invalid_urls.append(url)
-    return invalid_urls
+    
+    @classmethod
+    def is_each_url_valid(cls, xml_file: XMLMetadataFile) -> Optional(list[str]):
+        """
+        Checks each Space Physics Ontology URL in the
+        provided XML metadata file is valid.
+        """
+        invalid_urls = []
+        ontology_urls = xml_file.ontology_urls
+        for url in ontology_urls:
+            is_valid_ontology_term = cls._validate_ontology_term_url(url)
+            if is_valid_ontology_term == False:
+                invalid_urls.append(url)
+        if len(invalid_urls) > 0:
+            return invalid_urls
 
 # Resource url validation
 def is_resource_url_base_structure_valid(resource_url):
