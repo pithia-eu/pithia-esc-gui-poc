@@ -243,7 +243,7 @@ class MetadataFileOntologyURLReferencesValidator:
 #     schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
 #     validate_xml_against_schema_at_url(xml_file, schema_url)
 
-def validate_and_get_validation_details_of_xml_file(
+def validate_xml_file_and_return_summary(
     xml_file,
     expected_root_localname,
     mongodb_model,

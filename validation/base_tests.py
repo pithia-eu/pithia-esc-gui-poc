@@ -8,7 +8,7 @@ from register.xml_conversion_checks_and_fixes import correct_instrument_xml_conv
 from validation.metadata_validation import (
     validate_xml_against_own_schema,
     validate_and_parse_xml_file,
-    validate_and_get_validation_details_of_xml_file,
+    validate_xml_file_and_return_summary,
     validate_xml_root_element_name_equals_expected_name,
     validate_xml_file_name,
     validate_xml_file_is_unregistered,
@@ -320,13 +320,13 @@ class OperationalModesValidationTestCase:
 
 class ValidationChecklistTestCase:
     @tag('slow', 'checklist')
-    def test_validate_and_get_validation_details_of_xml_file(self):
+    def test_validate_xml_file_and_return_summary(self):
         """
         The validation results does not contain an error.
         """
         with open(self.xml_file_path) as xml_file:
             try:
-                validation_results = validate_and_get_validation_details_of_xml_file(
+                validation_results = validate_xml_file_and_return_summary(
                     xml_file,
                     self.root_element_name,
                     self.mongodb_model,
@@ -335,8 +335,8 @@ class ValidationChecklistTestCase:
                 if validation_results['error'] is not None:
                     print('error', validation_results['error'])
                     print(f'Failed validation checklist test for {Path(xml_file.name).name}.')
-                    self.fail('validate_and_get_validation_details_of_xml_file() returned an error.')
+                    self.fail('validate_xml_file_and_return_summary() returned an error.')
                 self.assertEqual(validation_results['error'], None)
                 print(f'Passed validation checklist test for {Path(xml_file.name).name}.')
             except:
-                self.fail('validate_and_get_validation_details_of_xml_file() raised an exception unexpectedly!')
+                self.fail('validate_xml_file_and_return_summary() raised an exception unexpectedly!')

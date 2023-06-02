@@ -39,7 +39,7 @@ from validation.metadata_validation import (
     CATALOGUE_XML_ROOT_TAG_NAME,
     CATALOGUE_ENTRY_XML_ROOT_TAG_NAME,
     CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME,
-    validate_and_get_validation_details_of_xml_file,
+    validate_xml_file_and_return_summary,
 )
 
 import logging
@@ -58,7 +58,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
         existing_resource_id = ''
         if 'resource_id' in request.POST:
             existing_resource_id = request.POST['resource_id']
-        validation_results = validate_and_get_validation_details_of_xml_file(
+        validation_results = validate_xml_file_and_return_summary(
             xml_file,
             self.expected_root_tag_name,
             self.mongodb_model,

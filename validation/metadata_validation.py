@@ -204,7 +204,7 @@ def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrum
     operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
     return len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
 
-def validate_and_get_validation_details_of_xml_file(
+def validate_xml_file_and_return_summary(
     xml_file,
     expected_root_localname,
     mongodb_model,
