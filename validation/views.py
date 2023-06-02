@@ -10,6 +10,11 @@ from lxml import etree
 from openapi_spec_validator import validate_spec_url
 from urllib.error import HTTPError
 
+from .file_wrappers import (
+    DataSubsetXMLMetadataFile,
+    InstrumentXMLMetadataFile,
+    XMLMetadataFile,
+)
 from .forms import ApiSpecificationUrlValidationForm
 # TODO: remove old code
 # from .metadata_validation import (
@@ -31,12 +36,7 @@ from .forms import ApiSpecificationUrlValidationForm
 #     validate_xml_file_and_return_summary,
 # )
 from .helpers import create_validation_summary_error
-from .services import (
-    DataSubsetXMLMetadataFile,
-    InstrumentXMLMetadataFile,
-    validate_xml_file_and_return_summary,
-    XMLMetadataFile,
-)
+from .services import validate_xml_file_and_return_summary
 
 from common import models
 # TODO: remove old code

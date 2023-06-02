@@ -9,9 +9,8 @@ from rdflib import (
     SKOS,
 )
 from requests import get
-from typing import Optional
 
-from .services import (
+from .file_wrappers import (
     AcquisitionCapabilitiesXMLMetadataFile,
     XMLMetadataFile,
 )
@@ -60,7 +59,7 @@ class MetadataFileOntologyURLReferencesValidator:
         return False
     
     @classmethod
-    def is_each_ontology_url_valid(cls, xml_file: XMLMetadataFile) -> Optional(list[str]):
+    def is_each_ontology_url_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
         """
         Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
@@ -71,8 +70,7 @@ class MetadataFileOntologyURLReferencesValidator:
             is_valid_ontology_term = cls._is_ontology_term_url_valid(url)
             if is_valid_ontology_term == False:
                 invalid_urls.append(url)
-        if len(invalid_urls) > 0:
-            return invalid_urls
+        return invalid_urls
 
 class MetadataFileMetadataURLReferencesValidator:
     def _is_resource_url_well_formed(self, resource_url):
