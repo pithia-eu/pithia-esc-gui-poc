@@ -1,6 +1,6 @@
 import logging
 import xmlschema
-from bson import ObjectId
+from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 from pathlib import Path
 from requests import get
@@ -10,9 +10,7 @@ from .helpers import (
     create_validation_details_error,
     _map_string_to_li_element,
     _create_li_element_with_register_link_from_resource_type_from_resource_url,
-    _map_etree_element_to_text,
     _map_acquisition_capability_to_update_link,
-    _map_operational_mode_object_to_id_string,
 )
 from .url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -21,7 +19,11 @@ from .url_validation import (
 )
 
 from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
-from common.models import CatalogueDataSubset
+from common.models import (
+    CatalogueDataSubset,
+    Instrument,
+    ScientificMetadata,
+)
 from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CurrentInstrument,
@@ -35,7 +37,14 @@ from validation.errors import (
 logger = logging.getLogger(__name__)
 
 class XMLMetadataFile:
+    """
+    A wrapper class around an XML Metadata File
+    being submitted for validation. Facilitates
+    accessing certain properties and hides
+    complexity behind functions.
+    """
     def __init__(self, xml_file) -> None:
+        self._xml_file_name = xml_file.name
         xml_file.seek(0)
         self._xml_file_contents = xml_file.read()
         xml_file.seek(0)
@@ -53,7 +62,40 @@ class XMLMetadataFile:
     @property
     def contents(self):
         return self._xml_file_contents
+
+    # Scientific Metadata properties
+    @property
+    def localid(self):
+        # There should be only one <localID> tag in the tree
+        return self._parse_xml_file.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
+
+    @property
+    def namespace(self):
+        return self._parse_xml_file.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
+
+    # Helper properties
+    @property
+    def file_name_no_extension(self):
+        return Path(self._xml_file_name).stem
     
+    @property
+    def schema_url(self):
+        root = self._parsed_xml_file.getroot()
+        urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+        urls_with_xsi_ns = urls_with_xsi_ns[0].split()
+        schema_url = urls_with_xsi_ns[0]
+        if len(urls_with_xsi_ns) > 1:
+            schema_url = urls_with_xsi_ns[1]
+        return schema_url
+
+    @property
+    def root_element_name(self):
+        root = self._parsed_xml_file.getroot()
+        # Get the root tag text without the namespace
+        root_localname = etree.QName(root).localname
+        return root_localname
+
+class DataSubsetXMLMetadataFile(XMLMetadataFile):
     @property
     def contents_with_spoofed_doi(self):
         parsed_file_copy = self._parse_xml_string(self._xml_file_contents)
@@ -71,22 +113,11 @@ class XMLMetadataFile:
             pass
         return contents_with_spoofed_doi
 
+class InstrumentXMLMetadataFile(XMLMetadataFile):
     @property
-    def root_element_name(self):
-        root = self._parsed_xml_file.getroot()
-        # Get the root tag text without the namespace
-        root_localname = etree.QName(root).localname
-        return root_localname
-    
-    @property
-    def schema_url(self):
-        root = self._parsed_xml_file.getroot()
-        urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
-        urls_with_xsi_ns = urls_with_xsi_ns[0].split()
-        schema_url = urls_with_xsi_ns[0]
-        if len(urls_with_xsi_ns) > 1:
-            schema_url = urls_with_xsi_ns[1]
-        return schema_url
+    def operational_mode_ids(self):
+        # Operational mode IDs are the only values enclosed in <id></id> tags
+        return [om_element.text for om_element in self._parse_xml_file.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')]
 
 
 class MetadataRootElementNameValidator:
@@ -106,19 +137,20 @@ class MetadataRootElementNameValidator:
 
 class MetadataFileXSDValidator:
     def _validate_xml_file_string_against_schema(self, xml_file_string: str, schema):
-        xml_schema = xmlschema.XMLSchema()
+        xml_schema = xmlschema.XMLSchema(schema)
         xml_schema.validate(xml_file_string)
 
-    def _validate_data_subset_file_against_schema(self, xml_file: XMLMetadataFile, schema):
+    def _validate_data_subset_file_against_schema(self, xml_file: DataSubsetXMLMetadataFile, schema):
         """
-        Validates the XML file with a DOI element against a schema hosted at a URL.
+        Validates a Data Subset XML metadata file (potentially
+        with a DOI element) against a schema hosted at a URL.
         """
-        spoofed_xml_file = XMLMetadataFile()
-        self._validate_data_subset_file_against_schema(etree.tostring(xml_file_string_parsed), schema)
+        self._validate_xml_file_string_against_schema(xml_file.contents_with_spoofed_doi, schema)
 
     def validate(self, xml_file: XMLMetadataFile):
         """
-        Validates the XML file against a schema hosted at a URL.
+        Validates an XML metadata file against the schema it
+        specifies at its schemaLocation URL.
         """
         xml_file_schema_url = xml_file.schema_url
         schema_response = get(xml_file_schema_url)
@@ -129,29 +161,78 @@ class MetadataFileXSDValidator:
 
 
 class MetadataFileNameValidator:
-    def validate(self, xml_file):
-        pass
+    def validate(self, xml_file: XMLMetadataFile):
+        """
+        Validates the name of an XML metadata file matches
+        with the innerText of its <localID> element.
+        """
+        localid_tag_text = xml_file.localid
+        xml_file_name_with_no_extension = xml_file.file_name_no_extension
+        if localid_tag_text != xml_file_name_with_no_extension:
+            raise FileNameNotMatchingWithLocalID(
+                'File name not matching with localID',
+                f'The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".'
+            )
 
 class MetadataFileRegistrationValidator:
-    def validate(self, xml_file):
-        pass
+    def validate(self, xml_file: XMLMetadataFile, model: ScientificMetadata):
+        """
+        Validates whether an XML metadata file has been
+        registered before or not.
+        """
+        xml_file_localid = xml_file.localid
+        xml_file_namespace = xml_file.namespace
+        try:
+            model.objects.get_by_namespace_and_localid(
+                namespace=xml_file_namespace,
+                namespace=xml_file_localid,
+            )
+        except ObjectDoesNotExist:
+            return
+        
+        raise FileRegisteredBefore(
+            'This XML metadata file has been registered before.',
+            f'Metadata sharing the same localID of "{xml_file_localid}" has already been registered with the e-Science Centre.',
+        )
 
 class MetadataFileUpdateValidator:
-    def validate(self, xml_file):
-        pass
+    def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+        self,
+        xml_file: InstrumentXMLMetadataFile,
+        current_instrument_id,
+        model: Instrument
+    ):
+        operational_mode_ids_of_updated_xml = xml_file.operational_mode_ids
+        instrument_to_update = model.objects.get(pk=current_instrument_id)
+        operational_mode_ids_of_current_xml = instrument_to_update.operational_mode_ids
+        operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
+        return len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
+
+    def validate(self, xml_file: XMLMetadataFile, model: ScientificMetadata, metadata_registration_id):
+        """
+        Validates whether the localID and namespace of
+        an updated XML metadata file matches the localID
+        and namespace of its current corresponding
+        e-Science Centre registration.
+        """
+        xml_file_localid = xml_file.localid
+        xml_file_namespace = xml_file.namespace
+        existing_registration = model.objects.get(pk=metadata_registration_id)
+        return all([
+            xml_file_localid == existing_registration.localid,
+            xml_file_namespace == existing_registration.namespace
+        ])
 
 class MetadataFileMetadataURLReferencesValidator:
-    def validate(self, xml_file):
+    def validate(self, xml_file: XMLMetadataFile):
         pass
 
 class MetadataFileOntologyURLReferencesValidator:
-    def validate(self, xml_file):
+    def validate(self, xml_file: XMLMetadataFile):
         pass
 
 
 # XSD Schema validation
-
-
 # def validate_xml_against_own_schema(xml_file):
 #     """
 #     Validates the XML file against its own schema by
@@ -161,89 +242,6 @@ class MetadataFileOntologyURLReferencesValidator:
 #     xml_file_parsed = validate_and_parse_xml_file(xml_file)
 #     schema_url = get_schema_location_url_from_parsed_xml_file(xml_file_parsed)
 #     validate_xml_against_schema_at_url(xml_file, schema_url)
-
-# Matching file name and localID tag text validation
-def validate_xml_file_name(xml_file):
-    """
-    Returns whether the name for an XML file matches
-    with the innerText of its <localID> element.
-    """
-    xml_file_parsed = validate_and_parse_xml_file(xml_file)
-    # There should be only one <localID> tag in the tree
-    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
-    xml_file_name_with_no_extension = Path(xml_file.name).stem
-    if localid_tag_text != xml_file_name_with_no_extension:
-        raise FileNameNotMatchingWithLocalID(
-            'File name not matching with localID',
-            f'The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".'
-        )
-
-# Registration validation
-def validate_xml_file_is_unregistered(mongodb_model, xml_file):
-    """
-    Returns whether there is pre-registered metadata with the same localID and namespace
-    as the metadata that the user would like to register.
-    """
-    xml_file_parsed = validate_and_parse_xml_file(xml_file)
-    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
-    namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
-    num_times_uploaded_before = mongodb_model.count_documents({
-        'identifier.PITHIA_Identifier.localID': localid_tag_text,
-        'identifier.PITHIA_Identifier.namespace': namespace_tag_text,
-    })
-    if num_times_uploaded_before > 0:
-        raise FileRegisteredBefore(
-            'This XML metadata file has been registered before.',
-            f'Metadata sharing the same localID of "{localid_tag_text}" has already been registered with the e-Science Centre.',
-        )
-
-# Update validation
-def is_updated_xml_file_localid_matching_with_current_resource_localid(
-    xml_file,
-    resource_id,
-    mongodb_model,
-):
-    """
-    Returns whether the localID and namespace of the updated metadata
-    is the same as the current version of the metadata.
-    """
-    xml_file_parsed = validate_and_parse_xml_file(xml_file)
-    localid_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}localID').text
-    namespace_tag_text = xml_file_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}namespace').text
-    resource_to_update = mongodb_model.find_one({
-        '_id': ObjectId(resource_id)
-    })
-    resource_to_update_pithia_identifier = resource_to_update['identifier']['PITHIA_Identifier']
-    return all([
-        localid_tag_text == resource_to_update_pithia_identifier['localID'],
-        namespace_tag_text == resource_to_update_pithia_identifier['namespace']
-    ])
-
-# Operational mode ID modification check
-def is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(xml_file, current_instrument_id, mongodb_model=CurrentInstrument):
-    xml_file_parsed = validate_and_parse_xml_file(xml_file)
-    # Operational mode IDs are the only values enclosed in <id></id> tags
-    operational_mode_ids_of_updated_xml = list(
-        map(
-            _map_etree_element_to_text,
-            xml_file_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')
-        )
-    )
-    instrument_to_update = mongodb_model.find_one(
-        {
-            '_id': ObjectId(current_instrument_id)
-        },
-        {
-            'operationalMode': True
-        }
-    )
-    operational_mode_ids_of_current_xml = []
-    if 'operationalMode' in instrument_to_update:
-        operational_mode_ids_of_current_xml = list(
-            map(_map_operational_mode_object_to_id_string, instrument_to_update['operationalMode'])
-        )
-    operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
-    return len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
 
 def validate_and_get_validation_details_of_xml_file(
     xml_file,
