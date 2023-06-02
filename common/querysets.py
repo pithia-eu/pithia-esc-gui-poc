@@ -4,7 +4,10 @@ from operator import itemgetter
 
 from .abstract_classes import *
 
-from utils.url_helpers import get_namespace_and_localid_from_resource_url
+from utils.url_helpers import (
+    divide_resource_url_from_op_mode_id,
+    get_namespace_and_localid_from_resource_url,
+)
 
 class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
     def _get_by_namespace_and_localid(self, namespace: str, localid: str):
@@ -38,6 +41,15 @@ class OperationQuerySet(MetadataQuerySet, AbstractOperationDatabaseQueries):
     pass
 
 class InstrumentQuerySet(MetadataQuerySet, AbstractInstrumentDatabaseQueries):
+    def get_by_operational_mode_url(self, operational_mode_url: str):
+        metadata_server_url, op_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(operational_mode_url))
+        namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(metadata_server_url))
+        return self.get(
+            json__identifier__PITHIA_Identifier__namespace=namespace,
+            json__identifier__PITHIA_Identifier__localid=localid,
+            json__operationalMode__contains={'InstrumentOperationalMode__id': op_mode_id}
+        )
+    
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         query = Q()
         for url in instrument_type_urls:
