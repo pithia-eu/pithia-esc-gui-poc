@@ -219,16 +219,6 @@ class MetadataFileUpdateValidator:
         ])):
             raise UpdateFileNotMatching('The localID and namespace must be matching with the current version of the metadata.')
 
-class MetadataFileMetadataURLReferencesValidator:
-    @classmethod
-    def validate(cls, xml_file: XMLMetadataFile):
-        pass
-
-class MetadataFileOntologyURLReferencesValidator:
-    @classmethod
-    def validate(cls, xml_file: XMLMetadataFile):
-        pass
-
 # XSD Schema validation
 # def validate_xml_against_own_schema(xml_file):
 #     """
