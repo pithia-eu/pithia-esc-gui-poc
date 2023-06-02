@@ -18,3 +18,6 @@ class FileNameNotMatchingWithLocalID(ValidationError):
 
 class FileRegisteredBefore(ValidationError):
     pass
+
+class UpdateFileNotMatching(ValidationError):
+    pass

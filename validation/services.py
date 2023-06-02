@@ -10,6 +10,7 @@ from .errors_new import (
     InvalidRootElementName,
     FileNameNotMatchingWithLocalID,
     FileRegisteredBefore,
+    UpdateFileNotMatching,
 )
 from .helpers import (
     create_validation_summary_error,
@@ -212,10 +213,11 @@ class MetadataFileUpdateValidator:
         xml_file_localid = xml_file.localid
         xml_file_namespace = xml_file.namespace
         existing_registration = model.objects.get(pk=metadata_registration_id)
-        return all([
+        if (not all([
             xml_file_localid == existing_registration.localid,
             xml_file_namespace == existing_registration.namespace
-        ])
+        ])):
+            raise UpdateFileNotMatching('The localID and namespace must be matching with the current version of the metadata.')
 
 class MetadataFileMetadataURLReferencesValidator:
     @classmethod
@@ -226,7 +228,6 @@ class MetadataFileOntologyURLReferencesValidator:
     @classmethod
     def validate(cls, xml_file: XMLMetadataFile):
         pass
-
 
 # XSD Schema validation
 # def validate_xml_against_own_schema(xml_file):
@@ -322,18 +323,19 @@ def validate_xml_file_and_return_summary(
     if metadata_id_to_validate_for_update is not None:
         # Update validation
         try:
-            is_xml_file_a_valid_update = MetadataFileUpdateValidator.validate(xml_metadata_file, model, metadata_id_to_validate_for_update)
-            if is_xml_file_a_valid_update is False:
-                validation_summary['error'] = create_validation_summary_error(
-                    message='Invalid localID and namespace',
-                    details='The localID and namespace must be matching with the current version of the metadata.',
-                )
-                return validation_summary
+            MetadataFileUpdateValidator.validate(xml_metadata_file, model, metadata_id_to_validate_for_update)
+        except UpdateFileNotMatching as err:
+            validation_summary['error'] = create_validation_summary_error(
+                message='Invalid localID and namespace',
+                details=str(err),
+            )
+            return validation_summary
         except ObjectDoesNotExist:
             validation_summary['error'] = create_validation_summary_error(
                 message='Registration not found.',
                 details='The metadata registration being updated could not be found.'
             )
+            return validation_summary
 
         try:
             # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
