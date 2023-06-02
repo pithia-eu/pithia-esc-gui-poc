@@ -9,7 +9,11 @@ from .metadata_validation import (
     get_schema_location_url_from_parsed_xml_file,
     validate_xml_with_doi_against_schema_at_url,
 )
-from .services import XMLMetadataFile
+from .services import (
+    DataSubsetXMLMetadataFile,
+    MetadataFileXSDValidator,
+    XMLMetadataFile,
+)
 from .url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
     get_invalid_resource_urls_from_parsed_xml,
@@ -397,5 +401,12 @@ class XMLMetadataFileTestCase(SimpleTestCase):
     def test_contents_with_spoofed_doi(self):
         xml_file = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
-            xml_file = XMLMetadataFile(test_file)
-        print('xml_file.contents_with_spoofed_doi', xml_file.contents_with_spoofed_doi)
+            xml_file = DataSubsetXMLMetadataFile.from_file(test_file)
+        print('xml_file.contents', xml_file.contents)
+        self.assertTrue('10.000' in xml_file.contents)
+
+    def test_data_subset_xsd_validation(self):
+        xml_file = None
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
+            xml_file = DataSubsetXMLMetadataFile.from_file(test_file)
+        MetadataFileXSDValidator.validate(xml_file)
