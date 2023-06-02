@@ -1,46 +1,62 @@
 import json
-from urllib.error import HTTPError
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import (
+    HttpResponse,
+    HttpResponseServerError,
+    JsonResponse,
+)
 from django.views.decorators.http import require_POST
 from django.views.generic import View
+from lxml import etree
 from openapi_spec_validator import validate_spec_url
+from urllib.error import HTTPError
 
-from common.mongodb_models import (
-    CurrentAcquisition,
-    CurrentAcquisitionCapability,
-    CurrentComputation,
-    CurrentComputationCapability,
-    CurrentDataCollection,
-    CurrentIndividual,
-    CurrentInstrument,
-    CurrentOperation,
-    CurrentOrganisation,
-    CurrentPlatform,
-    CurrentProcess,
-    CurrentProject,
-    CurrentCatalogue,
-    CurrentCatalogueEntry,
-    CurrentCatalogueDataSubset,
-)
-from validation.forms import ApiSpecificationUrlValidationForm
-from validation.metadata_validation import (
-    ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
-    ACQUISITION_XML_ROOT_TAG_NAME,
-    COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
-    COMPUTATION_XML_ROOT_TAG_NAME,
-    DATA_COLLECTION_XML_ROOT_TAG_NAME,
-    INDIVIDUAL_XML_ROOT_TAG_NAME,
-    INSTRUMENT_XML_ROOT_TAG_NAME,
-    OPERATION_XML_ROOT_TAG_NAME,
-    ORGANISATION_XML_ROOT_TAG_NAME,
-    PLATFORM_XML_ROOT_TAG_NAME,
-    PROCESS_XML_ROOT_TAG_NAME,
-    PROJECT_XML_ROOT_TAG_NAME,
-    CATALOGUE_XML_ROOT_TAG_NAME,
-    CATALOGUE_ENTRY_XML_ROOT_TAG_NAME,
-    CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME,
+from .forms import ApiSpecificationUrlValidationForm
+# TODO: remove old code
+# from .metadata_validation import (
+#     ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME,
+#     ACQUISITION_XML_ROOT_TAG_NAME,
+#     COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME,
+#     COMPUTATION_XML_ROOT_TAG_NAME,
+#     DATA_COLLECTION_XML_ROOT_TAG_NAME,
+#     INDIVIDUAL_XML_ROOT_TAG_NAME,
+#     INSTRUMENT_XML_ROOT_TAG_NAME,
+#     OPERATION_XML_ROOT_TAG_NAME,
+#     ORGANISATION_XML_ROOT_TAG_NAME,
+#     PLATFORM_XML_ROOT_TAG_NAME,
+#     PROCESS_XML_ROOT_TAG_NAME,
+#     PROJECT_XML_ROOT_TAG_NAME,
+#     CATALOGUE_XML_ROOT_TAG_NAME,
+#     CATALOGUE_ENTRY_XML_ROOT_TAG_NAME,
+#     CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME,
+#     validate_xml_file_and_return_summary,
+# )
+from .helpers import create_validation_summary_error
+from .services import (
+    DataSubsetXMLMetadataFile,
+    InstrumentXMLMetadataFile,
     validate_xml_file_and_return_summary,
+    XMLMetadataFile,
 )
+
+from common import models
+# TODO: remove old code
+# from common.mongodb_models import (
+#     CurrentAcquisition,
+#     CurrentAcquisitionCapability,
+#     CurrentComputation,
+#     CurrentComputationCapability,
+#     CurrentDataCollection,
+#     CurrentIndividual,
+#     CurrentInstrument,
+#     CurrentOperation,
+#     CurrentOrganisation,
+#     CurrentPlatform,
+#     CurrentProcess,
+#     CurrentProject,
+#     CurrentCatalogue,
+#     CurrentCatalogueEntry,
+#     CurrentCatalogueDataSubset,
+# )
 
 import logging
 
@@ -51,98 +67,179 @@ class ResourceXmlMetadataFileValidationFormView(View):
     mongodb_model = None
     expected_root_tag_name = ''
 
+    def prepare_xml_metadata_file(xml_file):
+        return XMLMetadataFile(xml_file)
+
     def post(self, request, *args, **kwargs):
+        # Extract content from request
         xml_file = request.FILES['file']
-        check_file_is_unregistered = 'validate_is_not_registered' in request.POST
-        check_xml_file_localid_matches_existing_resource_localid = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
-        existing_resource_id = ''
-        if 'resource_id' in request.POST:
-            existing_resource_id = request.POST['resource_id']
-        validation_results = validate_xml_file_and_return_summary(
-            xml_file,
-            self.expected_root_tag_name,
-            self.mongodb_model,
-            check_file_is_unregistered=check_file_is_unregistered,
-            check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid,
-            existing_resource_id=existing_resource_id
-        )
-        if validation_results['error'] is None and len(validation_results['warnings']) == 0:
+        validate_registration = 'validate_is_not_registered' in request.POST
+        # validate_update = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
+        existing_scientific_metadata_id = request.POST['resource_id'] if 'resource_id' in request.POST else ''
+        
+        # Begin the validation process
+        validation_summary = {}
+        try:
+            # Syntax validation
+            prepared_xml_metadata_file = self.prepare_xml_metadata_file(xml_file)
+        except etree.XMLSyntaxError as err:
+            validation_summary['error'] = create_validation_summary_error(
+                message='Syntax is invalid.',
+                details=str(err)
+            )
+            return JsonResponse(validation_summary)
+
+        try:
+            validation_summary = validate_xml_file_and_return_summary(
+                prepared_xml_metadata_file,
+                self.model,
+                validate_for_registration=validate_registration,
+                metadata_id_to_validate_for_update=existing_scientific_metadata_id
+            )
+        except BaseException as err:
+            validation_summary['error'] = create_validation_summary_error(details=str(err))
+            return JsonResponse(validation_summary)
+
+        # Process any errors that occurred during the validation process
+        if (validation_summary['error'] is None
+            and len(validation_summary['warnings']) == 0):
             return HttpResponse(json.dumps({
                 'result': 'valid'
             }), content_type='application/json')
 
         response_body = {}
-        if len(validation_results['warnings']) > 0:
-            response_body['warnings'] = validation_results['warnings']
-        if validation_results['error'] != None:
-            response_body['error'] = validation_results['error']
+        if len(validation_summary['warnings']) > 0:
+            response_body['warnings'] = validation_summary['warnings']
+        if validation_summary['error'] != None:
+            response_body['error'] = validation_summary['error']
         return HttpResponseServerError(
             json.dumps(response_body),
             content_type='application/json'
         )
+        # xml_file = request.FILES['file']
+        # check_file_is_unregistered = 'validate_is_not_registered' in request.POST
+        # check_xml_file_localid_matches_existing_resource_localid = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
+        # existing_scientific_metadata_id = ''
+        # if 'resource_id' in request.POST:
+        #     existing_scientific_metadata_id = request.POST['resource_id']
+        # validation_summary = validate_xml_file_and_return_summary(
+        #     xml_file,
+        #     self.expected_root_tag_name,
+        #     self.mongodb_model,
+        #     check_file_is_unregistered=check_file_is_unregistered,
+        #     check_xml_file_localid_matches_existing_resource_localid=check_xml_file_localid_matches_existing_resource_localid,
+        #     existing_scientific_metadata_id=existing_scientific_metadata_id
+        # )
+        # if validation_summary['error'] is None and len(validation_summary['warnings']) == 0:
+        #     return HttpResponse(json.dumps({
+        #         'result': 'valid'
+        #     }), content_type='application/json')
+
+        # response_body = {}
+        # if len(validation_summary['warnings']) > 0:
+        #     response_body['warnings'] = validation_summary['warnings']
+        # if validation_summary['error'] != None:
+        #     response_body['error'] = validation_summary['error']
+        # return HttpResponseServerError(
+        #     json.dumps(response_body),
+        #     content_type='application/json'
+        # )
 
 class OrganisationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentOrganisation
-    expected_root_tag_name = ORGANISATION_XML_ROOT_TAG_NAME
+    model = models.Organisation
+    # mongodb_model = CurrentOrganisation
+    # expected_root_tag_name = ORGANISATION_XML_ROOT_TAG_NAME
     
 class IndividualXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentIndividual
-    expected_root_tag_name = INDIVIDUAL_XML_ROOT_TAG_NAME
+    model = models.Individual
+    # mongodb_model = CurrentIndividual
+    # expected_root_tag_name = INDIVIDUAL_XML_ROOT_TAG_NAME
 
 class ProjectXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentProject
-    expected_root_tag_name = PROJECT_XML_ROOT_TAG_NAME
+    model = models.Project
+    # mongodb_model = CurrentProject
+    # expected_root_tag_name = PROJECT_XML_ROOT_TAG_NAME
 
 class PlatformXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentPlatform
-    expected_root_tag_name = PLATFORM_XML_ROOT_TAG_NAME
-
-class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentInstrument
-    expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
+    model = models.Platform
+    # TODO: remove old code
+    # mongodb_model = CurrentPlatform
+    # expected_root_tag_name = PLATFORM_XML_ROOT_TAG_NAME
 
 class OperationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentOperation
-    expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
+    model = models.Operation
+    # TODO: remove old code
+    # mongodb_model = CurrentOperation
+    # expected_root_tag_name = OPERATION_XML_ROOT_TAG_NAME
+
+class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
+    model = models.Instrument
+    # TODO: remove old code
+    # mongodb_model = CurrentInstrument
+    # expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
+
+    def prepare_xml_metadata_file(xml_file):
+        return InstrumentXMLMetadataFile(xml_file)
 
 class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentAcquisitionCapability
-    expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
+    model = models.AcquisitionCapabilities
+    # TODO: remove old code
+    # mongodb_model = CurrentAcquisitionCapability
+    # expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
 
 class AcquisitionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentAcquisition
-    expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
+    model = models.Acquisition
+    # TODO: remove old code
+    # mongodb_model = CurrentAcquisition
+    # expected_root_tag_name = ACQUISITION_XML_ROOT_TAG_NAME
 
 class ComputationCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentComputationCapability
-    expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
+    model = models.ComputationCapabilities
+    # TODO: remove old code
+    # mongodb_model = CurrentComputationCapability
+    # expected_root_tag_name = COMPUTATION_CAPABILITY_XML_ROOT_TAG_NAME
 
 class ComputationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentComputation
-    expected_root_tag_name = COMPUTATION_XML_ROOT_TAG_NAME
+    model = models.Computation
+    # TODO: remove old code
+    # mongodb_model = CurrentComputation
+    # expected_root_tag_name = COMPUTATION_XML_ROOT_TAG_NAME
 
 class ProcessXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentProcess
-    expected_root_tag_name = PROCESS_XML_ROOT_TAG_NAME
+    model = models.Process
+    # TODO: remove old code
+    # mongodb_model = CurrentProcess
+    # expected_root_tag_name = PROCESS_XML_ROOT_TAG_NAME
 
 class DataCollectionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentDataCollection
-    expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
+    model = models.DataCollection
+    # TODO: remove old code
+    # mongodb_model = CurrentDataCollection
+    # expected_root_tag_name = DATA_COLLECTION_XML_ROOT_TAG_NAME
 
 
 class CatalogueXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentCatalogue
-    expected_root_tag_name = CATALOGUE_XML_ROOT_TAG_NAME
+    model = models.Catalogue
+    # TODO: remove old code
+    # mongodb_model = CurrentCatalogue
+    # expected_root_tag_name = CATALOGUE_XML_ROOT_TAG_NAME
 
 
 class CatalogueEntryXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentCatalogueEntry
-    expected_root_tag_name = CATALOGUE_ENTRY_XML_ROOT_TAG_NAME
+    model = models.CatalogueEntry
+    # TODO: remove old code
+    # mongodb_model = CurrentCatalogueEntry
+    # expected_root_tag_name = CATALOGUE_ENTRY_XML_ROOT_TAG_NAME
 
 
 class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    mongodb_model = CurrentCatalogueDataSubset
-    expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
+    model = models.CatalogueDataSubset
+    # TODO: remove old code
+    # mongodb_model = CurrentCatalogueDataSubset
+    # expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
+
+    def prepare_xml_metadata_file(xml_file):
+        return DataSubsetXMLMetadataFile(xml_file)
 
 
 @require_POST
