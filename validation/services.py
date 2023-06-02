@@ -126,6 +126,11 @@ class InstrumentXMLMetadataFile(XMLMetadataFile):
     def operational_mode_ids(self):
         # Operational mode IDs are the only values enclosed in <id></id> tags
         return [om_element.text for om_element in self._parsed_xml.findall('.//{https://metadata.pithia.eu/schemas/2.2}id')]
+    
+class AcquisitionCapabilitiesXMLMetadataFile(XMLMetadataFile):
+    @property
+    def operational_mode_urls(self):
+        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
 
 
 class MetadataRootElementNameValidator:
