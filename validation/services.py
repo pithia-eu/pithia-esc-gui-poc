@@ -41,12 +41,12 @@ class XMLMetadataFile:
     def __init__(self, xml_file_string, xml_file_name) -> None:
         self._xml_file_name = xml_file_name
         self._xml_file_contents = xml_file_string
-        self._parsed_xml_file = self._parse_xml_string(self._xml_file_contents)
+        self._parsed_xml = self._parse_xml_string(self._xml_file_contents)
 
     @classmethod
     def from_file(cls, xml_file):
         xml_file.seek(0)
-        cls(xml_file.read(), xml_file.name)
+        return cls(xml_file.read(), xml_file.name)
 
     def _parse_xml_file(self, xml_file):
         return etree.parse(xml_file)
@@ -78,8 +78,7 @@ class XMLMetadataFile:
     
     @property
     def schema_url(self):
-        root = self._parsed_xml_file.getroot()
-        urls_with_xsi_ns = root.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
+        urls_with_xsi_ns = self._parsed_xml.xpath("//@*[local-name()='schemaLocation' and namespace-uri()='http://www.w3.org/2001/XMLSchema-instance']")
         urls_with_xsi_ns = urls_with_xsi_ns[0].split()
         schema_url = urls_with_xsi_ns[0]
         if len(urls_with_xsi_ns) > 1:
@@ -88,9 +87,8 @@ class XMLMetadataFile:
 
     @property
     def root_element_name(self):
-        root = self._parsed_xml_file.getroot()
         # Get the root tag text without the namespace
-        root_localname = etree.QName(root).localname
+        root_localname = etree.QName(self._parsed_xml).localname
         return root_localname
 
 class DataSubsetXMLMetadataFile(XMLMetadataFile):
@@ -98,7 +96,6 @@ class DataSubsetXMLMetadataFile(XMLMetadataFile):
         xml_file_string = self._xml_string_with_spoofed_doi(xml_file_string)
         super().__init__(xml_file_string, xml_file_name)
 
-    @property
     def _xml_string_with_spoofed_doi(self, xml_string):
         parsed_xml_string = self._parse_xml_string(xml_string)
         valid_doi_name = '10.000/000'
@@ -144,14 +141,6 @@ class MetadataFileXSDValidator:
         xml_schema.validate(xml_file_string)
 
     @classmethod
-    def _validate_data_subset_file_against_schema(cls, xml_file: DataSubsetXMLMetadataFile, schema):
-        """
-        Validates a Data Subset XML metadata file (potentially
-        with a DOI element) against a schema hosted at a URL.
-        """
-        cls._validate_xml_file_string_against_schema(xml_file.contents_with_spoofed_doi, schema)
-
-    @classmethod
     def validate(cls, xml_file: XMLMetadataFile):
         """
         Validates an XML metadata file against the schema it
@@ -189,7 +178,7 @@ class MetadataFileRegistrationValidator:
         try:
             model.objects.get_by_namespace_and_localid(
                 namespace=xml_file_namespace,
-                namespace=xml_file_localid,
+                localid=xml_file_localid
             )
         except ObjectDoesNotExist:
             return
