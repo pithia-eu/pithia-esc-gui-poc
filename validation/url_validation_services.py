@@ -161,10 +161,11 @@ class MetadataFileMetadataURLReferencesValidator:
             return invalid_urls_dict
 
     @classmethod
-    def is_each_operation_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> Optional(list[str]):
+    def is_each_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> Optional(list[str]):
         """
-        Checks that each metadata server URL is well-formed and that each URL
-        corresponds with a metadata registration in the e-Science Centre.
+        Checks that each operational mode URL is well-formed and that
+        each URL corresponds with a metadata registration in the
+        e-Science Centre.
         """
         invalid_urls_dict = {
             'urls_with_incorrect_structure': [],
