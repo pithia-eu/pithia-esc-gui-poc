@@ -19,7 +19,7 @@ from .url_validation import (
 from pathlib import Path
 from bson import ObjectId
 from .helpers import (
-    create_validation_details_error,
+    create_validation_summary_error,
     _map_string_to_li_element,
     _create_li_element_with_register_link_from_resource_type_from_resource_url,
     _map_etree_element_to_text,
@@ -236,7 +236,7 @@ def validate_xml_file_and_return_summary(
       and localID is the same as the file registered
       with the e-Science Centre.
     """
-    validation_details = {
+    validation_summary = {
         'error': None,
         'warnings': [],
     }
@@ -266,11 +266,11 @@ def validate_xml_file_and_return_summary(
         if (check_xml_file_localid_matches_existing_resource_localid == True and
             existing_resource_id != ''):
             if is_updated_xml_file_localid_matching_with_current_resource_localid(xml_file, existing_resource_id, mongodb_model) == False:
-                validation_details['error'] = create_validation_details_error(
+                validation_summary['error'] = create_validation_summary_error(
                     message='Invalid localID and namespace',
                     details='The localID and namespace must be matching with the current version of the metadata.',
                 )
-                return validation_details
+                return validation_summary
 
         # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
         if (check_xml_file_localid_matches_existing_resource_localid == True and
@@ -281,7 +281,7 @@ def validate_xml_file_and_return_summary(
                 existing_resource_id,
             ):
                 acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(existing_resource_id)
-                validation_details['warnings'].append(create_validation_details_error(
+                validation_summary['warnings'].append(create_validation_summary_error(
                     message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets)))
                 ))
@@ -297,61 +297,61 @@ def validate_xml_file_and_return_summary(
         if len(resource_urls_with_incorrect_structure) > 0:
             error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
             error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
-            validation_details['error'] = create_validation_details_error(
+            validation_summary['error'] = create_validation_summary_error(
                 message='One or multiple resource URLs specified via the xlink:href attribute are invalid.',
                 details=error_msg
             )
-            return validation_details
+            return validation_summary
 
         if len(resource_urls_pointing_to_unregistered_resources) > 0:
             error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
             error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_create_li_element_with_register_link_from_resource_type_from_resource_url, types_of_missing_resources)))
-            validation_details['error'] = create_validation_details_error(
+            validation_summary['error'] = create_validation_summary_error(
                 message='One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.',
                 details=error_msg
             )
-            return validation_details
+            return validation_summary
 
         if len(resource_urls_pointing_to_registered_resources_with_missing_op_modes) > 0:
             error_msg = 'Invalid operational mode references: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_registered_resources_with_missing_op_modes)))
-            validation_details['error'] = create_validation_details_error(
+            validation_summary['error'] = create_validation_summary_error(
                 message='One or multiple referenced operational modes are invalid.',
                 details=error_msg
             )
-            return validation_details
+            return validation_summary
 
         # Ontology URL validation
         invalid_ontology_urls = get_invalid_ontology_urls_from_parsed_xml(xml_file_parsed)
         if len(invalid_ontology_urls) > 0:
             error_msg = 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(_map_string_to_li_element, invalid_ontology_urls)))
-            validation_details['error'] = create_validation_details_error(
+            validation_summary['error'] = create_validation_summary_error(
                 message='One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.',
                 details=error_msg
             )
 
     except etree.XMLSyntaxError as err:
         logger.exception('Error occurred whilst validating XML syntax.')
-        validation_details['error'] = create_validation_details_error(
+        validation_summary['error'] = create_validation_summary_error(
             message='Syntax is invalid.',
             details=str(err),
         )
     except XMLSchemaException as err:
         logger.exception('Error occurred whilst validating XML for schema correctness.')
-        validation_details['error'] = create_validation_details_error(
+        validation_summary['error'] = create_validation_summary_error(
             message='XML does not conform to the corresponding schema.',
             details=str(err),
         )
     except (InvalidRootElementName, FileRegisteredBefore, FileNameNotMatchingWithLocalID) as err:
         logger.exception('Error occurred whilst validating XML. Please see error message for details.')
-        validation_details['error'] = create_validation_details_error(
+        validation_summary['error'] = create_validation_summary_error(
             err.message,
             err.details
         )
     except BaseException as err:
         logger.exception('An unexpected error occurred whilst validating the XML.')
-        validation_details['error'] = create_validation_details_error(
+        validation_summary['error'] = create_validation_summary_error(
             details=str(err)
         )
 
-    return validation_details
+    return validation_summary
