@@ -90,6 +90,10 @@ class ScientificMetadata(models.Model):
         pass
 
     @property
+    def localid_base(self):
+        pass
+
+    @property
     def _metadata_server_url_base(self):
         return 'https://metadata.pithia.eu/resources/2.2'
 
@@ -166,6 +170,7 @@ class HandleURLMapping(models.Model):
 # Proxy models
 class Organisation(ScientificMetadata):
     type_in_metadata_server_url = 'organisation'
+    localid_base = 'Organisation'
     weight = 1
     type_readable = 'organisation'
     type_plural_readable = 'organisations'
@@ -180,6 +185,7 @@ class Organisation(ScientificMetadata):
 
 class Individual(ScientificMetadata):
     type_in_metadata_server_url = 'individual'
+    localid_base = 'Individual'
     weight = 2
     type_readable = 'individual'
     type_plural_readable = 'individuals'
@@ -194,6 +200,7 @@ class Individual(ScientificMetadata):
 
 class Project (ScientificMetadata):
     type_in_metadata_server_url = 'project'
+    localid_base = 'Project'
     weight = 3
     type_readable = 'project'
     type_plural_readable = 'projects'
@@ -208,6 +215,7 @@ class Project (ScientificMetadata):
 
 class Platform(ScientificMetadata):
     type_in_metadata_server_url = 'platform'
+    localid_base = 'Platform'
     weight = 4
     type_readable = 'platform'
     type_plural_readable = 'platforms'
@@ -223,6 +231,7 @@ class Platform(ScientificMetadata):
 
 class Operation(ScientificMetadata):
     type_in_metadata_server_url = 'operation'
+    localid_base = 'Operation'
     weight = 5
     type_readable = 'operation'
     type_plural_readable = 'operations'
@@ -237,6 +246,7 @@ class Operation(ScientificMetadata):
 
 class Instrument(ScientificMetadata):
     type_in_metadata_server_url = 'instrument'
+    localid_base = 'Instrument'
     weight = 6
     type_readable = 'instrument'
     type_plural_readable = 'instruments'
@@ -256,6 +266,7 @@ class Instrument(ScientificMetadata):
 
 class AcquisitionCapabilities(ScientificMetadata):
     type_in_metadata_server_url = 'acquisitionCapabilities'
+    localid_base = 'AcquisitionCapabilities'
     weight = 7
     type_readable = 'acquisition capabilities'
     type_plural_readable = 'acquisition capabilities'
@@ -271,6 +282,7 @@ class AcquisitionCapabilities(ScientificMetadata):
 
 class Acquisition(ScientificMetadata):
     type_in_metadata_server_url = 'acquisition'
+    localid_base = 'Acquisition'
     weight = 8
     type_readable = 'acquisition'
     type_plural_readable = 'acquisitions'
@@ -286,6 +298,7 @@ class Acquisition(ScientificMetadata):
 
 class ComputationCapabilities(ScientificMetadata):
     type_in_metadata_server_url = 'computationCapabilities'
+    localid_base = 'ComputationCapabilities'
     weight = 9
     type_readable = 'computation capabilities'
     type_plural_readable = 'computation capabilities'
@@ -301,6 +314,7 @@ class ComputationCapabilities(ScientificMetadata):
 
 class Computation(ScientificMetadata):
     type_in_metadata_server_url = 'computation'
+    localid_base = 'Computation'
     weight = 10
     type_readable = 'computation'
     type_plural_readable = 'computations'
@@ -316,6 +330,7 @@ class Computation(ScientificMetadata):
 
 class Process(ScientificMetadata):
     type_in_metadata_server_url = 'process'
+    localid_base = 'CompositeProcess'
     weight = 11
     type_readable = 'process'
     type_plural_readable = 'processes'
@@ -331,6 +346,7 @@ class Process(ScientificMetadata):
 
 class DataCollection(ScientificMetadata):
     type_in_metadata_server_url = 'collection'
+    localid_base = 'DataCollection'
     weight = 12
     type_readable = 'data collection'
     type_plural_readable = 'data collections'
@@ -350,6 +366,7 @@ class DataCollection(ScientificMetadata):
 
 class Catalogue(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
+    localid_base = 'Catalogue'
     weight = 13
     type_readable = 'catalogue'
     type_plural_readable = 'catalogues'
@@ -364,6 +381,7 @@ class Catalogue(ScientificMetadata):
 
 class CatalogueEntry(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
+    localid_base = 'CatalogueEntry'
     weight = 14
     type_readable = 'catalogue entry'
     type_plural_readable = 'catalogue entries'
@@ -386,6 +404,7 @@ class CatalogueEntry(ScientificMetadata):
 
 class CatalogueDataSubset(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
+    localid_base = 'DataSubset'
     weight = 15
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
