@@ -1,6 +1,9 @@
 from django.urls import reverse_lazy
 
-def create_validation_summary_error(message='An error occurred during validation', details=''):
+def create_validation_summary_error(
+    message='An unexpected error occurred whilst validating the XML.',
+    details=''
+):
     return {
         'message': message,
         'details': details
