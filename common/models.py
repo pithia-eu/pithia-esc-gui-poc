@@ -245,6 +245,10 @@ class Instrument(ScientificMetadata):
     _browse_detail_page_url_name = 'browse:instrument_detail'
     root_element_name = 'Instrument'
 
+    @property
+    def operational_mode_ids(self):
+        return [om['InstrumentOperationalMode']['id'] for om in self.json.get('operationalMode', [])]
+
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
     class Meta:
