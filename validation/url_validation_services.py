@@ -15,12 +15,11 @@ from .services import (
     AcquisitionCapabilitiesXMLMetadataFile,
     XMLMetadataFile,
 )
-from .url_validation_utils import (
-    get_resource_by_pithia_identifier_components,
-    get_resource_by_pithia_identifier_components_and_op_mode_id,
-)
 
-from common.models import ScientificMetadata
+from common.models import (
+    Instrument,
+    ScientificMetadata,
+)
 from common.helpers import (
     get_mongodb_model_by_resource_type_from_resource_url,
     get_mongodb_model_from_catalogue_related_resource_url,
@@ -189,9 +188,7 @@ class MetadataFileMetadataURLReferencesValidator:
                 invalid_urls_dict['types_of_missing_resources'] = list(set(invalid_urls_dict['types_of_missing_resources']))
                 
             if is_pointing_to_registered_resource:
-                resource_type_in_resource_url, namespace, localid = itemgetter('resource_type', 'namespace', 'localid')(divide_resource_url_into_main_components(resource_url))
-                resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(resource_type_in_resource_url)
-                resource_with_op_mode_id = get_resource_by_pithia_identifier_components_and_op_mode_id(resource_mongodb_model, localid, namespace, op_mode_id)
+                resource_with_op_mode_id = Instrument.objects.get_by_operational_mode_url(resource_url_with_op_mode_id)
                 if resource_with_op_mode_id == None:
                     invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(resource_url_with_op_mode_id)
         
