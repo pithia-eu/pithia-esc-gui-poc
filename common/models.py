@@ -113,6 +113,27 @@ class ScientificMetadata(models.Model):
     def root_element_name(self):
         return None
     
+    @property
+    def _immediate_metadata_dependents(self):
+        return []
+
+    def _dependents_of_immedidate_metadata_dependents(self, immediate_metadata_dependents):
+        all_dependents_of_dependents = []
+        for imd in immediate_metadata_dependents:
+            if not any(str(imd.pk) == str(md.pk) for md in all_dependents_of_dependents):
+                dependents_of_imd = imd.metadata_dependents
+                all_dependents_of_dependents += dependents_of_imd
+
+        return all_dependents_of_dependents
+
+    @property
+    def metadata_dependents(self):
+        print('self.localid', self.localid)
+        immediate_metadata_dependents = self._immediate_metadata_dependents
+        dependents_of_immediate_metadata_dependents = self._dependents_of_immedidate_metadata_dependents(immediate_metadata_dependents)
+        all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
+        return list({ str(md.pk): md for md in all_metadata_dependents }.values())
+    
     organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()
     individuals = IndividualManager.from_queryset(IndividualQuerySet)()
     projects = ProjectManager.from_queryset(ProjectQuerySet)()
@@ -178,6 +199,16 @@ class Organisation(ScientificMetadata):
     _browse_detail_page_url_name = 'browse:organisation_detail'
     root_element_name = 'Organisation'
 
+    @property
+    def _immediate_metadata_dependents(self):
+        individuals = Individual.objects.for_delete_chain(self.metadata_server_url)
+        projects = Project.objects.for_delete_chain(self.metadata_server_url)
+        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
+        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
+        instruments = Instrument.objects.for_delete_chain(self.metadata_server_url)
+        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
+        return list(individuals) + list(projects) + list(platforms) + list(operations) + list(instruments) + list(data_collections)
+
     objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
     class Meta:
@@ -192,13 +223,22 @@ class Individual(ScientificMetadata):
     a_or_an = 'an'
     _browse_detail_page_url_name = 'browse:individual_detail'
     root_element_name = 'Individual'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        projects = Project.objects.for_delete_chain(self.metadata_server_url)
+        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
+        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
+        instruments = Instrument.objects.for_delete_chain(self.metadata_server_url)
+        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
+        return list(projects) + list(platforms) + list(operations) + list(instruments) + list(data_collections)
 
     objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
     class Meta:
         proxy = True
 
-class Project (ScientificMetadata):
+class Project(ScientificMetadata):
     type_in_metadata_server_url = 'project'
     localid_base = 'Project'
     weight = 3
@@ -207,6 +247,11 @@ class Project (ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:project_detail'
     root_element_name = 'Project'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
+        return data_collections
 
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
@@ -223,6 +268,17 @@ class Platform(ScientificMetadata):
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:platform_detail'
     root_element_name = 'Platform'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        return []
+        # operations = [PyMongoOperation(o) for o in list(CurrentOperation.find({
+        #     'platform.@xlink:href': self.resource_url_on_server
+        # }))]
+        # platforms = [PyMongoPlatform(p) for p in list(CurrentPlatform.find({
+        #     'childPlatform.@xlink:href': self.resource_url_on_server
+        # }))]
+        # return operations + platforms
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -254,6 +310,45 @@ class Instrument(ScientificMetadata):
     converted_xml_correction_function = correct_instrument_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:instrument_detail'
     root_element_name = 'Instrument'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        return []
+        # operational_mode_urls = []
+        # if 'operationalMode' in self.scientific_metadata:
+        #     instrument_operational_modes = self.scientific_metadata['operationalMode']
+        #     for om in instrument_operational_modes:
+        #         om_id = om['InstrumentOperationalMode']['id']
+        #         operational_mode_urls.append(f'{self.resource_url_on_server}#{om_id}')
+
+        # # Referenced by: Acquisition (from instrument prop)
+        # acquisitions = [PyMongoAcquisition(a) for a in list(CurrentAcquisition.find({
+        #     'instrument.@xlink:href': self.resource_url_on_server
+        # }))]
+        # # Referenced by: AcquisitionCapability (from
+        # # instrumentModePair.InstrumentOperationalModePair.instrument prop and
+        # # instrumentModePair.InstrumentOperationalModePair.mode prop)
+        # acquisition_capability_sets = [PyMongoAcquisitionCapabilities(ac) for ac in list(CurrentAcquisitionCapability.find({
+        #     '$or': [
+        #         {
+        #             'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': self.resource_url_on_server
+        #         },
+        #         {
+        #             'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': self.resource_url_on_server
+        #         },
+        #         {
+        #             'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
+        #                 '$in': operational_mode_urls
+        #             }
+        #         },
+        #         {
+        #             'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
+        #                 '$in': operational_mode_urls
+        #             }
+        #         },
+        #     ]
+        # }))]
+        # return acquisitions + acquisition_capability_sets
 
     @property
     def operational_mode_ids(self):
@@ -274,6 +369,13 @@ class AcquisitionCapabilities(ScientificMetadata):
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     root_element_name = 'AcquisitionCapabilities'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        acquisitions = [PyMongoAcquisition(a) for a in list(CurrentAcquisition.find({
+            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink:href': self.resource_url_on_server
+        }))]
+        return acquisitions
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -290,6 +392,13 @@ class Acquisition(ScientificMetadata):
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_detail'
     root_element_name = 'Acquisition'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
+            'acquisitionComponent.@xlink:href': self.resource_url_on_server
+        }))]
+        return processes
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -306,6 +415,16 @@ class ComputationCapabilities(ScientificMetadata):
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
     root_element_name = 'ComputationCapabilities'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        computation_capability_sets = [PyMongoComputationCapabilities(cc) for cc in list(CurrentComputationCapability.find({
+            'childComputation.@xlink:href': self.resource_url_on_server
+        }))]
+        computations = [PyMongoComputation(c) for c in list(CurrentComputation.find({
+            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': self.resource_url_on_server
+        }))]
+        return computation_capability_sets + computations
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
@@ -322,6 +441,13 @@ class Computation(ScientificMetadata):
     converted_xml_correction_function = correct_computation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_detail'
     root_element_name = 'Computation'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
+            'computationComponent.@xlink:href': self.resource_url_on_server
+        }))]
+        return processes
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
@@ -338,6 +464,13 @@ class Process(ScientificMetadata):
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
     root_element_name = 'Process'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        data_collections = [PyMongoDataCollection(dc) for dc in list(CurrentDataCollection.find({
+            'om:procedure.@xlink:href': self.resource_url_on_server
+        }))]
+        return data_collections
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -354,6 +487,14 @@ class DataCollection(ScientificMetadata):
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:data_collection_detail'
     root_element_name = 'DataCollection'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        return []
+        # catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
+        #     'dataCollection.@xlink:href': self.resource_url_on_server
+        # }))]
+        # return catalogue_data_subsets
 
     @property
     def first_related_party_url(self):
@@ -373,6 +514,13 @@ class Catalogue(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        catalogue_entries = [PyMongoCatalogueEntry(ce) for ce in list(CurrentCatalogueEntry.find({
+            'catalogueIdentifier.@xlink:href': self.resource_url_on_server
+        }))]
+        return catalogue_entries
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -388,6 +536,13 @@ class CatalogueEntry(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
+            'entryIdentifier.@xlink:href': self.resource_url_on_server
+        }))]
+        return catalogue_data_subsets
 
     @property
     def name(self):
@@ -411,6 +566,10 @@ class CatalogueDataSubset(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
+    
+    @property
+    def _immediate_metadata_dependents(self):
+        pass
 
     @property
     def name(self):
