@@ -348,6 +348,22 @@ class AbstractProcessDatabaseQueries(ABC):
 
 class AbstractDataCollectionDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_computation_type_urls(self, computation_type_urls: list):
+        """
+        Data Collections referencing at least one URL
+        from a list of Computation Type URLs.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
+        """
+        Data Collections referencing at least one URL
+        from a list of Feature of Interest URLs.
+        """
+        pass
+
+    @abstractmethod
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         """
         Data Collections referencing at least one URL
@@ -356,10 +372,10 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
     @abstractmethod
-    def referencing_computation_type_urls(self, computation_type_urls: list):
+    def referencing_party_url(self, party_url: str):
         """
-        Data Collections referencing at least one URL
-        from a list of Computation Type URLs.
+        Data Collections referencing a given Organisation
+        or Individual URL.
         """
         pass
 
@@ -372,10 +388,10 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
     @abstractmethod
-    def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
+    def referencing_project_urls(self, project_urls: list):
         """
         Data Collections referencing at least one URL
-        from a list of Feature of Interest URLs.
+        from a list of Project URLs.
         """
         pass
 
@@ -398,14 +414,6 @@ class AbstractDataCollectionDatabaseQueries(ABC):
           a list of Instrument Type URLs
         * Referencing at least one URL from a
           list of Computation Type URLs
-        """
-        pass
-
-    @abstractmethod
-    def referencing_party_url(self, party_url: str):
-        """
-        Data Collections referencing a given Organisation
-        or Individual URL.
         """
         pass
 
