@@ -266,13 +266,13 @@ def validate_xml_file_and_return_summary(
     invalid_operational_mode_urls = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(xml_metadata_file)
 
     # Process the returned invalid resource URLs.
-    resource_urls_with_incorrect_structure = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_operational_mode_urls['urls_with_incorrect_structure']]
-    resource_urls_pointing_to_unregistered_resources = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_operational_mode_urls['urls_pointing_to_unregistered_resources']]
-    types_of_missing_resources = [*invalid_resource_urls['types_of_missing_resources'], *invalid_operational_mode_urls['types_of_missing_resources']]
-    resource_urls_pointing_to_registered_resources_with_missing_op_modes = invalid_operational_mode_urls['urls_pointing_to_registered_resources_with_missing_op_modes']
+    incorrectly_structured_urls = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_operational_mode_urls['urls_with_incorrect_structure']]
+    unregistered_resource_urls = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_operational_mode_urls['urls_pointing_to_unregistered_resources']]
+    unregistered_resource_url_types = [*invalid_resource_urls['types_of_missing_resources'], *invalid_operational_mode_urls['types_of_missing_resources']]
+    unregistered_operational_mode_urls = invalid_operational_mode_urls['urls_pointing_to_registered_resources_with_missing_op_modes']
     
-    if len(resource_urls_with_incorrect_structure) > 0:
-        error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, resource_urls_with_incorrect_structure)))
+    if len(incorrectly_structured_urls) > 0:
+        error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, incorrectly_structured_urls)))
         error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
         validation_summary['error'] = create_validation_summary_error(
             message='One or multiple resource URLs specified via the xlink:href attribute are invalid.',
@@ -280,18 +280,18 @@ def validate_xml_file_and_return_summary(
         )
         return validation_summary
 
-    if len(resource_urls_pointing_to_unregistered_resources) > 0:
-        error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_unregistered_resources)))
+    if len(unregistered_resource_urls) > 0:
+        error_msg = 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(_map_string_to_li_element, unregistered_resource_urls)))
         error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-        error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_create_li_element_with_register_link_from_resource_type_from_resource_url, types_of_missing_resources)))
+        error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(_create_li_element_with_register_link_from_resource_type_from_resource_url, unregistered_resource_url_types)))
         validation_summary['error'] = create_validation_summary_error(
             message='One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.',
             details=error_msg
         )
         return validation_summary
 
-    if len(resource_urls_pointing_to_registered_resources_with_missing_op_modes) > 0:
-        error_msg = 'Invalid operational mode references: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, resource_urls_pointing_to_registered_resources_with_missing_op_modes)))
+    if len(unregistered_operational_mode_urls) > 0:
+        error_msg = 'Invalid operational mode references: <ul>%s</ul>' % ''.join(list(map(_map_string_to_li_element, unregistered_operational_mode_urls)))
         validation_summary['error'] = create_validation_summary_error(
             message='One or multiple referenced operational modes are invalid.',
             details=error_msg
