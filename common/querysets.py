@@ -29,16 +29,36 @@ class OrganisationQuerySet(MetadataQuerySet, AbstractOrganisationDatabaseQueries
     pass
 
 class IndividualQuerySet(MetadataQuerySet, AbstractIndividualDatabaseQueries):
-    pass
+    def referencing_organisation_url(self, organisation_url: str):
+        return self.filter(**{'json__organisation__@xlink:href': organisation_url})
+
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_organisation_url = self.referencing_organisation_url(metadata_server_url)
+        return referencing_organisation_url
 
 class ProjectQuerySet(MetadataQuerySet, AbstractProjectDatabaseQueries):
-    pass
+    def referencing_party_url(self, party_url: str):
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
+
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_party_url = self.referencing_party_url(metadata_server_url)
+        return referencing_party_url
 
 class PlatformQuerySet(MetadataQuerySet, AbstractPlatformDatabaseQueries):
-    pass
+    def referencing_party_url(self, party_url: str):
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
+
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_party_url = self.referencing_party_url(metadata_server_url)
+        return referencing_party_url
 
 class OperationQuerySet(MetadataQuerySet, AbstractOperationDatabaseQueries):
-    pass
+    def referencing_party_url(self, party_url: str):
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
+
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_party_url = self.referencing_party_url(metadata_server_url)
+        return referencing_party_url
 
 class InstrumentQuerySet(MetadataQuerySet, AbstractInstrumentDatabaseQueries):
     def get_by_operational_mode_url(self, operational_mode_url: str):
@@ -55,9 +75,16 @@ class InstrumentQuerySet(MetadataQuerySet, AbstractInstrumentDatabaseQueries):
         for url in instrument_type_urls:
             query |= Q(**{'json__type__@xlink:href__contains': url})
         return self.filter(query)
+    
+    def referencing_party_url(self, party_url: str):
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
 
     def for_search(self, instrument_type_urls: list):
         return self.referencing_instrument_type_urls(instrument_type_urls)
+
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_party_url = self.referencing_party_url(metadata_server_url)
+        return referencing_party_url
 
 class AcquisitionCapabilitiesQuerySet(MetadataQuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
     def referencing_instrument_urls(self, instrument_urls: list):
@@ -74,6 +101,9 @@ class AcquisitionCapabilitiesQuerySet(MetadataQuerySet, AbstractAcquisitionCapab
 
     def for_search(self, instrument_urls: list, observed_property_urls: list):
         return self.referencing_instrument_urls(instrument_urls) & self.referencing_observed_property_urls(observed_property_urls)
+    
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class AcquisitionQuerySet(MetadataQuerySet, AbstractAcquisitionDatabaseQueries):
     def referencing_acquisition_capability_set_urls(self, acquisition_capability_set_urls: list):
@@ -84,6 +114,9 @@ class AcquisitionQuerySet(MetadataQuerySet, AbstractAcquisitionDatabaseQueries):
 
     def for_search(self, acquisition_capability_set_urls: list):
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
+    
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class ComputationCapabilitiesQuerySet(MetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
@@ -143,6 +176,9 @@ class ComputationCapabilitiesQuerySet(MetadataQuerySet, AbstractComputationCapab
 
         # Convert everything back to QuerySets
         return self.filter(pk__in=merged_list)
+    
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class ComputationQuerySet(MetadataQuerySet, AbstractComputationDatabaseQueries):
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):
@@ -153,6 +189,9 @@ class ComputationQuerySet(MetadataQuerySet, AbstractComputationDatabaseQueries):
 
     def for_search(self, computation_capability_set_urls: list):
         return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
+    
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class ProcessQuerySet(MetadataQuerySet, AbstractProcessDatabaseQueries):
     def referencing_acquisition_urls(self, acquisition_urls: list):
@@ -169,24 +208,15 @@ class ProcessQuerySet(MetadataQuerySet, AbstractProcessDatabaseQueries):
 
     def for_search(self, acquisition_urls: list, computation_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) | self.referencing_computation_urls(computation_urls)
+    
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQueries):
-    def referencing_instrument_type_urls(self, instrument_type_urls: list):
-        query = Q()
-        for url in instrument_type_urls:
-            query |= Q(**{'json__type__@xlink:href': url})
-        return self.filter(query)
-
     def referencing_computation_type_urls(self, computation_type_urls: list):
         query = Q()
         for url in computation_type_urls:
             query |= Q(**{'json__type__@xlink:href': url})
-        return self.filter(query)
-
-    def referencing_process_urls(self, process_urls: list):
-        query = Q()
-        for url in process_urls:
-            query |= Q(**{'json__om:procedure__@xlink:href': url})
         return self.filter(query)
 
     def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
@@ -194,6 +224,24 @@ class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQue
         for url in feature_of_interest_urls:
             query |= Q(**{'json__om:featureOfInterest__FeatureOfInterest__namedRegion__contains': [{'@xlink:href': url}]})
         return self.filter(query)
+    
+    def referencing_instrument_type_urls(self, instrument_type_urls: list):
+        query = Q()
+        for url in instrument_type_urls:
+            query |= Q(**{'json__type__@xlink:href': url})
+        return self.filter(query)
+    
+    def referencing_party_url(self, party_url: str):
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
+
+    def referencing_process_urls(self, process_urls: list):
+        query = Q()
+        for url in process_urls:
+            query |= Q(**{'json__om:procedure__@xlink:href': url})
+        return self.filter(query)
+    
+    def referencing_project_url(self, project_url: list):
+        return self.filter(**{'json__project__@xlink:href': project_url})
 
     def for_search(
         self,
@@ -207,11 +255,19 @@ class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQue
             | self.referencing_computation_type_urls(computation_type_urls) \
             | self.referencing_feature_of_interest_urls(feature_of_interest_urls)
 
+    def for_delete_chain(self, metadata_server_url: str):
+        referencing_party_url = self.referencing_party_url(metadata_server_url)
+        referencing_project_url = self.referencing_project_url(metadata_server_url)
+        return referencing_party_url | referencing_project_url
+
 class CatalogueQuerySet(MetadataQuerySet, AbstractCatalogueDatabaseQueries):
-    pass
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class CatalogueEntryQuerySet(MetadataQuerySet, AbstractCatalogueEntryDatabaseQueries):
-    pass
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
 
 class CatalogueDataSubsetQuerySet(MetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
-    pass
+    def for_delete_chain(self, metadata_server_url: str):
+        return super().for_delete_chain(metadata_server_url)
