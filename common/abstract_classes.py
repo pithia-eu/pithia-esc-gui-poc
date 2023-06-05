@@ -500,14 +500,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueDatabaseQueries(ABC):
-    @abstractmethod
-    def for_delete_chain(self, metadata_server_url: str):
-        """
-        Catalogues referencing a URL corresponding
-        to a metadata registration that is planned
-        for deletion.
-        """
-        pass
+    pass
 
 class AbstractCatalogueEntryDatabaseQueries(ABC):
     @abstractmethod
