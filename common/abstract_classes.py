@@ -332,6 +332,14 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
 
 class AbstractComputationDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
+        """
+        Computations referencing a given Computation
+        Capabilities URL.
+        """
+        pass
+
+    @abstractmethod
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):
         """
         Computations referencing at least one URL from a list
@@ -358,10 +366,24 @@ class AbstractComputationDatabaseQueries(ABC):
 
 class AbstractProcessDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_acquisition_url(self, acquisition_url: str):
+        """
+        Processes referencing a given Acquisition URL.
+        """
+        pass
+
+    @abstractmethod
     def referencing_acquisition_urls(self, acquisition_urls: list):
         """
         Processes referencing at least one URL from a list
         of Acquisition URLs.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_computation_url(self, computation_url: str):
+        """
+        Processes referencing a given Computation URL.
         """
         pass
 
@@ -425,6 +447,13 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
     @abstractmethod
+    def referencing_process_url(self, process_url: str):
+        """
+        Data Collections referencing a given Process URL.
+        """
+        pass
+
+    @abstractmethod
     def referencing_process_urls(self, process_urls: list):
         """
         Data Collections referencing at least one URL
@@ -482,6 +511,13 @@ class AbstractCatalogueDatabaseQueries(ABC):
 
 class AbstractCatalogueEntryDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_catalogue_url(self, catalogue_url: str):
+        """
+        Catalogue Entries referencing a given Catalogue URL.
+        """
+        pass
+
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Catalogue Entries referencing a URL corresponding
@@ -491,6 +527,22 @@ class AbstractCatalogueEntryDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
+    @abstractmethod
+    def referencing_catalogue_entry_url(self, catalogue_entry_url: str):
+        """
+        Catalogue Data Subsets referencing a given Catalogue
+        Entry URL.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_data_collection_url(self, data_collection_url: str):
+        """
+        Catalogue Data Subsets referencing a given Data
+        Collection URL.
+        """
+        pass
+
     @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
