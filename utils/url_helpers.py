@@ -3,7 +3,7 @@ from django.urls import reverse
 
 
 # Resource URL component extraction functions
-def divide_resource_url_into_main_components(resource_url):
+def divide_data_collection_related_resource_url_into_main_components(resource_url):
     resource_url_split = resource_url.split('/')
     return {
         'url_base': '/'.join(resource_url_split[:-3]),
@@ -21,6 +21,12 @@ def divide_catalogue_related_resource_url_into_main_components(resource_url):
         'event': resource_url_split[-2],
         'localid': resource_url_split[-1],
     }
+
+def divide_resource_url_into_main_components(resource_url):
+        try:
+            return divide_catalogue_related_resource_url_into_main_components(resource_url)
+        except IndexError:
+            return divide_resource_url_into_main_components(resource_url)
 
 def divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id):
     resource_url_with_op_mode_id_split = resource_url_with_op_mode_id.split('#')
