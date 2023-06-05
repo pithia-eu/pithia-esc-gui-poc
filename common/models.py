@@ -368,10 +368,8 @@ class Acquisition(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
-            'acquisitionComponent.@xlink:href': self.metadata_server_url
-        }))]
-        return processes
+        processes = Process.objects.for_delete_chain(self.metadata_server_url)
+        return list(processes)
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -391,13 +389,9 @@ class ComputationCapabilities(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        computation_capability_sets = [PyMongoComputationCapabilities(cc) for cc in list(CurrentComputationCapability.find({
-            'childComputation.@xlink:href': self.metadata_server_url
-        }))]
-        computations = [PyMongoComputation(c) for c in list(CurrentComputation.find({
-            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': self.metadata_server_url
-        }))]
-        return computation_capability_sets + computations
+        computation_capability_sets = ComputationCapabilities.objects.for_delete_chain(self.metadata_server_url)
+        computations = Computation.objects.for_delete_chain(self.metadata_server_url)
+        return list(computation_capability_sets) + list(computations)
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
@@ -417,9 +411,7 @@ class Computation(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
-            'computationComponent.@xlink:href': self.metadata_server_url
-        }))]
+        processes = Process.objects.for_delete_chain(self.metadata_server_url)
         return processes
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
@@ -440,10 +432,8 @@ class Process(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        data_collections = [PyMongoDataCollection(dc) for dc in list(CurrentDataCollection.find({
-            'om:procedure.@xlink:href': self.metadata_server_url
-        }))]
-        return data_collections
+        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
+        return list(data_collections)
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -463,11 +453,8 @@ class DataCollection(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        return []
-        # catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
-        #     'dataCollection.@xlink:href': self.metadata_server_url
-        # }))]
-        # return catalogue_data_subsets
+        catalogue_data_subsets = CatalogueDataSubset.objects.for_delete_chain(self.metadata_server_url)
+        return list(catalogue_data_subsets)
 
     @property
     def first_related_party_url(self):
@@ -490,10 +477,8 @@ class Catalogue(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        catalogue_entries = [PyMongoCatalogueEntry(ce) for ce in list(CurrentCatalogueEntry.find({
-            'catalogueIdentifier.@xlink:href': self.metadata_server_url
-        }))]
-        return catalogue_entries
+        catalogue_entries = CatalogueEntry.objects.for_delete_chain(self.metadata_server_url)
+        return list(catalogue_entries)
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -512,10 +497,8 @@ class CatalogueEntry(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
-            'entryIdentifier.@xlink:href': self.metadata_server_url
-        }))]
-        return catalogue_data_subsets
+        catalogue_data_subsets = CatalogueDataSubset.objects.for_delete_chain(self.metadata_server_url)
+        return list(catalogue_data_subsets)
 
     @property
     def name(self):
