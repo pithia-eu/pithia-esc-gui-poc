@@ -11,7 +11,7 @@ from utils.url_helpers import (
 
 class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
     def _get_by_namespace_and_localid(self, namespace: str, localid: str):
-        return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localid=localid)
+        return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
         namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
@@ -22,7 +22,7 @@ class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
         for url in metadata_server_urls:
             namespace, localid = get_namespace_and_localid_from_resource_url(url)
             query |= Q(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
-        return self.get_by_metadata_server_url(query)
+        return self.filter(query)
 
 
 class OrganisationQuerySet(MetadataQuerySet, AbstractOrganisationDatabaseQueries):
