@@ -76,6 +76,13 @@ class AbstractPlatformDatabaseQueries(ABC):
         pass
 
     @abstractmethod
+    def referencing_platform_url(self, platform_url: str):
+        """
+        Platforms referencing a given Platform URL.
+        """
+        pass
+
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Platforms referencing a URL corresponding
@@ -90,6 +97,13 @@ class AbstractOperationDatabaseQueries(ABC):
         """
         Operations referencing a given Organisation
         or Individual URL.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_platform_url(self, platform_url: str):
+        """
+        Operations referencing a given Platform URL.
         """
         pass
 
@@ -138,6 +152,14 @@ class AbstractInstrumentDatabaseQueries(ABC):
 
 class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_instrument_url(self, instrument_url: str):
+        """
+        Acquisition Capabilities registrations referencing a given
+        Instrument URL.
+        """
+        pass
+    
+    @abstractmethod
     def referencing_instrument_urls(self, instrument_urls: list):
         """
         Acquisition Capabilities referencing at least one URL from
@@ -150,6 +172,14 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         Acquisition Capabilities referencing at least one URL from
         a list of Observed Property URLs.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_operational_mode_urls(self, operational_mode_urls: list):
+        """
+        Acquisition Capabilities referencing at least one URL from
+        a list of operational mode URLs.
         """
         pass
 
@@ -168,7 +198,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         pass
 
     @abstractmethod
-    def for_delete_chain(self, metadata_server_url: str):
+    def for_delete_chain(self, metadata_server_url: str, operational_mode_urls: list = []):
         """
         Acquisition Capabilities referencing a URL
         corresponding to a metadata registration
@@ -178,10 +208,25 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
 
 class AbstractAcquisitionDatabaseQueries(ABC):
     @abstractmethod
+    def referencing_acquisition_capability_set_url(self, acquisition_capability_set_url: str):
+        """
+        Acquisitions referencing a given Acquisition
+        Capabilities URL.
+        """
+        pass
+
+    @abstractmethod
     def referencing_acquisition_capability_set_urls(self, acquisition_capability_set_urls: list):
         """
         Acquisitions referencing at least one URL from
         a list of Acquisition Capabilities.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_instrument_url(self, instrument_url: str):
+        """
+        Acquisitions referencing a given Instrument URL.
         """
         pass
 
