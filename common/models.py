@@ -114,10 +114,10 @@ class ScientificMetadata(models.Model):
         return None
     
     @property
-    def _immediate_metadata_dependents(self):
+    def _immediate_metadata_dependents(self) -> list:
         return []
 
-    def _dependents_of_immedidate_metadata_dependents(self, immediate_metadata_dependents):
+    def _dependents_of_immedidate_metadata_dependents(self, immediate_metadata_dependents) -> list:
         all_dependents_of_dependents = []
         for imd in immediate_metadata_dependents:
             if not any(str(imd.pk) == str(md.pk) for md in all_dependents_of_dependents):
@@ -127,8 +127,7 @@ class ScientificMetadata(models.Model):
         return all_dependents_of_dependents
 
     @property
-    def metadata_dependents(self):
-        print('self.localid', self.localid)
+    def metadata_dependents(self) -> list:
         immediate_metadata_dependents = self._immediate_metadata_dependents
         dependents_of_immediate_metadata_dependents = self._dependents_of_immedidate_metadata_dependents(immediate_metadata_dependents)
         all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
@@ -251,7 +250,7 @@ class Project(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
-        return data_collections
+        return list(data_collections)
 
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
@@ -271,14 +270,9 @@ class Platform(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        return []
-        # operations = [PyMongoOperation(o) for o in list(CurrentOperation.find({
-        #     'platform.@xlink:href': self.resource_url_on_server
-        # }))]
-        # platforms = [PyMongoPlatform(p) for p in list(CurrentPlatform.find({
-        #     'childPlatform.@xlink:href': self.resource_url_on_server
-        # }))]
-        # return operations + platforms
+        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
+        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
+        return list(operations) + list(platforms)
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -313,42 +307,23 @@ class Instrument(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        return []
-        # operational_mode_urls = []
-        # if 'operationalMode' in self.scientific_metadata:
-        #     instrument_operational_modes = self.scientific_metadata['operationalMode']
-        #     for om in instrument_operational_modes:
-        #         om_id = om['InstrumentOperationalMode']['id']
-        #         operational_mode_urls.append(f'{self.resource_url_on_server}#{om_id}')
+        operational_mode_urls = []
+        if 'operationalMode' in self.json:
+            instrument_operational_modes = self.json['operationalMode']
+            for om in instrument_operational_modes:
+                om_id = om['InstrumentOperationalMode']['id']
+                operational_mode_urls.append(f'{self.metadata_server_url}#{om_id}')
 
-        # # Referenced by: Acquisition (from instrument prop)
-        # acquisitions = [PyMongoAcquisition(a) for a in list(CurrentAcquisition.find({
-        #     'instrument.@xlink:href': self.resource_url_on_server
-        # }))]
-        # # Referenced by: AcquisitionCapability (from
-        # # instrumentModePair.InstrumentOperationalModePair.instrument prop and
-        # # instrumentModePair.InstrumentOperationalModePair.mode prop)
-        # acquisition_capability_sets = [PyMongoAcquisitionCapabilities(ac) for ac in list(CurrentAcquisitionCapability.find({
-        #     '$or': [
-        #         {
-        #             'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': self.resource_url_on_server
-        #         },
-        #         {
-        #             'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': self.resource_url_on_server
-        #         },
-        #         {
-        #             'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
-        #                 '$in': operational_mode_urls
-        #             }
-        #         },
-        #         {
-        #             'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
-        #                 '$in': operational_mode_urls
-        #             }
-        #         },
-        #     ]
-        # }))]
-        # return acquisitions + acquisition_capability_sets
+        # Referenced by: Acquisition (from instrument prop)
+        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
+        # Referenced by: AcquisitionCapability (from
+        # instrumentModePair.InstrumentOperationalModePair.instrument prop and
+        # instrumentModePair.InstrumentOperationalModePair.mode prop)
+        acquisition_capability_sets = AcquisitionCapabilities.objects.for_delete_chain(
+            self.metadata_server_url,
+            operational_mode_urls
+        )
+        return list(acquisitions) + list(acquisition_capability_sets)
 
     @property
     def operational_mode_ids(self):
@@ -372,10 +347,8 @@ class AcquisitionCapabilities(ScientificMetadata):
     
     @property
     def _immediate_metadata_dependents(self):
-        acquisitions = [PyMongoAcquisition(a) for a in list(CurrentAcquisition.find({
-            'capabilityLinks.capabilityLink.acquisitionCapabilities.@xlink:href': self.resource_url_on_server
-        }))]
-        return acquisitions
+        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
+        return list(acquisitions)
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -396,7 +369,7 @@ class Acquisition(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
-            'acquisitionComponent.@xlink:href': self.resource_url_on_server
+            'acquisitionComponent.@xlink:href': self.metadata_server_url
         }))]
         return processes
 
@@ -419,10 +392,10 @@ class ComputationCapabilities(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         computation_capability_sets = [PyMongoComputationCapabilities(cc) for cc in list(CurrentComputationCapability.find({
-            'childComputation.@xlink:href': self.resource_url_on_server
+            'childComputation.@xlink:href': self.metadata_server_url
         }))]
         computations = [PyMongoComputation(c) for c in list(CurrentComputation.find({
-            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': self.resource_url_on_server
+            'capabilityLinks.capabilityLink.computationCapabilities.@xlink:href': self.metadata_server_url
         }))]
         return computation_capability_sets + computations
 
@@ -445,7 +418,7 @@ class Computation(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         processes = [PyMongoProcess(p) for p in list(CurrentProcess.find({
-            'computationComponent.@xlink:href': self.resource_url_on_server
+            'computationComponent.@xlink:href': self.metadata_server_url
         }))]
         return processes
 
@@ -468,7 +441,7 @@ class Process(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         data_collections = [PyMongoDataCollection(dc) for dc in list(CurrentDataCollection.find({
-            'om:procedure.@xlink:href': self.resource_url_on_server
+            'om:procedure.@xlink:href': self.metadata_server_url
         }))]
         return data_collections
 
@@ -492,7 +465,7 @@ class DataCollection(ScientificMetadata):
     def _immediate_metadata_dependents(self):
         return []
         # catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
-        #     'dataCollection.@xlink:href': self.resource_url_on_server
+        #     'dataCollection.@xlink:href': self.metadata_server_url
         # }))]
         # return catalogue_data_subsets
 
@@ -518,7 +491,7 @@ class Catalogue(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         catalogue_entries = [PyMongoCatalogueEntry(ce) for ce in list(CurrentCatalogueEntry.find({
-            'catalogueIdentifier.@xlink:href': self.resource_url_on_server
+            'catalogueIdentifier.@xlink:href': self.metadata_server_url
         }))]
         return catalogue_entries
 
@@ -540,7 +513,7 @@ class CatalogueEntry(ScientificMetadata):
     @property
     def _immediate_metadata_dependents(self):
         catalogue_data_subsets = [PyMongoCatalogueDataSubset(cds) for cds in list(CurrentCatalogueDataSubset.find({
-            'entryIdentifier.@xlink:href': self.resource_url_on_server
+            'entryIdentifier.@xlink:href': self.metadata_server_url
         }))]
         return catalogue_data_subsets
 
