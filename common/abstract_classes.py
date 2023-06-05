@@ -1,7 +1,10 @@
-from abc import ABC, abstractclassmethod
+from abc import (
+    ABC,
+    abstractmethod,
+)
 
 class AbstractMetadataDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def _get_by_namespace_and_localid(self, namespace: str, localid: str):
         """
         A metadata registration using the passed in
@@ -9,7 +12,7 @@ class AbstractMetadataDatabaseQueries(ABC):
         """
         pass
     
-    @abstractclassmethod
+    @abstractmethod
     def get_by_metadata_server_url(self, metadata_server_url: str):
         """
         A metadata registration corresponding to the
@@ -17,7 +20,7 @@ class AbstractMetadataDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def get_by_metadata_server_urls(self, metadata_server_urls: list):
         """
         Metadata registrations corresponding to at least
@@ -29,14 +32,14 @@ class AbstractOrganisationDatabaseQueries(ABC):
     pass
 
 class AbstractIndividualDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_organisation_url(self, organisation_url: str):
         """
         Individuals referencing a given Organisation URL.
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Individuals referencing a URL corresponding
@@ -46,6 +49,7 @@ class AbstractIndividualDatabaseQueries(ABC):
         pass
 
 class AbstractProjectDatabaseQueries(ABC):
+    @abstractmethod
     def referencing_party_url(self, party_url: str):
         """
         Projects referencing a given Organisation
@@ -53,6 +57,7 @@ class AbstractProjectDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Projects referencing a URL corresponding
@@ -62,6 +67,7 @@ class AbstractProjectDatabaseQueries(ABC):
         pass
 
 class AbstractPlatformDatabaseQueries(ABC):
+    @abstractmethod
     def referencing_party_url(self, party_url: str):
         """
         Platforms referencing a given Organisation
@@ -69,6 +75,7 @@ class AbstractPlatformDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Platforms referencing a URL corresponding
@@ -78,6 +85,7 @@ class AbstractPlatformDatabaseQueries(ABC):
         pass
 
 class AbstractOperationDatabaseQueries(ABC):
+    @abstractmethod
     def referencing_party_url(self, party_url: str):
         """
         Operations referencing a given Organisation
@@ -85,6 +93,7 @@ class AbstractOperationDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Operations referencing a URL corresponding
@@ -94,7 +103,7 @@ class AbstractOperationDatabaseQueries(ABC):
         pass
 
 class AbstractInstrumentDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         """
         Instruments referencing at least one URL from
@@ -102,21 +111,23 @@ class AbstractInstrumentDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, instrument_type_urls: list):
         """
         Instruments referencing at least one URL
         from a list of Instrument Type URLs.
         """
         pass
-
+    
+    @abstractmethod
     def referencing_party_url(self, party_url: str):
         """
         Instruments referencing a given Organisation
         or Individual URL.
         """
         pass
-
+    
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Instruments referencing a URL corresponding
@@ -126,7 +137,7 @@ class AbstractInstrumentDatabaseQueries(ABC):
         pass
 
 class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_instrument_urls(self, instrument_urls: list):
         """
         Acquisition Capabilities referencing at least one URL from
@@ -134,7 +145,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_observed_property_urls(self, observed_property_urls: list):
         """
         Acquisition Capabilities referencing at least one URL from
@@ -142,7 +153,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, instrument_urls: list, observed_property_urls: list):
         """
         Acquisition Capabilities matching both of the following criteria:
@@ -156,7 +167,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Acquisition Capabilities referencing a URL
@@ -166,7 +177,7 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         pass
 
 class AbstractAcquisitionDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_acquisition_capability_set_urls(self, acquisition_capability_set_urls: list):
         """
         Acquisitions referencing at least one URL from
@@ -174,7 +185,7 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, acquisition_capability_set_urls: list):
         """
         Acquisitions referencing at least one URL from a
@@ -182,7 +193,7 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Acquisitions referencing a URL corresponding
@@ -192,7 +203,7 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         pass
 
 class AbstractComputationCapabilitiesDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_computation_type_urls(self, computation_type_urls: list):
         """
         Computation Capabilities referencing at least one URL from a
@@ -200,7 +211,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
         """
         Computation Capabilities referencing the passed in
@@ -208,7 +219,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def _immediate_computation_capability_set_referers(self, computation_capability_set):
         """
         Computation Capabilities registrations referencing a given
@@ -216,7 +227,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def all_computation_capability_set_referers(self, computation_capability_set, initial_referers_list=[]):
         """
         Computation Capabilities registrations referencing the passed
@@ -225,7 +236,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def _immediate_child_computations(self, computation_capability_set):
         """
         Child Computation Capabilities registrations of a given Computation Capabilities
@@ -233,7 +244,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def all_child_computations(self, computation_capability_set, initial_child_computation_list=[]):
         """
         Child computation Capabilities registrations referencing the passed
@@ -243,7 +254,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_observed_property_urls(self, observed_property_urls: list):
         """
         Computation Capabilities referencing at least one URL from a
@@ -251,7 +262,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         """
         Computation Capabilities matching both of the following criteria:
@@ -265,7 +276,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Computation Capabilities referencing a URL
@@ -275,7 +286,7 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         pass
 
 class AbstractComputationDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):
         """
         Computations referencing at least one URL from a list
@@ -283,7 +294,7 @@ class AbstractComputationDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, computation_capability_set_urls: list):
         """
         Computations referencing at least one URL from a list
@@ -291,7 +302,7 @@ class AbstractComputationDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Computations referencing a URL corresponding
@@ -301,7 +312,7 @@ class AbstractComputationDatabaseQueries(ABC):
         pass
 
 class AbstractProcessDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_acquisition_urls(self, acquisition_urls: list):
         """
         Processes referencing at least one URL from a list
@@ -309,7 +320,7 @@ class AbstractProcessDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_computation_urls(self, computation_urls: list):
         """
         Processes referencing at least one URL from a list
@@ -317,7 +328,7 @@ class AbstractProcessDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(self, acquisition_urls: list, computation_urls: list):
         """
         Processes meeting at least one of the following criteria:
@@ -326,7 +337,7 @@ class AbstractProcessDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Processes referencing a URL corresponding
@@ -336,7 +347,7 @@ class AbstractProcessDatabaseQueries(ABC):
         pass
 
 class AbstractDataCollectionDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         """
         Data Collections referencing at least one URL
@@ -344,7 +355,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_computation_type_urls(self, computation_type_urls: list):
         """
         Data Collections referencing at least one URL
@@ -352,7 +363,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_process_urls(self, process_urls: list):
         """
         Data Collections referencing at least one URL
@@ -360,7 +371,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
         """
         Data Collections referencing at least one URL
@@ -368,7 +379,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def for_search(
         self,
         process_urls: list,
@@ -390,6 +401,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
     def referencing_party_url(self, party_url: str):
         """
         Data Collections referencing a given Organisation
@@ -397,6 +409,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Data Collections referencing a URL corresponding
@@ -406,7 +419,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Catalogues referencing a URL corresponding
@@ -416,7 +429,7 @@ class AbstractCatalogueDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueEntryDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Catalogue Entries referencing a URL corresponding
@@ -426,7 +439,7 @@ class AbstractCatalogueEntryDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Catalogue Data Subsets referencing a URL
