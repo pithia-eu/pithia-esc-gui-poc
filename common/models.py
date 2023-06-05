@@ -474,6 +474,10 @@ class Catalogue(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
+
+    @property
+    def metadata_server_url(self):
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}'
     
     @property
     def _immediate_metadata_dependents(self):
@@ -507,6 +511,18 @@ class CatalogueEntry(ScientificMetadata):
     @property
     def description(self):
         return self.json['entryDescription']
+    
+    @property
+    def catalogue_url(self):
+        return self.json['catalogueIdentifier']['@xlink:href']
+
+    @property
+    def catalogue(self):
+        return Catalogue.objects.get_by_metadata_server_url(self.catalogue_url)
+
+    @property
+    def metadata_server_url(self):
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
 
     objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
 
@@ -522,10 +538,6 @@ class CatalogueDataSubset(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        pass
 
     @property
     def name(self):
@@ -538,6 +550,22 @@ class CatalogueDataSubset(ScientificMetadata):
     @property
     def data_collection_url(self):
         return self.json['dataCollection']['@xlink:href']
+    
+    @property
+    def catalogue_entry_url(self):
+        return self.json['entryIdentifier']['@xlink:href']
+    
+    @property
+    def catalogue_entry(self):
+        return CatalogueEntry.objects.get_by_metadata_server_url(self.catalogue_entry_url)
+
+    @property
+    def catalogue(self):
+        return self.catalogue_entry.catalogue
+
+    @property
+    def metadata_server_url(self):
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
 
     objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
 
