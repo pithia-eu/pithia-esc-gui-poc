@@ -63,8 +63,11 @@ class CommonTestMixin:
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             DataCollection.objects.create_from_xml_string(xml_file.read())
 
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
-            Catalogue.objects.create_from_xml_string(xml_file.read())
+        if self.test_file_name != 'Catalogue_Test.xml':
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
+                Catalogue.objects.create_from_xml_string(xml_file.read())
+        else:
+            print('hi')
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
             CatalogueEntry.objects.create_from_xml_string(xml_file.read())
@@ -83,9 +86,6 @@ class CommonTestMixin:
         self.metadata_registration = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, self.test_file_name)) as xml_file:
             self.metadata_registration = self.model.objects.create_from_xml_string(xml_file.read())
-        # print(self.metadata_registration.localid)
-        # print('self.metadata_registration.metadata_dependents' , self.metadata_registration.metadata_dependents)
-        # print('len(self.metadata_registration.metadata_dependents)' , len(self.metadata_registration.metadata_dependents))
 
 class OrganisationTestCase(CommonTestMixin, TestCase):
     model = Organisation
