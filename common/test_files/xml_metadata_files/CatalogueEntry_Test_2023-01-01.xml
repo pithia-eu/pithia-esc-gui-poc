@@ -26,7 +26,7 @@
         cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </entryDescription>
     <catalogueIdentifier
-        xlink:href="https://metadata.pithia.eu/resources/2.2/catalogue/pithia/Test/Catalogue_Test" />
+        xlink:href="https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/Catalogue_Test" />
     <phenomenonTime>
         <gml:TimePeriod gml:id="tp1">
             <gml:begin>
