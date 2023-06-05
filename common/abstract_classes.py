@@ -388,10 +388,9 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
     @abstractmethod
-    def referencing_project_urls(self, project_urls: list):
+    def referencing_project_url(self, project_url: list):
         """
-        Data Collections referencing at least one URL
-        from a list of Project URLs.
+        Data Collections referencing a given Project URL.
         """
         pass
 
