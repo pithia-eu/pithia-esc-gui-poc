@@ -14,13 +14,13 @@ class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
         return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localid=localid)
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
-        namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(metadata_server_url))
+        namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
         return self._get_by_namespace_and_localid(namespace, localid)
     
     def get_by_metadata_server_urls(self, metadata_server_urls: list):
         query = Q()
         for url in metadata_server_urls:
-            namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(url))
+            namespace, localid = get_namespace_and_localid_from_resource_url(url)
             query |= Q(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
         return self.get_by_metadata_server_url(query)
 
@@ -71,7 +71,7 @@ class OperationQuerySet(MetadataQuerySet, AbstractOperationDatabaseQueries):
 class InstrumentQuerySet(MetadataQuerySet, AbstractInstrumentDatabaseQueries):
     def get_by_operational_mode_url(self, operational_mode_url: str):
         metadata_server_url, op_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(operational_mode_url))
-        namespace, localid = itemgetter('namespace', 'localid')(get_namespace_and_localid_from_resource_url(metadata_server_url))
+        namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
         return self.get(
             json__identifier__PITHIA_Identifier__namespace=namespace,
             json__identifier__PITHIA_Identifier__localid=localid,
@@ -122,7 +122,7 @@ class AcquisitionCapabilitiesQuerySet(MetadataQuerySet, AbstractAcquisitionCapab
     def for_delete_chain(self, metadata_server_url: str, operational_mode_urls: list = []):
         referencing_instrument_url = self.referencing_instrument_url(metadata_server_url)
         referencing_operational_mode_urls = self.referencing_operational_mode_urls(operational_mode_urls)
-        return referencing_instrument_url + referencing_operational_mode_urls
+        return referencing_instrument_url | referencing_operational_mode_urls
 
 class AcquisitionQuerySet(MetadataQuerySet, AbstractAcquisitionDatabaseQueries):
     def referencing_acquisition_capability_set_url(self, acquisition_capability_set_url: str):
@@ -249,7 +249,7 @@ class ProcessQuerySet(MetadataQuerySet, AbstractProcessDatabaseQueries):
     def for_delete_chain(self, metadata_server_url: str):
         referencing_acquisition_url = self.referencing_acquisition_url(metadata_server_url)
         referencing_computation_url = self.referencing_computation_url(metadata_server_url)
-        return referencing_acquisition_url + referencing_computation_url
+        return referencing_acquisition_url | referencing_computation_url
 
 class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
@@ -304,8 +304,7 @@ class DataCollectionQuerySet(MetadataQuerySet, AbstractDataCollectionDatabaseQue
         return referencing_party_url | referencing_project_url | referencing_process_url
 
 class CatalogueQuerySet(MetadataQuerySet, AbstractCatalogueDatabaseQueries):
-    def for_delete_chain(self, metadata_server_url: str):
-        return super().for_delete_chain(metadata_server_url)
+    pass
 
 class CatalogueEntryQuerySet(MetadataQuerySet, AbstractCatalogueEntryDatabaseQueries):
     def referencing_catalogue_url(self, catalogue_url: str):
@@ -317,7 +316,7 @@ class CatalogueEntryQuerySet(MetadataQuerySet, AbstractCatalogueEntryDatabaseQue
 
 class CatalogueDataSubsetQuerySet(MetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
     def referencing_catalogue_entry_url(self, catalogue_entry_url: str):
-        return super().referencing_catalogue_entry_url(**{'json__entryIdentifier__@xlink:href': catalogue_entry_url})
+        return self.filter(**{'json__entryIdentifier__@xlink:href': catalogue_entry_url})
     
     def referencing_data_collection_url(self, data_collection_url: str):
         return self.filter(**{'json__dataCollection__@xlink:href': data_collection_url})
