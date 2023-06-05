@@ -29,16 +29,69 @@ class AbstractOrganisationDatabaseQueries(ABC):
     pass
 
 class AbstractIndividualDatabaseQueries(ABC):
-    pass
+    @abstractclassmethod
+    def referencing_organisation_url(self, organisation_url: str):
+        """
+        Individuals referencing a given Organisation URL.
+        """
+        pass
+
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Individuals referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
 
 class AbstractProjectDatabaseQueries(ABC):
-    pass
+    def referencing_party_url(self, party_url: str):
+        """
+        Projects referencing a given Organisation
+        or Individual URL.
+        """
+        pass
+
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Projects referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
 
 class AbstractPlatformDatabaseQueries(ABC):
-    pass
+    def referencing_party_url(self, party_url: str):
+        """
+        Platforms referencing a given Organisation
+        or Individual URL.
+        """
+        pass
+
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Platforms referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
 
 class AbstractOperationDatabaseQueries(ABC):
-    pass
+    def referencing_party_url(self, party_url: str):
+        """
+        Operations referencing a given Organisation
+        or Individual URL.
+        """
+        pass
+
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Operations referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
 
 class AbstractInstrumentDatabaseQueries(ABC):
     @abstractclassmethod
@@ -54,6 +107,21 @@ class AbstractInstrumentDatabaseQueries(ABC):
         """
         Instruments referencing at least one URL
         from a list of Instrument Type URLs.
+        """
+        pass
+
+    def referencing_party_url(self, party_url: str):
+        """
+        Instruments referencing a given Organisation
+        or Individual URL.
+        """
+        pass
+
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Instruments referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
         """
         pass
 
@@ -88,6 +156,15 @@ class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Acquisition Capabilities referencing a URL
+        corresponding to a metadata registration
+        that is planned for deletion.
+        """
+        pass
+
 class AbstractAcquisitionDatabaseQueries(ABC):
     @abstractclassmethod
     def referencing_acquisition_capability_set_urls(self, acquisition_capability_set_urls: list):
@@ -102,6 +179,15 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         """
         Acquisitions referencing at least one URL from a
         list of Acquisition Capabilities URLs.
+        """
+        pass
+
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Acquisitions referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
         """
         pass
 
@@ -179,6 +265,15 @@ class AbstractComputationCapabilitiesDatabaseQueries(ABC):
         """
         pass
 
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Computation Capabilities referencing a URL
+        corresponding to a metadata registration
+        that is planned for deletion.
+        """
+        pass
+
 class AbstractComputationDatabaseQueries(ABC):
     @abstractclassmethod
     def referencing_computation_capability_set_urls(self, computation_capability_set_urls: list):
@@ -193,6 +288,15 @@ class AbstractComputationDatabaseQueries(ABC):
         """
         Computations referencing at least one URL from a list
         of Computation Capabilities URLs.
+        """
+        pass
+
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Computations referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
         """
         pass
 
@@ -219,6 +323,15 @@ class AbstractProcessDatabaseQueries(ABC):
         Processes meeting at least one of the following criteria:
         * Referencing at least one URL from a list of Acquisition URLs
         * Referencing at least one URL from a list of Computation URLs
+        """
+        pass
+
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Processes referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
         """
         pass
 
@@ -277,11 +390,47 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
+    def referencing_party_url(self, party_url: str):
+        """
+        Data Collections referencing a given Organisation
+        or Individual URL.
+        """
+        pass
+
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Data Collections referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
+
 class AbstractCatalogueDatabaseQueries(ABC):
-    pass
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Catalogues referencing a URL corresponding
+        to a metadata registration that is planned
+        for deletion.
+        """
+        pass
 
 class AbstractCatalogueEntryDatabaseQueries(ABC):
-    pass
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Catalogue Entries referencing a URL corresponding
+        to a metadata registration that is planned for
+        deletion.
+        """
+        pass
 
 class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
-    pass
+    @abstractclassmethod
+    def for_delete_chain(self, metadata_server_url: str):
+        """
+        Catalogue Data Subsets referencing a URL
+        corresponding to a metadata registration that
+        is planned for deletion.
+        """
+        pass
