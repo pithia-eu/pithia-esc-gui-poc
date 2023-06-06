@@ -5,6 +5,7 @@ from django.test import (
 )
 
 from common.models import (
+    ScientificMetadata,
     Organisation,
     Individual,
     Project,
@@ -27,8 +28,7 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 
 # Create your tests here.
 
-@tag('metadata_dependents')
-class CommonTestMixin:
+class CommonSetUpMixin:
     def setUp(self) -> None:
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
             Individual.objects.create_from_xml_string(xml_file.read())
@@ -63,11 +63,15 @@ class CommonTestMixin:
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
             DataCollection.objects.create_from_xml_string(xml_file.read())
 
-        if self.test_file_name != 'Catalogue_Test.xml':
+        is_catalogue_test_case = False
+        try:
+            is_catalogue_test_case = self.test_file_name == 'Catalogue_Test.xml'
+        except AttributeError:
+            pass
+
+        if not is_catalogue_test_case:
             with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
                 Catalogue.objects.create_from_xml_string(xml_file.read())
-        else:
-            print('hi')
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
             CatalogueEntry.objects.create_from_xml_string(xml_file.read())
@@ -76,7 +80,9 @@ class CommonTestMixin:
             CatalogueDataSubset.objects.create_from_xml_string(xml_file.read())
 
         return super().setUp()
-    
+
+@tag('metadata_dependents')
+class CommonTestMixin(CommonSetUpMixin):
     def test_metadata_dependents(self):
         """
         metadata_dependents() returns all metadata
@@ -86,6 +92,18 @@ class CommonTestMixin:
         self.metadata_registration = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, self.test_file_name)) as xml_file:
             self.metadata_registration = self.model.objects.create_from_xml_string(xml_file.read())
+
+class MetadataTestCase(CommonSetUpMixin, TestCase):
+    def test_delete_by_metadata_server_urls(self):
+        """
+        Model.objects.delete_by_metadata_server_urls() deletes all
+        metadata registrations corresponding to at least one URL
+        from a list of metadata server URLs.
+        """
+        metadata_server_urls = [m.metadata_server_url for m in list(ScientificMetadata.objects.all())]
+        ScientificMetadata.objects.delete_by_metadata_server_urls(metadata_server_urls)
+        remaining_registrations = list(ScientificMetadata.objects.all())
+        self.assertTrue(len(remaining_registrations) == 0)
 
 class OrganisationTestCase(CommonTestMixin, TestCase):
     model = Organisation
