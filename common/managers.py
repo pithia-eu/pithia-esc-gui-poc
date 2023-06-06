@@ -28,17 +28,6 @@ class ScientificMetadataManager(models.Manager):
         metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
         return metadata_file_dict
     
-    def get_by_namespace_and_localid(self, namespace: str, localid: str):
-        return self.get(
-            json__identifier__PITHIA_Identifier__namespace=namespace,
-            json_metadata__identifier__PITHIA_Identifier__localID=localid
-        )
-
-    def with_localids(self, localids: list):
-        return self.get_queryset().filter(
-            json__identifier__PITHIA_Identifier__localID__in=localids
-        )
-    
     def _create_from_xml_string(self, xml_string: str, resource_type: str):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
         
