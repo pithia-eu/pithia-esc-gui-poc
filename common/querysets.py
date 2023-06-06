@@ -24,6 +24,10 @@ class MetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
             query |= Q(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
         return self.filter(query)
 
+    def delete_by_metadata_server_urls(self, metadata_server_urls: list):
+        localids = [get_namespace_and_localid_from_resource_url(url)[1] for url in metadata_server_urls]
+        return self.filter(json__identifier__PITHIA_Identifier__localID__in=localids).delete()
+
 
 class OrganisationQuerySet(MetadataQuerySet, AbstractOrganisationDatabaseQueries):
     pass
