@@ -10,12 +10,12 @@ from utils.url_helpers import (
 )
 
 class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQueries):
-    def _get_by_namespace_and_localid(self, namespace: str, localid: str):
+    def get_by_namespace_and_localid(self, namespace: str, localid: str):
         return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
         namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
-        return self._get_by_namespace_and_localid(namespace, localid)
+        return self.get_by_namespace_and_localid(namespace, localid)
     
     def get_by_metadata_server_urls(self, metadata_server_urls: list):
         query = Q()

@@ -5,7 +5,7 @@ from abc import (
 
 class AbstractMetadataDatabaseQueries(ABC):
     @abstractmethod
-    def _get_by_namespace_and_localid(self, namespace: str, localid: str):
+    def get_by_namespace_and_localid(self, namespace: str, localid: str):
         """
         A metadata registration using the passed in
         namespace and localID.
