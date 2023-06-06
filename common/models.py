@@ -133,6 +133,7 @@ class ScientificMetadata(models.Model):
         all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
         return sorted(list({ str(md.pk): md for md in all_metadata_dependents }.values()), key=lambda md: md.weight)
     
+    objects = ScientificMetadataManager.from_queryset(MetadataQuerySet)()
     organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()
     individuals = IndividualManager.from_queryset(IndividualQuerySet)()
     projects = ProjectManager.from_queryset(ProjectQuerySet)()
