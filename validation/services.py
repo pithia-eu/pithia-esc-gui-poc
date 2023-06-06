@@ -220,7 +220,7 @@ def validate_xml_file_and_return_summary(
     try:
         # Registration validation
         if validate_for_registration is True:
-            MetadataFileRegistrationValidator.validate(xml_metadata_file)
+            MetadataFileRegistrationValidator.validate(xml_metadata_file, model)
     except FileRegisteredBefore as err:
         logger.exception('Error occurred whilst validating XML. Please see error message for details.')
         validation_summary['error'] = create_validation_summary_error(
