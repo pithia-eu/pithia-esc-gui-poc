@@ -265,11 +265,17 @@ def validate_xml_file_and_return_summary(
     invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(xml_metadata_file)
     invalid_operational_mode_urls = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(xml_metadata_file)
 
+    # Keys to access invalid URL categories
+    INCORRECTLY_STRUCTURED_URLS = 'urls_with_incorrect_structure'
+    UNREGISTERED_RESOURCE_URLS = 'urls_pointing_to_unregistered_resources'
+    UNREGISTERED_RESOURCE_URL_TYPES = 'types_of_missing_resources'
+    UNREGISTERED_OPERATIONAL_MODE_URLS = 'urls_pointing_to_registered_resources_with_missing_op_modes'
+
     # Process the returned invalid resource URLs.
-    incorrectly_structured_urls = [*invalid_resource_urls['urls_with_incorrect_structure'], *invalid_operational_mode_urls['urls_with_incorrect_structure']]
-    unregistered_resource_urls = [*invalid_resource_urls['urls_pointing_to_unregistered_resources'], *invalid_operational_mode_urls['urls_pointing_to_unregistered_resources']]
-    unregistered_resource_url_types = [*invalid_resource_urls['types_of_missing_resources'], *invalid_operational_mode_urls['types_of_missing_resources']]
-    unregistered_operational_mode_urls = invalid_operational_mode_urls['urls_pointing_to_registered_resources_with_missing_op_modes']
+    incorrectly_structured_urls = invalid_resource_urls.get(INCORRECTLY_STRUCTURED_URLS, []) + invalid_operational_mode_urls.get(INCORRECTLY_STRUCTURED_URLS, [])
+    unregistered_resource_urls = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URLS, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URLS, [])
+    unregistered_resource_url_types = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, [])
+    unregistered_operational_mode_urls = invalid_operational_mode_urls.get(UNREGISTERED_OPERATIONAL_MODE_URLS, [])
     
     if len(incorrectly_structured_urls) > 0:
         error_msg = 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(_map_string_to_li_element, incorrectly_structured_urls)))
