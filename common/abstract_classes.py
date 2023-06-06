@@ -28,6 +28,15 @@ class AbstractMetadataDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
+    def delete_by_metadata_server_urls(self, metadata_server_urls: list):
+        """
+        Deletes all metadata registrations corresponding to
+        at least one of the URLs in a list of metadata
+        server URLs.
+        """
+        pass
+
 class AbstractOrganisationDatabaseQueries(ABC):
     pass
 
