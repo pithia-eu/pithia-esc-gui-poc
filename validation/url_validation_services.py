@@ -90,7 +90,7 @@ class MetadataFileMetadataURLReferencesValidator:
         url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
 
         # Verify resource type in resource URL is valid
-        scientific_metadata_subclasses = ScientificMetadata.__subclasses__
+        scientific_metadata_subclasses = ScientificMetadata.__subclasses__()
         is_resource_type_in_resource_url_valid = any(resource_type_in_resource_url == cls.type_in_metadata_server_url for cls in scientific_metadata_subclasses)
 
         # Verify that the localID base used in the resource
