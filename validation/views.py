@@ -1,7 +1,7 @@
 import json
+from http import HTTPStatus
 from django.http import (
     HttpResponse,
-    HttpResponseServerError,
     JsonResponse,
 )
 from django.views.decorators.http import require_POST
@@ -67,7 +67,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
     mongodb_model = None
     expected_root_tag_name = ''
 
-    def prepare_xml_metadata_file(xml_file):
+    def prepare_xml_metadata_file(self, xml_file):
         return XMLMetadataFile.from_file(xml_file)
 
     def post(self, request, *args, **kwargs):
@@ -75,7 +75,7 @@ class ResourceXmlMetadataFileValidationFormView(View):
         xml_file = request.FILES['file']
         validate_registration = 'validate_is_not_registered' in request.POST
         # validate_update = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
-        existing_scientific_metadata_id = request.POST['resource_id'] if 'resource_id' in request.POST else ''
+        existing_scientific_metadata_id = request.POST['resource_id'] if 'resource_id' in request.POST else None
         
         # Begin the validation process
         validation_summary = {}
@@ -83,11 +83,12 @@ class ResourceXmlMetadataFileValidationFormView(View):
             # Syntax validation
             prepared_xml_metadata_file = self.prepare_xml_metadata_file(xml_file)
         except etree.XMLSyntaxError as err:
+            logger.exception('An exception occurred whilst parsing the XML.')
             validation_summary['error'] = create_validation_summary_error(
                 message='Syntax is invalid.',
                 details=str(err)
             )
-            return JsonResponse(validation_summary)
+            return JsonResponse(validation_summary, status=HTTPStatus.BAD_REQUEST)
 
         try:
             validation_summary = validate_xml_file_and_return_summary(
@@ -97,25 +98,23 @@ class ResourceXmlMetadataFileValidationFormView(View):
                 metadata_id_to_validate_for_update=existing_scientific_metadata_id
             )
         except BaseException as err:
+            logger.exception('An exception occurred during metadata file validation.')
             validation_summary['error'] = create_validation_summary_error(details=str(err))
-            return JsonResponse(validation_summary)
+            return JsonResponse(validation_summary, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
-        # Process any errors that occurred during the validation process
+        # Process any errors not handled by the try-except block
         if (validation_summary['error'] is None
             and len(validation_summary['warnings']) == 0):
-            return HttpResponse(json.dumps({
-                'result': 'valid'
-            }), content_type='application/json')
+            return JsonResponse({
+                'result': 'valid',
+            })
 
         response_body = {}
         if len(validation_summary['warnings']) > 0:
             response_body['warnings'] = validation_summary['warnings']
         if validation_summary['error'] != None:
             response_body['error'] = validation_summary['error']
-        return HttpResponseServerError(
-            json.dumps(response_body),
-            content_type='application/json'
-        )
+        return JsonResponse(response_body, status=HTTPStatus.BAD_REQUEST)
         # xml_file = request.FILES['file']
         # check_file_is_unregistered = 'validate_is_not_registered' in request.POST
         # check_xml_file_localid_matches_existing_resource_localid = 'validate_xml_file_localid_matches_existing_resource_localid' in request.POST
