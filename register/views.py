@@ -98,35 +98,35 @@ class ResourceRegisterFormView(FormView):
                     self.new_registration = self.model.objects.create_from_xml_string(xml_file.read())
 
                     # TODO: remove old code
-                    if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
-                        self.resource_conversion_validate_and_correct_function = None
-                    with client.start_session() as s:
-                        def cb(s):
-                            registration_results = register_metadata_xml_file(
-                                xml_file,
-                                self.resource_mongodb_model,
-                                self.resource_conversion_validate_and_correct_function,
-                                session=s
-                            )
-                            self.resource_id = registration_results['_id']
+                    # if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
+                    #     self.resource_conversion_validate_and_correct_function = None
+                    # with client.start_session() as s:
+                    #     def cb(s):
+                    #         registration_results = register_metadata_xml_file(
+                    #             xml_file,
+                    #             self.resource_mongodb_model,
+                    #             self.resource_conversion_validate_and_correct_function,
+                    #             session=s
+                    #         )
+                    #         self.resource_id = registration_results['_id']
 
-                            store_xml_file_as_string_and_map_to_resource_id(
-                                xml_file,
-                                registration_results['_id'],
-                                session=s
-                            )
-                            if 'api_selected' in request.POST:
-                                api_specification_url = request.POST['api_specification_url']
-                                api_description = ''
-                                if 'api_description' in request.POST:
-                                    api_description = request.POST['api_description']
-                                register_api_specification(
-                                    api_specification_url,
-                                    registration_results['identifier']['PITHIA_Identifier']['localID'],
-                                    api_description=api_description,
-                                    session=s
-                                )
-                        s.with_transaction(cb)
+                    #         store_xml_file_as_string_and_map_to_resource_id(
+                    #             xml_file,
+                    #             registration_results['_id'],
+                    #             session=s
+                    #         )
+                    #         if 'api_selected' in request.POST:
+                    #             api_specification_url = request.POST['api_specification_url']
+                    #             api_description = ''
+                    #             if 'api_description' in request.POST:
+                    #                 api_description = request.POST['api_description']
+                    #             register_api_specification(
+                    #                 api_specification_url,
+                    #                 registration_results['identifier']['PITHIA_Identifier']['localID'],
+                    #                 api_description=api_description,
+                    #                 session=s
+                    #             )
+                    #     s.with_transaction(cb)
                     # End of old code
                     
                     file_registered = True
@@ -175,23 +175,23 @@ class ResourceRegisterFormView(FormView):
                         add_handle_to_url_mapping(handle, data_subset_url)
 
                         # TODO: remove old code
-                        with client.start_session() as s:
-                            def cb(s):
-                                xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
-                                    doi_dict,
-                                    self.resource_id,
-                                    xml_file,
-                                    self.resource_mongodb_model,
-                                    resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function,
-                                    session=s
-                                )
-                                update_original_metadata_xml_string(
-                                    xml_string_with_doi,
-                                    self.resource_id,
-                                    session=s
-                                )
-                                add_handle_to_url_mapping_old(handle, data_subset_url, session=s)
-                            s.with_transaction(cb)
+                        # with client.start_session() as s:
+                        #     def cb(s):
+                        #         xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
+                        #             doi_dict,
+                        #             self.resource_id,
+                        #             xml_file,
+                        #             self.resource_mongodb_model,
+                        #             resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function,
+                        #             session=s
+                        #         )
+                        #         update_original_metadata_xml_string(
+                        #             xml_string_with_doi,
+                        #             self.resource_id,
+                        #             session=s
+                        #         )
+                        #         add_handle_to_url_mapping_old(handle, data_subset_url, session=s)
+                        #     s.with_transaction(cb)
                         # End of old code
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:

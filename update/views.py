@@ -130,39 +130,39 @@ class ResourceUpdateFormView(FormView):
                 self.model.objects.update_from_xml_string(self.resource_id, xml_file.read())
                 
                 # TODO: remove old code
-                if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
-                    self.resource_conversion_validate_and_correct_function = None
-                with client.start_session() as s:
-                    def cb(s):
-                        if self.xml_file_string is None:
-                            self.xml_file_string = xml_file.read()
-                        converted_xml_file = convert_xml_metadata_file_to_dictionary(self.xml_file_string)
-                        converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                        pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
-                        resource_revision = create_revision_of_current_resource_version(
-                            pithia_identifier,
-                            self.resource_mongodb_model,
-                            self.resource_revision_mongodb_model,
-                            session=s
-                        )
-                        assign_original_xml_file_entry_to_revision_id(
-                            self.resource_id,
-                            resource_revision['_id'],
-                            session=s
-                        )
-                        update_current_version_of_resource(
-                            self.resource_id,
-                            self.xml_file_string,
-                            self.resource_mongodb_model,
-                            self.resource_conversion_validate_and_correct_function,
-                            session=s
-                        )
-                        store_xml_file_as_string_and_map_to_resource_id(
-                            self.xml_file_string,
-                            self.resource_id,
-                            session=s
-                        )
-                    s.with_transaction(cb)
+                # if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
+                #     self.resource_conversion_validate_and_correct_function = None
+                # with client.start_session() as s:
+                #     def cb(s):
+                #         if self.xml_file_string is None:
+                #             self.xml_file_string = xml_file.read()
+                #         converted_xml_file = convert_xml_metadata_file_to_dictionary(self.xml_file_string)
+                #         converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+                #         pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
+                #         resource_revision = create_revision_of_current_resource_version(
+                #             pithia_identifier,
+                #             self.resource_mongodb_model,
+                #             self.resource_revision_mongodb_model,
+                #             session=s
+                #         )
+                #         assign_original_xml_file_entry_to_revision_id(
+                #             self.resource_id,
+                #             resource_revision['_id'],
+                #             session=s
+                #         )
+                #         update_current_version_of_resource(
+                #             self.resource_id,
+                #             self.xml_file_string,
+                #             self.resource_mongodb_model,
+                #             self.resource_conversion_validate_and_correct_function,
+                #             session=s
+                #         )
+                #         store_xml_file_as_string_and_map_to_resource_id(
+                #             self.xml_file_string,
+                #             self.resource_id,
+                #             session=s
+                #         )
+                #     s.with_transaction(cb)
                 messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
