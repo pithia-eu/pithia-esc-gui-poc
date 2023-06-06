@@ -177,7 +177,10 @@ class MetadataFileMetadataURLReferencesValidator:
         each URL corresponds with a metadata registration in the
         e-Science Centre.
         """
-        resource_urls_with_op_mode_ids = xml_file.operational_mode_urls
+        try:
+            resource_urls_with_op_mode_ids = xml_file.operational_mode_urls
+        except:
+            return cls._is_each_resource_url_valid([])
         resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
         invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
 
