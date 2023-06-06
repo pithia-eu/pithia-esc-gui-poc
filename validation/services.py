@@ -249,9 +249,13 @@ def validate_xml_file_and_return_summary(
 
         try:
             # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
-            is_each_op_mode_in_update_valid = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument()
+            is_each_op_mode_in_update_valid = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+                xml_metadata_file,
+                metadata_id_to_validate_for_update,
+                Instrument
+            )
             if not is_each_op_mode_in_update_valid:
-                acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(existing_resource_id)
+                acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(metadata_id_to_validate_for_update)
                 validation_summary['warnings'].append(create_validation_summary_error(
                     message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets)))
