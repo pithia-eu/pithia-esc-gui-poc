@@ -33,7 +33,8 @@ SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE = f'https://{SPACE_PHYSICS_ONTOLOGY
 
 
 class MetadataFileOntologyURLReferencesValidator:
-    def _is_ontology_term_url_valid(self, ontology_term_url: str):
+    @classmethod
+    def _is_ontology_term_url_valid(cls, ontology_term_url: str):
         """
         Checks that the provided Space Physics Ontology URL
         has a valid HTTP response and that the response
@@ -73,17 +74,20 @@ class MetadataFileOntologyURLReferencesValidator:
         return invalid_urls
 
 class MetadataFileMetadataURLReferencesValidator:
-    def _is_resource_url_well_formed(self, resource_url):
+    @classmethod
+    def _is_resource_url_well_formed(cls, resource_url):
         return validators.url(resource_url)
     
-    def _divide_resource_url_into_components(self, resource_url):
+    @classmethod
+    def _divide_resource_url_into_components(cls, resource_url):
         try:
             return divide_catalogue_related_resource_url_into_main_components(resource_url)
         except IndexError:
             return divide_resource_url_into_main_components(resource_url)
 
-    def _is_resource_url_structure_valid(self, resource_url):
-        url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(self._divide_resource_url_into_components(resource_url))
+    @classmethod
+    def _is_resource_url_structure_valid(cls, resource_url):
+        url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
 
         # Verify resource type in resource URL is valid
         scientific_metadata_subclasses = ScientificMetadata.__subclasses__
@@ -109,23 +113,24 @@ class MetadataFileMetadataURLReferencesValidator:
             resource_url.endswith(localid),
         ])
 
-    def _is_resource_url_valid(self, resource_url):
+    @classmethod
+    def _is_resource_url_valid(cls, resource_url):
         validation_summary_for_metadata_server_url = {
             'is_structure_valid': False,
             'is_pointing_to_registered_resource': False,
             'type_of_missing_resource': None,
         }
-        if not self._is_resource_url_well_formed(resource_url):
+        if not cls._is_resource_url_well_formed(resource_url):
             return validation_summary_for_metadata_server_url
         
-        if not self._is_resource_url_structure_valid(resource_url):
+        if not cls._is_resource_url_structure_valid(resource_url):
             return validation_summary_for_metadata_server_url
         validation_summary_for_metadata_server_url['is_structure_valid'] = True
 
         try:
             ScientificMetadata.objects.get_by_metadata_server_url(resource_url)
         except ObjectDoesNotExist:
-            resource_type_in_resource_url, localid = itemgetter('resource_type', 'localid')(self._divide_resource_url_into_components(resource_url))
+            resource_type_in_resource_url, localid = itemgetter('resource_type', 'localid')(cls._divide_resource_url_into_components(resource_url))
             validation_summary_for_metadata_server_url['type_of_missing_resource'] = resource_type_in_resource_url
             if resource_type_in_resource_url == 'catalogue':
                 validation_summary_for_metadata_server_url['type_of_missing_resource'] += f'_{localid}'
@@ -134,7 +139,8 @@ class MetadataFileMetadataURLReferencesValidator:
 
         return validation_summary_for_metadata_server_url
 
-    def _is_each_resource_url_valid(self, resource_urls: list[str]) -> dict:
+    @classmethod
+    def _is_each_resource_url_valid(cls, resource_urls: list[str]) -> dict:
         """
         Checks that each metadata server URL is well-formed and that each URL
         corresponds with a metadata registration in the e-Science Centre.
