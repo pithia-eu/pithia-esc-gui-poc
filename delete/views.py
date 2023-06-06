@@ -1,8 +1,22 @@
-from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+import logging
 from bson.objectid import ObjectId
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+
+from .utils import (
+    get_data_collection_related_resources_linked_through_resource_id,
+    delete_current_version_and_revisions_and_xmls_of_resource_id,
+    delete_current_versions_and_revisions_of_data_collection_interaction_methods,
+    sort_resource_list,
+    get_catalogue_related_resources_linked_through_resource_id,
+)
+
+from common import models
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
+from common.models import ScientificMetadata
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -35,23 +49,12 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
-from django.contrib import messages
-from django.views.generic import TemplateView
+from mongodb import client
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 )
-from .utils import (
-    get_data_collection_related_resources_linked_through_resource_id,
-    delete_current_version_and_revisions_and_xmls_of_resource_id,
-    delete_current_versions_and_revisions_of_data_collection_interaction_methods,
-    sort_resource_list,
-    get_catalogue_related_resources_linked_through_resource_id,
-)
-from mongodb import client
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +62,6 @@ logger = logging.getLogger(__name__)
 
 class ResourceDeleteView(TemplateView):
     resource_id = ''
-    resource_type_in_resource_url = ''
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
     redirect_url = ''
@@ -84,37 +86,52 @@ class ResourceDeleteView(TemplateView):
         context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_type_in_resource_url = self.model.type_in_metadata_server_url
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
-        self.resource_to_delete = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-        self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-        self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
+        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
+        self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
+        # TODO: remove old code
+        # self.resource_to_delete = self.resource_mongodb_model.find_one({
+        #     '_id': ObjectId(self.resource_id)
+        # })
+        # self.other_resources_to_delete = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        # self.other_resources_to_delete = sort_resource_list(self.other_resources_to_delete)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_to_delete = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-        try:
-            with client.start_session() as s:
-                def cb(s):
-                    # Delete the resource and resources that are referencing the resource to be deleted. These should not
-                    # be able to exist without the resource being deleted.
-                    linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
-                    if 'catalogue_related_resources_to_delete' in kwargs:
-                        linked_resources.extend(kwargs['catalogue_related_resources_to_delete'])
-                    delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
-                    for r in linked_resources:
-                        delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
-                    if self.resource_mongodb_model == CurrentDataCollection:
-                        delete_current_versions_and_revisions_of_data_collection_interaction_methods(kwargs['data_collection_id'], session=s)
-                s.with_transaction(cb)
-            messages.success(request, f'Successfully deleted {self.resource_to_delete["name"]}.')
-        except BaseException as e:
-            logger.exception('An error occurred during resource deletion.')
-            messages.error(request, 'An error occurred during resource deletion.')
+        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
+        self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
+        self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
+        self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
+        ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
 
+        # TODO: remove old code
+        # self.resource_to_delete_old = self.resource_mongodb_model.find_one({
+        #     '_id': ObjectId(self.resource_id)
+        # })
+        # try:
+        #     with client.start_session() as s:
+        #         def cb(s):
+        #             # Delete the resource and resources that are referencing the resource to be deleted. These should not
+        #             # be able to exist without the resource being deleted.
+        #             linked_resources = get_data_collection_related_resources_linked_through_resource_id(self.resource_id, self.resource_type_in_resource_url, self.resource_mongodb_model)
+        #             if 'catalogue_related_resources_to_delete' in kwargs:
+        #                 linked_resources.extend(kwargs['catalogue_related_resources_to_delete'])
+        #             delete_current_version_and_revisions_and_xmls_of_resource_id(self.resource_id, self.resource_mongodb_model, self.resource_revision_mongodb_model, session=s)
+        #             for r in linked_resources:
+        #                 delete_current_version_and_revisions_and_xmls_of_resource_id(r[0]['_id'], r[2], r[3], session=s)
+        #             if self.resource_mongodb_model == CurrentDataCollection:
+        #                 delete_current_versions_and_revisions_of_data_collection_interaction_methods(kwargs['data_collection_id'], session=s)
+        #         s.with_transaction(cb)
+        # except BaseException as e:
+        #     logger.exception('An error occurred during resource deletion.')
+        #     messages.error(request, 'An error occurred during resource deletion.')
+        #     return HttpResponseRedirect(self.redirect_url)
+
+        messages.success(request, f'Successfully deleted {self.resource_to_delete_old["name"]}.')
         return HttpResponseRedirect(self.redirect_url)
 
 class CatalogueRelatedResourceDeleteView(TemplateView):
@@ -173,7 +190,8 @@ class CatalogueRelatedResourceDeleteView(TemplateView):
 
 
 class OrganisationDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'organisation'
+    model = models.Organisation
+
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
     redirect_url = reverse_lazy('resource_management:organisations')
@@ -186,7 +204,8 @@ class OrganisationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class IndividualDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'individual'
+    model = models.Individual
+
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
     redirect_url = reverse_lazy('resource_management:individuals')
@@ -199,7 +218,8 @@ class IndividualDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProjectDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'project'
+    model = models.Project
+
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
     redirect_url = reverse_lazy('resource_management:projects')
@@ -212,7 +232,8 @@ class ProjectDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class PlatformDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'platform'
+    model = models.Platform
+
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
     redirect_url = reverse_lazy('resource_management:platforms')
@@ -225,7 +246,8 @@ class PlatformDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class InstrumentDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'instrument'
+    model = models.Instrument
+
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
     redirect_url = reverse_lazy('resource_management:instruments')
@@ -238,7 +260,8 @@ class InstrumentDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class OperationDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'operation'
+    model = models.Operation
+
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
     redirect_url = reverse_lazy('resource_management:operations')
@@ -251,7 +274,8 @@ class OperationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'acquisitionCapabilities'
+    model = models.AcquisitionCapabilities
+
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
     redirect_url = reverse_lazy('resource_management:acquisition_capability_sets')
@@ -264,7 +288,8 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'acquisition'
+    model = models.Acquisition
+
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
     redirect_url = reverse_lazy('resource_management:acquisitions')
@@ -277,7 +302,8 @@ class AcquisitionDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'computationCapabilities'
+    model = models.ComputationCapabilities
+
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
     redirect_url = reverse_lazy('resource_management:computation_capability_sets')
@@ -290,7 +316,8 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'computation'
+    model = models.Computation
+
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
     redirect_url = reverse_lazy('resource_management:computations')
@@ -303,7 +330,8 @@ class ComputationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProcessDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'process'
+    model = models.Process
+
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
     redirect_url = reverse_lazy('resource_management:processes')
@@ -316,7 +344,8 @@ class ProcessDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class DataCollectionDeleteView(ResourceDeleteView):
-    resource_type_in_resource_url = 'collection'
+    model = models.DataCollection
+
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     redirect_url = reverse_lazy('resource_management:data_collections')
@@ -345,6 +374,8 @@ class DataCollectionDeleteView(ResourceDeleteView):
         return super().post(request, *args, **kwargs)
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
+    model = models.Catalogue
+
     resource_type = 'catalogue'
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
@@ -364,6 +395,8 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
         return context
 
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
+    model = models.CatalogueEntry
+
     resource_type = 'catalogue entry'
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
@@ -383,6 +416,8 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
         return context
 
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
+    model = models.CatalogueDataSubset
+
     resource_type = 'catalogue data subset'
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
