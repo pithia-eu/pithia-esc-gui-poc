@@ -285,7 +285,7 @@ class ResourceDetailView(TemplateView):
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
-        context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable
+        context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         if self.resource is None:
             return context

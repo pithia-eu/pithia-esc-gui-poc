@@ -118,7 +118,7 @@ class ResourceUpdateFormView(FormView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.model.type_plural_readable}'
+        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.model.type_plural_readable.title()}'
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
