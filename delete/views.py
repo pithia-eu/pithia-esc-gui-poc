@@ -131,7 +131,7 @@ class ResourceDeleteView(TemplateView):
         #     messages.error(request, 'An error occurred during resource deletion.')
         #     return HttpResponseRedirect(self.redirect_url)
 
-        messages.success(request, f'Successfully deleted {self.resource_to_delete_old["name"]}.')
+        messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         return HttpResponseRedirect(self.redirect_url)
 
 class CatalogueRelatedResourceDeleteView(TemplateView):
