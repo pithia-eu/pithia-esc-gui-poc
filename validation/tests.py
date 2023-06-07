@@ -1,18 +1,23 @@
 import os
 
-from django.test import SimpleTestCase
+from django.test import (
+    SimpleTestCase,
+    TestCase,
+)
 from lxml import etree
 
 from .base_tests import *
+from .file_wrappers import (
+    DataSubsetXMLMetadataFile,
+    XMLMetadataFile,
+)
 from .metadata_validation import (
     validate_and_parse_xml_file,
     get_schema_location_url_from_parsed_xml_file,
     validate_xml_with_doi_against_schema_at_url,
 )
 from .services import (
-    DataSubsetXMLMetadataFile,
     MetadataFileXSDValidator,
-    XMLMetadataFile,
 )
 from .url_validation import (
     get_invalid_ontology_urls_from_parsed_xml,
@@ -22,7 +27,12 @@ from .url_validation import (
     is_resource_url_base_structure_valid,
     validate_ontology_term_url,
 )
+from .url_validation_services import MetadataFileMetadataURLReferencesValidator
 
+from common.models import (
+    Organisation,
+    Catalogue,
+)
 from pithiaesc.settings import BASE_DIR
 from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
 
@@ -410,3 +420,23 @@ class XMLMetadataFileTestCase(SimpleTestCase):
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
             xml_file = DataSubsetXMLMetadataFile.from_file(test_file)
         MetadataFileXSDValidator.validate(xml_file)
+
+class URLReferencesValidatorTestCase(TestCase):
+    def test_is_each_resource_url_valid_on_individual(self):
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
+            Organisation.objects.create_from_xml_string(xml_file.read())
+        
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
+            invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))
+            print('invalid_resource_urls_dict', invalid_resource_urls_dict)
+            for value in invalid_resource_urls_dict.values():
+                self.assertTrue(len(value) == 0)
+
+    def test_is_each_resource_url_valid_on_catalogue_entry(self):
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
+            Catalogue.objects.create_from_xml_string(xml_file.read())
+        
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
+            invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))
+            for value in invalid_resource_urls_dict.values():
+                self.assertTrue(len(value) == 0)
