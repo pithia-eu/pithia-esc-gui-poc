@@ -1,5 +1,6 @@
 import logging
 from django.contrib import messages
+from django.db import IntegrityError
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from pyexpat import ExpatError
@@ -134,7 +135,7 @@ class ResourceRegisterFormView(FormView):
                 except ExpatError as err:
                     logger.exception('Expat error occurred during registration process.')
                     messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
-                except FileRegisteredBefore as err:
+                except IntegrityError as err:
                     logger.exception('The XML file submitted for registration has been registered before.')
                     messages.error(request, f'{xml_file.name} has been registered before.')
                 except BaseException as err:
