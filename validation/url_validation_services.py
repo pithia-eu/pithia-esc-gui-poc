@@ -80,10 +80,7 @@ class MetadataFileMetadataURLReferencesValidator:
     
     @classmethod
     def _divide_resource_url_into_components(cls, resource_url):
-        try:
-            return divide_catalogue_related_resource_url_into_main_components(resource_url)
-        except IndexError:
-            return divide_resource_url_into_main_components(resource_url)
+        return divide_resource_url_into_main_components(resource_url)
 
     @classmethod
     def _is_resource_url_structure_valid(cls, resource_url):
