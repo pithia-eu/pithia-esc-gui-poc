@@ -39,7 +39,7 @@ class ScientificMetadata(models.Model):
         (CATALOGUE_ENTRY, 'Catalogue Entry'),
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
     ]
-    registration_id = models.CharField(max_length=200)
+    id = models.CharField(max_length=200, primary_key=True)
     resource_type = models.CharField(
         max_length=100,
         choices=RESOURCE_TYPE_CHOICES

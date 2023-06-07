@@ -36,11 +36,13 @@ class ScientificMetadataManager(models.Manager):
         except (UnicodeDecodeError, AttributeError):
             pass
 
-        scientific_metadata = self.create(
+        scientific_metadata = self.model(
             resource_type=resource_type,
             xml=xml_string,
             json=xml_as_dict,
         )
+        scientific_metadata.id = scientific_metadata.localid
+        scientific_metadata.save()
 
         return scientific_metadata
 
