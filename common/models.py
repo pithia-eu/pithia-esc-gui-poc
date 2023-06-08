@@ -185,7 +185,7 @@ class Institution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class HandleURLMapping(models.Model):
-    data_subset_url = models.URLField()
+    url = models.URLField()
     handle_name = models.CharField(max_length=100)
 
 # Proxy models
