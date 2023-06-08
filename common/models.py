@@ -188,6 +188,8 @@ class HandleURLMapping(models.Model):
     url = models.URLField()
     handle_name = models.CharField(max_length=100)
 
+    objects = HandleURLMappingQuerySet.as_manager()
+
 # Proxy models
 class Organisation(ScientificMetadata):
     type_in_metadata_server_url = 'organisation'
