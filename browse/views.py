@@ -487,14 +487,18 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.client, self.credentials = instantiate_client_and_load_credentials()
-        handle_url_mapping = mongodb_models.HandleUrlMapping.find_one({
-            'url': {'$regex': f'{request.get_full_path()}$'}
-        })
         self.handle = None
         self.handle_data = None
-        if handle_url_mapping is not None:
-            self.handle = handle_url_mapping['handle_name']
+        try:
+            handle_url_mapping = models.HandleURLMapping.objects.for_url(request.get_full_path())
+            self.handle = handle_url_mapping.handle_name
             self.handle_data = get_handle_record(self.handle, self.client)
+        except models.HandleURLMapping.DoesNotExist:
+            pass
+        # TODO: remove old code
+        # handle_url_mapping = mongodb_models.HandleUrlMapping.find_one({
+        #     'url': {'$regex': f'{request.get_full_path()}$'}
+        # })
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
