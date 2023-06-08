@@ -78,8 +78,8 @@ class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQ
         namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
         return self.get(
             json__identifier__PITHIA_Identifier__namespace=namespace,
-            json__identifier__PITHIA_Identifier__localid=localid,
-            json__operationalMode__contains={'InstrumentOperationalMode__id': op_mode_id}
+            json__identifier__PITHIA_Identifier__localID=localid,
+            json__operationalMode__contains=[{'InstrumentOperationalMode': {'id': op_mode_id}}]
         )
     
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
