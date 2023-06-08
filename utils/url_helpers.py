@@ -2,6 +2,10 @@ import os
 from django.urls import reverse
 
 
+# Resource URL identification functions
+def is_operational_mode_url(url):
+    return '#' in url
+
 # Resource URL component extraction functions
 def divide_data_collection_related_resource_url_into_main_components(resource_url):
     resource_url_split = resource_url.split('/')
