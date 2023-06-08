@@ -329,6 +329,16 @@ class Instrument(ScientificMetadata):
     @property
     def operational_mode_ids(self):
         return [om['InstrumentOperationalMode']['id'] for om in self.json.get('operationalMode', [])]
+    
+    def get_operational_mode_by_id(self, operational_mode_id):
+        try:
+            for operational_mode in self.json['operationalMode']:
+                operational_mode = operational_mode['InstrumentOperationalMode']
+                if operational_mode['id'] == operational_mode_id:
+                    return operational_mode
+        except KeyError:
+            pass
+        return None
 
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
