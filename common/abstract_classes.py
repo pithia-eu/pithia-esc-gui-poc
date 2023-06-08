@@ -553,3 +553,11 @@ class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
         is planned for deletion.
         """
         pass
+
+class AbstractHandleURLMappingDatabaseQueries(ABC):
+    @abstractmethod
+    def for_url(self, url):
+        """
+        A Handle to URL mapping for a given URL.
+        """
+        pass
