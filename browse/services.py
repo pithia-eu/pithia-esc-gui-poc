@@ -1,21 +1,22 @@
 import re
-from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from operator import itemgetter
+from typing import Union
 
-from common.helpers import (
-    get_mongodb_model_from_catalogue_related_resource_url,
-    get_mongodb_model_by_resource_type_from_resource_url,
+from common.models import (
+    Instrument,
+    ScientificMetadata,
 )
 from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_pref_label_from_ontology_node_iri,
 )
-from utils.mapping_functions import prepare_resource_for_template
 from utils.string_helpers import _split_camel_case
 from utils.url_helpers import (
     create_ontology_term_detail_url_from_ontology_term_server_url,
-    divide_catalogue_related_resource_url_into_main_components,
-    divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
+    divide_resource_url_into_main_components,
+    is_operational_mode_url,
 )
 from validation.url_validation import (
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
@@ -62,88 +63,80 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
         })
     return converted_ontology_server_urls
 
+# Credit: https://stackoverflow.com/a/4578605
+def _sort_resource_server_urls_from_operational_mode_urls(pred, resource_server_urls: list) -> Union[list, list]:
+    operational_mode_urls = []
+    non_operational_mode_urls = []
+    for url in resource_server_urls:
+        if pred(url):
+            operational_mode_urls.append(url)
+        else:
+            non_operational_mode_urls.append(url)
+    return operational_mode_urls, non_operational_mode_urls
+
+
 def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
     """
     Maps metadata server URLs to e-Science Centre browse page URLs
     based on the metadata term that each metadata server URL is for.
     """
-    converted_resource_server_urls = []
-    for resource_server_url in resource_server_urls:
-        referenced_resource_type = ''
-        referenced_resource_namespace = ''
-        referenced_resource_localid = ''
-        referenced_op_mode_id = ''
-        referenced_resource_mongodb_model = None
-        
+    mapped_resource_server_urls = []
+    operational_mode_urls, non_operational_mode_urls = _sort_resource_server_urls_from_operational_mode_urls(
+        lambda url: is_operational_mode_url(url),
+        resource_server_urls
+    )
+
+    for url in operational_mode_urls:
+        url_without_op_mode_id, operational_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(url))
         url_mapping = {
-            'original_server_url': resource_server_url,
-            'converted_url': resource_server_url,
-            'converted_url_text': resource_server_url.split('/')[-1],
+            'original_server_url': url,
+            'converted_url': url,
+            # Use the localID in the resource URL as a default in
+            # case a corresponding registration cannot be found.
+            'converted_url_text': url_without_op_mode_id.split('/')[-1],
+        }
+        instrument = None
+
+        try:
+            instrument = Instrument.objects.get_by_operational_mode_url(url)
+        except (AttributeError, Instrument.DoesNotExist):
+            mapped_resource_server_urls.append(url_mapping)
+            continue
+        operational_mode_name = operational_mode_id
+        try:
+            operational_mode_name = instrument.get_operational_mode_by_id(operational_mode_id).get('name')
+        except AttributeError:
+            pass
+        url_mapping['converted_url'] = f'{instrument.get_absolute_url()}#{operational_mode_id}'
+        url_mapping['converted_url_text'] = f'{instrument.name}#{operational_mode_name}'
+        mapped_resource_server_urls.append(url_mapping)
+
+    for url in non_operational_mode_urls:
+        url_mapping = {
+            'original_server_url': url,
+            'converted_url': url,
+            # Use the localID in the resource URL as a default in
+            # case a corresponding registration cannot be found.
+            'converted_url_text': url.split('/')[-1],
         }
 
-        if '/catalogue/' in resource_server_url:
-            resource_server_url_components = divide_catalogue_related_resource_url_into_main_components(resource_server_url)
-            referenced_resource_type = resource_server_url_components['resource_type']
-            referenced_resource_namespace = resource_server_url_components['namespace']
-            referenced_resource_localid = resource_server_url_components['localid']
-            referenced_resource_mongodb_model = get_mongodb_model_from_catalogue_related_resource_url(resource_server_url)
-        else:
-            resource_server_url_copy = resource_server_url
-            if '#' in resource_server_url_copy:
-                components_of_resource_server_url_with_op_mode_id = divide_resource_url_from_op_mode_id(resource_server_url_copy)
-                resource_server_url_copy = components_of_resource_server_url_with_op_mode_id['resource_url']
-                referenced_op_mode_id = components_of_resource_server_url_with_op_mode_id['op_mode_id']
-            resource_server_url_components = divide_resource_url_into_main_components(resource_server_url_copy)
-            referenced_resource_type = resource_server_url_components['resource_type']
-            referenced_resource_namespace = resource_server_url_components['namespace']
-            referenced_resource_localid = resource_server_url_components['localid']
-            referenced_resource_mongodb_model = get_mongodb_model_by_resource_type_from_resource_url(referenced_resource_type)
-        
-        if referenced_resource_mongodb_model == 'unknown':
-            converted_resource_server_urls.append(url_mapping)
-            continue
         referenced_resource = None
-        find_params = {
-            'identifier.PITHIA_Identifier.namespace': referenced_resource_namespace,
-            'identifier.PITHIA_Identifier.localID': referenced_resource_localid,
-        }
-        if len(referenced_op_mode_id) > 0:
-            find_params['operationalMode.InstrumentOperationalMode.id'] = referenced_op_mode_id
-        referenced_resource = referenced_resource_mongodb_model.find_one(find_params, {
-            '_id': 1,
-            'name': 1,
-            'entryName': 1,
-            'dataSubsetName': 1,
-        })
-        if referenced_resource is None:
-            converted_resource_server_urls.append(url_mapping)
+        scientific_metadata_subclasses = ScientificMetadata.__subclasses__()
+        type_in_metadata_server_url = itemgetter('resource_type')(divide_resource_url_into_main_components(url))
+        model = None
+        for subclass in scientific_metadata_subclasses:
+            if subclass.type_in_metadata_server_url == type_in_metadata_server_url:
+                model = subclass
+        
+        try:
+            referenced_resource = model.objects.get_by_metadata_server_url(url)
+        except (AttributeError, ObjectDoesNotExist):
+            mapped_resource_server_urls.append(url_mapping)
             continue
-        referenced_resource = prepare_resource_for_template(referenced_resource)
-        resource_objectid_str = str(referenced_resource['_id'])
-        url_name = referenced_resource_type.lower()
-        if referenced_resource_type.lower() == 'computationcapabilities':
-            url_name = 'computation_capability_set'
-        elif referenced_resource_type.lower() == 'acquisitioncapabilities':
-            url_name = 'acquisition_capability_set'
-        elif referenced_resource_type.lower() == 'collection':
-            url_name = 'data_collection'
-        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('Catalogue_'):
-            url_name = 'catalogue'
-        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('CatalogueEntry_'):
-            url_name = 'catalogue_entry'
-        elif referenced_resource_type.lower() == 'catalogue' and referenced_resource_localid.startswith('DataSubset_'):
-            url_name = 'catalogue_data_subset'
-        referenced_resource_detail_url = reverse(f'browse:{url_name}_detail', args=[resource_objectid_str])
-        url_mapping = {
-            'original_server_url': resource_server_url,
-            'converted_url': referenced_resource_detail_url,
-            'converted_url_text': referenced_resource['name'],
-        }
-        if len(referenced_op_mode_id) > 0:
-            url_mapping['converted_url'] = f'{url_mapping["converted_url"]}#{referenced_op_mode_id}'
-            url_mapping['converted_url_text'] = f'{url_mapping["converted_url_text"]}#{referenced_op_mode_id}'
-        converted_resource_server_urls.append(url_mapping)
-    return converted_resource_server_urls
+        url_mapping['converted_url'] = referenced_resource.get_absolute_url()
+        url_mapping['converted_url_text'] = referenced_resource.name
+        mapped_resource_server_urls.append(url_mapping)
+    return mapped_resource_server_urls
 
 
 def get_server_urls_from_scientific_metadata_flattened(scientific_metadata_flattened: dict) -> tuple[list, list]:
