@@ -180,6 +180,7 @@ class MetadataFileMetadataURLReferencesValidator:
             return cls._is_each_resource_url_valid([])
         resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
         invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
+        invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'] = []
 
         for url in resource_urls_with_op_mode_ids:
             try:

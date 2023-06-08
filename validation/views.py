@@ -11,6 +11,7 @@ from openapi_spec_validator import validate_spec_url
 from urllib.error import HTTPError
 
 from .file_wrappers import (
+    AcquisitionCapabilitiesXMLMetadataFile,
     DataSubsetXMLMetadataFile,
     InstrumentXMLMetadataFile,
     XMLMetadataFile,
@@ -177,7 +178,7 @@ class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidat
     # mongodb_model = CurrentInstrument
     # expected_root_tag_name = INSTRUMENT_XML_ROOT_TAG_NAME
 
-    def prepare_xml_metadata_file(xml_file):
+    def prepare_xml_metadata_file(self, xml_file):
         return InstrumentXMLMetadataFile.from_file(xml_file)
 
 class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
@@ -185,6 +186,9 @@ class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetada
     # TODO: remove old code
     # mongodb_model = CurrentAcquisitionCapability
     # expected_root_tag_name = ACQUISITION_CAPABILITY_XML_ROOT_TAG_NAME
+
+    def prepare_xml_metadata_file(self, xml_file):
+        return AcquisitionCapabilitiesXMLMetadataFile.from_file(xml_file)
 
 class AcquisitionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     model = models.Acquisition
@@ -237,7 +241,7 @@ class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFi
     # mongodb_model = CurrentCatalogueDataSubset
     # expected_root_tag_name = CATALOGUE_DATA_SUBSET_XML_ROOT_TAG_NAME
 
-    def prepare_xml_metadata_file(xml_file):
+    def prepare_xml_metadata_file(self, xml_file):
         return DataSubsetXMLMetadataFile.from_file(xml_file)
 
 
