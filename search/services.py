@@ -22,20 +22,6 @@ from common.mongodb_models import (
     CurrentInstrument,
 )
 
-BASE_ONTOLOGY_URL = 'https://metadata.pithia.eu/ontology/2.2'
-BASE_ONTOLOGY_OBSERVED_PROPERTY_URL = f'{BASE_ONTOLOGY_URL}/observedProperty'
-BASE_ONTOLOGY_FEATURE_OF_INTEREST_URL = f'{BASE_ONTOLOGY_URL}/featureOfInterest'
-BASE_ONTOLOGY_INSTRUMENT_TYPE_URL = f'{BASE_ONTOLOGY_URL}/instrumentType'
-BASE_ONTOLOGY_COMPUTATION_TYPE_URL = f'{BASE_ONTOLOGY_URL}/computationType'
-
-BASE_METADATA_URL = 'https://metadata.pithia.eu/resources/2.2'
-BASE_INSTRUMENT_URL = f'{BASE_METADATA_URL}/instrument'
-BASE_ACQUISITION_CAPABILITIES_URL = f'{BASE_METADATA_URL}/acquisitionCapabilities'
-BASE_ACQUISITION_URL = f'{BASE_METADATA_URL}/acquisition'
-BASE_COMPUTATION_CAPABILITIES_URL = f'{BASE_METADATA_URL}/computationCapabilities'
-BASE_COMPUTATION_URL = f'{BASE_METADATA_URL}/computation'
-BASE_PROCESS_URL = f'{BASE_METADATA_URL}/process'
-BASE_DATA_COLLECTION_URL = f'{BASE_METADATA_URL}/collection'
 
 # cc = computation capability
 
@@ -55,29 +41,10 @@ def get_cc_set_localids_referencing_another_cc_set_localid(computation_capabilit
 
     return localids_from_cc_sets_referencing_cc_set_id
 
-def get_cc_set_urls_referencing_another_cc_set_url(computation_capability_set_url, cc_set_url_set):
-    cc_sets_referencing_cc_set_url = list(CurrentComputationCapability.find({
-        'childComputation.@xlink:href': computation_capability_set_url
-    }))
-    urls_from_cc_sets_referencing_cc_set_url = [create_metadata_url(BASE_COMPUTATION_CAPABILITIES_URL, cc_set) for cc_set in cc_sets_referencing_cc_set_url]
-    for cc_set_url in urls_from_cc_sets_referencing_cc_set_url:
-        if cc_set_url not in cc_set_url_set:
-            cc_set_url_set.add(cc_set_url)
-            get_cc_set_urls_referencing_another_cc_set_url(cc_set_url, cc_set_url_set)
-
-    return urls_from_cc_sets_referencing_cc_set_url
-
 def find_instruments_by_instrument_types(types):
     return list(CurrentInstrument.find({
         'type.@xlink:href': {
             '$in': types
-        }
-    }))
-
-def find_instruments_by_instrument_type_urls(instrument_type_urls):
-    return list(CurrentInstrument.find({
-        'type.@xlink:href': {
-            '$in': instrument_type_urls
         }
     }))
 
@@ -171,11 +138,6 @@ def get_observed_property_urls_by_computation_types(computation_types):
     })
     computation_capability_sets.extend(ccs_referencing_cc)
     return get_observed_property_urls_from_computation_capability_sets(computation_capability_sets)
-
-def create_metadata_url(base_metadata_url, metadata_registration):
-    namespace = metadata_registration['identifier']['PITHIA_Identifier']['namespace']
-    localid = metadata_registration['identifier']['PITHIA_Identifier']['localID']
-    return f'{base_metadata_url}/{namespace}/{localid}'
 
 def find_matching_data_collections(feature_of_interest_urls: list = [], instrument_type_urls: list = [], computation_type_urls: list = [], observed_property_urls: list = []):
     # observed_property_urls = [f'{BASE_ONTOLOGY_OBSERVED_PROPERTY_URL}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
