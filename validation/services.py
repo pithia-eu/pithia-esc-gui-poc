@@ -2,6 +2,7 @@ import logging
 import xmlschema
 from django.core.exceptions import ObjectDoesNotExist
 from requests import get
+from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
 from .errors_new import (
@@ -25,9 +26,9 @@ from .url_validation_services import (
     MetadataFileOntologyURLReferencesValidator,
 )
 
-from common.helpers import get_acquisition_capability_sets_referencing_instrument_operational_ids
 from common.models import (
     Instrument,
+    AcquisitionCapabilities,
     ScientificMetadata,
 )
 
@@ -109,7 +110,7 @@ class MetadataFileUpdateValidator:
         xml_file: InstrumentXMLMetadataFile,
         current_instrument_id,
         model: Instrument
-    ):
+    ) -> Union(bool, list):
         """
         Checks whether each Operational Mode ID present in
         the Instrument that is currently registered is also
@@ -120,7 +121,10 @@ class MetadataFileUpdateValidator:
         instrument_to_update = model.objects.get(pk=current_instrument_id)
         operational_mode_ids_of_current_xml = instrument_to_update.operational_mode_ids
         operational_mode_ids_intersection = set(operational_mode_ids_of_updated_xml).intersection(set(operational_mode_ids_of_current_xml))
-        return len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
+        result = len(operational_mode_ids_intersection) == len(operational_mode_ids_of_current_xml)
+        missing_ids = [id for id in list(operational_mode_ids_of_current_xml) if id not in list(operational_mode_ids_intersection)]
+        missing_operational_mode_urls = [f'{instrument_to_update.metadata_server_url}#{id}' for id in missing_ids]
+        return result, missing_operational_mode_urls
 
     @classmethod
     def validate(cls, xml_file: XMLMetadataFile, model: ScientificMetadata, metadata_registration_id):
@@ -249,13 +253,13 @@ def validate_xml_file_and_return_summary(
 
         try:
             # Operational mode IDs are changed and pre-existing IDs are referenced by any Acquisition Capabilities validation
-            is_each_op_mode_in_update_valid = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+            is_each_op_mode_in_update_valid, missing_operational_mode_urls = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
                 xml_metadata_file,
                 metadata_id_to_validate_for_update,
                 Instrument
             )
             if not is_each_op_mode_in_update_valid:
-                acquisition_capability_sets = get_acquisition_capability_sets_referencing_instrument_operational_ids(metadata_id_to_validate_for_update)
+                acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_operational_mode_urls(missing_operational_mode_urls)
                 validation_summary['warnings'].append(create_validation_summary_error(
                     message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(_map_acquisition_capability_to_update_link, acquisition_capability_sets)))
