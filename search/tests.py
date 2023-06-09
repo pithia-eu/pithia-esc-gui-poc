@@ -8,8 +8,8 @@ from .services import (
     find_matching_data_collections,
     get_observed_property_urls_by_instrument_types,
     get_observed_property_urls_by_computation_types,
-    group_instrument_types_by_observed_property,
-    group_computation_types_by_observed_property,
+    setup_computation_types_for_observed_property_search_form,
+    setup_instrument_types_for_observed_property_search_form,
 )
 from .views import (
     get_registered_observed_properties,
@@ -24,10 +24,6 @@ from common.models import (
     Computation,
     Process,
     DataCollection,
-)
-from common.mongodb_models import (
-    CurrentInstrument,
-    CurrentComputationCapability
 )
 from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
@@ -102,10 +98,8 @@ class ObservedPropertyCategorisationTestCase(SimpleTestCase):
         """
         gen_dict_extract() returns a list of all nested phenomenons in the observed_property_dict
         """
-        instruments = CurrentInstrument.find({})
-        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
-        computation_capability_sets = CurrentComputationCapability.find({})
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = create_dictionary_from_pithia_ontology_component(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
@@ -119,10 +113,8 @@ class ObservedPropertyCategorisationTestCase(SimpleTestCase):
         """
         categorise_observed_property_dict_by_top_level_phenomenons returns an observed property dict categorised by top level phenomenons, where each dict key is a top-level phenomenon
         """
-        instruments = CurrentInstrument.find({})
-        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
-        computation_capability_sets = CurrentComputationCapability.find({})
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = create_dictionary_from_pithia_ontology_component(
             'observedProperty',
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
@@ -165,23 +157,21 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
 
     def test_instrument_types_are_grouped_by_observed_property(self):
         """
-        group_instrument_types_by_observed_property() returns a dict
+        setup_instrument_types_for_observed_property_search_form() returns a dict
         of instrument types grouped by observed property when passed
         in a list of instruments
         """
-        instruments = CurrentInstrument.find({})
-        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
+        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         # print('instrument_types_grouped_by_observed_property', instrument_types_grouped_by_observed_property)
         self.assertTrue(isinstance(instrument_types_grouped_by_observed_property, dict))
 
     def test_computation_types_are_grouped_by_observed_property(self):
         """
-        group_computation_types_by_observed_property() returns a dict
+        setup_computation_types_for_observed_property_search_form() returns a dict
         of computation types grouped by observed property when passed
         in a list of computation capabilities
         """
-        computation_capability_sets = CurrentComputationCapability.find({})
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+        computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
 

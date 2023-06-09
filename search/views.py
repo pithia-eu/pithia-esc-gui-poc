@@ -16,8 +16,8 @@ from .services import (
     BASE_ONTOLOGY_COMPUTATION_TYPE_URL,
     BASE_ONTOLOGY_INSTRUMENT_TYPE_URL,
     find_matching_data_collections,
-    group_instrument_types_by_observed_property,
-    group_computation_types_by_observed_property,
+    setup_computation_types_for_observed_property_search_form,
+    setup_instrument_types_for_observed_property_search_form,
 )
 from common.mongodb_models import (
     CurrentAcquisitionCapability,
@@ -32,10 +32,8 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}
     if ontology_component == 'observedProperty':
-        instruments = CurrentInstrument.find({})
-        instrument_types_grouped_by_observed_property = group_instrument_types_by_observed_property(instruments)
-        computation_capability_sets = CurrentComputationCapability.find({})
-        computation_types_grouped_by_observed_property = group_computation_types_by_observed_property(computation_capability_sets)
+        instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
+        computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
     dictionary = create_dictionary_from_pithia_ontology_component(
         ontology_component,
         instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,

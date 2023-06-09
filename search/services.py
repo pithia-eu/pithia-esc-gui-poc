@@ -77,30 +77,46 @@ def find_computation_capability_sets_by_computation_types(computation_types):
         }
     }))
 
-def group_instrument_types_by_observed_property(instruments):
+def setup_instrument_types_for_observed_property_search_form():
     instrument_types_grouped_by_observed_property = {}
+    instruments = Instrument.objects.all()
     for i in instruments:
-        observed_property_urls = get_observed_property_urls_from_instruments([i])
+        # Find the Acquisition Capabilities relating to each Instrument.
+        acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_instrument_url(i.metadata_server_url)
+        
+        # If any Acquisition Capabilities are found, return its Observed
+        # Property URLs.
+        observed_property_urls = []
+        for ac in acquisition_capability_sets:
+            observed_property_urls = list(set(observed_property_urls + ac.observed_property_urls))
+        
+        instrument_type_id = i.instrument_type_url.split('/')[-1]
         for url in observed_property_urls:
+            # Map the Instrument Type URL of
+            # the Instrument to each Observed Property URL.
             observed_property_id = url.split('/')[-1]
             if observed_property_id not in instrument_types_grouped_by_observed_property:
                 instrument_types_grouped_by_observed_property[observed_property_id] = []
-            instrument_types_grouped_by_observed_property[observed_property_id].append(f"instrumentType{i['type']['@xlink:href'].split('/')[-1]}")
+            instrument_types_grouped_by_observed_property[observed_property_id].append(f'instrumentType{instrument_type_id}')
             instrument_types_grouped_by_observed_property[observed_property_id] = list(set(instrument_types_grouped_by_observed_property[observed_property_id]))
-
     return instrument_types_grouped_by_observed_property
 
-def group_computation_types_by_observed_property(computation_capability_sets):
+def setup_computation_types_for_observed_property_search_form():
     computation_types_grouped_by_observed_property = {}
+    computation_capability_sets = ComputationCapabilities.objects.all()
     for cc_set in computation_capability_sets:
-        observed_property_urls = get_observed_property_urls_from_computation_capability_sets([cc_set])
+        # Get the Observed Property URLs for each Computation Capabilities
+        # registration.
+        observed_property_urls = cc_set.observed_property_urls
+        computation_type_id = cc_set.computation_type_url.split('/')[-1]
         for url in observed_property_urls:
+            # Map the Computation Type URLs of the Computation Capabilities
+            # registration to each Observed Property URL of the Computation
+            # Capabilities registration.
             observed_property_id = url.split('/')[-1]
             if observed_property_id not in computation_types_grouped_by_observed_property:
                 computation_types_grouped_by_observed_property[observed_property_id] = []
-            if 'type' not in cc_set:
-                continue
-            computation_types_grouped_by_observed_property[observed_property_id].append(f"computationType{cc_set['type']['@xlink:href'].split('/')[-1]}")
+            computation_types_grouped_by_observed_property[observed_property_id].append(f"computationType{computation_type_id}")
             computation_types_grouped_by_observed_property[observed_property_id] = list(set(computation_types_grouped_by_observed_property[observed_property_id]))
 
     return computation_types_grouped_by_observed_property
