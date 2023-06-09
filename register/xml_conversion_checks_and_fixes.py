@@ -31,6 +31,10 @@ def correct_computation_capability_set_xml_converted_to_dict(dictionary):
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
         dictionary['capabilities']['processCapability'] = [dictionary['capabilities']['processCapability']]
+    # Check if the 'type' property exists and if it is an
+    # array-type property
+    if 'type' in dictionary and not isinstance(dictionary['type'], list):
+        dictionary['type'] = [dictionary['type']]
     return dictionary
 
 def correct_computation_xml_converted_to_dict(dictionary):
