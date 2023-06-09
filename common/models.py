@@ -331,6 +331,10 @@ class Instrument(ScientificMetadata):
     @property
     def operational_mode_ids(self):
         return [om['InstrumentOperationalMode']['id'] for om in self.json.get('operationalMode', [])]
+
+    @property
+    def instrument_type_url(self):
+        return self.json['type']['@xlink:href']
     
     def get_operational_mode_by_id(self, operational_mode_id):
         try:
@@ -362,6 +366,10 @@ class AcquisitionCapabilities(ScientificMetadata):
     def _immediate_metadata_dependents(self):
         acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
         return list(acquisitions)
+
+    @property
+    def observed_property_urls(self):
+        return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']]
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -405,6 +413,17 @@ class ComputationCapabilities(ScientificMetadata):
         computation_capability_sets = ComputationCapabilities.objects.for_delete_chain(self.metadata_server_url)
         computations = Computation.objects.for_delete_chain(self.metadata_server_url)
         return list(computation_capability_sets) + list(computations)
+
+    @property
+    def computation_type_url(self):
+        try:
+            return self.json['type']['@xlink:href']
+        except KeyError:
+            return None
+
+    @property
+    def observed_property_urls(self):
+        return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']]
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
