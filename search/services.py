@@ -7,6 +7,7 @@ from .helpers import (
     convert_list_to_regex_list,
 )
 
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from common.models import (
     Acquisition,
     AcquisitionCapabilities,
@@ -21,6 +22,8 @@ from common.mongodb_models import (
     CurrentComputationCapability,
     CurrentInstrument,
 )
+BASE_ONTOLOGY_INSTRUMENT_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/instrumentType'
+BASE_ONTOLOGY_COMPUTATION_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/computationType'
 
 
 # cc = computation capability

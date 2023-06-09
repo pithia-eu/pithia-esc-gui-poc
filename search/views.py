@@ -12,7 +12,7 @@ from ontology.utils import (
     get_phenomenon_ids_from_observed_property_id,
     categorise_observed_property_dict_by_top_level_phenomenons,
 )
-from .search_helpers import (
+from .services import (
     BASE_ONTOLOGY_COMPUTATION_TYPE_URL,
     BASE_ONTOLOGY_INSTRUMENT_TYPE_URL,
     find_matching_data_collections,

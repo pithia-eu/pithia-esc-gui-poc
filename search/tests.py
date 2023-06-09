@@ -4,13 +4,13 @@ from django.test import (
     TestCase,
 )
 
-from .search_helpers import (
+from .services import (
+    find_matching_data_collections,
     get_observed_property_urls_by_instrument_types,
     get_observed_property_urls_by_computation_types,
     group_instrument_types_by_observed_property,
     group_computation_types_by_observed_property,
 )
-from .services import find_matching_data_collections
 from .views import (
     get_registered_observed_properties,
     get_registered_features_of_interest
