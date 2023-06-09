@@ -8,6 +8,7 @@ def add_handle_to_url_mapping(handle: str, url: str):
     )
     handle_url_mapping.save()
 
+# TODO: remove old code
 def add_handle_to_url_mapping_old(handle: str, url: str, session=None):
     HandleUrlMapping.insert_one({
         'handle_name': handle,

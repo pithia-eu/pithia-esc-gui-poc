@@ -1,4 +1,16 @@
+import logging
 from bson import ObjectId
+from lxml import etree
+from lxml.etree import (
+    Element,
+    ElementTree,
+)
+from operator import itemgetter
+from pyhandle.handleexceptions import *
+from pymongo import collection
+
+from .handle_api import get_date_handle_was_issued_as_string
+
 from common.helpers import get_mongodb_model_by_resource_type_from_resource_url
 from common.models import (
     CatalogueDataSubset,
@@ -13,21 +25,11 @@ from common.mongodb_models import (
     CurrentOrganisation,
     OriginalMetadataXml,
 )
-from .handle_api import (
-    get_date_handle_was_issued_as_string,
-)
-from lxml import etree
-from lxml.etree import Element, ElementTree
-from operator import itemgetter
-from pyhandle.handleexceptions import *
-from pymongo import collection
 from update.update import update_current_version_of_resource
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
     get_namespace_and_localid_from_resource_url,
 )
-
-import logging
 
 logger = logging.getLogger(__name__)
 
