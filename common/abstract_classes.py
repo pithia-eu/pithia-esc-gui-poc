@@ -159,6 +159,13 @@ class AbstractInstrumentDatabaseQueries(ABC):
         """
         pass
 
+    @abstractmethod
+    def distinct_instrument_type_urls(self):
+        """
+        All distinct Instrument Type URLs among all
+        registered Instruments.
+        """
+
 class AbstractAcquisitionCapabilitiesDatabaseQueries(ABC):
     @abstractmethod
     def referencing_instrument_url(self, instrument_url: str):
