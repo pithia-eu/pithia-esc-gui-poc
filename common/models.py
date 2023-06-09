@@ -490,7 +490,15 @@ class DataCollection(ScientificMetadata):
 
     @property
     def first_related_party_url(self):
-        return self.scientific_metadata['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
+        return self.json['relatedParty'][0]['ResponsiblePartyInfo']['party']['@xlink:href']
+
+    @property
+    def feature_of_interest_urls(self):
+        return [nr['@xlink:href'] for nr in self.json['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+
+    @property
+    def type_urls(self):
+        return [type['@xlink:href'] for type in self.json['type']]
 
     objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
