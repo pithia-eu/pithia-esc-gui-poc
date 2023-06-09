@@ -22,7 +22,6 @@ from common.models import (
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
-    divide_catalogue_related_resource_url_into_main_components,
 )
 
 

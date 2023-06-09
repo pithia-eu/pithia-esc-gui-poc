@@ -5,7 +5,7 @@ from requests import get
 from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
-from .errors_new import (
+from .errors import (
     InvalidRootElementName,
     FileNameNotMatchingWithLocalID,
     FileRegisteredBefore,
@@ -110,7 +110,7 @@ class MetadataFileUpdateValidator:
         xml_file: InstrumentXMLMetadataFile,
         current_instrument_id,
         model: Instrument
-    ) -> Union(bool, list):
+    ) -> Union[bool, list]:
         """
         Checks whether each Operational Mode ID present in
         the Instrument that is currently registered is also

@@ -1,8 +1,5 @@
 class ValidationError(Exception):
-    def __init__(self, message, details) -> None:
-        super().__init__(message)
-        self.message = message
-        self.details = details
+    pass
 
 class InvalidResourceURL(ValidationError):
     pass
@@ -20,4 +17,7 @@ class FileNameNotMatchingWithLocalID(ValidationError):
     pass
 
 class FileRegisteredBefore(ValidationError):
+    pass
+
+class UpdateFileNotMatching(ValidationError):
     pass

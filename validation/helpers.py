@@ -37,9 +37,3 @@ def _create_li_element_with_register_link_from_resource_type_from_resource_url(r
 
 def _map_acquisition_capability_to_update_link(resource):
     return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
-
-def _map_etree_element_to_text(element):
-    return element.text
-
-def _map_operational_mode_object_to_id_string(om):
-    return om['InstrumentOperationalMode']['id']

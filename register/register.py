@@ -1,16 +1,19 @@
 from bson import ObjectId
-from common.mongodb_models import OriginalMetadataXml
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from typing import Union
-from validation.metadata_validation import validate_xml_file_is_unregistered
+
+from .xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+
+from common.mongodb_models import OriginalMetadataXml
+from validation.file_wrappers import XMLMetadataFile
+from validation.services import MetadataFileRegistrationValidator
 
 
 def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and_fix, session=None):
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     converted_metadata_file_dictionary = converted_metadata_file_dictionary[(list(converted_metadata_file_dictionary)[0])]
-    validate_xml_file_is_unregistered(mongodb_model, xml_file)
+    MetadataFileRegistrationValidator.validate(XMLMetadataFile.from_file(xml_file))
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(converted_metadata_file_dictionary)
     mongodb_model.insert_one(converted_metadata_file_dictionary, session=session)

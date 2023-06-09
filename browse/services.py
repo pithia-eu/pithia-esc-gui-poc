@@ -3,6 +3,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from operator import itemgetter
 from typing import Union
 
+from common.constants import (
+    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE,
+)
 from common.models import (
     Instrument,
     ScientificMetadata,
@@ -18,11 +22,7 @@ from utils.url_helpers import (
     divide_resource_url_into_main_components,
     is_operational_mode_url,
 )
-from validation.url_validation import (
-    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
-    SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE,
-    validate_ontology_term_url
-)
+from validation.url_validation_services import MetadataFileOntologyURLReferencesValidator
 
 
 # Server URL mapping
@@ -33,15 +33,17 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
     """
     converted_ontology_server_urls = []
     ontology_term_category_graphs = {}
-    for ontology_server_url in ontology_server_urls:
-        is_ontology_server_url_valid = validate_ontology_term_url(ontology_server_url)
-        if is_ontology_server_url_valid == False:
-            converted_ontology_server_urls.append({
-                'original_server_url': ontology_server_url,
-                'converted_url': ontology_server_url,
-                'converted_url_text': ontology_server_url,
-            })
-            continue
+
+    invalid_ontology_server_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid(ontology_server_urls)
+    for url in invalid_ontology_server_urls:
+        converted_ontology_server_urls.append({
+            'original_server_url': url,
+            'converted_url': url,
+            'converted_url_text': url,
+        })
+    
+    valid_ontology_server_urls = [url for url in ontology_server_urls if url not in invalid_ontology_server_urls]
+    for ontology_server_url in valid_ontology_server_urls:
         ontology_term_detail_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
         ontology_term_id = ontology_server_url.split('/')[-1]
         ontology_term_category = ontology_server_url.split('/')[-2]
