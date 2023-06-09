@@ -1,12 +1,3 @@
-import re
-from ontology.utils import (
-    get_observed_property_urls_from_feature_of_interest_urls,
-)
-
-from .helpers import (
-    convert_list_to_regex_list,
-)
-
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from common.models import (
     Acquisition,
@@ -17,65 +8,13 @@ from common.models import (
     Instrument,
     Process,
 )
-from common.mongodb_models import (
-    CurrentAcquisitionCapability,
-    CurrentComputationCapability,
-    CurrentInstrument,
+from ontology.utils import (
+    get_observed_property_urls_from_feature_of_interest_urls,
 )
+
 BASE_ONTOLOGY_INSTRUMENT_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/instrumentType'
 BASE_ONTOLOGY_COMPUTATION_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/computationType'
 
-
-# cc = computation capability
-
-# Computation Capability Sets may make references to other Computation Capability Sets.
-# This function ensures that, for example, if Computation A references Computation Capability Set A
-# that the Computation Capability Sets that Computation Capability Set A references are
-# also included in that reference.
-def get_cc_set_localids_referencing_another_cc_set_localid(computation_capability_set_localid, cc_set_localid_set):
-    cc_sets_referencing_cc_set_id = list(CurrentComputationCapability.find({
-        'childComputation.@xlink:href': re.compile(computation_capability_set_localid)
-    }))
-    localids_from_cc_sets_referencing_cc_set_id = [cc_set['identifier']['PITHIA_Identifier']['localID'] for cc_set in cc_sets_referencing_cc_set_id]
-    for cc_set_localid in localids_from_cc_sets_referencing_cc_set_id:
-        if cc_set_localid not in cc_set_localid_set:
-            cc_set_localid_set.add(cc_set_localid)
-            get_cc_set_localids_referencing_another_cc_set_localid(cc_set_localid, cc_set_localid_set)
-
-    return localids_from_cc_sets_referencing_cc_set_id
-
-def find_instruments_by_instrument_types(types):
-    return list(CurrentInstrument.find({
-        'type.@xlink:href': {
-            '$in': types
-        }
-    }))
-
-def find_acquisition_capability_sets_by_instrument_localids(instrument_localids):
-    return list(CurrentAcquisitionCapability.find({
-        'capabilities': {
-            '$exists': True
-        },
-        '$or': [
-            {
-                'instrumentModePair.InstrumentOperationalModePair.instrument.@xlink:href': {
-                    '$in': instrument_localids
-                }
-            },
-            {
-                'instrumentModePair.InstrumentOperationalModePair.mode.@xlink:href': {
-                    '$in': instrument_localids
-                }
-            },
-        ]
-    }))
-
-def find_computation_capability_sets_by_computation_types(computation_types):
-    return list(CurrentComputationCapability.find({
-        'type.@xlink:href': {
-            '$in': computation_types
-        }
-    }))
 
 def setup_instrument_types_for_observed_property_search_form():
     instrument_types_grouped_by_observed_property = {}
