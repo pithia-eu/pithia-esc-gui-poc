@@ -1,16 +1,15 @@
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from rdflib import URIRef
 from rdflib.resource import Resource
 from rdflib.namespace._SKOS import SKOS
-from utils.string_helpers import _split_camel_case
-from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
-from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
+
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     get_graph_of_pithia_ontology_component,
-    ONTOLOGY_SERVER_BASE_URL
 )
-from search.views import (
+from search.services import (
     get_parents_of_registered_ontology_terms,
     get_registered_computation_types,
     get_registered_features_of_interest,
@@ -19,6 +18,9 @@ from search.views import (
     get_registered_observed_properties,
     get_registered_phenomenons
 )
+from utils.string_helpers import _split_camel_case
+from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
+from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
 
 _ONTOLOGY_INDEX_PAGE_TITLE = 'Space Physics Ontology'
 
@@ -84,7 +86,7 @@ def _remove_namespace_prefix_from_predicate(p):
 def ontology_term_detail(request, category, term_id):
     g = get_graph_of_pithia_ontology_component(category)
     resource = None
-    resource_uriref = URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}')
+    resource_uriref = URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{category}/{term_id}')
     triples = list(g.triples((None, SKOS.member, resource_uriref)))
     if len(triples) > 0:
         resource = Resource(g, triples[0][2])
@@ -143,7 +145,7 @@ def ontology_term_detail(request, category, term_id):
             resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title() 
     return render(request, 'ontology/ontology_term_detail.html', {
         'title': resource_dictionary['prefLabel'],
-        'resource_ontology_url': f'{ONTOLOGY_SERVER_BASE_URL}{category}/{term_id}',
+        'resource_ontology_url': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{category}/{term_id}',
         'resource_dictionary': resource_dictionary,
         'resource_predicates_no_prefix': resource_predicates_no_prefix,
         'resource_predicates_readable': resource_predicates_readable,
