@@ -415,11 +415,11 @@ class ComputationCapabilities(ScientificMetadata):
         return list(computation_capability_sets) + list(computations)
 
     @property
-    def computation_type_url(self):
+    def computation_type_urls(self):
         try:
-            return self.json['type']['@xlink:href']
+            return [type['@xlink:href'] for type in self.json['type']]
         except KeyError:
-            return None
+            return []
 
     @property
     def observed_property_urls(self):
