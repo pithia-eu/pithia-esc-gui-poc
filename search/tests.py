@@ -6,8 +6,6 @@ from django.test import (
 
 from .services import (
     find_matching_data_collections,
-    get_observed_property_urls_by_instrument_types,
-    get_observed_property_urls_by_computation_types,
     setup_computation_types_for_observed_property_search_form,
     setup_instrument_types_for_observed_property_search_form,
 )
@@ -127,34 +125,6 @@ class ObservedPropertyCategorisationTestCase(SimpleTestCase):
 
 
 class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
-    def test_observed_properties_are_fetched_by_instrument_type(self):
-        """
-        get_observed_property_urls_by_instrument_types() returns a list
-        of observed property urls when passed in a list of instrument
-        types
-        """
-        instrument_types = [
-            'GNSS-receiver',
-            'GNSS-receiverScintillation',
-            'InSituRelaxationSounder',
-        ]
-        observed_property_urls_by_instrument_types = get_observed_property_urls_by_instrument_types(instrument_types)
-        # print('observed_property_urls_by_instrument_types', observed_property_urls_by_instrument_types)
-        self.assertTrue(isinstance(observed_property_urls_by_instrument_types, list))
-
-    def test_observed_properties_are_fetched_by_computation_type(self):
-        """
-        get_observed_property_urls_by_computation_types() returns a list
-        of observed property urls when passed in a list of computation
-        types
-        """
-        computation_types = [
-            'EmpiricalModel',
-        ]
-        observed_property_urls_by_computation_types = get_observed_property_urls_by_computation_types(computation_types)
-        # print('observed_property_urls_by_computation_types', observed_property_urls_by_computation_types)
-        self.assertTrue(isinstance(observed_property_urls_by_computation_types, list))
-
     def test_instrument_types_are_grouped_by_observed_property(self):
         """
         setup_instrument_types_for_observed_property_search_form() returns a dict

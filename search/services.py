@@ -121,43 +121,6 @@ def setup_computation_types_for_observed_property_search_form():
 
     return computation_types_grouped_by_observed_property
 
-def get_observed_property_urls_from_instruments(instruments):
-    instrument_localids = [i['identifier']['PITHIA_Identifier']['localID'] for i in instruments]
-    instrument_localid_regex_list = convert_list_to_regex_list(instrument_localids)
-    acquisition_capability_sets = find_acquisition_capability_sets_by_instrument_localids(instrument_localid_regex_list)
-    process_capabilities_from_acquisition_capability_sets = [ac_set['capabilities']['processCapability'] for ac_set in acquisition_capability_sets]
-    process_capabilities_from_acquisition_capability_sets_flattened = [item for sublist in process_capabilities_from_acquisition_capability_sets for item in sublist]
-    observed_property_urls_from_acquisition_capability_sets = [pc['observedProperty']['@xlink:href'] for pc in process_capabilities_from_acquisition_capability_sets_flattened]
-    return observed_property_urls_from_acquisition_capability_sets
-
-def get_observed_property_urls_from_computation_capability_sets(computation_capability_sets):
-    observed_property_urls_from_computation_capability_sets = []
-    for cc_set in computation_capability_sets:
-        if 'capabilities' in cc_set:
-            observed_property_urls_from_computation_capability_sets.extend([pc['observedProperty']['@xlink:href'] for pc in cc_set['capabilities']['processCapability']])
-    return list(set(observed_property_urls_from_computation_capability_sets))
-
-def get_observed_property_urls_by_instrument_types(instrument_types):
-    instrument_type_regex_list = convert_list_to_regex_list(instrument_types)
-    instruments = find_instruments_by_instrument_types(instrument_type_regex_list)
-    return get_observed_property_urls_from_instruments(instruments)
-
-def get_observed_property_urls_by_computation_types(computation_types):
-    regexes_of_computation_types = convert_list_to_regex_list(computation_types)
-    computation_capability_sets = find_computation_capability_sets_by_computation_types(regexes_of_computation_types)
-    cc_set_localids_referencing_other_cc_set_localids = []
-    for cc_set in computation_capability_sets:
-        cc_set_localids_referencing_other_cc_set_localids.extend(list(get_cc_set_localids_referencing_another_cc_set_localid(cc_set['identifier']['PITHIA_Identifier']['localID'], set())))
-        cc_set_localids_referencing_other_cc_set_localids = list(set(cc_set_localids_referencing_other_cc_set_localids))
-    regexes_of_cc_set_localids_referencing_other_cc_set_localids = convert_list_to_regex_list(cc_set_localids_referencing_other_cc_set_localids)
-    ccs_referencing_cc = CurrentComputationCapability.find({
-        'identifier.PITHIA_Identifier.localID': {
-            '$in': regexes_of_cc_set_localids_referencing_other_cc_set_localids
-        }
-    })
-    computation_capability_sets.extend(ccs_referencing_cc)
-    return get_observed_property_urls_from_computation_capability_sets(computation_capability_sets)
-
 def find_matching_data_collections(feature_of_interest_urls: list = [], instrument_type_urls: list = [], computation_type_urls: list = [], observed_property_urls: list = []):
     # observed_property_urls = [f'{BASE_ONTOLOGY_OBSERVED_PROPERTY_URL}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
     # instrument_type_urls = [f'{BASE_ONTOLOGY_INSTRUMENT_TYPE_URL}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
