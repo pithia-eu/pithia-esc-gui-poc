@@ -6,6 +6,9 @@ from django.test import (
 
 from .services import (
     find_matching_data_collections,
+    get_distinct_computation_type_urls_from_data_collections,
+    get_distinct_instrument_type_urls_from_data_collections,
+    find_matching_data_collections,
     setup_computation_types_for_observed_property_search_form,
     setup_instrument_types_for_observed_property_search_form,
 )
@@ -91,6 +94,24 @@ class SearchTestCase(TestCase):
         self.assertTrue(len(data_collections) > 0)
 
 
+class SearchSetupTestCase(TestCase):
+    def test_distinct_instrument_urls(self):
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+            DataCollection.objects.create_from_xml_string(xml_file.read())
+        data_collections = DataCollection.objects.all()
+        distinct_instrument_type_urls = get_distinct_instrument_type_urls_from_data_collections(data_collections)
+        print('distinct_instrument_type_urls', distinct_instrument_type_urls)
+        self.assertTrue(len(distinct_instrument_type_urls) > 0)
+
+    def test_distinct_model_urls(self):
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+            DataCollection.objects.create_from_xml_string(xml_file.read())
+        data_collections = DataCollection.objects.all()
+        distinct_model_urls = get_distinct_computation_type_urls_from_data_collections(data_collections)
+        print('distinct_model_urls', distinct_model_urls)
+        self.assertTrue(len(distinct_model_urls) == 0)
+
+
 class ObservedPropertyCategorisationTestCase(SimpleTestCase):
     def test_get_all_phenomenons_of_observed_property(self):
         """
@@ -144,6 +165,7 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
+
 
 class RegisteredResourcesTestCase(SimpleTestCase):
     def test_get_registered_observed_properties(self):
