@@ -123,12 +123,6 @@ class PlatformManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:platform'
     resource_xml_download_page_url_name = 'utils:view_platform_as_xml'
 
-    def get_resource_list(self):
-        resource_list = list(self.resource_mongodb_model.find({}).sort([
-            ('name', pymongo.ASCENDING)
-        ]))
-        return list(map(prepare_resource_for_template, resource_list))
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pithia_platforms, non_pithia_platforms = [], []
