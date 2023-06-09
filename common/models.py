@@ -47,7 +47,7 @@ class ScientificMetadata(models.Model):
     xml = models.TextField()
     json = models.JSONField()
     # institution_id = models.ForeignKey()
-    # registrant_id = models.CharField(max_length=100)
+    # owner_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -158,16 +158,16 @@ class ScientificMetadata(models.Model):
     def get_absolute_url(self):
         return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
 
-class TechnicalMetadata(models.Model):
+class InteractionMethod(models.Model):
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
     INTERACTION_METHOD_CHOICES = [
         (API, 'API'),
-        (MICADO, 'MiCADO'),
-        (DOWNLOAD, 'Download'),
+        # (MICADO, 'MiCADO'),
+        # (DOWNLOAD, 'Download'),
     ]
-    # data_collection_id = models.ForeignKey()
+    data_collection_id = models.ForeignKey()
     interaction_method = models.CharField(
         choices=INTERACTION_METHOD_CHOICES,
         default=API,
@@ -175,7 +175,7 @@ class TechnicalMetadata(models.Model):
     )
     json = models.JSONField()
     # institution_id = models.ForeignKey()
-    # registrant_id = models.CharField(max_length=100)
+    # owner_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
