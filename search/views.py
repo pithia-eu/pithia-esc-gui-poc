@@ -1,8 +1,23 @@
-import re
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+
 from .helpers import remove_underscore_from_id_attribute
+from .services import (
+    find_matching_data_collections,
+    get_distinct_computation_type_urls_from_computation_capability_sets,
+    get_distinct_computation_type_urls_from_data_collections,
+    get_distinct_instrument_type_urls_from_data_collections,
+    setup_computation_types_for_observed_property_search_form,
+    setup_instrument_types_for_observed_property_search_form,
+)
+
+from common.models import (
+    Instrument,
+    AcquisitionCapabilities,
+    ComputationCapabilities,
+    DataCollection,
+)
 from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     get_feature_of_interest_ids_from_observed_property_id,
@@ -11,19 +26,6 @@ from ontology.utils import (
     get_parent_node_ids_of_node_id,
     get_phenomenon_ids_from_observed_property_id,
     categorise_observed_property_dict_by_top_level_phenomenons,
-)
-from .services import (
-    BASE_ONTOLOGY_COMPUTATION_TYPE_URL,
-    BASE_ONTOLOGY_INSTRUMENT_TYPE_URL,
-    find_matching_data_collections,
-    setup_computation_types_for_observed_property_search_form,
-    setup_instrument_types_for_observed_property_search_form,
-)
-from common.mongodb_models import (
-    CurrentAcquisitionCapability,
-    CurrentComputationCapability,
-    CurrentInstrument,
-    CurrentDataCollection
 )
 
 _INDEX_PAGE_TITLE = 'Search Data Collections'
@@ -104,64 +106,47 @@ def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
 def get_registered_observed_properties():
-    observed_properties_from_computation_capability_sets = list(CurrentComputationCapability.aggregate([
-        {
-            '$unwind': {
-                'path': '$capabilities.processCapability'
-            }
-        },
-        {
-            '$group': {
-                '_id': None,
-                'xlink_hrefs': {
-                    '$addToSet': '$capabilities.processCapability.observedProperty.@xlink:href'
-                }
-            }
-        }
-    ]))
-
-    observed_properties_from_acquisition_capability_sets = list(CurrentAcquisitionCapability.aggregate([
-        {
-            '$unwind': {
-                'path': '$capabilities.processCapability'
-            }
-        },
-            {
-                '$group': {
-                    '_id': None,
-                    'xlink_hrefs': {
-                        '$addToSet': '$capabilities.processCapability.observedProperty.@xlink:href'
-                    }
-                }
-            }
-    ]))
-
-    observed_property_ids = []
-    if len(observed_properties_from_computation_capability_sets) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_computation_capability_sets[0]['xlink_hrefs'])))
-    if len(observed_properties_from_acquisition_capability_sets) > 0:
-        observed_property_ids.extend(list(map(extract_localid_from_xlink_href, observed_properties_from_acquisition_capability_sets[0]['xlink_hrefs'])))
-    return list(set(observed_property_ids))
+    acquisition_capability_sets = AcquisitionCapabilities.objects.all()
+    computation_capability_sets = ComputationCapabilities.objects.all()
+    registered_observed_property_urls = []
+    for ac in acquisition_capability_sets:
+        registered_observed_property_urls + ac.observed_property_urls
+    for cc in computation_capability_sets:
+        registered_observed_property_urls + cc.observed_property_urls
+    registered_observed_property_ids = [extract_localid_from_xlink_href(url) for url in registered_observed_property_urls]
+    return list(set(registered_observed_property_ids))
 
 def get_registered_features_of_interest(registered_observed_property_ids):
     feature_of_interest_ids = []
     g_op = get_graph_of_pithia_ontology_component('observedProperty')
     for id in registered_observed_property_ids:
         get_feature_of_interest_ids_from_observed_property_id(id, g_op, feature_of_interest_ids)
-    registered_data_collections = list(CurrentDataCollection.find({}, projection={ 'om:featureOfInterest.FeatureOfInterest.namedRegion': 1 }))
-    feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(nr['@xlink:href']) for dc in registered_data_collections for nr in dc['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+    registered_data_collections = list(DataCollection.objects.all())
+    feature_of_interest_ids_from_data_collections = [extract_localid_from_xlink_href(url) for dc in registered_data_collections for url in dc.feature_of_interest_urls]
     feature_of_interest_ids.extend(feature_of_interest_ids_from_data_collections)
     return list(set(feature_of_interest_ids))
 
 def get_registered_instrument_types():
-    types_from_instruments = list(map(extract_localid_from_xlink_href, list(CurrentInstrument.find({'type.@xlink:href': re.compile(f'^{BASE_ONTOLOGY_INSTRUMENT_TYPE_URL}')}).distinct('type.@xlink:href'))))
-    types_from_data_collections = list(map(extract_localid_from_xlink_href, list(CurrentDataCollection.find({'type.@xlink:href': re.compile(f'^{BASE_ONTOLOGY_INSTRUMENT_TYPE_URL}')}).distinct('type.@xlink:href'))))
+    # Get Instrument Type URLs from all Instruments
+    types_from_instruments = list(map(extract_localid_from_xlink_href, list(Instrument.objects.distinct_instrument_type_urls())))
+    # Get Instrument Type URLs from all Data Collections
+    data_collections = DataCollection.objects.all()
+    instrument_type_urls_from_data_collections = get_distinct_instrument_type_urls_from_data_collections(data_collections)
+    types_from_data_collections = list(map(extract_localid_from_xlink_href, instrument_type_urls_from_data_collections))
+    # Join the two lists
     all_registered_instrument_types = list(set(types_from_instruments + types_from_data_collections))
     return all_registered_instrument_types
 
 def get_registered_computation_types():
-    types_from_computation_capability_sets = list(map(extract_localid_from_xlink_href, list(CurrentComputationCapability.find({'type.@xlink:href': re.compile(f'^{BASE_ONTOLOGY_COMPUTATION_TYPE_URL}')}).distinct('type.@xlink:href'))))
-    types_from_data_collections = list(map(extract_localid_from_xlink_href, list(CurrentDataCollection.find({'type.@xlink:href': re.compile(f'^{BASE_ONTOLOGY_COMPUTATION_TYPE_URL}')}).distinct('type.@xlink:href'))))
+    # Get Computation Type URLs from all Computation Capabilities
+    computation_capability_sets = ComputationCapabilities.objects.all()
+    computation_type_urls_from_computation_capability_sets = get_distinct_computation_type_urls_from_computation_capability_sets(computation_capability_sets)
+    types_from_computation_capability_sets = list(map(extract_localid_from_xlink_href, computation_type_urls_from_computation_capability_sets))
+    # Get Computation Type URLs from all Data Collections
+    data_collections = DataCollection.objects.all()
+    computation_type_urls_from_data_collections = get_distinct_computation_type_urls_from_data_collections(data_collections)
+    types_from_data_collections = list(map(extract_localid_from_xlink_href, computation_type_urls_from_data_collections))
+    # Join the two lists
     all_registered_computation_types = list(set(types_from_computation_capability_sets + types_from_data_collections))
     return all_registered_computation_types
 
