@@ -66,8 +66,6 @@ class ResourceManagementListView(ListView):
     template_name = 'resource_management/resource_management_list_by_type_outer.html'
     context_object_name = 'resources'
     
-    resource_mongodb_model = None
-    resource_list = []
     resource_delete_page_url_name = ''
     resource_update_page_url_name = ''
     resource_register_page_url_name = ''
