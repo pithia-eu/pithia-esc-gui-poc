@@ -1,4 +1,9 @@
-from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+from common.constants import (
+    COMPUTATION_TYPE_URL_BASE,
+    FEATURE_OF_INTEREST_URL_BASE,
+    INSTRUMENT_TYPE_URL_BASE,
+    OBSERVED_PROPERTY_URL_BASE,
+)
 from common.models import (
     Acquisition,
     AcquisitionCapabilities,
@@ -11,9 +16,6 @@ from common.models import (
 from ontology.utils import (
     get_observed_property_urls_from_feature_of_interest_urls,
 )
-
-BASE_ONTOLOGY_INSTRUMENT_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/instrumentType'
-BASE_ONTOLOGY_COMPUTATION_TYPE_URL = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/computationType'
 
 
 def setup_instrument_types_for_observed_property_search_form():
@@ -62,8 +64,8 @@ def setup_computation_types_for_observed_property_search_form():
 
 def find_matching_data_collections(feature_of_interest_urls: list = [], instrument_type_urls: list = [], computation_type_urls: list = [], observed_property_urls: list = []):
     # observed_property_urls = [f'{BASE_ONTOLOGY_OBSERVED_PROPERTY_URL}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
-    # instrument_type_urls = [f'{BASE_ONTOLOGY_INSTRUMENT_TYPE_URL}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
-    # computation_type_urls = [f'{BASE_ONTOLOGY_COMPUTATION_TYPE_URL}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
+    # instrument_type_urls = [f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
+    # computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
     # feature_of_interest_urls = [f'{BASE_ONTOLOGY_FEATURE_OF_INTEREST_URL}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])]
 
     if len(feature_of_interest_urls) > 0:
