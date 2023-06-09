@@ -12,7 +12,6 @@ from resource_management.views import (
 
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
-    resource_mongodb_model = None
     resource_name = ''
     resource_localid = ''
     template_name = 'utils/resource_as_xml.html'
