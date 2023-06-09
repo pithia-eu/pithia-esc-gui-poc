@@ -117,7 +117,14 @@ def group_computation_types_by_observed_property(computation_capability_sets):
     computation_types_grouped_by_observed_property = {}
     for cc_set in computation_capability_sets:
         observed_property_urls = get_observed_property_urls_from_computation_capability_sets([cc_set])
-        computation_type_urls = [type['@xlink:href'] for type in cc_set['type']]
+        try:
+            computation_type_urls = [type['@xlink:href'] for type in cc_set['type']]
+        except:
+            pass
+        try:
+            computation_type_urls = [cc_set['type']['@xlink:href']]
+        except:
+            continue
         for url in observed_property_urls:
             observed_property_id = url.split('/')[-1]
             if observed_property_id not in computation_types_grouped_by_observed_property:
