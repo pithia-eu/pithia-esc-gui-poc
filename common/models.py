@@ -167,7 +167,7 @@ class InteractionMethod(models.Model):
         # (MICADO, 'MiCADO'),
         # (DOWNLOAD, 'Download'),
     ]
-    data_collection_id = models.ForeignKey()
+    # data_collection_id = models.ForeignKey()
     interaction_method = models.CharField(
         choices=INTERACTION_METHOD_CHOICES,
         default=API,
