@@ -98,6 +98,9 @@ class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQ
         referencing_party_url = self.referencing_party_url(metadata_server_url)
         return referencing_party_url
 
+    def distinct_instrument_type_urls(self):
+        return self.values_list('json__type__@xlink:href', flat=True).distinct()
+
 class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
     def referencing_instrument_url(self, instrument_url: str):
         return self.filter(**{'json__instrumentModePair__InstrumentOperationalModePair__instrument__@xlink:href': instrument_url})
