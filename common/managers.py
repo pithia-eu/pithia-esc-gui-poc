@@ -7,6 +7,9 @@ from typing import Union
 
 
 class ScientificMetadataManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('json__name')
+
     def _convert_xml_metadata_file_to_dictionary(self, xml_file_or_string: Union[InMemoryUploadedFile, str]) -> dict:
         xml = xml_file_or_string
         if hasattr(xml_file_or_string, 'read'):
