@@ -4,10 +4,18 @@
 {% block resource_list_inner %}
 <h2>Platform Networks</h2>
 {% with resource_list=pithia_platforms %}
+{% if not resource_list %}
+<p>{{ no_platform_networks_message }}</p>
+{% else %}
 {% include 'resource_management/resource_management_list_by_type_inner.html' %}
+{% endif %}
 {% endwith %}
 <h2 class="mt-5">Individual Platforms</h2>
 {% with resource_list=non_pithia_platforms %}
+{% if not resource_list %}
+<p>{{ no_platforms_message }}</p>
+{% else %}
 {% include 'resource_management/resource_management_list_by_type_inner.html' %}
+{% endif %}
 {% endwith %}
 {% endblock resource_list_inner %}
