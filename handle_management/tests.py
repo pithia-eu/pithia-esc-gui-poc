@@ -5,7 +5,11 @@ from django.test import (
     SimpleTestCase,
     tag
 )
-from handle_management.handle_api import (
+from pathlib import Path
+from pyhandle.handleclient import RESTHandleClient
+from pyhandle.clientcredentials import PIDClientCredentials
+
+from .handle_api import (
     add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource,
     create_handle,
@@ -22,7 +26,7 @@ from handle_management.handle_api import (
     register_handle,
     update_handle_url,
 )
-from handle_management.xml_utils import (
+from .xml_utils import (
     add_data_subset_data_to_doi_metadata_kernel_dict_old,
     add_doi_xml_string_to_metadata_xml_string,
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
@@ -37,10 +41,8 @@ from handle_management.xml_utils import (
     parse_xml_string,
     remove_doi_element_from_metadata_xml_string,
 )
-from pathlib import Path
+
 from pithiaesc.settings import BASE_DIR
-from pyhandle.handleclient import RESTHandleClient
-from pyhandle.clientcredentials import PIDClientCredentials
 from register.register import register_metadata_xml_file
 from utils.dict_helpers import flatten
 
