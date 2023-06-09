@@ -2,7 +2,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .helpers import remove_underscore_from_id_attribute
 from .services import (
     find_matching_data_collections,
     get_parents_of_registered_ontology_terms,
@@ -87,7 +86,6 @@ def index(request):
 
 def results(request):
     data_collections = find_matching_data_collections(request)
-    data_collections = list(map(remove_underscore_from_id_attribute, data_collections))
 
     return render(request, 'search/results.html', {
         'title': 'Search results',
