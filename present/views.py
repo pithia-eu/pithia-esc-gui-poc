@@ -1,8 +1,8 @@
+from bson import ObjectId
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib import messages
-from bson import ObjectId
 
 from common.mongodb_models import CurrentDataCollection, CurrentDataCollectionInteractionMethod
 
