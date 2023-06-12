@@ -111,4 +111,8 @@ def format_data_collection_dictionary(dictionary):
         for s in dictionary['collectionResults']['source']:
             if 'dataFormat' in s['OnlineResource'] and not isinstance(s['OnlineResource']['dataFormat'], list):
                 s['OnlineResource']['dataFormat'] = [s['OnlineResource']['dataFormat']]
+    # Check if nested 'project' property is an
+    # array-type property
+    if 'project' in dictionary and not isinstance(dictionary['project'], list):
+        dictionary['project'] = [dictionary['project']]
     return dictionary
