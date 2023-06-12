@@ -57,6 +57,10 @@ def format_computation_capability_set_dictionary(dictionary):
     # array-type property
     if 'type' in dictionary and not isinstance(dictionary['type'], list):
         dictionary['type'] = [dictionary['type']]
+    # Check if the 'childComputation' property exists and if it is an
+    # array-type property
+    if 'childComputation' in dictionary and not isinstance(dictionary['childComputation'], list):
+        dictionary['childComputation'] = [dictionary['childComputation']]
     return dictionary
 
 def format_computation_dictionary(dictionary):
