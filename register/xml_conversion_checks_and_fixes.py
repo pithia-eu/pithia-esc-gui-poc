@@ -16,7 +16,7 @@ def correct_platform_xml_converted_to_dict(dictionary):
         dictionary['childPlatform'] = [dictionary['childPlatform']]
     return dictionary
 
-def format_operation_dictionary(dictionary):
+def correct_operation_xml_converted_to_dict(dictionary):
     # Check if relatedParty property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
