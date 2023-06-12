@@ -1,11 +1,11 @@
-def correct_project_xml_converted_to_dict(self, dictionary):
+def correct_project_xml_converted_to_dict(dictionary):
     # Check if relatedParty property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
         dictionary['relatedParty'] = [dictionary['relatedParty']]
     return dictionary
 
-def correct_platform_xml_converted_to_dict(self, dictionary):
+def correct_platform_xml_converted_to_dict(dictionary):
     # Check if relatedParty property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
