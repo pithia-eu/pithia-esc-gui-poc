@@ -1,4 +1,15 @@
-def format_platform_dictionary(dictionary):
+def format_project_dictionary(self, dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
+    return dictionary
+
+def format_platform_dictionary(self, dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
     # Check if childPlatform property is an
     # array-type property
     if 'childPlatform' in dictionary and not isinstance(dictionary['childPlatform'], list):
