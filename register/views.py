@@ -226,6 +226,10 @@ class ProjectRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_project_dictionary
+        return super().post(request, *args, **kwargs)
+
 class PlatformRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentPlatform
     success_url = reverse_lazy('register:platform')
@@ -235,6 +239,10 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:platform')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_platform_dictionary
+        return super().post(request, *args, **kwargs)
 
 class InstrumentRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentInstrument
@@ -259,6 +267,10 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:operation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_operation_dictionary
+        return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability

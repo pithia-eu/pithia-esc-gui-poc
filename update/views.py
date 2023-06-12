@@ -56,7 +56,10 @@ from register.xml_conversion_checks_and_fixes import (
     format_computation_dictionary,
     format_data_collection_dictionary,
     format_instrument_dictionary,
-    format_process_dictionary
+    format_operation_dictionary,
+    format_platform_dictionary,
+    format_process_dictionary,
+    format_project_dictionary,
 )
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.register_api_specification import register_api_specification
@@ -231,6 +234,10 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_project_dictionary
+        return super().post(request, *args, **kwargs)
+
 class PlatformUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
@@ -247,6 +254,10 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_platform_dictionary
+        return super().post(request, *args, **kwargs)
+
 class OperationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
@@ -262,6 +273,10 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = format_operation_dictionary
+        return super().post(request, *args, **kwargs)
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentInstrument
