@@ -460,7 +460,7 @@ class Process(ScientificMetadata):
     a_or_an = 'a'
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
-    root_element_name = 'Process'
+    root_element_name = 'CompositeProcess'
     
     @property
     def _immediate_metadata_dependents(self):
