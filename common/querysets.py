@@ -50,10 +50,10 @@ class ProjectQuerySet(ScientificMetadataQuerySet, AbstractProjectDatabaseQueries
 
 class PlatformQuerySet(ScientificMetadataQuerySet, AbstractPlatformDatabaseQueries):
     def referencing_party_url(self, party_url: str):
-        return self.filter(**{'json__relatedParty__contains': {'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}})
+        return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
     
     def referencing_platform_url(self, platform_url: str):
-        return self.filter(**{'json__childPlatform__@xlink:href': platform_url})
+        return self.filter(**{'json__childPlatform__contains': [{'@xlink:href': platform_url}]})
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_party_url = self.referencing_party_url(metadata_server_url)
