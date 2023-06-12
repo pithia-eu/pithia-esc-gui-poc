@@ -16,6 +16,17 @@ def correct_platform_xml_converted_to_dict(self, dictionary):
         dictionary['childPlatform'] = [dictionary['childPlatform']]
     return dictionary
 
+def correct_operation_xml_converted_to_dict(self, dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
+    # Check if platform property is an
+    # array-type property
+    if 'platform' in dictionary and not isinstance(dictionary['platform'], list):
+        dictionary['platform'] = [dictionary['platform']]
+    return dictionary
+
 def correct_instrument_xml_converted_to_dict(self, dictionary):
     # Check if 'operationalMode' property is an
     # array-type property
