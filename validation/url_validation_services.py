@@ -83,7 +83,10 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def _is_resource_url_structure_valid(cls, resource_url):
-        url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
+        try:
+            url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
+        except IndexError:
+            return False
 
         # Verify resource type in resource URL is valid
         scientific_metadata_subclasses = ScientificMetadata.__subclasses__()
@@ -182,6 +185,7 @@ class MetadataFileMetadataURLReferencesValidator:
         invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'] = []
 
         for url in resource_urls_with_op_mode_ids:
+            print('url', url)
             try:
                 Instrument.objects.get_by_operational_mode_url(url)
             except ObjectDoesNotExist:
