@@ -64,7 +64,8 @@ class ScientificMetadataManager(models.Manager):
         registration = self.get(pk=pk)
         registration.xml = xml_string
         registration.json = xml_as_dict
-        return registration.save()
+        registration.save()
+        return registration
     
     class Meta:
         abstract = True
