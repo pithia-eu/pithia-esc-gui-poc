@@ -57,6 +57,10 @@ def correct_computation_capability_set_xml_converted_to_dict(self, dictionary):
     # array-type property
     if 'type' in dictionary and not isinstance(dictionary['type'], list):
         dictionary['type'] = [dictionary['type']]
+    # Check if the 'childComputation' property exists and if it is an
+    # array-type property
+    if 'childComputation' in dictionary and not isinstance(dictionary['childComputation'], list):
+        dictionary['childComputation'] = [dictionary['childComputation']]
     return dictionary
 
 def correct_computation_xml_converted_to_dict(self, dictionary):
