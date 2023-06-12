@@ -57,7 +57,10 @@ from register.xml_conversion_checks_and_fixes import (
     correct_computation_xml_converted_to_dict,
     correct_data_collection_xml_converted_to_dict,
     correct_instrument_xml_converted_to_dict,
-    correct_process_xml_converted_to_dict
+    correct_operation_xml_converted_to_dict,
+    correct_platform_xml_converted_to_dict,
+    correct_process_xml_converted_to_dict,
+    correct_project_xml_converted_to_dict,
 )
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 from register.register_api_specification import register_api_specification
@@ -228,6 +231,10 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['project_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = correct_project_xml_converted_to_dict
+        return super().post(request, *args, **kwargs)
+
 class PlatformUpdateFormView(ResourceUpdateFormView):
     model = models.Platform
     resource_mongodb_model = CurrentPlatform
@@ -242,6 +249,10 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
         self.resource_id = self.kwargs['platform_id']
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = correct_platform_xml_converted_to_dict
+        return super().post(request, *args, **kwargs)
+
 class OperationUpdateFormView(ResourceUpdateFormView):
     model = models.Operation
     resource_mongodb_model = CurrentOperation
@@ -255,6 +266,10 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.resource_conversion_validate_and_correct_function = correct_operation_xml_converted_to_dict
+        return super().post(request, *args, **kwargs)
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     model = models.Instrument
