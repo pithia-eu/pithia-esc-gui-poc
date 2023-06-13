@@ -167,7 +167,12 @@ class InteractionMethod(models.Model):
         # (MICADO, 'MiCADO'),
         # (DOWNLOAD, 'Download'),
     ]
-    data_collection = models.ForeignKey('DataCollection', on_delete=models.CASCADE)
+    data_collection = models.ForeignKey(
+        'DataCollection',
+        on_delete=models.CASCADE,
+        null=True,
+        limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION}
+    )
     # owner_id = models.CharField(max_length=100)
     type = models.CharField(
         choices=TYPE_CHOICES,
