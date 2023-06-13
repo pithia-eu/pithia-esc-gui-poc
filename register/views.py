@@ -100,7 +100,7 @@ class ResourceRegisterFormView(FormView):
                         models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
                             api_specification_url,
                             api_description,
-                            self.new_registration.pk
+                            self.new_registration
                         )
                     # TODO: remove old code
                     register_with_pymongo(

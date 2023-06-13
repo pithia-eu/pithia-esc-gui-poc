@@ -179,13 +179,13 @@ class InteractionMethodManager(models.Manager):
     pass
 
 class APIInteractionMethodManager(models.Manager):
-    def create_api_interaction_method(self, specification_url: str, description: str, data_collection_id: str):
+    def create_api_interaction_method(self, specification_url: str, description: str, data_collection: str):
         config = {
             'specification_url': specification_url,
             'description': description,
         }
         return self.create(
             type=self.model.API,
-            data_collection_id=data_collection_id,
+            data_collection=data_collection,
             config=config
         )
