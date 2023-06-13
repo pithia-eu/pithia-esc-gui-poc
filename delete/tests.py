@@ -28,72 +28,79 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 
 # Create your tests here.
 
-class CommonSetUpMixin:
+def _register_metadata_file_for_test(test_file_name, model):
+    metadata_registration = None
+    with open(os.path.join(_XML_METADATA_FILE_DIR, test_file_name)) as xml_file:
+        metadata_registration = model.objects.create_from_xml_string(xml_file.read())
+    return metadata_registration
+
+def _register_organisation_for_test():
+    return _register_metadata_file_for_test('Organisation_Test.xml', Organisation)
+
+def _register_individual_for_test():
+    return _register_metadata_file_for_test('Individual_Test.xml', Individual)
+
+def _register_project_for_test():
+    return _register_metadata_file_for_test('Project_Test.xml', Project)
+
+def _register_platform_for_test():
+    return _register_metadata_file_for_test('Platform_Test.xml', Platform)
+
+def _register_operation_for_test():
+    return _register_metadata_file_for_test('Operation_Test.xml', Operation)
+
+def _register_instrument_for_test():
+    return _register_metadata_file_for_test('Instrument_Test.xml', Instrument)
+
+def _register_acquisition_capabilities_for_test():
+    return _register_metadata_file_for_test('AcquisitionCapabilities_Test.xml', AcquisitionCapabilities)
+
+def _register_acquisition_for_test():
+    return _register_metadata_file_for_test('Acquisition_Test.xml', Acquisition)
+
+def _register_computation_capabilities_for_test():
+    return _register_metadata_file_for_test('ComputationCapabilities_Test.xml', ComputationCapabilities)
+
+def _register_computation_for_test():
+    return _register_metadata_file_for_test('Computation_Test.xml', Computation)
+
+def _register_process_for_test():
+    return _register_metadata_file_for_test('CompositeProcess_Test.xml', Process)
+
+def _register_data_collection_for_test():
+    return _register_metadata_file_for_test('DataCollection_Test.xml', DataCollection)
+
+def _register_catalogue_for_test():
+    return _register_metadata_file_for_test('Catalogue_Test.xml', Catalogue)
+
+def _register_catalogue_entry_for_test():
+    return _register_metadata_file_for_test('CatalogueEntry_Test_2023-01-01.xml', CatalogueEntry)
+
+def _register_catalogue_data_subset_for_test():
+    return _register_metadata_file_for_test('DataSubset_Test-2023-01-01_DataCollectionTest.xml', CatalogueDataSubset)
+
+def _register_all_metadata_types():
+    _register_organisation_for_test()
+    _register_individual_for_test()
+    _register_project_for_test()
+    _register_platform_for_test()
+    _register_operation_for_test()
+    _register_instrument_for_test()
+    _register_acquisition_capabilities_for_test()
+    _register_acquisition_for_test()
+    _register_computation_capabilities_for_test()
+    _register_computation_for_test()
+    _register_process_for_test()
+    _register_data_collection_for_test()
+    _register_catalogue_for_test()
+    _register_catalogue_entry_for_test()
+    _register_catalogue_data_subset_for_test()
+
+class MetadataTestCase(TestCase):
     def setUp(self) -> None:
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
-            Individual.objects.create_from_xml_string(xml_file.read())
-            
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test.xml')) as xml_file:
-            Project.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Platform_Test.xml')) as xml_file:
-            Platform.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Operation_Test.xml')) as xml_file:
-            Operation.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
-            Instrument.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
-            Acquisition.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
-            Computation.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
-            Process.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
-
-        is_catalogue_test_case = False
-        try:
-            is_catalogue_test_case = self.test_file_name == 'Catalogue_Test.xml'
-        except AttributeError:
-            pass
-
-        if not is_catalogue_test_case:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
-                Catalogue.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
-            CatalogueEntry.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            CatalogueDataSubset.objects.create_from_xml_string(xml_file.read())
-
+        _register_all_metadata_types()
         return super().setUp()
 
-@tag('metadata_dependents')
-class CommonTestMixin(CommonSetUpMixin):
-    def test_metadata_dependents(self):
-        """
-        metadata_dependents() returns all metadata
-        registration dependents for a metadata
-        instance.
-        """
-        self.metadata_registration = None
-        with open(os.path.join(_XML_METADATA_FILE_DIR, self.test_file_name)) as xml_file:
-            self.metadata_registration = self.model.objects.create_from_xml_string(xml_file.read())
-
-class MetadataTestCase(CommonSetUpMixin, TestCase):
     def test_delete_by_metadata_server_urls(self):
         """
         Model.objects.delete_by_metadata_server_urls() deletes all
@@ -105,122 +112,102 @@ class MetadataTestCase(CommonSetUpMixin, TestCase):
         remaining_registrations = list(ScientificMetadata.objects.all())
         self.assertTrue(len(remaining_registrations) == 0)
 
-class OrganisationTestCase(CommonTestMixin, TestCase):
-    model = Organisation
-    test_file_name = 'Organisation_Test.xml'
+class OrganisationTestCase(TestCase):
+    def setUp(self) -> None:
+        self.organisation = _register_organisation_for_test()
+        _register_individual_for_test()
+        _register_project_for_test()
+        _register_platform_for_test()
+        _register_operation_for_test()
+        _register_instrument_for_test()
+        _register_data_collection_for_test()
+        return super().setUp()
 
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.organisation._immediate_metadata_dependents
+        print('immediate_metadata_dependents', immediate_metadata_dependents)
+        self.assertTrue(any(isinstance(md, Individual) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Project) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Platform) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Operation) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Instrument) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, DataCollection) for md in immediate_metadata_dependents))
+
+class IndividualTestCase(TestCase):
+    def setUp(self) -> None:
+        self.individual = _register_individual_for_test()
+        _register_project_for_test()
+        _register_platform_for_test()
+        _register_operation_for_test()
+        _register_instrument_for_test()
+        _register_data_collection_for_test()
+        return super().setUp()
+    
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class IndividualTestCase(CommonTestMixin, TestCase):
-    model = Individual
-    test_file_name = 'Individual_Test.xml'
-
+class ProjectTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class ProjectTestCase(CommonTestMixin, TestCase):
-    model = Project
-    test_file_name = 'Project_Test.xml'
-
+class PlatformTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class PlatformTestCase(CommonTestMixin, TestCase):
-    model = Platform
-    test_file_name = 'Platform_Test.xml'
-
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
-
-class OperationTestCase(CommonTestMixin, TestCase):
-    model = Operation
-    test_file_name = 'Operation_Test.xml'
-
+class OperationTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) == 0)
 
-class InstrumentTestCase(CommonTestMixin, TestCase):
-    model = Instrument
-    test_file_name = 'Instrument_Test.xml'
-
+class InstrumentTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class AcquisitionCapabilitiesTestCase(CommonTestMixin, TestCase):
-    model = AcquisitionCapabilities
-    test_file_name = 'AcquisitionCapabilities_Test.xml'
-
+class AcquisitionCapabilitiesTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class AcquisitionTestCase(CommonTestMixin, TestCase):
-    model = Acquisition
-    test_file_name = 'Acquisition_Test.xml'
-
+class AcquisitionTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class ComputationCapabilitiesTestCase(CommonTestMixin, TestCase):
-    model = ComputationCapabilities
-    test_file_name = 'ComputationCapabilities_Test.xml'
-
+class ComputationCapabilitiesTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class ComputationTestCase(CommonTestMixin, TestCase):
-    model = Computation
-    test_file_name = 'Computation_Test.xml'
-
+class ComputationTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class ProcessTestCase(CommonTestMixin, TestCase):
-    model = Process
-    test_file_name = 'CompositeProcess_Test.xml'
-
+class ProcessTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class DataCollectionTestCase(CommonTestMixin, TestCase):
-    model = DataCollection
-    test_file_name = 'DataCollection_Test.xml'
-
+class DataCollectionTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class CatalogueTestCase(CommonTestMixin, TestCase):
-    model = Catalogue
-    test_file_name = 'Catalogue_Test.xml'
-
+class CatalogueTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class CatalogueEntryTestCase(CommonTestMixin, TestCase):
-    model = CatalogueEntry
-    test_file_name = 'CatalogueEntry_Test_2023-01-01.xml'
-
+class CatalogueEntryTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
 
-class CatalogueDataSubsetTestCase(CommonTestMixin, TestCase):
-    model = CatalogueDataSubset
-    test_file_name = 'DataSubset_Test-2023-01-01_DataCollectionTest.xml'
-
+class CatalogueDataSubsetTestCase(TestCase):
     def test_metadata_dependents(self):
         super().test_metadata_dependents()
         self.assertTrue(len(self.metadata_registration.metadata_dependents) == 0)
