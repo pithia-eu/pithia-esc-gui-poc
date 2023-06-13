@@ -32,6 +32,10 @@ def correct_instrument_xml_converted_to_dict(dictionary):
     # array-type property
     if 'operationalMode' in dictionary and not isinstance(dictionary['operationalMode'], list):
         dictionary['operationalMode'] = [dictionary['operationalMode']]
+    # Check if 'relatedParty' property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
     return dictionary
 
 def correct_acquisition_capability_set_xml_converted_to_dict(dictionary):
