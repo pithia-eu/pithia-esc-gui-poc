@@ -8,11 +8,6 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
-from .pymongo_api import (
-    update_with_pymongo,
-    update_interaction_method_with_pymongo,
-)
-
 from common import models
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
@@ -63,7 +58,11 @@ from resource_management.views import (
 )
 
 # TODO: remove old code
-from .pymongo_api import update_with_pymongo
+
+from .pymongo_api import (
+    update_with_pymongo,
+    update_interaction_method_with_pymongo,
+)
 
 from register.xml_conversion_checks_and_fixes import (
     correct_acquisition_capability_set_xml_converted_to_dict,
@@ -103,6 +102,7 @@ class ResourceUpdateFormView(FormView):
     # TODO: remove old code
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
+    resource_conversion_validate_and_correct_function = None
 
     def dispatch(self, request, *args, **kwargs):
         self.resource = self.model.objects.get(pk=self.resource_id)

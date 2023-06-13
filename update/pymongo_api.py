@@ -23,12 +23,16 @@ logger = logging.getLogger(__name__)
 
 
 def update_with_pymongo(
-    resource_id,
+    resource_localid,
     resource_mongodb_model,
     resource_revision_mongodb_model,
     xml_file_string=None,
     resource_conversion_validate_and_correct_function=None
 ):
+    resource = resource_mongodb_model.find_one({
+        'identifier.PITHIA_Identifier.localID': resource_localid
+    })
+    resource_id = str(resource['_id'])
     with client.start_session() as s:
         def cb(s):
             converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file_string)
