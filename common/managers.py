@@ -2,7 +2,6 @@ import json
 import xmltodict
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
-from django.db.models import Q
 from typing import Union
 
 
@@ -179,6 +178,9 @@ class InteractionMethodManager(models.Manager):
     pass
 
 class APIInteractionMethodManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(type=self.model.API)
+
     def create_api_interaction_method(self, specification_url: str, description: str, data_collection: str):
         config = {
             'specification_url': specification_url,
@@ -189,3 +191,9 @@ class APIInteractionMethodManager(models.Manager):
             data_collection=data_collection,
             config=config
         )
+
+    def update_config(self, interaction_method_id, specification_url: str, description: str):
+        interaction_method = self.model.get(pk=interaction_method_id)
+        interaction_method.specification_url = specification_url
+        interaction_method.description = description
+        interaction_method.save()
