@@ -148,8 +148,9 @@ class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabas
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
     
     def for_delete_chain(self, metadata_server_url: str):
+        referencing_instrument_url = self.referencing_instrument_url(metadata_server_url)
         referencing_acquisition_capability_set_url = self.referencing_acquisition_capability_set_url(metadata_server_url)
-        return referencing_acquisition_capability_set_url
+        return referencing_instrument_url | referencing_acquisition_capability_set_url
 
 class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
