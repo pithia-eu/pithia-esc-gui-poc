@@ -49,7 +49,7 @@ from .pymongo_api import (
     get_first_related_party_name_from_data_collection_old,
 )
 
-from register.register import register_metadata_xml_file
+from register.pymongo_api import register_metadata_xml_file
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 env = environ.Env()
