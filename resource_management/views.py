@@ -1,9 +1,7 @@
-import pymongo
 from django.shortcuts import render
 from django.views.generic import ListView
 
 from common import models
-from utils.mapping_functions import prepare_resource_for_template
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
