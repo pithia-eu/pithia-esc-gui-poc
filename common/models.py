@@ -167,7 +167,7 @@ class InteractionMethod(models.Model):
         # (MICADO, 'MiCADO'),
         # (DOWNLOAD, 'Download'),
     ]
-    # data_collection_id = models.ForeignKey()
+    data_collection_id = models.ForeignKey(ScientificMetadata, on_delete=models.CASCADE)
     # owner_id = models.CharField(max_length=100)
     type = models.CharField(
         choices=TYPE_CHOICES,
@@ -178,6 +178,8 @@ class InteractionMethod(models.Model):
     # deactivated = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = InteractionMethodManager()
 
 class Institution(models.Model):
     institution_name = models.CharField(max_length=200)
