@@ -166,7 +166,7 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
         return self.filter(query)
     
     def referencing_computation_capability_set_url(self, computation_capability_set_url: str):
-        return self.filter(json__childComputation__contains={'@xlink:href': computation_capability_set_url})
+        return self.filter(json__childComputation__contains=[{'@xlink:href': computation_capability_set_url}])
     
     def _immediate_computation_capability_set_referers(self, computation_capability_set):
         return self.referencing_computation_capability_set_url(computation_capability_set.metadata_server_url)
