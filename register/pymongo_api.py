@@ -9,8 +9,7 @@ from common.mongodb_models import (
     CurrentDataCollectionInteractionMethod,
     OriginalMetadataXml,
 )
-from validation.file_wrappers import XMLMetadataFile
-from validation.services import MetadataFileRegistrationValidator
+from validation.errors import FileRegisteredBefore
 
 
 # From register.py
@@ -18,7 +17,12 @@ def register_metadata_xml_file(xml_file, mongodb_model, xml_conversion_check_and
     converted_metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
     # Remove the top-level tag - this will be just <Organisation>, for example
     converted_metadata_file_dictionary = converted_metadata_file_dictionary[(list(converted_metadata_file_dictionary)[0])]
-    MetadataFileRegistrationValidator.validate(XMLMetadataFile.from_file(xml_file))
+    existing_registration = mongodb_model.find_one({
+        'identifier.PITHIA_Identifier.namespace': converted_metadata_file_dictionary['identifier']['PITHIA_Identifier']['namespace'],
+        'identifier.PITHIA_Identifier.localID': converted_metadata_file_dictionary['identifier']['PITHIA_Identifier']['localID'],
+    })
+    if existing_registration is not None:
+        raise FileRegisteredBefore('This XML metadata file has been registered before.',)
     if xml_conversion_check_and_fix:
         xml_conversion_check_and_fix(converted_metadata_file_dictionary)
     mongodb_model.insert_one(converted_metadata_file_dictionary, session=session)
