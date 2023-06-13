@@ -90,7 +90,6 @@ from register.xml_conversion_checks_and_fixes import (
     correct_process_xml_converted_to_dict,
     correct_project_xml_converted_to_dict,
 )
-from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 
 
 logger = logging.getLogger(__name__)

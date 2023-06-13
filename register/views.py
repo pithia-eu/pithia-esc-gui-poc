@@ -37,12 +37,10 @@ from utils.url_helpers import create_data_subset_detail_page_url
 
 # TODO: remove old code
 from . import xml_conversion_checks_and_fixes
-from .pymongo_api import (
-    register_doi_with_pymongo,
-    register_with_pymongo,
-)
+from .pymongo_api import register_with_pymongo
 
 from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
+from update.pymongo_api import register_doi_with_pymongo
 from validation.errors import FileRegisteredBefore
 
 

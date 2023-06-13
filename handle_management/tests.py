@@ -45,11 +45,11 @@ from utils.dict_helpers import flatten
 # TODO: remove old code
 from .pymongo_api import (
     add_data_subset_data_to_doi_metadata_kernel_dict_old,
-    add_doi_kernel_metadata_to_xml_and_return_updated_string,
     get_first_related_party_name_from_data_collection_old,
 )
 
 from register.pymongo_api import register_metadata_xml_file
+from update.pymongo_api import add_doi_kernel_metadata_to_xml_and_return_updated_string
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 env = environ.Env()

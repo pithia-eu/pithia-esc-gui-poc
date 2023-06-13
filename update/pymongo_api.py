@@ -6,6 +6,11 @@ from common.mongodb_models import (
     DataCollectionInteractionMethodRevision,
     OriginalMetadataXml,
 )
+from handle_management.pymongo_api import add_handle_to_url_mapping_old
+from handle_management.xml_utils import (
+    add_doi_xml_string_to_metadata_xml_string,
+    create_doi_xml_string_from_dict,
+)
 from mongodb import client
 from register.pymongo_api import store_xml_file_as_string_and_map_to_resource_id
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
@@ -52,6 +57,54 @@ def update_with_pymongo(
                 resource_id,
                 session=s
             )
+        s.with_transaction(cb)
+
+def add_doi_kernel_metadata_to_xml_and_return_updated_string(
+    doi_dict,
+    resource_id,
+    xml_file,
+    resource_mongodb_model,
+    resource_conversion_validate_and_correct_function=None,
+    session=None
+):
+    doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
+    xml_file.seek(0)
+    metadata_xml_string = xml_file.read()
+    xml_string_with_doi = add_doi_xml_string_to_metadata_xml_string(metadata_xml_string, doi_xml_string)
+    update_current_version_of_resource(
+        resource_id,
+        xml_string_with_doi,
+        resource_mongodb_model,
+        resource_conversion_validate_and_correct_function,
+        session=session
+    )
+    return xml_string_with_doi
+
+def register_doi_with_pymongo(
+    doi_dict,
+    resource_id,
+    xml_file,
+    resource_mongodb_model,
+    handle,
+    data_subset_url,
+    resource_conversion_validate_and_correct_function=None,
+):
+    with client.start_session() as s:
+        def cb(s):
+            xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
+                doi_dict,
+                resource_id,
+                xml_file,
+                resource_mongodb_model,
+                resource_conversion_validate_and_correct_function=resource_conversion_validate_and_correct_function,
+                session=s
+            )
+            update_original_metadata_xml_string(
+                xml_string_with_doi,
+                resource_id,
+                session=s
+            )
+            add_handle_to_url_mapping_old(handle, data_subset_url, session=s)
         s.with_transaction(cb)
 
 # From update.py

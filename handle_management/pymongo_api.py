@@ -4,8 +4,6 @@ from operator import itemgetter
 from pymongo import collection
 
 from .xml_utils import (
-    add_doi_xml_string_to_metadata_xml_string,
-    create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
 )
 
@@ -18,7 +16,6 @@ from common.mongodb_models import (
     HandleUrlMapping,
     OriginalMetadataXml,
 )
-from update.pymongo_api import update_current_version_of_resource
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
     get_namespace_and_localid_from_resource_url,
@@ -82,27 +79,6 @@ def get_doi_xml_string_for_resource_id(resource_id):
     }, { 'value': 1 })
     xml_string = original_metadata_xml['value']
     return get_doi_xml_string_from_metadata_xml_string(xml_string)
-
-def add_doi_kernel_metadata_to_xml_and_return_updated_string(
-    doi_dict,
-    resource_id,
-    xml_file,
-    resource_mongodb_model,
-    resource_conversion_validate_and_correct_function=None,
-    session=None
-):
-    doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
-    xml_file.seek(0)
-    metadata_xml_string = xml_file.read()
-    xml_string_with_doi = add_doi_xml_string_to_metadata_xml_string(metadata_xml_string, doi_xml_string)
-    update_current_version_of_resource(
-        resource_id,
-        xml_string_with_doi,
-        resource_mongodb_model,
-        resource_conversion_validate_and_correct_function,
-        session=session
-    )
-    return xml_string_with_doi
 
 # From utils.py
 def add_handle_to_url_mapping_old(handle: str, url: str, session=None):

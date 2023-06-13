@@ -9,11 +9,6 @@ from common.mongodb_models import (
     CurrentDataCollectionInteractionMethod,
     OriginalMetadataXml,
 )
-from handle_management.pymongo_api import (
-    add_doi_kernel_metadata_to_xml_and_return_updated_string,
-    add_handle_to_url_mapping_old,
-)
-from update.pymongo_api import update_original_metadata_xml_string
 from validation.file_wrappers import XMLMetadataFile
 from validation.services import MetadataFileRegistrationValidator
 
@@ -81,31 +76,4 @@ def register_with_pymongo(
                     api_description=api_description,
                     session=s
                 )
-        s.with_transaction(cb)
-
-def register_doi_with_pymongo(
-    doi_dict,
-    resource_id,
-    xml_file,
-    resource_mongodb_model,
-    handle,
-    data_subset_url,
-    resource_conversion_validate_and_correct_function=None,
-):
-    with client.start_session() as s:
-        def cb(s):
-            xml_string_with_doi = add_doi_kernel_metadata_to_xml_and_return_updated_string(
-                doi_dict,
-                resource_id,
-                xml_file,
-                resource_mongodb_model,
-                resource_conversion_validate_and_correct_function=resource_conversion_validate_and_correct_function,
-                session=s
-            )
-            update_original_metadata_xml_string(
-                xml_string_with_doi,
-                resource_id,
-                session=s
-            )
-            add_handle_to_url_mapping_old(handle, data_subset_url, session=s)
         s.with_transaction(cb)
