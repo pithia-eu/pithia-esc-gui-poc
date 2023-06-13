@@ -13,7 +13,7 @@ from handle_management.pymongo_api import (
     add_doi_kernel_metadata_to_xml_and_return_updated_string,
     add_handle_to_url_mapping_old,
 )
-from update.update import update_original_metadata_xml_string
+from update.pymongo_api import update_original_metadata_xml_string
 from validation.file_wrappers import XMLMetadataFile
 from validation.services import MetadataFileRegistrationValidator
 

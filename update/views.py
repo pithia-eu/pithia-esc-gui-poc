@@ -1,5 +1,23 @@
 import logging
 from bson.objectid import ObjectId
+from django.contrib import messages
+from django.shortcuts import (
+    render,
+    redirect
+)
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
+from pyexpat import ExpatError
+
+from .pymongo_api import (
+    assign_original_xml_file_entry_to_revision_id,
+    create_revision_of_current_resource_version,
+    create_revision_of_data_collection_api_interaction_method,
+    update_current_version_of_resource,
+    update_data_collection_api_interaction_method_specification_url,
+    update_data_collection_api_interaction_method_description
+)
+
 from common import models
 from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from common.mongodb_models import (
@@ -35,21 +53,31 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
-from django.contrib import messages
-from django.shortcuts import (
-    render,
-    redirect
-)
-from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
-    get_doi_xml_string_for_resource_id,
     remove_doi_element_from_metadata_xml_string,
 )
+from resource_management.forms import (
+    UploadUpdatedDataCollectionFileForm,
+    UploadUpdatedFileForm,
+    UpdateDataCollectionInteractionMethodsForm
+)
+from resource_management.views import (
+    _INDEX_PAGE_TITLE,
+    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+)
+
+# TODO: remove old code
+from .pymongo_api import update_with_pymongo
+
+from handle_management.pymongo_api import (
+    get_doi_xml_string_for_resource_id,
+)
 from mongodb import client
-from pyexpat import ExpatError
-from register.register import store_xml_file_as_string_and_map_to_resource_id
+from register.pymongo_api import (
+    register_api_specification,
+)
 from register.xml_conversion_checks_and_fixes import (
     correct_acquisition_capability_set_xml_converted_to_dict,
     correct_acquisition_xml_converted_to_dict,
@@ -63,27 +91,6 @@ from register.xml_conversion_checks_and_fixes import (
     correct_project_xml_converted_to_dict,
 )
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
-from register.register_api_specification import register_api_specification
-from resource_management.forms import (
-    UploadUpdatedDataCollectionFileForm,
-    UploadUpdatedFileForm,
-    UpdateDataCollectionInteractionMethodsForm
-)
-from resource_management.views import (
-    _INDEX_PAGE_TITLE,
-    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-)
-from update.update import (
-    update_current_version_of_resource,
-    update_data_collection_api_interaction_method_specification_url,
-    update_data_collection_api_interaction_method_description
-)
-from update.version_control import (
-    assign_original_xml_file_entry_to_revision_id,
-    create_revision_of_current_resource_version,
-    create_revision_of_data_collection_api_interaction_method
-)
 
 
 logger = logging.getLogger(__name__)
@@ -94,8 +101,6 @@ class ResourceUpdateFormView(FormView):
     # Registration variables
     resource = None
     resource_id = ''
-    resource_mongodb_model = None
-    resource_revision_mongodb_model = None
 
     # Template variables
     resource_update_page_url_name = ''
@@ -108,6 +113,10 @@ class ResourceUpdateFormView(FormView):
     form_class = UploadUpdatedFileForm
     success_url = ''
     xml_file_string = None
+
+    # TODO: remove old code
+    resource_mongodb_model = None
+    resource_revision_mongodb_model = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,42 +138,19 @@ class ResourceUpdateFormView(FormView):
         xml_file = request.FILES['files']
         if form.is_valid():
             try:
-                self.model.objects.update_from_xml_string(self.resource_id, xml_file.read())
-                
+                xml_file_string = xml_file.read()
+                self.model.objects.update_from_xml_string(self.resource_id, xml_file_string)
+
                 # TODO: remove old code
-                # if not hasattr(self, 'resource_conversion_validate_and_correct_function'):
-                #     self.resource_conversion_validate_and_correct_function = None
-                # with client.start_session() as s:
-                #     def cb(s):
-                #         if self.xml_file_string is None:
-                #             self.xml_file_string = xml_file.read()
-                #         converted_xml_file = convert_xml_metadata_file_to_dictionary(self.xml_file_string)
-                #         converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
-                #         pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
-                #         resource_revision = create_revision_of_current_resource_version(
-                #             pithia_identifier,
-                #             self.resource_mongodb_model,
-                #             self.resource_revision_mongodb_model,
-                #             session=s
-                #         )
-                #         assign_original_xml_file_entry_to_revision_id(
-                #             self.resource_id,
-                #             resource_revision['_id'],
-                #             session=s
-                #         )
-                #         update_current_version_of_resource(
-                #             self.resource_id,
-                #             self.xml_file_string,
-                #             self.resource_mongodb_model,
-                #             self.resource_conversion_validate_and_correct_function,
-                #             session=s
-                #         )
-                #         store_xml_file_as_string_and_map_to_resource_id(
-                #             self.xml_file_string,
-                #             self.resource_id,
-                #             session=s
-                #         )
-                #     s.with_transaction(cb)
+                update_with_pymongo(
+                    self.resource_id,
+                    xml_file,
+                    self.resource_mongodb_model,
+                    self.resource_revision_mongodb_model,
+                    xml_file_string=xml_file_string,
+                    resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
+                )
+
                 messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
@@ -179,24 +165,19 @@ class ResourceUpdateFormView(FormView):
 
     def get(self, request, *args, **kwargs):
         self.resource = self.model.objects.get(pk=self.resource_id)
-        # resource_to_update = self.resource_mongodb_model.find_one({
-        #     '_id': ObjectId(self.resource_id)
-        # })
-        # resource_to_update_name = resource_to_update['identifier']['PITHIA_Identifier']['localID']
-        # if 'name' in resource_to_update:
-        #     resource_to_update_name = resource_to_update['name']
-        # self.resource_to_update_name = resource_to_update_name
         return super().get(request, *args, **kwargs)
 
 class OrganisationUpdateFormView(ResourceUpdateFormView):
     model = models.Organisation
-    resource_mongodb_model = CurrentOrganisation
-    resource_revision_mongodb_model = OrganisationRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_update_page_url_name = 'update:organisation'
     validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentOrganisation
+    resource_revision_mongodb_model = OrganisationRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -205,13 +186,15 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
 
 class IndividualUpdateFormView(ResourceUpdateFormView):
     model = models.Individual
-    resource_mongodb_model = CurrentIndividual
-    resource_revision_mongodb_model = IndividualRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_update_page_url_name = 'update:individual'
     validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentIndividual
+    resource_revision_mongodb_model = IndividualRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -219,13 +202,15 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
 
 class ProjectUpdateFormView(ResourceUpdateFormView):
     model = models.Project
-    resource_mongodb_model = CurrentProject
-    resource_revision_mongodb_model = ProjectRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_update_page_url_name = 'update:project'
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentProject
+    resource_revision_mongodb_model = ProjectRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -237,13 +222,15 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
 
 class PlatformUpdateFormView(ResourceUpdateFormView):
     model = models.Platform
-    resource_mongodb_model = CurrentPlatform
-    resource_revision_mongodb_model = PlatformRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_update_page_url_name = 'update:platform'
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentPlatform
+    resource_revision_mongodb_model = PlatformRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -255,13 +242,15 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
 
 class OperationUpdateFormView(ResourceUpdateFormView):
     model = models.Operation
-    resource_mongodb_model = CurrentOperation
-    resource_revision_mongodb_model = OperationRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_update_page_url_name = 'update:operation'
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentOperation
+    resource_revision_mongodb_model = OperationRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -273,13 +262,15 @@ class OperationUpdateFormView(ResourceUpdateFormView):
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     model = models.Instrument
-    resource_mongodb_model = CurrentInstrument
-    resource_revision_mongodb_model = InstrumentRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_update_page_url_name = 'update:instrument'
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentInstrument
+    resource_revision_mongodb_model = InstrumentRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -291,13 +282,15 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
 
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.AcquisitionCapabilities
-    resource_mongodb_model = CurrentAcquisitionCapability
-    resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_update_page_url_name = 'update:acquisition_capability_set'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentAcquisitionCapability
+    resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -314,13 +307,15 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
     model = models.Acquisition
-    resource_mongodb_model = CurrentAcquisition
-    resource_revision_mongodb_model = AcquisitionRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_update_page_url_name = 'update:acquisition'
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentAcquisition
+    resource_revision_mongodb_model = AcquisitionRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -332,13 +327,15 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
 
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.ComputationCapabilities
-    resource_mongodb_model = CurrentComputationCapability
-    resource_revision_mongodb_model = ComputationCapabilityRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_update_page_url_name = 'update:computation_capability_set'
     validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentComputationCapability
+    resource_revision_mongodb_model = ComputationCapabilityRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -355,13 +352,15 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
         
 class ComputationUpdateFormView(ResourceUpdateFormView):
     model = models.Computation
-    resource_mongodb_model = CurrentComputation
-    resource_revision_mongodb_model = ComputationRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_update_page_url_name = 'update:computation'
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentComputation
+    resource_revision_mongodb_model = ComputationRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -373,13 +372,15 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
 
 class ProcessUpdateFormView(ResourceUpdateFormView):
     model = models.Process
-    resource_mongodb_model = CurrentProcess
-    resource_revision_mongodb_model = ProcessRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentProcess
+    resource_revision_mongodb_model = ProcessRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -391,8 +392,7 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
     model = models.DataCollection
-    resource_mongodb_model = CurrentDataCollection
-    resource_revision_mongodb_model = DataCollectionRevision
+
     template_name = 'update/file_upload_data_collection.html'
     form_class = UploadUpdatedDataCollectionFileForm
 
@@ -400,6 +400,10 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentDataCollection
+    resource_revision_mongodb_model = DataCollectionRevision
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']

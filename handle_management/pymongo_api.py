@@ -18,7 +18,7 @@ from common.mongodb_models import (
     HandleUrlMapping,
     OriginalMetadataXml,
 )
-from update.update import update_current_version_of_resource
+from update.pymongo_api import update_current_version_of_resource
 from utils.url_helpers import (
     divide_resource_url_into_main_components,
     get_namespace_and_localid_from_resource_url,

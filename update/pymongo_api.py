@@ -1,0 +1,166 @@
+import logging
+from bson import ObjectId
+
+from common.mongodb_models import (
+    CurrentDataCollectionInteractionMethod,
+    DataCollectionInteractionMethodRevision,
+    OriginalMetadataXml,
+)
+from mongodb import client
+from register.pymongo_api import store_xml_file_as_string_and_map_to_resource_id
+from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
+
+
+logger = logging.getLogger(__name__)
+
+
+def update_with_pymongo(
+    resource_id,
+    xml_file,
+    resource_mongodb_model,
+    resource_revision_mongodb_model,
+    xml_file_string=None,
+    resource_conversion_validate_and_correct_function=None
+):
+    with client.start_session() as s:
+        def cb(s):
+            if xml_file_string is None:
+                xml_file_string = xml_file.read()
+            converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file_string)
+            converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
+            pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
+            resource_revision = create_revision_of_current_resource_version(
+                pithia_identifier,
+                resource_mongodb_model,
+                resource_revision_mongodb_model,
+                session=s
+            )
+            assign_original_xml_file_entry_to_revision_id(
+                resource_id,
+                resource_revision['_id'],
+                session=s
+            )
+            update_current_version_of_resource(
+                resource_id,
+                xml_file_string,
+                resource_mongodb_model,
+                resource_conversion_validate_and_correct_function,
+                session=s
+            )
+            store_xml_file_as_string_and_map_to_resource_id(
+                xml_file_string,
+                resource_id,
+                session=s
+            )
+        s.with_transaction(cb)
+
+# From update.py
+def update_current_version_of_resource(
+    resource_id,
+    xml_file,
+    current_resource_mongodb_model,
+    xml_conversion_check_and_fix,
+    session=None
+):
+    metadata_file_dictionary = convert_xml_metadata_file_to_dictionary(xml_file)
+    # Remove the top-level tag - this will be just <Organisation>, for example
+    metadata_file_dictionary = metadata_file_dictionary[(list(metadata_file_dictionary)[0])]
+    if xml_conversion_check_and_fix:
+        xml_conversion_check_and_fix(metadata_file_dictionary)
+    current_resource_mongodb_model.update_one({
+        '_id': ObjectId(str(resource_id))
+    }, { '$set': metadata_file_dictionary }, session=session)
+    return metadata_file_dictionary
+
+def update_data_collection_api_interaction_method_specification_url(
+    data_collection_localid,
+    api_specification_url,
+    session=None
+):
+    return CurrentDataCollectionInteractionMethod.update_one(
+        {
+            'data_collection_localid': data_collection_localid,
+            'interaction_method': 'api',
+        },
+        {
+            '$set': {
+                'interaction_url': api_specification_url
+            }
+        },
+        session=session
+    )
+
+def update_data_collection_api_interaction_method_description(
+    data_collection_localid,
+    api_description,
+    session=None
+):
+    return CurrentDataCollectionInteractionMethod.update_one(
+        {
+            'data_collection_localid': data_collection_localid,
+            'interaction_method': 'api',
+        },
+        {
+            '$set': {
+                'interaction_method_description': api_description
+            }
+        },
+        session=session
+    )
+
+def update_original_metadata_xml_string(updated_xml_string, resource_id, session=None):
+    return OriginalMetadataXml.update_one(
+        {
+            'resourceId': ObjectId(resource_id),
+        },
+        {
+            '$set': {
+                'value': updated_xml_string
+            }
+        },
+        session=session
+    )
+
+
+# From version_control.py
+def create_revision_of_current_resource_version(
+    resource_pithia_identifier,
+    current_resource_mongodb_model,
+    resource_revision_mongodb_model,
+    session=None
+):
+    current_version_of_resource = current_resource_mongodb_model.find_one({
+        'identifier.PITHIA_Identifier.localID': resource_pithia_identifier['localID'],
+        'identifier.PITHIA_Identifier.namespace': resource_pithia_identifier['namespace'],
+    })
+    if not current_version_of_resource:
+        logger.warning(f"Could not create a revision of the resource with a localID {resource_pithia_identifier['localID']} and namespace {resource_pithia_identifier['namespace']}, as that resource could not be found.")
+        return 'Resource not found.'
+    current_version_of_resource.pop('_id', None)
+    resource_revision_mongodb_model.insert_one(current_version_of_resource, session=session)
+    return current_version_of_resource
+
+def assign_original_xml_file_entry_to_revision_id(old_resource_id, revision_id, session=None):
+    current_orginal_xml_file = OriginalMetadataXml.find_one({
+        'resourceId': ObjectId(str(old_resource_id))
+    })
+    if current_orginal_xml_file is None:
+        logger.warning(f'Could not assign the original XML metadata string for resource with ID {old_resource_id} to the resource\'s revision, as an original XML metadata string for that resource was not found.')
+        return 'The original XML metadata string for this resource was not found.'
+    return OriginalMetadataXml.update_one({
+        'resourceId': ObjectId(str(old_resource_id))
+    }, { '$set': {
+        'resourceId': ObjectId(str(revision_id))
+    }}, session=session)
+
+def create_revision_of_data_collection_api_interaction_method(data_collection_localid, session=None):
+    current_version_of_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
+        'data_collection_localid': data_collection_localid,
+        'interaction_method': 'api',
+    })
+    if current_version_of_api_interaction_method == None:
+        logger.warning(f'Could not make a revision of the API interaction method for the Data Collection with localID {data_collection_localid}, as no Data Collection with that localID was found.')
+        return 'No API interaction method for this data collection was found.'
+    current_version_of_api_interaction_method.pop('_id', None)
+    DataCollectionInteractionMethodRevision.insert_one(current_version_of_api_interaction_method, session=session)
+    return current_version_of_api_interaction_method
