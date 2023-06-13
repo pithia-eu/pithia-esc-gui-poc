@@ -162,20 +162,20 @@ class InteractionMethod(models.Model):
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
-    INTERACTION_METHOD_CHOICES = [
+    TYPE_CHOICES = [
         (API, 'API'),
         # (MICADO, 'MiCADO'),
         # (DOWNLOAD, 'Download'),
     ]
     # data_collection_id = models.ForeignKey()
-    interaction_method = models.CharField(
-        choices=INTERACTION_METHOD_CHOICES,
+    # owner_id = models.CharField(max_length=100)
+    type = models.CharField(
+        choices=TYPE_CHOICES,
         default=API,
         max_length=100
     )
-    json = models.JSONField()
-    # institution_id = models.ForeignKey()
-    # owner_id = models.CharField(max_length=100)
+    config = models.JSONField()
+    # deactivated = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
