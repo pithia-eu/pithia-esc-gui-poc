@@ -46,6 +46,9 @@ def _register_project_for_test():
 def _register_platform_for_test():
     return _register_metadata_file_for_test('Platform_Test.xml', Platform)
 
+def _register_platform_with_child_platforms_for_test():
+    return _register_metadata_file_for_test('Platform_Test_with_child_platforms.xml', Platform)
+
 def _register_operation_for_test():
     return _register_metadata_file_for_test('Operation_Test.xml', Operation)
 
@@ -58,8 +61,14 @@ def _register_acquisition_capabilities_for_test():
 def _register_acquisition_for_test():
     return _register_metadata_file_for_test('Acquisition_Test.xml', Acquisition)
 
+def _register_acquisition_with_instrument_for_test():
+    return _register_metadata_file_for_test('Acquisition_Test_with_instrument.xml', Acquisition)
+
 def _register_computation_capabilities_for_test():
     return _register_metadata_file_for_test('ComputationCapabilities_Test.xml', ComputationCapabilities)
+
+def _register_computation_capabilities_2_for_test():
+    return _register_metadata_file_for_test('ComputationCapabilities_Test_2.xml', ComputationCapabilities)
 
 def _register_computation_for_test():
     return _register_metadata_file_for_test('Computation_Test.xml', Computation)
@@ -123,15 +132,16 @@ class OrganisationTestCase(TestCase):
         _register_data_collection_for_test()
         return super().setUp()
 
+    @tag('immediate_metadata_dependents')
     def test_immediate_metadata_dependents(self):
         immediate_metadata_dependents = self.organisation._immediate_metadata_dependents
-        print('immediate_metadata_dependents', immediate_metadata_dependents)
         self.assertTrue(any(isinstance(md, Individual) for md in immediate_metadata_dependents))
         self.assertTrue(any(isinstance(md, Project) for md in immediate_metadata_dependents))
         self.assertTrue(any(isinstance(md, Platform) for md in immediate_metadata_dependents))
         self.assertTrue(any(isinstance(md, Operation) for md in immediate_metadata_dependents))
         self.assertTrue(any(isinstance(md, Instrument) for md in immediate_metadata_dependents))
         self.assertTrue(any(isinstance(md, DataCollection) for md in immediate_metadata_dependents))
+
 
 class IndividualTestCase(TestCase):
     def setUp(self) -> None:
@@ -143,72 +153,162 @@ class IndividualTestCase(TestCase):
         _register_data_collection_for_test()
         return super().setUp()
     
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.individual._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, Project) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Platform) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Operation) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Instrument) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, DataCollection) for md in immediate_metadata_dependents))
 
 class ProjectTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.project = _register_project_for_test()
+        _register_data_collection_for_test()
+        return super().setUp()
+
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.project._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, DataCollection) for md in immediate_metadata_dependents))
 
 class PlatformTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.platform = _register_platform_for_test()
+        _register_operation_for_test()
+        _register_platform_with_child_platforms_for_test()
+        return super().setUp()
+
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.platform._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, Operation) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Platform) for md in immediate_metadata_dependents))
 
 class OperationTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) == 0)
+    def setUp(self) -> None:
+        _register_all_metadata_types()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        operation = Operation.objects.all()[0]
+        immediate_metadata_dependents = operation._immediate_metadata_dependents
+        self.assertTrue(len(immediate_metadata_dependents) == 0)
 
 class InstrumentTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.instrument = _register_instrument_for_test()
+        _register_acquisition_capabilities_for_test()
+        _register_acquisition_with_instrument_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.instrument._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, AcquisitionCapabilities) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Acquisition) for md in immediate_metadata_dependents))
 
 class AcquisitionCapabilitiesTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.acquisition_capabilities = _register_acquisition_capabilities_for_test()
+        _register_acquisition_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.acquisition_capabilities._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, Acquisition) for md in immediate_metadata_dependents))
 
 class AcquisitionTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.acquisition = _register_acquisition_for_test()
+        _register_process_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.acquisition._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, Process) for md in immediate_metadata_dependents))
 
 class ComputationCapabilitiesTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.computation_capabilities = _register_computation_capabilities_for_test()
+        _register_computation_capabilities_2_for_test()
+        _register_computation_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.computation_capabilities._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, ComputationCapabilities) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, Computation) for md in immediate_metadata_dependents))
 
 class ComputationTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.computation = _register_computation_for_test()
+        _register_process_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.computation._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, Process) for md in immediate_metadata_dependents))
 
 class ProcessTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.process = _register_process_for_test()
+        _register_data_collection_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.process._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, DataCollection) for md in immediate_metadata_dependents))
 
 class DataCollectionTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.data_collection = _register_data_collection_for_test()
+        _register_catalogue_data_subset_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.data_collection._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, CatalogueDataSubset) for md in immediate_metadata_dependents))
 
 class CatalogueTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        self.catalogue = _register_catalogue_for_test()
+        _register_catalogue_entry_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.catalogue._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, CatalogueEntry) for md in immediate_metadata_dependents))
 
 class CatalogueEntryTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) > 0)
+    def setUp(self) -> None:
+        _register_catalogue_for_test()
+        self.catalogue_entry = _register_catalogue_entry_for_test()
+        _register_catalogue_data_subset_for_test()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        immediate_metadata_dependents = self.catalogue_entry._immediate_metadata_dependents
+        self.assertTrue(any(isinstance(md, CatalogueDataSubset) for md in immediate_metadata_dependents))
 
 class CatalogueDataSubsetTestCase(TestCase):
-    def test_metadata_dependents(self):
-        super().test_metadata_dependents()
-        self.assertTrue(len(self.metadata_registration.metadata_dependents) == 0)
+    def setUp(self) -> None:
+        _register_all_metadata_types()
+        return super().setUp()
+        
+    @tag('immediate_metadata_dependents')
+    def test_immediate_metadata_dependents(self):
+        catalogue_data_subset = CatalogueDataSubset.objects.all()[0]
+        immediate_metadata_dependents = catalogue_data_subset._immediate_metadata_dependents
+        self.assertTrue(len(immediate_metadata_dependents) == 0)
 
