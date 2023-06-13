@@ -27,13 +27,10 @@ from .handle_api import (
     update_handle_url,
 )
 from .xml_utils import (
-    add_data_subset_data_to_doi_metadata_kernel_dict_old,
     add_doi_xml_string_to_metadata_xml_string,
-    add_doi_kernel_metadata_to_xml_and_return_updated_string,
     add_handle_data_to_doi_metadata_kernel_dict,
     create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
-    get_first_related_party_name_from_data_collection_old,
     get_last_source_element,
     get_last_result_time_element,
     initialise_default_doi_kernel_metadata_dict,
@@ -43,8 +40,16 @@ from .xml_utils import (
 )
 
 from pithiaesc.settings import BASE_DIR
-from register.register import register_metadata_xml_file
 from utils.dict_helpers import flatten
+
+# TODO: remove old code
+from .pymongo_api import (
+    add_data_subset_data_to_doi_metadata_kernel_dict_old,
+    add_doi_kernel_metadata_to_xml_and_return_updated_string,
+    get_first_related_party_name_from_data_collection_old,
+)
+
+from register.register import register_metadata_xml_file
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 env = environ.Env()
