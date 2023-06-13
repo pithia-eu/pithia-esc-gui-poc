@@ -193,7 +193,8 @@ class APIInteractionMethodManager(models.Manager):
         )
 
     def update_config(self, interaction_method_id, specification_url: str, description: str):
-        interaction_method = self.model.get(pk=interaction_method_id)
+        interaction_method = self.get_queryset().get(pk=interaction_method_id)
         interaction_method.specification_url = specification_url
         interaction_method.description = description
         interaction_method.save()
+        return interaction_method
