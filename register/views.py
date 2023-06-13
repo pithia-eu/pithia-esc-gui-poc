@@ -93,23 +93,22 @@ class ResourceRegisterFormView(FormView):
                 # should be implemented.
                 try:
                     self.new_registration = self.model.objects.create_from_xml_string(xml_file.read())
-                    if 'api_selected' in request.POST:
-                        config = {
-                            'specification_url': request.POST.get('api_specification_url', None),
-                            'description': request.POST.get('api_description', '')
-                        }
-                        models.InteractionMethod.objects.create(
-                            type=models.InteractionMethod.API,
-                            data_collection_id=self.new_registration.pk,
-                            config=config
+                    is_api_selected = 'api_selected' in request.POST
+                    api_specification_url = request.POST.get('api_specification_url', None)
+                    api_description = request.POST.get('api_description', '')
+                    if is_api_selected:
+                        models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
+                            api_specification_url,
+                            api_description,
+                            self.new_registration.pk
                         )
                     # TODO: remove old code
                     register_with_pymongo(
                         xml_file,
                         self.resource_mongodb_model,
-                        api_selected='api_selected' in request.POST,
-                        api_specification_url=request.POST.get('api_specification_url', None),
-                        api_description=request.POST.get('api_description', ''),
+                        api_selected=is_api_selected,
+                        api_specification_url=api_specification_url,
+                        api_description=api_description,
                         resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
                     )
                     
