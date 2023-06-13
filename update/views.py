@@ -137,16 +137,16 @@ class ResourceUpdateFormView(FormView):
         xml_file = request.FILES['files']
         if form.is_valid():
             try:
-                xml_file_string = xml_file.read()
-                self.model.objects.update_from_xml_string(self.resource_id, xml_file_string)
+                if self.xml_file_string is None:
+                    self.xml_file_string = xml_file.read()
+                self.model.objects.update_from_xml_string(self.resource_id, self.xml_file_string)
 
                 # TODO: remove old code
                 update_with_pymongo(
                     self.resource_id,
-                    xml_file,
                     self.resource_mongodb_model,
                     self.resource_revision_mongodb_model,
-                    xml_file_string=xml_file_string,
+                    xml_file_string=self.xml_file_string,
                     resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
                 )
 
@@ -489,13 +489,15 @@ def data_collection_interaction_methods(request, data_collection_id):
 
 class CatalogueUpdateFormView(ResourceUpdateFormView):
     model = models.Catalogue
-    resource_mongodb_model = CurrentCatalogue
-    resource_revision_mongodb_model = CatalogueRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_update_page_url_name = 'update:catalogue'
     validation_url = reverse_lazy('validation:catalogue')
     success_url = reverse_lazy('resource_management:catalogues')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentCatalogue
+    resource_revision_mongodb_model = CatalogueRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -509,13 +511,15 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
 
 class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueEntry
-    resource_mongodb_model = CurrentCatalogueEntry
-    resource_revision_mongodb_model = CatalogueEntryRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_update_page_url_name = 'update:catalogue_entry'
     validation_url = reverse_lazy('validation:catalogue_entry')
     success_url = reverse_lazy('resource_management:catalogue_entries')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentCatalogueEntry
+    resource_revision_mongodb_model = CatalogueEntryRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -529,13 +533,15 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
 
 class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueDataSubset
-    resource_mongodb_model = CurrentCatalogueDataSubset
-    resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentCatalogueDataSubset
+    resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

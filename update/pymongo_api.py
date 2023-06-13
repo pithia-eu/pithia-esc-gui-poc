@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 def update_with_pymongo(
     resource_id,
-    xml_file,
     resource_mongodb_model,
     resource_revision_mongodb_model,
     xml_file_string=None,
@@ -29,8 +28,6 @@ def update_with_pymongo(
 ):
     with client.start_session() as s:
         def cb(s):
-            if xml_file_string is None:
-                xml_file_string = xml_file.read()
             converted_xml_file = convert_xml_metadata_file_to_dictionary(xml_file_string)
             converted_xml_file = converted_xml_file[(list(converted_xml_file)[0])]
             pithia_identifier = converted_xml_file['identifier']['PITHIA_Identifier']
