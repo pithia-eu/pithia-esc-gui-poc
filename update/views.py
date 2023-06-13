@@ -50,6 +50,7 @@ from common.mongodb_models import (
 )
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
+    get_doi_xml_string_from_metadata_xml_string,
     remove_doi_element_from_metadata_xml_string,
 )
 from resource_management.forms import (
@@ -66,9 +67,6 @@ from resource_management.views import (
 # TODO: remove old code
 from .pymongo_api import update_with_pymongo
 
-from handle_management.pymongo_api import (
-    get_doi_xml_string_for_resource_id,
-)
 from register.xml_conversion_checks_and_fixes import (
     correct_acquisition_capability_set_xml_converted_to_dict,
     correct_acquisition_xml_converted_to_dict,
@@ -107,6 +105,10 @@ class ResourceUpdateFormView(FormView):
     # TODO: remove old code
     resource_mongodb_model = None
     resource_revision_mongodb_model = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource = self.model.objects.get(pk=self.resource_id)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,10 +154,6 @@ class ResourceUpdateFormView(FormView):
             messages.error(request, 'The form submitted was not valid.')
 
         return super().post(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        self.resource = self.model.objects.get(pk=self.resource_id)
-        return super().get(request, *args, **kwargs)
 
 class OrganisationUpdateFormView(ResourceUpdateFormView):
     model = models.Organisation
@@ -426,6 +424,8 @@ def data_collection_interaction_methods(request, data_collection_id):
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
             return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+        
+    # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
     interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
     if len(interaction_methods) > 0:
@@ -519,13 +519,13 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
         form = self.form_class(request.POST, request.FILES)
         xml_file = request.FILES['files']
         if form.is_valid():
+            resource_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(self.resource.xml)
+            if resource_doi_xml_string is None:
+                return super().post(request, *args, **kwargs)
             # The DOI stored in the e-Science Centre will always be considered the
             # "right" version, so we need to replace any DOI that may have been
             # passed in the updated XML file.
-            resource_doi_xml_string = get_doi_xml_string_for_resource_id(self.resource_id)
             self.xml_file_string = xml_file.read()
-            if resource_doi_xml_string is None:
-                return super().post(request, *args, **kwargs)
             self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
             self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, resource_doi_xml_string)
         return super().post(request, *args, **kwargs)
