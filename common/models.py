@@ -247,6 +247,7 @@ class Project(ScientificMetadata):
     type_readable = 'project'
     type_plural_readable = 'projects'
     a_or_an = 'a'
+    converted_xml_correction_function = correct_project_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:project_detail'
     root_element_name = 'Project'
     
