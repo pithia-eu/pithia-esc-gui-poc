@@ -271,7 +271,7 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
 
     def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.format_operation_dictionary
+        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_operation_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 class InstrumentRegisterFormView(ResourceRegisterFormView):
