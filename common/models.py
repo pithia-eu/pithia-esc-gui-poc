@@ -187,6 +187,28 @@ class InteractionMethod(models.Model):
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
 
+class APIInteractionMethod(InteractionMethod):
+    @property
+    def specification_url(self):
+        return self.config['specification_url']
+    
+    @property
+    def description(self):
+        return self.config['description']
+    
+    @specification_url.setter
+    def specification_url(self, value):
+        self.config['specification_url'] = value
+    
+    @description.setter
+    def description(self, value):
+        self.config['description'] = value
+
+    objects = APIInteractionMethodManager()
+
+    class Meta:
+        proxy = True
+
 class Institution(models.Model):
     institution_name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
