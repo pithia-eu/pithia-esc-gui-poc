@@ -12,7 +12,10 @@ from handle_management.xml_utils import (
     create_doi_xml_string_from_dict,
 )
 from mongodb import client
-from register.pymongo_api import store_xml_file_as_string_and_map_to_resource_id
+from register.pymongo_api import (
+    register_api_specification,
+    store_xml_file_as_string_and_map_to_resource_id,
+)
 from register.xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
 
 
@@ -54,6 +57,47 @@ def update_with_pymongo(
                 resource_id,
                 session=s
             )
+        s.with_transaction(cb)
+
+def update_interaction_method_with_pymongo(
+    data_collection_localid: str,
+    api_selected=False,
+    api_specification_url=None,
+    api_description='',
+):
+    with client.start_session() as s:
+        def cb(s):
+            create_revision_of_data_collection_api_interaction_method(
+                data_collection_localid,
+                session=s
+            )
+            if api_selected is False:
+                CurrentDataCollectionInteractionMethod.delete_one({
+                    'data_collection_localid': data_collection_localid,
+                    'interaction_method': 'api',
+                }, session=s)
+                return
+            existing_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
+                'data_collection_localid': data_collection_localid
+            })
+            if existing_api_interaction_method is None:
+                register_api_specification(
+                    api_specification_url,
+                    data_collection_localid,
+                    api_description,
+                    session=s
+                )
+            else:
+                update_data_collection_api_interaction_method_specification_url(
+                    data_collection_localid,
+                    api_specification_url,
+                    session=s
+                )
+                update_data_collection_api_interaction_method_description(
+                    data_collection_localid,
+                    api_description,
+                    session=s
+                )
         s.with_transaction(cb)
 
 def add_doi_kernel_metadata_to_xml_and_return_updated_string(

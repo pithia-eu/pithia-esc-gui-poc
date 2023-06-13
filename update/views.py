@@ -10,12 +10,8 @@ from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
 from .pymongo_api import (
-    assign_original_xml_file_entry_to_revision_id,
-    create_revision_of_current_resource_version,
-    create_revision_of_data_collection_api_interaction_method,
-    update_current_version_of_resource,
-    update_data_collection_api_interaction_method_specification_url,
-    update_data_collection_api_interaction_method_description
+    update_with_pymongo,
+    update_interaction_method_with_pymongo,
 )
 
 from common import models
@@ -30,7 +26,6 @@ from common.mongodb_models import (
     CurrentComputation,
     CurrentComputationCapability,
     CurrentDataCollection,
-    CurrentDataCollectionInteractionMethod,
     CurrentIndividual,
     CurrentInstrument,
     CurrentOperation,
@@ -73,10 +68,6 @@ from .pymongo_api import update_with_pymongo
 
 from handle_management.pymongo_api import (
     get_doi_xml_string_for_resource_id,
-)
-from mongodb import client
-from register.pymongo_api import (
-    register_api_specification,
 )
 from register.xml_conversion_checks_and_fixes import (
     correct_acquisition_capability_set_xml_converted_to_dict,
@@ -421,44 +412,15 @@ def data_collection_interaction_methods(request, data_collection_id):
         if form.is_valid():
             data_collection_localid = data_collection['identifier']['PITHIA_Identifier']['localID']
             try:
-                with client.start_session() as s:
-                    def cb(s):
-                        create_revision_of_data_collection_api_interaction_method(
-                            data_collection_localid,
-                            session=s
-                        )
-                        if 'api_selected' not in request.POST:
-                            CurrentDataCollectionInteractionMethod.delete_one({
-                                'data_collection_localid': data_collection_localid,
-                                'interaction_method': 'api',
-                            }, session=s)
-                            return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
-                        api_specification_url = request.POST['api_specification_url']
-                        api_description = ''
-                        if 'api_description' in request.POST:
-                            api_description = request.POST['api_description']
-                        existing_api_interaction_method = CurrentDataCollectionInteractionMethod.find_one({
-                            'data_collection_localid': data_collection_localid
-                        })
-                        if existing_api_interaction_method is None:
-                            register_api_specification(
-                                api_specification_url,
-                                data_collection_localid,
-                                api_description,
-                                session=s
-                            )
-                        else:
-                            update_data_collection_api_interaction_method_specification_url(
-                                data_collection_localid,
-                                api_specification_url,
-                                session=s
-                            )
-                            update_data_collection_api_interaction_method_description(
-                                data_collection_localid,
-                                api_description,
-                                session=s
-                            )
-                    s.with_transaction(cb)
+                is_api_selected = 'api_selected' in request.POST
+                api_specification_url = request.POST.get('api_specification_url')
+                api_description = request.POST.get('api_description')
+                update_interaction_method_with_pymongo(
+                    data_collection_localid,
+                    api_selected=is_api_selected,
+                    api_specification_url=api_specification_url,
+                    api_description=api_description
+                )
                 messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
