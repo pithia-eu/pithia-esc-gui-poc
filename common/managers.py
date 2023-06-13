@@ -174,3 +174,6 @@ class CatalogueDataSubsetManager(ScientificMetadataManager):
 
     def create_from_xml_string(self, xml_string: str):
         return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET)
+    
+class InteractionMethodManager(models.Manager):
+    pass
