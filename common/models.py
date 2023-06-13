@@ -22,7 +22,7 @@ class ScientificMetadata(models.Model):
     CATALOGUE = 'catalogue'
     CATALOGUE_ENTRY = 'catalogue_entry'
     CATALOGUE_DATA_SUBSET = 'catalogue_data_subset'
-    RESOURCE_TYPE_CHOICES = [
+    TYPE_CHOICES = [
         (ORGANISATION, 'Organisation'),
         (INDIVIDUAL, 'Individual'),
         (PROJECT, 'Project'),
@@ -40,9 +40,9 @@ class ScientificMetadata(models.Model):
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
     ]
     id = models.CharField(max_length=200, primary_key=True)
-    resource_type = models.CharField(
+    type = models.CharField(
         max_length=100,
-        choices=RESOURCE_TYPE_CHOICES
+        choices=TYPE_CHOICES
     )
     xml = models.TextField()
     json = models.JSONField()
