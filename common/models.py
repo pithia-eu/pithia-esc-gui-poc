@@ -289,6 +289,7 @@ class Operation(ScientificMetadata):
     type_readable = 'operation'
     type_plural_readable = 'operations'
     a_or_an = 'an'
+    converted_xml_correction_function = correct_operation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:operation_detail'
     root_element_name = 'Operation'
 
