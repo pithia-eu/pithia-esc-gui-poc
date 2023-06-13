@@ -40,7 +40,7 @@
             <p>Please review the mentioned metadata in the list below before confirming deletion:</p>
             <ul class="list-group mb-0">
                 {% for r in other_resources_to_delete %}
-                <li class="list-group-item list-group-item-light">{{ r.name|default:r.localid }} <small class="text-muted">({{ r.resource_type|title }})</small></li>
+                <li class="list-group-item list-group-item-light">{{ r.name|default:r.localid }} <small class="text-muted">({{ r.type_readable|title }})</small></li>
                 {% endfor %}
             </ul>
         </div>
