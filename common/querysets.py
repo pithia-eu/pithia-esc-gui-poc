@@ -290,7 +290,7 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         return self.filter(query)
     
     def referencing_project_url(self, project_url: list):
-        return self.filter(**{'json__project__contains': {'@xlink:href': project_url}})
+        return self.filter(**{'json__project__contains': [{'@xlink:href': project_url}]})
 
     def for_search(
         self,
