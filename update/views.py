@@ -402,24 +402,31 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 def data_collection_interaction_methods(request, data_collection_id):
-    data_collection = CurrentDataCollection.find_one({
-        '_id': ObjectId(data_collection_id)
-    })
+    data_collection = models.DataCollection.objects.get(pk=data_collection_id)
     if request.method == 'POST':
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
-            data_collection_localid = data_collection['identifier']['PITHIA_Identifier']['localID']
+            data_collection_localid = data_collection.localid
             try:
                 is_api_selected = 'api_selected' in request.POST
                 api_specification_url = request.POST.get('api_specification_url')
                 api_description = request.POST.get('api_description')
+
+                api_interaction_method = data_collection.interactionmethod_set.first()
+                models.APIInteractionMethod.objects.update_config(
+                    api_interaction_method.pk,
+                    api_specification_url,
+                    api_description
+                )
+
+                # TODO: remove old code
                 update_interaction_method_with_pymongo(
                     data_collection_localid,
                     api_selected=is_api_selected,
                     api_specification_url=api_specification_url,
                     api_description=api_description
                 )
-                messages.success(request, f'Successfully updated interaction methods for {data_collection["name"]}.')
+                messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
@@ -427,18 +434,19 @@ def data_collection_interaction_methods(request, data_collection_id):
         
     # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
-    interaction_methods = get_interaction_methods_linked_to_data_collection_id(data_collection_id)
+    interaction_methods = list(data_collection.interactionmethod_set.all())
     if len(interaction_methods) > 0:
         form_data = {}
         for im in interaction_methods:
-            if im['interaction_method'] == 'api':
+            if im.type == models.InteractionMethod.API:
+                api_im = models.APIInteractionMethod.objects.get(im.pk)
                 form_data['api_selected'] = True
-                form_data['api_specification_url'] = im['interaction_url']
-                form_data['api_description'] = im['interaction_method_description']
+                form_data['api_specification_url'] = api_im.specification_url
+                form_data['api_description'] = api_im.description
         form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
     return render(request, 'update/interaction_methods.html', {
         'data_collection': data_collection,
-        'data_collection_id': str(data_collection['_id']),
+        'data_collection_id': data_collection.pk,
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
         'title': 'Update Interaction Methods',
