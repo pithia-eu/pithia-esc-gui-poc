@@ -106,7 +106,7 @@ class ResourceDeleteView(TemplateView):
 
         # TODO: remove old code
         try:
-            delete_data_collection_related_resource(resource_localid, self.resource_mongodb_model, self.resource_type_in_resource_url)
+            delete_data_collection_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model, self.resource_type_in_resource_url)
         except BaseException as e:
             logger.exception('An error occurred during resource deletion.')
             messages.error(request, 'An error occurred during resource deletion.')
@@ -133,7 +133,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
         ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
 
         try:
-            delete_catalogue_related_resource(resource_localid, self.resource_mongodb_model)
+            delete_catalogue_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model)
         except BaseException as e:
             print(e)
             messages.error(request, 'An error occurred during resource deletion.')
