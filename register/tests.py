@@ -4,7 +4,11 @@ from django.test import (
     TestCase,
 )
 
-from common.models import Organisation
+from common.models import (
+    Organisation,
+    DataCollection,
+    InteractionMethod,
+)
 from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
@@ -27,3 +31,28 @@ class ManagerTestCase(TestCase):
         except BaseException as err:
             print(err)
             self.fail('test_create_from_xml_string() unexpectedly raised an error!')
+
+class InteractionMethodTestCase(TestCase):
+    def test_create_api_interaction_method(self):
+        """
+        InteractionMethod.objects.create() returns a new
+        API Interaction Method.
+        """
+        try:
+            data_collection = None
+            with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
+                data_collection = DataCollection.objects.create_from_xml_string(xml_file.read())
+            interaction_method = InteractionMethod.api_interaction_methods.create_api_interaction_method(
+                'https://www.example.com',
+                '',
+                data_collection
+            )
+            print('interaction_method.type', interaction_method.type)
+            print('interaction_method.config', interaction_method.config)
+            print('interaction_method.data_collection', interaction_method.data_collection)
+            print('data_collection.interactionmethod_set.all()', data_collection.interactionmethod_set.all())
+            self.assertTrue(len(list(data_collection.interactionmethod_set.all())) > 0)
+            print('Passed create_api_interaction_method() test.')
+        except BaseException as err:
+            print(err)
+            self.fail('test_api_interaction_method_create() unexpectedly raised an error!')
