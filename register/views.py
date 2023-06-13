@@ -93,6 +93,17 @@ class ResourceRegisterFormView(FormView):
                 # should be implemented.
                 try:
                     self.new_registration = self.model.objects.create_from_xml_string(xml_file.read())
+                    if 'api_selected' in request.POST:
+                        config = {
+                            'specification_url': request.POST.get('api_specification_url', None),
+                            'description': request.POST.get('api_description', '')
+                        }
+                        models.InteractionMethod.objects.create(
+                            type=models.InteractionMethod.API,
+                            data_collection_id=self.new_registration.pk,
+                            config=config
+                        )
+                    # TODO: remove old code
                     register_with_pymongo(
                         xml_file,
                         self.resource_mongodb_model,
