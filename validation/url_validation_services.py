@@ -57,6 +57,15 @@ class MetadataFileOntologyURLReferencesValidator:
             return (ontology_term, RDF['type'], SKOS['Concept']) in g
         response.raise_for_status()
         return False
+
+    @classmethod
+    def _is_each_ontology_url_valid(cls, ontology_urls: list):
+        invalid_urls = []
+        for url in ontology_urls:
+            is_valid_ontology_term = cls._is_ontology_term_url_valid(url)
+            if is_valid_ontology_term == False:
+                invalid_urls.append(url)
+        return invalid_urls
     
     @classmethod
     def is_each_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
@@ -64,13 +73,8 @@ class MetadataFileOntologyURLReferencesValidator:
         Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
         """
-        invalid_urls = []
         ontology_urls = xml_file.ontology_urls
-        for url in ontology_urls:
-            is_valid_ontology_term = cls._is_ontology_term_url_valid(url)
-            if is_valid_ontology_term == False:
-                invalid_urls.append(url)
-        return invalid_urls
+        return cls._is_each_ontology_url_valid(ontology_urls)
 
 class MetadataFileMetadataURLReferencesValidator:
     @classmethod
