@@ -2,7 +2,7 @@ import logging
 from django.contrib import messages
 from django.shortcuts import (
     render,
-    redirect
+    redirect,
 )
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
@@ -409,14 +409,7 @@ def data_collection_interaction_methods(request, data_collection_id):
                 is_api_selected = 'api_selected' in request.POST
                 api_specification_url = request.POST.get('api_specification_url')
                 api_description = request.POST.get('api_description')
-
-                api_interaction_method = data_collection.interactionmethod_set.first()
-                models.APIInteractionMethod.objects.update_config(
-                    api_interaction_method.pk,
-                    api_specification_url,
-                    api_description
-                )
-
+                
                 # TODO: remove old code
                 update_interaction_method_with_pymongo(
                     data_collection_localid,
@@ -424,6 +417,28 @@ def data_collection_interaction_methods(request, data_collection_id):
                     api_specification_url=api_specification_url,
                     api_description=api_description
                 )
+
+                if is_api_selected == False:
+                    try:
+                        models.APIInteractionMethod.objects.get(data_collection=data_collection).delete()
+                    except models.APIInteractionMethod.DoesNotExist:
+                        pass
+                    messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
+                    return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+
+                try:
+                    api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+                    models.APIInteractionMethod.objects.update_config(
+                        api_interaction_method.pk,
+                        api_specification_url,
+                        api_description
+                    )
+                except models.APIInteractionMethod.DoesNotExist:
+                    models.APIInteractionMethod.objects.create_api_interaction_method(
+                        api_specification_url,
+                        api_description,
+                        data_collection
+                    )
                 messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
@@ -432,16 +447,15 @@ def data_collection_interaction_methods(request, data_collection_id):
         
     # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
-    interaction_methods = list(data_collection.interactionmethod_set.all())
-    if len(interaction_methods) > 0:
-        form_data = {}
-        for im in interaction_methods:
-            if im.type == models.InteractionMethod.API:
-                api_im = models.APIInteractionMethod.objects.get(im.pk)
-                form_data['api_selected'] = True
-                form_data['api_specification_url'] = api_im.specification_url
-                form_data['api_description'] = api_im.description
+    form_data = {}
+    try:
+        api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+        form_data['api_selected'] = True
+        form_data['api_specification_url'] = api_interaction_method.specification_url
+        form_data['api_description'] = api_interaction_method.description
         form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
+    except models.APIInteractionMethod.DoesNotExist:
+        pass
     return render(request, 'update/interaction_methods.html', {
         'data_collection': data_collection,
         'data_collection_id': data_collection.pk,
