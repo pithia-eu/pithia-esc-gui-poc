@@ -532,6 +532,14 @@ class DataCollection(ScientificMetadata):
     def type_urls(self):
         return [type['@xlink:href'] for type in self.json['type']]
 
+    @property
+    def link_interaction_methods(self):
+        try:
+            return self.json['collectionResults']['source']
+        except KeyError:
+            pass
+        return []
+
     objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
     class Meta:
