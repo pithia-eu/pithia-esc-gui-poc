@@ -53,7 +53,7 @@
     <instrumentModePair>
         <InstrumentOperationalModePair>
             <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test"/>
-            <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#test"/>
+            <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1"/>
         </InstrumentOperationalModePair>
     </instrumentModePair>    
 </AcquisitionCapabilities>
