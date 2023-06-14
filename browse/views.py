@@ -345,35 +345,19 @@ class DataCollectionDetailView(ResourceDetailView):
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
-        # TODO: implement interaction method replacements
+        self.resource = get_object_or_404(self.model, pk=self.resource_id)
         # API Interaction methods
+        self.interaction_methods = models.APIInteractionMethod.objects.filter(data_collection_id=self.resource_id)
         # Link interaction methods
-
-        # TODO: remove old code
-        # self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
-        #     'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
-        # })
-        # if 'collectionResults' in self.resource:
-        #     if 'source' in self.resource['collectionResults']:
-        #         self.link_interaction_methods = self.resource['collectionResults']['source']
+        self.link_interaction_methods = self.resource.link_interaction_methods
 
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # TODO: temp whilst TechnicalMetadata model is not implemented
-        context['interaction_methods'] = []
-        # context['interaction_methods'] = list(models.TechnicalMetadata.objects.interaction_methods_for_data_collection(self.resource.pk))
-        # try:
-        #     context['link_interaction_methods'] = self.resource.url_interaction_methods
-        # except KeyError:
-        #     context['link_interaction_methods'] = []
+        context['interaction_methods'] = list(self.interaction_methods)
+        context['link_interaction_methods'] = list(self.link_interaction_methods)
         context['data_collection_id'] = self.resource_id
-        # TODO: remove old code
-        # context = super().get_context_data(**kwargs)
-        # context['interaction_methods'] = list(self.interaction_methods)
-        # context['link_interaction_methods'] = list(self.link_interaction_methods)
-        # context['data_collection_id'] = self.resource_id
         
         return context
 
