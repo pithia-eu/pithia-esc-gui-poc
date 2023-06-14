@@ -15,6 +15,12 @@ from .services import (
     setup_instrument_types_for_observed_property_search_form,
 )
 
+from common.constants import (
+    COMPUTATION_TYPE_URL_BASE,
+    FEATURE_OF_INTEREST_URL_BASE,
+    INSTRUMENT_TYPE_URL_BASE,
+    OBSERVED_PROPERTY_URL_BASE,
+)
 from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     categorise_observed_property_dict_by_top_level_phenomenons,
@@ -85,7 +91,17 @@ def index(request):
     })
 
 def results(request):
-    data_collections = find_matching_data_collections(request)
+    observed_property_urls = [f'{OBSERVED_PROPERTY_URL_BASE}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
+    instrument_type_urls = [f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
+    computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
+    feature_of_interest_urls = [f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])]
+    
+    data_collections = find_matching_data_collections(
+        feature_of_interest_urls=feature_of_interest_urls,
+        instrument_type_urls=instrument_type_urls,
+        computation_type_urls=computation_type_urls,
+        observed_property_urls=observed_property_urls
+    )
 
     return render(request, 'search/results.html', {
         'title': 'Search results',

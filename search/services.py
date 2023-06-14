@@ -2,9 +2,7 @@ import re
 
 from common.constants import (
     COMPUTATION_TYPE_URL_BASE,
-    FEATURE_OF_INTEREST_URL_BASE,
     INSTRUMENT_TYPE_URL_BASE,
-    OBSERVED_PROPERTY_URL_BASE,
 )
 from common.models import (
     Acquisition,
@@ -25,12 +23,12 @@ from ontology.utils import (
 )
 
 
-def find_matching_data_collections(feature_of_interest_urls: list = [], instrument_type_urls: list = [], computation_type_urls: list = [], observed_property_urls: list = []):
-    observed_property_urls = [f'{OBSERVED_PROPERTY_URL_BASE}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
-    instrument_type_urls = [f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
-    computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
-    feature_of_interest_urls = [f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])]
-
+def find_matching_data_collections(
+    feature_of_interest_urls: list = [],
+    instrument_type_urls: list = [],
+    computation_type_urls: list = [],
+    observed_property_urls: list = []
+):
     if len(feature_of_interest_urls) > 0:
         additional_observed_property_urls = get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls)
         observed_property_urls += additional_observed_property_urls
@@ -143,8 +141,8 @@ def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
 def get_registered_observed_properties():
-    acquisition_capability_sets = AcquisitionCapabilities.objects.all()
-    computation_capability_sets = ComputationCapabilities.objects.all()
+    acquisition_capability_sets = list(AcquisitionCapabilities.objects.all())
+    computation_capability_sets = list(ComputationCapabilities.objects.all())
     registered_observed_property_urls = []
     for ac in acquisition_capability_sets:
         registered_observed_property_urls + ac.observed_property_urls
