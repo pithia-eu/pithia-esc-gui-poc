@@ -345,7 +345,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['linked_interaction_methods'] = get_interaction_methods_linked_to_data_collection_id(self.resource_id)
+        context['linked_interaction_methods'] = list(self.resource_to_delete.interactionmethod_set.all())
         return context
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
