@@ -343,7 +343,7 @@ class DataCollectionDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
         # API Interaction methods
-        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(data_collection_id=self.resource_id)
+        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(data_collection=self.resource)
         # Link interaction methods
         self.link_interaction_methods = self.resource.link_interaction_methods
 
@@ -351,7 +351,7 @@ class DataCollectionDetailView(ResourceDetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interaction_methods'] = list(self.interaction_methods)
+        context['api_interaction_methods'] = list(self.api_interaction_methods)
         context['link_interaction_methods'] = list(self.link_interaction_methods)
         context['data_collection_id'] = self.resource_id
         
