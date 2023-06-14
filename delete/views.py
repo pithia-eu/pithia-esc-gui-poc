@@ -1,5 +1,6 @@
 import logging
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
@@ -97,22 +98,25 @@ class ResourceDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
         # TODO: remove old code
+        # In case the localid getter isn't available after
+        # the resource is deleted.
         resource_localid = self.resource_to_delete.localid
 
-        self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
-        self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
-        self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
-        ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
-
-        # TODO: remove old code
         try:
-            delete_data_collection_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model, self.resource_type_in_resource_url)
+            with transaction.atomic():
+                self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
+                self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
+                self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
+                ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
+
+                # TODO: remove old code
+                delete_data_collection_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model, self.resource_type_in_resource_url)
+            messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         except BaseException as e:
             logger.exception('An error occurred during resource deletion.')
             messages.error(request, 'An error occurred during resource deletion.')
             return HttpResponseRedirect(self.redirect_url)
 
-        messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         return HttpResponseRedirect(self.redirect_url)
 
 class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
@@ -125,15 +129,20 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
     def post(self, request, *args, **kwargs):
         self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
         # TODO: remove old code
+        # In case the localid getter isn't available after
+        # the resource is deleted.
         resource_localid = self.resource_to_delete.localid
 
-        self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
-        self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
-        self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
-        ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
-
         try:
-            delete_catalogue_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model)
+            with transaction.atomic():
+                self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
+                self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
+                self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
+                ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
+                
+                # TODO: remove old code
+                delete_catalogue_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model)
+            messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         except BaseException as e:
             print(e)
             messages.error(request, 'An error occurred during resource deletion.')

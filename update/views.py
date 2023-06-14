@@ -1,5 +1,6 @@
 import logging
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import (
     render,
     redirect,
@@ -130,16 +131,17 @@ class ResourceUpdateFormView(FormView):
             try:
                 if self.xml_file_string is None:
                     self.xml_file_string = xml_file.read()
-                self.model.objects.update_from_xml_string(self.resource_id, self.xml_file_string)
+                with transaction.atomic():
+                    self.model.objects.update_from_xml_string(self.resource_id, self.xml_file_string)
 
-                # TODO: remove old code
-                update_with_pymongo(
-                    self.resource_id,
-                    self.resource_mongodb_model,
-                    self.resource_revision_mongodb_model,
-                    xml_file_string=self.xml_file_string,
-                    resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                )
+                    # TODO: remove old code
+                    update_with_pymongo(
+                        self.resource_id,
+                        self.resource_mongodb_model,
+                        self.resource_revision_mongodb_model,
+                        xml_file_string=self.xml_file_string,
+                        resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
+                    )
 
                 messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
@@ -410,35 +412,36 @@ def data_collection_interaction_methods(request, data_collection_id):
                 api_specification_url = request.POST.get('api_specification_url')
                 api_description = request.POST.get('api_description')
                 
-                # TODO: remove old code
-                update_interaction_method_with_pymongo(
-                    data_collection_localid,
-                    api_selected=is_api_selected,
-                    api_specification_url=api_specification_url,
-                    api_description=api_description
-                )
+                with transaction.atomic():
+                    # TODO: remove old code
+                    update_interaction_method_with_pymongo(
+                        data_collection_localid,
+                        api_selected=is_api_selected,
+                        api_specification_url=api_specification_url,
+                        api_description=api_description
+                    )
 
-                if is_api_selected == False:
+                    if is_api_selected == False:
+                        try:
+                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete()
+                        except models.APIInteractionMethod.DoesNotExist:
+                            pass
+                        messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
+                        return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+
                     try:
-                        models.APIInteractionMethod.objects.get(data_collection=data_collection).delete()
+                        api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+                        models.APIInteractionMethod.objects.update_config(
+                            api_interaction_method.pk,
+                            api_specification_url,
+                            api_description
+                        )
                     except models.APIInteractionMethod.DoesNotExist:
-                        pass
-                    messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
-                    return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
-
-                try:
-                    api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
-                    models.APIInteractionMethod.objects.update_config(
-                        api_interaction_method.pk,
-                        api_specification_url,
-                        api_description
-                    )
-                except models.APIInteractionMethod.DoesNotExist:
-                    models.APIInteractionMethod.objects.create_api_interaction_method(
-                        api_specification_url,
-                        api_description,
-                        data_collection
-                    )
+                        models.APIInteractionMethod.objects.create_api_interaction_method(
+                            api_specification_url,
+                            api_description,
+                            data_collection
+                        )
                 messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')

@@ -1,6 +1,9 @@
 import logging
 from django.contrib import messages
-from django.db import IntegrityError
+from django.db import (
+    IntegrityError,
+    transaction,
+)
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from pyexpat import ExpatError
@@ -55,6 +58,7 @@ class ResourceRegisterFormView(FormView):
 
     resource_id = None
     new_registration = None
+    xml_file_string = None
     handle = None
     handle_api_client = None
     validation_url = ''
@@ -92,26 +96,31 @@ class ResourceRegisterFormView(FormView):
                 # place again, but takes a long time. Another
                 # method which verifies validation took place
                 # should be implemented.
+                xml_file_string = xml_file.read()
                 try:
-                    self.new_registration = self.model.objects.create_from_xml_string(xml_file.read())
-                    is_api_selected = 'api_selected' in request.POST
-                    api_specification_url = request.POST.get('api_specification_url', None)
-                    api_description = request.POST.get('api_description', '')
-                    if is_api_selected:
-                        models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
-                            api_specification_url,
-                            api_description,
-                            self.new_registration
+                    with transaction.atomic():
+                        self.new_registration = self.model.objects.create_from_xml_string(xml_file_string)
+                        is_api_selected = 'api_selected' in request.POST
+                        api_specification_url = request.POST.get('api_specification_url', None)
+                        api_description = request.POST.get('api_description', '')
+                        if is_api_selected:
+                            models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
+                                api_specification_url,
+                                api_description,
+                                self.new_registration
+                            )
+                        # TODO: remove old code
+                        register_with_pymongo(
+                            xml_file,
+                            self.resource_mongodb_model,
+                            api_selected=is_api_selected,
+                            api_specification_url=api_specification_url,
+                            api_description=api_description,
+                            resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
                         )
-                    # TODO: remove old code
-                    register_with_pymongo(
-                        xml_file,
-                        self.resource_mongodb_model,
-                        api_selected=is_api_selected,
-                        api_specification_url=api_specification_url,
-                        api_description=api_description,
-                        resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                    )
+                        self.new_pymongo_registration = self.resource_mongodb_model.find_one({
+                            'identifier.PITHIA_Identifier.localID': self.new_registration.localid
+                        })
                     
                     file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
@@ -135,37 +144,39 @@ class ResourceRegisterFormView(FormView):
                     # Perform an update on the resource
                     # Continue with registration as normal
                     if 'register_doi' in request.POST:
-                        is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
-                        if is_doi_in_file_already == True:
-                            logger.exception('A DOI has already been issued for this metadata file.')
-                            messages.error(request, f'A DOI has already been issued for this metadata file.')
-                            return super().post(request, *args, **kwargs)
-                        # Create a blank DOI dict first
-                        doi_dict = initialise_default_doi_kernel_metadata_dict()
-                        add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
-                        # TODO: remove old code
-                        add_data_subset_data_to_doi_metadata_kernel_dict_old(self.resource_id, doi_dict)
-                        # Create and register a handle
-                        data_subset_url = create_data_subset_detail_page_url(self.resource_id)
-                        handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url, initial_doi_dict_values=doi_dict)
-                        self.handle_api_client = handle_api_client
-                        self.handle = handle
-                        # Add the handle metadata to the DOI dict
-                        doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
-                        # Add the DOI dict metadata to the handle
-                        add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
-                        
-                        add_doi_metadata_kernel_to_data_subset(self.resource_id, doi_dict, xml_file.read())
-                        add_handle_to_url_mapping(handle, data_subset_url)
-                        register_doi_with_pymongo(
-                            doi_dict,
-                            self.resource_id,
-                            xml_file,
-                            self.resource_mongodb_model,
-                            handle,
-                            data_subset_url,
-                            resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                        )
+                        with transaction.atomic():
+                            is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
+                            if is_doi_in_file_already == True:
+                                logger.exception('A DOI has already been issued for this metadata file.')
+                                messages.error(request, f'A DOI has already been issued for this metadata file.')
+                                return super().post(request, *args, **kwargs)
+                            # Create a blank DOI dict first
+                            doi_dict = initialise_default_doi_kernel_metadata_dict()
+                            add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
+                            # TODO: remove old code
+                            add_data_subset_data_to_doi_metadata_kernel_dict_old(self.new_pymongo_registration['_id'], doi_dict)
+                            # Create and register a handle
+                            data_subset_url = create_data_subset_detail_page_url(self.new_registration.pk)
+                            handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url, initial_doi_dict_values=doi_dict)
+                            self.handle_api_client = handle_api_client
+                            self.handle = handle
+                            # Add the handle metadata to the DOI dict
+                            doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
+                            # Add the DOI dict metadata to the handle
+                            add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
+                            add_doi_metadata_kernel_to_data_subset(self.new_registration.pk, doi_dict, xml_file_string)
+                            add_handle_to_url_mapping(handle, data_subset_url)
+
+                            # TODO: remove old code
+                            register_doi_with_pymongo(
+                                doi_dict,
+                                str(self.new_pymongo_registration['_id']),
+                                xml_file,
+                                self.resource_mongodb_model,
+                                handle,
+                                data_subset_url,
+                                resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
+                            )
 
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
