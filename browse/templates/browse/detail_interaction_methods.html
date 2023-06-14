@@ -53,13 +53,12 @@
                         </tr>
                         {% endwith %}
                         {% endfor %}
-                        {% for method in interaction_methods %}
-                        {% if method.interaction_method == 'api' %}
+                        {% for method in api_interaction_methods %}
                         <tr>
                             <td>API</td>
                             <td>
-                                {% if 'interaction_method_description' in method %}
-                                {{ method.interaction_method_description|urlize }}
+                                {% if 'description' in method.config %}
+                                {{ method.config.description|urlize }}
                                 {% else %}
                                 <i class="text-muted">None</i>
                                 {% endif %}
@@ -71,7 +70,6 @@
                                 </a>
                             </td>
                         </tr>
-                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

@@ -347,7 +347,7 @@ class DataCollectionDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
         # API Interaction methods
-        self.interaction_methods = models.APIInteractionMethod.objects.filter(data_collection_id=self.resource_id)
+        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(data_collection_id=self.resource_id)
         # Link interaction methods
         self.link_interaction_methods = self.resource.link_interaction_methods
 
