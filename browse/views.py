@@ -1,9 +1,5 @@
 from dateutil.parser import parse
-from django.http import (
-    JsonResponse,
-    # TODO: remove old code
-    # HttpResponseNotFound,
-)
+from django.http import JsonResponse
 from django.shortcuts import (
     get_object_or_404,
     render,
