@@ -67,18 +67,18 @@ def get_first_related_party_name_from_data_collection(
         return None
     
     try:
-        return organisation_model.objects.get_by_metadata_server_url(related_party_url).scientific_metadata_name
+        return organisation_model.objects.get_by_metadata_server_url(related_party_url).name
     except organisation_model.DoesNotExist:
         pass
     
     try:
-        individual = individual_model.objects.get_by_metadata_server_url(related_party_url).scientific_metadata_name
+        individual = individual_model.objects.get_by_metadata_server_url(related_party_url)
     except individual_model.DoesNotExist:
         return None
     organisation_url = individual.organisation_url
     
     try:
-        return organisation_model.objects.get_by_metadata_server_url(organisation_url)
+        return organisation_model.objects.get_by_metadata_server_url(organisation_url).name
     except organisation_model.DoesNotExist:
         pass
     return None
