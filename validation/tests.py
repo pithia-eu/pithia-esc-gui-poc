@@ -414,10 +414,10 @@ class URLReferencesValidatorTestCase(TestCase):
 
     def test_invalid_ontology_urls_are_detected(self):
         """
-        MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid()
+        MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid()
         returns a list of invalid ontology URLs.
         """
-        invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid(self.xml_metadata_file_with_invalid_urls)
+        invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(self.xml_metadata_file_with_invalid_urls)
         self.assertEquals(len(invalid_ontology_urls), 1)
 
     def test_invalid_resource_urls_are_detected(self):

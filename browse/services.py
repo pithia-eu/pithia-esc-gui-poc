@@ -34,7 +34,7 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
     converted_ontology_server_urls = []
     ontology_term_category_graphs = {}
 
-    invalid_ontology_server_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid(ontology_server_urls)
+    invalid_ontology_server_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(ontology_server_urls, )
     for url in invalid_ontology_server_urls:
         converted_ontology_server_urls.append({
             'original_server_url': url,

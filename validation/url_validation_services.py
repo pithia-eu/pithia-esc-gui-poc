@@ -59,7 +59,7 @@ class MetadataFileOntologyURLReferencesValidator:
         return False
     
     @classmethod
-    def is_each_ontology_url_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
+    def is_each_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
         """
         Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.

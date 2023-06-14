@@ -199,16 +199,16 @@ def validate_xml_file_and_return_summary(
         )
         return validation_summary
 
-    try:
-        # XSD Schema validation
-        MetadataFileXSDValidator.validate(xml_metadata_file)
-    except XMLSchemaException as err:
-        logger.exception('Error occurred whilst validating XML for schema correctness.')
-        validation_summary['error'] = create_validation_summary_error(
-            message='XML does not conform to the corresponding schema.',
-            details=str(err),
-        )
-        return validation_summary
+    # try:
+    #     # XSD Schema validation
+    #     MetadataFileXSDValidator.validate(xml_metadata_file)
+    # except XMLSchemaException as err:
+    #     logger.exception('Error occurred whilst validating XML for schema correctness.')
+    #     validation_summary['error'] = create_validation_summary_error(
+    #         message='XML does not conform to the corresponding schema.',
+    #         details=str(err),
+    #     )
+    #     return validation_summary
 
     try:
         # Matching file name and localID tag text validation
@@ -313,7 +313,7 @@ def validate_xml_file_and_return_summary(
         return validation_summary
 
     # Ontology URL validation
-    invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_valid(xml_metadata_file)
+    invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(xml_metadata_file)
     if len(invalid_ontology_urls) > 0:
         error_msg = 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(map_string_to_li_element, invalid_ontology_urls)))
         validation_summary['error'] = create_validation_summary_error(
