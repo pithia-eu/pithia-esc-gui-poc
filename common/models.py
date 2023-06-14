@@ -405,7 +405,10 @@ class AcquisitionCapabilities(ScientificMetadata):
 
     @property
     def observed_property_urls(self):
-        return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']]
+        try:
+            return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']['processCapability']]
+        except KeyError:
+            return []
 
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
@@ -459,7 +462,10 @@ class ComputationCapabilities(ScientificMetadata):
 
     @property
     def observed_property_urls(self):
-        return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']]
+        try:
+            return [process_capability['observedProperty']['@xlink:href'] for process_capability in self.json['capabilities']['processCapability']]
+        except KeyError:
+            return []
 
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
