@@ -2,6 +2,7 @@ import logging
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import (
+    get_object_or_404,
     render,
     redirect,
 )
@@ -402,7 +403,7 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 def data_collection_interaction_methods(request, data_collection_id):
-    data_collection = models.DataCollection.objects.get(pk=data_collection_id)
+    data_collection = get_object_or_404(models.DataCollection, pk=data_collection_id)
     if request.method == 'POST':
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
