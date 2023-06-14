@@ -257,6 +257,10 @@ class Individual(ScientificMetadata):
     root_element_name = 'Individual'
     
     @property
+    def organisation_url(self):
+        return self.json['organisation']['@xlink:href']
+
+    @property
     def _immediate_metadata_dependents(self):
         projects = Project.objects.for_delete_chain(self.metadata_server_url)
         platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
