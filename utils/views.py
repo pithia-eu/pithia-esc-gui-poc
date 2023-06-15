@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+from lxml import etree
 
 from common import models
 from resource_management.views import (
@@ -21,6 +22,12 @@ class ResourceXmlDownloadView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
+        _xml = self.resource.xml
+        try:
+            _xml = _xml.encode('utf-8')
+        except AttributeError:
+            pass
+        self.xml =  etree.tostring(etree.fromstring(_xml.strip()), pretty_print=True, doctype='<?xml version="1.0" encoding="UTF-8"?>').decode()
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -28,7 +35,7 @@ class ResourceXmlDownloadView(TemplateView):
         context['title'] = f'{self.resource.name} XML'
         context['resource_name'] = self.resource.name
         context['resource_localid'] = self.resource.localid
-        context['xml'] = self.resource.xml
+        context['xml'] = self.xml
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
