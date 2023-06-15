@@ -40,14 +40,15 @@ class ScientificMetadata(models.Model):
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
     ]
     id = models.CharField(max_length=200, primary_key=True)
+    # institution_id = models.ForeignKey()
+    # owner_id = models.CharField(max_length=100)
     type = models.CharField(
         max_length=100,
         choices=TYPE_CHOICES
     )
     xml = models.TextField()
     json = models.JSONField()
-    # institution_id = models.ForeignKey()
-    # owner_id = models.CharField(max_length=100)
+    deactivated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -180,7 +181,7 @@ class InteractionMethod(models.Model):
         max_length=100
     )
     config = models.JSONField()
-    # deactivated = models.BooleanField()
+    deactivated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
