@@ -39,18 +39,29 @@ class ScientificMetadata(models.Model):
         (CATALOGUE_ENTRY, 'Catalogue Entry'),
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
     ]
-    id = models.CharField(max_length=200, primary_key=True)
-    # institution_id = models.ForeignKey()
-    # owner_id = models.CharField(max_length=100)
+    id = models.CharField(
+        max_length=200,
+        primary_key=True,
+        db_column='SM_ID'
+    )
+    # institution = models.ForeignKey(
+    #   'Institution',
+    #   db_column='INSTITUTION_ID'
+    # )
+    # owner = models.ForeignKey(
+    #   'Member',
+    #   db_column='OWNER_ID'
+    # )
     type = models.CharField(
         max_length=100,
-        choices=TYPE_CHOICES
+        choices=TYPE_CHOICES,
+        db_column='SM_TYPE'
     )
-    xml = models.TextField()
-    json = models.JSONField()
-    deactivated = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    xml = models.TextField(db_column='SM_METADATA_FILE')
+    json = models.JSONField(db_column='SM_JSON_SUPPORT')
+    deactivated = models.BooleanField(default=False, db_column='SM_DEACTIVATED')
+    created_at = models.DateTimeField(auto_now_add=True, db_column='SM_REG_DATE')
+    updated_at = models.DateTimeField(auto_now=True, db_column='SM_UPD_DATE')
 
     # JSON field properties
     @property
