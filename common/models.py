@@ -171,6 +171,18 @@ class ScientificMetadata(models.Model):
         return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
 
 class InteractionMethod(models.Model):
+    # ID is handled by the DB technology.
+    data_collection = models.ForeignKey(
+        'DataCollection',
+        on_delete=models.CASCADE,
+        null=True,
+        limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION},
+        db_column='SM_ID'
+    )
+    # owner = models.ForeignKey(
+    #   'Member',
+    #   db_column='OWNER_ID'
+    # )
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
@@ -179,22 +191,16 @@ class InteractionMethod(models.Model):
         # (MICADO, 'MiCADO'),
         # (DOWNLOAD, 'Download'),
     ]
-    data_collection = models.ForeignKey(
-        'DataCollection',
-        on_delete=models.CASCADE,
-        null=True,
-        limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION}
-    )
-    # owner_id = models.CharField(max_length=100)
     type = models.CharField(
         choices=TYPE_CHOICES,
         default=API,
-        max_length=100
+        max_length=100,
+        db_column='INTM_TYPE'
     )
-    config = models.JSONField()
-    deactivated = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    config = models.JSONField(db_column='INTM_CONFIG')
+    deactivated = models.BooleanField(default=False, db_column='INTM_DEACTIVATED')
+    created_at = models.DateTimeField(auto_now_add=True, db_column='INTM_REG_DATE')
+    updated_at = models.DateTimeField(auto_now=True, db_column='INTM_UPD_DATE')
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
