@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.environ['DATABASE_ENGINE'],
-        'NAME': os.environ['DATABASE_NAME'],
+        'NAME': os.environ['MIGRATION_TEST_DATABASE_NAME'],
         'USER': os.environ['DATABASE_USER'],
         'PASSWORD': os.environ['DATABASE_PASSWORD'],
         'HOST': os.environ['DATABASE_HOST'],

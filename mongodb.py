@@ -10,4 +10,4 @@ try:
     client = MongoClient(env('MONGODB_CONNECTION_STRING'), serverSelectionTimeoutMS=1)
 except ServerSelectionTimeoutError:
     client = MongoClient(env('MONGODB_CONNECTION_STRING'), tlsCAFile=certifi.where())
-db = client[env('TEST_DB_NAME')]
+db = client[env('MIGRATION_TEST_MONGODB_NAME')]
