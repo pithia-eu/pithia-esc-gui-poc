@@ -239,10 +239,13 @@ class Institution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class HandleURLMapping(models.Model):
-    handle_name = models.CharField(max_length=100)
-    url = models.URLField()
+    handle_name = models.CharField(max_length=100, db_column='DOI_NAME')
+    url = models.URLField(db_column='DOI_URL')
 
     objects = HandleURLMappingQuerySet.as_manager()
+
+    class Meta:
+        db_table = 'DOI'
 
 # Proxy models
 class Organisation(ScientificMetadata):
