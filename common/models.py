@@ -239,8 +239,8 @@ class Institution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class HandleURLMapping(models.Model):
-    url = models.URLField()
     handle_name = models.CharField(max_length=100)
+    url = models.URLField()
 
     objects = HandleURLMappingQuerySet.as_manager()
 
