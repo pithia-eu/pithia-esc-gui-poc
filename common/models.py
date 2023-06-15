@@ -169,6 +169,9 @@ class ScientificMetadata(models.Model):
 
     def get_absolute_url(self):
         return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
+    
+    class Meta:
+        db_table = 'SCIEN_METADATA'
 
 class InteractionMethod(models.Model):
     # ID is handled by the DB technology.
@@ -204,6 +207,9 @@ class InteractionMethod(models.Model):
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
+    
+    class Meta:
+        db_table = 'INT_METHOD'
 
 class APIInteractionMethod(InteractionMethod):
     @property
