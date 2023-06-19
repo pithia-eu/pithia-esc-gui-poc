@@ -36,8 +36,14 @@
         {% block extra_information %}{% endblock extra_information %}
         {% if other_resources_to_delete|length > 0 %}
         <div class="alert alert-warning mb-0">
-            <p>There {% if other_resources_to_delete|length > 1 %}are {{ other_resources_to_delete|length }} other metadata registrations{% else %}is {{ other_resources_to_delete|length }} other metadata registration{% endif %} referencing this metadata that will also be deleted upon deleting this metadata.</p>
-            <p>Please review the mentioned metadata in the list below before confirming deletion:</p>
+            <p>
+                Please resolve the references from the
+                {% if other_resources_to_delete|length == 1 %}
+                registration
+                {% else %}
+                {{ other_resources_to_delete|length }} registrations listed
+                {% endif %} below to enable the deletion of this metadata.
+            </p>
             <ul class="list-group mb-0">
                 {% for r in other_resources_to_delete %}
                 <li class="list-group-item list-group-item-light">{{ r.name|default:r.localid }} <small class="text-muted">({{ r.type_readable|title }})</small></li>
@@ -50,6 +56,7 @@
         </div>
         {% endif %}
     </div>
+    {% if other_resources_to_delete|length == 0 %}
     <div class="col-lg-5 mt-4">
         <label for="confirm-resource-name">Type <b>{{ resource_to_delete.name|default:resource_to_delete.localid }}</b> to confirm deletion.</label>
         <input type="text" class="form-control mt-1" id="confirm-resource-name" value="">
@@ -71,5 +78,6 @@
             </div>
         </form>
     </div>
+    {% endif %}
 </div>
 {% endblock content %}
