@@ -1,6 +1,5 @@
 <ul class="list-group">
     {% for resource in resource_list %}
-    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
     <li class="list-group-item">
         <div class="row gx-2 gy-4">
             <div class="col-8">
@@ -23,6 +22,5 @@
             </div>
         </div>
     </li>
-    {% endwith %}
     {% endfor %}
 </ul>
