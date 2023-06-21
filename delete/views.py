@@ -56,6 +56,25 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 class ResourceDeleteView(TemplateView):
+    """
+    The deletion confirmation page for a
+    scientific metadata registration.
+
+    Displays (if any) the scientific metadata
+    dependents of the registration being
+    deleted.
+
+    For Data Collections, the page also informs
+    of whether any associated interaction
+    methods will be deleted as well.
+
+    If any scientific metadata dependents exist,
+    the deletion of the resource is prevented,
+    else the deletion of the resource is allowed.
+
+    This view is intended to be subclassed and to not
+    be called directly.
+    """
     template_name = 'delete/confirm_delete_resource.html'
 
     resource_id = ''
@@ -119,6 +138,15 @@ class ResourceDeleteView(TemplateView):
         return HttpResponseRedirect(self.redirect_url)
 
 class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
+    """
+    A subclass of ResourceDeleteView.
+
+    Maps Data Collection-related features (e.g., breadcrumbs)
+    to Catalogue-related features.
+
+    This view is intended to be subclassed and to not
+    be called directly.
+    """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -149,6 +177,10 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
 
 
 class OrganisationDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Organisation
+    registration.
+    """
     model = models.Organisation
 
     redirect_url = reverse_lazy('resource_management:organisations')
@@ -165,6 +197,10 @@ class OrganisationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class IndividualDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Individual
+    registration.
+    """
     model = models.Individual
 
     redirect_url = reverse_lazy('resource_management:individuals')
@@ -181,6 +217,10 @@ class IndividualDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProjectDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Project
+    registration.
+    """
     model = models.Project
 
     redirect_url = reverse_lazy('resource_management:projects')
@@ -197,6 +237,10 @@ class ProjectDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class PlatformDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Platform
+    registration.
+    """
     model = models.Platform
 
     redirect_url = reverse_lazy('resource_management:platforms')
@@ -213,6 +257,10 @@ class PlatformDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class InstrumentDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Instrument
+    registration.
+    """
     model = models.Instrument
 
     redirect_url = reverse_lazy('resource_management:instruments')
@@ -229,6 +277,10 @@ class InstrumentDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class OperationDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Operation
+    registration.
+    """
     model = models.Operation
 
     redirect_url = reverse_lazy('resource_management:operations')
@@ -245,6 +297,10 @@ class OperationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Acquisition
+    Capabilities registration.
+    """
     model = models.AcquisitionCapabilities
 
     redirect_url = reverse_lazy('resource_management:acquisition_capability_sets')
@@ -261,6 +317,10 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for an Acquisition
+    registration.
+    """
     model = models.Acquisition
 
     redirect_url = reverse_lazy('resource_management:acquisitions')
@@ -277,6 +337,10 @@ class AcquisitionDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Computation
+    Capabilities registration.
+    """
     model = models.ComputationCapabilities
 
     redirect_url = reverse_lazy('resource_management:computation_capability_sets')
@@ -293,6 +357,10 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Computation
+    registration.
+    """
     model = models.Computation
 
     redirect_url = reverse_lazy('resource_management:computations')
@@ -309,6 +377,10 @@ class ComputationDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProcessDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Process
+    registration.
+    """
     model = models.Process
 
     redirect_url = reverse_lazy('resource_management:processes')
@@ -325,6 +397,10 @@ class ProcessDeleteView(ResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class DataCollectionDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Data
+    Collection registration.
+    """
     template_name = 'delete/confirm_delete_data_collection.html'
     model = models.DataCollection
 
@@ -348,6 +424,10 @@ class DataCollectionDeleteView(ResourceDeleteView):
         return context
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
+    """
+    The deletion confirmation page for a Catalogue
+    registration.
+    """
     model = models.Catalogue
 
     redirect_url = reverse_lazy('resource_management:catalogues')
@@ -364,6 +444,10 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
+    """
+    The deletion confirmation page for a Catalogue
+    Entry registration.
+    """
     model = models.CatalogueEntry
 
     redirect_url = reverse_lazy('resource_management:catalogue_entries')
@@ -380,6 +464,10 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
+    """
+    The deletion confirmation page for a Catalogue
+    Data Subset registration.
+    """
     model = models.CatalogueDataSubset
 
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')

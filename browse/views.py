@@ -272,8 +272,8 @@ class CatalogueRelatedResourceListView(ResourceListView):
     """
     A subclass of ResourceListView.
 
-    Changes Data Collection-specific features to Catalogue-
-    specific features.
+    Maps Data Collection-related features (e.g., breadcrumbs)
+    to Catalogue-related features.
     """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -549,8 +549,8 @@ class CatalogueRelatedResourceDetailView(ResourceDetailView):
     """
     A subclass of ResourceDetailView.
 
-    Changes Data Collection-specific features to Catalogue-
-    specific features.
+    Maps Data Collection-related features (e.g., breadcrumbs)
+    to Catalogue-related features.
 
     This view is intended to be subclassed and to not
     be called directly.
