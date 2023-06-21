@@ -114,6 +114,7 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         mapped_resource_server_urls.append(url_mapping)
 
     for url in non_operational_mode_urls:
+        print('url', url)
         url_mapping = {
             'original_server_url': url,
             'converted_url': url,
@@ -124,13 +125,15 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
 
         referenced_resource = None
         scientific_metadata_subclasses = ScientificMetadata.__subclasses__()
-        type_in_metadata_server_url = itemgetter('resource_type')(divide_resource_url_into_main_components(url))
+        type_in_metadata_server_url, localid = itemgetter('resource_type', 'localid')(divide_resource_url_into_main_components(url))
         model = None
         for subclass in scientific_metadata_subclasses:
-            if subclass.type_in_metadata_server_url == type_in_metadata_server_url:
+            if (subclass.type_in_metadata_server_url == type_in_metadata_server_url
+                and localid.startswith(subclass.localid_base)):
                 model = subclass
         
         try:
+            print('model', model)
             referenced_resource = model.objects.get_by_metadata_server_url(url)
         except (AttributeError, ObjectDoesNotExist):
             mapped_resource_server_urls.append(url_mapping)
