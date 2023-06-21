@@ -12,7 +12,6 @@ from .pymongo_api import (
 )
 
 from common import models
-from common.helpers import get_interaction_methods_linked_to_data_collection_id
 from common.models import ScientificMetadata
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
