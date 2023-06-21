@@ -90,7 +90,6 @@ class ResourceListView(ListView):
     context_object_name = 'resources'
 
     description = ''
-    resource_type_plural = ''
     resource_detail_page_url_name = ''
     
     def get_queryset(self):
@@ -100,7 +99,7 @@ class ResourceListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.description
-        context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -197,7 +196,6 @@ class ResourceDetailView(TemplateView):
     title = 'Resource Detail'
     resource = None
     resource_id = ''
-    resource_type_plural = ''
     resource_flattened = None
     resource_human_readable = {}
     ontology_server_urls = []
@@ -234,7 +232,6 @@ class ResourceDetailView(TemplateView):
 
 class OrganisationDetailView(ResourceDetailView):
     model = models.Organisation
-    resource_type_plural = 'Organisations'
     resource_list_by_type_url_name = 'browse:list_organisations'
 
     def get(self, request, *args, **kwargs):
@@ -243,7 +240,6 @@ class OrganisationDetailView(ResourceDetailView):
 
 class IndividualDetailView(ResourceDetailView):
     model = models.Individual
-    resource_type_plural = 'Individuals'
     resource_list_by_type_url_name = 'browse:list_individuals'
 
     def get(self, request, *args, **kwargs):
@@ -252,7 +248,6 @@ class IndividualDetailView(ResourceDetailView):
 
 class ProjectDetailView(ResourceDetailView):
     model = models.Project
-    resource_type_plural = 'Projects'
     resource_list_by_type_url_name = 'browse:list_projects'
 
     def get(self, request, *args, **kwargs):
@@ -261,7 +256,6 @@ class ProjectDetailView(ResourceDetailView):
 
 class PlatformDetailView(ResourceDetailView):
     model = models.Platform
-    resource_type_plural = 'Platforms'
     resource_list_by_type_url_name = 'browse:list_platforms'
 
     def get(self, request, *args, **kwargs):
@@ -270,7 +264,6 @@ class PlatformDetailView(ResourceDetailView):
 
 class InstrumentDetailView(ResourceDetailView):
     model = models.Instrument
-    resource_type_plural = 'Instruments'
     resource_list_by_type_url_name = 'browse:list_instruments'
 
     def get(self, request, *args, **kwargs):
@@ -279,7 +272,6 @@ class InstrumentDetailView(ResourceDetailView):
 
 class OperationDetailView(ResourceDetailView):
     model = models.Operation
-    resource_type_plural = 'Operations'
     resource_list_by_type_url_name = 'browse:list_operations'
 
     def get(self, request, *args, **kwargs):
@@ -288,7 +280,6 @@ class OperationDetailView(ResourceDetailView):
 
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     model = models.AcquisitionCapabilities
-    resource_type_plural = 'Acquisition Capabilities'
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
@@ -297,7 +288,6 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
 
 class AcquisitionDetailView(ResourceDetailView):
     model = models.Acquisition
-    resource_type_plural = 'Acquisitions'
     resource_list_by_type_url_name = 'browse:list_acquisitions'
 
     def get(self, request, *args, **kwargs):
@@ -306,7 +296,6 @@ class AcquisitionDetailView(ResourceDetailView):
 
 class ComputationCapabilitiesDetailView(ResourceDetailView):
     model = models.ComputationCapabilities
-    resource_type_plural = 'Computation Capabilities'
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
@@ -315,7 +304,6 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
 
 class ComputationDetailView(ResourceDetailView):
     model = models.Computation
-    resource_type_plural = 'Computations'
     resource_list_by_type_url_name = 'browse:list_computations'
 
     def get(self, request, *args, **kwargs):
@@ -324,7 +312,6 @@ class ComputationDetailView(ResourceDetailView):
 
 class ProcessDetailView(ResourceDetailView):
     model = models.Process
-    resource_type_plural = 'Processes'
     resource_list_by_type_url_name = 'browse:list_processes'
 
     def get(self, request, *args, **kwargs):
@@ -333,7 +320,6 @@ class ProcessDetailView(ResourceDetailView):
 
 class DataCollectionDetailView(ResourceDetailView):
     model = models.DataCollection
-    resource_type_plural = 'Data Collections'
     resource_list_by_type_url_name = 'browse:list_data_collections'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
