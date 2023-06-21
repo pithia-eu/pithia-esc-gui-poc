@@ -42,26 +42,26 @@ class ScientificMetadata(models.Model):
     id = models.CharField(
         max_length=200,
         primary_key=True,
-        db_column='SM_ID'
+        db_column='sm_id'
     )
     # institution = models.ForeignKey(
     #   'Institution',
-    #   db_column='INSTITUTION_ID'
+    #   db_column='institution_id'
     # )
     # owner = models.ForeignKey(
     #   'Member',
-    #   db_column='OWNER_ID'
+    #   db_column='owner_id'
     # )
     type = models.CharField(
         max_length=100,
         choices=TYPE_CHOICES,
-        db_column='SM_TYPE'
+        db_column='sm_type'
     )
-    xml = models.TextField(db_column='SM_METADATA_FILE')
-    json = models.JSONField(db_column='SM_JSON_SUPPORT')
-    deactivated = models.BooleanField(default=False, db_column='SM_DEACTIVATED')
-    created_at = models.DateTimeField(auto_now_add=True, db_column='SM_REG_DATE')
-    updated_at = models.DateTimeField(auto_now=True, db_column='SM_UPD_DATE')
+    xml = models.TextField(db_column='sm_metadata_file')
+    json = models.JSONField(db_column='sm_json_support')
+    deactivated = models.BooleanField(default=False, db_column='sm_deactivated')
+    created_at = models.DateTimeField(auto_now_add=True, db_column='sm_reg_date')
+    updated_at = models.DateTimeField(auto_now=True, db_column='sm_upd_date')
 
     # JSON field properties
     @property
@@ -171,7 +171,7 @@ class ScientificMetadata(models.Model):
         return reverse(f'{self._browse_detail_page_url_name}', args=[str(self.pk)])
     
     class Meta:
-        db_table = 'SCIEN_METADATA'
+        db_table = 'scien_metadata'
 
 class InteractionMethod(models.Model):
     # ID is handled by the DB technology.
@@ -180,11 +180,11 @@ class InteractionMethod(models.Model):
         on_delete=models.CASCADE,
         null=True,
         limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION},
-        db_column='SM_ID'
+        db_column='sm_id'
     )
     # owner = models.ForeignKey(
     #   'Member',
-    #   db_column='OWNER_ID'
+    #   db_column='owner_id'
     # )
     API = 'api'
     MICADO = 'micado'
@@ -198,18 +198,18 @@ class InteractionMethod(models.Model):
         choices=TYPE_CHOICES,
         default=API,
         max_length=100,
-        db_column='INTM_TYPE'
+        db_column='intm_type'
     )
-    config = models.JSONField(db_column='INTM_CONFIG')
-    deactivated = models.BooleanField(default=False, db_column='INTM_DEACTIVATED')
-    created_at = models.DateTimeField(auto_now_add=True, db_column='INTM_REG_DATE')
-    updated_at = models.DateTimeField(auto_now=True, db_column='INTM_UPD_DATE')
+    config = models.JSONField(db_column='intm_config')
+    deactivated = models.BooleanField(default=False, db_column='intm_deactivated')
+    created_at = models.DateTimeField(auto_now_add=True, db_column='intm_reg_date')
+    updated_at = models.DateTimeField(auto_now=True, db_column='intm_upd_date')
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
     
     class Meta:
-        db_table = 'INT_METHOD'
+        db_table = 'int_method'
 
 class APIInteractionMethod(InteractionMethod):
     @property
@@ -239,13 +239,13 @@ class Institution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class HandleURLMapping(models.Model):
-    handle_name = models.CharField(max_length=100, db_column='DOI_NAME')
-    url = models.URLField(db_column='DOI_URL')
+    handle_name = models.CharField(max_length=100, db_column='doi_name')
+    url = models.URLField(db_column='doi_url')
 
     objects = HandleURLMappingQuerySet.as_manager()
 
     class Meta:
-        db_table = 'DOI'
+        db_table = 'doi'
 
 # Proxy models
 class Organisation(ScientificMetadata):
