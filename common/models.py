@@ -174,7 +174,8 @@ class ScientificMetadata(models.Model):
         db_table = 'scien_metadata'
 
 class InteractionMethod(models.Model):
-    # ID is handled by the DB technology.
+    # Primary key should be handled automatically in the future
+    id = models.UUIDField(primary_key=True, db_column='intm_id')
     data_collection = models.ForeignKey(
         'DataCollection',
         on_delete=models.CASCADE,
@@ -186,6 +187,7 @@ class InteractionMethod(models.Model):
     #   'Member',
     #   db_column='owner_id'
     # )
+    owner = models.CharField(max_length=9999, db_column='owner_id')
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
