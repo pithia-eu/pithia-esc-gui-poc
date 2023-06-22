@@ -1,4 +1,5 @@
 import json
+import uuid
 import xmltodict
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
@@ -187,12 +188,14 @@ class APIInteractionMethodManager(models.Manager):
             'description': description,
         }
         return self.create(
+            id=uuid.uuid4(),
             type=self.model.API,
             data_collection=data_collection,
-            config=config
+            config=config,
+            owner=0
         )
 
-    def update_config(self, interaction_method_id, specification_url: str, description: str):
+    def update_config(self, interaction_method_id, specification_url: str, description: str = ''):
         interaction_method = self.get_queryset().get(pk=interaction_method_id)
         interaction_method.specification_url = specification_url
         interaction_method.description = description
