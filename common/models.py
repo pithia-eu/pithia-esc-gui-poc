@@ -563,11 +563,19 @@ class DataCollection(ScientificMetadata):
 
     @property
     def feature_of_interest_urls(self):
-        return [nr['@xlink:href'] for nr in self.json['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+        try:
+            return [nr['@xlink:href'] for nr in self.json['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
+        except KeyError:
+            pass
+        return []
 
     @property
     def type_urls(self):
-        return [type['@xlink:href'] for type in self.json['type']]
+        try:
+            return [type['@xlink:href'] for type in self.json['type']]
+        except KeyError:
+            pass
+        return []
 
     @property
     def link_interaction_methods(self):
