@@ -181,7 +181,7 @@ class APIInteractionMethodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.API)
 
-    def create_api_interaction_method(self, specification_url: str, description: str, data_collection: str):
+    def create_api_interaction_method(self, specification_url: str, description: str, data_collection):
         config = {
             'specification_url': specification_url,
             'description': description,
