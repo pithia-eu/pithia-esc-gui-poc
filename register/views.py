@@ -43,7 +43,7 @@ from . import xml_conversion_checks_and_fixes
 from .pymongo_api import register_with_pymongo_transaction_if_possible
 
 from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
-from update.pymongo_api import register_doi_with_pymongo
+from update.pymongo_api import register_doi_with_pymongo_transaction_if_possible
 from validation.errors import FileRegisteredBefore
 
 
@@ -169,7 +169,7 @@ class ResourceRegisterFormView(FormView):
                             add_handle_to_url_mapping(handle, data_subset_url)
 
                             # TODO: remove old code
-                            register_doi_with_pymongo(
+                            register_doi_with_pymongo_transaction_if_possible(
                                 doi_dict,
                                 str(self.new_pymongo_registration['_id']),
                                 xml_file,

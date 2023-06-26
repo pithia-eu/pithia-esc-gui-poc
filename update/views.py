@@ -62,8 +62,8 @@ from resource_management.views import (
 # TODO: remove old code
 
 from .pymongo_api import (
-    update_with_pymongo,
-    update_interaction_method_with_pymongo,
+    update_interaction_method_with_pymongo_transaction_if_possible,
+    update_with_pymongo_transaction_if_possible,
 )
 
 from register.xml_conversion_checks_and_fixes import (
@@ -136,7 +136,7 @@ class ResourceUpdateFormView(FormView):
                     self.model.objects.update_from_xml_string(self.resource_id, self.xml_file_string)
 
                     # TODO: remove old code
-                    update_with_pymongo(
+                    update_with_pymongo_transaction_if_possible(
                         self.resource_id,
                         self.resource_mongodb_model,
                         self.resource_revision_mongodb_model,
@@ -415,7 +415,7 @@ def data_collection_interaction_methods(request, data_collection_id):
                 
                 with transaction.atomic():
                     # TODO: remove old code
-                    update_interaction_method_with_pymongo(
+                    update_interaction_method_with_pymongo_transaction_if_possible(
                         data_collection_localid,
                         api_selected=is_api_selected,
                         api_specification_url=api_specification_url,
