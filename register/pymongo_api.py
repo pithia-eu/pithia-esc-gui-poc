@@ -1,6 +1,7 @@
 from bson import ObjectId
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from mongodb import client
+from pymongo.errors import OperationFailure
 from typing import Union
 
 from .xml_metadata_file_conversion import convert_xml_metadata_file_to_dictionary
@@ -57,27 +58,56 @@ def register_with_pymongo(
     api_selected=False,
     api_specification_url=None,
     api_description='',
-    resource_conversion_validate_and_correct_function=None
+    resource_conversion_validate_and_correct_function=None,
+    session=None
 ):
-    with client.start_session() as s:
-        def cb(s):
-            registration_results = register_metadata_xml_file(
-                xml_file,
-                resource_mongodb_model,
-                resource_conversion_validate_and_correct_function,
-                session=s
-            )
+    registration_results = register_metadata_xml_file(
+        xml_file,
+        resource_mongodb_model,
+        resource_conversion_validate_and_correct_function,
+        session=session
+    )
 
-            store_xml_file_as_string_and_map_to_resource_id(
-                xml_file,
-                registration_results['_id'],
-                session=s
-            )
-            if api_selected is True:
-                register_api_specification(
-                    api_specification_url,
-                    registration_results['identifier']['PITHIA_Identifier']['localID'],
+    store_xml_file_as_string_and_map_to_resource_id(
+        xml_file,
+        registration_results['_id'],
+        session=session
+    )
+    if api_selected is True:
+        register_api_specification(
+            api_specification_url,
+            registration_results['identifier']['PITHIA_Identifier']['localID'],
+            api_description=api_description,
+            session=session
+        )
+
+def register_with_pymongo_transaction_if_possible(
+    xml_file,
+    resource_mongodb_model,
+    api_selected=False,
+    api_specification_url=None,
+    api_description='',
+    resource_conversion_validate_and_correct_function=None,
+):
+    try:
+        with client.start_session() as s:
+            def cb(s):
+                register_with_pymongo(
+                    xml_file,
+                    resource_mongodb_model,
+                    api_selected=api_selected,
+                    api_specification_url=api_specification_url,
                     api_description=api_description,
+                    resource_conversion_validate_and_correct_function=resource_conversion_validate_and_correct_function,
                     session=s
                 )
-        s.with_transaction(cb)
+            s.with_transaction(cb)
+    except OperationFailure:
+        register_with_pymongo(
+            xml_file,
+            resource_mongodb_model,
+            api_selected=api_selected,
+            api_specification_url=api_specification_url,
+            api_description=api_description,
+            resource_conversion_validate_and_correct_function=resource_conversion_validate_and_correct_function
+        )

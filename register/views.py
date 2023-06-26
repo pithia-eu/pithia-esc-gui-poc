@@ -40,7 +40,7 @@ from utils.url_helpers import create_data_subset_detail_page_url
 
 # TODO: remove old code
 from . import xml_conversion_checks_and_fixes
-from .pymongo_api import register_with_pymongo
+from .pymongo_api import register_with_pymongo_transaction_if_possible
 
 from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
 from update.pymongo_api import register_doi_with_pymongo
@@ -110,7 +110,8 @@ class ResourceRegisterFormView(FormView):
                                 self.new_registration
                             )
                         # TODO: remove old code
-                        register_with_pymongo(
+                        
+                        register_with_pymongo_transaction_if_possible(
                             xml_file,
                             self.resource_mongodb_model,
                             api_selected=is_api_selected,
