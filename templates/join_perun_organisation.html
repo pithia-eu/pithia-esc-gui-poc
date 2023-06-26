@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section>
+	<h1>Join an Institution</h1>
+	<ul class="list-group">
+	{% for o in org_list %}
+		<li class="list-group-item">
+			<a href="{% url 'join_perun_organisation_subgroup' o %}" target="_blank">{{ o }}</a>
+		</li>
+	{% endfor %}
+	</ul>
+</section>
+{% endblock content %}

@@ -3,7 +3,10 @@ from . import views
 from browse.views import schemas
 
 urlpatterns = [
-    path('', views.index_admin, name='data_provider_home'),
+    path('dashboard/', views.index_admin, name='data_provider_home'),
+    path('join-organisation/', views.join_perun_organisation, name='join_perun_organisation'),
+    path('join-organisation/<organisation_id>/', views.join_perun_organisation_subgroup, name='join_perun_organisation_subgroup'),
+    path('logout/', views.logout, name='logout'),
     path('', include('update.urls')),
     path('', include('delete.urls')),
     path('', include('utils.urls')),

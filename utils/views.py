@@ -1,5 +1,7 @@
+import json
+import os
 from .url_helpers import convert_ontology_server_urls_to_browse_urls, convert_resource_server_urls_to_browse_urls
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
 from django.http import HttpResponseNotFound
 from bson import ObjectId

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section>
+	<h1>Join {{ organisation_id }}</h1>
+        <ul class="list-group">
+        	<li class="list-group-item">
+			<a href="{{ join_url_base }}{{ organisation_id }}:admins" target="_blank">Join as an Admin</a>
+                </li>
+		<li class="list-group-item">
+                        <a href="{{ join_url_base }}{{ organisation_id }}:members" target="_blank">Join as a Member</a>
+                </li>
+        </ul>
+</section>
+{% endblock content %}

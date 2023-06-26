@@ -54,6 +54,7 @@
         </div>
     </div>
 </section>
+{% if is_part_of_an_institution == True %}
 <section>
     <h2 class="mb-0">Admin Functionalities & Resources</h2>
     <hr>
@@ -83,5 +84,59 @@
             </div>
         </div>
     </div>
+</section>
+{% endif %}
+<section>
+   <h2 class="mb-0">Create or Join an Institution</h2>
+   <hr>
+   <div class="card-menu">
+        <div class="card">
+            <div class="card-body">
+                <a href="https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests">
+                        <img src="{% static 'data_models.svg' %}" alt="Data Models">
+                        <span>Create an Institution</span>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'join_perun_organisation' %}">
+                    <img src="{% static 'data_models.svg' %}" alt="Data Models">
+                    <span>Join an Institution</span>
+                </a>
+            </div>
+        </div>
+   </div>
+</section>
+<section>
+	<h2>Subgroup Selection</h2>
+	<p>Please select the organization that you want to work with.</p>
+	<select class="form-control">
+	{% for sg in subgroups %}
+	<option value="{{ sg }}">{{ sg }}</option>
+	{% endfor %}
+	</select>
+</section>
+<section>
+	<h2>ID token hint</h2>
+	{% if ID_TOKEN_HINT %}
+	<p>{{ ID_TOKEN_HINT }}</p>
+	{% else %}
+	<p>None</p>
+	{% endif %}
+	<h2>CLIENT_ID</h2>
+	{% if CLIENT_ID %}
+	<p>{{ CLIENT_ID }}</p>
+	{% else %}
+	<p>None</p>
+	{% endif %}
+	<h2>error in user info</h2>
+	{{ error_in_user_info }}
+	<h2>request.META</h2>
+	<hr>
+	<p style="white-space: pre-wrap;">{{ request.META|pprint }}</p>
+	<h2>Is logged in</h2>
+	<p>{{ request.session.is_logged_in }}</p>
+	{% if logout_response %}<p style="white-space: pre-wrap;">{{ logout_response }}</p>{% else %}<p>No logout response</p>{% endif %}
 </section>
 {% endblock content %}

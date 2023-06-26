@@ -18,7 +18,7 @@ import environ
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env(
-    ALLOWED_HOSTS=('127.0.0.1,localhost'),
+    ALLOWED_HOSTS=('127.0.0.1,localhost,18.134.0.206,pithia.yangcpc.site'),
     CSRF_TRUSTED_ORIGINS=''
 )
 
@@ -70,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middleware.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'
@@ -164,32 +165,32 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # Logging
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'custom': {
-            'format': '[{asctime}] [{levelname}] [{name}]  {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'pithiaesc.log'),
-            'formatter': 'custom',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        '': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
+#LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': False,
+#    'formatters': {
+#        'custom': {
+#            'format': '[{asctime}] [{levelname}] [{name}]  {message}',
+#            'style': '{',
+#        },
+#    },
+#    'handlers': {
+#        'file': {
+#            'level': 'INFO',
+#            'class': 'logging.FileHandler',
+#            'filename': os.path.join(BASE_DIR, 'pithiaesc.log'),
+#            'formatter': 'custom',
+#        },
+#        'console': {
+#            'level': 'INFO',
+#            'class': 'logging.StreamHandler',
+#        }
+#    },
+#    'loggers': {
+#        '': {
+#            'handlers': ['file', 'console'],
+#            'level': 'INFO',
+#            'propagate': True,
+#        },
+#    },
+#}

@@ -76,8 +76,14 @@
     </ul>
 
     <div class="col-md-3 text-end">
+	{% if request.session.is_logged_in %}
+	<a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">
+            Logout
+        </a>
+	{% else %}
         <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login
         </a>
+	{% endif %}
     </div>
 </header>
