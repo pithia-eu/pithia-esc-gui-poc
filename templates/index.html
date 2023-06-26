@@ -109,34 +109,6 @@
    </div>
 </section>
 <section>
-	<h2>Subgroup Selection</h2>
-	<p>Please select the organization that you want to work with.</p>
-	<select class="form-control">
-	{% for sg in subgroups %}
-	<option value="{{ sg }}">{{ sg }}</option>
-	{% endfor %}
-	</select>
-</section>
-<section>
-	<h2>ID token hint</h2>
-	{% if ID_TOKEN_HINT %}
-	<p>{{ ID_TOKEN_HINT }}</p>
-	{% else %}
-	<p>None</p>
-	{% endif %}
-	<h2>CLIENT_ID</h2>
-	{% if CLIENT_ID %}
-	<p>{{ CLIENT_ID }}</p>
-	{% else %}
-	<p>None</p>
-	{% endif %}
-	<h2>error in user info</h2>
-	{{ error_in_user_info }}
-	<h2>request.META</h2>
-	<hr>
-	<p style="white-space: pre-wrap;">{{ request.META|pprint }}</p>
-	<h2>Is logged in</h2>
-	<p>{{ request.session.is_logged_in }}</p>
-	{% if logout_response %}<p style="white-space: pre-wrap;">{{ logout_response }}</p>{% else %}<p>No logout response</p>{% endif %}
+    <a href="{% url 'select_institution_subgroup' %}">Select a Subgroup</a>
 </section>
 {% endblock content %}

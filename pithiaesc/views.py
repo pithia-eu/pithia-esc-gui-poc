@@ -67,63 +67,9 @@ def index(request):
     })
 
 def index_admin(request):
-    url = 'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
-
-    request_meta = request.META.items()
-    ACCESS_TOKEN = request.META.get('OIDC_access_token')
-
-    user_info_response = get_user_info(url, ACCESS_TOKEN)
-    user_info = json.loads(user_info_response.text)
-    error_in_user_info = 'error' in user_info
-    institution_details = user_info.get('eduperson_entitlement')
-    is_part_of_an_institution = institution_details is not None
-
-    # One user has multiple organisations, but we need to select
-    # one organisation per session.
-
-    # Find the organisation and then do the following things (David's work)
-    if is_part_of_an_institution:
-        # type of t: <class 'str'>
-        for t in institution_details:
-            print(t)
-        print()
-
-        # find organizations
-        organisations = []
-        for t in institution_details:
-            index = t.rfind('organizations', 0, -1)
-
-            if index == -1:
-                continue
-
-            index1 = t.rfind('role', 0, -1)
-            new_string = t[index: index1 - 1]
-
-            if len(new_string) <= len('organizations'):
-                continue
-
-            index2 = new_string.find(':', 0, -1)
-            organisations.append(new_string[index2 + 1:])
-
-        print(organisations)
-        
-        # find the sub groups
-        subgroups = []
-        for o in organisations:
-            index = o.find(':')
-            if index == -1:
-                continue
-            subgroups.append(unquote(o[:]))
-        print('subgroups: ', subgroups)
-
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
-        'request_meta': request_meta,
-        'user_info_text': user_info,
         'create_perun_organisation_url': 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests',
-        'is_part_of_an_institution': is_part_of_an_institution,
-        'error_in_user_info': error_in_user_info,
-        'subgroups': subgroups, 
     })
 
 
@@ -218,3 +164,79 @@ def update_perun_organisation_list(request):
     with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'w') as organisation_list_file:
         json.dump(update_data, organisation_list_file)
     return HttpResponse(status=200)
+
+def select_institution_subgroup(request):
+    print("request.session.get('selected_org')", request.session.get('selected_org'))
+    if request.method == 'POST':
+        subgroup_name = request.POST['subgroup-name']
+        request.session['selected_org'] = subgroup_name
+        return HttpResponseRedirect(reverse('select_institution_subgroup'))
+    # url = 'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+
+    # request_meta = request.META.items()
+    # ACCESS_TOKEN = request.META.get('OIDC_access_token')
+
+    # user_info_response = get_user_info(url, ACCESS_TOKEN)
+    # user_info = json.loads(user_info_response.text)
+    # error_in_user_info = 'error' in user_info
+    # institution_details = user_info.get('eduperson_entitlement')
+    # is_part_of_an_institution = institution_details is not None
+
+    # TEMP
+    is_part_of_an_institution = True
+    institution_details = [
+        'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:role=member#aai.egi.eu',
+        'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
+    ]
+
+    # One user has multiple organisations, but we need to select
+    # one organisation per session.
+
+    # Find the organisation and then do the following things (David's work)
+    if is_part_of_an_institution:
+        # type of t: <class 'str'>
+        for t in institution_details:
+            print(t)
+        print()
+
+        # find organizations
+        organisations = []
+        for t in institution_details:
+            index = t.rfind('organizations', 0, -1)
+
+            if index == -1:
+                continue
+
+            index1 = t.rfind('role', 0, -1)
+            new_string = t[index: index1 - 1]
+
+            if len(new_string) <= len('organizations'):
+                continue
+
+            index2 = new_string.find(':', 0, -1)
+            organisations.append(new_string[index2 + 1:])
+
+        print(organisations)
+        
+        # find the sub groups
+        subgroups = []
+        for o in organisations:
+            index = o.find(':')
+            if index == -1:
+                continue
+            subgroups.append(unquote(o[:]))
+        print('subgroups: ', subgroups)
+
+    return render(request, 'subgroup_selection.html', {
+        # 'request_meta': request_meta,
+        # 'user_info_text': user_info,
+        'create_perun_organisation_url': 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests',
+        'is_part_of_an_institution': is_part_of_an_institution,
+        # 'error_in_user_info': error_in_user_info,
+        'subgroups': subgroups, 
+    })

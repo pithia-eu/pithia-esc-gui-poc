@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section>
+    <h2>Subgroup Selection</h2>
+    <p>Please select the organization that you want to work with.</p>
+    <form action="{% url 'select_institution_subgroup' %}" method="POST">
+        {% csrf_token %}
+        <select class="form-control" name="subgroup-name">
+        {% for sg in subgroups %}
+        <option value="{{ sg }}">{{ sg }}</option>
+        {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</section>
+<section>
+    {% comment %} <h2>ID token hint</h2>
+    {% if ID_TOKEN_HINT %}
+    <p>{{ ID_TOKEN_HINT }}</p>
+    {% else %}
+    <p>None</p>
+    {% endif %}
+    <h2>CLIENT_ID</h2>
+    {% if CLIENT_ID %}
+    <p>{{ CLIENT_ID }}</p>
+    {% else %}
+    <p>None</p>
+    {% endif %} {% endcomment %}
+    <h2>error in user info</h2>
+    {{ error_in_user_info }}
+    <h2>request.META</h2>
+    <hr>
+    <p style="white-space: pre-wrap;">{{ request.META|pprint }}</p>
+    <h2>Is logged in</h2>
+    <p>{{ request.session.is_logged_in }}</p>
+    {% if logout_response %}<p style="white-space: pre-wrap;">{{ logout_response }}</p>{% else %}<p>No logout response</p>{% endif %}
+</section>
+{% endblock content %}
