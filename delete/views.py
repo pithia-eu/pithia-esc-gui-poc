@@ -7,8 +7,8 @@ from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 
 from .pymongo_api import (
-    delete_data_collection_related_resource,
-    delete_catalogue_related_resource,
+    delete_catalogue_related_resource_with_pymongo_transaction_if_possible,
+    delete_data_collection_related_resource_with_pymongo_transaction_if_possible,
 )
 
 from common import models
@@ -128,7 +128,7 @@ class ResourceDeleteView(TemplateView):
                 ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
 
                 # TODO: remove old code
-                delete_data_collection_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model, self.resource_type_in_resource_url)
+                delete_data_collection_related_resource_with_pymongo_transaction_if_possible(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model, self.resource_type_in_resource_url)
             messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         except BaseException as e:
             logger.exception('An error occurred during resource deletion.')
@@ -168,7 +168,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
                 ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
                 
                 # TODO: remove old code
-                delete_catalogue_related_resource(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model)
+                delete_catalogue_related_resource_with_pymongo_transaction_if_possible(resource_localid, self.resource_mongodb_model, self.resource_revision_mongodb_model)
             messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
         except BaseException as e:
             print(e)
