@@ -241,6 +241,7 @@ class Institution(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class HandleURLMapping(models.Model):
+    id = models.UUIDField(db_column='doi_id', primary_key=True)
     handle_name = models.CharField(max_length=100, db_column='doi_name')
     url = models.URLField(db_column='doi_url')
 
