@@ -1,6 +1,7 @@
 import environ
 import os
 from django.test import (
+    SimpleTestCase,
     TestCase,
 )
 
@@ -10,6 +11,10 @@ from common.models import (
     InteractionMethod,
 )
 from pithiaesc.settings import BASE_DIR
+
+# TODO: remove old code
+import mongomock
+from .pymongo_api import _register_with_pymongo
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
@@ -56,3 +61,19 @@ class InteractionMethodTestCase(TestCase):
         except BaseException as err:
             print(err)
             self.fail('test_api_interaction_method_create() unexpectedly raised an error!')
+
+class PyMongoApiTestCase(SimpleTestCase):
+    def test_register_with_pymongo(self):
+        """
+        _register_with_pymongo() registers
+        an XML metadata file and creates an OriginalMetadataXml
+        entry alongside it.
+        """
+        client = mongomock.MongoClient()
+        MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
+            _register_with_pymongo(
+                xml_file,
+                MockCurrentOrganisation,
+            )
+        print('Passed _register_with_pymongo() test.')
