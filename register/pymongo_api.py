@@ -52,7 +52,7 @@ def register_api_specification(api_specification_url, data_collection_localid, a
     }, session=session)
 
 # From views.py
-def register_with_pymongo(
+def _register_with_pymongo(
     xml_file,
     resource_mongodb_model,
     api_selected=False,
@@ -92,7 +92,7 @@ def register_with_pymongo_transaction_if_possible(
     try:
         with client.start_session() as s:
             def cb(s):
-                register_with_pymongo(
+                _register_with_pymongo(
                     xml_file,
                     resource_mongodb_model,
                     api_selected=api_selected,
@@ -103,7 +103,7 @@ def register_with_pymongo_transaction_if_possible(
                 )
             s.with_transaction(cb)
     except OperationFailure:
-        register_with_pymongo(
+        _register_with_pymongo(
             xml_file,
             resource_mongodb_model,
             api_selected=api_selected,
