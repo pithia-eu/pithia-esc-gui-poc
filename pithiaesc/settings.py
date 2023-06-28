@@ -108,11 +108,19 @@ DATABASES = {
     'default': {
         'ENGINE': os.environ['DATABASE_ENGINE'],
         'NAME': os.environ['DATABASE_NAME'],
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
+        'USER': os.environ['DATABASE_READ_USER'],
+        'PASSWORD': os.environ['DATABASE_READ_PASSWORD'],
         'HOST': os.environ['DATABASE_HOST'],
         'PORT': os.environ['DATABASE_PORT'],
-    }
+    },
+    'esc_rw': {
+        'ENGINE': os.environ['DATABASE_ENGINE'],
+        'NAME': os.environ['DATABASE_NAME'],
+        'USER': os.environ['DATABASE_WRITE_USER'],
+        'PASSWORD': os.environ['DATABASE_WRITE_PASSWORD'],
+        'HOST': os.environ['DATABASE_HOST'],
+        'PORT': os.environ['DATABASE_PORT'],
+    },
 }
 
 
