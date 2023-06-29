@@ -175,7 +175,7 @@ class ScientificMetadata(models.Model):
 
 class InteractionMethod(models.Model):
     # Primary key should be handled automatically in the future
-    id = models.UUIDField(primary_key=True, db_column='intm_id')
+    id = models.CharField(max_length=36, primary_key=True, db_column='intm_id')
     data_collection = models.ForeignKey(
         'DataCollection',
         on_delete=models.CASCADE,

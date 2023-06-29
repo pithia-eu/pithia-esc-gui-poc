@@ -7,4 +7,4 @@ def add_handle_to_url_mapping(handle: str, url: str):
         handle_name=handle,
         url=url
     )
-    handle_url_mapping.save()
+    handle_url_mapping.save(using='esc_rw')

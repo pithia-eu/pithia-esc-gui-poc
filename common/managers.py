@@ -45,7 +45,7 @@ class ScientificMetadataManager(models.Manager):
             json=xml_as_dict,
         )
         scientific_metadata.id = scientific_metadata.localid
-        scientific_metadata.save()
+        scientific_metadata.save(using='esc_rw')
 
         return scientific_metadata
 
@@ -64,7 +64,7 @@ class ScientificMetadataManager(models.Manager):
         registration = self.get(pk=pk)
         registration.xml = xml_string
         registration.json = xml_as_dict
-        registration.save()
+        registration.save(using='esc_rw')
         return registration
     
     class Meta:
@@ -187,17 +187,18 @@ class APIInteractionMethodManager(models.Manager):
             'specification_url': specification_url,
             'description': description,
         }
-        return self.create(
+        interaction_method = self.model(
             id=uuid.uuid4(),
             type=self.model.API,
             data_collection=data_collection,
             config=config,
             owner=0
         )
+        return interaction_method.save(using='esc_rw')
 
     def update_config(self, interaction_method_id, specification_url: str, description: str = ''):
         interaction_method = self.get_queryset().get(pk=interaction_method_id)
         interaction_method.specification_url = specification_url
         interaction_method.description = description
-        interaction_method.save()
+        interaction_method.save(using='esc_rw')
         return interaction_method

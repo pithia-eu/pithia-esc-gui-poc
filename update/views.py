@@ -424,7 +424,7 @@ def data_collection_interaction_methods(request, data_collection_id):
 
                     if is_api_selected == False:
                         try:
-                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete()
+                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using='esc_rw')
                         except models.APIInteractionMethod.DoesNotExist:
                             pass
                         messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
