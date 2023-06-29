@@ -199,16 +199,16 @@ def validate_xml_file_and_return_summary(
         )
         return validation_summary
 
-    # try:
-    #     # XSD Schema validation
-    #     MetadataFileXSDValidator.validate(xml_metadata_file)
-    # except XMLSchemaException as err:
-    #     logger.exception('Error occurred whilst validating XML for schema correctness.')
-    #     validation_summary['error'] = create_validation_summary_error(
-    #         message='XML does not conform to the corresponding schema.',
-    #         details=str(err),
-    #     )
-    #     return validation_summary
+    try:
+        # XSD Schema validation
+        MetadataFileXSDValidator.validate(xml_metadata_file)
+    except XMLSchemaException as err:
+        logger.exception('Error occurred whilst validating XML for schema correctness.')
+        validation_summary['error'] = create_validation_summary_error(
+            message='XML does not conform to the corresponding schema.',
+            details=str(err),
+        )
+        return validation_summary
 
     try:
         # Matching file name and localID tag text validation
