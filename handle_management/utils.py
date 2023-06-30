@@ -1,7 +1,10 @@
-from common.mongodb_models import HandleUrlMapping
+from common.models import HandleURLMapping
 
-def add_handle_to_url_mapping(handle: str, url: str, session=None):
-    HandleUrlMapping.insert_one({
-        'handle_name': handle,
-        'url': url,
-    }, session=session)
+
+def add_handle_to_url_mapping(handle: str, url: str):
+    handle_url_mapping = HandleURLMapping(
+        id=handle,
+        handle_name=handle,
+        url=url
+    )
+    handle_url_mapping.save(using='esc_rw')

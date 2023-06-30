@@ -1,32 +1,29 @@
-import re
-from bson.objectid import ObjectId
 from dateutil.parser import parse
-from django.http import (
-    HttpResponseNotFound,
-    JsonResponse,
+from django.http import JsonResponse
+from django.shortcuts import (
+    get_object_or_404,
+    render,
 )
-from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import TemplateView
-
-from .url_mapping import (
-    convert_ontology_server_urls_to_browse_urls,
-    convert_resource_server_urls_to_browse_urls,
+from django.views.generic import (
+    ListView,
+    TemplateView,
 )
 
-from common import mongodb_models
+from .services import (
+    create_readable_scientific_metadata_flattened,
+    get_server_urls_from_scientific_metadata_flattened,
+    map_metadata_server_urls_to_browse_urls,
+    map_ontology_server_urls_to_browse_urls,
+)
+
+from common import models
 from handle_management.handle_api import (
-    create_handle,
     get_handle_record,
     instantiate_client_and_load_credentials,
 )
 from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
-from utils.string_helpers import _split_camel_case
-from validation.url_validation import (
-    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
-    SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
-)
 
 _INDEX_PAGE_TITLE = 'Browse Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -42,18 +39,25 @@ def index(request):
     })
 
 def data_collection_related_resource_types(request):
-    num_current_organsations = mongodb_models.CurrentOrganisation.estimated_document_count()
-    num_current_individuals = mongodb_models.CurrentIndividual.estimated_document_count()
-    num_current_projects = mongodb_models.CurrentProject.estimated_document_count()
-    num_current_platforms = mongodb_models.CurrentPlatform.estimated_document_count()
-    num_current_instruments = mongodb_models.CurrentInstrument.estimated_document_count()
-    num_current_operations = mongodb_models.CurrentOperation.estimated_document_count()
-    num_current_acquisition_capability_sets = mongodb_models.CurrentAcquisitionCapability.estimated_document_count()
-    num_current_acquisitions = mongodb_models.CurrentAcquisition.estimated_document_count()
-    num_current_computation_capability_sets = mongodb_models.CurrentComputationCapability.estimated_document_count()
-    num_current_computations = mongodb_models.CurrentComputation.estimated_document_count()
-    num_current_processes = mongodb_models.CurrentProcess.estimated_document_count()
-    num_current_data_collections = mongodb_models.CurrentDataCollection.estimated_document_count()
+    """
+    Acts as a centre point to all registration list pages
+    for each Data Collection-related registration (i.e.,
+    all scientific metadata types up to Data Collections).
+    Lists the links to these pages and the total number of
+    registrations for each scientific metadata type.
+    """
+    num_current_organsations = models.Organisation.objects.count()
+    num_current_individuals = models.Individual.objects.count()
+    num_current_projects = models.Project.objects.count()
+    num_current_platforms = models.Platform.objects.count()
+    num_current_instruments = models.Instrument.objects.count()
+    num_current_operations = models.Operation.objects.count()
+    num_current_acquisition_capability_sets = models.AcquisitionCapabilities.objects.count()
+    num_current_acquisitions = models.Acquisition.objects.count()
+    num_current_computation_capability_sets = models.ComputationCapabilities.objects.count()
+    num_current_computations = models.Computation.objects.count()
+    num_current_processes = models.Process.objects.count()
+    num_current_data_collections = models.DataCollection.objects.count()
     return render(request, 'browse/data_collection_related_resource_types.html', {
         'title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_organisations': num_current_organsations,
@@ -72,9 +76,17 @@ def data_collection_related_resource_types(request):
     })
 
 def catalogue_related_resource_types(request):
-    num_current_catalogues = mongodb_models.CurrentCatalogue.estimated_document_count()
-    num_current_catalogue_entries = mongodb_models.CurrentCatalogueEntry.estimated_document_count()
-    num_current_catalogue_data_subsets = mongodb_models.CurrentCatalogueDataSubset.estimated_document_count()
+    """
+    Acts as a centre point to all registration list pages
+    for each Catalogue-related registration (i.e., all
+    scientific metadata types from Catalogues to Catalogue
+    Data Subsets). Lists the links to these pages and the
+    total number of registrations for each scientific
+    metadata type.
+    """
+    num_current_catalogues = models.Catalogue.objects.count()
+    num_current_catalogue_entries = models.CatalogueEntry.objects.count()
+    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.count()
     return render(request, 'browse/catalogue_related_resource_types.html', {
         'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
         'num_current_catalogues': num_current_catalogues,
@@ -84,28 +96,36 @@ def catalogue_related_resource_types(request):
     })
 
 def schemas(request):
+    """
+    A list of links to the XML metadata schemas.
+    """
     return render(request, 'browse/schemas.html', {
         'title': _XML_SCHEMAS_PAGE_TITLE
     })
 
-class ResourceListView(TemplateView):
-    template_name = 'browse/resource_list_by_type.html'
-    description = ''
-    resource_mongodb_model = None
-    resource_type_plural = ''
-    resource_detail_page_url_name = ''
-    resource_list = []
+class ResourceListView(ListView):
+    """
+    A list of detail page links of scientific metadata
+    registrations for one given type. E.g., a list of
+    all registered Data Collections.
 
-    def get_resource_list(self):
-        resource_list = list(self.resource_mongodb_model.find({}))
-        return list(map(prepare_resource_for_template, resource_list))
+    This view is intended to be subclassed and to not
+    be called directly.
+    """
+    template_name = 'browse/resource_list_by_type.html'
+    context_object_name = 'resources'
+
+    description = ''
+    resource_detail_page_url_name = ''
+    
+    def get_queryset(self):
+        return self.model.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = self.resource_type_plural
+        context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.description
-        context['resource_list'] = self.get_resource_list()
-        context['empty_resource_list_text'] = f'No {self.resource_type_plural.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -117,78 +137,144 @@ class ResourceListView(TemplateView):
 
 
 class OrganisationListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentOrganisation
-    resource_type_plural = 'Organisations'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Organisation
+    registration.
+    """
+    model = models.Organisation
     resource_detail_page_url_name = 'browse:organisation_detail'
     description = 'Data Provider/Owner organisation'
 
 class IndividualListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentIndividual
-    resource_type_plural = 'Individuals'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Individual
+    registration.
+    """
+    model = models.Individual
     resource_detail_page_url_name = 'browse:individual_detail'
     description = 'An individual, acting in a particular role and associated with an Organisation'
 
 class ProjectListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentProject
-    resource_type_plural = 'Projects'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Project
+    registration.
+    """
+    model = models.Project
     resource_detail_page_url_name = 'browse:project_detail'
     description = 'An identifiable activity designed to accomplish a set of objectives'
 
 class PlatformListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentPlatform
-    resource_type_plural = 'Platforms'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Platform
+    registration.
+    """
+    model = models.Platform
     resource_detail_page_url_name = 'browse:platform_detail'
     description = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory)'
 
 class InstrumentListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentInstrument
-    resource_type_plural = 'Instruments'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Instrument
+    registration.
+    """
+    model = models.Instrument
     resource_detail_page_url_name = 'browse:instrument_detail'
     description = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values'
 
 class OperationListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentOperation
-    resource_type_plural = 'Operations'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Operation
+    registration.
+    """
+    model = models.Operation
     resource_detail_page_url_name = 'browse:operation_detail'
     description = 'Description of how a platform operates in order to support data acquisition by the instrument'
 
 class AcquisitionCapabilitiesListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
-    resource_type_plural = 'Acquisition Capabilities'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Acquisition
+    Capabilities registration.
+    """
+    model = models.AcquisitionCapabilities
     resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     description = ''
 
 class AcquisitionListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentAcquisition
-    resource_type_plural = 'Acquisitions'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Acquisition
+    registration.
+    """
+    model = models.Acquisition
     resource_detail_page_url_name = 'browse:acquisition_detail'
     description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties'
 
 class ComputationCapabilitiesListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentComputationCapability
-    resource_type_plural = 'Computation Capabilities'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Computation
+    Capabilities registration.
+    """
+    model = models.ComputationCapabilities
     resource_detail_page_url_name = 'browse:computation_capability_set_detail'
     description = ''
 
 class ComputationListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentComputation
-    resource_type_plural = 'Computations'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Computation
+    registration.
+    """
+    model = models.Computation
     resource_detail_page_url_name = 'browse:computation_detail'
     description = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output'
 
 class ProcessListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentProcess
-    resource_type_plural = 'Processes'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Process
+    registration.
+    """
+    model = models.Process
     resource_detail_page_url_name = 'browse:process_detail'
     description = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations'
 
 class DataCollectionListView(ResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentDataCollection
-    resource_type_plural = 'Data Collections'
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Data
+    Collection registration.
+    """
+    model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
 
 class CatalogueRelatedResourceListView(ResourceListView):
+    """
+    A subclass of ResourceListView.
+
+    Maps Data Collection-related features (e.g., breadcrumbs)
+    to Catalogue-related features.
+    """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -196,111 +282,50 @@ class CatalogueRelatedResourceListView(ResourceListView):
         return context
 
 class CatalogueListView(CatalogueRelatedResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
-    resource_type_plural = 'Catalogues'
+    """
+    A subclass of CatalogueRelatedResourceListView.
+
+    Lists the detail page links for each Catalogue
+    registration.
+    """
+    model = models.Catalogue
     resource_detail_page_url_name = 'browse:catalogue_detail'
     description = ''
 
 class CatalogueEntryListView(CatalogueRelatedResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
-    resource_type_plural = 'Catalogue Entries'
+    """
+    A subclass of CatalogueRelatedResourceListView.
+
+    Lists the detail page links for each Catalogue
+    Entry registration.
+    """
+    model = models.CatalogueEntry
     resource_detail_page_url_name = 'browse:catalogue_entry_detail'
     description = ''
 
 class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
-    resource_type_plural = 'Catalogue Data Subsets'
+    """
+    A subclass of CatalogueRelatedResourceListView.
+
+    Lists the detail page links for each Catalogue
+    Data Subset registration.
+    """
+    model = models.CatalogueDataSubset
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     description = ''
 
-def _get_ontology_server_urls_from_flattened_resource(resource_flattened):
-    ontology_server_urls = set()
-    resource_server_urls = set()
-    for key, value in resource_flattened.items():
-        if key.endswith('@xlink:href') and value.startswith(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE):
-            ontology_server_urls.add(value)
-        if key.endswith('@xlink:href') and value.startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE):
-            resource_server_urls.add(value)
-
-    return list(ontology_server_urls), list(resource_server_urls)
-
-def _update_flattened_resource_keys_to_human_readable_html(resource_flattened):
-    hidden_keys = [
-        '_id',
-        'description',
-    ]
-    hidden_key_regex = [
-        re.compile(r'^name'),
-        re.compile(r'^contactinfo'),
-        re.compile(r'^identifier'),
-        re.compile(r'.*onlineresource <b>(1/1)</b>\.description'),
-        re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),
-        # re.compile(r'.*onlineresource <b>1</b>\.name'),
-    ]
-    resource_human_readable = {}
-    for key in resource_flattened:
-        if key.startswith('@') or any(x == key.lower() for x in hidden_keys) or any(regex for regex in hidden_key_regex if re.match(regex, key.lower())):
-            continue
-        key_split_by_dot = key.split('.')
-        human_readable_key_strings = []
-        for string in key_split_by_dot:
-            # If there is only one occurrence of a property
-            # doesn't make sense to keep the number suffix
-            is_only_numbered_key = True
-            if string.endswith('<b>(1/1)</b>'):
-                for key2 in resource_flattened:
-                    if string.replace('<b>(1/', '<b>(2/') in key2:
-                        is_only_numbered_key = False
-            if is_only_numbered_key:
-                string = string.replace('<b>(1/1)</b>', '')
-
-            # Skip these strings
-            if  string.startswith('#') or string == '@xlink:href':
-                continue
-
-            # Only keep the part of the key after the ':'
-            if ':' in string:
-                index_of_colon = string.index(':')
-                string = string[index_of_colon + 1:]
-            # Only keep the part of the key after the '@'
-            if '@' in string:
-                index_of_at_symbol = string.index('@')
-                string = string[index_of_at_symbol + 1:]
-
-            # Append the string that the be part of the 
-            # human-readable key
-            if string == '_id' or string.isupper():
-                human_readable_key_strings.append(string)
-            elif '_' in string:
-                human_readable_string = ' '.join(string.split('_'))
-                human_readable_string = ' '.join(_split_camel_case(human_readable_string))
-                human_readable_key_strings.append(human_readable_string)
-            else:
-                human_readable_string = ' '.join(_split_camel_case(string))
-                if not human_readable_string[0].isupper():
-                    human_readable_string = human_readable_string.title()
-                human_readable_key_strings.append(human_readable_string)
-        human_readable_key_strings[-1] = f'<b>{human_readable_key_strings[-1]}</b>'
-        human_readable_key_last_string = human_readable_key_strings[-1]
-        human_readable_key_strings.pop()
-
-        human_readable_key = ' > '.join(human_readable_key_strings).strip()
-        if human_readable_key.startswith('Om:'):
-            human_readable_key = human_readable_key.replace('Om:', '')
-        if len(human_readable_key_strings):
-            human_readable_key = f'{human_readable_key_last_string} <small class="text-muted fst-italic">(from {human_readable_key})</small>'
-        else:
-            human_readable_key = human_readable_key_last_string
-        if human_readable_key != '':
-            resource_human_readable[human_readable_key] = resource_flattened[key]
-    return resource_human_readable
-
 class ResourceDetailView(TemplateView):
+    """
+    The detail page for a scientific metadata
+    registration. The properties of a scientific
+    metadata registration are displayed here.
+
+    This view is intended to be subclassed and to not
+    be called directly.
+    """
     title = 'Resource Detail'
     resource = None
     resource_id = ''
-    resource_mongodb_model = None
-    resource_type_plural = ''
     resource_flattened = None
     resource_human_readable = {}
     ontology_server_urls = []
@@ -309,24 +334,12 @@ class ResourceDetailView(TemplateView):
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.resource_human_readable = {}
-        if self.resource is None:
-            # Extra check done for data_collection() view
-            self.resource = self.resource_mongodb_model.find_one({
-                '_id': ObjectId(self.resource_id)
-            })
-        if self.resource is None:
-            self.title = 'Not found'
-            self.template_name = 'browse/detail_404.html'
-            return super().get(request, *args, **kwargs)
-            # return HttpResponseNotFound('Resource not found.')
-        self.resource = prepare_resource_for_template(self.resource)
-        self.resource_flattened = flatten(self.resource)
-        self.ontology_server_urls, self.resource_server_urls = _get_ontology_server_urls_from_flattened_resource(self.resource_flattened)
-        self.resource_human_readable = _update_flattened_resource_keys_to_human_readable_html(self.resource_flattened)
-        self.title = self.resource['identifier']['PITHIA_Identifier']['localID']
-        if 'name' in self.resource:
-            self.title = self.resource['name']
+        self.resource = get_object_or_404(self.model, pk=self.resource_id)
+        self.scientific_metadata = prepare_resource_for_template(self.resource.json)
+        self.scientific_metadata_flattened = flatten(self.scientific_metadata)
+        self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.scientific_metadata_readable = create_readable_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.title = self.resource.name
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -335,23 +348,26 @@ class ResourceDetailView(TemplateView):
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
-        context['resource_list_page_breadcrumb_text'] = self.resource_type_plural
+        context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
-        if self.resource is None:
-            return context
         context['resource'] = self.resource
-        context['resource_flattened'] = self.resource_flattened
+        context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
         context['resource_server_urls'] = self.resource_server_urls
-        context['resource_human_readable'] = self.resource_human_readable
-        context['resource_creation_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['creationDate'])
-        context['resource_last_modification_date'] = parse(self.resource['identifier']['PITHIA_Identifier']['lastModificationDate'])
+        context['scientific_metadata_readable'] = self.scientific_metadata_readable
+        context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
+        context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
         return context
 
 class OrganisationDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentOrganisation
-    resource_type_plural = 'Organisations'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Organisation registration.
+    """
+    model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
 
     def get(self, request, *args, **kwargs):
@@ -359,8 +375,13 @@ class OrganisationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class IndividualDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentIndividual
-    resource_type_plural = 'Individuals'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Individual registration.
+    """
+    model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
 
     def get(self, request, *args, **kwargs):
@@ -368,8 +389,13 @@ class IndividualDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ProjectDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentProject
-    resource_type_plural = 'Projects'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Project registration.
+    """
+    model = models.Project
     resource_list_by_type_url_name = 'browse:list_projects'
 
     def get(self, request, *args, **kwargs):
@@ -377,8 +403,13 @@ class ProjectDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class PlatformDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentPlatform
-    resource_type_plural = 'Platforms'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Platform registration.
+    """
+    model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
 
     def get(self, request, *args, **kwargs):
@@ -386,8 +417,13 @@ class PlatformDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class InstrumentDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentInstrument
-    resource_type_plural = 'Instruments'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Instrument registration.
+    """
+    model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
 
     def get(self, request, *args, **kwargs):
@@ -395,8 +431,13 @@ class InstrumentDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class OperationDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentOperation
-    resource_type_plural = 'Operations'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Operation registration.
+    """
+    model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
 
     def get(self, request, *args, **kwargs):
@@ -404,8 +445,13 @@ class OperationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
-    resource_type_plural = 'Acquisition Capabilities'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Acquisition Capabilities registration.
+    """
+    model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
 
     def get(self, request, *args, **kwargs):
@@ -413,8 +459,13 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class AcquisitionDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentAcquisition
-    resource_type_plural = 'Acquisitions'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    an Acquisition registration.
+    """
+    model = models.Acquisition
     resource_list_by_type_url_name = 'browse:list_acquisitions'
 
     def get(self, request, *args, **kwargs):
@@ -422,8 +473,13 @@ class AcquisitionDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ComputationCapabilitiesDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentComputationCapability
-    resource_type_plural = 'Computation Capabilities'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Computation Capabilities registration.
+    """
+    model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
 
     def get(self, request, *args, **kwargs):
@@ -431,8 +487,13 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ComputationDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentComputation
-    resource_type_plural = 'Computations'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Computation registration.
+    """
+    model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
 
     def get(self, request, *args, **kwargs):
@@ -440,8 +501,13 @@ class ComputationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ProcessDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentProcess
-    resource_type_plural = 'Processes'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Process registration.
+    """
+    model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
 
     def get(self, request, *args, **kwargs):
@@ -449,8 +515,13 @@ class ProcessDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class DataCollectionDetailView(ResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentDataCollection
-    resource_type_plural = 'Data Collections'
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Data Collection registration.
+    """
+    model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
@@ -458,29 +529,32 @@ class DataCollectionDetailView(ResourceDetailView):
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
-        self.resource = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        })
-        if self.resource is None:
-            return HttpResponseNotFound('Resource not found.')
-        self.interaction_methods = mongodb_models.CurrentDataCollectionInteractionMethod.find({
-            'data_collection_localid': self.resource['identifier']['PITHIA_Identifier']['localID']
-        })
-        if 'collectionResults' in self.resource:
-            if 'source' in self.resource['collectionResults']:
-                self.link_interaction_methods = self.resource['collectionResults']['source']
+        self.resource = get_object_or_404(self.model, pk=self.resource_id)
+        # API Interaction methods
+        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(data_collection=self.resource)
+        # Link interaction methods
+        self.link_interaction_methods = self.resource.link_interaction_methods
 
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interaction_methods'] = list(self.interaction_methods)
+        context['api_interaction_methods'] = list(self.api_interaction_methods)
         context['link_interaction_methods'] = list(self.link_interaction_methods)
         context['data_collection_id'] = self.resource_id
         
         return context
 
 class CatalogueRelatedResourceDetailView(ResourceDetailView):
+    """
+    A subclass of ResourceDetailView.
+
+    Maps Data Collection-related features (e.g., breadcrumbs)
+    to Catalogue-related features.
+
+    This view is intended to be subclassed and to not
+    be called directly.
+    """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -488,8 +562,13 @@ class CatalogueRelatedResourceDetailView(ResourceDetailView):
         return context
 
 class CatalogueDetailView(CatalogueRelatedResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
-    resource_type_plural = 'Catalogues'
+    """
+    A subclass of CatalogueRelatedResourceDetailView.
+
+    A detail page displaying the properties of
+    a Catalogue registration.
+    """
+    model = models.Catalogue
     resource_list_by_type_url_name = 'browse:list_catalogues'
 
     def get(self, request, *args, **kwargs):
@@ -497,8 +576,13 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
-    resource_type_plural = 'Catalogue Entries'
+    """
+    A subclass of CatalogueRelatedResourceDetailView.
+
+    A detail page displaying the properties of
+    a Catalogue Entry registration.
+    """
+    model = models.CatalogueEntry
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
 
     def get(self, request, *args, **kwargs):
@@ -506,21 +590,26 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
-    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
-    resource_type_plural = 'Catalogue Data Subsets'
+    """
+    A subclass of CatalogueRelatedResourceDetailView.
+
+    A detail page displaying the properties of
+    a Catalogue Data Subset registration.
+    """
+    model = models.CatalogueDataSubset
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.client, self.credentials = instantiate_client_and_load_credentials()
-        handle_url_mapping = mongodb_models.HandleUrlMapping.find_one({
-            'url': {'$regex': f'{request.get_full_path()}$'}
-        })
         self.handle = None
         self.handle_data = None
-        if handle_url_mapping is not None:
-            self.handle = handle_url_mapping['handle_name']
+        try:
+            handle_url_mapping = models.HandleURLMapping.objects.for_url(request.get_full_path())
+            self.handle = handle_url_mapping.handle_name
             self.handle_data = get_handle_record(self.handle, self.client)
+        except models.HandleURLMapping.DoesNotExist:
+            pass
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -528,18 +617,24 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
         context['handle'] = self.handle
         context['handle_data'] = None
         if self.handle_data is not None:
-            context['handle_data'] = _update_flattened_resource_keys_to_human_readable_html(self.handle_data)
+            context['handle_data'] = create_readable_scientific_metadata_flattened(self.handle_data)
         return context
 
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
+    """
+    Used for mapping ontology server URLs and
+    metadata server URLs to their corresponding
+    detail pages. Mappings are displayed in 
+    scientific metadata detail pages.
+    """
     ontology_server_urls = []
     resource_server_urls = []
     if 'ontology-server-urls' in request.GET:
         ontology_server_urls = request.GET['ontology-server-urls'].split(',')
     if 'resource-server-urls' in request.GET:
         resource_server_urls = request.GET['resource-server-urls'].split(',')
-    esc_ontology_urls = convert_ontology_server_urls_to_browse_urls(ontology_server_urls)
-    esc_resource_urls = convert_resource_server_urls_to_browse_urls(resource_server_urls)
+    esc_ontology_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
+    esc_resource_urls = map_metadata_server_urls_to_browse_urls(resource_server_urls)
     
     return JsonResponse({
         'ontology_urls': esc_ontology_urls,

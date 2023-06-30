@@ -1,36 +1,18 @@
-from bson import ObjectId
-from common.mongodb_models import (
-    CurrentOrganisation,
-    CurrentIndividual,
-    CurrentProject,
-    CurrentPlatform,
-    CurrentOperation,
-    CurrentInstrument,
-    CurrentAcquisitionCapability,
-    CurrentAcquisition,
-    CurrentComputationCapability,
-    CurrentComputation,
-    CurrentProcess,
-    CurrentDataCollection,
-    CurrentCatalogue,
-    CurrentCatalogueEntry,
-    CurrentCatalogueDataSubset,
-    OriginalMetadataXml,
-)
-from django.http import HttpResponseNotFound
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+from lxml import etree
+
+from common import models
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
 )
-from .mapping_functions import prepare_resource_for_template
 
 # Create your views here.
 
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
-    resource_mongodb_model = None
     resource_name = ''
     resource_localid = ''
     template_name = 'utils/resource_as_xml.html'
@@ -39,32 +21,20 @@ class ResourceXmlDownloadView(TemplateView):
     resource_management_list_page_breadcrumb_url_name = ''
 
     def get(self, request, *args, **kwargs):
-        original_metadata_xml = OriginalMetadataXml.find_one({
-            'resourceId': ObjectId(self.resource_id)
-        })
-        if original_metadata_xml is None:
-            return HttpResponseNotFound('The XML for this resource was not found.')
-        self.xml = original_metadata_xml['value']
-        resource = self.resource_mongodb_model.find_one({
-            '_id': ObjectId(self.resource_id)
-        }, projection={
-            'identifier': 1,
-            'name': 1,
-            'entryName': 1,
-            'dataSubsetName': 1,
-        })
-        resource = prepare_resource_for_template(resource)
-        self.resource_localid = resource['identifier']['PITHIA_Identifier']['localID']
-        self.resource_name = self.resource_localid
-        if 'name' in resource:
-            self.resource_name = resource['name']
+        self.resource = get_object_or_404(self.model, pk=self.resource_id)
+        _xml = self.resource.xml
+        try:
+            _xml = _xml.encode('utf-8')
+        except AttributeError:
+            pass
+        self.xml =  etree.tostring(etree.fromstring(_xml.strip()), pretty_print=True, doctype='<?xml version="1.0" encoding="UTF-8"?>').decode()
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'{self.resource_name} XML'
-        context['resource_name'] = self.resource_name
-        context['resource_localid'] = self.resource_localid
+        context['title'] = f'{self.resource.name} XML'
+        context['resource_name'] = self.resource.name
+        context['resource_localid'] = self.resource.localid
         context['xml'] = self.xml
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
@@ -74,7 +44,8 @@ class ResourceXmlDownloadView(TemplateView):
         return context
 
 class OrganisationXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentOrganisation
+    model = models.Organisation
+
     resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
@@ -83,7 +54,8 @@ class OrganisationXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class IndividualXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentIndividual
+    model = models.Individual
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
@@ -92,7 +64,8 @@ class IndividualXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProjectXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentProject
+    model = models.Project
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
@@ -101,7 +74,8 @@ class ProjectXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class PlatformXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentPlatform
+    model = models.Platform
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
@@ -110,7 +84,8 @@ class PlatformXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class OperationXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentOperation
+    model = models.Operation
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
@@ -119,7 +94,8 @@ class OperationXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class InstrumentXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentInstrument
+    model = models.Instrument
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
@@ -128,7 +104,8 @@ class InstrumentXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentAcquisitionCapability
+    model = models.AcquisitionCapabilities
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
@@ -137,7 +114,8 @@ class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentAcquisition
+    model = models.Acquisition
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
@@ -146,7 +124,8 @@ class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentComputationCapability
+    model = models.ComputationCapabilities
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
@@ -155,7 +134,8 @@ class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class ComputationXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentComputation
+    model = models.Computation
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
@@ -164,7 +144,8 @@ class ComputationXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class ProcessXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentProcess
+    model = models.Process
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
@@ -173,7 +154,8 @@ class ProcessXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentDataCollection
+    model = models.DataCollection
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
@@ -182,7 +164,8 @@ class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentCatalogue
+    model = models.Catalogue
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogues'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
@@ -197,7 +180,8 @@ class CatalogueXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentCatalogueEntry
+    model = models.CatalogueEntry
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
 
@@ -212,7 +196,8 @@ class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
         return super().dispatch(request, *args, **kwargs)
 
 class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
-    resource_mongodb_model = CurrentCatalogueDataSubset
+    model = models.CatalogueDataSubset
+    
     resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
 

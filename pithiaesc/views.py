@@ -1,14 +1,15 @@
 import environ
 import hashlib
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
+from common.forms import LoginForm
 
 # Initialise environment variables
 env = environ.Env()
 
-from common.forms import LoginForm
 
 def index(request):
     return render(request, 'index.html', {

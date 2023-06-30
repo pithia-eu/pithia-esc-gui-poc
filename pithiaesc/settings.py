@@ -44,6 +44,7 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'common.apps.CommonConfig',
     'delete.apps.DeleteConfig',
     'update.apps.UpdateConfig',
     'browse.apps.BrowseConfig',
@@ -105,13 +106,21 @@ WSGI_APPLICATION = 'pithiaesc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': env('UTIL_DB_NAME'),
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': env('MONGODB_CONNECTION_STRING')
-        }
-    }
+        'ENGINE': os.environ['DATABASE_ENGINE'],
+        'NAME': os.environ['DATABASE_NAME'],
+        'USER': os.environ['DATABASE_READ_USER'],
+        'PASSWORD': os.environ['DATABASE_READ_PASSWORD'],
+        'HOST': os.environ['DATABASE_HOST'],
+        'PORT': os.environ['DATABASE_PORT'],
+    },
+    'esc_rw': {
+        'ENGINE': os.environ['DATABASE_ENGINE'],
+        'NAME': os.environ['DATABASE_NAME'],
+        'USER': os.environ['DATABASE_WRITE_USER'],
+        'PASSWORD': os.environ['DATABASE_WRITE_PASSWORD'],
+        'HOST': os.environ['DATABASE_HOST'],
+        'PORT': os.environ['DATABASE_PORT'],
+    },
 }
 
 
