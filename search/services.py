@@ -145,9 +145,9 @@ def get_registered_observed_properties():
     computation_capability_sets = list(ComputationCapabilities.objects.all())
     registered_observed_property_urls = []
     for ac in acquisition_capability_sets:
-        registered_observed_property_urls + ac.observed_property_urls
+        registered_observed_property_urls = registered_observed_property_urls + ac.observed_property_urls
     for cc in computation_capability_sets:
-        registered_observed_property_urls + cc.observed_property_urls
+        registered_observed_property_urls = registered_observed_property_urls + cc.observed_property_urls
     registered_observed_property_ids = [extract_localid_from_xlink_href(url) for url in registered_observed_property_urls]
     return list(set(registered_observed_property_ids))
 
