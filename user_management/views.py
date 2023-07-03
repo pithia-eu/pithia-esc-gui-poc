@@ -21,6 +21,8 @@ from urllib.parse import unquote
 
 from .services import (
     CREATION_URL_BASE,
+    get_user_info,
+    verify_if_part_of_an_organisation,
     JOIN_URL_BASE,
 )
 
@@ -155,18 +157,14 @@ def select_perun_organisation_subgroup_for_session(request):
         subgroup_name = request.POST['subgroup-name']
         request.session['selected_institution_subgroup'] = subgroup_name
         return HttpResponseRedirect(reverse('select_perun_organisation_subgroup_for_session'))
-    # url = 'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
 
-    # request_meta = request.META.items()
+    # TODO: Uncomment once deployed to production
     # ACCESS_TOKEN = request.META.get('OIDC_access_token')
+    # user_info = get_user_info(ACCESS_TOKEN)
+    # is_part_of_an_organisation = verify_if_part_of_an_organisation(user_info)
 
-    # user_info_response = get_user_info(url, ACCESS_TOKEN)
-    # user_info = json.loads(user_info_response.text)
-    # error_in_user_info = 'error' in user_info
-    # organisation_details = user_info.get('eduperson_entitlement')
-    # is_part_of_an_organisation = organisation_details is not None
-
-    # TEMP
+    # TEMP - Used for testing
+    # request_meta = request.META.items()
     is_part_of_an_organisation = True
     organisation_details = [
         'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
@@ -221,5 +219,4 @@ def select_perun_organisation_subgroup_for_session(request):
         'subgroups': subgroups,
         # 'request_meta': request_meta,
         # 'user_info_text': user_info,
-        # 'error_in_user_info': error_in_user_info,
     })
