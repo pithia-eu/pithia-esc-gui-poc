@@ -2,19 +2,23 @@
 {% load static %}
 {% block content %}
 <section>
-    <h2>Subgroup Selection</h2>
-    <p>Please select the organization that you want to work with.</p>
+    <h2>Choose an Institution</h2>
+    <p>
+        Please select the organisation that you would like to use
+        for this login session.
+    </p>
     <form action="{% url 'select_perun_organisation_subgroup_for_session' %}" method="POST">
         {% csrf_token %}
         <select class="form-control" name="subgroup-name">
         {% for sg in subgroups %}
-        <option value="{{ sg }}">{{ sg }}</option>
+            <option value="{{ sg }}">{{ sg }}</option>
         {% endfor %}
         </select>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </section>
 <section>
+    {% comment %} USED FOR DEBUGGING {% endcomment %}
     {% comment %} <h2>ID token hint</h2>
     {% if ID_TOKEN_HINT %}
     <p>{{ ID_TOKEN_HINT }}</p>
