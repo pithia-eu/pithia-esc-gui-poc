@@ -1,5 +1,4 @@
 import base64
-import gzip
 import hashlib
 import json
 import os
@@ -7,18 +6,22 @@ import random
 import requests
 import uuid
 import zlib
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
+
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST
+
 from functools import wraps
-from urllib.parse import unquote
-from utils.user_info_api import (
-    get_user_info,
-    list_groups,
-)
 from pathlib import Path
+from urllib.parse import unquote
+
+from utils.user_info_api import get_user_info
 
 
 # def perun_login_required(function):
