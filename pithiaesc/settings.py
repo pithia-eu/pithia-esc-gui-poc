@@ -76,7 +76,7 @@ MIDDLEWARE = [
     # Future permanent login middleware solution
     'utils.middleware.LoginMiddleware',
     # Temporary login middleware solution
-    'common.middleware.LoginMiddleware',
+    # 'common.middleware.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'
