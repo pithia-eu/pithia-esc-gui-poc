@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
 <section>
-	<h1>Join an Institution</h1>
-	<ul class="list-group">
-	{% for o in org_list %}
-		<li class="list-group-item">
-			<a href="{% url 'list_joinable_perun_organisation_subgroups' o %}" target="_blank">{{ o }}</a>
-		</li>
-	{% endfor %}
-	</ul>
+    <h1>Join an Institution</h1>
+    <ul class="list-group">
+    {% for o in org_list %}
+        <li class="list-group-item">
+            <a href="{% url 'list_joinable_perun_organisation_subgroups' o %}" target="_blank">{{ o }}</a>
+        </li>
+    {% endfor %}
+    </ul>
 </section>
 {% endblock content %}
