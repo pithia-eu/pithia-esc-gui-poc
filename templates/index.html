@@ -54,7 +54,7 @@
         </div>
     </div>
 </section>
-{% if is_part_of_an_institution == True %}
+{% if is_part_of_an_organisation == True %}
 <section>
     <h2 class="mb-0">Admin Functionalities & Resources</h2>
     <hr>
@@ -100,7 +100,7 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'join_perun_organisation' %}">
+                <a href="{% url 'list_joinable_perun_organisations' %}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
                     <span>Join an Institution</span>
                 </a>
@@ -109,6 +109,6 @@
    </div>
 </section>
 <section>
-    <a href="{% url 'select_institution_subgroup_for_session' %}">Select a Subgroup</a>
+    <a href="{% url 'select_perun_organisation_subgroup_for_session' %}">Select a Subgroup</a>
 </section>
 {% endblock content %}

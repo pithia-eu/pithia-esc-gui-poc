@@ -14,6 +14,6 @@ urlpatterns = [
     path('register/', include('register.urls')),
     path('schemas/', schemas, name='schemas'),
     path('validate/', include('validation.urls')),
-    path('institutions/', user_management_views.join_perun_organisation, name='join_perun_organisation'),
-    path('institutions/<institution_id>/', user_management_views.join_perun_organisation_subgroup, name='join_perun_organisation_subgroup'),
+    path('institutions/', user_management_views.list_joinable_perun_organisations, name='list_joinable_perun_organisations'),
+    path('institutions/<institution_id>/', user_management_views.list_joinable_perun_organisation_subgroups, name='list_joinable_perun_organisation_subgroups'),
 ]

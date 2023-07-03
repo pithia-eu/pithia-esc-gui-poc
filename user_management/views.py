@@ -12,17 +12,23 @@ from django.http import (
     JsonResponse,
 )
 from django.urls import reverse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST
-
 from functools import wraps
 from pathlib import Path
 from urllib.parse import unquote
 
-from django.shortcuts import render
+from .services import (
+    CREATION_URL_BASE,
+    JOIN_URL_BASE,
+)
 
 
 # Create your views here.
+
+# TODO: Uncomment these functions when token-based support
+# is added to Perun.
 
 # def perun_login_required(function):
 #     @wraps(function)
@@ -45,17 +51,6 @@ from django.shortcuts import render
 #     return wrap
 
 
-@require_POST
-def save_perun_info(request):
-    username = request.POST['username']
-    password = request.POST['password']
-
-    # Save username and password into the database
-    os.environ['PERUN_USERNAME'] = username
-    os.environ['PERUN_PASSWORD'] = hashlib.sha512(password.encode('utf-8')).hexdigest()
-
-    return JsonResponse({'msg': 'ok'}, status=200)
-
 # @csrf_exempt
 # @require_POST
 # def perun_login(request):
@@ -76,72 +71,90 @@ def save_perun_info(request):
 # def perun_login_test(request):
 #     return JsonResponse({'msg': 'hello world!'}, status=200)
 
-def join_perun_organisation(request):
-    # join a group
-    # i. list organisations from local json files
-    BASE_URL = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
+
+@require_POST
+def save_perun_info(request):
+    username = request.POST['username']
+    password = request.POST['password']
+
+    # Save username and password into the database
+    os.environ['PERUN_USERNAME'] = username
+    os.environ['PERUN_PASSWORD'] = hashlib.sha512(password.encode('utf-8')).hexdigest()
+
+    return JsonResponse({'msg': 'ok'}, status=200)
+
+
+def list_joinable_perun_organisations(request):
+    # Join a group - list organisations from local JSON file
+    org_list_raw = []
     org_list = []
-    groups = {
-        'Organisations': []
-    }
+    
     try:
         with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'r') as org_list_file:
-            groups = json.load(org_list_file)
+            org_list_raw = json.load(org_list_file)
     except FileNotFoundError:
-        print('Cannot find the file. Please provide an exist file!')
+        print('Cannot find the file. Please provide an existing file!')
     else:
-        org_list = []
-        for org in groups:
-            index = org.find(':')
-            index1 = org.rfind(':')
-            if index == index1:
-                org_list.append(org[index+1:])
+        for org in org_list_raw:
+            index_first_colon = org.find(':')
+            index_last_colon = org.rfind(':')
+            if index_first_colon == index_last_colon:
+                org_list.append(org[index_first_colon + 1:])
         print(org_list)
-        print('Join a group: ', BASE_URL + org_list[0])
+        print('Join a group: ', JOIN_URL_BASE + org_list[0])
 
-    return render(request, 'join_perun_organisation.html', {
+    return render(request, 'user_management/list_joinable_perun_organisations.html', {
         'org_list': org_list,
-        'join_url_base': BASE_URL
+        'join_url_base': JOIN_URL_BASE
     })
 
-def join_perun_organisation_subgroup(request, institution_id):
-    BASE_URL = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
-    return render(request, 'join_perun_organisation_subgroup.html', {
+def list_joinable_perun_organisation_subgroups(request, institution_id):
+    return render(request, 'user_management/list_joinable_perun_organisation_subgroups.html', {
         'institution_id': institution_id,
-        'join_url_base': BASE_URL
+        'join_url_base': JOIN_URL_BASE
     })
 
 
 @csrf_exempt
 @require_http_methods(["PUT"])
 def update_perun_organisation_list(request):
+    """
+    Decodes a JSON payload of organisations sent by Perun and
+    overwrites the locally stored version of these organisations
+    which are stored in a JSON file.
+    """
+    # Retrieve the authorisation details from the request.
     authorisation_header = request.headers.get('Authorization')
     encoded_credentials = authorisation_header.split(' ')[1]  # Removes "Basic " to isolate credentials
     decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8").split(':')
     username = decoded_credentials[0]
     password = decoded_credentials[1]
+
+    # Check the details are correct.
     if username != os.environ['PERUN_USERNAME']:
         return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
     hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-    print('password', password)
-    print('hashed_password', hashed_password)
     if hashed_password != os.environ['PERUN_PASSWORD']:
         return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
 
+    # If the details are correct, decode the data.
     decompressed_data = zlib.decompress(request.body, 16+zlib.MAX_WBITS)
     decompressed_data_string = decompressed_data.replace(b'\x00', b'').decode('ascii')
     index_first_square_bracket = decompressed_data_string.index('[')
     index_last_square_bracket = decompressed_data_string.index(']') 
     update_data = json.loads(decompressed_data_string[index_first_square_bracket:index_last_square_bracket + 1])
+    
+    # Store the update by overwriting the locally stored JSON file.
     with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'w') as organisation_list_file:
         json.dump(update_data, organisation_list_file)
     return HttpResponse(status=200)
 
-def select_institution_subgroup_for_session(request):
+
+def select_perun_organisation_subgroup_for_session(request):
     if request.method == 'POST':
         subgroup_name = request.POST['subgroup-name']
         request.session['selected_institution_subgroup'] = subgroup_name
-        return HttpResponseRedirect(reverse('select_institution_subgroup_for_session'))
+        return HttpResponseRedirect(reverse('select_perun_organisation_subgroup_for_session'))
     # url = 'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
 
     # request_meta = request.META.items()
@@ -150,12 +163,12 @@ def select_institution_subgroup_for_session(request):
     # user_info_response = get_user_info(url, ACCESS_TOKEN)
     # user_info = json.loads(user_info_response.text)
     # error_in_user_info = 'error' in user_info
-    # institution_details = user_info.get('eduperson_entitlement')
-    # is_part_of_an_institution = institution_details is not None
+    # organisation_details = user_info.get('eduperson_entitlement')
+    # is_part_of_an_organisation = organisation_details is not None
 
     # TEMP
-    is_part_of_an_institution = True
-    institution_details = [
+    is_part_of_an_organisation = True
+    organisation_details = [
         'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
         'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
         'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
@@ -169,15 +182,14 @@ def select_institution_subgroup_for_session(request):
     # one organisation per session.
 
     # Find the organisation and then do the following things (David's work)
-    if is_part_of_an_institution:
+    if is_part_of_an_organisation:
         # type of t: <class 'str'>
-        for t in institution_details:
+        for t in organisation_details:
             print(t)
-        print()
 
         # find organizations
         organisations = []
-        for t in institution_details:
+        for t in organisation_details:
             index = t.rfind('organizations', 0, -1)
 
             if index == -1:
@@ -194,7 +206,7 @@ def select_institution_subgroup_for_session(request):
 
         print(organisations)
         
-        # find the sub groups
+        # Find the subgroups
         subgroups = []
         for o in organisations:
             index = o.find(':')
@@ -203,11 +215,11 @@ def select_institution_subgroup_for_session(request):
             subgroups.append(unquote(o[:]))
         print('subgroups: ', subgroups)
 
-    return render(request, 'subgroup_selection.html', {
+    return render(request, 'user_management/subgroup_selection_for_session.html', {
+        'create_perun_organisation_url': CREATION_URL_BASE,
+        'is_part_of_an_organisation': is_part_of_an_organisation,
+        'subgroups': subgroups,
         # 'request_meta': request_meta,
         # 'user_info_text': user_info,
-        'create_perun_organisation_url': 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests',
-        'is_part_of_an_institution': is_part_of_an_institution,
         # 'error_in_user_info': error_in_user_info,
-        'subgroups': subgroups, 
     })
