@@ -1,39 +1,73 @@
-def format_platform_dictionary(dictionary):
+def correct_project_xml_converted_to_dict(dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
+    return dictionary
+
+def correct_platform_xml_converted_to_dict(dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
     # Check if childPlatform property is an
     # array-type property
     if 'childPlatform' in dictionary and not isinstance(dictionary['childPlatform'], list):
         dictionary['childPlatform'] = [dictionary['childPlatform']]
     return dictionary
 
-def format_instrument_dictionary(dictionary):
+def correct_operation_xml_converted_to_dict(dictionary):
+    # Check if relatedParty property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
+    # Check if platform property is an
+    # array-type property
+    if 'platform' in dictionary and not isinstance(dictionary['platform'], list):
+        dictionary['platform'] = [dictionary['platform']]
+    return dictionary
+
+def correct_instrument_xml_converted_to_dict(dictionary):
     # Check if 'operationalMode' property is an
     # array-type property
     if 'operationalMode' in dictionary and not isinstance(dictionary['operationalMode'], list):
         dictionary['operationalMode'] = [dictionary['operationalMode']]
+    # Check if 'relatedParty' property is an
+    # array-type property
+    if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
+        dictionary['relatedParty'] = [dictionary['relatedParty']]
     return dictionary
 
-def format_acquisition_capability_set_dictionary(dictionary):
+def correct_acquisition_capability_set_xml_converted_to_dict(dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
         dictionary['capabilities']['processCapability'] = [dictionary['capabilities']['processCapability']]
     return dictionary
 
-def format_acquisition_dictionary(dictionary):
+def correct_acquisition_xml_converted_to_dict(dictionary):
     # Check if the 'capabilityLink' property is an
     # array-type property
     if 'capabilityLinks' in dictionary and 'capabilityLink' in dictionary['capabilityLinks'] and not isinstance(dictionary['capabilityLinks']['capabilityLink'], list):
         dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
-def format_computation_capability_set_dictionary(dictionary):
+def correct_computation_capability_set_xml_converted_to_dict(dictionary):
     # Check if the 'processCapability' property is an
     # array-type property
     if 'capabilities' in dictionary and 'processCapability' in dictionary['capabilities'] and not isinstance(dictionary['capabilities']['processCapability'], list):
         dictionary['capabilities']['processCapability'] = [dictionary['capabilities']['processCapability']]
+    # Check if the 'type' property exists and if it is an
+    # array-type property
+    if 'type' in dictionary and not isinstance(dictionary['type'], list):
+        dictionary['type'] = [dictionary['type']]
+    # Check if the 'childComputation' property exists and if it is an
+    # array-type property
+    if 'childComputation' in dictionary and not isinstance(dictionary['childComputation'], list):
+        dictionary['childComputation'] = [dictionary['childComputation']]
     return dictionary
 
-def format_computation_dictionary(dictionary):
+def correct_computation_xml_converted_to_dict(dictionary):
     # Check if the 'capability' property is an
     # array-type property
     if 'capability' in dictionary and not isinstance(dictionary['capability'], list):
@@ -44,7 +78,7 @@ def format_computation_dictionary(dictionary):
         dictionary['capabilityLinks']['capabilityLink'] = [dictionary['capabilityLinks']['capabilityLink']]
     return dictionary
 
-def format_process_dictionary(dictionary):
+def correct_process_xml_converted_to_dict(dictionary):
     # Check if the 'acquisitionComponent' property exists and
     # if it is an array-type property
     if 'acquisitionComponent' in dictionary and not isinstance(dictionary['acquisitionComponent'], list):
@@ -55,7 +89,7 @@ def format_process_dictionary(dictionary):
         dictionary['computationComponent'] = [dictionary['computationComponent']]
     return dictionary
 
-def format_data_collection_dictionary(dictionary):
+def correct_data_collection_xml_converted_to_dict(dictionary):
     # Check if the 'relatedParty' property is an
     # array-type property
     if 'relatedParty' in dictionary and not isinstance(dictionary['relatedParty'], list):
@@ -81,4 +115,8 @@ def format_data_collection_dictionary(dictionary):
         for s in dictionary['collectionResults']['source']:
             if 'dataFormat' in s['OnlineResource'] and not isinstance(s['OnlineResource']['dataFormat'], list):
                 s['OnlineResource']['dataFormat'] = [s['OnlineResource']['dataFormat']]
+    # Check if nested 'project' property is an
+    # array-type property
+    if 'project' in dictionary and not isinstance(dictionary['project'], list):
+        dictionary['project'] = [dictionary['project']]
     return dictionary

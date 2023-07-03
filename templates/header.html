@@ -41,6 +41,7 @@
                 </li>
             </ul>
         </li>
+        {% if request.session.is_authorised %}
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Admin
@@ -73,17 +74,18 @@
                 </li>
             </ul>
         </li>
+        {% endif %}
     </ul>
 
     <div class="col-md-3 text-end">
-	{% if request.session.is_logged_in %}
-	<a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">
+        {% if request.session.is_logged_in %}
+        <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">
             Logout
         </a>
-	{% else %}
+        {% else %}
         <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login
         </a>
-	{% endif %}
+        {% endif %}
     </div>
 </header>

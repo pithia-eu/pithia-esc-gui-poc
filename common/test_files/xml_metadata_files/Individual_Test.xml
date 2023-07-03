@@ -38,6 +38,6 @@
         </CI_Contact>
     </contactInfo>
     <positionName>Test, Test</positionName>
-    <organisation xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_LGDC"></organisation> <!-- link to the organisation that this individual has the position name -->
+    <organisation xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"></organisation> <!-- link to the organisation that this individual has the position name -->
  </Individual>
  

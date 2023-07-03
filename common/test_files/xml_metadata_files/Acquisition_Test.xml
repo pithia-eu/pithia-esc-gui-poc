@@ -30,17 +30,17 @@
     <capabilityLinks>
         <capabilityLink>
             <platform
-                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test" />
             <standardIdentifier authority="URSI">AT138</standardIdentifier>
             <acquisitionCapabilities
-                xlink:href="https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/ldi/AcquisitionCapabilities_Ionosonde_DPS4D" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test" />
         </capabilityLink>
         <capabilityLink>
             <platform
-                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test" />
             <standardIdentifier authority="URSI">AT138</standardIdentifier>
             <acquisitionCapabilities
-                xlink:href="https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/noa/AcquisitionCapabilities_Ionosonde_AT138" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test" />
         </capabilityLink>
     </capabilityLinks>
 </Acquisition>

@@ -19,7 +19,22 @@
 <p class="lead text-muted">
     {{ description }}
 </p>
-{% if resource_list|length > 0 %}
+{% if not resources %}
+<p>{{ empty_resource_list_text }}</p>
+{% else %}
+{% block resource_list_inner %}
+{% with resource_list=resources %}
+<ul class="list-group">
+    {% for resource in resources %}
+    <li class="list-group-item">
+        <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endwith %}
+{% endblock resource_list_inner %}
+{% endif %}
+{% comment %} {% if resource_list|length > 0 %}
 <ul class="list-group">
     {% for resource in resource_list|dictsort:'name' %}
     {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
@@ -29,5 +44,5 @@
 </ul>
 {% else %}
 <p>{{ empty_resource_list_text }}</p>
-{% endif %}
+{% endif %} {% endcomment %}
 {% endblock content %}

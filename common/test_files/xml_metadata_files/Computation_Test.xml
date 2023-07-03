@@ -22,17 +22,17 @@
     <capabilityLinks>
         <capabilityLink>
             <platform
-                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test" />
             <standardIdentifier authority="URSI">AT138</standardIdentifier>
             <computationCapabilities
-                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/lgdc/ComputationCapabilities_IonogramScaling_ARTIST5" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test" />
         </capabilityLink>
         <capabilityLink>
             <platform
-                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/noa/Platform_Athens_Greece" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test" />
             <standardIdentifier authority="URSI">AT138</standardIdentifier>
             <computationCapabilities
-                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/noa/ComputationCapabilities_Ionogram_AT138" />
+                xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test" />
         </capabilityLink>
     </capabilityLinks>
 </Computation>

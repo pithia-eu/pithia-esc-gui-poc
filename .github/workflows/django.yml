@@ -1,0 +1,45 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ "3.10" ]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Create and populate .env file
+      env:
+        SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
+        MONGODB_CONNECTION_STRING: mongodb://localhost:27017
+        DB_NAME: pithiaesc
+        UTIL_DB_NAME: django
+      run: |
+        touch pithiaesc/.env
+        echo SECRET_KEY="$SECRET_KEY" >> pithiaesc/.env
+        echo MONGODB_CONNECTION_STRING="$MONGODB_CONNECTION_STRING" >> pithiaesc/.env
+        echo DB_NAME="$DB_NAME" >> pithiaesc/.env
+        echo UTIL_DB_NAME="$UTIL_DB_NAME" >> pithiaesc/.env
+        
+        echo "cat pithiaesc/.env"
+        cat pithiaesc/.env
+    - name: Verify Organisation XSD validation unit test passes
+      run: |
+        python manage.py test validation.tests.OrganisationXSDValidationTestCase

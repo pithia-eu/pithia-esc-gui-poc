@@ -84,12 +84,23 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         method: "POST",
         body: formData
     });
-    const responseContent = await response.json();
+    let responseContent = undefined;
+    let jsonParseError = undefined;
+    try {
+        responseContent = await response.json();
+    } catch (error) {
+        console.log("response", response);
+        console.log(error);
+        jsonParseError = error;
+    }
     if (!response.ok) {
         return {
-            state: 'error',
-            error: responseContent.error,
-            warnings: responseContent.warnings,
+            state: "error",
+            error: (responseContent === undefined ? {
+                message: "An error occurred whilst checking the validation results.",
+                details: jsonParseError
+            } : responseContent.error),
+            warnings: (responseContent === undefined ? [] : responseContent.warnings),
         };
     }
     return {
@@ -184,7 +195,12 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
         });
         uploadFormSubmitButton.disabled = true;
         updateXMLFileValidationStatus({ state: xmlValidationStates.VALIDATING }, validationStatusElem, `Validating ${file.name}`);
-        const fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        let fileValidationUrl = '';
+        try {
+            fileValidationUrl = JSON.parse(document.getElementById("validation-url").textContent);
+        } catch (error) {
+            console.log(error);
+        }
         const validationResults = await validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegistered, validateUpdatedXmlIsValid);
         if (document.querySelector(`.file-list-group-item-${i}`)) {
             finishedValidating.push(`file${i}`);

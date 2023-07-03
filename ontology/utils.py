@@ -1,24 +1,28 @@
+import logging
 import os
 from requests import get
-from rdflib import Graph, Namespace, URIRef
+from rdflib import (
+    Graph,
+    Namespace,
+    URIRef,
+)
 from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
 
-import logging
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 
 logger = logging.getLogger(__name__)
 
-ONTOLOGY_SERVER_BASE_URL = 'https://metadata.pithia.eu/ontology/2.2/'
-PITHIA = Namespace('https://metadata.pithia.eu/ontology/2.2/')
+PITHIA = Namespace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/')
 
 def get_object_names_from_triple(triple):
     s, p, o = triple
     if 'phenomenon' in o:
-        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}phenomenon/', 'phenomenon')
+        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/phenomenon/', 'phenomenon')
     if 'measurand' in o:
-        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}measurand/', 'measurand')
+        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/measurand/', 'measurand')
     if 'featureOfInterest' in o:
-        return o.replace(f'{ONTOLOGY_SERVER_BASE_URL}featureOfInterest/', 'featureOfInterest')
+        return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/featureOfInterest/', 'featureOfInterest')
 
 def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.phenomenon, None))))
@@ -30,7 +34,7 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     return op_dict
 
 def get_rdf_text_remotely(ontology_component):
-    ontology_component_url = f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/'
+    ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/'
     ontology_response = get(ontology_component_url)
     return ontology_response.text
 
@@ -64,23 +68,31 @@ def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
             op_hrefs.append(str(s))
     return op_hrefs
 
+def get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls):
+    op_urls = []
+    g = get_graph_of_pithia_ontology_component('observedProperty')
+    for s, p, o in g.triples((None, PITHIA.featureOfInterest, None)):
+        if any(x in str(o) for x in feature_of_interest_urls):
+            op_urls.append(str(s))
+    return op_urls
+
 def get_feature_of_interest_ids_from_observed_property_id(observed_property_id, g, feature_of_interest_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.featureOfInterest, None)):
+    for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.featureOfInterest, None)):
         feature_of_interest_ids.append(o.split('/')[-1])
     return feature_of_interest_ids
 
 def get_phenomenon_ids_from_observed_property_id(observed_property_id, g, phenomenon_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.phenomenon, None)):
+    for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.phenomenon, None)):
         phenomenon_ids.append(o.split('/')[-1])
     return phenomenon_ids
 
 def get_measurand_ids_from_observed_property_id(observed_property_id, g, measurand_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}observedProperty/{observed_property_id}'), PITHIA.measurand, None)):
+    for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/observedProperty/{observed_property_id}'), PITHIA.measurand, None)):
         measurand_ids.append(o.split('/')[-1])
     return measurand_ids
 
-def get_parent_node_ids_of_node_id(node_id, ontology_component, g, parent_node_ids):
-    for s, p, o in g.triples((URIRef(f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{node_id}'), SKOS.broader, None)):
+def get_parent_node_ids_of_node_id(node_id, ontology_component, parent_node_ids, g):
+    for s, p, o in g.triples((URIRef(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{node_id}'), SKOS.broader, None)):
         parent_node_ids.append(o.split('/')[-1])
     return parent_node_ids
 
@@ -173,7 +185,7 @@ def create_dictionary_from_pithia_ontology_component(
                 'id': f'{ontology_component}{o_value}',
                 'value': o_value,
                 'narrowers': {},
-                'iri': f'{ONTOLOGY_SERVER_BASE_URL}{ontology_component}/{o_value}',
+                'iri': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/{o_value}',
             }
             o_resource = Resource(g, o)
             for op in o_resource.predicates():

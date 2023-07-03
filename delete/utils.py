@@ -1,4 +1,6 @@
+from bson import ObjectId
 from functools import cmp_to_key
+
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -37,7 +39,6 @@ from common.helpers import (
     create_resource_url,
     create_catalogue_related_resource_url,
 )
-from bson import ObjectId
 
 # Getters for resources referencing "parties" - Organisations and/or Individuals
 def _get_projects_referencing_party_url(party_url):

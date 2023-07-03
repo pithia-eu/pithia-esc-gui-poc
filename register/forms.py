@@ -12,9 +12,10 @@ class UploadFileForm(forms.Form):
         })
     )
 
+
 class UploadDataCollectionFileForm(forms.Form):
     files = forms.FileField(
-        label='File Upload',
+        label='Single File Upload',
         label_suffix='',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
@@ -43,5 +44,24 @@ class UploadDataCollectionFileForm(forms.Form):
             'class': 'form-control',
             'rows': 3,
             'style': 'resize: none;'
+        })
+    )
+
+
+class UploadCatalogueDataSubsetFileForm(forms.Form):
+    files = forms.FileField(
+        label='Single File Upload',
+        label_suffix='',
+        widget=forms.ClearableFileInput(attrs={
+            'accept': 'application/xml',
+            'class': 'form-control',
+        })
+    )
+
+    register_doi = forms.BooleanField(
+        label='Generate DOI for this Data Subset',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
         })
     )
