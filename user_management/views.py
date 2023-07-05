@@ -27,6 +27,9 @@ from .services import (
 )
 
 
+JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
+
+
 # Create your views here.
 
 # TODO: Uncomment these functions when token-based support
@@ -106,14 +109,22 @@ def list_joinable_perun_organisations(request):
         print('Join a group: ', JOIN_URL_BASE + org_list[0])
 
     return render(request, 'user_management/list_joinable_perun_organisations.html', {
-        'title': 'Join an Institution',
+        'title': JOIN_AN_INSTITUTION_PAGE_TITLE,
         'org_list': org_list,
         'join_url_base': JOIN_URL_BASE
     })
 
 def list_joinable_perun_organisation_subgroups(request, institution_id):
+    # TODO: substitute institution_id with the institution
+    # display name in the JSON received from Perun.
+    institution_name = institution_id
+
     return render(request, 'user_management/list_joinable_perun_organisation_subgroups.html', {
+        'title': f'Join {institution_name}',
+        'join_an_institution_breadcrumb_text': JOIN_AN_INSTITUTION_PAGE_TITLE,
+        'join_an_institution_breadcrumb_url_name': 'list_joinable_perun_organisations',
         'institution_id': institution_id,
+        'institution_name': institution_name,
         'join_url_base': JOIN_URL_BASE
     })
 
