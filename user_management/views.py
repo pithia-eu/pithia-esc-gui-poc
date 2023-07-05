@@ -164,11 +164,11 @@ def update_perun_organisation_list(request):
     return HttpResponse(status=200)
 
 
-def select_perun_organisation_subgroup_for_session(request):
+def choose_perun_organisation_subgroup_for_session(request):
     if request.method == 'POST':
         subgroup_name = request.POST['subgroup-name']
         request.session['selected_institution_subgroup'] = subgroup_name
-        return HttpResponseRedirect(reverse('select_perun_organisation_subgroup_for_session'))
+        return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
 
     # TODO: Uncomment once deployed to production
     # ACCESS_TOKEN = request.META.get('OIDC_access_token')
