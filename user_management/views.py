@@ -106,6 +106,7 @@ def list_joinable_perun_organisations(request):
         print('Join a group: ', JOIN_URL_BASE + org_list[0])
 
     return render(request, 'user_management/list_joinable_perun_organisations.html', {
+        'title': 'Join an Institution',
         'org_list': org_list,
         'join_url_base': JOIN_URL_BASE
     })
