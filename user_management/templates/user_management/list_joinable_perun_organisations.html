@@ -11,7 +11,7 @@
     <ul class="list-group">
     {% for o in org_list %}
         <li class="list-group-item">
-            <a href="{% url 'list_joinable_perun_organisation_subgroups' o %}" target="_blank">{{ o }}</a>
+            <a href="{% url 'list_joinable_perun_organisation_subgroups' o %}">{{ o }}</a>
         </li>
     {% endfor %}
     </ul>
