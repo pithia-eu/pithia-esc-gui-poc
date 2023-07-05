@@ -47,30 +47,6 @@ def index(request):
         'title': 'PITHIA e-Science Centre Home',
     })
 
-def login(request):
-    if 'is_logged_in' in request.session and request.session['is_logged_in'] == True:
-        return HttpResponseRedirect(reverse('home'))
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            password = request.POST.get('password')
-            hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-            if hashed_password != env('ESC_PASSWORD'):
-                messages.error(request, 'Password is incorrect.')
-                if request.GET.get('next', '') != '':
-                    return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.GET.get('next', '')))
-                return HttpResponseRedirect(reverse('login'))
-            request.session['is_logged_in'] = True
-            if request.GET.get('next', '') != '':
-                return HttpResponseRedirect(request.GET.get('next', ''))
-            return HttpResponseRedirect(reverse('home'))
-    form = LoginForm()
-    return render(request, 'login.html', {
-        'title': 'Enter password',
-        'form': form,
-        'next': request.GET.get('next', '')
-    })
-
 def logout(request):
     if 'is_logged_in' in request.session:
         del request.session['is_logged_in']
