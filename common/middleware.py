@@ -25,7 +25,7 @@ class LoginMiddleware(object):
         # the view is called.
 
         # No need to process URLs if user already logged in
-        if 'is_authorised' in request.session and request.session['is_authorised'] == True:
+        if 'is_logged_in' in request.session and request.session['is_logged_in'] == True:
             return response
 
         # An exception match should immediately return None

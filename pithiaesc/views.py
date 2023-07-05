@@ -48,7 +48,7 @@ def index(request):
     })
 
 def login(request):
-    if 'is_authorised' in request.session and request.session['is_authorised'] == True:
+    if 'is_logged_in' in request.session and request.session['is_logged_in'] == True:
         return HttpResponseRedirect(reverse('home'))
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -60,7 +60,7 @@ def login(request):
                 if request.GET.get('next', '') != '':
                     return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.GET.get('next', '')))
                 return HttpResponseRedirect(reverse('login'))
-            request.session['is_authorised'] = True
+            request.session['is_logged_in'] = True
             if request.GET.get('next', '') != '':
                 return HttpResponseRedirect(request.GET.get('next', ''))
             return HttpResponseRedirect(reverse('home'))
@@ -72,8 +72,8 @@ def login(request):
     })
 
 def logout(request):
-    if 'is_authorised' in request.session:
-        del request.session['is_authorised']
+    if 'is_logged_in' in request.session:
+        del request.session['is_logged_in']
     return HttpResponseRedirect(reverse('login'))
 
 def index_admin(request):
