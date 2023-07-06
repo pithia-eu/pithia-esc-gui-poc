@@ -24,14 +24,17 @@ def logout(request):
     
     # Verify EGI Check-in logout was successful by checking for an
     # error from the UserInfo API.
-    
     ACCESS_TOKEN = request.META.get('OIDC_access_token')
     user_info = get_user_info(ACCESS_TOKEN)
     error_in_user_info = 'error' in user_info
 
-    # Remove 'is_logged_in' flag in session
+    # Remove relevant session variables
     if 'is_logged_in' in request.session:
         del request.session['is_logged_in']
+    if 'eduperson_entitlement' in request.session:
+        del request.session['eduperson_entitlement']
+    if 'email' in request.session:
+        del request.session['email']
 
     return render(request, 'index.html', {
         'title': f'PITHIA e-Science Centre Home',
