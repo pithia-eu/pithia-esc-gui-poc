@@ -21,8 +21,7 @@ from urllib.parse import unquote
 
 from .services import (
     CREATION_URL_BASE,
-    get_user_info,
-    verify_if_part_of_an_organisation,
+    get_institution_subgroups_of_logged_in_user,
     JOIN_URL_BASE,
 )
 
@@ -170,64 +169,27 @@ def choose_perun_organisation_subgroup_for_session(request):
         request.session['selected_institution_subgroup'] = subgroup_name
         return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
 
-    # TODO: Uncomment once deployed to production
-    # ACCESS_TOKEN = request.META.get('OIDC_access_token')
-    # user_info = get_user_info(ACCESS_TOKEN)
-    # is_part_of_an_organisation = verify_if_part_of_an_organisation(user_info)
-
     # TEMP - Used for testing
-    # request_meta = request.META.items()
-    is_part_of_an_organisation = True
-    organisation_details = [
-        'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:role=member#aai.egi.eu',
-        'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
-    ]
+    # organisation_details = [
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:role=member#aai.egi.eu',
+    #     'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
+    # ]
 
     # One user has multiple organisations, but we need to select
     # one organisation per session.
 
     # Find the organisation and then do the following things (David's work)
-    if is_part_of_an_organisation:
-        # type of t: <class 'str'>
-        for t in organisation_details:
-            print(t)
-
-        # find organizations
-        organisations = []
-        for t in organisation_details:
-            index = t.rfind('organizations', 0, -1)
-
-            if index == -1:
-                continue
-
-            index1 = t.rfind('role', 0, -1)
-            new_string = t[index: index1 - 1]
-
-            if len(new_string) <= len('organizations'):
-                continue
-
-            index2 = new_string.find(':', 0, -1)
-            organisations.append(new_string[index2 + 1:])
-
-        print(organisations)
-        
-        # Find the subgroups
-        subgroups = []
-        for o in organisations:
-            index = o.find(':')
-            if index == -1:
-                continue
-            subgroups.append(unquote(o[:]))
-        print('subgroups: ', subgroups)
+    subgroups = get_institution_subgroups_of_logged_in_user(request)
+    is_part_of_an_institution = len(subgroups) > 0
 
     return render(request, 'user_management/subgroup_selection_for_session.html', {
         'create_perun_organisation_url': CREATION_URL_BASE,
-        'is_part_of_an_organisation': is_part_of_an_organisation,
+        'is_part_of_an_institution': is_part_of_an_institution,
         'subgroups': subgroups,
         # 'request_meta': request_meta,
         # 'user_info_text': user_info,

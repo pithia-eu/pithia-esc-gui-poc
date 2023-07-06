@@ -9,10 +9,6 @@ CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&gro
 JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests:'
 
 
-def verify_if_part_of_an_organisation(user_info):
-    organisation_details = user_info.get('eduperson_entitlement')
-    return organisation_details is not None
-
 def get_user_info(access_token):
     """
     Contacts the EGI Check-in UserInfo API to retrieve
