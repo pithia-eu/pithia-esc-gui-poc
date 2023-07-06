@@ -10,7 +10,6 @@ env = environ.Env()
 from user_management.services import (
     CREATION_URL_BASE,
     get_user_info,
-    verify_if_part_of_an_organisation,
 )
 
 def logout(request):
