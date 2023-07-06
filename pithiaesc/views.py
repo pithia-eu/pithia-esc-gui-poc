@@ -2,7 +2,6 @@ import environ
 import requests
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 
 # Initialise environment variables
 env = environ.Env()
