@@ -54,7 +54,7 @@
         </div>
     </div>
 </section>
-{% if is_part_of_an_organisation == True %}
+{% if request.session.subgroup_for_login_session %}
 <section>
     <h2 class="mb-0">Metadata Registration & Management</h2>
     <hr>

@@ -48,12 +48,7 @@ def index(request):
     })
 
 def index_admin(request):
-    ACCESS_TOKEN = request.META.get('OIDC_access_token')
-    user_info = get_user_info(ACCESS_TOKEN)
-    is_part_of_an_organisation = verify_if_part_of_an_organisation(user_info)
-
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
-        'is_part_of_an_organisation': is_part_of_an_organisation,
         'create_perun_organisation_url': CREATION_URL_BASE,
     })
