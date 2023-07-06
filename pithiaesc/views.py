@@ -28,8 +28,10 @@ def logout(request):
     ACCESS_TOKEN = request.META.get('OIDC_access_token')
     user_info = get_user_info(ACCESS_TOKEN)
     error_in_user_info = 'error' in user_info
-    # TODO: maybe add some additional actions after
-    # logout has been verified.
+
+    # Remove 'is_logged_in' flag in session
+    if 'is_logged_in' in request.session:
+        del request.session['is_logged_in']
 
     return render(request, 'index.html', {
         'title': f'PITHIA e-Science Centre Home',
@@ -42,11 +44,6 @@ def index(request):
     return render(request, 'index.html', {
         'title': 'PITHIA e-Science Centre Home',
     })
-
-def logout(request):
-    if 'is_logged_in' in request.session:
-        del request.session['is_logged_in']
-    return HttpResponseRedirect(reverse('login'))
 
 def index_admin(request):
     ACCESS_TOKEN = request.META.get('OIDC_access_token')
