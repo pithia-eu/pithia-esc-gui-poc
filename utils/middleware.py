@@ -1,13 +1,7 @@
-"""
-Implementation creditation: https://stackoverflow.com/a/2164224/10640126
-"""
-
-import re
-from django.http import HttpResponseRedirect
-from django.conf import settings
-from django.urls import reverse_lazy
-
-from user_management.services import get_user_info
+from user_management.services import (
+    get_user_info,
+    get_highest_subgroup_of_each_institution_for_logged_in_user,
+)
 
 class LoginMiddleware(object):
     def __init__(self, get_response):
@@ -32,7 +26,7 @@ class LoginMiddleware(object):
             # Store user info in session to minimise
             # calls to the UserInfo API.
             request.session['is_logged_in'] = True
-            request.session['eduperson_entitlement'] = user_info.get('eduperson_entitlement')
-            request.session['email'] = user_info.get('email')
+            request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info.get('eduperson_entitlement'))
+            request.session['user_email'] = user_info.get('email')
 
         return response

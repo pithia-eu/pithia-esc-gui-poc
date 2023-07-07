@@ -41,7 +41,7 @@
                 </li>
             </ul>
         </li>
-        {% if request.session.subgroup_for_login_session %}
+        {% if request.session.institution_for_login_session %}
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Admin
@@ -79,10 +79,27 @@
 
     <div class="col-md-3 text-end">
         {% if request.session.is_logged_in %}
-        <form action="{% url 'logout' %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
-        </form>
+        <div class="dropdown user-menu">
+            <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Menu
+            </a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-header">Switch Institutions</li>
+                {% for institution, subgroup in request.session.user_institution_subgroups.items %}
+                <li>
+                    <a class="dropdown-item" href="#"><small>{{ institution }}</small></a>
+                </li>
+                {% endfor %}
+                <li>
+                    <form action="{% url 'logout' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
         {% else %}
         <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login

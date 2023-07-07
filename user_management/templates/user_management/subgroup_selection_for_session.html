@@ -10,8 +10,8 @@
     <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}" method="POST">
         {% csrf_token %}
         <select class="form-control" name="subgroup-name">
-        {% for sg in subgroups %}
-            <option value="{{ sg }}">{{ sg }}</option>
+        {% for institution, subgroup in request.session.user_institution_subgroups.items %}
+            <option value="{{ institution }}:{{ subgroup }}">{{ institution }}</option>
         {% endfor %}
         </select>
         <button type="submit" class="btn btn-primary">Submit</button>

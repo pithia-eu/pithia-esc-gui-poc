@@ -17,13 +17,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST
 from functools import wraps
 from pathlib import Path
-from urllib.parse import unquote
 
-from .services import (
-    CREATION_URL_BASE,
-    get_institution_subgroups_of_logged_in_user,
-    JOIN_URL_BASE,
-)
+from .services import JOIN_URL_BASE
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
@@ -184,14 +179,8 @@ def choose_perun_organisation_subgroup_for_session(request):
     # One user has multiple organisations, but we need to select
     # one organisation per session.
 
-    # Find the organisation and then do the following things (David's work)
-    subgroups = get_institution_subgroups_of_logged_in_user(request)
-    is_part_of_an_institution = len(subgroups) > 0
-
+    # Find the organisation to be able to configure views to institution.
     return render(request, 'user_management/subgroup_selection_for_session.html', {
-        'create_perun_organisation_url': CREATION_URL_BASE,
-        'is_part_of_an_institution': is_part_of_an_institution,
-        'subgroups': subgroups,
         # 'request_meta': request_meta,
         # 'user_info_text': user_info,
     })

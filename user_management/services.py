@@ -23,9 +23,7 @@ def get_user_info(access_token):
     response = requests.get(url, headers=headers)
     return json.loads(response.text)
 
-def get_institution_subgroups_of_logged_in_user(request):
-    eduperson_entitlement = request.session.get('eduperson_entitlement')
-
+def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of
     # the 'organizations' parent group.
     organisations = []
@@ -55,14 +53,30 @@ def get_institution_subgroups_of_logged_in_user(request):
         subgroups.append(unquote(o[:]))
     return subgroups
 
+def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitlement):
+    institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement)
+    subgroups_by_institution = {}
+    for isgp in institution_subgroup_pairs:
+        isgp_split = isgp.split(':')
+        institution_name = isgp_split[0]
+        subgroup_name = isgp_split[1]
+        if (
+            institution_name not in subgroups_by_institution
+            or (institution_name in subgroups_by_institution
+                and subgroup_name == 'admins')
+        ):
+            subgroups_by_institution[institution_name] = subgroup_name
+        
+    return subgroups_by_institution
+
 # Login session management
 def remove_login_session_variables(request):
     if 'is_logged_in' in request.session:
         del request.session['is_logged_in']
-    if 'eduperson_entitlement' in request.session:
-        del request.session['eduperson_entitlement']
-    if 'email' in request.session:
-        del request.session['email']
+    if 'user_institution_subgroups' in request.session:
+        del request.session['user_institution_subgroups']
+    if 'user_email' in request.session:
+        del request.session['user_email']
     if 'institution_for_login_session' in request.session:
         del request.session['institution_for_login_session']
     if 'subgroup_for_login_session' in request.session:

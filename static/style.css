@@ -108,6 +108,14 @@ header .dropdown-item:active a {
     background-color: var(--pithia-blue);
 }
 
+.user-menu .dropdown-menu {
+    max-width: 8rem;
+}
+
+.user-menu .dropdown-menu li a {
+    white-space: pre-wrap;
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     padding: 0.5em 0;
