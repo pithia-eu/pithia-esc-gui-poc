@@ -21,7 +21,7 @@ def logout(request):
     # Remove relevant session variables
     remove_login_session_variables(request)
 
-    return HttpResponseRedirect(f'{request.build_absolute_uri("authorised/")}?{urlencode({"logout": request.build_absolute_uri(reverse("home"))})}')
+    return HttpResponseRedirect(f'{request.get_host()}/authorised/?{urlencode({"logout": request.build_absolute_uri(reverse("home"))})}')
 
     # Send a GET request to the EGI Check-in Logout endpoint
     ID_TOKEN_HINT = request.META.get('OIDC_id_token')
