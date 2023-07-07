@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.http import urlencode
 
 # Initialise environment variables
 env = environ.Env()
@@ -17,6 +18,11 @@ from user_management.services import (
 
 @require_POST
 def logout(request):
+    # Remove relevant session variables
+    remove_login_session_variables(request)
+
+    return HttpResponseRedirect(f'authorised/?{urlencode({"logout": request.build_absolute_uri(reverse("home"))})}')
+
     # Send a GET request to the EGI Check-in Logout endpoint
     ID_TOKEN_HINT = request.META.get('OIDC_id_token')
     logout_response = requests.get(f'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/logout?id_token_hint={ID_TOKEN_HINT}')
@@ -36,9 +42,6 @@ def logout(request):
     #     error_in_user_info = 'error' in user_info
     # except:
     #     pass
-
-    # Remove relevant session variables
-    remove_login_session_variables(request)
 
     return HttpResponseRedirect(reverse('home'))
 
