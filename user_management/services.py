@@ -55,6 +55,19 @@ def get_institution_subgroups_of_logged_in_user(request):
         subgroups.append(unquote(o[:]))
     return subgroups
 
+# Login session management
+def remove_login_session_variables(request):
+    if 'is_logged_in' in request.session:
+        del request.session['is_logged_in']
+    if 'eduperson_entitlement' in request.session:
+        del request.session['eduperson_entitlement']
+    if 'email' in request.session:
+        del request.session['email']
+    if 'institution_for_login_session' in request.session:
+        del request.session['institution_for_login_session']
+    if 'subgroup_for_login_session' in request.session:
+        del request.session['subgroup_for_login_session']
+
 def get_institution_id_of_logged_in_user(request):
     return request.session.get('institution_for_login_session')
 

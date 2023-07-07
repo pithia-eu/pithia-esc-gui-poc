@@ -10,6 +10,7 @@ env = environ.Env()
 from user_management.services import (
     CREATION_URL_BASE,
     get_user_info,
+    remove_login_session_variables,
 )
 
 def logout(request):
@@ -27,12 +28,7 @@ def logout(request):
     error_in_user_info = 'error' in user_info
 
     # Remove relevant session variables
-    if 'is_logged_in' in request.session:
-        del request.session['is_logged_in']
-    if 'eduperson_entitlement' in request.session:
-        del request.session['eduperson_entitlement']
-    if 'email' in request.session:
-        del request.session['email']
+    remove_login_session_variables(request)
 
     return render(request, 'index.html', {
         'title': f'PITHIA e-Science Centre Home',
