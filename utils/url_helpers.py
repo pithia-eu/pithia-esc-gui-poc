@@ -1,6 +1,8 @@
 import os
 from django.urls import reverse
 
+from typing import Tuple
+
 
 # Resource URL identification functions
 def is_operational_mode_url(url):
@@ -39,7 +41,7 @@ def divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id):
         'op_mode_id': resource_url_with_op_mode_id_split[-1],
     }
 
-def get_namespace_and_localid_from_resource_url(resource_url: str) -> tuple[str, str]:
+def get_namespace_and_localid_from_resource_url(resource_url: str) -> Tuple[str, str]:
     resource_server_url_components = divide_resource_url_into_main_components(resource_url)
     return resource_server_url_components['namespace'], resource_server_url_components['localid']
 

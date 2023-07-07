@@ -1,7 +1,10 @@
 import re
 from django.core.exceptions import ObjectDoesNotExist
 from operator import itemgetter
-from typing import Union
+from typing import (
+    Tuple,
+    Union,
+)
 
 from common.constants import (
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
@@ -144,7 +147,7 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
     return mapped_resource_server_urls
 
 
-def get_server_urls_from_scientific_metadata_flattened(scientific_metadata_flattened: dict) -> tuple[list, list]:
+def get_server_urls_from_scientific_metadata_flattened(scientific_metadata_flattened: dict) -> Tuple[list, list]:
     """
     Finds server URLs (ontology, metadata) in a scientific metadata dict
     that has been flattened.
