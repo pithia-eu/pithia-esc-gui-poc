@@ -166,7 +166,7 @@ def update_perun_organisation_list(request):
 def choose_perun_organisation_subgroup_for_session(request):
     if request.method == 'POST':
         subgroup_name = request.POST['subgroup-name']
-        request.session['selected_institution_subgroup'] = subgroup_name
+        request.session['subgroup_for_login_session'] = subgroup_name
         return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
 
     # TEMP - Used for testing
