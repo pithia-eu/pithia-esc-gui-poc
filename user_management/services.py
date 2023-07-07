@@ -55,5 +55,11 @@ def get_institution_subgroups_of_logged_in_user(request):
         subgroups.append(unquote(o[:]))
     return subgroups
 
+def get_institution_id_of_logged_in_user(request):
+    return request.session.get('institution_for_login_session')
+
+def get_subgroup_of_logged_in_user(request):
+    return request.session.get('subgroup_for_login_session')
+
 def get_logged_in_user_id(request):
     return request.session.get('email')
