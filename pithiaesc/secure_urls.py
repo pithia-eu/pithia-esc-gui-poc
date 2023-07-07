@@ -6,7 +6,6 @@ from user_management import views as user_management_views
 
 urlpatterns = [
     path('dashboard/', views.index_admin, name='data_provider_home'),
-    path('logout/', views.logout, name='logout'),
     path('', include('update.urls')),
     path('', include('delete.urls')),
     path('', include('utils.urls')),
