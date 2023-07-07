@@ -24,10 +24,10 @@ class LoginMiddleware(object):
         # the view is called.
 
         access_token = request.META.get('OIDC_access_token')
-        if access_token is not None:
+        user_info = get_user_info(access_token)
+        if 'error' not in user_info:
             # Store user info in session to minimise
             # calls to the UserInfo API.
-            user_info = get_user_info(access_token)
             request.session['is_logged_in'] = True
             request.session['eduperson_entitlement'] = user_info.get('eduperson_entitlement')
             request.session['email'] = user_info.get('email')
