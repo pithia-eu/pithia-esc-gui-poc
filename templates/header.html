@@ -79,9 +79,10 @@
 
     <div class="col-md-3 text-end">
         {% if request.session.is_logged_in %}
-        <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">
-            Logout
-        </a>
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
+        </form>
         {% else %}
         <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login
