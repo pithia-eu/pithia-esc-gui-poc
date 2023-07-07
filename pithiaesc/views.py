@@ -21,8 +21,8 @@ def logout(request):
     remove_login_session_variables(request)
     
     # Send a GET request to the EGI Check-in Logout endpoint
-    ID_TOKEN_HINT = request.META.get('OIDC_id_token')
-    logout_response = requests.get(f'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/logout?id_token_hint={ID_TOKEN_HINT}')
+    # ID_TOKEN_HINT = request.META.get('OIDC_id_token')
+    # logout_response = requests.get(f'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/logout?id_token_hint={ID_TOKEN_HINT}')
 
     absolute_home_page_uri = request.build_absolute_uri(reverse("home"))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
