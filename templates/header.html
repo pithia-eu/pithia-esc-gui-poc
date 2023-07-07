@@ -91,14 +91,12 @@
                 </li>
                 {% endfor %}
                 <li>
-                    {% url 'logout' as logout_url %}
-                    <a href="/authorised/?logout={{ logout_url|urlencode }}">Logout</a>
-                    {% comment %} <form action="{% url 'logout' %}" method="POST">
+                    <form action="{% url 'logout' %}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="dropdown-item">
                             Logout
                         </button>
-                    </form> {% endcomment %}
+                    </form>
                 </li>
             </ul>
         </div>

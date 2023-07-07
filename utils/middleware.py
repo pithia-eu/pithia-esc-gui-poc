@@ -25,7 +25,6 @@ class LoginMiddleware(object):
         if 'error' not in user_info:
             # Store user info in session to minimise
             # calls to the UserInfo API.
-            request.session['OIDC_access_token'] = access_token
             request.session['is_logged_in'] = True
             request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info.get('eduperson_entitlement'))
             request.session['user_email'] = user_info.get('email')
