@@ -23,7 +23,7 @@ class LoginMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
 
-        access_token = request.headers.get('OIDC_access_token')
+        access_token = request.META.get('OIDC_access_token')
         if access_token is not None:
             # Store user info in session to minimise
             # calls to the UserInfo API.
