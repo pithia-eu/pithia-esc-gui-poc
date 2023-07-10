@@ -12,38 +12,15 @@ env = environ.Env()
 
 from user_management.services import (
     CREATION_URL_BASE,
-    get_user_info,
     remove_login_session_variables,
 )
 
 def logout(request):
     # Remove relevant session variables
     remove_login_session_variables(request)
-    
-    # Send a GET request to the EGI Check-in Logout endpoint
-    # ID_TOKEN_HINT = request.META.get('OIDC_id_token')
-    # logout_response = requests.get(f'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/logout?id_token_hint={ID_TOKEN_HINT}')
 
     absolute_home_page_uri = request.build_absolute_uri(reverse("home"))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
-
-    # TEST: Verify logout was successful by checking for success
-    # status code in response.
-    # print('logout_response', logout_response)
-    
-    # TEST: Redirect straight to the EGI Check-in logout page.
-    # return HttpResponseRedirect(f'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/logout?id_token_hint={ID_TOKEN_HINT}')
-    
-    # TEST: Verify EGI Check-in logout was successful by checking for an
-    # error from the UserInfo API.
-    # ACCESS_TOKEN = request.META.get('OIDC_access_token')
-    # try:
-    #     user_info = get_user_info(ACCESS_TOKEN)
-    #     error_in_user_info = 'error' in user_info
-    # except:
-    #     pass
-
-    return HttpResponseRedirect(reverse('home'))
 
 def index(request):
     return render(request, 'index.html', {
