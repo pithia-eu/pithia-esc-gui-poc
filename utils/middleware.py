@@ -80,3 +80,23 @@ class LoginMiddleware(object):
             self._get_user_info_and_set_login_variables(request, access_token_copy)
 
         return response
+
+class LoginSessionInstitutionMiddleware(object):
+    def __init__(self, get_response):
+        # One-time configuration and initialisation.
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
+
+        if ('institution_for_login_session' not in request.session
+            and 'subgroup_for_login_session' not in request.session):
+            return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
+
+        return response
