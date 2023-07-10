@@ -95,8 +95,7 @@ class LoginSessionInstitutionMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
 
-        if ('authorised/' in request.path
-            and reverse('choose_perun_organisation_subgroup_for_session') != request.path
+        if (reverse('choose_perun_organisation_subgroup_for_session') != request.path
             and 'institution_for_login_session' not in request.session
             and 'subgroup_for_login_session' not in request.session):
             return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
