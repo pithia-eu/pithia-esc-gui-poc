@@ -1,6 +1,7 @@
 from user_management.services import (
     get_user_info,
     get_highest_subgroup_of_each_institution_for_logged_in_user,
+    remove_login_session_variables,
 )
 
 class LoginMiddleware(object):
@@ -19,8 +20,12 @@ class LoginMiddleware(object):
 
         access_token = request.META.get('OIDC_access_token')
         if access_token is None:
+            # If the access token is none, the
+            # OIDC login session does not exist.
+            remove_login_session_variables(request)
             return response
         
+        request.session['access_token'] = access_token
         user_info = get_user_info(access_token)
         if 'error' not in user_info:
             # Store user info in session to minimise
