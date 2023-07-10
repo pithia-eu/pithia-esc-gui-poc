@@ -25,11 +25,18 @@ class LoginMiddleware(object):
             remove_login_session_variables(request)
             return response
         
-        request.session['access_token'] = access_token
+        if request.session['access_token'] == access_token:
+            # If the session's access token is the same
+            # as the one in request.META, there's shouldn't
+            # be a need to set the login session variables
+            # again.
+            return response
+
         user_info = get_user_info(access_token)
         if 'error' not in user_info:
             # Store user info in session to minimise
             # calls to the UserInfo API.
+            request.session['access_token'] = access_token
             request.session['is_logged_in'] = True
             request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info.get('eduperson_entitlement'))
             request.session['user_email'] = user_info.get('email')
