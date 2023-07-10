@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='home'),
+    path('logout/', views.logout, name='logout'),
+    # Include URLs
     path('', include('browse.urls')),
     path('ontology/', include('ontology.urls')),
     path('present/', include('present.urls')),
