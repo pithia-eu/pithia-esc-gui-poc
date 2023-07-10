@@ -14,7 +14,7 @@ class LoginMiddleware(object):
 
     def _get_user_info_and_set_login_variables(self, request, access_token):
         user_info = get_user_info(access_token)
-        if 'error' not in user_info:
+        if 'error' in user_info:
             remove_login_session_variables(request)
             return HttpResponseRedirect(reverse('home'))
 
