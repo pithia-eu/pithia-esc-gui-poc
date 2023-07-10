@@ -71,8 +71,8 @@ def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitl
 
 # Login session management
 def remove_login_session_variables(request):
-    if 'access_token' in request.session:
-        del request.session['access_token']
+    if 'OIDC_access_token' in request.session:
+        del request.session['OIDC_access_token']
     if 'is_logged_in' in request.session:
         del request.session['is_logged_in']
     if 'user_institution_subgroups' in request.session:
