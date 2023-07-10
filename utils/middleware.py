@@ -96,6 +96,7 @@ class LoginSessionInstitutionMiddleware(object):
         # the view is called.
 
         if (reverse('choose_perun_organisation_subgroup_for_session') != request.path
+            and reverse('logout') != request.path
             and 'institution_for_login_session' not in request.session
             and 'subgroup_for_login_session' not in request.session):
             return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
