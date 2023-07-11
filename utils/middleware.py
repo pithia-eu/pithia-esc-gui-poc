@@ -71,6 +71,8 @@ class LoginMiddleware(object):
                 # If there isn't one in the session, can probably
                 # just assume that the user is logged out.
                 remove_login_session_variables(request)
+                if '/authorised' in request.path:
+                    return HttpResponseRedirect(reverse('home'))
                 return response
 
             # If there is one in the session, verify it is
