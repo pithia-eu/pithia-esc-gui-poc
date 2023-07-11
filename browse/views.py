@@ -18,6 +18,7 @@ from .services import (
 )
 
 from common import models
+from common.views import institution_for_login_session_required
 from handle_management.handle_api import (
     get_handle_record,
     instantiate_client_and_load_credentials,
@@ -95,6 +96,7 @@ def catalogue_related_resource_types(request):
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
+@institution_for_login_session_required
 def schemas(request):
     """
     A list of links to the XML metadata schemas.

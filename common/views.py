@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
+from django.views.generic import View
 from functools import wraps
 
 # Create your views here.
@@ -20,5 +20,5 @@ def institution_for_login_session_required(function):
     return wrap
 
 @method_decorator(institution_for_login_session_required, name='dispatch')
-class LoginInstitutionRequiredView(TemplateView):
+class LoginInstitutionRequiredView(View):
     pass

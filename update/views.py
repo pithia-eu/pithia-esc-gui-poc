@@ -43,6 +43,10 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
+from common.views import (
+    institution_for_login_session_required,
+    LoginInstitutionRequiredView,
+)
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_from_metadata_xml_string,
@@ -84,7 +88,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-class ResourceUpdateFormView(FormView):
+class ResourceUpdateFormView(LoginInstitutionRequiredView, FormView):
     # Registration variables
     resource = None
     resource_id = ''
@@ -402,6 +406,7 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
         self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
+@institution_for_login_session_required
 def data_collection_interaction_methods(request, data_collection_id):
     data_collection = get_object_or_404(models.DataCollection, pk=data_collection_id)
     if request.method == 'POST':

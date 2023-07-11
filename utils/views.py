@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from lxml import etree
 
 from common import models
+from common.views import LoginInstitutionRequiredView
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -11,7 +12,7 @@ from resource_management.views import (
 
 # Create your views here.
 
-class ResourceXmlDownloadView(TemplateView):
+class ResourceXmlDownloadView(LoginInstitutionRequiredView, TemplateView):
     resource_id = ''
     resource_name = ''
     resource_localid = ''

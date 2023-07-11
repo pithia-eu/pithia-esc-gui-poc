@@ -15,6 +15,7 @@ from .forms import (
 )
 
 from common import models, mongodb_models
+from common.views import LoginInstitutionRequiredView
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource_url,
@@ -51,7 +52,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-class ResourceRegisterFormView(FormView):
+class ResourceRegisterFormView(LoginInstitutionRequiredView, FormView):
     success_url = ''
     form_class = UploadFileForm
     template_name = 'register/file_upload.html'

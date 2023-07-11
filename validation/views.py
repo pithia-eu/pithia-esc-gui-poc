@@ -5,7 +5,6 @@ from django.http import (
     JsonResponse,
 )
 from django.views.decorators.http import require_POST
-from django.views.generic import View
 from http import HTTPStatus
 from lxml import etree
 from openapi_spec_validator import validate_spec_url
@@ -22,12 +21,16 @@ from .helpers import create_validation_summary_error
 from .services import validate_xml_file_and_return_summary
 
 from common import models
+from common.views import (
+    institution_for_login_session_required,
+    LoginInstitutionRequiredView,
+)
 
 
 logger = logging.getLogger(__name__)
 
 # Create your views here.
-class ResourceXmlMetadataFileValidationFormView(View):
+class ResourceXmlMetadataFileValidationFormView(LoginInstitutionRequiredView):
     def prepare_xml_metadata_file(self, xml_file):
         return XMLMetadataFile.from_file(xml_file)
 
@@ -132,6 +135,7 @@ class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFi
 
 
 @require_POST
+@institution_for_login_session_required
 def api_specification_url(request):
     response_body = {
         'valid': False
