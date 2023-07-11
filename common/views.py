@@ -6,7 +6,7 @@ from functools import wraps
 
 # Create your views here.
 def institution_for_login_session_required(function):
-    @wraps
+    @wraps(function)
     def wrap(request, *args, **kwargs):
         if (request.session.get('is_logged_in') is True
             and reverse('choose_perun_organisation_subgroup_for_session') != request.path
