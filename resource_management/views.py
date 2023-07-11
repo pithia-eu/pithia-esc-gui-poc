@@ -2,10 +2,6 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from common import models
-from common.views import (
-    institution_for_login_session_required,
-    LoginInstitutionRequiredView,
-)
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -15,13 +11,11 @@ def _create_manage_resource_page_title(resource_type_plural_readable):
     return f'Register & Manage {resource_type_plural_readable.title()}'
 
 # Create your views here.
-@institution_for_login_session_required
 def index(request):
     return render(request, 'resource_management/index.html', {
         'title': _INDEX_PAGE_TITLE
     })
 
-@institution_for_login_session_required
 def data_collection_related_metadata_index(request):
     num_current_organsations = models.Organisation.objects.count()
     num_current_individuals = models.Individual.objects.count()
@@ -53,7 +47,6 @@ def data_collection_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
-@institution_for_login_session_required
 def catalogue_related_metadata_index(request):
     num_current_catalogues = models.Catalogue.objects.count()
     num_current_catalogue_entries = models.CatalogueEntry.objects.count()
@@ -67,7 +60,7 @@ def catalogue_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
-class ResourceManagementListView(LoginInstitutionRequiredView, ListView):
+class ResourceManagementListView(ListView):
     template_name = 'resource_management/resource_management_list_by_type_outer.html'
     context_object_name = 'resources'
     

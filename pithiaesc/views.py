@@ -4,10 +4,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
 
-from common.views import (
-    institution_for_login_session_required,
-)
-
 # Initialise environment variables
 env = environ.Env()
 
@@ -29,7 +25,6 @@ def index(request):
         'title': 'PITHIA e-Science Centre Home',
     })
 
-@institution_for_login_session_required
 def index_admin(request):
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',

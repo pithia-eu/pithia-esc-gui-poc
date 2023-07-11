@@ -45,9 +45,6 @@ from common.mongodb_models import (
     CurrentCatalogueDataSubset,
     CatalogueDataSubsetRevision,
 )
-from common.views import (
-    LoginInstitutionRequiredView,
-)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -58,7 +55,7 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 
-class ResourceDeleteView(LoginInstitutionRequiredView, TemplateView):
+class ResourceDeleteView(TemplateView):
     """
     The deletion confirmation page for a
     scientific metadata registration.
