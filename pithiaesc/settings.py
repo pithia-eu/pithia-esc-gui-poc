@@ -74,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.LoginMiddleware',
-    # 'utils.middleware.LoginSessionInstitutionMiddleware',
+    'utils.middleware.LoginSessionInstitutionMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'

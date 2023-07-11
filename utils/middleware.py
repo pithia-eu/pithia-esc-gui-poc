@@ -98,9 +98,20 @@ class LoginSessionInstitutionMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
 
-        if (request.session.get('is_logged_in') is True
-            and reverse('choose_perun_organisation_subgroup_for_session') != request.path
-            and reverse('logout') != request.path
+        exempt_paths = [
+            reverse('logout'),
+            reverse('list_joinable_perun_organisations'),
+            reverse('choose_perun_organisation_subgroup_for_session'),
+        ]
+        # Join an institution subgroup page cannot be
+        # resolved with reverse, so have to use
+        # another method to match the current
+        # path with an exempt path.
+        is_current_path_exempt = any([p in request.path for p in exempt_paths])
+
+        if ((request.META.get('OIDC_access_token')
+            or request.session.get('is_logged_in') is True)
+            and is_current_path_exempt
             and 'institution_for_login_session' not in request.session
             and 'subgroup_for_login_session' not in request.session):
             return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
