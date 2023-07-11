@@ -2,7 +2,6 @@ import environ
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils.http import urlencode
 
 from common.views import (
