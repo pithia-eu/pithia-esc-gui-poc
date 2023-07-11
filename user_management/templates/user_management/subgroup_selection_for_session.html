@@ -1,43 +1,37 @@
 {% extends 'base.html' %}
+{% load project_tags %}
 {% load static %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
 {% block content %}
 <section>
-    <h2>Choose an Institution</h2>
-    <p>
-        Please select the organisation that you would like to use
-        for this login session.
-    </p>
-    <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}" method="POST">
-        {% csrf_token %}
-        <select class="form-control" name="subgroup-name">
-        {% for institution, subgroup in request.session.user_institution_subgroups.items %}
-            <option value="{{ institution }}:{{ subgroup }}">{{ institution }}</option>
-        {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <h1>{{ title }}</h1>
+    <div class="col-lg-8">
+        <p>
+            Only one institution can be used per login
+            session. Please select one from the dropdown
+            list below.
+        </p>
+        <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <select class="form-control" name="subgroup-name">
+                {% for institution, subgroup in request.session.user_institution_subgroups.items %}
+                    <option value="{{ institution }}:{{ subgroup }}">{{ institution }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </section>
-<section>
-    {% comment %} USED FOR DEBUGGING {% endcomment %}
-    {% comment %} <h2>ID token hint</h2>
-    {% if ID_TOKEN_HINT %}
-    <p>{{ ID_TOKEN_HINT }}</p>
-    {% else %}
-    <p>None</p>
-    {% endif %}
-    <h2>CLIENT_ID</h2>
-    {% if CLIENT_ID %}
-    <p>{{ CLIENT_ID }}</p>
-    {% else %}
-    <p>None</p>
-    {% endif %} {% endcomment %}
-    <h2>error in user info</h2>
-    {{ error_in_user_info }}
-    <h2>request.META</h2>
+{% comment %} <section>
+    <h2>Debugging</h2>
     <hr>
+    <h3>request.META</h3>
     <p style="white-space: pre-wrap;">{{ request.META|pprint }}</p>
-    <h2>Is logged in</h2>
+    <h3>Is logged in</h3>
     <p>{{ request.session.is_logged_in }}</p>
-    {% if logout_response %}<p style="white-space: pre-wrap;">{{ logout_response }}</p>{% else %}<p>No logout response</p>{% endif %}
-</section>
+</section> {% endcomment %}
 {% endblock content %}
