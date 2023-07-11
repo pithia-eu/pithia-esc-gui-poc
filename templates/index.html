@@ -57,6 +57,9 @@
 {% if request.session.institution_for_login_session %}
 <section>
     <h2 class="mb-0">Metadata Registration & Management</h2>
+    <div role="doc-subtitle" class="text-body-secondary">
+        <strong>{{ request.session.institution_for_login_session }}</strong>
+    </div>
     <hr>
     <div class="card-menu">
         <div class="card">
