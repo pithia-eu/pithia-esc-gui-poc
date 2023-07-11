@@ -111,7 +111,7 @@ class LoginSessionInstitutionMiddleware(object):
 
         if ((request.META.get('OIDC_access_token')
             or request.session.get('is_logged_in') is True)
-            and is_current_path_exempt
+            and not is_current_path_exempt
             and 'institution_for_login_session' not in request.session
             and 'subgroup_for_login_session' not in request.session):
             return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
