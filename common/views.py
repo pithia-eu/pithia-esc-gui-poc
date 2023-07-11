@@ -8,7 +8,8 @@ from functools import wraps
 def institution_for_login_session_required(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        if (request.session.get('is_logged_in') is True
+        if ((request.META.get('OIDC_access_token')
+            or request.session.get('is_logged_in') is True)
             and reverse('choose_perun_organisation_subgroup_for_session') != request.path
             and reverse('logout') != request.path
             and 'institution_for_login_session' not in request.session
