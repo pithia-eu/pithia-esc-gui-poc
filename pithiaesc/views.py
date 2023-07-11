@@ -1,10 +1,10 @@
 import environ
-import requests
 from django.http import HttpResponseRedirect
-from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
+
+from common.views import LoginInstitutionRequiredView
 
 # Initialise environment variables
 env = environ.Env()
@@ -27,7 +27,7 @@ def index(request):
         'title': 'PITHIA e-Science Centre Home',
     })
 
-def index_admin(request):
+def index_admin(request, LoginInstitutionRequiredView):
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
         'create_perun_organisation_url': CREATION_URL_BASE,
