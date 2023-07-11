@@ -7,6 +7,7 @@
 {% block content %}
 <section>
     <h1>{{ title }}</h1>
+    {% if request.session.user_institution_subgroups|length > 0 %}
     <div class="col-lg-8">
         <p>
             Please select the institution you would like
@@ -24,6 +25,29 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+    {% else %}
+    <div class="col-lg-8">
+        <p>
+            An institution membership is required before any
+            further actions can be performed in the e-Science
+            Centre. Please use the links below to submit an
+            application to register a new institution, or
+            alternatively, join an existing institution.
+        </p>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests" target="_blank">
+                    Create an Institution
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'list_joinable_perun_organisations' %}">
+                    <span>Join an Institution</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    {% endif %}
 </section>
 {% comment %} <section>
     <h2>Debugging</h2>

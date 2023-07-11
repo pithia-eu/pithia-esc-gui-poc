@@ -172,6 +172,7 @@ def choose_perun_organisation_subgroup_for_session(request):
     # one organisation per session.
 
     # Find the organisation to be able to configure views to institution.
+
     return render(request, 'user_management/subgroup_selection_for_session.html', {
-        'title': 'Choose an institution for login session',
+        'title': 'Institution for Login Session',
     })
