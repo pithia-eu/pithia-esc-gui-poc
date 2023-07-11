@@ -24,6 +24,7 @@ class LoginMiddleware(object):
         request.session['is_logged_in'] = True
         request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info.get('eduperson_entitlement'))
         request.session['user_email'] = user_info.get('email')
+        request.session['user_name'] = user_info.get('name')
 
     def __call__(self, request):
         # Code to be executed for each request before
