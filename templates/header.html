@@ -19,25 +19,25 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Search & Browse</a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item">
+                <li>
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
+                    <a href="{{ search_url }}" class="dropdown-item {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'browse:list_data_collections' as data_collections_url %}
-                    <a href="{{ data_collections_url }}" class="nav-link px-2 {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
+                    <a href="{{ data_collections_url }}" class="dropdown-item {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
-                    <a href="{{ catalogues_url }}" class="nav-link px-2 {% if request.path == catalogues_url %}link-secondary{% endif %}">Browse Catalogues</a>
+                    <a href="{{ catalogues_url }}" class="dropdown-item {% if request.path == catalogues_url %}link-secondary{% endif %}">Browse Catalogues</a>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'browse:index' as browse_url %}
-                    <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
+                    <a href="{{ browse_url }}" class="dropdown-item {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'ontology:index' as browse_ontology_url %}
-                    <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
+                    <a href="{{ browse_ontology_url }}" class="dropdown-item {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
                 </li>
             </ul>
         </li>
@@ -47,30 +47,30 @@
                 aria-expanded="false">Admin
             </a>
             <ul class="dropdown-menu">
-                <li class="dropdown-item">
+                <li>
                     {% url 'data_provider_home' as data_provider_home_url %}
-                    <a href="{{ data_provider_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
+                    <a href="{{ data_provider_home_url }}" class="dropdown-item {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
                 </li>
                 <li>
                     <span class="dropdown-header">
                         Register & Manage Metadata
                     </span>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'resource_management:index' as resource_management_url %}
-                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
+                    <a href="{{ resource_management_url }}" class="dropdown-item {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
                 </li>
-                <li class="dropdown-item">
-                    <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="nav-link px-2" target="_blank">Metadata Registration Guide</a>
+                <li>
+                    <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="dropdown-item" target="_blank">Metadata Registration Guide</a>
                 </li>
                 <li>
                     <span class="dropdown-header">
                         Browse
                     </span>
                 </li>
-                <li class="dropdown-item">
+                <li>
                     {% url 'schemas' as browse_schemas_url %}
-                    <a href="{{ browse_schemas_url }}" class="nav-link px-2 {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
+                    <a href="{{ browse_schemas_url }}" class="dropdown-item {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
                 </li>
             </ul>
         </li>
@@ -80,20 +80,20 @@
     <div class="col-md-3 text-end">
         {% if request.session.is_logged_in %}
         <div class="dropdown user-menu">
-            <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Menu
+            <a class="link-body-emphasis text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ request.session.user_given_name }}
             </a>
             <ul class="dropdown-menu">
-                <li class="dropdown-header">Switch Institutions</li>
-                {% for institution, subgroup in request.session.user_institution_subgroups.items %}
+                {% if request.session.institution_for_login_session %}
+                <li class="dropdown-header institution-for-login-session">{{ request.session.institution_for_login_session }}</li>
+                {% endif %}
                 <li>
-                    <a class="dropdown-item" href="#"><small>{{ institution }}</small></a>
+                    <a href={% url 'choose_perun_organisation_subgroup_for_session' %} class="dropdown-item">Switch Institutions...</a>
                 </li>
-                {% endfor %}
                 <li>
                     <form action="{% url 'logout' %}" method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="dropdown-item">
+                        <button href="#" type="submit" class="dropdown-item pithia-blue">
                             Logout
                         </button>
                     </form>

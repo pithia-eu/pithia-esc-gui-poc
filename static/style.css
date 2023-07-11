@@ -99,6 +99,11 @@ p {
     width: 97px;
 }
 
+header .dropdown-item {
+    padding-block: 0.75rem;
+    padding-inline: 1.5rem;
+}
+
 header .dropdown-item:active a {
     color: white !important;
     transition-property: none;
@@ -109,11 +114,21 @@ header .dropdown-item:active a {
 }
 
 .user-menu .dropdown-menu {
-    max-width: 8rem;
+    max-width: 15rem;
 }
 
-.user-menu .dropdown-menu li a {
+.user-menu .institution-for-login-session {
     white-space: pre-wrap;
+}
+
+.user-menu .dropdown-menu li a,
+.user-menu .dropdown-menu li button {
+    width: 100%;
+}
+
+.user-menu .dropdown-menu li a:hover,
+.user-menu .dropdown-menu li button:hover {
+    text-decoration: underline;
 }
 
 /* Breadcrumb */
