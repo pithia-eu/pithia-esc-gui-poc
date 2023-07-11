@@ -30,7 +30,7 @@ def index(request):
         'title': 'PITHIA e-Science Centre Home',
     })
 
-@method_decorator(institution_for_login_session_required, name='dispatch')
+@institution_for_login_session_required
 def index_admin(request):
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
