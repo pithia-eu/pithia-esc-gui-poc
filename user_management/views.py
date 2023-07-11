@@ -166,18 +166,7 @@ def choose_perun_organisation_subgroup_for_session(request):
         subgroup_name = request.POST['subgroup-name']
         request.session['institution_for_login_session'] = subgroup_name.split(':')[0]
         request.session['subgroup_for_login_session'] = subgroup_name
-        return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
-
-    # TEMP - Used for testing
-    # organisation_details = [
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:admins:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:members:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc-test:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:organizations:abc:role=member#aai.egi.eu',
-    #     'urn:mace:egi.eu:group:vo.abc.test.eu:role=member#aai.egi.eu'
-    # ]
+        return HttpResponseRedirect(reverse('data_provider_home'))
 
     # One user has multiple organisations, but we need to select
     # one organisation per session.
