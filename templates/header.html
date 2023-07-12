@@ -9,7 +9,7 @@
         </div>
     </a>
 
-    {% if not request.session.is_institution_for_login_session_required %}
+    {% if not request.session.is_user_selecting_institution_for_login_session %}
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li class="nav-item">
             {% url 'home' as base_url %}

@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% load static %}
 {% block breadcrumbs %}
-{% if not is_institution_for_login_session_required %}
+{% if not request.session.is_user_selecting_institution_for_login_session %}
 {% breadcrumb_item_active title %}
 {% endif %}
 {% endblock breadcrumbs %}
