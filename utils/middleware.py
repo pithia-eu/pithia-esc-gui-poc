@@ -33,11 +33,6 @@ class LoginMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        response = self.get_response(request)
-
-        # Code to be executed for each request/response after
-        # the view is called.
-
         # Verify if the user is logged in or not.
 
         # Check if an OIDC_access_token exists in
@@ -85,6 +80,11 @@ class LoginMiddleware(object):
             # log the user out.
             self._get_user_info_and_set_login_variables(request, access_token_copy)
 
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
+
         return response
 
 class LoginSessionInstitutionMiddleware(object):
@@ -96,11 +96,6 @@ class LoginSessionInstitutionMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        response = self.get_response(request)
-
-        # Code to be executed for each request/response after
-        # the view is called.
-
         exempt_paths = [
             reverse('logout'),
             reverse('list_joinable_perun_organisations'),
@@ -111,12 +106,20 @@ class LoginSessionInstitutionMiddleware(object):
         # another method to match the current
         # path with an exempt path.
         is_current_path_exempt = any([p in request.path for p in exempt_paths])
-
-        if ((request.META.get('OIDC_access_token')
-            or request.session.get('is_logged_in') is True)
-            and not is_current_path_exempt
+        is_institution_for_login_session_required = (
+            request.session.get('is_logged_in') is True
             and 'institution_for_login_session' not in request.session
-            and 'subgroup_for_login_session' not in request.session):
+            and 'subgroup_for_login_session' not in request.session
+        )
+        request.session['is_institution_for_login_session_required'] = is_institution_for_login_session_required
+
+        if (is_institution_for_login_session_required
+            and not is_current_path_exempt):
             return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
+
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
 
         return response
