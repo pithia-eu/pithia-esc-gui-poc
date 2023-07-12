@@ -91,22 +91,14 @@
 {% endif %}
 {% if request.session.is_logged_in %}
 <section>
-    <h2 class="mb-0">Create or Join an Institution</h2>
+    <h2 class="mb-0">Institutional Memberships</h2>
     <hr>
     <div class="card-menu">
         <div class="card">
             <div class="card-body">
-                <a href="https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests" target="_blank">
-                        <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                        <span>Create an Institution</span>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'list_joinable_perun_organisations' %}">
+                <a href="{% url 'institution_management' %}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    <span>Join an Institution</span>
+                    Manage Memberships
                 </a>
             </div>
         </div>
@@ -114,7 +106,7 @@
             <div class="card-body">
                 <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    <span>Select an Institution</span>
+                    <span>Institution for Login Session</span>
                 </a>
             </div>
         </div>
