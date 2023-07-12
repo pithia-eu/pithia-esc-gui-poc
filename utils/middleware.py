@@ -85,8 +85,8 @@ class LoginSessionInstitutionMiddleware(object):
         is_current_path_exempt = any([p in request.path for p in exempt_paths])
         is_institution_for_login_session_required = (
             request.session.get('is_logged_in') is True
-            and 'institution_for_login_session' not in request.session
-            and 'subgroup_for_login_session' not in request.session
+            and ('institution_for_login_session' not in request.session
+            or 'subgroup_for_login_session' not in request.session)
         )
         request.session['is_institution_for_login_session_required'] = is_institution_for_login_session_required
 
