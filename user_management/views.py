@@ -21,7 +21,10 @@ from django.views.decorators.http import (
 from functools import wraps
 from pathlib import Path
 
-from .services import JOIN_URL_BASE
+from .services import (
+    CREATION_URL_BASE,
+    JOIN_URL_BASE,
+)
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
@@ -84,6 +87,13 @@ def save_perun_info(request):
     os.environ['PERUN_PASSWORD'] = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
     return JsonResponse({'msg': 'ok'}, status=200)
+
+
+def index(request):
+    return render(request, 'user_management/index.html', {
+        'title': 'Institution Management',
+        'create_institution_url': CREATION_URL_BASE,
+    })
 
 
 def list_joinable_perun_organisations(request):
