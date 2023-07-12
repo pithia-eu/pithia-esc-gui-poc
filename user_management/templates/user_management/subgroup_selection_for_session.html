@@ -27,21 +27,21 @@
 {% else %}
 <div class="col-lg-8">
     <p>
-        An institution membership is required before any
-        further actions can be performed in the e-Science
-        Centre. Please use the links below to submit an
-        application to register a new institution, or
-        alternatively, join an existing institution.
+        An institution membership is required before you
+        can perform any further actions. Use the link below
+        to register your institution with the e-Science
+        Centre, or, use the other link to submit a join
+        request if your institution is already registered.
     </p>
     <ul class="list-group">
         <li class="list-group-item">
             <a href="https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests" target="_blank">
-                Create an Institution
+                Apply for a New Institution
             </a>
         </li>
         <li class="list-group-item">
             <a href="{% url 'list_joinable_perun_organisations' %}">
-                <span>Join an Institution</span>
+                <span>Join an Existing Institution</span>
             </a>
         </li>
     </ul>
