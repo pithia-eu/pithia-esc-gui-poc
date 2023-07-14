@@ -101,8 +101,8 @@ class ResourceRegisterFormView(FormView):
                     with transaction.atomic():
                         self.new_registration = self.model.objects.create_from_xml_string(
                             xml_file_string,
-                            request.session.institution_for_login_session,
-                            request.session.email,
+                            request.session.get('institution_for_login_session'),
+                            request.session.get('email'),
                         )
                         is_api_selected = 'api_selected' in request.POST
                         api_specification_url = request.POST.get('api_specification_url', None)
@@ -173,7 +173,7 @@ class ResourceRegisterFormView(FormView):
                                 self.new_registration.pk,
                                 doi_dict,
                                 xml_file_string,
-                                request.session.email
+                                request.session.get('email')
                             )
                             add_handle_to_url_mapping(handle, data_subset_url)
 

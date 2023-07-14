@@ -136,7 +136,7 @@ class ResourceUpdateFormView(FormView):
                     self.model.objects.update_from_xml_string(
                         self.resource_id,
                         self.xml_file_string,
-                        request.session.email
+                        request.session.get('email')
                     )
 
                     # TODO: remove old code
