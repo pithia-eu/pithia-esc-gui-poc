@@ -25,6 +25,11 @@ from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
+
 class FileTestCase:
     xml_file_name = ''
 
@@ -241,7 +246,7 @@ class NewRegistrationValidationTestCase:
         with open(self.xml_file_path) as xml_file:
             xml_file_string = xml_file.read()
             xml_file_name = xml_file.name
-        self.model.objects.create_from_xml_string(xml_file_string)
+        self.model.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         xml_metadata_file = XMLMetadataFile(xml_file_string, xml_file_name)
         self.assertRaises(
             FileRegisteredBefore,
@@ -264,7 +269,7 @@ class UpdateValidationTestCase:
             with open(self.xml_file_path) as xml_file:
                 xml_file_string = xml_file.read()
                 xml_file_name = xml_file.name
-            test_registration = self.model.objects.create_from_xml_string(xml_file_string)
+            test_registration = self.model.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             xml_metadata_file = XMLMetadataFile(xml_file_string, xml_file_name)
             MetadataFileUpdateValidator.validate(
                 xml_metadata_file,
@@ -304,7 +309,7 @@ class OperationalModesValidationTestCase:
             xml_file_string = xml_file.read()
             xml_file_name = xml_file.name
         xml_metadata_file = InstrumentXMLMetadataFile(xml_file_string, xml_file_name)
-        instrument_registration = self.model.objects.create_from_xml_string(xml_file_string)
+        instrument_registration = self.model.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         result, missing_operational_mode_urls = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
             xml_metadata_file,
             instrument_registration.pk,
@@ -322,7 +327,7 @@ class OperationalModesValidationTestCase:
         """
         test_registration = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test_NoOpModes.xml')) as xml_file:
-            test_registration = self.model.objects.create_from_xml_string(xml_file.read())
+            test_registration = self.model.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             
         xml_file_string = None
         xml_file_name = None
@@ -347,7 +352,7 @@ class OperationalModesValidationTestCase:
         """
         test_registration = None
         with open(self.xml_file_path) as xml_file:
-            test_registration = self.model.objects.create_from_xml_string(xml_file.read())
+            test_registration = self.model.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             
         xml_file_string = None
         xml_file_name = None

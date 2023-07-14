@@ -18,6 +18,10 @@ from .pymongo_api import _register_with_pymongo
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
 env = environ.Env()
 
 # Create your tests here.
@@ -30,7 +34,7 @@ class ManagerTestCase(TestCase):
         """
         try:
             with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-                organisation = Organisation.objects.create_from_xml_string(xml_file.read())
+                organisation = Organisation.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
                 self.assertIn('id', organisation)
                 print('organisation.id', organisation.id)
         except BaseException as err:
@@ -46,7 +50,7 @@ class InteractionMethodTestCase(TestCase):
         try:
             data_collection = None
             with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-                data_collection = DataCollection.objects.create_from_xml_string(xml_file.read())
+                data_collection = DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             interaction_method = InteractionMethod.api_interaction_methods.create_api_interaction_method(
                 'https://www.example.com',
                 '',

@@ -31,7 +31,13 @@ class ScientificMetadataManager(models.Manager):
         metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
         return metadata_file_dict
     
-    def _create_from_xml_string(self, xml_string: str, type: str):
+    def _create_from_xml_string(
+        self,
+        xml_string: str,
+        type: str,
+        institution_id: str,
+        owner_id: str
+    ):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
         
         try:
@@ -43,6 +49,8 @@ class ScientificMetadataManager(models.Manager):
             type=type,
             xml=xml_string,
             json=xml_as_dict,
+            institution_id=institution_id,
+            owner_id=owner_id
         )
         scientific_metadata.id = scientific_metadata.localid
         scientific_metadata.save(using='esc_rw')
@@ -50,10 +58,11 @@ class ScientificMetadataManager(models.Manager):
         return scientific_metadata
 
 
-    def create_from_xml_string(self, xml_string: str):
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         pass
 
-    def update_from_xml_string(self, pk, xml_string: str):
+
+    def update_from_xml_string(self, pk, xml_string: str, owner_id: str):
         xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
 
         try:
@@ -64,6 +73,7 @@ class ScientificMetadataManager(models.Manager):
         registration = self.get(pk=pk)
         registration.xml = xml_string
         registration.json = xml_as_dict
+        registration.owner_id = owner_id
         registration.save(using='esc_rw')
         return registration
     
@@ -74,106 +84,106 @@ class OrganisationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.ORGANISATION)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.ORGANISATION)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.ORGANISATION, institution_id, owner_id)
 
 class IndividualManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.INDIVIDUAL)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.INDIVIDUAL)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.INDIVIDUAL, institution_id, owner_id)
 
 class ProjectManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.PROJECT)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.PROJECT)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.PROJECT, institution_id, owner_id)
 
 class PlatformManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.PLATFORM)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.PLATFORM)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.PLATFORM, institution_id, owner_id)
 
 class OperationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.OPERATION)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.OPERATION)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.OPERATION, institution_id, owner_id)
 
 class InstrumentManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.INSTRUMENT)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.INSTRUMENT)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.INSTRUMENT, institution_id, owner_id)
 
 class AcquisitionCapabilitiesManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.ACQUISITION_CAPABILITIES)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION_CAPABILITIES)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION_CAPABILITIES, institution_id, owner_id)
 
 class AcquisitionManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.ACQUISITION)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.ACQUISITION, institution_id, owner_id)
 
 class ComputationCapabilitiesManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.COMPUTATION_CAPABILITIES)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION_CAPABILITIES)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION_CAPABILITIES, institution_id, owner_id)
 
 class ComputationManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.COMPUTATION)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.COMPUTATION, institution_id, owner_id)
 
 class ProcessManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.PROCESS)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.PROCESS)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.PROCESS, institution_id, owner_id)
 
 class DataCollectionManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.DATA_COLLECTION)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.DATA_COLLECTION)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.DATA_COLLECTION, institution_id, owner_id)
 
 class CatalogueManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.CATALOGUE)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE, institution_id, owner_id)
 
 class CatalogueEntryManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.CATALOGUE_ENTRY)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_ENTRY)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_ENTRY, institution_id, owner_id)
 
 class CatalogueDataSubsetManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.CATALOGUE_DATA_SUBSET)
 
-    def create_from_xml_string(self, xml_string: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET)
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET, institution_id, owner_id)
     
 class InteractionMethodManager(models.Manager):
     pass

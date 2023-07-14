@@ -99,7 +99,11 @@ class ResourceRegisterFormView(FormView):
                 xml_file_string = xml_file.read()
                 try:
                     with transaction.atomic():
-                        self.new_registration = self.model.objects.create_from_xml_string(xml_file_string)
+                        self.new_registration = self.model.objects.create_from_xml_string(
+                            xml_file_string,
+                            request.session.institution_for_login_session,
+                            request.session.email,
+                        )
                         is_api_selected = 'api_selected' in request.POST
                         api_specification_url = request.POST.get('api_specification_url', None)
                         api_description = request.POST.get('api_description', '')
@@ -165,7 +169,12 @@ class ResourceRegisterFormView(FormView):
                             doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
                             # Add the DOI dict metadata to the handle
                             add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
-                            add_doi_metadata_kernel_to_data_subset(self.new_registration.pk, doi_dict, xml_file_string)
+                            add_doi_metadata_kernel_to_data_subset(
+                                self.new_registration.pk,
+                                doi_dict,
+                                xml_file_string,
+                                request.session.email
+                            )
                             add_handle_to_url_mapping(handle, data_subset_url)
 
                             # TODO: remove old code

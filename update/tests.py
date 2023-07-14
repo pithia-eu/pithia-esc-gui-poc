@@ -11,6 +11,10 @@ from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
 
 # Create your tests here.
 
@@ -22,11 +26,15 @@ class XMLMetadataFileUpdateTestCase(TestCase):
         organisation_updated = None
         organisation_id = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            organisation_original = Organisation.objects.create_from_xml_string(xml_file.read())
+            organisation_original = Organisation.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             organisation_id = organisation_original.pk
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_Update.xml')) as xml_file:
-            organisation_updated = Organisation.objects.update_from_xml_string(organisation_id, xml_file.read())
+            organisation_updated = Organisation.objects.update_from_xml_string(
+                organisation_id,
+                xml_file.read(),
+                SAMPLE_USER_ID
+            )
 
         print('organisation_original.pk', organisation_original.pk)
         print('organisation_original.name', organisation_original.name)
@@ -39,7 +47,7 @@ class InteractionMethodTestCase(TestCase):
     def test_update_config(self):
         data_collection = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            data_collection = DataCollection.objects.create_from_xml_string(xml_file.read())
+            data_collection = DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         interaction_method = InteractionMethod.api_interaction_methods.create_api_interaction_method(
             'https://www.example.com',
             '',

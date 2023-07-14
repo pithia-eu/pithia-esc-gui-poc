@@ -10,6 +10,10 @@ from .models import (
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
 # Create your tests here.
 class ScientificMetadataModelTestCase(TestCase):
     def test_metadata_server_url(self):
@@ -18,8 +22,8 @@ class ScientificMetadataModelTestCase(TestCase):
         URL for a scientific metadata registration.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            xml_string = xml_file.read()
-            organisation = Organisation.objects.create_from_xml_string(xml_string)
+            xml_file_string = xml_file.read()
+            organisation = Organisation.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         metadata_server_url = organisation.metadata_server_url
         print('metadata_server_url', metadata_server_url)
 
@@ -40,8 +44,8 @@ class AcquisitionCapabilitiesQuerySetTestCase(TestCase):
             'https://metadata.pithia.eu/ontology/2.2/observedProperty/bad',
         ]
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            xml_string = xml_file.read()
-            acquisition_capability_set = AcquisitionCapabilities.objects.create_from_xml_string(xml_string)
+            xml_file_string = xml_file.read()
+            acquisition_capability_set = AcquisitionCapabilities.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         acquisition_capability_sets = AcquisitionCapabilities.objects.for_search(instrument_urls, observed_property_urls)
         acquisition_capability_sets_empty = AcquisitionCapabilities.objects.for_search(instrument_urls, bad_observed_property_urls)
         self.assertTrue(len(acquisition_capability_sets) > 0)
@@ -60,19 +64,19 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
         # Register the Computation Capabilities XML files
         test_computation_capability_set = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_2.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_3.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4a.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         # Execute all_computation_capability_set_referers()
         ccs_referers = ComputationCapabilities.objects.all_computation_capability_set_referers(test_computation_capability_set)
@@ -94,19 +98,19 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
 
         # Register the Computation Capabilities XML files
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_2.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_3.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test_4a.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         search_results = ComputationCapabilities.objects.for_search(computation_type_urls, [])
         print('search_results', search_results)

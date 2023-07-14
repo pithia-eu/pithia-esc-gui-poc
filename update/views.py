@@ -133,7 +133,11 @@ class ResourceUpdateFormView(FormView):
                 if self.xml_file_string is None:
                     self.xml_file_string = xml_file.read()
                 with transaction.atomic():
-                    self.model.objects.update_from_xml_string(self.resource_id, self.xml_file_string)
+                    self.model.objects.update_from_xml_string(
+                        self.resource_id,
+                        self.xml_file_string,
+                        request.session.email
+                    )
 
                     # TODO: remove old code
                     update_with_pymongo_transaction_if_possible(

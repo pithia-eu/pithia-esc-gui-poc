@@ -29,6 +29,11 @@ from utils.url_helpers import divide_catalogue_related_resource_url_into_main_co
 _TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
+
 # Create your tests here.
 # The SimpleTestCase class is used to disable the automatic SQL database
 # create/destroy that Django automatically does with the default
@@ -391,7 +396,7 @@ class URLReferencesValidatorTestCase(TestCase):
         returns a dict where each value is a list of invalid resource URLs.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            Organisation.objects.create_from_xml_string(xml_file.read())
+            Organisation.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
             invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))
@@ -405,7 +410,7 @@ class URLReferencesValidatorTestCase(TestCase):
         returns a dict where each value is a list of invalid resource URLs.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
-            Catalogue.objects.create_from_xml_string(xml_file.read())
+            Catalogue.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
             invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))

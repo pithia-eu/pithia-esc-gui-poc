@@ -49,6 +49,11 @@ from pithiaesc.settings import BASE_DIR
 from utils.dict_helpers import flatten
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
+
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
 env = environ.Env()
 
 # Create your tests here.
@@ -231,7 +236,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         add_doi_metadata_kernel_to_handle() adds the DOI metadata kernel properties to a handle.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read())
+            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
@@ -266,7 +271,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
         All properties in the DOI dict are set successfully.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read())
+            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
@@ -286,7 +291,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
         Nested dicts in the DOI dict use dot notation when flattened.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read())
+            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
@@ -310,7 +315,7 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
             xml_file_string = xml_file.read()
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file_string)
+            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
             catalogue_data_subset_id = catalogue_data_subset.pk
             self.handle, client, credentials = create_and_register_handle_for_resource(catalogue_data_subset_id)
             print('xml_file', xml_file)
@@ -318,7 +323,8 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
             add_doi_metadata_kernel_to_data_subset(
                 catalogue_data_subset_id,
                 doi_dict,
-                xml_file_string
+                xml_file_string,
+                SAMPLE_USER_ID
             )
 
         print(f'Passed handle registration for {Path(xml_file.name).name}.')
@@ -438,6 +444,6 @@ class PrincipalAgentTestCase(TestCase):
         """
         data_collection = None
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            data_collection = DataCollection.objects.create_from_xml_string(xml_file.read())
+            data_collection = DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         principal_agent_name = get_first_related_party_name_from_data_collection(data_collection)
         print('principal_agent_name', principal_agent_name)

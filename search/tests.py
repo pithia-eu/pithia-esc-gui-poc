@@ -35,30 +35,35 @@ from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
+
 # Create your tests here.
 
 class SearchTestCase(TestCase):
     def setUp(self) -> None:
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
-            Instrument.objects.create_from_xml_string(xml_file.read())
+            Instrument.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
+            AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
-            Acquisition.objects.create_from_xml_string(xml_file.read())
+            Acquisition.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
-            Computation.objects.create_from_xml_string(xml_file.read())
+            Computation.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
-            Process.objects.create_from_xml_string(xml_file.read())
+            Process.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
+            DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         return super().setUp()
 
@@ -97,7 +102,7 @@ class SearchTestCase(TestCase):
 class SearchSetupTestCase(TestCase):
     def test_distinct_instrument_urls(self):
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
+            DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         data_collections = DataCollection.objects.all()
         distinct_instrument_type_urls = get_distinct_instrument_type_urls_from_data_collections(data_collections)
         print('distinct_instrument_type_urls', distinct_instrument_type_urls)
@@ -105,7 +110,7 @@ class SearchSetupTestCase(TestCase):
 
     def test_distinct_model_urls(self):
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
+            DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         data_collections = DataCollection.objects.all()
         distinct_model_urls = get_distinct_computation_type_urls_from_data_collections(data_collections)
         print('distinct_model_urls', distinct_model_urls)

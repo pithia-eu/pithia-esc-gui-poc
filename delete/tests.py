@@ -26,12 +26,16 @@ from pithiaesc.settings import BASE_DIR
 
 _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
 # Create your tests here.
 
 def _register_metadata_file_for_test(test_file_name, model):
     metadata_registration = None
     with open(os.path.join(_XML_METADATA_FILE_DIR, test_file_name)) as xml_file:
-        metadata_registration = model.objects.create_from_xml_string(xml_file.read())
+        metadata_registration = model.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
     return metadata_registration
 
 def _register_organisation_for_test():
