@@ -36,6 +36,10 @@ from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title
 )
+from user_management.services import (
+    get_logged_in_user_id,
+    get_logged_in_user_institution_id,
+)
 from utils.url_helpers import create_data_subset_detail_page_url
 
 # TODO: remove old code
@@ -85,6 +89,9 @@ class ResourceRegisterFormView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
+        institution_id = get_logged_in_user_institution_id(request)
+        owner_id = get_logged_in_user_id(request)
+
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
         xml_files = request.FILES.getlist('files')
@@ -101,8 +108,8 @@ class ResourceRegisterFormView(FormView):
                     with transaction.atomic():
                         self.new_registration = self.model.objects.create_from_xml_string(
                             xml_file_string,
-                            request.session.get('institution_for_login_session'),
-                            request.session.get('email'),
+                            institution_id,
+                            owner_id,
                         )
                         is_api_selected = 'api_selected' in request.POST
                         api_specification_url = request.POST.get('api_specification_url', None)
@@ -173,7 +180,7 @@ class ResourceRegisterFormView(FormView):
                                 self.new_registration.pk,
                                 doi_dict,
                                 xml_file_string,
-                                request.session.get('email')
+                                owner_id
                             )
                             add_handle_to_url_mapping(handle, data_subset_url)
 

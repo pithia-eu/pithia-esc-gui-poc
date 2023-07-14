@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from common import models
+from user_management.services import (
+    get_logged_in_user_institution_id,
+)
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -17,18 +20,20 @@ def index(request):
     })
 
 def data_collection_related_metadata_index(request):
-    num_current_organsations = models.Organisation.objects.count()
-    num_current_individuals = models.Individual.objects.count()
-    num_current_projects = models.Project.objects.count()
-    num_current_platforms = models.Platform.objects.count()
-    num_current_operations = models.Operation.objects.count()
-    num_current_instruments = models.Instrument.objects.count()
-    num_current_acquisition_capability_sets = models.AcquisitionCapabilities.objects.count()
-    num_current_acquisitions = models.Acquisition.objects.count()
-    num_current_computation_capability_sets = models.ComputationCapabilities.objects.count()
-    num_current_computations = models.Computation.objects.count()
-    num_current_processes = models.Process.objects.count()
-    num_current_data_collections = models.DataCollection.objects.count()
+    institution_id = get_logged_in_user_institution_id(request)
+
+    num_current_organsations = models.Organisation.objects.owned_by_institution(institution_id).count()
+    num_current_individuals = models.Individual.objects.owned_by_institution(institution_id).count()
+    num_current_projects = models.Project.objects.owned_by_institution(institution_id).count()
+    num_current_platforms = models.Platform.objects.owned_by_institution(institution_id).count()
+    num_current_operations = models.Operation.objects.owned_by_institution(institution_id).count()
+    num_current_instruments = models.Instrument.objects.owned_by_institution(institution_id).count()
+    num_current_acquisition_capability_sets = models.AcquisitionCapabilities.objects.owned_by_institution(institution_id).count()
+    num_current_acquisitions = models.Acquisition.objects.owned_by_institution(institution_id).count()
+    num_current_computation_capability_sets = models.ComputationCapabilities.objects.owned_by_institution(institution_id).count()
+    num_current_computations = models.Computation.objects.owned_by_institution(institution_id).count()
+    num_current_processes = models.Process.objects.owned_by_institution(institution_id).count()
+    num_current_data_collections = models.DataCollection.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
@@ -48,9 +53,11 @@ def data_collection_related_metadata_index(request):
     })
 
 def catalogue_related_metadata_index(request):
-    num_current_catalogues = models.Catalogue.objects.count()
-    num_current_catalogue_entries = models.CatalogueEntry.objects.count()
-    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.count()
+    institution_id = get_logged_in_user_institution_id(request)
+    
+    num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
+    num_current_catalogue_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
+    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_catalogue_entries': num_current_catalogue_entries,
@@ -71,8 +78,13 @@ class ResourceManagementListView(ListView):
     resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
+    def get(self, request, *args, **kwargs):
+        self.institution_id = get_logged_in_user_institution_id(request)
+
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.owned_by_institution(self.institution_id).all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
