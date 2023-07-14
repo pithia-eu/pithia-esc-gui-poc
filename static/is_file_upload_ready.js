@@ -4,7 +4,7 @@ import {
 
 export function enableSubmitButtonIfReady() {
     let isFileReadyToSubmit = isEachFileValid;
-    document.querySelector("button[type='submit']").disabled = !isFileReadyToSubmit;
+    document.querySelector("#file-upload-form button[type='submit']").disabled = !isFileReadyToSubmit;
 }
 
 document.addEventListener("fileValidationStatusUpdated", event => {
