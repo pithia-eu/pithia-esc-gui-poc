@@ -3,9 +3,8 @@
 {% block content %}
 <h1>PITHIA-NRF e-Science Centre</h1>
 <section>
-    <h2 class="mb-0">Search & Browse Metadata</h2>
-    <hr>
-    <div class="card-menu mb-3">
+    <h2 class="mb-3">Search & Browse Metadata</h2>
+    <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'search:index' %}">
@@ -40,10 +39,10 @@
         </div>
     </div>
 </section>
+<hr>
 <section>
-    <h2 class="mb-0">Space Physics Ontology</h2>
-    <hr>
-    <div class="card-menu mb-3">
+    <h2 class="mb-3">Space Physics Ontology</h2>
+    <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'ontology:index' %}">
@@ -55,13 +54,13 @@
     </div>
 </section>
 {% if request.session.institution_for_login_session %}
+<hr>
 <section>
-    <h2 class="mb-0">Metadata Registration & Management</h2>
-    <div role="doc-subtitle" class="text-body-secondary">
-        <strong>{{ request.session.institution_for_login_session }}</strong>
-    </div>
-    <hr>
-    <div class="card-menu">
+    <hgroup>
+        <h2>Data Providers</h2>
+        <p class="text-secondary">{{ request.session.institution_for_login_session|title }}</p>
+    </hgroup>
+    <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'resource_management:index' %}">
@@ -88,12 +87,29 @@
         </div>
     </div>
 </section>
+<hr>
+<section>
+    <hgroup>
+        <h2>Institution Admin</h2>
+        <p class="text-secondary">{{ request.session.institution_for_login_session|title }}</p>
+    </hgroup>
+    <div class="card-menu mb-2">
+        <div class="card">
+            <div class="card-body">
+                <a href="#">
+                    <img src="{% static 'data_models.svg' %}" alt="Data Models">
+                    Manage Members
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
 {% endif %}
 {% if request.session.is_logged_in %}
 <section>
-    <h2 class="mb-0">Institutional Memberships</h2>
-    <hr>
-    <div class="card-menu">
+    <h2 class="mb-3">Institution Member</h2>
+    <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'institution_management' %}">
