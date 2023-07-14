@@ -57,7 +57,7 @@
 <hr>
 <section>
     <hgroup>
-        <h2>Data Providers</h2>
+        <h2>Data & Model Providers</h2>
         <p class="text-secondary">{{ request.session.institution_for_login_session|title }}</p>
     </hgroup>
     <div class="card-menu mb-2">
@@ -108,21 +108,13 @@
 {% endif %}
 {% if request.session.is_logged_in %}
 <section>
-    <h2 class="mb-3">Institution Member</h2>
+    <h2 class="mb-3">My Institutions</h2>
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'institution_management' %}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    Manage Memberships
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}">
-                    <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    <span>Institution for Login Session</span>
+                    Manage My Memberships
                 </a>
             </div>
         </div>
