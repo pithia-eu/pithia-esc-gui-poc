@@ -34,6 +34,9 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
         for r in registrations_for_deletion:
             r.delete(using='esc_rw')
 
+    def owned_by_institution(self, institution_id: str):
+        return self.filter(institution_id=institution_id)
+
 
 class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatabaseQueries):
     pass
