@@ -3,7 +3,7 @@ import requests
 from urllib.parse import unquote
 
 # Used in the main menu. Used as the base link for creating new institutions.
-CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
+CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests'
 # Used in institutions list page. Used as the base link for joining organisations.
 # E.g., JOIN_URL_BASE + "<institution_name>"
 JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests:'
