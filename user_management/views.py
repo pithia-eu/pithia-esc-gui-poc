@@ -154,9 +154,9 @@ def update_perun_organisation_list(request):
     # If the details are correct, decode the data.
     decompressed_data = zlib.decompress(request.body, 16+zlib.MAX_WBITS)
     decompressed_data_string = decompressed_data.replace(b'\x00', b'').decode('ascii')
-    index_first_square_bracket = decompressed_data_string.index('[')
-    index_last_square_bracket = decompressed_data_string.index(']') 
-    update_data = json.loads(decompressed_data_string[index_first_square_bracket:index_last_square_bracket + 1])
+    index_first_curly_bracket = decompressed_data_string.index('{')
+    index_last_curly_bracket = decompressed_data_string.rfind('}') 
+    update_data = json.loads(decompressed_data_string[index_first_curly_bracket:index_last_curly_bracket + 1])
     
     # Store the update by overwriting the locally stored JSON file.
     with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'w') as organisation_list_file:
