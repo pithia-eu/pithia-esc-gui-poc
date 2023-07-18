@@ -2,13 +2,10 @@
 {% load project_tags %}
 {% load static %}
 {% block breadcrumbs %}
-{% if not request.session.is_user_selecting_institution_for_login_session %}
 {% breadcrumb_item_active title %}
-{% endif %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-{% if request.session.user_institution_subgroups|length > 0 %}
 <div class="col-lg-8">
     <p>
         Please select the institution you would like
@@ -26,29 +23,6 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
-{% else %}
-<div class="col-lg-8">
-    <p>
-        An institution membership is required before you
-        can perform any further actions. Use the link below
-        to register your institution with the e-Science
-        Centre, or, use the other link to submit a join
-        request if your institution is already registered.
-    </p>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <a href="{{ create_institution_url }}" target="_blank">
-                Register a New Institution
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'list_joinable_perun_organisations' %}">
-                <span>Join an Existing Institution</span>
-            </a>
-        </li>
-    </ul>
-</div>
-{% endif %}
 {% comment %} <section>
     <h2>Debugging</h2>
     <hr>

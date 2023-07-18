@@ -39,20 +39,11 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     {% load project_tags %}
-                    {% if request.session.is_user_selecting_institution_for_login_session %}
-                    {% url 'choose_perun_organisation_subgroup_for_session' as institution_selection_url %}
-                    {% if request.path == institution_selection_url %}
-                    {% breadcrumb_item_active title %}
-                    {% else %}
-                    {% breadcrumb_item 'Institution for Login Session' 'choose_perun_organisation_subgroup_for_session' %}
-                    {% endif %}
-                    {% else %}
                     {% url 'home' as base_url %}
                     {% if request.path == base_url %}
                     {% breadcrumb_item_active 'Home' %}
                     {% else %}
                     {% breadcrumb_item 'Home' 'home' %}
-                    {% endif %}
                     {% endif %}
                     {% block breadcrumbs %}{% endblock breadcrumbs %}
                 </ol>
