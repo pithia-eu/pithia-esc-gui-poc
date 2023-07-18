@@ -88,10 +88,10 @@
             <ul class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
                 <li class="dropdown-header institution-for-login-session">{{ request.session.institution_for_login_session }}</li>
-                {% endif %}
                 <li>
                     <a href={% url 'choose_perun_organisation_subgroup_for_session' %} class="dropdown-item">Switch Institutions...</a>
                 </li>
+                {% endif %}
                 <li>
                     <form action="{% url 'logout' %}" method="POST">
                         {% csrf_token %}
