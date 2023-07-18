@@ -89,13 +89,6 @@ def save_perun_info(request):
     return JsonResponse({'msg': 'ok'}, status=200)
 
 
-def index(request):
-    return render(request, 'user_management/index.html', {
-        'title': 'Institution Management',
-        'create_institution_url': CREATION_URL_BASE,
-    })
-
-
 def list_joinable_perun_organisations(request):
     # Join a group - list organisations from local JSON file
     org_list_raw = []
