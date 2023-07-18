@@ -85,7 +85,7 @@ def remove_login_session_variables(request):
         del request.session['subgroup_for_login_session']
 
 def get_logged_in_user_id(request):
-    return request.session.get('email')
+    return request.session.get('user_email')
 
 def get_logged_in_user_institution_id(request):
     return request.session.get('institution_for_login_session')
