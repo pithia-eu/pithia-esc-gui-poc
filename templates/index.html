@@ -112,9 +112,17 @@
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'institution_management' %}">
+                <a href="{{ create_institution_url }}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    Manage My Memberships
+                    Register a New Institution
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'list_joinable_perun_organisations' %}">
+                    <img src="{% static 'data_models.svg' %}" alt="Data Models">
+                    Join Another Institution
                 </a>
             </div>
         </div>

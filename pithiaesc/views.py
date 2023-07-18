@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
 
+from user_management.services import CREATION_URL_BASE
+
 # Initialise environment variables
 env = environ.Env()
 
@@ -23,10 +25,11 @@ def logout(request):
 def index(request):
     return render(request, 'index.html', {
         'title': 'PITHIA e-Science Centre Home',
+        'create_institution_url': CREATION_URL_BASE,
     })
 
 def index_admin(request):
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
-        'create_perun_organisation_url': CREATION_URL_BASE,
+        'create_institution_url': CREATION_URL_BASE,
     })
