@@ -25,7 +25,7 @@ class LoginMiddleware(object):
         try:
             request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
         except KeyError:
-            request.session['user_institution_subgroups'] = []
+            request.session['user_institution_subgroups'] = {}
         request.session['user_email'] = user_info.get('email')
         request.session['user_given_name'] = user_info.get('given_name')
 
