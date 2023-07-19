@@ -25,7 +25,9 @@
             {% endfor %}
             </select>
         </div>
+        {% if next %}
         <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
