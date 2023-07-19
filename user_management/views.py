@@ -175,6 +175,9 @@ def choose_perun_organisation_subgroup_for_session(request):
         institution_subgroup_pair = request.POST['subgroup-name']
         institution_subgroup_pair_split = institution_subgroup_pair.split(':')
         _set_institution_for_login_session(institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
+        next_url = request.POST.get('next')
+        if next_url:
+            return HttpResponseRedirect(next_url)
         return HttpResponseRedirect(reverse('data_provider_home'))
 
     logged_in_user_memberships = get_institution_memberships_of_logged_in_user(request)
@@ -195,4 +198,5 @@ def choose_perun_organisation_subgroup_for_session(request):
     return render(request, 'user_management/choose_institution_for_login_session.html', {
         'title': 'Choose an Institution',
         'create_institution_url': CREATION_URL_BASE,
+        'next': request.GET.get('next'),
     })

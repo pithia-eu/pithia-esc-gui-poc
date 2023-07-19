@@ -89,7 +89,7 @@
                 {% endif %}
                 {% if request.session.user_institution_subgroups|length > 1 %}
                 <li>
-                    <a href={% url 'choose_perun_organisation_subgroup_for_session' %} class="dropdown-item">
+                    <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}?next={{ request.path }}" class="dropdown-item">
                         {% if request.session.institution_for_login_session %}
                         Change Institution...
                         {% else %}
