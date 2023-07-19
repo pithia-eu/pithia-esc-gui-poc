@@ -79,6 +79,8 @@ def remove_login_session_variables(request):
         del request.session['user_institution_subgroups']
     if 'user_email' in request.session:
         del request.session['user_email']
+    if 'user_given_name' in request.session:
+        del request.session['user_given_name']
     if 'institution_for_login_session' in request.session:
         del request.session['institution_for_login_session']
     if 'subgroup_for_login_session' in request.session:
