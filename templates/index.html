@@ -5,6 +5,47 @@
 {% if request.session.user_given_name %}
 <p class="text-secondary">Logged in as: {{ request.session.user_given_name }}</p>
 {% endif %}
+{% if request.session.is_logged_in and not request.session.institution_for_login_session %}
+<div class="row">
+    <div class="col-lg-8">
+        {% if not request.session.user_institution_subgroups %}
+        <div class="alert alert-info">
+            <h2>Register or Join an Institution</h2>
+            <p>
+                To enable scientific metadata management capabilities,
+                please join or register for a new institution using the
+                links below.
+            </p>
+            <hr>
+            <ul>
+                <li>
+                    <a href="{{ create_institution_url }}">
+                        Register a New Institution
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'list_joinable_perun_organisations' %}">
+                        Join an Existing Institution
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-primary">
+            <p>
+                To enable scientific metadata management capabilities,
+                please select the institution you would like to act on
+                behalf of for this login session.
+            </p>
+            <a href={% url 'choose_perun_organisation_subgroup_for_session' %}>
+                Choose an Institution...
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<hr>
+{% endif %}
 <section>
     <h2 class="mb-3">Search & Browse Metadata</h2>
     <div class="card-menu mb-2">
@@ -108,7 +149,7 @@
     </div>
 </section>
 {% endif %}
-{% if request.session.is_logged_in %}
+{% if request.session.is_logged_in and request.session.institution_for_login_session %}
 <hr>
 <section>
     <h2 class="mb-3">My Institutions</h2>
