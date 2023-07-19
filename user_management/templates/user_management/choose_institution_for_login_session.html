@@ -16,7 +16,12 @@
         <div class="mb-3">
             <select class="form-select" name="subgroup-name">
             {% for institution, subgroup in request.session.user_institution_subgroups.items %}
-                <option value="{{ institution }}:{{ subgroup }}">{{ institution }}</option>
+                <option
+                    value="{{ institution }}:{{ subgroup }}"
+                    {% if request.session.institution_for_login_session == institution %}
+                    selected
+                    {% endif %}
+                >{{ institution }}</option>
             {% endfor %}
             </select>
         </div>
