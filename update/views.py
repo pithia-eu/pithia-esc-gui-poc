@@ -7,10 +7,12 @@ from django.shortcuts import (
     redirect,
 )
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
 from common import models
+from common.decorators import login_session_institution_required
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -85,6 +87,8 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceUpdateFormView(FormView):
     # Registration variables
     resource = None
@@ -407,6 +411,7 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
         self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
+@login_session_institution_required
 def data_collection_interaction_methods(request, data_collection_id):
     data_collection = get_object_or_404(models.DataCollection, pk=data_collection_id)
     if request.method == 'POST':

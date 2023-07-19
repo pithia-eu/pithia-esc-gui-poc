@@ -5,6 +5,7 @@ from django.db import (
     transaction,
 )
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 from pyexpat import ExpatError
 
@@ -15,6 +16,7 @@ from .forms import (
 )
 
 from common import models, mongodb_models
+from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource_url,
@@ -55,6 +57,8 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceRegisterFormView(FormView):
     success_url = ''
     form_class = UploadFileForm

@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from common import models
+from common.decorators import login_session_institution_required
 from user_management.services import (
     get_institution_id_for_login_session,
 )
@@ -14,11 +16,13 @@ def _create_manage_resource_page_title(resource_type_plural_readable):
     return f'Register & Manage {resource_type_plural_readable.title()}'
 
 # Create your views here.
+@login_session_institution_required
 def index(request):
     return render(request, 'resource_management/index.html', {
         'title': _INDEX_PAGE_TITLE
     })
 
+@login_session_institution_required
 def data_collection_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request)
 
@@ -52,6 +56,7 @@ def data_collection_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
+@login_session_institution_required
 def catalogue_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request)
     
@@ -67,6 +72,7 @@ def catalogue_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceManagementListView(ListView):
     template_name = 'resource_management/resource_management_list_by_type_outer.html'
     context_object_name = 'resources'

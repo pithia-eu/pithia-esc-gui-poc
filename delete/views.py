@@ -4,6 +4,7 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from .pymongo_api import (
@@ -12,6 +13,7 @@ from .pymongo_api import (
 )
 
 from common import models
+from common.decorators import login_session_institution_required
 from common.models import ScientificMetadata
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
@@ -55,6 +57,7 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceDeleteView(TemplateView):
     """
     The deletion confirmation page for a
