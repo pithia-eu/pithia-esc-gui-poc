@@ -14,7 +14,7 @@
 <script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1 class="pb-0">{{ title }}</h1>
+<h1>{{ title }}</h1>
 <div class="text-muted mb-4">
     Data Collection: <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b>
 </div>

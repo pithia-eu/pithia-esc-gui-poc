@@ -10,7 +10,7 @@
 <script type="module" src="{% static "ontology/ontology.js" %}" id="ontology-script" defer></script>
 {% endblock scripts %}
 {% block content %}
-<h1 class="pb-3">{{ title }}</h1>
+<h1>{{ title }}</h1>
 <div class="col-lg-12">
     {% with category=category %}
     {% include "ontology/ontology_tree_container_template.html" %}
