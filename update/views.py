@@ -58,7 +58,7 @@ from resource_management.views import (
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 )
-from user_management.services import get_logged_in_user_id
+from user_management.services import get_user_id_for_login_session
 
 # TODO: remove old code
 
@@ -137,7 +137,7 @@ class ResourceUpdateFormView(FormView):
                     self.model.objects.update_from_xml_string(
                         self.resource_id,
                         self.xml_file_string,
-                        get_logged_in_user_id(request)
+                        get_user_id_for_login_session(request)
                     )
 
                     # TODO: remove old code

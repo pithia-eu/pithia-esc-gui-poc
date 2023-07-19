@@ -3,7 +3,7 @@ from django.views.generic import ListView
 
 from common import models
 from user_management.services import (
-    get_logged_in_user_institution_id,
+    get_institution_id_for_login_session,
 )
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
@@ -20,7 +20,7 @@ def index(request):
     })
 
 def data_collection_related_metadata_index(request):
-    institution_id = get_logged_in_user_institution_id(request)
+    institution_id = get_institution_id_for_login_session(request)
 
     num_current_organsations = models.Organisation.objects.owned_by_institution(institution_id).count()
     num_current_individuals = models.Individual.objects.owned_by_institution(institution_id).count()
@@ -53,7 +53,7 @@ def data_collection_related_metadata_index(request):
     })
 
 def catalogue_related_metadata_index(request):
-    institution_id = get_logged_in_user_institution_id(request)
+    institution_id = get_institution_id_for_login_session(request)
     
     num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
     num_current_catalogue_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
@@ -79,7 +79,7 @@ class ResourceManagementListView(ListView):
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
     def get(self, request, *args, **kwargs):
-        self.institution_id = get_logged_in_user_institution_id(request)
+        self.institution_id = get_institution_id_for_login_session(request)
 
         return super().get(request, *args, **kwargs)
 
