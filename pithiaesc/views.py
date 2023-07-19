@@ -24,6 +24,6 @@ def logout(request):
 
 def index(request):
     return render(request, 'index.html', {
-        'title': 'Dashboard',
+        'title': 'PITHIA-NRF e-Science Centre',
         'create_institution_url': CREATION_URL_BASE,
     })
