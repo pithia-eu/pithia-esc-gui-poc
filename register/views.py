@@ -37,8 +37,8 @@ from resource_management.views import (
     _create_manage_resource_page_title
 )
 from user_management.services import (
-    get_logged_in_user_id,
-    get_logged_in_user_institution_id,
+    get_user_id_for_login_session,
+    get_institution_id_for_login_session,
 )
 from utils.url_helpers import create_data_subset_detail_page_url
 
@@ -89,8 +89,8 @@ class ResourceRegisterFormView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        institution_id = get_logged_in_user_institution_id(request)
-        owner_id = get_logged_in_user_id(request)
+        institution_id = get_institution_id_for_login_session(request)
+        owner_id = get_user_id_for_login_session(request)
 
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)

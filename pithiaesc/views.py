@@ -24,12 +24,6 @@ def logout(request):
 
 def index(request):
     return render(request, 'index.html', {
-        'title': 'PITHIA e-Science Centre Home',
-        'create_institution_url': CREATION_URL_BASE,
-    })
-
-def index_admin(request):
-    return render(request, 'index.html', {
-        'title': 'Admin Dashboard',
+        'title': 'Dashboard',
         'create_institution_url': CREATION_URL_BASE,
     })

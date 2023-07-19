@@ -79,16 +79,21 @@ def remove_login_session_variables(request):
         del request.session['user_institution_subgroups']
     if 'user_email' in request.session:
         del request.session['user_email']
+    if 'user_given_name' in request.session:
+        del request.session['user_given_name']
     if 'institution_for_login_session' in request.session:
         del request.session['institution_for_login_session']
     if 'subgroup_for_login_session' in request.session:
         del request.session['subgroup_for_login_session']
 
-def get_logged_in_user_id(request):
+def get_user_id_for_login_session(request):
     return request.session.get('user_email')
 
-def get_logged_in_user_institution_id(request):
+def get_institution_id_for_login_session(request):
     return request.session.get('institution_for_login_session')
 
-def get_subgroup_of_logged_in_user(request):
+def get_subgroup_id_for_login_session(request):
     return request.session.get('subgroup_for_login_session')
+
+def get_institution_memberships_of_logged_in_user(request):
+    return request.session.get('user_institution_subgroups')

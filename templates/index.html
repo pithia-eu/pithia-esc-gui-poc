@@ -1,15 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1>PITHIA-NRF e-Science Centre</h1>
+<h1>{{ title }}</h1>
+{% if request.session.user_given_name %}
+<p class="text-secondary">Logged in as: {{ request.session.user_given_name }}</p>
+{% endif %}
+{% if request.session.is_logged_in and not request.session.institution_for_login_session %}
+<div class="row">
+    <div class="col-lg-8">
+        {% if not request.session.user_institution_subgroups %}
+        <div class="alert alert-info">
+            <h2>Register or Join an Institution</h2>
+            <p>
+                To enable scientific metadata management capabilities,
+                please join or register for a new institution using the
+                links below.
+            </p>
+            <hr>
+            <ul>
+                <li>
+                    <a href="{{ create_institution_url }}">
+                        Register a New Institution
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'list_joinable_perun_organisations' %}">
+                        Join an Existing Institution
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-primary">
+            <p>
+                To enable scientific metadata management capabilities,
+                please select the institution you would like to act on
+                behalf of for this login session.
+            </p>
+            <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}">
+                Choose an Institution...
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<hr>
+{% endif %}
 <section>
-    <h2 class="mb-3">Search & Browse Metadata</h2>
+    <h2 class="mb-3">Scientific Metadata</h2>
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'search:index' %}">
                     <img src="{% static 'search.svg' %}" alt="Search">
-                    <span>Search Data Collections</span>
+                    <span>Search Data Collections with Ontology</span>
                 </a>
             </div>
         </div>
@@ -33,7 +77,7 @@
             <div class="card-body">
                 <a href="{% url 'browse:index' %}">
                     <img src="{% static 'browse.svg' %}" alt="Browse">
-                    <span>Browse Metadata</span>
+                    <span>Browse All Metadata</span>
                 </a>
             </div>
         </div>
@@ -47,7 +91,7 @@
             <div class="card-body">
                 <a href="{% url 'ontology:index' %}">
                     <img src="{% static 'ontology.svg' %}" alt="Ontology">
-                    <span>Space Physics Ontology</span>
+                    <span>Browse Space Physics Ontology</span>
                 </a>
             </div>
         </div>
@@ -55,17 +99,15 @@
 </section>
 {% if request.session.institution_for_login_session %}
 <hr>
+<h2>{{ request.session.institution_for_login_session }}</h2>
 <section>
-    <hgroup>
-        <h2>Data & Model Providers</h2>
-        <p class="text-secondary">{{ request.session.institution_for_login_session|title }}</p>
-    </hgroup>
+    <h3 class="text-secondary mb-3">Scientific Metadata Registrations</h3>
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'resource_management:index' %}">
                     <img src="{% static 'file_upload.svg' %}" alt="File Upload">
-                    <span>Register & Manage Metadata</span>
+                    <span>Manage Registrations</span>
                 </a>
             </div>
         </div>
@@ -73,7 +115,7 @@
             <div class="card-body">
                 <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
                     <img src="{% static 'file_info.svg' %}" alt="Info">
-                    <span>Metadata Registration Guide</span>
+                    <span>View Metadata Registration Guide</span>
                 </a>
             </div>
         </div>
@@ -81,18 +123,14 @@
             <div class="card-body">
                 <a href="{% url 'schemas' %}">
                     <img src="{% static 'data_models.svg' %}" alt="Data Models">
-                    <span>Metadata Models</span>
+                    <span>View Metadata Models</span>
                 </a>
             </div>
         </div>
     </div>
 </section>
-<hr>
 <section>
-    <hgroup>
-        <h2>Institution Admin</h2>
-        <p class="text-secondary">{{ request.session.institution_for_login_session|title }}</p>
-    </hgroup>
+    <h3 class="text-secondary mb-3">Memberships</h3>
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
@@ -105,7 +143,7 @@
     </div>
 </section>
 {% endif %}
-{% if request.session.is_logged_in %}
+{% if request.session.is_logged_in and request.session.institution_for_login_session %}
 <hr>
 <section>
     <h2 class="mb-3">My Institutions</h2>

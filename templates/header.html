@@ -86,8 +86,16 @@
             <ul class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
                 <li class="dropdown-header institution-for-login-session">{{ request.session.institution_for_login_session }}</li>
+                {% endif %}
+                {% if request.session.user_institution_subgroups|length > 1 %}
                 <li>
-                    <a href={% url 'choose_perun_organisation_subgroup_for_session' %} class="dropdown-item">Switch Institutions...</a>
+                    <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}?next={{ request.path }}" class="dropdown-item">
+                        {% if request.session.institution_for_login_session %}
+                        Change Institution...
+                        {% else %}
+                        Choose an Institution...
+                        {% endif %}
+                    </a>
                 </li>
                 {% endif %}
                 <li>
@@ -101,7 +109,7 @@
             </ul>
         </div>
         {% else %}
-        <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
+        <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}" class="btn btn-outline-primary me-2">
             Login
         </a>
         {% endif %}

@@ -26,6 +26,8 @@ from .services import (
     JOIN_URL_BASE,
 )
 
+from user_management.services import get_institution_memberships_of_logged_in_user
+
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
 
@@ -165,10 +167,27 @@ def update_perun_organisation_list(request):
 
 
 def choose_perun_organisation_subgroup_for_session(request):
+    def _set_institution_for_login_session(institution, subgroup):
+        request.session['institution_for_login_session'] = institution
+        request.session['subgroup_for_login_session'] = subgroup
+
     if request.method == 'POST':
-        subgroup_name = request.POST['subgroup-name']
-        request.session['institution_for_login_session'] = subgroup_name.split(':')[0]
-        request.session['subgroup_for_login_session'] = subgroup_name
+        institution_subgroup_pair = request.POST['subgroup-name']
+        institution_subgroup_pair_split = institution_subgroup_pair.split(':')
+        _set_institution_for_login_session(institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
+        next_url = request.POST.get('next')
+        if next_url:
+            return HttpResponseRedirect(next_url)
+        return HttpResponseRedirect(reverse('data_provider_home'))
+
+    logged_in_user_memberships = get_institution_memberships_of_logged_in_user(request)
+    if logged_in_user_memberships is None:
+        return HttpResponseRedirect(reverse('data_provider_home'))
+
+    if len(logged_in_user_memberships.keys()) == 1:
+        institution = list(logged_in_user_memberships.keys())[0]
+        subgroup = list(logged_in_user_memberships.values())[0]
+        _set_institution_for_login_session(institution, subgroup)
         return HttpResponseRedirect(reverse('data_provider_home'))
 
     # One user has multiple organisations, but we need to select
@@ -176,7 +195,8 @@ def choose_perun_organisation_subgroup_for_session(request):
 
     # Find the organisation to be able to configure views to institution.
 
-    return render(request, 'user_management/subgroup_selection_for_session.html', {
-        'title': 'Institution for Login Session',
+    return render(request, 'user_management/choose_institution_for_login_session.html', {
+        'title': 'Choose an Institution',
         'create_institution_url': CREATION_URL_BASE,
+        'next': request.GET.get('next'),
     })
