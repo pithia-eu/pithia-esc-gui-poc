@@ -13,13 +13,11 @@
 <script src="{% static 'is_file_upload_ready.js' %}" type="module" defer></script>
 {% endblock scripts %}
 {% block title %}
-<h1>{{ title }}</h1>
+<hgroup>
+    <h1>{{ title }}</h1>
+    <p class="text-secondary">Updating: {{ resource.name }}</p>
+</hgroup>
 {% endblock title %}
-{% block subtitle %}
-<div class="text-muted mb-4">
-    Updating: {{ resource.name }}
-</div>
-{% endblock subtitle %}
 {% block page_description %}
 Upload the updated file using the file input below.
 This will start the file validation process.

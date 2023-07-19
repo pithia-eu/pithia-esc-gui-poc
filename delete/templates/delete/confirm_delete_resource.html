@@ -14,12 +14,12 @@
 {% block content %}
 <div class="row gy-3">
     <div class="col-lg-8">
-        <h1>
-            {{ title }}
-        </h1>
-        <span class="text-muted">
-            Deleting: {{ resource_to_delete.name|default:resource_to_delete.localid }}
-        </span>
+        <hgroup>
+            <h1>{{ title }}</h1>
+            <p class="text-secondary">
+                Deleting: {{ resource_to_delete.name|default:resource_to_delete.localid }}
+            </p>
+        </hgroup>
     </div>
     {% if messages %}
     <div class="col-lg-8">
