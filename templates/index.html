@@ -129,6 +129,7 @@
         </div>
     </div>
 </section>
+{% if 'admins' in request.session.subgroup_for_login_session %}
 <section>
     <h3 class="text-secondary mb-3">Memberships</h3>
     <div class="card-menu mb-2">
@@ -142,6 +143,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endif %}
 {% if request.session.is_logged_in and request.session.institution_for_login_session %}
 <hr>
