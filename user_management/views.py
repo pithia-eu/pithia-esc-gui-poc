@@ -26,7 +26,7 @@ from .services import (
     JOIN_URL_BASE,
 )
 
-from user_management.services import get_institution_memberships_of_logged_in_user
+from user_management.services import set_institution_for_login_session
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
@@ -166,31 +166,17 @@ def update_perun_organisation_list(request):
     return HttpResponse(status=200)
 
 
-def set_institution_for_login_session(request):
-    def _set_institution_for_login_session(institution, subgroup):
-        request.session['institution_for_login_session'] = institution
-        request.session['subgroup_for_login_session'] = subgroup
-
-    if request.method == 'POST':
-        institution_subgroup_pair = request.POST['institutions']
-        institution_subgroup_pair_split = institution_subgroup_pair.split(':')
-        _set_institution_for_login_session(institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
-        next_url = request.POST.get('next')
-        if next_url:
-            return HttpResponseRedirect(next_url)
-        return HttpResponseRedirect(reverse('data_provider_home'))
-
-    logged_in_user_memberships = get_institution_memberships_of_logged_in_user(request)
-    if logged_in_user_memberships is None:
-        return HttpResponseRedirect(reverse('data_provider_home'))
-
-    if len(logged_in_user_memberships.keys()) == 1:
-        institution = list(logged_in_user_memberships.keys())[0]
-        subgroup = list(logged_in_user_memberships.values())[0]
-        _set_institution_for_login_session(institution, subgroup)
-
+def choose_institution_for_login_session(request):
     # One user has multiple organisations, but we need to select
     # one organisation per session.
 
     # Find the organisation to be able to configure views to institution.
+    if request.method == 'POST':
+        institution_subgroup_pair = request.POST['institutions']
+        institution_subgroup_pair_split = institution_subgroup_pair.split(':')
+        set_institution_for_login_session(request, institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
+        next_url = request.POST.get('next')
+        if next_url:
+            return HttpResponseRedirect(next_url)
+
     return HttpResponseRedirect(reverse('data_provider_home'))

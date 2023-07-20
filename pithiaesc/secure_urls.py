@@ -15,5 +15,5 @@ urlpatterns = [
     path('validate/', include('validation.urls')),
     path('institutions/', user_management_views.list_joinable_perun_organisations, name='list_joinable_perun_organisations'),
     path('institutions/<institution_id>/', user_management_views.list_joinable_perun_organisation_subgroups, name='list_joinable_perun_organisation_subgroups'),
-    path('set-institution-for-session/', user_management_views.set_institution_for_login_session, name='set_institution_for_login_session'),
+    path('choose-institution-for-session/', user_management_views.choose_institution_for_login_session, name='choose_institution_for_login_session'),
 ]

@@ -67,6 +67,33 @@ class LoginMiddleware(object):
 
         return response
 
+class InstitutionSelectionMiddleware:
+    def __init__(self, get_response):
+        # One-time configuration and initialisation.
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        try:
+            user_memberships = get_institution_memberships_of_logged_in_user(request)
+            if len(user_memberships.keys()) == 1:
+                set_institution_for_login_session(
+                    request,
+                    list(user_memberships.keys())[0],
+                    list(user_memberships.values())[0]
+                )
+        except AttributeError:
+            pass
+
+        response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
+
+        return response
+
 class InstitutionSelectionFormMiddleware:
     def __init__(self, get_response):
         # One-time configuration and initialisation.

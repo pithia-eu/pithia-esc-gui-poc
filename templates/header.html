@@ -92,7 +92,7 @@
                     </div>
                     {% if request.session.user_institution_subgroups|length > 1 %}
                     <div class="col-12">
-                        <form action="{% url 'set_institution_for_login_session' %}?next={{ request.path }}" method="POST">
+                        <form action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}" method="POST">
                             {% csrf_token %}
                             <label for="{{ request.institution_selection_form.institutions.auto_id }}">
                                 Change to:
@@ -123,7 +123,7 @@
             </div>
         </div>
         {% else %}
-        <a href="{% url 'set_institution_for_login_session' %}" class="btn btn-outline-primary me-2">
+        <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
             Login
         </a>
         {% endif %}
