@@ -126,7 +126,7 @@ header .dropdown-item:active a {
 }
 
 .user-menu .dropdown-menu {
-    max-width: 15rem;
+    max-width: 21rem;
 }
 
 .user-menu .institution-for-login-session {

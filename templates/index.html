@@ -37,9 +37,11 @@
                 please select the institution you would like to act on
                 behalf of for this login session.
             </p>
-            <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}">
-                Choose an Institution...
-            </a>
+            <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}" method="POST">
+                {% csrf_token %}
+                {{ request.institution_selection_form }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
         {% endif %}
     </div>

@@ -172,7 +172,7 @@ def choose_perun_organisation_subgroup_for_session(request):
         request.session['subgroup_for_login_session'] = subgroup
 
     if request.method == 'POST':
-        institution_subgroup_pair = request.POST['subgroup-name']
+        institution_subgroup_pair = request.POST['institutions']
         institution_subgroup_pair_split = institution_subgroup_pair.split(':')
         _set_institution_for_login_session(institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
         next_url = request.POST.get('next')

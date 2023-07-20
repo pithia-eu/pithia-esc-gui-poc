@@ -83,30 +83,44 @@
             <a class="link-body-emphasis text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ request.session.user_given_name }}
             </a>
-            <ul class="dropdown-menu">
+            <div class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
-                <li class="dropdown-header institution-for-login-session">{{ request.session.institution_for_login_session }}</li>
+                <p class="dropdown-header">Current Institution</p>
+                <div class="row px-3 pb-2 gy-3">
+                    <div class="col-12">
+                        <small class="institution-for-login-session text-secondary fw-bold">{{ request.session.institution_for_login_session }}</small>
+                    </div>
+                    {% if request.session.user_institution_subgroups|length > 1 %}
+                    <div class="col-12">
+                        <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}?next={{ request.path }}" method="POST">
+                            {% csrf_token %}
+                            <label for="{{ request.institution_selection_form.institutions.auto_id }}">
+                                Change to:
+                            </label>
+                            <select
+                                name="{{ request.institution_selection_form.institutions.name }}"
+                                id="{{ request.institution_selection_form.institutions.auto_id }}"
+                                class="form-select mb-3">
+                                {% for value, text in request.institution_selection_form.fields.institutions.choices %}
+                                    <option value="{{ value }}" {% if request.session.institution_for_login_session == text %}selected{% endif %}>{{ text }}</option>
+                                {% endfor %}
+                            </select>
+                            <button href="#" type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+                <hr class="dropdown-divider">
                 {% endif %}
-                {% if request.session.user_institution_subgroups|length > 1 %}
-                <li>
-                    <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}?next={{ request.path }}" class="dropdown-item">
-                        {% if request.session.institution_for_login_session %}
-                        Change Institution...
-                        {% else %}
-                        Choose an Institution...
-                        {% endif %}
-                    </a>
-                </li>
-                {% endif %}
-                <li>
-                    <form action="{% url 'logout' %}" method="POST">
-                        {% csrf_token %}
-                        <button href="#" type="submit" class="dropdown-item pithia-blue">
-                            Logout
-                        </button>
-                    </form>
-                </li>
-            </ul>
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button href="#" type="submit" class="dropdown-item">
+                        Logout
+                    </button>
+                </form>
+            </div>
         </div>
         {% else %}
         <a href="{% url 'choose_perun_organisation_subgroup_for_session' %}" class="btn btn-outline-primary me-2">

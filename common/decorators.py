@@ -9,7 +9,7 @@ def login_session_institution_required(function):
     def wrap(request, *args, **kwargs):
         institution_id_for_login_session = get_institution_id_for_login_session(request)
         if not institution_id_for_login_session:
-            return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
+            return HttpResponseRedirect(reverse('home'))
         return function(request, *args, **kwargs)
 
     return wrap

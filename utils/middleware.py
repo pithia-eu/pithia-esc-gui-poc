@@ -1,11 +1,14 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
+from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
     get_user_info,
     get_highest_subgroup_of_each_institution_for_logged_in_user,
+    get_institution_memberships_of_logged_in_user,
     remove_login_session_variables,
 )
+
 
 class LoginMiddleware(object):
     def __init__(self, get_response):
@@ -64,7 +67,7 @@ class LoginMiddleware(object):
 
         return response
 
-class LoginSessionInstitutionMiddleware(object):
+class InstitutionSelectionFormMiddleware:
     def __init__(self, get_response):
         # One-time configuration and initialisation.
         self.get_response = get_response
@@ -73,26 +76,11 @@ class LoginSessionInstitutionMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        exempt_paths = [
-            reverse('logout'),
-            reverse('list_joinable_perun_organisations'),
-            reverse('choose_perun_organisation_subgroup_for_session'),
-        ]
-        # Join an institution subgroup page cannot be
-        # resolved with reverse, so have to use
-        # another method to match the current
-        # path with an exempt path.
-        is_current_path_exempt = any([p in request.path for p in exempt_paths])
-        is_user_selecting_institution_for_login_session = (
-            request.session.get('is_logged_in') is True
-            and ('institution_for_login_session' not in request.session
-            or 'subgroup_for_login_session' not in request.session)
-        )
-        request.session['is_user_selecting_institution_for_login_session'] = is_user_selecting_institution_for_login_session
-
-        if (is_user_selecting_institution_for_login_session
-            and not is_current_path_exempt):
-            return HttpResponseRedirect(reverse('choose_perun_organisation_subgroup_for_session'))
+        user_memberships = get_institution_memberships_of_logged_in_user(request)
+        if user_memberships is not None:
+            institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
+            institution_selection_form = InstitutionForLoginSessionForm(institution_choices)
+            request.institution_selection_form = institution_selection_form
 
         response = self.get_response(request)
 
