@@ -104,11 +104,13 @@ class InstitutionSelectionFormMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        user_memberships = get_institution_memberships_of_logged_in_user(request)
-        if user_memberships is not None:
+        try:
+            user_memberships = get_institution_memberships_of_logged_in_user(request)
             institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
-            institution_selection_form = InstitutionForLoginSessionForm(institution_choices)
+            institution_selection_form = InstitutionForLoginSessionForm(institution_choices, initial={'next': request.path})
             request.institution_selection_form = institution_selection_form
+        except AttributeError:
+            pass
 
         response = self.get_response(request)
 

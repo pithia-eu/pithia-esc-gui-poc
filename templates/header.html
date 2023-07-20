@@ -105,6 +105,7 @@
                                     <option value="{{ value }}" {% if request.session.institution_for_login_session == text %}selected{% endif %}>{{ text }}</option>
                                 {% endfor %}
                             </select>
+                            {{ request.institution_selection_form.next }}
                             <button href="#" type="submit" class="btn btn-primary">
                                 Submit
                             </button>

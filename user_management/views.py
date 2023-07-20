@@ -24,9 +24,8 @@ from pathlib import Path
 from .services import (
     CREATION_URL_BASE,
     JOIN_URL_BASE,
+    set_institution_for_login_session,
 )
-
-from user_management.services import set_institution_for_login_session
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'

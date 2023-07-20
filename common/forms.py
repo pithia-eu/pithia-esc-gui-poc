@@ -3,7 +3,7 @@ from django import forms
 
 class InstitutionForLoginSessionForm(forms.Form):
     def __init__(self, institution_choices, *args, **kwargs):
-        super(InstitutionForLoginSessionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['institutions'].choices = institution_choices
 
     institutions = forms.ChoiceField(
@@ -14,3 +14,5 @@ class InstitutionForLoginSessionForm(forms.Form):
             'class': 'form-select mb-3',
         })
     )
+
+    next = forms.URLField(widget=forms.HiddenInput())
