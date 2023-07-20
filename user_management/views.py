@@ -166,7 +166,7 @@ def update_perun_organisation_list(request):
     return HttpResponse(status=200)
 
 
-def choose_perun_organisation_subgroup_for_session(request):
+def set_institution_for_login_session(request):
     def _set_institution_for_login_session(institution, subgroup):
         request.session['institution_for_login_session'] = institution
         request.session['subgroup_for_login_session'] = subgroup
@@ -188,15 +188,9 @@ def choose_perun_organisation_subgroup_for_session(request):
         institution = list(logged_in_user_memberships.keys())[0]
         subgroup = list(logged_in_user_memberships.values())[0]
         _set_institution_for_login_session(institution, subgroup)
-        return HttpResponseRedirect(reverse('data_provider_home'))
 
     # One user has multiple organisations, but we need to select
     # one organisation per session.
 
     # Find the organisation to be able to configure views to institution.
-
-    return render(request, 'user_management/choose_institution_for_login_session.html', {
-        'title': 'Choose an Institution',
-        'create_institution_url': CREATION_URL_BASE,
-        'next': request.GET.get('next'),
-    })
+    return HttpResponseRedirect(reverse('data_provider_home'))

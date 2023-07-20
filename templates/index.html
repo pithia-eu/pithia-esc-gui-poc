@@ -9,14 +9,13 @@
 <div class="row">
     <div class="col-lg-8">
         {% if not request.session.user_institution_subgroups %}
-        <div class="alert alert-secondary">
+        <div class="alert alert-light">
             <h2>Register or Join an Institution</h2>
             <p>
                 To enable scientific metadata management capabilities,
                 please join or register for a new institution using the
                 links below.
             </p>
-            <hr>
             <ul>
                 <li>
                     <a href="{{ create_institution_url }}">
@@ -37,7 +36,7 @@
                 please select the institution you would like to act on
                 behalf of for this login session.
             </p>
-            <form action="{% url 'choose_perun_organisation_subgroup_for_session' %}" method="POST">
+            <form action="{% url 'set_institution_for_login_session' %}" method="POST">
                 {% csrf_token %}
                 {{ request.institution_selection_form }}
                 <button type="submit" class="btn btn-primary">Submit</button>
