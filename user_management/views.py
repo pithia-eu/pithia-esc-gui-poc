@@ -6,6 +6,7 @@ import random
 import uuid
 import zlib
 
+from django.contrib import messages
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
@@ -23,6 +24,7 @@ from pathlib import Path
 
 from .services import (
     CREATION_URL_BASE,
+    get_institution_id_for_login_session,
     JOIN_URL_BASE,
     set_institution_for_login_session,
 )
@@ -173,7 +175,11 @@ def choose_institution_for_login_session(request):
     if request.method == 'POST':
         institution_subgroup_pair = request.POST['institutions']
         institution_subgroup_pair_split = institution_subgroup_pair.split(':')
-        set_institution_for_login_session(request, institution_subgroup_pair_split[0], institution_subgroup_pair_split[1])
+        institution = institution_subgroup_pair_split[0]
+        subgroup = institution_subgroup_pair_split[1]
+        changed_or_set = 'changed' if get_institution_id_for_login_session(request) else 'set'
+        set_institution_for_login_session(request, institution, subgroup)
+        messages.success(request, f'Institution for login session {changed_or_set} to {institution}.')
         next_url = request.POST.get('next')
         if next_url:
             return HttpResponseRedirect(next_url)
