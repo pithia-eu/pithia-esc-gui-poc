@@ -7,6 +7,7 @@ from user_management.services import (
     get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_memberships_of_logged_in_user,
     remove_login_session_variables,
+    set_institution_for_login_session,
 )
 
 
