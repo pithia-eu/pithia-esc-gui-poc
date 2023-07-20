@@ -13,7 +13,10 @@ from .pymongo_api import (
 )
 
 from common import models
-from common.decorators import login_session_institution_required
+from common.decorators import (
+    login_session_institution_required,
+    institution_ownership_required,
+)
 from common.models import ScientificMetadata
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
@@ -58,6 +61,7 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 @method_decorator(login_session_institution_required, name='dispatch')
+@method_decorator(institution_ownership_required, name='dispatch')
 class ResourceDeleteView(TemplateView):
     """
     The deletion confirmation page for a
@@ -108,16 +112,16 @@ class ResourceDeleteView(TemplateView):
         return context
 
     def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['resource_id']
         self.resource_type_in_resource_url = self.model.type_in_metadata_server_url
+        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
         self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
         # TODO: remove old code
         # In case the localid getter isn't available after
         # the resource is deleted.
@@ -195,10 +199,6 @@ class OrganisationDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['organisation_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class IndividualDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Individual
@@ -214,10 +214,6 @@ class IndividualDeleteView(ResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['individual_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class ProjectDeleteView(ResourceDeleteView):
     """
@@ -235,10 +231,6 @@ class ProjectDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['project_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class PlatformDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Platform
@@ -254,10 +246,6 @@ class PlatformDeleteView(ResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['platform_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class InstrumentDeleteView(ResourceDeleteView):
     """
@@ -275,10 +263,6 @@ class InstrumentDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['instrument_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class OperationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Operation
@@ -294,10 +278,6 @@ class OperationDeleteView(ResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['operation_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -315,10 +295,6 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentAcquisitionCapability
     resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class AcquisitionDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Acquisition
@@ -334,10 +310,6 @@ class AcquisitionDeleteView(ResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -355,10 +327,6 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentComputationCapability
     resource_revision_mongodb_model = ComputationCapabilityRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class ComputationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Computation
@@ -375,10 +343,6 @@ class ComputationDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class ProcessDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Process
@@ -394,10 +358,6 @@ class ProcessDeleteView(ResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['process_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class DataCollectionDeleteView(ResourceDeleteView):
     """
@@ -416,10 +376,6 @@ class DataCollectionDeleteView(ResourceDeleteView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
     catalogue_related_resources_to_delete = []
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['data_collection_id']
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -442,10 +398,6 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     resource_mongodb_model = CurrentCatalogue
     resource_revision_mongodb_model = CatalogueRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -462,10 +414,6 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     resource_mongodb_model = CurrentCatalogueEntry
     resource_revision_mongodb_model = CatalogueEntryRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_entry_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -481,7 +429,3 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_data_subset_id']
-        return super().dispatch(request, *args, **kwargs)

@@ -12,7 +12,7 @@ from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
 from common import models
-from common.decorators import login_session_institution_required
+from common.decorators import login_session_institution_required, institution_ownership_required
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
@@ -60,7 +60,10 @@ from resource_management.views import (
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
 )
-from user_management.services import get_user_id_for_login_session
+from user_management.services import (
+    get_institution_id_for_login_session,
+    get_user_id_for_login_session,
+)
 
 # TODO: remove old code
 
@@ -89,6 +92,7 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 @method_decorator(login_session_institution_required, name='dispatch')
+@method_decorator(institution_ownership_required, name='dispatch')
 class ResourceUpdateFormView(FormView):
     # Registration variables
     resource = None
@@ -112,6 +116,7 @@ class ResourceUpdateFormView(FormView):
     resource_conversion_validate_and_correct_function = None
 
     def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['resource_id']
         self.resource = self.model.objects.get(pk=self.resource_id)
         return super().dispatch(request, *args, **kwargs)
 
@@ -176,10 +181,6 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
     # TODO: remove old code
     resource_mongodb_model = CurrentOrganisation
     resource_revision_mongodb_model = OrganisationRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['organisation_id']
-        return super().dispatch(request, *args, **kwargs)
     
 
 class IndividualUpdateFormView(ResourceUpdateFormView):
@@ -194,10 +195,6 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentIndividual
     resource_revision_mongodb_model = IndividualRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['individual_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class ProjectUpdateFormView(ResourceUpdateFormView):
     model = models.Project
 
@@ -209,10 +206,6 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
     # TODO: remove old code
     resource_mongodb_model = CurrentProject
     resource_revision_mongodb_model = ProjectRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['project_id']
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_project_xml_converted_to_dict
@@ -230,10 +223,6 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentPlatform
     resource_revision_mongodb_model = PlatformRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['platform_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_platform_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -250,10 +239,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentOperation
     resource_revision_mongodb_model = OperationRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['operation_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_operation_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -269,10 +254,6 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
     # TODO: remove old code
     resource_mongodb_model = CurrentInstrument
     resource_revision_mongodb_model = InstrumentRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['instrument_id']
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_instrument_xml_converted_to_dict
@@ -295,10 +276,6 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
         context['title'] = f'Update {self.model.type_readable.title()}'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_acquisition_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -314,10 +291,6 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
     # TODO: remove old code
     resource_mongodb_model = CurrentAcquisition
     resource_revision_mongodb_model = AcquisitionRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_id']
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_acquisition_xml_converted_to_dict
@@ -340,10 +313,6 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
         context['title'] = f'Update {self.model.type_readable.title()}'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_computation_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -360,10 +329,6 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentComputation
     resource_revision_mongodb_model = ComputationRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_computation_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -379,10 +344,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
     # TODO: remove old code
     resource_mongodb_model = CurrentProcess
     resource_revision_mongodb_model = ProcessRevision
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['process_id']
-        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_process_xml_converted_to_dict
@@ -403,17 +364,14 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_mongodb_model = CurrentDataCollection
     resource_revision_mongodb_model = DataCollectionRevision
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['data_collection_id']
-        return super().dispatch(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
 
 @login_session_institution_required
-def data_collection_interaction_methods(request, data_collection_id):
-    data_collection = get_object_or_404(models.DataCollection, pk=data_collection_id)
+@institution_ownership_required
+def data_collection_interaction_methods(request, resource_id):
+    data_collection = get_object_or_404(models.DataCollection, pk=resource_id)
     if request.method == 'POST':
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
@@ -438,7 +396,7 @@ def data_collection_interaction_methods(request, data_collection_id):
                         except models.APIInteractionMethod.DoesNotExist:
                             pass
                         messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
-                        return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+                        return redirect('update:data_collection_interaction_methods', data_collection_id=resource_id)
 
                     try:
                         api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
@@ -457,7 +415,7 @@ def data_collection_interaction_methods(request, data_collection_id):
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
-            return redirect('update:data_collection_interaction_methods', data_collection_id=data_collection_id)
+            return redirect('update:data_collection_interaction_methods', data_collection_id=resource_id)
         
     # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
@@ -501,10 +459,6 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueEntry
 
@@ -523,10 +477,6 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_entry_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueDataSubset
 
@@ -544,10 +494,6 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_data_subset_id']
-        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
