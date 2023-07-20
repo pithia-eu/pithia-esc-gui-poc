@@ -125,10 +125,6 @@ header .dropdown-item:active a {
     background-color: var(--pithia-blue);
 }
 
-.user-menu .dropdown-menu {
-    max-width: 21rem;
-}
-
 .user-menu .institution-for-login-session {
     white-space: pre-wrap;
 }
@@ -163,8 +159,6 @@ header .dropdown-item:active a {
 }
 
 .card-menu .card {
-    border-color: var(--pithia-blue);
-    background-color: white;
     transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
 }
@@ -184,7 +178,6 @@ header .dropdown-item:active a {
 
 .card-menu .card:hover,
 .card-menu .card:focus {
-    box-shadow: 0px 0px 0px 1.5px var(--pithia-blue);
     background-color: rgb(245, 248, 251);
 }
 
