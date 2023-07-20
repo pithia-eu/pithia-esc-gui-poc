@@ -69,7 +69,7 @@ h2 + .card-menu {
 }
 
 h1 + .list-group,
-h2 + .list-group {
+h2 + .list-group:not(.file-validation-status-list) {
     margin-top: 1.5rem;
 }
 
@@ -233,7 +233,7 @@ header .dropdown-item:active a {
 }
 
 /* Register page */
-.registration-alerts {
+.messages-container {
     display: flex;
     flex-direction: column;
 }

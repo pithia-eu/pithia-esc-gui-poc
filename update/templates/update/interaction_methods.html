@@ -19,19 +19,6 @@
     Data Collection: <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b>
 </div>
 <div class="row mb-3">
-    {% block messages %}
-    {% if messages %}
-    <div class="col-lg-8">
-        <div class="registration-alerts mb-3">
-            {% for message in messages %}
-            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-    {% endblock messages %}
     <div class="col-lg-8">
         <p>Select and fill out the interaction method details you would like to add for <b>{{ data_collection.name|default:data_collection.identifier.PITHIA_Identifier.localID }}</b> below, then click <b>Save</b> to save your changes.</p>
     </div>

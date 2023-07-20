@@ -15,15 +15,6 @@
 {% block content %}
 <div class="row flex-wrap gx-md-5 gy-5 pb-4">
     <div class="col-lg-8">
-        {% if messages %}
-        <div class="registration-alerts">
-            {% for message in messages %}
-            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
         {% block title %}
         <h1>{{ title }}</h1>
         {% endblock title %}

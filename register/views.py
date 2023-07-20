@@ -148,7 +148,7 @@ class ResourceRegisterFormView(FormView):
                     messages.error(request, f'{xml_file.name} has been registered before.')
                 except BaseException as err:
                     logger.exception('An unexpected error occurred during metadata registration.')
-                    messages.error(request, 'An unexpected error occurred.')
+                    messages.error(request, 'An unexpected error occurred during metadata registration.')
                 
                 if file_registered == False:
                     return super().post(request, *args, **kwargs)
