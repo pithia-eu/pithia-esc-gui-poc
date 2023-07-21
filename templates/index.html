@@ -20,18 +20,6 @@
             <a href="{{ create_institution_url }}" class="btn btn-outline-dark">
                 Register a New Institution
             </a>
-            {% comment %} <ul>
-                <li>
-                    <a href="{{ create_institution_url }}">
-                        Register a New Institution
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'list_joinable_perun_organisations' %}">
-                        Join an Existing Institution
-                    </a>
-                </li>
-            </ul> {% endcomment %}
         </div>
         {% else %}
         <div class="alert alert-primary">
@@ -42,7 +30,19 @@
             </p>
             <form action="{% url 'choose_institution_for_login_session' %}" method="POST">
                 {% csrf_token %}
-                {{ request.institution_selection_form }}
+                {{ request.institution_selection_form.institutions.label_tag }}
+                <select
+                    name="{{ request.institution_selection_form.institutions.name }}"
+                    id="{{ request.institution_selection_form.institutions.auto_id }}"
+                    class="form-select mb-3"
+                    required="{{ request.institution_selection_form.institutions.required }}">
+                    <option value="" disabled selected>
+                        Member of {{ request.institution_selection_form.fields.institutions.choices|length }} institutions...
+                    </option>
+                    {% for value, text in request.institution_selection_form.fields.institutions.choices %}
+                    <option value="{{ value }}">{{ text }}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
