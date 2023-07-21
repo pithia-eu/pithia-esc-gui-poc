@@ -6,7 +6,7 @@ from urllib.parse import unquote
 CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests'
 # Used in institutions list page. Used as the base link for joining organisations.
 # E.g., JOIN_URL_BASE + "<institution_name>"
-JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizationRequests:'
+JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
 
 
 def get_user_info(access_token):
