@@ -50,14 +50,6 @@ a:not(.btn, .nav-link):focus {
     text-indent: 1em; /* the width of the icon */
 }
 
-header .nav-item {
-    text-transform: uppercase;
-}
-
-header .dropdown-menu {
-    text-transform: none;
-}
-
 h1 {
     color: var(--pithia-blue);
 }
