@@ -99,7 +99,7 @@ def list_joinable_perun_organisations(request):
     
     try:
         with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'r') as org_list_file:
-            org_list_raw = json.load(org_list_file)
+            org_list_raw = [o['name'] for o in json.load(org_list_file)['organizations']]
     except FileNotFoundError:
         print('Cannot find the file. Please provide an existing file!')
     else:
@@ -108,8 +108,9 @@ def list_joinable_perun_organisations(request):
             index_last_colon = org.rfind(':')
             if index_first_colon == index_last_colon:
                 org_list.append(org[index_first_colon + 1:])
+        # Debugging
         print(org_list)
-        print('Join a group: ', JOIN_URL_BASE + org_list[0])
+        # print('Join a group: ', JOIN_URL_BASE + org_list[0])
 
     return render(request, 'user_management/list_joinable_perun_organisations.html', {
         'title': JOIN_AN_INSTITUTION_PAGE_TITLE,
