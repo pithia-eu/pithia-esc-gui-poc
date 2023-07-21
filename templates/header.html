@@ -53,7 +53,7 @@
             </a>
             <div class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
-                <p class="dropdown-header">Current Institution: {{ request.session.institution_for_login_session }}</p>
+                <p class="dropdown-header institution-for-login-session">Current Institution: {{ request.session.institution_for_login_session }}</p>
                 <div class="row px-3 pb-2 gy-3">
                     {% comment %} <div class="col-12">
                         <small class="institution-for-login-session text-secondary fw-bold">{{ request.session.institution_for_login_session }}</small>
