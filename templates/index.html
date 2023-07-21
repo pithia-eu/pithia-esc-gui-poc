@@ -10,13 +10,17 @@
     <div class="col-lg-8">
         {% if not request.session.user_institution_subgroups %}
         <div class="alert alert-light">
-            <h2>Register or Join an Institution</h2>
             <p>
                 To enable scientific metadata management capabilities,
-                please join or register for a new institution using the
-                links below.
+                please join or register for a new institution.
             </p>
-            <ul>
+            <a href="{% url 'list_joinable_perun_organisations' %}" class="btn btn-primary">
+                Join an Existing Institution
+            </a>
+            <a href="{{ create_institution_url }}" class="btn btn-outline-dark">
+                Register a New Institution
+            </a>
+            {% comment %} <ul>
                 <li>
                     <a href="{{ create_institution_url }}">
                         Register a New Institution
@@ -27,7 +31,7 @@
                         Join an Existing Institution
                     </a>
                 </li>
-            </ul>
+            </ul> {% endcomment %}
         </div>
         {% else %}
         <div class="alert alert-primary">

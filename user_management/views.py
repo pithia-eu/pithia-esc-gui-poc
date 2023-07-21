@@ -179,7 +179,7 @@ def choose_institution_for_login_session(request):
         subgroup = institution_subgroup_pair_split[1]
         changed_or_set = 'changed' if get_institution_id_for_login_session(request) else 'set'
         set_institution_for_login_session(request, institution, subgroup)
-        messages.success(request, f'Institution for login session {changed_or_set} to {institution}.')
+        messages.success(request, f'Institution {changed_or_set} to {institution}.')
         next_url = request.POST.get('next')
         if next_url:
             return HttpResponseRedirect(next_url)
