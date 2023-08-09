@@ -16,12 +16,13 @@
                 aria-current="page">Home</a>
         </li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                aria-expanded="false">Search & Browse</a>
+            <a class="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown" href="#" role="button"
+                aria-expanded="false">Scientific Metadata</a>
             <ul class="dropdown-menu">
                 <li>
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="dropdown-item {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
+                    <a href="{{ search_url }}" class="dropdown-item {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections with Ontology</a>
                 </li>
                 <li>
                     {% url 'browse:list_data_collections' as data_collections_url %}
@@ -35,48 +36,15 @@
                     {% url 'browse:index' as browse_url %}
                     <a href="{{ browse_url }}" class="dropdown-item {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
                 </li>
-                <li>
-                    {% url 'ontology:index' as browse_ontology_url %}
-                    <a href="{{ browse_ontology_url }}" class="dropdown-item {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
-                </li>
             </ul>
         </li>
-        {% if request.session.institution_for_login_session %}
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                aria-expanded="false">Admin
+        <li class="nav-item">
+            {% url 'ontology:index' as browse_ontology_url %}
+            <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">
+                Space Physics Ontology
             </a>
-            <ul class="dropdown-menu">
-                <li>
-                    {% url 'data_provider_home' as data_provider_home_url %}
-                    <a href="{{ data_provider_home_url }}" class="dropdown-item {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
-                </li>
-                <li>
-                    <span class="dropdown-header">
-                        Register & Manage Metadata
-                    </span>
-                </li>
-                <li>
-                    {% url 'resource_management:index' as resource_management_url %}
-                    <a href="{{ resource_management_url }}" class="dropdown-item {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
-                </li>
-                <li>
-                    <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="dropdown-item" target="_blank">Metadata Registration Guide</a>
-                </li>
-                <li>
-                    <span class="dropdown-header">
-                        Browse
-                    </span>
-                </li>
-                <li>
-                    {% url 'schemas' as browse_schemas_url %}
-                    <a href="{{ browse_schemas_url }}" class="dropdown-item {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
-                </li>
-            </ul>
         </li>
-        {% endif %}
     </ul>
-
     <div class="col-md-3 text-end">
         {% if request.session.is_logged_in %}
         <div class="dropdown user-menu">
@@ -85,11 +53,11 @@
             </a>
             <div class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
-                <p class="dropdown-header">Current Institution</p>
+                <p class="dropdown-header institution-for-login-session">Current Institution: {{ request.session.institution_for_login_session }}</p>
                 <div class="row px-3 pb-2 gy-3">
-                    <div class="col-12">
+                    {% comment %} <div class="col-12">
                         <small class="institution-for-login-session text-secondary fw-bold">{{ request.session.institution_for_login_session }}</small>
-                    </div>
+                    </div> {% endcomment %}
                     {% if request.session.user_institution_subgroups|length > 1 %}
                     <div class="col-12">
                         <form action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}" method="POST">
@@ -100,9 +68,15 @@
                             <select
                                 name="{{ request.institution_selection_form.institutions.name }}"
                                 id="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="form-select mb-3">
+                                class="form-select mb-3"
+                                required="{{ request.institution_selection_form.institutions.required }}">
+                                <option value="" disabled selected>
+                                    {{ request.institution_selection_form.fields.institutions.choices|length|add:-1 }} others available...
+                                </option>
                                 {% for value, text in request.institution_selection_form.fields.institutions.choices %}
-                                    <option value="{{ value }}" {% if request.session.institution_for_login_session == text %}selected{% endif %}>{{ text }}</option>
+                                {% if request.session.institution_for_login_session != text %}
+                                <option value="{{ value }}">{{ text }}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
                             {{ request.institution_selection_form.next }}
@@ -113,6 +87,34 @@
                     </div>
                     {% endif %}
                 </div>
+                {% if request.session.institution_for_login_session %}
+                <hr class="dropdown-divider">
+                <b class="dropdown-header">Current Institution Management</b>
+                <p class="dropdown-header">
+                    Scientific Metadata Registrations
+                </p>
+                {% url 'resource_management:index' as resource_management_url %}
+                <a href="{{ resource_management_url }}" class="dropdown-item {% if request.path == resource_management_url %}link-secondary{% endif %}">
+                    Manage Registrations
+                </a>
+                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="dropdown-item" target="_blank">
+                    View Metadata Registration Guide
+                </a>
+                <li>
+                    {% url 'schemas' as browse_schemas_url %}
+                    <a href="{{ browse_schemas_url }}" class="dropdown-item {% if request.path == browse_schemas_url %}link-secondary{% endif %}">
+                        View Metadata Models
+                    </a>
+                </li>
+                {% endif %}
+                <hr class="dropdown-divider">
+                <p class="dropdown-header">My Institutions</p>
+                <a href="{{ create_institution_url }}" class="dropdown-item">
+                    Register a New Institution
+                </a>
+                <a href="{{ join_an_institution_url }}" class="dropdown-item">
+                    Join Another Institution
+                </a>
                 <hr class="dropdown-divider">
                 {% endif %}
                 <form action="{% url 'logout' %}" method="POST">
@@ -125,7 +127,7 @@
         </div>
         {% else %}
         <a href="{% url 'data_provider_home' %}" class="btn btn-outline-primary me-2">
-            Login
+            Login/Sign up
         </a>
         {% endif %}
     </div>

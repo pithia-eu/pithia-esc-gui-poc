@@ -9,7 +9,7 @@ class InstitutionForLoginSessionForm(forms.Form):
     institutions = forms.ChoiceField(
         choices=(),
         required=True,
-        label='Select an Institution',
+        label='Institutions',
         widget=forms.Select(attrs={
             'class': 'form-select mb-3',
         })
