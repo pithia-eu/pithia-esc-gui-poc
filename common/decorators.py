@@ -25,7 +25,7 @@ def institution_ownership_required(function):
         institution_id_for_login_session = get_institution_id_for_login_session(request)
         resource = ScientificMetadata.objects.get(pk=resource_id)
         if resource.institution_id != institution_id_for_login_session:
-            messages.error(request, f'You are not authorised to make changes to this resource.')
+            messages.error(request, f'You must be a member of the institution that owns registration "{resource_id}" to make changes to it.')
             return redirect(reverse('home'))
         return function(request, *args, **kwargs)
 
