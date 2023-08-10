@@ -4,7 +4,10 @@ from django.views.generic import TemplateView
 from lxml import etree
 
 from common import models
-from common.decorators import login_session_institution_required
+from common.decorators import (
+    login_session_institution_required,
+    institution_ownership_required,
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -14,6 +17,7 @@ from resource_management.views import (
 # Create your views here.
 
 @method_decorator(login_session_institution_required, name='dispatch')
+@method_decorator(institution_ownership_required, name='dispatch')
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
     resource_name = ''
@@ -22,6 +26,10 @@ class ResourceXmlDownloadView(TemplateView):
     xml = ''
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['resource_id']
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
@@ -52,19 +60,11 @@ class OrganisationXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['organisation_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class IndividualXmlDownloadView(ResourceXmlDownloadView):
     model = models.Individual
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['individual_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class ProjectXmlDownloadView(ResourceXmlDownloadView):
     model = models.Project
@@ -72,19 +72,11 @@ class ProjectXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['project_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class PlatformXmlDownloadView(ResourceXmlDownloadView):
     model = models.Platform
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['platform_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class OperationXmlDownloadView(ResourceXmlDownloadView):
     model = models.Operation
@@ -92,19 +84,11 @@ class OperationXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['operation_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class InstrumentXmlDownloadView(ResourceXmlDownloadView):
     model = models.Instrument
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['instrument_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     model = models.AcquisitionCapabilities
@@ -112,19 +96,11 @@ class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
     model = models.Acquisition
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['acquisition_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     model = models.ComputationCapabilities
@@ -132,19 +108,11 @@ class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_capability_set_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class ComputationXmlDownloadView(ResourceXmlDownloadView):
     model = models.Computation
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['computation_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class ProcessXmlDownloadView(ResourceXmlDownloadView):
     model = models.Process
@@ -152,19 +120,11 @@ class ProcessXmlDownloadView(ResourceXmlDownloadView):
     resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['process_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
     model = models.DataCollection
     
     resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['data_collection_id']
-        return super().dispatch(request, *args, **kwargs)
 
 class CatalogueXmlDownloadView(ResourceXmlDownloadView):
     model = models.Catalogue
@@ -178,10 +138,6 @@ class CatalogueXmlDownloadView(ResourceXmlDownloadView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
     model = models.CatalogueEntry
     
@@ -194,10 +150,6 @@ class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_entry_id']
-        return super().dispatch(request, *args, **kwargs)
-
 class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
     model = models.CatalogueDataSubset
     
@@ -209,7 +161,3 @@ class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_data_subset_id']
-        return super().dispatch(request, *args, **kwargs)
