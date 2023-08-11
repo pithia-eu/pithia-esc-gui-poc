@@ -3,8 +3,10 @@ from django.urls import reverse
 
 from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
+    delete_institution_for_login_session,
     get_user_info,
     get_highest_subgroup_of_each_institution_for_logged_in_user,
+    get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
     remove_login_session_variables,
     set_institution_for_login_session,
@@ -60,6 +62,15 @@ class LoginMiddleware(object):
                 return HttpResponseRedirect(reverse('home'))
         else:
             self._get_user_info_and_set_login_variables(request, access_token_in_session)
+
+        # Check if the user is still a member of the
+        # institution they have logged in with. If not,
+        # perform the appropriate action.
+        logged_in_institution_id = get_institution_id_for_login_session(request)
+        user_memberships = get_institution_memberships_of_logged_in_user(request)
+        if (logged_in_institution_id is not None
+            and logged_in_institution_id in user_memberships):
+            delete_institution_for_login_session(request)
 
         response = self.get_response(request)
 

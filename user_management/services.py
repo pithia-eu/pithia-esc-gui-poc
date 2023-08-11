@@ -101,3 +101,7 @@ def get_institution_memberships_of_logged_in_user(request):
 def set_institution_for_login_session(request, institution, subgroup):
     request.session['institution_for_login_session'] = institution
     request.session['subgroup_for_login_session'] = subgroup
+
+def delete_institution_for_login_session(request):
+    del request.session['institution_for_login_session']
+    del request.session['subgroup_for_login_session']
