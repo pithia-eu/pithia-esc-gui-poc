@@ -77,8 +77,8 @@ def remove_login_session_variables(request):
         del request.session['is_logged_in']
     if 'user_institution_subgroups' in request.session:
         del request.session['user_institution_subgroups']
-    if 'user_email' in request.session:
-        del request.session['user_email']
+    if 'user_id' in request.session:
+        del request.session['user_id']
     if 'user_given_name' in request.session:
         del request.session['user_given_name']
     if 'institution_for_login_session' in request.session:
@@ -87,7 +87,7 @@ def remove_login_session_variables(request):
         del request.session['subgroup_for_login_session']
 
 def get_user_id_for_login_session(request):
-    return request.session.get('user_email')
+    return request.session.get('user_id')
 
 def get_institution_id_for_login_session(request):
     return request.session.get('institution_for_login_session')
