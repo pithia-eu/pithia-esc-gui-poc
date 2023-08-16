@@ -1,5 +1,7 @@
 import json
+import os
 import requests
+from pathlib import Path
 from urllib.parse import unquote
 
 # Used in the main menu. Used as the base link for creating new institutions.
@@ -105,3 +107,31 @@ def set_institution_for_login_session(request, institution, subgroup):
 def delete_institution_for_login_session(request):
     del request.session['institution_for_login_session']
     del request.session['subgroup_for_login_session']
+
+# Templates
+def get_members_by_institution_id(institution_id):
+    members = []
+    perun_data = None
+    try:
+        with open(os.path.join(Path.home(), 'ListOfOrganisations.json')) as organisation_list_file:
+            perun_data = json.loads(organisation_list_file.read())
+    except FileNotFoundError:
+        return members
+    
+    try:
+        institutions = perun_data.get('organizations')
+        print('institution_id', institution_id)
+        # Gets the first institution if there is one,
+        # else, returns None
+        institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
+        member_ids = institution.get('members')
+        for u in perun_data.get('users'):
+            uid = u.get('edu_person_unique_id')
+            if uid in member_ids:
+                members.append(u)
+    except AttributeError:
+        # Something is wrong here, as it means
+        # that the institution cannot be found.
+        pass
+
+    return members

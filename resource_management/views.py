@@ -6,6 +6,7 @@ from common import models
 from common.decorators import login_session_institution_required
 from user_management.services import (
     get_institution_id_for_login_session,
+    get_members_by_institution_id,
 )
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
@@ -94,9 +95,11 @@ class ResourceManagementListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['title'] = _create_manage_resource_page_title(self.model.type_plural_readable)
         context['resource_type_plural'] = self.model.type_plural_readable
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
+        context['institution_members_by_id'] = {im['edu_person_unique_id']: im['name'] for im in get_members_by_institution_id(self.institution_id)}
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
