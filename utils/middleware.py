@@ -8,6 +8,7 @@ from user_management.services import (
     get_highest_subgroup_of_each_institution_for_logged_in_user,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
+    get_subgroup_id_for_login_session,
     remove_login_session_variables,
     set_institution_for_login_session,
 )
@@ -67,10 +68,21 @@ class LoginMiddleware(object):
         # institution they have logged in with. If not,
         # perform the appropriate action.
         logged_in_institution_id = get_institution_id_for_login_session(request)
+        logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request)
         user_memberships = get_institution_memberships_of_logged_in_user(request)
         if (logged_in_institution_id is not None
             and logged_in_institution_id not in user_memberships):
             delete_institution_for_login_session(request)
+        elif (logged_in_institution_id is not None
+            and user_memberships.get(logged_in_institution_id) != logged_in_institution_subgroup_id):
+            # If the user's permissions changed whilst
+            # they are logged, update the user's
+            # permission level automatically.
+            set_institution_for_login_session(
+                request,
+                logged_in_institution_id,
+                user_memberships.get(logged_in_institution_id)
+            )
 
         response = self.get_response(request)
 
