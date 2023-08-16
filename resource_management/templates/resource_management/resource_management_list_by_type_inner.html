@@ -1,5 +1,6 @@
+{% load static %}
 {% load project_tags %}
-<table class="table">
+<table class="table table-hover resource-management-table">
     <thead>
         <tr>
             <th id="name">Name</th>
@@ -17,28 +18,39 @@
                 {{ institution_members_by_id|get_key_value:resource.owner_id|default:'Unknown' }}
             </td>
             <td headers="actions">
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                        </svg>
+                <div class="action-buttons">
+                    <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="btn btn-light" title="View">
+                        <img src="{% static 'view-file.svg' %}" alt="View">
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="dropdown-item">View</a>
+                            </li>
+                            <li>
+                                <a href="{% url resource_update_page_url_name resource.pk %}" class="dropdown-item">Upload a New XML File</a>
+                            </li>
+                            <li>
+                                {% if interaction_method_update_page_url_name %}
+                                <a href="{% url interaction_method_update_page_url_name resource.pk %}" class="dropdown-item">Update Interaction Methods</a>
+                                {% endif %}
+                            </li>
+                            <li>
+                                <a href="{% url resource_delete_page_url_name resource.pk %}" class="dropdown-item">Delete...</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% comment %} <button class="btn btn-light">
+                        <img src="{% static 'update-file.svg' %}" alt="View" style="width: 1.5rem;">
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="dropdown-item">View</a>
-                        </li>
-                        <li>
-                            <a href="{% url resource_update_page_url_name resource.pk %}" class="dropdown-item">Upload a New XML File</a>
-                        </li>
-                        <li>
-                            {% if interaction_method_update_page_url_name %}
-                            <a href="{% url interaction_method_update_page_url_name resource.pk %}" class="dropdown-item">Update Interaction Methods</a>
-                            {% endif %}
-                        </li>
-                        <li>
-                            <a href="{% url resource_delete_page_url_name resource.pk %}" class="dropdown-item">Delete...</a>
-                        </li>
-                    </ul>
+                    <button class="btn btn-light">
+                        <img src="{% static 'delete-file.svg' %}" alt="View" style="width: 1.5rem;">
+                    </button> {% endcomment %}
                 </div>
             </td>
         </tr>
