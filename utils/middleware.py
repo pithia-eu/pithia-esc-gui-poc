@@ -33,7 +33,7 @@ class LoginMiddleware(object):
             request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
         except KeyError:
             request.session['user_institution_subgroups'] = {}
-        request.session['user_id'] = user_info.get('OIDC_CLAIM_sub')
+        request.session['user_id'] = request.META.get('OIDC_CLAIM_sub')
         request.session['user_given_name'] = user_info.get('given_name')
 
     def __call__(self, request):
