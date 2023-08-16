@@ -69,7 +69,7 @@ class LoginMiddleware(object):
         logged_in_institution_id = get_institution_id_for_login_session(request)
         user_memberships = get_institution_memberships_of_logged_in_user(request)
         if (logged_in_institution_id is not None
-            and logged_in_institution_id in user_memberships):
+            and logged_in_institution_id not in user_memberships):
             delete_institution_for_login_session(request)
 
         response = self.get_response(request)
