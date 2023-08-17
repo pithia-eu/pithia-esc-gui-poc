@@ -24,13 +24,18 @@
 {% else %}
 {% block resource_list_inner %}
 {% with resource_list=resources %}
-<ul class="list-group">
+{% for ns in namespaces %}
+<h2>{{ ns }}</h2>
+<ul class="list-group mb-3">
     {% for resource in resources %}
+    {% if resource.namespace == ns %}
     <li class="list-group-item">
         <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
     </li>
+    {% endif %}
     {% endfor %}
 </ul>
+{% endfor %}
 {% endwith %}
 {% endblock resource_list_inner %}
 {% endif %}
