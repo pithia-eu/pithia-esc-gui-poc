@@ -27,6 +27,6 @@ def institution_ownership_required(function):
         if resource.institution_id != institution_id_for_login_session:
             messages.error(request, f'You must be a member of the institution that owns registration "{resource_id}" to perform this action.')
             return redirect(reverse('resource_management:index'))
-        return function(request, *args, **kwargs)
+        return function(request, resource_id, *args, **kwargs)
 
     return wrap
