@@ -16,40 +16,26 @@
     {% endfor %}
 </div>
 {% endif %}
-<h1>{{ title }}</h1>
-<p class="text-muted">
-    {{ description }}
-</p>
+<div class="d-flex align-items-end justify-content-between">
+    <div>
+        <h1>{{ title }}</h1>
+        {% if description|length > 0 %}
+        <p class="fs-5 text-muted" style="max-width: 60rem;">
+            {{ description }}
+        </p>
+        {% endif %}
+    </div>
+    <form action="{{ request.path }}" method="GET" class="d-flex flex-column align-items-start py-3">
+        {{ form.group_by.label_tag }}
+        <div class="d-flex">
+            {{ form.group_by }}
+            <button type="submit" class="btn btn-dark btn-sm ms-2">Submit</button>
+        </div>
+    </form>
+</div>
 {% if not resources %}
 <p>{{ empty_resource_list_text }}</p>
 {% else %}
-<form action="{{ request.path }}" method="GET" class="p-3 mb-4">
-    <fieldset class="mb-3">
-        <legend class="d-flex align-items-center me-2">
-            <img src="{% static 'list.svg' %}" alt="list" style="height: 1.3rem;" class="me-2">
-            Group by
-        </legend>
-        {% for value, text in form.group_by.field.choices %}
-        <div class="me-3">
-            <div class="form-check">
-                <input
-                    type="radio"
-                    name="{{ form.group_by.name }}"
-                    id="id_{{ form.group_by.name }}_{{ forloop.counter0 }}"
-                    value="{{ value }}"
-                    class="form-check-input"
-                    {% if form.group_by.value == value %}
-                    checked
-                    {% endif %}>
-                <label
-                    for="id_{{ form.group_by.name }}_{{ forloop.counter0 }}"
-                    class="form-check-label">{{ text }}</label>
-            </div>
-        </div>
-        {% endfor %}
-    </fieldset>
-    <input type="submit" value="Submit" class="btn btn-primary">
-</form>
 {% block resource_list_inner %}
 {% with resource_list=resources %}
 <ul class="list-group mb-3">

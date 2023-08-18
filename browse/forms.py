@@ -2,7 +2,10 @@ from django import forms
 
 class GroupByForm(forms.Form):
     group_by = forms.ChoiceField(
-        widget=forms.RadioSelect(),
+        label='Group by',
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        }),
         choices=[
             ('', 'None'),
             ('namespace', 'Namespace'),
