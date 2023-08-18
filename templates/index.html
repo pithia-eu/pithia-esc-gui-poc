@@ -102,25 +102,29 @@
         </div>
     </div>
 </section>
-{% if request.session.institution_for_login_session %}
 <hr>
+{% if request.session.institution_for_login_session %}
 <h2>{{ request.session.institution_for_login_session }}</h2>
+{% else %}
+<h2>Data Registrations</h2>
+{% endif %}
+{% if request.session.institution_for_login_session %}
 <section>
     <h3 class="text-secondary mb-3">Scientific Metadata Registrations</h3>
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'resource_management:index' %}">
-                    <img src="{% static 'file_upload.svg' %}" alt="File Upload">
-                    <span>Manage Registrations</span>
+                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
+                    <img src="{% static 'file_info.svg' %}" alt="Info">
+                    <span>View Metadata Registration Guide</span>
                 </a>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
-                    <img src="{% static 'file_info.svg' %}" alt="Info">
-                    <span>View Metadata Registration Guide</span>
+                <a href="{% url 'resource_management:index' %}">
+                    <img src="{% static 'file_upload.svg' %}" alt="File Upload">
+                    <span>Manage Registrations</span>
                 </a>
             </div>
         </div>
@@ -134,6 +138,21 @@
         </div>
     </div>
 </section>
+{% else %}
+<section>
+    <div class="card-menu mb-2">
+        <div class="card">
+            <div class="card-body">
+                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
+                    <img src="{% static 'file_info.svg' %}" alt="Info">
+                    <span>View Metadata Registration Guide</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if request.session.institution_for_login_session %}
 {% if 'admins' in request.session.subgroup_for_login_session %}
 <section>
     <h3 class="text-secondary mb-3">Memberships</h3>
