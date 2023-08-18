@@ -34,8 +34,8 @@ a:not(.btn, .nav-link):focus {
     text-decoration: underline;
 }
 
-[href^="http"]:not([href*="pithia.eu"]):not(footer a, .card-menu a)::after,
-.card-menu [href^="http"]:not([href*="pithia.eu"]) span::after {
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
+.card-menu [href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
     width: 1em;
     height: 1em;
