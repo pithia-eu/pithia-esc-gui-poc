@@ -15,9 +15,9 @@
 {% endblock breadcrumbs %}
 {% block content %}
 {% block messages %}{% endblock messages %}
-<h1>{{ resource.name }}</h1>
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
+        <h1>{{ resource.name }}</h1>
         <section>
             <h2 class="visually-hidden">Description</h2>
             {% if resource.description and resource.description|cut:' ' != '' %}
