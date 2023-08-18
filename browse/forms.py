@@ -7,8 +7,8 @@ class GroupByForm(forms.Form):
             'class': 'form-select'
         }),
         choices=[
-            ('', 'None'),
+            ('none', 'None'),
             ('namespace', 'Namespace'),
         ],
-        initial=''
+        initial='none'
     )

@@ -16,7 +16,7 @@
     {% endfor %}
 </div>
 {% endif %}
-<div class="d-flex align-items-end justify-content-between">
+<div class="d-flex flex-wrap align-items-end justify-content-between">
     <div>
         <h1>{{ title }}</h1>
         {% if description|length > 0 %}
@@ -29,7 +29,7 @@
         {{ form.group_by.label_tag }}
         <div class="d-flex">
             {{ form.group_by }}
-            <button type="submit" class="btn btn-dark btn-sm ms-2">Submit</button>
+            <button type="submit" class="btn btn-outline-dark ms-2">Apply</button>
         </div>
     </form>
 </div>
