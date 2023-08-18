@@ -1,32 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'browse/resource_list_by_type_ungrouped.html' %}
 {% load project_tags %}
-{% block breadcrumbs %}
-{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
-{% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
-{% breadcrumb_item_active title %}
-{% endblock breadcrumbs %}
-{% block content %}
-{% if messages %}
-<div class="registration-alerts mb-3">
-    {% for message in messages %}
-    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-<h1>{{ title }}</h1>
-<p class="lead text-muted">
-    {{ description }}
-</p>
-{% if not resources %}
-<p>{{ empty_resource_list_text }}</p>
-{% else %}
 {% block resource_list_inner %}
 {% with resource_list=resources %}
 {% for ns in namespaces %}
 <h2>{{ ns }}</h2>
-<ul class="list-group mb-3">
+<ul class="list-group mb-4">
     {% for resource in resources %}
     {% if resource.namespace == ns %}
     <li class="list-group-item">
@@ -38,16 +16,3 @@
 {% endfor %}
 {% endwith %}
 {% endblock resource_list_inner %}
-{% endif %}
-{% comment %} {% if resource_list|length > 0 %}
-<ul class="list-group">
-    {% for resource in resource_list|dictsort:'name' %}
-    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
-    <li class="list-group-item"><a href="{% url resource_detail_page_url_name resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
-    {% endwith %}
-    {% endfor %}
-</ul>
-{% else %}
-<p>{{ empty_resource_list_text }}</p>
-{% endif %} {% endcomment %}
-{% endblock content %}

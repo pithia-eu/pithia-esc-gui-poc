@@ -10,6 +10,7 @@ from django.views.generic import (
     TemplateView,
 )
 
+from .forms import GroupByForm
 from .services import (
     create_readable_scientific_metadata_flattened,
     get_server_urls_from_scientific_metadata_flattened,
@@ -112,7 +113,7 @@ class ResourceListView(ListView):
     This view is intended to be subclassed and to not
     be called directly.
     """
-    template_name = 'browse/resource_list_by_type.html'
+    template_name = 'browse/resource_list_by_type_ungrouped.html'
     context_object_name = 'resources'
 
     description = ''
@@ -123,10 +124,18 @@ class ResourceListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        context['form'] = GroupByForm()
+        if self.request.GET:
+            context['form'] = GroupByForm(self.request.GET)
+        
+        try:
+            context['namespaces'] = sorted(self.namespaces, key=str.lower)
+        except AttributeError:
+            pass
         context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.description
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
-        context['namespaces'] = [sm.namespace for sm in list(self.model.objects.order_by().distinct('json__identifier__PITHIA_Identifier__namespace'))]
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -134,6 +143,12 @@ class ResourceListView(ListView):
         return context
 
     def get(self, request, *args, **kwargs):
+        form = GroupByForm(request.GET)
+        if form.is_valid():
+            if self.request.GET.get('group_by') == 'namespace':
+                self.template_name = 'browse/resource_list_by_type.html'
+                self.namespaces = [sm.namespace for sm in list(self.model.objects.order_by().distinct('json__identifier__PITHIA_Identifier__namespace'))]
+
         return super().get(request, *args, **kwargs)
 
 
