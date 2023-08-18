@@ -54,24 +54,24 @@
         </div>
     </div>
 </section>
-{% if 'is_authorised' in request.session %}
 <section>
-    <h2 class="mb-0">Metadata Registration & Management</h2>
+    <h2 class="mb-0">Data Registration</h2>
     <hr>
     <div class="card-menu">
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'resource_management:index' %}">
-                    <img src="{% static 'file_upload.svg' %}" alt="File Upload">
-                    <span>Register & Manage Metadata</span>
-                </a>
-            </div>
-        </div>
         <div class="card">
             <div class="card-body">
                 <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
                     <img src="{% static 'file_info.svg' %}" alt="Info">
                     <span>Metadata Registration Guide</span>
+                </a>
+            </div>
+        </div>
+        {% if 'is_authorised' in request.session %}
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'resource_management:index' %}">
+                    <img src="{% static 'file_upload.svg' %}" alt="File Upload">
+                    <span>Register & Manage Metadata</span>
                 </a>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 </a>
             </div>
         </div>
+        {% endif %}
     </div>
 </section>
-{% endif %}
 {% endblock content %}
