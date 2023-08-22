@@ -22,7 +22,7 @@ class LoginMiddleware(object):
     def _get_user_info_and_set_login_variables(self, request, access_token):
         user_info = get_user_info(access_token)
         if 'error' in user_info:
-            remove_login_session_variables(request)
+            remove_login_session_variables(request.session)
             return HttpResponseRedirect(reverse('home'))
 
         # Store user info in session to minimise
@@ -58,7 +58,7 @@ class LoginMiddleware(object):
         if access_token_in_session is None:
             # If there isn't one in the session, can probably
             # just assume that the user is logged out.
-            remove_login_session_variables(request)
+            remove_login_session_variables(request.session)
             if '/authorised' in request.path:
                 return HttpResponseRedirect(reverse('home'))
         else:
@@ -67,19 +67,19 @@ class LoginMiddleware(object):
         # Check if the user is still a member of the
         # institution they have logged in with. If not,
         # perform the appropriate action.
-        logged_in_institution_id = get_institution_id_for_login_session(request)
-        logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request)
-        user_memberships = get_institution_memberships_of_logged_in_user(request)
+        logged_in_institution_id = get_institution_id_for_login_session(request.session)
+        logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
+        user_memberships = get_institution_memberships_of_logged_in_user(request.session)
         if (logged_in_institution_id is not None
             and logged_in_institution_id not in user_memberships):
-            delete_institution_for_login_session(request)
+            delete_institution_for_login_session(request.session)
         elif (logged_in_institution_id is not None
             and user_memberships.get(logged_in_institution_id) != logged_in_institution_subgroup_id):
             # If the user's permissions changed whilst
             # they are logged, update the user's
             # permission level automatically.
             set_institution_for_login_session(
-                request,
+                request.session,
                 logged_in_institution_id,
                 user_memberships.get(logged_in_institution_id)
             )
@@ -101,10 +101,10 @@ class InstitutionSelectionMiddleware:
         # the view (and later middleware) are called.
 
         try:
-            user_memberships = get_institution_memberships_of_logged_in_user(request)
+            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
             if len(user_memberships.keys()) == 1:
                 set_institution_for_login_session(
-                    request,
+                    request.session,
                     list(user_memberships.keys())[0],
                     list(user_memberships.values())[0]
                 )
@@ -128,7 +128,7 @@ class InstitutionSelectionFormMiddleware:
         # the view (and later middleware) are called.
 
         try:
-            user_memberships = get_institution_memberships_of_logged_in_user(request)
+            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
             institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
             institution_selection_form = InstitutionForLoginSessionForm(institution_choices, initial={'next': request.path})
             request.institution_selection_form = institution_selection_form

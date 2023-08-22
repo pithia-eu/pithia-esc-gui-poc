@@ -178,8 +178,8 @@ def choose_institution_for_login_session(request):
         institution_subgroup_pair_split = institution_subgroup_pair.split(':')
         institution = institution_subgroup_pair_split[0]
         subgroup = institution_subgroup_pair_split[1]
-        changed_or_set = 'changed' if get_institution_id_for_login_session(request) else 'set'
-        set_institution_for_login_session(request, institution, subgroup)
+        changed_or_set = 'changed' if get_institution_id_for_login_session(request.session) else 'set'
+        set_institution_for_login_session(request.session, institution, subgroup)
         messages.success(request, f'Institution {changed_or_set} to {institution}.')
         next_url = request.POST.get('next')
         if next_url:

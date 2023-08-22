@@ -72,41 +72,41 @@ def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitl
     return subgroups_by_institution
 
 # Login session management
-def remove_login_session_variables(request):
-    if 'OIDC_access_token' in request.session:
-        del request.session['OIDC_access_token']
-    if 'is_logged_in' in request.session:
-        del request.session['is_logged_in']
-    if 'user_institution_subgroups' in request.session:
-        del request.session['user_institution_subgroups']
-    if 'user_id' in request.session:
-        del request.session['user_id']
-    if 'user_given_name' in request.session:
-        del request.session['user_given_name']
-    if 'institution_for_login_session' in request.session:
-        del request.session['institution_for_login_session']
-    if 'subgroup_for_login_session' in request.session:
-        del request.session['subgroup_for_login_session']
+def remove_login_session_variables(session):
+    if 'OIDC_access_token' in session:
+        del session['OIDC_access_token']
+    if 'is_logged_in' in session:
+        del session['is_logged_in']
+    if 'user_institution_subgroups' in session:
+        del session['user_institution_subgroups']
+    if 'user_id' in session:
+        del session['user_id']
+    if 'user_given_name' in session:
+        del session['user_given_name']
+    if 'institution_for_login_session' in session:
+        del session['institution_for_login_session']
+    if 'subgroup_for_login_session' in session:
+        del session['subgroup_for_login_session']
 
-def get_user_id_for_login_session(request):
-    return request.session.get('user_id')
+def get_user_id_for_login_session(session):
+    return session.get('user_id')
 
-def get_institution_id_for_login_session(request):
-    return request.session.get('institution_for_login_session')
+def get_institution_id_for_login_session(session):
+    return session.get('institution_for_login_session')
 
-def get_subgroup_id_for_login_session(request):
-    return request.session.get('subgroup_for_login_session')
+def get_subgroup_id_for_login_session(session):
+    return session.get('subgroup_for_login_session')
 
-def get_institution_memberships_of_logged_in_user(request):
-    return request.session.get('user_institution_subgroups')
+def get_institution_memberships_of_logged_in_user(session):
+    return session.get('user_institution_subgroups')
 
-def set_institution_for_login_session(request, institution, subgroup):
-    request.session['institution_for_login_session'] = institution
-    request.session['subgroup_for_login_session'] = subgroup
+def set_institution_for_login_session(session, institution, subgroup):
+    session['institution_for_login_session'] = institution
+    session['subgroup_for_login_session'] = subgroup
 
-def delete_institution_for_login_session(request):
-    del request.session['institution_for_login_session']
-    del request.session['subgroup_for_login_session']
+def delete_institution_for_login_session(session):
+    del session['institution_for_login_session']
+    del session['subgroup_for_login_session']
 
 # Templates
 def get_members_by_institution_id(institution_id):

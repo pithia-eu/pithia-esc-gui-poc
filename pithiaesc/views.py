@@ -17,7 +17,7 @@ from user_management.services import (
 
 def logout(request):
     # Remove relevant session variables
-    remove_login_session_variables(request)
+    remove_login_session_variables(request.session)
 
     absolute_home_page_uri = request.build_absolute_uri(reverse("home"))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')

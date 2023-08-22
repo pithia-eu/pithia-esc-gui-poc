@@ -11,7 +11,7 @@ from user_management.services import get_institution_id_for_login_session
 def login_session_institution_required(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        institution_id_for_login_session = get_institution_id_for_login_session(request)
+        institution_id_for_login_session = get_institution_id_for_login_session(request.session)
         if not institution_id_for_login_session:
             messages.warning(request, 'The page cannot be accessed without setting an institution for this login session.')
             return HttpResponseRedirect(reverse('home'))
@@ -22,7 +22,7 @@ def login_session_institution_required(function):
 def institution_ownership_required(function):
     @wraps(function)
     def wrap(request, resource_id, *args, **kwargs):
-        institution_id_for_login_session = get_institution_id_for_login_session(request)
+        institution_id_for_login_session = get_institution_id_for_login_session(request.session)
         resource = ScientificMetadata.objects.get(pk=resource_id)
         if resource.institution_id != institution_id_for_login_session:
             messages.error(request, f'You must be a member of the institution that owns registration "{resource_id}" to perform this action.')

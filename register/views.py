@@ -93,8 +93,8 @@ class ResourceRegisterFormView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        institution_id = get_institution_id_for_login_session(request)
-        owner_id = get_user_id_for_login_session(request)
+        institution_id = get_institution_id_for_login_session(request.session)
+        owner_id = get_user_id_for_login_session(request.session)
 
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
