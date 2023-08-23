@@ -28,9 +28,14 @@ jobs:
     - name: Create and populate .env file
       env:
         SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
-        MONGODB_CONNECTION_STRING: mongodb://localhost:27017
-        DB_NAME: pithiaesc
-        UTIL_DB_NAME: django
+        DATABASE_ENGINE: test
+        DATABASE_NAME: test
+        DATABASE_READ_USER: test
+        DATABASE_READ_PASSWORD: test
+        DATABASE_HOST: test
+        DATABASE_PORT: test
+        DATABASE_WRITE_USER: test
+        DATABASE_WRITE_PASSWORD: test
       run: |
         touch pithiaesc/.env
         echo SECRET_KEY="$SECRET_KEY" >> pithiaesc/.env
