@@ -55,9 +55,6 @@
                 {% if request.session.institution_for_login_session %}
                 <p class="dropdown-header institution-for-login-session">Current Institution: {{ request.session.institution_for_login_session }}</p>
                 <div class="row px-3 pb-2 gy-3">
-                    {% comment %} <div class="col-12">
-                        <small class="institution-for-login-session text-secondary fw-bold">{{ request.session.institution_for_login_session }}</small>
-                    </div> {% endcomment %}
                     {% if request.session.user_institution_subgroups|length > 1 %}
                     <div class="col-12">
                         <form action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}" method="POST">
@@ -87,7 +84,7 @@
                     </div>
                     {% endif %}
                 </div>
-                {% if request.session.institution_for_login_session %}
+                {% comment %} {% if request.session.institution_for_login_session %}
                 <hr class="dropdown-divider">
                 <b class="dropdown-header">Current Institution Management</b>
                 <p class="dropdown-header">
@@ -114,7 +111,7 @@
                 </a>
                 <a href="{{ join_an_institution_url }}" class="dropdown-item">
                     Join Another Institution
-                </a>
+                </a> {% endcomment %}
                 <hr class="dropdown-divider">
                 {% endif %}
                 <form action="{% url 'logout' %}" method="POST">

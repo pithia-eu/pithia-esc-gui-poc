@@ -126,6 +126,12 @@ header .dropdown-item:active a {
 
 .user-menu .institution-for-login-session {
     white-space: pre-wrap;
+    line-clamp: 3;
+    overflow-wrap: break-word;
+}
+
+.user-menu .dropdown-menu {
+    max-width: 100%;
 }
 
 .user-menu .dropdown-menu li a,
