@@ -43,7 +43,7 @@ class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValid
     pass
 class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, TestCase):
+class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -59,7 +59,7 @@ class IndividualSyntaxValidationTestCase(IndividualFileTestCase, SyntaxValidatio
     pass
 class IndividualRootElementValidationTestCase(IndividualFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class IndividualXSDValidationTestCase(IndividualFileTestCase, XSDValidationTestCase, TestCase):
+class IndividualXSDValidationTestCase(IndividualFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class IndividualFileNameValidationTestCase(IndividualFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -75,7 +75,7 @@ class ProjectSyntaxValidationTestCase(ProjectFileTestCase, SyntaxValidationTestC
     pass
 class ProjectRootElementValidationTestCase(ProjectFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class ProjectXSDValidationTestCase(ProjectFileTestCase, XSDValidationTestCase, TestCase):
+class ProjectXSDValidationTestCase(ProjectFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class ProjectFileNameValidationTestCase(ProjectFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -91,7 +91,7 @@ class PlatformSyntaxValidationTestCase(PlatformFileTestCase, SyntaxValidationTes
     pass
 class PlatformRootElementValidationTestCase(PlatformFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class PlatformXSDValidationTestCase(PlatformFileTestCase, XSDValidationTestCase, TestCase):
+class PlatformXSDValidationTestCase(PlatformFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class PlatformFileNameValidationTestCase(PlatformFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -107,7 +107,7 @@ class OperationSyntaxValidationTestCase(OperationFileTestCase, SyntaxValidationT
     pass
 class OperationRootElementValidationTestCase(OperationFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class OperationXSDValidationTestCase(OperationFileTestCase, XSDValidationTestCase, TestCase):
+class OperationXSDValidationTestCase(OperationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class OperationFileNameValidationTestCase(OperationFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -123,7 +123,7 @@ class InstrumentSyntaxValidationTestCase(InstrumentFileTestCase, SyntaxValidatio
     pass
 class InstrumentRootElementValidationTestCase(InstrumentFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class InstrumentXSDValidationTestCase(InstrumentFileTestCase, XSDValidationTestCase, TestCase):
+class InstrumentXSDValidationTestCase(InstrumentFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class InstrumentFileNameValidationTestCase(InstrumentFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -141,7 +141,7 @@ class AcquisitionCapabilitiesSyntaxValidationTestCase(AcquisitionCapabilitiesFil
     pass
 class AcquisitionCapabilitiesRootElementValidationTestCase(AcquisitionCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class AcquisitionCapabilitiesXSDValidationTestCase(AcquisitionCapabilitiesFileTestCase, XSDValidationTestCase, TestCase):
+class AcquisitionCapabilitiesXSDValidationTestCase(AcquisitionCapabilitiesFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class AcquisitionCapabilitiesFileNameValidationTestCase(AcquisitionCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -157,7 +157,7 @@ class AcquisitionSyntaxValidationTestCase(AcquisitionFileTestCase, SyntaxValidat
     pass
 class AcquisitionRootElementValidationTestCase(AcquisitionFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class AcquisitionXSDValidationTestCase(AcquisitionFileTestCase, XSDValidationTestCase, TestCase):
+class AcquisitionXSDValidationTestCase(AcquisitionFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class AcquisitionFileNameValidationTestCase(AcquisitionFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -173,7 +173,7 @@ class ComputationCapabilitiesSyntaxValidationTestCase(ComputationCapabilitiesFil
     pass
 class ComputationCapabilitiesRootElementValidationTestCase(ComputationCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class ComputationCapabilitiesXSDValidationTestCase(ComputationCapabilitiesFileTestCase, XSDValidationTestCase, TestCase):
+class ComputationCapabilitiesXSDValidationTestCase(ComputationCapabilitiesFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class ComputationCapabilitiesFileNameValidationTestCase(ComputationCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -189,7 +189,7 @@ class ComputationSyntaxValidationTestCase(ComputationFileTestCase, SyntaxValidat
     pass
 class ComputationRootElementValidationTestCase(ComputationFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class ComputationXSDValidationTestCase(ComputationFileTestCase, XSDValidationTestCase, TestCase):
+class ComputationXSDValidationTestCase(ComputationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class ComputationFileNameValidationTestCase(ComputationFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -205,7 +205,7 @@ class ProcessSyntaxValidationTestCase(ProcessFileTestCase, SyntaxValidationTestC
     pass
 class ProcessRootElementValidationTestCase(ProcessFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class ProcessXSDValidationTestCase(ProcessFileTestCase, XSDValidationTestCase, TestCase):
+class ProcessXSDValidationTestCase(ProcessFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class ProcessFileNameValidationTestCase(ProcessFileTestCase, FileNameValidationTestCase, TestCase):
     pass
@@ -221,7 +221,7 @@ class DataCollectionSyntaxValidationTestCase(DataCollectionFileTestCase, SyntaxV
     pass
 class DataCollectionRootElementValidationTestCase(DataCollectionFileTestCase, RootElementValidationTestCase, TestCase):
     pass
-class DataCollectionXSDValidationTestCase(DataCollectionFileTestCase, XSDValidationTestCase, TestCase):
+class DataCollectionXSDValidationTestCase(DataCollectionFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class DataCollectionFileNameValidationTestCase(DataCollectionFileTestCase, FileNameValidationTestCase, TestCase):
     pass

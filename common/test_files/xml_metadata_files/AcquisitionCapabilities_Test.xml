@@ -42,7 +42,7 @@
             <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction"/> 
             <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
             <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
-            <crs xlink:href="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith"/>
+            <!-- <crs xlink:href="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith"/> -->
         </processCapability>
     </capabilities>
     <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
