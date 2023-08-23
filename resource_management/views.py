@@ -98,7 +98,7 @@ class ResourceManagementListView(ListView):
 
         context['title'] = _create_manage_resource_page_title(self.model.type_plural_readable)
         context['resource_type_plural'] = self.model.type_plural_readable
-        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered by your institution.'
         context['institution_members_by_id'] = {im['edu_person_unique_id']: im['name'] for im in get_members_by_institution_id(self.institution_id)}
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
@@ -152,8 +152,8 @@ class PlatformManagementListView(ResourceManagementListView):
                 non_pithia_platforms.append(r)
         context['pithia_platforms'] = pithia_platforms
         context['non_pithia_platforms'] = non_pithia_platforms
-        context['no_platform_networks_message'] = 'No platform networks have been registered with the e-Science Centre.'
-        context['no_platforms_message'] = 'No individual platforms have been registered with the e-Science Centre.'
+        context['no_platform_networks_message'] = 'No platform networks have been registered by your institution.'
+        context['no_platforms_message'] = 'No individual platforms have been registered by your institution.'
         return context
 
 class OperationManagementListView(ResourceManagementListView):
