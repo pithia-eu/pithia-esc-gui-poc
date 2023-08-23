@@ -28,7 +28,7 @@ jobs:
     - name: Create and populate .env file
       env:
         SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
-        DATABASE_ENGINE: django.db.backends.postgresql
+        DATABASE_ENGINE: django.db.backends.sqlite3
         DATABASE_NAME: test
         DATABASE_READ_USER: test
         DATABASE_READ_PASSWORD: test
