@@ -81,7 +81,7 @@
                             <button href="#" type="submit" class="btn btn-primary mb-4">
                                 Switch
                             </button>
-                            <small class="institution-for-login-session d-block"><b>Currently using</b> {{ request.session.institution_for_login_session }} <b>account</b></small>
+                            <small class="institution-for-login-session d-block"><b>Currently using account for</b> {{ request.session.institution_for_login_session }}</small>
                         </form>
                     </div>
                     {% endif %}
