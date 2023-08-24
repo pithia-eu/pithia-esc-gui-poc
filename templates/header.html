@@ -60,8 +60,8 @@
                             {% csrf_token %}
                             <label
                                 for="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="fw-medium mb-1">
-                                {{ request.institution_selection_form.institutions.label }}:
+                                class="fw-medium fs-5 mb-1 text-secondary">
+                                {{ request.institution_selection_form.institutions.label }}
                             </label>
                             <select
                                 name="{{ request.institution_selection_form.institutions.name }}"
