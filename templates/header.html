@@ -53,19 +53,20 @@
             </a>
             <div class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
-                <p class="dropdown-header institution-for-login-session">Current Institution: {{ request.session.institution_for_login_session }}</p>
-                <div class="row px-3 pb-2 gy-3">
+                <div class="row px-4 py-3">
                     {% if request.session.user_institution_subgroups|length > 1 %}
                     <div class="col-12">
                         <form action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}" method="POST">
                             {% csrf_token %}
-                            <label for="{{ request.institution_selection_form.institutions.auto_id }}">
-                                Change to:
+                            <label
+                                for="{{ request.institution_selection_form.institutions.auto_id }}"
+                                class="fw-medium mb-1">
+                                {{ request.institution_selection_form.institutions.label }}:
                             </label>
                             <select
                                 name="{{ request.institution_selection_form.institutions.name }}"
                                 id="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="form-select mb-3"
+                                class="form-select mb-1"
                                 required="{{ request.institution_selection_form.institutions.required }}">
                                 <option value="" disabled selected>
                                     {{ request.institution_selection_form.fields.institutions.choices|length|add:-1 }} others available...
@@ -76,6 +77,7 @@
                                 {% endif %}
                                 {% endfor %}
                             </select>
+                            <div class="form-text institution-for-login-session text-reset mb-3"><b>Current:</b> {{ request.session.institution_for_login_session }}</div>
                             {{ request.institution_selection_form.next }}
                             <button href="#" type="submit" class="btn btn-primary">
                                 Submit
@@ -116,8 +118,9 @@
                 {% endif %}
                 <form action="{% url 'logout' %}" method="POST">
                     {% csrf_token %}
-                    <button href="#" type="submit" class="dropdown-item">
+                    <button href="#" type="submit" class="dropdown-item logout-button">
                         Logout
+                        <img src="{% static 'logout.svg' %}" alt="Logout" class="ms-1">
                     </button>
                 </form>
             </div>

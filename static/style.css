@@ -144,6 +144,15 @@ header .dropdown-item:active a {
     text-decoration: underline;
 }
 
+.user-menu .logout-button {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu .logout-button img {
+    height: 1.2rem;
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     padding: 0.5em 0;
