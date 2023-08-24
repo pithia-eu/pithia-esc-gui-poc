@@ -48,7 +48,7 @@
     <div class="col-md-3 text-end">
         {% if request.session.is_logged_in %}
         <div class="dropdown user-menu">
-            <a class="link-body-emphasis text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="link-body-emphasis text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                 {{ request.session.user_given_name }}
             </a>
             <div class="dropdown-menu">
