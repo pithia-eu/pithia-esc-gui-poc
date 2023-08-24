@@ -60,7 +60,7 @@
                             {% csrf_token %}
                             <label
                                 for="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="fw-medium fs-5 mb-1 text-secondary">
+                                class="fs-5 mb-1 text-secondary">
                                 {{ request.institution_selection_form.institutions.label }}
                             </label>
                             <select
@@ -77,11 +77,12 @@
                                 {% endif %}
                                 {% endfor %}
                             </select>
-                            <div class="form-text institution-for-login-session text-reset mb-3"><b>Current:</b> {{ request.session.institution_for_login_session }}</div>
+                            <div class="form-text institution-for-login-session text-reset mb-3"><b>Logged in with:</b> {{ request.session.institution_for_login_session }}</div>
                             {{ request.institution_selection_form.next }}
                             <button href="#" type="submit" class="btn btn-primary">
-                                Submit
+                                Switch to Selected Institution
                             </button>
+                            
                         </form>
                     </div>
                     {% endif %}
@@ -119,8 +120,8 @@
                 <form action="{% url 'logout' %}" method="POST">
                     {% csrf_token %}
                     <button href="#" type="submit" class="dropdown-item logout-button">
+                        <img src="{% static 'logout.svg' %}" alt="Logout" class="me-1">
                         Logout
-                        <img src="{% static 'logout.svg' %}" alt="Logout" class="ms-1">
                     </button>
                 </form>
             </div>
