@@ -66,7 +66,7 @@
                             <select
                                 name="{{ request.institution_selection_form.institutions.name }}"
                                 id="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="form-select mb-1"
+                                class="form-select mb-2"
                                 required="{{ request.institution_selection_form.institutions.required }}">
                                 <option value="" disabled selected>
                                     {{ request.institution_selection_form.fields.institutions.choices|length|add:-1 }} others available...
@@ -77,12 +77,11 @@
                                 {% endif %}
                                 {% endfor %}
                             </select>
-                            <div class="form-text institution-for-login-session text-reset mb-3"><b>Logged in with:</b> {{ request.session.institution_for_login_session }}</div>
                             {{ request.institution_selection_form.next }}
-                            <button href="#" type="submit" class="btn btn-primary">
-                                Switch to Selected Institution
+                            <button href="#" type="submit" class="btn btn-primary mb-4">
+                                Switch
                             </button>
-                            
+                            <small class="institution-for-login-session d-block"><b>Currently logged in with</b> {{ request.session.institution_for_login_session }}</small>
                         </form>
                     </div>
                     {% endif %}
