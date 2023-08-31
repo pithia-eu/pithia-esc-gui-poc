@@ -53,16 +53,21 @@
             </a>
             <div class="dropdown-menu">
                 {% if request.session.institution_for_login_session %}
-                <div class="row px-4 py-3">
+                <div class="row p-3">
                     {% if request.session.user_institution_subgroups|length > 1 %}
                     <div class="col-12">
                         <form action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}" method="POST">
                             {% csrf_token %}
-                            <label
-                                for="{{ request.institution_selection_form.institutions.auto_id }}"
-                                class="fs-5 mb-1 text-secondary">
-                                {{ request.institution_selection_form.institutions.label }}
-                            </label>
+                            <div class="d-flex align-items-center mb-2">
+                                <img
+                                    src="{% static 'switch.svg' %}"
+                                    alt="Switch"
+                                    style="height: 1.5rem;"
+                                    class="me-1">
+                                <label for="{{ request.institution_selection_form.institutions.auto_id }}">
+                                    {{ request.institution_selection_form.institutions.label }}
+                                </label>
+                            </div>
                             <select
                                 name="{{ request.institution_selection_form.institutions.name }}"
                                 id="{{ request.institution_selection_form.institutions.auto_id }}"
@@ -78,9 +83,10 @@
                                 {% endfor %}
                             </select>
                             {{ request.institution_selection_form.next }}
-                            <button href="#" type="submit" class="btn btn-primary mb-4">
+                            <button href="#" type="submit" class="btn btn-primary">
                                 Switch
                             </button>
+                            <hr class="my-3">
                             <small class="institution-for-login-session d-block"><b>Currently on</b> {{ request.session.institution_for_login_session }}</small>
                         </form>
                     </div>
