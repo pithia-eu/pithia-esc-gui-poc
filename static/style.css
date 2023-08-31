@@ -124,16 +124,18 @@ header .dropdown-item:active a {
     background-color: var(--pithia-blue);
 }
 
+.dropdown-menu {
+    min-width: 100vw;
+    margin-inline: auto;
+}
+
 .user-menu .institution-for-login-session {
     white-space: pre-wrap;
     line-clamp: 3;
     overflow-wrap: break-word;
 }
 
-.user-menu .dropdown-menu {
-    width: 100%;
-}
-
+.user-menu .dropdown-menu li,
 .user-menu .dropdown-menu li a,
 .user-menu .dropdown-menu li button {
     width: 100%;
@@ -559,6 +561,12 @@ ul.tree ul {
 @media (min-width: 992px) {
     #id_files {
         max-width: 20rem;
+    }
+}
+
+@media (min-width: 320px) {
+    .dropdown-menu {
+        min-width: 20rem;
     }
 }
 
