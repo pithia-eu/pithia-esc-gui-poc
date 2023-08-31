@@ -124,38 +124,38 @@ header .dropdown-item:active a {
     background-color: var(--pithia-blue);
 }
 
-.user-menu {
+.user-dropdown {
     width: 100%;
     text-align: center !important;
 }
 
-.user-menu .dropdown-menu {
+.user-dropdown .dropdown-menu {
     width: 100%;
 }
 
-.user-menu .institution-for-login-session {
+.user-dropdown .institution-for-login-session {
     white-space: pre-wrap;
     line-clamp: 3;
     overflow-wrap: break-word;
 }
 
-.user-menu .dropdown-menu li,
-.user-menu .dropdown-menu li a,
-.user-menu .dropdown-menu li button {
+.user-dropdown .dropdown-menu li,
+.user-dropdown .dropdown-menu li a,
+.user-dropdown .dropdown-menu li button {
     width: 100%;
 }
 
-.user-menu .dropdown-menu li a:hover,
-.user-menu .dropdown-menu li button:hover {
+.user-dropdown .dropdown-menu li a:hover,
+.user-dropdown .dropdown-menu li button:hover {
     text-decoration: underline;
 }
 
-.user-menu .logout-button {
+.user-dropdown .logout-button {
     display: flex;
     align-items: center;
 }
 
-.user-menu .logout-button img {
+.user-dropdown .logout-button img {
     height: 1.2rem;
 }
 
@@ -569,13 +569,13 @@ ul.tree ul {
 }
 
 @media (min-width: 332px) {
-    .user-menu {
+    .user-dropdown {
         display: block;
         width: auto;
         text-align: end;
     }
 
-    .user-menu .dropdown-menu {
+    .user-dropdown .dropdown-menu {
         min-width: 20rem;
     }
 }
