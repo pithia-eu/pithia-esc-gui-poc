@@ -124,9 +124,10 @@ header .dropdown-item:active a {
     background-color: var(--pithia-blue);
 }
 
-.dropdown-menu {
-    min-width: 100vw;
-    margin-inline: auto;
+.dropdown {
+    display: flex;
+    width: 100%;
+    text-align: center !important;
 }
 
 .user-menu .institution-for-login-session {
@@ -564,7 +565,13 @@ ul.tree ul {
     }
 }
 
-@media (min-width: 320px) {
+@media (min-width: 332px) {
+    .dropdown {
+        display: block;
+        width: auto;
+        text-align: end;
+    }
+
     .dropdown-menu {
         min-width: 20rem;
     }
