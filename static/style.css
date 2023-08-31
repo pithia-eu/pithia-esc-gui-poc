@@ -125,7 +125,6 @@ header .dropdown-item:active a {
 }
 
 .dropdown {
-    display: flex;
     width: 100%;
     text-align: center !important;
 }
