@@ -131,7 +131,7 @@ header .dropdown-item:active a {
 }
 
 .user-menu .dropdown-menu {
-    max-width: 100%;
+    width: 100%;
 }
 
 .user-menu .dropdown-menu li a,
