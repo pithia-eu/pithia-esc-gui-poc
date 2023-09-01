@@ -100,7 +100,7 @@
                     Switch
                 </button>
                 <hr class="my-3">
-                <small class="institution-for-login-session d-block"><b>Currently on</b> {{ request.session.institution_for_login_session }}</small>
+                <p class="institution-for-login-session my-0"><b>Logged in with:</b> {{ request.session.institution_for_login_session }}</p>
             </form>
             {% endif %}
             <hr class="dropdown-divider">
