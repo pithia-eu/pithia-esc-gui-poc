@@ -139,6 +139,7 @@ def list_joinable_perun_organisation_subgroups(request, institution_id):
 
 @csrf_exempt
 @require_http_methods(["PUT"])
+@perun_login_required
 def update_perun_organisation_list(request):
     """
     Decodes a JSON payload of organisations sent by Perun and
@@ -146,18 +147,18 @@ def update_perun_organisation_list(request):
     which are stored in a JSON file.
     """
     # Retrieve the authorisation details from the request.
-    authorisation_header = request.headers.get('Authorization')
-    encoded_credentials = authorisation_header.split(' ')[1]  # Removes "Basic " to isolate credentials
-    decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8").split(':')
-    username = decoded_credentials[0]
-    password = decoded_credentials[1]
+    # authorisation_header = request.headers.get('Authorization')
+    # encoded_credentials = authorisation_header.split(' ')[1]  # Removes "Basic " to isolate credentials
+    # decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8").split(':')
+    # username = decoded_credentials[0]
+    # password = decoded_credentials[1]
 
-    # Check the details are correct.
-    if username != os.environ['PERUN_USERNAME']:
-        return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
-    hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-    if hashed_password != os.environ['PERUN_PASSWORD']:
-        return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
+    # # Check the details are correct.
+    # if username != os.environ['PERUN_USERNAME']:
+    #     return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
+    # hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+    # if hashed_password != os.environ['PERUN_PASSWORD']:
+    #     return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
 
     # If the details are correct, decode the data.
     decompressed_data = zlib.decompress(request.body, 16+zlib.MAX_WBITS)
