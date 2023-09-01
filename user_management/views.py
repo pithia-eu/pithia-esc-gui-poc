@@ -45,11 +45,15 @@ def perun_login_required(function):
 
         if not auth:
             return JsonResponse({'msg': 'Please login!'}, status=400)
+        
+        if not auth.startswith('Bearer'):
+            return JsonResponse({'msg': 'Header does not start with \'Bearer\'.'}, status=400)
 
-        username = request.session.get(auth)
+        token = auth[7]
+        username = request.session.get(token)
 
         if not username:
-            return JsonResponse({'msg': 'invalid token!'}, status=401)
+            return JsonResponse({'msg': 'Invalid token!'}, status=401)
 
         if not username != os.environ['PERUN_USERNAME']:
             return JsonResponse({'msg': 'The perun info has been deleted by the admin.'}, status=401)
@@ -70,7 +74,7 @@ def perun_login(request):
         if hashed_password == os.environ['PERUN_PASSWORD']:
             token = str(uuid.uuid4()).replace('-', '') + str(random.randint(0, 1000))
             request.session[token] = username
-            return JsonResponse({'msg': 'login succeed!', 'token': token}, status=200)
+            return JsonResponse({'msg': 'Login succeeded!', 'token': token}, status=200)
         else:
             return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
 
