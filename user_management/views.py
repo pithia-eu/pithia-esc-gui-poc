@@ -55,7 +55,7 @@ def perun_login_required(function):
         if not username:
             return JsonResponse({'msg': 'Invalid token!'}, status=401)
 
-        if not username != os.environ['PERUN_USERNAME']:
+        if username != os.environ['PERUN_USERNAME']:
             return JsonResponse({'msg': 'The perun info has been deleted by the admin.'}, status=401)
 
         return function(request, *args, **kwargs)
