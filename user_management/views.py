@@ -49,10 +49,10 @@ def perun_login_required(function):
         username = request.session.get(auth)
 
         if not username:
-            JsonResponse({'msg': 'invalid token!'}, status=401)
+            return JsonResponse({'msg': 'invalid token!'}, status=401)
 
         if not username != os.environ['PERUN_USERNAME']:
-            JsonResponse({'msg': 'The perun info has been deleted by the admin.'}, status=401)
+            return JsonResponse({'msg': 'The perun info has been deleted by the admin.'}, status=401)
 
         return function(request, *args, **kwargs)
 
