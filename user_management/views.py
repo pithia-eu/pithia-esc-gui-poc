@@ -49,7 +49,7 @@ def perun_login_required(function):
         if not auth.startswith('Bearer'):
             return JsonResponse({'msg': 'Header does not start with \'Bearer\'.'}, status=400)
 
-        token = auth[7]
+        token = auth[7:]
         username = request.session.get(token)
 
         if not username:
