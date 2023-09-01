@@ -179,7 +179,7 @@ header .dropdown-item:active a {
 }
 
 .card-menu .card {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.15) !important;
     transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
 }
