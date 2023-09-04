@@ -66,15 +66,15 @@ def perun_login_required(function):
 @csrf_exempt
 @require_POST
 def perun_login(request):
-    incorrect_login_msg = 'The username or password for perun is wrong.'
+    incorrect_login_msg = 'The username or password for Perun is wrong.'
 
     # Verify username
-    username = request.POST['username']
+    username = request.POST.get('username', None)
     if username != os.environ['PERUN_USERNAME']:
         return JsonResponse({'msg': incorrect_login_msg}, status=400)
     
     # Verify password
-    password = request.POST['password']
+    password = request.POST.get('password', None)
     hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
     if hashed_password != os.environ['PERUN_PASSWORD']:
         return JsonResponse({'msg': incorrect_login_msg}, status=400)
