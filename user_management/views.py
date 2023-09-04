@@ -66,17 +66,23 @@ def perun_login_required(function):
 @csrf_exempt
 @require_POST
 def perun_login(request):
-    username = request.POST['username']
-    if username == os.environ['PERUN_USERNAME']:
-        password = request.POST['password']
-        hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+    incorrect_login_msg = 'The username or password for perun is wrong.'
 
-        if hashed_password == os.environ['PERUN_PASSWORD']:
-            token = str(uuid.uuid4()).replace('-', '') + str(random.randint(0, 1000))
-            request.session[token] = username
-            return JsonResponse({'msg': 'Login succeeded!', 'token': token}, status=200)
-        else:
-            return JsonResponse({'msg': 'The username or password for perun is wrong.'}, status=400)
+    # Verify username
+    username = request.POST['username']
+    if username != os.environ['PERUN_USERNAME']:
+        return JsonResponse({'msg': incorrect_login_msg}, status=400)
+    
+    # Verify password
+    password = request.POST['password']
+    hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+    if hashed_password != os.environ['PERUN_PASSWORD']:
+        return JsonResponse({'msg': incorrect_login_msg}, status=400)
+    
+    # Set session token if login details are correct.
+    token = str(uuid.uuid4()).replace('-', '') + str(random.randint(0, 1000))
+    request.session[token] = username
+    return JsonResponse({'msg': 'Login succeeded!', 'token': token}, status=200)
 
 @csrf_exempt
 @perun_login_required
