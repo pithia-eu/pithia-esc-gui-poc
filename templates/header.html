@@ -49,14 +49,14 @@
     <div class="dropdown user-dropdown col-xs-auto flex-grow-1">
         <a
             href="#"
-            class="d-inline-block link-body-emphasis text-decoration-none dropdown-toggle"
+            class="d-inline-block text-decoration-none dropdown-toggle"
             data-bs-toggle="dropdown"
             aria-expanded="false"
             role="button"
             data-bs-auto-close="outside">
             {{ request.session.user_given_name }}
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu dropdown-menu-end">
             {% if request.session.institution_for_login_session %}
             {% if request.session.user_institution_subgroups|length > 1 %}
             <form
