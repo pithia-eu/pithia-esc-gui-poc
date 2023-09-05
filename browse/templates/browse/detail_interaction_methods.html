@@ -46,7 +46,7 @@
                         <tr>
                             <td>API</td>
                             <td>
-                                {% if 'description' in method.config %}
+                                {% if 'description' in method.config and method.config.description|length > 0 %}
                                 {{ method.config.description|urlize }}
                                 {% else %}
                                 <i class="text-muted">None</i>
