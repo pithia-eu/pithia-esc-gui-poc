@@ -393,7 +393,7 @@ def data_collection_interaction_methods(request, resource_id):
                         except models.APIInteractionMethod.DoesNotExist:
                             pass
                         messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
-                        return redirect('update:data_collection_interaction_methods', data_collection_id=resource_id)
+                        return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
 
                     try:
                         api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
@@ -412,7 +412,7 @@ def data_collection_interaction_methods(request, resource_id):
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
-            return redirect('update:data_collection_interaction_methods', data_collection_id=resource_id)
+            return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
         
     # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
