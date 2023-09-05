@@ -127,7 +127,7 @@ header .dropdown-item {
 
 .user-dropdown {
     width: 100%;
-    text-align: center !important;
+    text-align: center;
 }
 
 .user-dropdown .dropdown-menu {
@@ -569,15 +569,24 @@ ul.tree ul {
     }
 }
 
-@media (min-width: 332px) {
+@media (min-width: 768px) {
     .user-dropdown {
-        display: block;
-        width: auto;
         text-align: end;
     }
 
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
+    }
+}
+
+@media (min-width: 332px) {
+    .user-dropdown {
+        display: block;
+        width: auto;
+    }
+
+    .user-dropdown .dropdown-menu {
+        max-width: 20rem;
     }
 }
 

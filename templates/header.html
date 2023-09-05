@@ -9,7 +9,7 @@
         </div>
     </a>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 flex-grow-1">
         <li class="nav-item">
             {% url 'home' as base_url %}
             <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
@@ -46,10 +46,10 @@
         </li>
     </ul>
     {% if request.session.is_logged_in %}
-    <div class="dropdown user-dropdown col-xs-auto">
+    <div class="dropdown user-dropdown col-xs-auto flex-grow-1">
         <a
             href="#"
-            class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+            class="d-inline-block link-body-emphasis text-decoration-none dropdown-toggle"
             data-bs-toggle="dropdown"
             aria-expanded="false"
             role="button"
