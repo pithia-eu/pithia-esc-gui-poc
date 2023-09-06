@@ -17,8 +17,8 @@ document.addEventListener("fileValidationStatusUpdated", event => {
 
 export function enableSubmitButtonIfReady() {
     if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
-        document.querySelector("button[type='submit']").disabled = !(isEachFileValid && isApiSpecificationLinkValid);
+        document.querySelector("#file-upload-form button[type='submit']").disabled = !(isEachFileValid && isApiSpecificationLinkValid);
     } else {
-        document.querySelector("button[type='submit']").disabled = !isEachFileValid;
+        document.querySelector("#file-upload-form button[type='submit']").disabled = !isEachFileValid;
     }
 }
