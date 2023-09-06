@@ -102,8 +102,8 @@
                 <hr class="my-3">
                 <p class="institution-for-login-session my-0"><b>Current Institution:</b> {{ request.session.institution_for_login_session }}</p>
             </form>
-            {% endif %}
             <hr class="dropdown-divider">
+            {% endif %}
             {% endif %}
             <form action="{% url 'logout' %}" method="POST">
                 {% csrf_token %}
