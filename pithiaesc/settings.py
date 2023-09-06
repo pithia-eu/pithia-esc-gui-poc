@@ -18,7 +18,7 @@ import environ
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env(
-    ALLOWED_HOSTS=('127.0.0.1,localhost,18.134.0.206,pithia.yangcpc.site'),
+    ALLOWED_HOSTS=('127.0.0.1,localhost'),
     CSRF_TRUSTED_ORIGINS=''
 )
 
