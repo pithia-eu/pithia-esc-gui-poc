@@ -169,7 +169,7 @@
 </section>
 {% endif %} {% endcomment %}
 {% endif %}
-{% if request.session.is_logged_in %}
+{% if request.session.is_logged_in and request.session.user_institution_subgroups %}
 <hr>
 <section>
     <h2 class="mb-3">My Institutions</h2>
