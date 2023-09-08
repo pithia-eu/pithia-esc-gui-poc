@@ -130,9 +130,14 @@ class InstitutionSelectionFormMiddleware:
         try:
             user_memberships = get_institution_memberships_of_logged_in_user(request.session)
             institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
-            institution_selection_form = InstitutionForLoginSessionForm(institution_choices, initial={'next': request.path})
+            institution_selection_form = InstitutionForLoginSessionForm(
+                institution_choices=institution_choices,
+                initial={'next': request.path}
+            )
             request.institution_selection_form = institution_selection_form
         except AttributeError:
+            # session.get('user_memberships') will raise an AttributeError if
+            # user memberships have not been stored in the session yet.
             pass
 
         response = self.get_response(request)
