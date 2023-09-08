@@ -52,6 +52,12 @@ a:not(.btn, .nav-link):focus {
 
 [href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark::after {
     background-image: url('/static/external_link_black.svg');
+    transition: filter 150ms ease-in-out;
+}
+
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:hover::after,
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:focus::after {
+    filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
 h1 {
