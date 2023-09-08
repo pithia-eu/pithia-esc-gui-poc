@@ -50,6 +50,10 @@ a:not(.btn, .nav-link):focus {
     text-indent: 1em; /* the width of the icon */
 }
 
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark::after {
+    background-image: url('/static/external_link_black.svg');
+}
+
 h1 {
     color: var(--pithia-blue);
 }
