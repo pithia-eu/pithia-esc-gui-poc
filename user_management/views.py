@@ -13,7 +13,11 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import (
+    resolve,
+    Resolver404,
+    reverse,
+)
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import (
     require_http_methods,
@@ -23,11 +27,13 @@ from functools import wraps
 from pathlib import Path
 
 from .services import (
-    CREATION_URL_BASE,
     get_institution_id_for_login_session,
+    get_institution_memberships_of_logged_in_user,
     JOIN_URL_BASE,
     set_institution_for_login_session,
 )
+
+from common.forms import InstitutionForLoginSessionForm
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
@@ -182,6 +188,7 @@ def update_perun_organisation_list(request):
 def choose_institution_for_login_session(request):
     # One user has multiple organisations, but we need to select
     # one organisation per session.
+    next_url = reverse('data_provider_home')
 
     # Find the organisation to be able to configure views to institution.
     if request.method == 'POST':
@@ -189,11 +196,35 @@ def choose_institution_for_login_session(request):
         institution_subgroup_pair_split = institution_subgroup_pair.split(':')
         institution = institution_subgroup_pair_split[0]
         subgroup = institution_subgroup_pair_split[1]
-        changed_or_set = 'changed' if get_institution_id_for_login_session(request.session) else 'set'
-        set_institution_for_login_session(request.session, institution, subgroup)
-        messages.success(request, f'Institution {changed_or_set} to {institution}.')
-        next_url = request.POST.get('next')
-        if next_url:
+        
+        # Validate the next URL redirects to an eSC page
+        if request.POST.get('next') is not None:
+            try:
+                resolve(request.POST.get('next'))
+                next_url = request.POST.get('next')
+            except Resolver404:
+                messages.error(request, 'The "next" URL could not be resolved to a valid eSC URL.')
+                return HttpResponseRedirect(reverse('data_provider_home'))
+
+        # Validate the form
+        try:
+            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
+        except AttributeError:
+            # session.get('user_memberships') will raise an AttributeError if
+            # user memberships have not been stored in the session yet.
+            messages.error(request, 'Could not retrieve user\'s memberships for form validation.')
             return HttpResponseRedirect(next_url)
 
-    return HttpResponseRedirect(reverse('data_provider_home'))
+        institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
+        form = InstitutionForLoginSessionForm(
+            request.POST,
+            institution_choices=institution_choices,
+        )
+        if form.is_valid():
+            changed_or_set = 'changed' if get_institution_id_for_login_session(request.session) else 'set'
+            set_institution_for_login_session(request.session, institution, subgroup)
+            messages.success(request, f'Institution {changed_or_set} to {institution}.')
+        else:
+            messages.error(request, 'The form submitted was invalid.')
+
+    return HttpResponseRedirect(next_url)
