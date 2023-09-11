@@ -1,7 +1,13 @@
+import os
+from django.http import (
+    FileResponse,
+    HttpResponseNotFound,
+)
 from django.shortcuts import render
 from django.views.generic import ListView
 
 from common import models
+from pithiaesc.settings import BASE_DIR
 
 _INDEX_PAGE_TITLE = 'Register & Manage Metadata'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
@@ -15,6 +21,12 @@ def index(request):
     return render(request, 'resource_management/index.html', {
         'title': _INDEX_PAGE_TITLE
     })
+
+def resource_registration_user_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA-NRF Data Registration User Guide.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The data resource registration guide was not found.')
 
 def data_collection_related_metadata_index(request):
     num_current_organsations = models.Organisation.objects.count()
