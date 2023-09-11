@@ -1,11 +1,17 @@
 import environ
 import hashlib
+import os
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import (
+    FileResponse,
+    HttpResponseNotFound,
+    HttpResponseRedirect,
+)
 from django.shortcuts import render
 from django.urls import reverse
 
 from common.forms import LoginForm
+from pithiaesc.settings import BASE_DIR
 
 # Initialise environment variables
 env = environ.Env()
@@ -49,3 +55,9 @@ def index_admin(request):
     return render(request, 'index.html', {
         'title': 'Admin Dashboard',
     })
+
+def resource_registration_user_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'resource_management', 'PITHIA-NRF Data Registration User Guide.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The data resource registration guide was not found.')
