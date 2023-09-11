@@ -113,13 +113,14 @@
 <hr>
 {% if request.session.institution_for_login_session %}
 <h2>{{ request.session.institution_for_login_session }}</h2>
-{% else %}
-<h2>Data Registrations</h2>
-{% endif %}
-{% if request.session.institution_for_login_session %}
 <section>
     <h3 class="text-secondary mb-3">Data Registrations</h3>
     <div class="card-menu mb-2">
+{% else %}
+<h2>Data Registrations</h2>
+<section>
+    <div class="card-menu mb-2">
+{% endif %}
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'resource_registration_user_guide' %}">
@@ -128,6 +129,7 @@
                 </a>
             </div>
         </div>
+{% if request.session.institution_for_login_session %}
         <div class="card">
             <div class="card-body">
                 <a href="{% url 'resource_management:index' %}">
@@ -147,16 +149,6 @@
     </div>
 </section>
 {% else %}
-<section>
-    <div class="card-menu mb-2">
-        <div class="card">
-            <div class="card-body">
-                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
-                    <img src="{% static 'file_info.svg' %}" alt="Info">
-                    <span>View Metadata Registration Guide</span>
-                </a>
-            </div>
-        </div>
     </div>
 </section>
 {% endif %}
