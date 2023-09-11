@@ -100,6 +100,14 @@
                 </a>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'ontology:guide' %}">
+                    <img src="{% static 'ontology.svg' %}" alt="Ontology">
+                    <span>Space Physics Ontology Guide</span>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 <hr>
@@ -114,9 +122,9 @@
     <div class="card-menu mb-2">
         <div class="card">
             <div class="card-body">
-                <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" target="_blank">
+                <a href="{% url 'resource_registration_user_guide' %}">
                     <img src="{% static 'file_info.svg' %}" alt="Info">
-                    <span>View Metadata Registration Guide</span>
+                    <span>View Data Resource Registration Guide</span>
                 </a>
             </div>
         </div>

@@ -1,4 +1,8 @@
-from django.http import HttpResponseNotFound
+import os
+from django.http import (
+    FileResponse,
+    HttpResponseNotFound,
+)
 from django.shortcuts import render
 from rdflib import URIRef
 from rdflib.resource import Resource
@@ -9,6 +13,7 @@ from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     get_graph_of_pithia_ontology_component,
 )
+from pithiaesc.settings import BASE_DIR
 from search.services import (
     get_parents_of_registered_ontology_terms,
     get_registered_computation_types,
@@ -29,6 +34,12 @@ def ontology(request):
     return render(request, 'ontology/index.html', {
         'title': _ONTOLOGY_INDEX_PAGE_TITLE
     })
+
+def ontology_guide(request):
+    try:
+        return FileResponse(open(os.path.join(BASE_DIR, 'ontology', 'PITHIA-NRF_SpacePhysicsOntology_1.4.pdf'), 'rb'), content_type='application/pdf')
+    except IOError:
+        return HttpResponseNotFound('The ontology guide was not found.')
     
 def _get_ontology_category_term_list_page_title_from_category(category):
     title_base = ' '.join(_split_camel_case(category)).title()
