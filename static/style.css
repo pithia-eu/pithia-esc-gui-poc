@@ -21,8 +21,9 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link, footer a) {
-    color: var(--pithia-blue) !important;
+a:not(.btn, .header-logo-link, footer a),
+a:hover:not(.btn, .header-logo-link, footer a) {
+    color: var(--pithia-blue);
 }
 
 a {
