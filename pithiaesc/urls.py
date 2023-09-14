@@ -11,6 +11,7 @@ urlpatterns = [
     path('present/', include('present.urls')),
     path('search/', include('search.urls')),
     path('admin/', admin.site.urls),
+    path('data-resource-registration-guide', views.resource_registration_user_guide, name='resource_registration_user_guide'),
     path('authorised/', include('pithiaesc.secure_urls')),
     path('', include('user_management.urls')),
 ]

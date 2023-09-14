@@ -2,8 +2,9 @@ from django import forms
 
 
 class InstitutionForLoginSessionForm(forms.Form):
-    def __init__(self, institution_choices, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, institution_choices=[], **kwargs):
+        super(InstitutionForLoginSessionForm, self).__init__(*args, **kwargs)
+
         self.fields['institutions'].choices = institution_choices
 
     institutions = forms.ChoiceField(
@@ -15,4 +16,4 @@ class InstitutionForLoginSessionForm(forms.Form):
         })
     )
 
-    next = forms.URLField(widget=forms.HiddenInput())
+    next = forms.CharField(widget=forms.HiddenInput(), required=False)
