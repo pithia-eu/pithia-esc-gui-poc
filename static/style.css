@@ -416,6 +416,12 @@ ul.tree ul {
     color: white;
 }
 
+.search-form-controls button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Skeleton loader while search terms are loading */
 @keyframes loading {
     to {
@@ -503,6 +509,12 @@ ul.tree ul {
 @media (min-width: 992px) {
     #id_files {
         max-width: 20rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .search-form-controls button {
+        display: inline;
     }
 }
 
