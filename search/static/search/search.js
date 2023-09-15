@@ -167,6 +167,10 @@ function checkAllCheckboxesForTreeContainerId(treeContainerId, isEachFilteredChe
     setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked);
 }
 
+function setExpandedStateForTreeContainerId(treeContainerId, isExpanded) {
+    setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isExpanded);
+}
+
 function setupInputsForTreeContainerId(treeContainerId) {
     const ontologyParentNodeCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"][data-is-parent-node="true"]`);
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
@@ -190,6 +194,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
         filterTreeContainerIdBySearchBoxInput(treeContainerId);
     });
 
+    // Button setup
     const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
     deselectAllButtonForTree.addEventListener("click", event => {
         checkAllCheckboxesForTreeContainerId(treeContainerId, false);
@@ -198,6 +203,16 @@ function setupInputsForTreeContainerId(treeContainerId) {
     const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
     selectAllButtonForTree.addEventListener("click", event => {
         checkAllCheckboxesForTreeContainerId(treeContainerId, true);
+    });
+
+    const expandAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-expand-all`);
+    expandAllButtonForTree.addEventListener("click", event => {
+        setExpandedStateForTreeContainerId(treeContainerId, true);
+    });
+
+    const collapseAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-collapse-all`);
+    collapseAllButtonForTree.addEventListener("click", event => {
+        setExpandedStateForTreeContainerId(treeContainerId, false);
     });
 }
 
