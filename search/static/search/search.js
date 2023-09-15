@@ -147,7 +147,17 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
         liNodesToShow = Array.from(new Set(liNodesToShow));
         addSearchBoxInputFiltersToLiNodes(liNodesToHide);
         removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
+
+        // Collapse hidden nodes, expand visible ones
+        setDetailNodeOpenStatesForLiNodes(liNodesToShow, true);
+        setDetailNodeOpenStatesForLiNodes(liNodesToHide, false);
     }
+}
+
+function setDetailNodeOpenStatesForLiNodes(liNodes, open) {
+    liNodes.forEach(liNode => {
+        liNode.querySelector("details").open = open;
+    });
 }
 
 function setCheckboxCheckedStatesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked) {
