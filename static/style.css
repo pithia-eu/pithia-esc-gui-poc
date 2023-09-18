@@ -416,10 +416,16 @@ ul.tree ul {
     color: white;
 }
 
-.search-form-controls button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.search-form-controls {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    row-gap: 0.5rem;
+}
+
+input[type="checkbox"][id$="select-all-checkbox"],
+label[for$="select-all-checkbox"] {
+    opacity: 0;
+    transition: opacity 300ms ease;
 }
 
 /* Skeleton loader while search terms are loading */
@@ -509,12 +515,6 @@ ul.tree ul {
 @media (min-width: 992px) {
     #id_files {
         max-width: 20rem;
-    }
-}
-
-@media (min-width: 768px) {
-    .search-form-controls button {
-        display: inline;
     }
 }
 
