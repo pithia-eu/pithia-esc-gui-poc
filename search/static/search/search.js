@@ -226,10 +226,20 @@ function setExpandedStateForTreeContainerId(treeContainerId, isExpanded) {
 // Search form setup
 
 function setupInputsForTreeContainerId(treeContainerId) {
-    // Total checkboxes for a tree container
+    // Enabled checkbox count hint setup
     const allCheckboxes = getCheckboxesForTreeContainerId(treeContainerId);
     const selectAllCheckboxLabel = getSelectAllCheckboxLabelForTreeContainerId(treeContainerId);
     selectAllCheckboxLabel.innerHTML += ` <span class="text-secondary">${allCheckboxes.length}</span>`;
+
+    const topLevelDetailsNodes = document.querySelectorAll(`#${treeContainerId} .tree > li > details`);
+    topLevelDetailsNodes.forEach(detailsNode => {
+        const enabledCheckboxes = Array.from(detailsNode.querySelectorAll('input[type="checkbox"]:not([disabled])'));
+        const firstCheckboxLabel = detailsNode.querySelector('label');
+        let span = document.createElement('span');
+        span.className = 'text-secondary';
+        span.innerHTML = ` ${enabledCheckboxes.length}`;
+        firstCheckboxLabel.after(span);
+    });
 
     const ontologyParentNodeCheckboxesForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`input[type="checkbox"][data-is-parent-node="true"]`);
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
@@ -271,6 +281,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
             checkAllCheckboxesForTreeContainerId(treeContainerId, false);
         }
     });
+    selectAllCheckboxForTree.checked = false;
     selectAllCheckboxForTree.disabled = false;
     
     // Button setup
