@@ -234,11 +234,13 @@ function setupInputsForTreeContainerId(treeContainerId) {
     const topLevelDetailsNodes = document.querySelectorAll(`#${treeContainerId} .tree > li > details`);
     topLevelDetailsNodes.forEach(detailsNode => {
         const enabledCheckboxes = Array.from(detailsNode.querySelectorAll('input[type="checkbox"]:not([disabled])'));
-        const firstCheckboxLabel = detailsNode.querySelector('label');
-        let span = document.createElement('span');
-        span.className = 'text-secondary';
-        span.innerHTML = ` ${enabledCheckboxes.length}`;
-        firstCheckboxLabel.after(span);
+        if (enabledCheckboxes.length > 0) {
+            const firstCheckboxLabel = detailsNode.querySelector('label');
+            let span = document.createElement('span');
+            span.className = 'text-secondary';
+            span.innerHTML = ` ${enabledCheckboxes.length}`;
+            firstCheckboxLabel.after(span);
+        }
     });
 
     const ontologyParentNodeCheckboxesForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`input[type="checkbox"][data-is-parent-node="true"]`);
