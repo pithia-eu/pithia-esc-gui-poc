@@ -422,10 +422,8 @@ ul.tree ul {
     row-gap: 0.5rem;
 }
 
-input[type="checkbox"][id$="select-all-checkbox"],
-label[for$="select-all-checkbox"] {
-    opacity: 0;
-    transition: opacity 300ms ease;
+.select-all-checkbox-container {
+    transition: opacity 500ms ease;
 }
 
 /* Skeleton loader while search terms are loading */

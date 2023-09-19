@@ -20,7 +20,30 @@
             <span>Collapse All</span>
         </button>
     </div>
-    <input type="checkbox" name="" id="{{ ontology_component }}-select-all-checkbox" disabled="true">
-    <label for="{{ ontology_component }}-select-all-checkbox" class="me-auto mb-1"><strong>All</strong></label>
+    <div class="d-flex flex-wrap select-all-checkboxes-container d-none">
+        <div class="select-all-checkbox-container opacity-0 me-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="{{ ontology_component }}-select-all-checkbox">
+                <label for="{{ ontology_component }}-select-all-checkbox" class="form-check-label me-auto mb-1">All</label>
+                <span class="text-secondary"><span class="checkbox-num-hint-all"></span></span>
+            </div>
+        </div>
+        <div class="keyword-input-checkbox-container d-none me-3">
+            <div class="form-check">
+                <input type="checkbox" id="{{ ontology_component }}-select-keyword-input-checkbox" class="form-check-input">
+                <label for="{{ ontology_component }}-select-keyword-input-checkbox" class="me-auto mb-1 form-check-label">
+                    <span class="checkbox-num-hint-keyword-input"></span>
+                </label>
+            </div>
+        </div>
+        <div class="side-filters-checkbox-container d-none">
+            <div class="form-check">
+                <input type="checkbox" id="{{ ontology_component }}-select-side-filters-checkbox" class="form-check-input">
+                <label for="{{ ontology_component }}-select-side-filters-checkbox" class="me-auto mb-1 form-check-label">
+                    <span class="checkbox-num-hint-side-filters"></span>
+                </label>
+            </div>
+        </div>
+    </div>
     <div class="tree-search-terms" id="{{ ontology_component }}-tree-search-terms"></div>
 </div>

@@ -2,6 +2,7 @@ const CHECKBOX_FILTER_CLASS = "filter-no-match";
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
 
 
+
 // Filtering utility functions
 
 export function getEnclosingLiNode(elem) {
@@ -56,6 +57,7 @@ function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
 }
 
 
+
 // Checkbox filtering
 
 export function getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId) {
@@ -82,7 +84,9 @@ export function removeCheckboxFiltersFromLiNodes(liNodes) {
     });
 }
 
-// Search box input filtering
+
+
+// Keyword search
 
 function getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId) {
     return getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`li.search-no-match`);
@@ -108,55 +112,86 @@ function removeSearchBoxInputFiltersFromLiNodes(liNodes) {
     });
 }
 
-function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
-    const allCheckboxLabelsForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`label`);
-    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
-    const searchBoxInput = searchBoxForTree.value;
+function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searchBoxInput) {
+    const allCheckboxLabelsForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll("label");
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
-    
-    if (searchBoxInput === "") {
-        const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
-        removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
-    } else {
-        let liNodesToShow = [], liNodesToHide = [];
-        allCheckboxLabelsForTree.forEach(label => {
-            // AND match
-            let numInputMatchesFound = 0;
-            searchBoxInputSplit.forEach(inputTerm => {
-                if (label.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
-                    numInputMatchesFound++;
-                }
-            });
-            const enclosingLiNode = getEnclosingLiNode(label);
-            if (numInputMatchesFound === searchBoxInputSplit.length) {
-                liNodesToShow.push(enclosingLiNode);
-                const childNodeCheckboxes = enclosingLiNode.getElementsByTagName("input");
-                if (childNodeCheckboxes.length > 0) {
-                    const firstChildNodeCheckbox = childNodeCheckboxes[0];
-                    const parentNodeCheckboxes = getParentNodeCheckboxes(firstChildNodeCheckbox);
-                    parentNodeCheckboxes.forEach(checkbox => {
-                        const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(checkbox);
-                        liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
-                    });
-                }
-            } else {
-                liNodesToHide.push(enclosingLiNode);
+
+    const validCheckboxes = [];
+    let liNodesToShow = [], liNodesToHide = [];
+    allCheckboxLabelsForTree.forEach(label => {
+        // All keywords should be present
+        // in a label (AND match).
+        let matchCountForLabel = 0;
+        searchBoxInputSplit.forEach(inputTerm => {
+            if (label.innerHTML.toLowerCase().includes(inputTerm.toLowerCase())) {
+                matchCountForLabel++;
             }
         });
-        liNodesToHide = Array.from(new Set(liNodesToHide));
-        liNodesToShow = Array.from(new Set(liNodesToShow));
-        addSearchBoxInputFiltersToLiNodes(liNodesToHide);
-        removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
 
-        // Collapse hidden nodes, expand visible ones
-        setDetailNodeOpenStatesForLiNodes(liNodesToShow, true);
-        setDetailNodeOpenStatesForLiNodes(liNodesToHide, false);
+        const enclosingLiNode = getEnclosingLiNode(label);
+        // If all keywords are not present in the
+        // label, add its <li> to an array of <li>s
+        // to be hidden.
+        if (matchCountForLabel !== searchBoxInputSplit.length) {
+            return liNodesToHide.push(enclosingLiNode);
+        }
+
+        // If all keywords are present, increase the
+        // total match count, and add the enclosing
+        // <li> of the label to an array of <li>s to
+        // be shown.
+        const checkboxForLabel = document.getElementById(label.htmlFor);
+        if (!checkboxForLabel.disabled) {
+            // If the checkbox the label is associated
+            // with is enabled, this is counted as a
+            // valid match.
+            validCheckboxes.push(checkboxForLabel);
+        }
+        liNodesToShow.push(enclosingLiNode);
+
+        // Find parent <li>s by finding the parent
+        // checkbox of the checkbox the label is
+        // associated with.
+        const childNodeCheckboxes = enclosingLiNode.getElementsByTagName("input");
+        if (childNodeCheckboxes.length > 0) {
+            const firstChildNodeCheckbox = childNodeCheckboxes[0];
+            const parentNodeCheckboxes = getParentNodeCheckboxes(firstChildNodeCheckbox);
+            parentNodeCheckboxes.forEach(checkbox => {
+                const enclosingLiNodeOfParentNodeCheckbox = getEnclosingLiNode(checkbox);
+                liNodesToShow.push(enclosingLiNodeOfParentNodeCheckbox);
+            });
+        }
+    });
+    liNodesToHide = Array.from(new Set(liNodesToHide));
+    liNodesToShow = Array.from(new Set(liNodesToShow));
+
+    return {
+        validCheckboxes: validCheckboxes,
+        liNodesToHide: liNodesToHide,
+        liNodesToShow: liNodesToShow,
     }
 }
 
-// Utility functions
+function applySearchBoxInputFiltersToLiNodes(liNodesToHide, liNodesToShow) {
+    addSearchBoxInputFiltersToLiNodes(liNodesToHide);
+    removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
+}
 
-function getSearchTermsContainerForTreeContainerId(treeContainerId) {
+function hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId) {
+    document.querySelector(`#${treeContainerId} .keyword-input-checkbox-container`).classList.add("d-none");
+}
+
+export function updateAndShowSearchBoxInputCheckboxForTreeContainerId(treeContainerId, matchCountTotal) {
+    document.querySelector(`#${treeContainerId} .checkbox-num-hint-keyword-input`).innerHTML = `${matchCountTotal} keyword ${(matchCountTotal === 1) ? 'match' : 'matches'}`;
+    document.querySelector(`#${treeContainerId} .keyword-input-checkbox-container`).classList.remove("d-none");
+}
+
+
+
+
+// Common query selectors
+
+export function getSearchTermsContainerForTreeContainerId(treeContainerId) {
     return document.querySelector(`#${treeContainerId} .tree-search-terms`);
 }
 
@@ -164,12 +199,15 @@ function getCheckboxesForTreeContainerId(treeContainerId) {
     return Array.from(getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`input[type="checkbox"]:not([disabled])`));
 }
 
-function getSelectAllCheckboxForTreeContainerId(treeContainerId) {
-    return document.querySelector(`#${treeContainerId} input[type="checkbox"][id$="select-all-checkbox"]`);
+function getCheckedCheckboxesForTreeContainerId(treeContainerId) {
+    return Array.from(getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`input[type="checkbox"]:checked:not([disabled])`));
 }
 
-function getSelectAllCheckboxLabelForTreeContainerId(treeContainerId) {
-    return document.querySelector(`#${treeContainerId} label[for$="select-all-checkbox"]`);
+
+// Select/deselect all checkbox management
+
+export function getSelectAllCheckboxForTreeContainerId(treeContainerId) {
+    return document.querySelector(`#${treeContainerId} input[type="checkbox"][id$="select-all-checkbox"]`);
 }
 
 function getCheckboxCheckedStateForTreeContainerId(treeContainerId) {
@@ -183,7 +221,7 @@ function getCheckboxCheckedStateForTreeContainerId(treeContainerId) {
     return 'indeterminate';
 }
 
-function setSelectAllCheckboxForTreeContainerId(treeContainerId) {
+function setSelectAllCheckboxStateForTreeContainerId(treeContainerId) {
     const treeContainerCheckedState = getCheckboxCheckedStateForTreeContainerId(treeContainerId);
     const selectAllCheckbox = getSelectAllCheckboxForTreeContainerId(treeContainerId);
     selectAllCheckbox.indeterminate = false;
@@ -196,20 +234,25 @@ function setSelectAllCheckboxForTreeContainerId(treeContainerId) {
 }
 
 function setCheckboxCheckedStatesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked) {
-    return getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`li:not(.filter-no-match, .search-no-match) input[type="checkbox"]`).forEach(checkbox => {
+    return getCheckboxesForTreeContainerId(treeContainerId).forEach(checkbox => {
         checkbox.checked = isEachFilteredCheckboxChecked;
     });
 }
 
-function checkAllCheckboxesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked) {
+function checkAllVisibleCheckboxesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked) {
     setCheckboxCheckedStatesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked);
     // <details> open states are only toggled when selecting all checkboxes
     if (isEachFilteredCheckboxChecked) setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isEachFilteredCheckboxChecked);
 }
 
+
+
+// Tree expanded/collapsed management
+
 function setDetailNodeOpenStatesForLiNodes(liNodes, open) {
     liNodes.forEach(liNode => {
-        liNode.querySelector("details").open = open;
+        const detailsNode = liNode.querySelector("details");
+        if (detailsNode) detailsNode.open = open;
     });
 }
 
@@ -223,25 +266,22 @@ function setExpandedStateForTreeContainerId(treeContainerId, isExpanded) {
     setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isExpanded);
 }
 
+
+
 // Search form setup
 
 function setupInputsForTreeContainerId(treeContainerId) {
-    // Enabled checkbox count hint setup
-    const allCheckboxes = getCheckboxesForTreeContainerId(treeContainerId);
-    const selectAllCheckboxLabel = getSelectAllCheckboxLabelForTreeContainerId(treeContainerId);
-    selectAllCheckboxLabel.innerHTML += ` <span class="text-secondary">${allCheckboxes.length}</span>`;
-
-    const topLevelDetailsNodes = document.querySelectorAll(`#${treeContainerId} .tree > li > details`);
-    topLevelDetailsNodes.forEach(detailsNode => {
-        const enabledCheckboxes = Array.from(detailsNode.querySelectorAll('input[type="checkbox"]:not([disabled])'));
-        if (enabledCheckboxes.length > 0) {
-            const firstCheckboxLabel = detailsNode.querySelector('label');
-            let span = document.createElement('span');
-            span.className = 'text-secondary';
-            span.innerHTML = ` ${enabledCheckboxes.length}`;
-            firstCheckboxLabel.after(span);
-        }
-    });
+    // const topLevelDetailsNodes = document.querySelectorAll(`#${treeContainerId} .tree > li > details`);
+    // topLevelDetailsNodes.forEach(detailsNode => {
+    //     const enabledCheckboxes = Array.from(detailsNode.querySelectorAll('input[type="checkbox"]:not([disabled])'));
+    //     if (enabledCheckboxes.length > 0) {
+    //         const firstCheckboxLabel = detailsNode.querySelector('label');
+    //         let span = document.createElement('span');
+    //         span.className = 'text-secondary';
+    //         span.innerHTML = ` ${enabledCheckboxes.length}`;
+    //         firstCheckboxLabel.after(span);
+    //     }
+    // });
 
     const ontologyParentNodeCheckboxesForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(`input[type="checkbox"][data-is-parent-node="true"]`);
     ontologyParentNodeCheckboxesForTree.forEach(checkbox => {
@@ -249,7 +289,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
             const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
             if (childNodeCheckboxes.length > 0) {
                 updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
-                setSelectAllCheckboxForTreeContainerId(treeContainerId);
+                setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
             }
         });
     });
@@ -258,33 +298,16 @@ function setupInputsForTreeContainerId(treeContainerId) {
     ontologyChildNodeCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
             updateParentNodeCheckboxesByChildNodeCheckbox(checkbox);
-            setSelectAllCheckboxForTreeContainerId(treeContainerId);
+            setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
         });
     });
     
     const allStandaloneCheckboxes = document.querySelectorAll(`#${treeContainerId} .tree > li input[type="checkbox"]`);
     allStandaloneCheckboxes.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
-            setSelectAllCheckboxForTreeContainerId(treeContainerId);
+            setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
         });
     });
-
-    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
-    searchBoxForTree.addEventListener("input", event => {
-        filterTreeContainerIdBySearchBoxInput(treeContainerId);
-    });
-
-    // Select/Deselect all checkbox setup
-    const selectAllCheckboxForTree = getSelectAllCheckboxForTreeContainerId(treeContainerId);
-    selectAllCheckboxForTree.addEventListener("change", event => {
-        if (selectAllCheckboxForTree.checked) {
-            checkAllCheckboxesForTreeContainerId(treeContainerId, true);
-        } else {
-            checkAllCheckboxesForTreeContainerId(treeContainerId, false);
-        }
-    });
-    selectAllCheckboxForTree.checked = false;
-    selectAllCheckboxForTree.disabled = false;
     
     // Button setup
     const expandAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-expand-all`);
@@ -296,20 +319,81 @@ function setupInputsForTreeContainerId(treeContainerId) {
     collapseAllButtonForTree.addEventListener("click", event => {
         setExpandedStateForTreeContainerId(treeContainerId, false);
     });
-}
 
-function showSelectAllCheckbox(treeContainerId) {
+    // Select/Deselect all checkbox setup
+    // Enabled checkbox count hint setup
+    const enabledCheckboxes = getCheckboxesForTreeContainerId(treeContainerId);
+    document.querySelector(`#${treeContainerId} .checkbox-num-hint-all`).innerHTML = enabledCheckboxes.length;
+
     const selectAllCheckboxForTree = getSelectAllCheckboxForTreeContainerId(treeContainerId);
-    const selectAllCheckboxLabel = getSelectAllCheckboxLabelForTreeContainerId(treeContainerId);
-    selectAllCheckboxForTree.style.opacity = 1;
-    selectAllCheckboxLabel.style.opacity = 1;
+    selectAllCheckboxForTree.checked = false;
+    selectAllCheckboxForTree.addEventListener("change", event => {
+        if (selectAllCheckboxForTree.checked) {
+            checkAllVisibleCheckboxesForTreeContainerId(treeContainerId, true);
+        } else {
+            checkAllVisibleCheckboxesForTreeContainerId(treeContainerId, false);
+        }
+    });
+
+    // Keyword search setup
+    const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
+    const searchBoxCheckbox = document.querySelector(`#${treeContainerId} input[type="checkbox"][id$="keyword-input-checkbox"]`);
+    let checkboxesMatchingSearch = [];
+
+    searchBoxForTree.addEventListener("input", event => {
+        const searchBoxInput = searchBoxForTree.value;
+        if (searchBoxInput === "") {
+            // Remove search box filters if input is
+            // blank.
+            const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
+            removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
+            hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId)
+            selectAllCheckboxForTree.disabled = false;
+            expandAllButtonForTree.disabled = false;
+            collapseAllButtonForTree.disabled = false;
+            return;
+        }
+        const filterResults = getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searchBoxInput);
+
+        // Reset search box checkbox and its variables
+        const allCheckedCheckboxes = getCheckedCheckboxesForTreeContainerId(treeContainerId);
+        checkboxesMatchingSearch = filterResults.validCheckboxes;
+        searchBoxCheckbox.checked = checkboxesMatchingSearch.every(c => allCheckedCheckboxes.includes(c));
+        
+        // Disable select all checkbox
+        selectAllCheckboxForTree.disabled = true;
+        expandAllButtonForTree.disabled = true;
+        collapseAllButtonForTree.disabled = true;
+
+        // Filter by search box input
+        applySearchBoxInputFiltersToLiNodes(filterResults.liNodesToHide, filterResults.liNodesToShow);
+
+
+        // Collapse hidden nodes, expand visible ones
+        setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToHide, false);
+        setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToShow, true);
+
+        // Update numbers and show checkbox for search box input
+        if (checkboxesMatchingSearch.length > 0) {
+            return updateAndShowSearchBoxInputCheckboxForTreeContainerId(treeContainerId, checkboxesMatchingSearch.length);
+        }
+        return hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId);
+    });
+    
+    searchBoxCheckbox.addEventListener("change", event => {
+        checkboxesMatchingSearch.forEach(checkbox => {
+            checkbox.checked = searchBoxCheckbox.checked;
+        });
+        setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
+    });
 }
 
 export function addTreeContainerIdToClearInputsButton(treeContainerId, clearInputsButton) {
     clearInputsButton.addEventListener("click", event => {
-        checkAllCheckboxesForTreeContainerId(treeContainerId, false);
+        checkAllVisibleCheckboxesForTreeContainerId(treeContainerId, false);
         const checkboxFilteredLiNodesForTreeContainerId = getLiNodesHiddenByCheckboxFilterForTreeContainerId(treeContainerId);
         removeCheckboxFiltersFromLiNodes(checkboxFilteredLiNodesForTreeContainerId);
+        setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
     });
 }
 
@@ -317,7 +401,8 @@ export async function setupSearchFormComponent(html, treeContainerId, callback) 
     setTimeout(async () => {
         document.querySelector(`#${treeContainerId} .tree-search-terms`).innerHTML = html;
         setupInputsForTreeContainerId(treeContainerId);
-        showSelectAllCheckbox(treeContainerId);
+        document.querySelector(`#${treeContainerId} .select-all-checkboxes-container`).classList.remove("d-none");
+        document.querySelector(`#${treeContainerId} .select-all-checkbox-container`).classList.remove("opacity-0");
         document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 1;
         if (callback) {
             callback();
