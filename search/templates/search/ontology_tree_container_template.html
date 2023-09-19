@@ -2,25 +2,33 @@
 <div class="tree-search-container" id="{{ ontology_component }}-tree-search-container">
     <label for="{{ ontology_component }}-tree-search-box" class="text-muted"><small>Keyword Search</small></label>
     <div class="row">
-        <div class={{ search_input_col_width|default:"col-lg-12" }}>
-            <input type="text" class="tree-search-box form-control form-control-sm mb-2" id="{{ ontology_component }}-tree-search-box" placeholder="Start typing to select options...">
+        <div class="{{ search_input_col_width|default:"col-lg-12" }}">
+            <div class="input-group">
+                <span class="input-group-text mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </span>
+                <input type="search" class="tree-search-box form-control" id="{{ ontology_component }}-tree-search-box" placeholder="Start typing to select options...">
+            </div>
         </div>
     </div>
     <div class="d-flex align-items-center flex-wrap search-form-controls">
-        <button type="button" class="btn btn-sm btn-light btn-expand-all me-2">
+        <button type="button" class="btn btn-light btn-expand-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-expand" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8ZM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2ZM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10Z"/>
             </svg>
             <span>Show All</span>
         </button>
-        <button type="button" class="btn btn-sm btn-light btn-collapse-all">
+        <div class="vr mx-2"></div>
+        <button type="button" class="btn btn-light btn-collapse-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-collapse" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8Zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0Zm-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793Z"/>
             </svg>
             <span>Collapse All</span>
         </button>
     </div>
-    <div class="d-flex flex-wrap select-all-checkboxes-container d-none">
+    <div class="d-flex flex-wrap select-all-checkboxes-container mt-3 mb-2 d-none">
         <div class="select-all-checkbox-container opacity-0 me-3">
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="{{ ontology_component }}-select-all-checkbox">
