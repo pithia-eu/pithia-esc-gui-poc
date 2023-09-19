@@ -104,7 +104,7 @@ def results(request):
     )
 
     return render(request, 'search/results.html', {
-        'title': 'Search results',
+        'title': 'Search Results',
         'results': data_collections,
         'search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
