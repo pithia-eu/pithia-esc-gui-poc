@@ -18,7 +18,7 @@
         <div class="col-lg-12">
             {% if api_interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
             <div class="table-responsive">
-                <table class="table table-bordered interaction-method-table">
+                <table class="table table-hover interaction-method-table">
                     <thead>
                         <tr>
                             <th>Interaction Method</th>
@@ -31,24 +31,42 @@
                         {% for source in link_interaction_methods %}
                         {% with online_resource=source.OnlineResource %}
                         <tr>
-                            <td>Direct Link to Data Collection</td>
                             <td>
-                                {{ online_resource.description|urlize }}
-                            </td>
-                            <td>
+                                {% if 'serviceFunction' in online_resource %}
                                 <div class="metadata-server-url">
                                     <div class="placeholder-wrapper">
                                         <div class="placeholder-wave">
                                             <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
                                         </div>
                                     </div>
-                                    {{ online_resource.dataFormat.0|get_key_value:'@xlink:href'|urlize }}
+                                    {{ online_resource.serviceFunction|get_key_value:'@xlink:href'|urlize }}
                                 </div>
+                                {% else %}
+                                Linkage
+                                {% endif %}
                             </td>
-                            <td class="text-center">
-                                <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
-                                    Open {{ online_resource.name }} in new tab
-                                </a>
+                            <td>
+                                {{ online_resource.description|urlize }}
+                            </td>
+                            <td>
+                                {% for dataFormat in online_resource.dataFormat %}
+                                <div class="metadata-server-url">
+                                    <div class="placeholder-wrapper">
+                                        <div class="placeholder-wave">
+                                            <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                        </div>
+                                    </div>
+                                    {{ dataFormat|get_key_value:'@xlink:href'|urlize }}
+                                </div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
+                                        {{ online_resource.name }}
+                                    </a>
+                                    <small class="text-secondary">(link opens in new tab)</small>
+                                </div>
                             </td>
                         </tr>
                         {% endwith %}
