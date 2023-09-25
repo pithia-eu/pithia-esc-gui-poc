@@ -51,9 +51,10 @@ from common.mongodb_models import (
     CatalogueDataSubsetRevision,
 )
 from resource_management.views import (
-    _INDEX_PAGE_TITLE,
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _create_manage_resource_page_title,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    _INDEX_PAGE_TITLE,
 )
 
 logger = logging.getLogger(__name__)
@@ -89,7 +90,7 @@ class ResourceDeleteView(TemplateView):
     other_resources_to_delete = []
     redirect_url = ''
 
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Resources'
+    resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
     delete_resource_page_breadcrumb_url_name = ''
 
@@ -106,7 +107,7 @@ class ResourceDeleteView(TemplateView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_text'] = _create_manage_resource_page_title(self.model.type_plural_readable.title())
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         context['delete_resource_page_breadcrumb_url_name'] = self.delete_resource_page_breadcrumb_url_name
         return context
@@ -191,7 +192,6 @@ class OrganisationDeleteView(ResourceDeleteView):
     model = models.Organisation
 
     redirect_url = reverse_lazy('resource_management:organisations')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     delete_resource_page_breadcrumb_url_name = 'delete:organisation'
 
@@ -207,7 +207,6 @@ class IndividualDeleteView(ResourceDeleteView):
     model = models.Individual
 
     redirect_url = reverse_lazy('resource_management:individuals')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     delete_resource_page_breadcrumb_url_name = 'delete:individual'
 
@@ -223,7 +222,6 @@ class ProjectDeleteView(ResourceDeleteView):
     model = models.Project
 
     redirect_url = reverse_lazy('resource_management:projects')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     delete_resource_page_breadcrumb_url_name = 'delete:project'
 
@@ -239,7 +237,6 @@ class PlatformDeleteView(ResourceDeleteView):
     model = models.Platform
 
     redirect_url = reverse_lazy('resource_management:platforms')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     delete_resource_page_breadcrumb_url_name = 'delete:platform'
 
@@ -255,7 +252,6 @@ class InstrumentDeleteView(ResourceDeleteView):
     model = models.Instrument
 
     redirect_url = reverse_lazy('resource_management:instruments')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     delete_resource_page_breadcrumb_url_name = 'delete:instrument'
 
@@ -271,7 +267,6 @@ class OperationDeleteView(ResourceDeleteView):
     model = models.Operation
 
     redirect_url = reverse_lazy('resource_management:operations')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     delete_resource_page_breadcrumb_url_name = 'delete:operation'
 
@@ -287,7 +282,6 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     model = models.AcquisitionCapabilities
 
     redirect_url = reverse_lazy('resource_management:acquisition_capability_sets')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
@@ -303,7 +297,6 @@ class AcquisitionDeleteView(ResourceDeleteView):
     model = models.Acquisition
 
     redirect_url = reverse_lazy('resource_management:acquisitions')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition'
 
@@ -319,7 +312,6 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     model = models.ComputationCapabilities
 
     redirect_url = reverse_lazy('resource_management:computation_capability_sets')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
@@ -335,7 +327,6 @@ class ComputationDeleteView(ResourceDeleteView):
     model = models.Computation
 
     redirect_url = reverse_lazy('resource_management:computations')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     delete_resource_page_breadcrumb_url_name = 'delete:computation'
 
@@ -351,7 +342,6 @@ class ProcessDeleteView(ResourceDeleteView):
     model = models.Process
 
     redirect_url = reverse_lazy('resource_management:processes')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     delete_resource_page_breadcrumb_url_name = 'delete:process'
 
@@ -368,7 +358,6 @@ class DataCollectionDeleteView(ResourceDeleteView):
     model = models.DataCollection
 
     redirect_url = reverse_lazy('resource_management:data_collections')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     delete_resource_page_breadcrumb_url_name = 'delete:data_collection'
 
@@ -390,7 +379,6 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     model = models.Catalogue
 
     redirect_url = reverse_lazy('resource_management:catalogues')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogues'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
@@ -406,7 +394,6 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     model = models.CatalogueEntry
 
     redirect_url = reverse_lazy('resource_management:catalogue_entries')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
@@ -422,7 +409,6 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     model = models.CatalogueDataSubset
 
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
 

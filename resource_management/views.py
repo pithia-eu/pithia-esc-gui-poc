@@ -9,12 +9,12 @@ from user_management.services import (
     get_members_by_institution_id,
 )
 
-_INDEX_PAGE_TITLE = 'Register & Manage Metadata'
+_INDEX_PAGE_TITLE = 'Manage Registrations'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
 _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural_readable):
-    return f'Register & Manage {resource_type_plural_readable.title()}'
+    return resource_type_plural_readable.title()
 
 # Create your views here.
 @login_session_institution_required

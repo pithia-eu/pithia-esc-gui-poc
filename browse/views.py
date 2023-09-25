@@ -25,7 +25,7 @@ from handle_management.handle_api import (
 from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
 
-_INDEX_PAGE_TITLE = 'Browse Metadata'
+_INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
 _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'

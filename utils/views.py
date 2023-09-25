@@ -9,9 +9,10 @@ from common.decorators import (
     institution_ownership_required,
 )
 from resource_management.views import (
-    _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _create_manage_resource_page_title,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
+    _INDEX_PAGE_TITLE,
 )
 
 # Create your views here.
@@ -50,86 +51,73 @@ class ResourceXmlDownloadView(TemplateView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_text'] = _create_manage_resource_page_title(self.model.type_plural_readable.title())
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
 class OrganisationXmlDownloadView(ResourceXmlDownloadView):
     model = models.Organisation
 
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Organisations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
 class IndividualXmlDownloadView(ResourceXmlDownloadView):
     model = models.Individual
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Individuals'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
 class ProjectXmlDownloadView(ResourceXmlDownloadView):
     model = models.Project
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Projects'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
 class PlatformXmlDownloadView(ResourceXmlDownloadView):
     model = models.Platform
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Platforms'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
 class OperationXmlDownloadView(ResourceXmlDownloadView):
     model = models.Operation
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Operations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
 class InstrumentXmlDownloadView(ResourceXmlDownloadView):
     model = models.Instrument
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Instruments'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
 class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     model = models.AcquisitionCapabilities
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisition Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
 class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
     model = models.Acquisition
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Acquisitions'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
 class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
     model = models.ComputationCapabilities
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Computation Capabilities'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
 class ComputationXmlDownloadView(ResourceXmlDownloadView):
     model = models.Computation
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Computations'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
 class ProcessXmlDownloadView(ResourceXmlDownloadView):
     model = models.Process
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Processes'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
 class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
     model = models.DataCollection
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Data Collections'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
 class CatalogueXmlDownloadView(ResourceXmlDownloadView):
     model = models.Catalogue
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogues'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
     def get_context_data(self, **kwargs):
@@ -141,7 +129,6 @@ class CatalogueXmlDownloadView(ResourceXmlDownloadView):
 class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
     model = models.CatalogueEntry
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Entries'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
 
     def get_context_data(self, **kwargs):
@@ -153,7 +140,6 @@ class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
 class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
     model = models.CatalogueDataSubset
     
-    resource_management_list_page_breadcrumb_text = 'Register & Manage Catalogue Data Subsets'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
 
     def get_context_data(self, **kwargs):

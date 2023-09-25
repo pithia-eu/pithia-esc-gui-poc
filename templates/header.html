@@ -22,19 +22,19 @@
             <ul class="dropdown-menu">
                 <li>
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections with Ontology</a>
+                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections</a>
                 </li>
                 <li>
                     {% url 'browse:list_data_collections' as data_collections_url %}
-                    <a href="{{ data_collections_url }}" class="dropdown-item">Browse Data Collections</a>
+                    <a href="{{ data_collections_url }}" class="dropdown-item">Data Collections</a>
                 </li>
                 <li>
                     {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
-                    <a href="{{ catalogues_url }}" class="dropdown-item">Browse Catalogues</a>
+                    <a href="{{ catalogues_url }}" class="dropdown-item">Catalogues</a>
                 </li>
                 <li>
                     {% url 'browse:index' as browse_url %}
-                    <a href="{{ browse_url }}" class="dropdown-item">Browse Metadata</a>
+                    <a href="{{ browse_url }}" class="dropdown-item">All Scientific Metadata</a>
                 </li>
             </ul>
         </li>

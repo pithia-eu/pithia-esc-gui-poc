@@ -81,6 +81,7 @@ from register.xml_conversion_checks_and_fixes import (
     correct_process_xml_converted_to_dict,
     correct_project_xml_converted_to_dict,
 )
+from resource_management.views import _create_manage_resource_page_title
 
 
 logger = logging.getLogger(__name__)
@@ -128,7 +129,7 @@ class ResourceUpdateFormView(FormView):
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = f'Register & Manage {self.model.type_plural_readable.title()}'
+        context['resource_management_list_page_breadcrumb_text'] = _create_manage_resource_page_title(self.model.type_plural_readable.title())
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
@@ -435,7 +436,7 @@ def data_collection_interaction_methods(request, resource_id):
         'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
         'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
         'resource_management_list_page_breadcrumb_url_name': 'resource_management:data_collections',
-        'resource_management_list_page_breadcrumb_text': 'Register & Manage Data Collections'
+        'resource_management_list_page_breadcrumb_text': _create_manage_resource_page_title(models.DataCollection.type_plural_readable.title())
     })
 
 class CatalogueUpdateFormView(ResourceUpdateFormView):
