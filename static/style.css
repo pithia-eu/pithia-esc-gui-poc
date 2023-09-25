@@ -26,7 +26,14 @@ a:hover:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue);
 }
 
-a:not(.btn, .header-logo-link, footer a, header a, .breadcrumb a, .card-menu a):visited {
+a:not(
+    .btn,
+    .header-logo-link,
+    footer a,
+    header a,
+    .breadcrumb a,
+    .card-menu a,
+    a.dropdown-item):visited {
     color: #551A8B !important;
 }
 
@@ -297,6 +304,10 @@ header .dropdown-item {
 
 .action-buttons a img {
     width: 1.8rem;
+}
+
+.btn-view-xml {
+    display: none;
 }
 
 /* Register page */
@@ -599,6 +610,16 @@ ul.tree ul {
 
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
+    }
+}
+
+@media (min-width: 576px) {
+    .btn-view-xml {
+        display: inline;
+    }
+
+    .dropdown-item-container-view-xml {
+        display: none;
     }
 }
 

@@ -19,7 +19,7 @@
             </td>
             <td headers="actions">
                 <div class="action-buttons">
-                    <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="btn btn-light" title="View">
+                    <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="btn btn-light btn-view-xml" title="View">
                         <img src="{% static 'view-file.svg' %}" alt="View">
                     </a>
                     <div class="dropdown">
@@ -29,6 +29,9 @@
                             </svg>
                         </button>
                         <ul class="dropdown-menu">
+                            <li class="dropdown-item-container-view-xml">
+                                <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="dropdown-item">View</a>
+                            </li>
                             <li>
                                 <a href="{% url resource_update_page_url_name resource.pk %}" class="dropdown-item">Upload a New XML File</a>
                             </li>
