@@ -12,7 +12,7 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 flex-grow-1">
         <li class="nav-item">
             {% url 'home' as base_url %}
-            <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
+            <a href="{{ base_url }}" class="nav-link px-2"
                 aria-current="page">Home</a>
         </li>
         <li class="nav-item dropdown">
@@ -22,25 +22,25 @@
             <ul class="dropdown-menu">
                 <li>
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="dropdown-item {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections with Ontology</a>
+                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections with Ontology</a>
                 </li>
                 <li>
                     {% url 'browse:list_data_collections' as data_collections_url %}
-                    <a href="{{ data_collections_url }}" class="dropdown-item {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
+                    <a href="{{ data_collections_url }}" class="dropdown-item">Browse Data Collections</a>
                 </li>
                 <li>
                     {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
-                    <a href="{{ catalogues_url }}" class="dropdown-item {% if request.path == catalogues_url %}link-secondary{% endif %}">Browse Catalogues</a>
+                    <a href="{{ catalogues_url }}" class="dropdown-item">Browse Catalogues</a>
                 </li>
                 <li>
                     {% url 'browse:index' as browse_url %}
-                    <a href="{{ browse_url }}" class="dropdown-item {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
+                    <a href="{{ browse_url }}" class="dropdown-item">Browse Metadata</a>
                 </li>
             </ul>
         </li>
         <li class="nav-item">
             {% url 'ontology:index' as browse_ontology_url %}
-            <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">
+            <a href="{{ browse_ontology_url }}" class="nav-link px-2">
                 Space Physics Ontology
             </a>
         </li>
