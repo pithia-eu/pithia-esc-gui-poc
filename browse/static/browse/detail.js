@@ -71,6 +71,13 @@ function divideConversionUrlsForServerUrls(ontologyServerUrls, resourceServerUrl
     return allConversionUrlsAndDetails;
 }
 
+function addAnnotationToMetadataLink(text, element) {
+    const smallText = document.createElement("small");
+    smallText.innerHTML = text;
+    smallText.className = "text-muted";
+    element.parentElement.append(smallText);
+}
+
 function revealMetadataLink(tag, annotationText) {
     setTimeout(() => {
         tag.parentElement.querySelector(".placeholder-wrapper").style.display = "none";
@@ -82,13 +89,6 @@ function revealMetadataLink(tag, annotationText) {
         tag.parentElement.classList.remove("loading");
     }, 300);
     tag.parentElement.classList.add("updating");
-}
-
-function addAnnotationToMetadataLink(text, element) {
-    const smallText = document.createElement("small");
-    smallText.innerHTML = text;
-    smallText.className = "text-muted";
-    element.parentElement.append(smallText);
 }
 
 function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDetails) {
@@ -121,7 +121,7 @@ function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDeta
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = urlMapping.converted_url;
                     tag.innerHTML = urlMapping.converted_url_text;
-                    revealMetadataLink(tag, "(click the link to show information on this ontology term)");
+                    revealMetadataLink(tag);
                 });
             });
 
@@ -130,7 +130,7 @@ function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDeta
                 anchorTagsWithUrl.forEach(tag => {
                     tag.href = urlMapping.converted_url;
                     tag.innerHTML = urlMapping.converted_url_text;
-                    revealMetadataLink(tag, "(click the link to show information on this metadata registration)");
+                    revealMetadataLink(tag);
                 });
             });
         })
