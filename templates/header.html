@@ -12,7 +12,7 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li class="nav-item">
             {% url 'home' as base_url %}
-            <a href="{{ base_url }}" class="nav-link px-2 {% if request.path == base_url %}link-secondary{% endif %}"
+            <a href="{{ base_url }}" class="nav-link px-2"
                 aria-current="page">Home</a>
         </li>
         <li class="nav-item dropdown">
@@ -21,23 +21,23 @@
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="nav-link px-2 {% if request.path == search_url %}link-secondary{% endif %}">Search Data Collections</a>
+                    <a href="{{ search_url }}" class="nav-link px-2">Search Data Collections</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:list_data_collections' as data_collections_url %}
-                    <a href="{{ data_collections_url }}" class="nav-link px-2 {% if request.path == data_collections_url %}link-secondary{% endif %}">Browse Data Collections</a>
+                    <a href="{{ data_collections_url }}" class="nav-link px-2">Browse Data Collections</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
-                    <a href="{{ catalogues_url }}" class="nav-link px-2 {% if request.path == catalogues_url %}link-secondary{% endif %}">Browse Catalogues</a>
+                    <a href="{{ catalogues_url }}" class="nav-link px-2">Browse Catalogues</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'browse:index' as browse_url %}
-                    <a href="{{ browse_url }}" class="nav-link px-2 {% if request.path == browse_url %}link-secondary{% endif %}">Browse Metadata</a>
+                    <a href="{{ browse_url }}" class="nav-link px-2">Browse Metadata</a>
                 </li>
                 <li class="dropdown-item">
                     {% url 'ontology:index' as browse_ontology_url %}
-                    <a href="{{ browse_ontology_url }}" class="nav-link px-2 {% if request.path == browse_ontology_url %}link-secondary{% endif %}">Space Physics Ontology</a>
+                    <a href="{{ browse_ontology_url }}" class="nav-link px-2">Space Physics Ontology</a>
                 </li>
             </ul>
         </li>
@@ -49,7 +49,7 @@
             <ul class="dropdown-menu">
                 <li class="dropdown-item">
                     {% url 'data_provider_home' as data_provider_home_url %}
-                    <a href="{{ data_provider_home_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Dashboard</a>
+                    <a href="{{ data_provider_home_url }}" class="nav-link px-2">Dashboard</a>
                 </li>
                 <li>
                     <span class="dropdown-header">
@@ -58,7 +58,7 @@
                 </li>
                 <li class="dropdown-item">
                     {% url 'resource_management:index' as resource_management_url %}
-                    <a href="{{ resource_management_url }}" class="nav-link px-2 {% if request.path == resource_management_url %}link-secondary{% endif %}">Register & Manage Metadata</a>
+                    <a href="{{ resource_management_url }}" class="nav-link px-2">Register & Manage Metadata</a>
                 </li>
                 <li class="dropdown-item">
                     <a href="https://docs.google.com/document/d/1NK-YcZQZZju62_YC7mXFVZrkLFplEYFuaKKSet9uhJY/edit#" class="nav-link px-2" target="_blank">Metadata Registration Guide</a>
@@ -70,7 +70,7 @@
                 </li>
                 <li class="dropdown-item">
                     {% url 'schemas' as browse_schemas_url %}
-                    <a href="{{ browse_schemas_url }}" class="nav-link px-2 {% if request.path == browse_schemas_url %}link-secondary{% endif %}">Metadata Models</a>
+                    <a href="{{ browse_schemas_url }}" class="nav-link px-2">Metadata Models</a>
                 </li>
             </ul>
         </li>
