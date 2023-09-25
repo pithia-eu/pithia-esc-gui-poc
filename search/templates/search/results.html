@@ -3,10 +3,10 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item search_index_page_breadcrumb_text 'search:index' %}
-{% breadcrumb_item_active 'Results' %}
+{% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>Data Collection Search Results</h1>
+<h1 class="pb-3">{{ title }}</h1>
 <p>
     <a href="{% url 'search:index' %}">Search again</a>
 </p>
@@ -20,7 +20,13 @@
             <h5 class="mb-1">{{ r.name }}</h5>
         </a>
         {% endwith %}
-        <p class="mb-1 line-clamp search-result-description">{{ r.description }}</p>
+        <p class="mb-1 line-clamp search-result-description">
+            {% if r.description %}
+            {{ r.description }}
+            {% else %}
+            <i class="text-secondary">No description</i>
+            {% endif %}
+        </p>
     </div>
     {% endfor %}
 </ul>

@@ -26,6 +26,10 @@ a:hover:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue);
 }
 
+a:not(.btn, .header-logo-link, footer a, header a, .breadcrumb a, .card-menu a):visited {
+    color: #551A8B !important;
+}
+
 a {
     word-wrap: break-word;
 }
@@ -35,17 +39,17 @@ a:not(.btn, .nav-link):focus {
     text-decoration: underline;
 }
 
-[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
-.card-menu [href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
+a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
+.card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
     width: 1em;
     height: 1em;
-    background-image: url('/static/external_link.svg');
+    background-image: url('./external_link_black.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 75% auto;
     /* alternative text rules */
-    content: '(external link)';
+    content: '';
     overflow: hidden;
     white-space: nowrap;
     text-indent: 1em; /* the width of the icon */
@@ -488,6 +492,14 @@ ul.tree ul {
     border-color: var(--pithia-blue);
     background-color: var(--pithia-blue);
     color: white;
+}
+
+.search-form-controls {
+    row-gap: 0.5rem;
+}
+
+.select-all-checkbox-container {
+    transition: opacity 500ms ease;
 }
 
 /* Skeleton loader while search terms are loading */

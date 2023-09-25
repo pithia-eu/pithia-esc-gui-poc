@@ -5,8 +5,10 @@ import {
     getEnclosingLiNode,
     getLiNodesHiddenByCheckboxFilterForTreeContainerId,
     getParentNodeCheckboxes,
+    getSearchTermsContainerForTreeContainerId,
+    getSelectAllCheckboxForTreeContainerId,
     removeCheckboxFiltersFromLiNodes,
-    setupSearchFormComponent
+    setupSearchFormComponent,
 } from "./search.js";
 
 // op, OP = Observed Property
@@ -28,14 +30,12 @@ async function fetchAndSetupSearchFormComponents() {
     });
     setupSearchFormComponent(searchFormComponents[1], MEASURANDS_TREE_CONTAINER_ID, () => {
         setupCheckboxesForTreeContainerIdToFilterOPTerms(MEASURANDS_TREE_CONTAINER_ID);
-        setupSelectAllButtonForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
-        activateDeselectAllButtonForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
+        setupSelectAllCheckboxForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID);
         addTreeContainerIdToClearInputsButton(MEASURANDS_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);
     });
     setupSearchFormComponent(searchFormComponents[2], PHENOMENONS_TREE_CONTAINER_ID, () => {
         setupCheckboxesForTreeContainerIdToFilterOPTerms(PHENOMENONS_TREE_CONTAINER_ID);
-        setupSelectAllButtonForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
-        activateDeselectAllButtonForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
+        setupSelectAllCheckboxForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID);
         addTreeContainerIdToClearInputsButton(PHENOMENONS_TREE_CONTAINER_ID, clearObservedPropertiesInputsButton);
     });
 }
@@ -49,14 +49,14 @@ function getHtmlDatasetNameByInputName(inputName) {
 }
 
 function filterOPTree() {
-    const checkedPhenomenonCheckboxes = Array.from(document.querySelectorAll(`#${PHENOMENONS_TREE_CONTAINER_ID} input[type="checkbox"]:checked`));
-    const checkedMeasurandCheckboxes= Array.from(document.querySelectorAll(`#${MEASURANDS_TREE_CONTAINER_ID} input[type="checkbox"]:checked`));
+    const checkedPhenomenonCheckboxes = Array.from(getSearchTermsContainerForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]:checked`));
+    const checkedMeasurandCheckboxes= Array.from(getSearchTermsContainerForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]:checked`));
     const checkboxesToFilterBy = checkedPhenomenonCheckboxes.concat(checkedMeasurandCheckboxes);
     if (checkboxesToFilterBy.length === 0) {
         const hiddenLisForTreeContainer = getLiNodesHiddenByCheckboxFilterForTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID);
         return removeCheckboxFiltersFromLiNodes(hiddenLisForTreeContainer);
     }
-    const checkboxesToFilter = document.querySelectorAll(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID} input[type="checkbox"]`);
+    const checkboxesToFilter = getSearchTermsContainerForTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]`);
     const liNodesToHide = [], liNodesToShow = [];
     checkboxesToFilter.forEach(checkboxToFilter => {
         let isCheckboxToFilterAndChildrenVisible = false;
@@ -88,6 +88,13 @@ export function setupCheckboxesForTreeContainerIdToFilterOPTerms(treeContainerId
         checkbox.addEventListener("change", event => {
             filterOPTree();
         });
+    });
+}
+
+export function setupSelectAllCheckboxForTreeContainerId(treeContainerId) {
+    const selectAllCheckbox = getSelectAllCheckboxForTreeContainerId(treeContainerId);
+    selectAllCheckbox.addEventListener("change", event => {
+        filterOPTree();
     });
 }
 
