@@ -141,6 +141,8 @@ function convertBatchOfOntologyServerUrlsAndResourceServerUrls(urlConversionDeta
                 const decodedUrl = decodeURIComponent(encodedUrl);
                 const metadataLinkTags = document.querySelectorAll(`a[href="${decodedUrl}"]:not([style*="display: inline"])`);
                 metadataLinkTags.forEach(metadataLinkTag => {
+                    const decodedUrlSplit = decodedUrl.split("/");
+                    metadataLinkTag.innerHTML = decodedUrlSplit[decodedUrlSplit.length - 1];
                     revealMetadataLink(metadataLinkTag);
                 });
             });
