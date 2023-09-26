@@ -1,4 +1,7 @@
-from django.http import HttpResponseRedirect
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponseServerError,
+)
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -29,16 +32,22 @@ from ontology.utils import (
 _INDEX_PAGE_TITLE = 'Search Data Collections'
 
 def get_tree_form_for_ontology_component(request, ontology_component):
+    terms_load_error_msg = '<span class="text-secondary">The form could not be loaded due to a server error.</span>'
+
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}
     if ontology_component == 'observedProperty':
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
-    dictionary = create_dictionary_from_pithia_ontology_component(
-        ontology_component,
-        instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
-        computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
-    )
+    try:
+        dictionary = create_dictionary_from_pithia_ontology_component(
+            ontology_component,
+            instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
+            computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
+        )
+    except FileNotFoundError:
+        return HttpResponseServerError(terms_load_error_msg)
+    
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if ontology_component.lower() == 'observedproperty':
@@ -51,9 +60,12 @@ def get_tree_form_for_ontology_component(request, ontology_component):
             'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
         })
     elif ontology_component.lower() == 'featureofinterest':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        try:
+            registered_observed_property_ids = get_registered_observed_properties()
+            registered_ontology_terms = get_registered_features_of_interest(registered_observed_property_ids)
+            parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        except FileNotFoundError:
+            return HttpResponseServerError(terms_load_error_msg)
     elif ontology_component.lower() == 'instrumenttype':
         registered_ontology_terms = get_registered_instrument_types()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
@@ -61,13 +73,19 @@ def get_tree_form_for_ontology_component(request, ontology_component):
         registered_ontology_terms = get_registered_computation_types()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
     elif ontology_component.lower() == 'phenomenon':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        try:
+            registered_observed_property_ids = get_registered_observed_properties()
+            registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
+            parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        except FileNotFoundError:
+            return HttpResponseServerError(terms_load_error_msg)
     elif ontology_component.lower() == 'measurand':
-        registered_observed_property_ids = get_registered_observed_properties()
-        registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        try:
+            registered_observed_property_ids = get_registered_observed_properties()
+            registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
+            parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        except FileNotFoundError:
+            return HttpResponseServerError(terms_load_error_msg)
     return render(request, 'search/ontology_tree_template_outer.html', {
         'ontology_component': dictionary,
         'ontology_component_name': ontology_component,
