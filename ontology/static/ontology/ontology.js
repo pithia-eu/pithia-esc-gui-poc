@@ -96,10 +96,34 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
     }
 }
 
+function setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isEachFilteredDetailsNodeOpen) {
+    return document.querySelector(`#${treeContainerId} .tree-search-terms`).querySelectorAll(`li:not(.search-no-match) details`).forEach(detailsNode => {
+        detailsNode.open = isEachFilteredDetailsNodeOpen;
+    });
+}
+
+function setExpandedStateForTreeContainerId(treeContainerId, isExpanded) {
+    setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, isExpanded);
+}
+
 function setupInputsForTreeContainerId(treeContainerId) {
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
+
+    // Keyword search setup
     searchBoxForTree.addEventListener("input", event => {
         filterTreeContainerIdBySearchBoxInput(treeContainerId);
+    });
+
+    
+    // Expand/collapse all buttons setup
+    const expandAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-expand-all`);
+    expandAllButtonForTree.addEventListener("click", event => {
+        setExpandedStateForTreeContainerId(treeContainerId, true);
+    });
+
+    const collapseAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-collapse-all`);
+    collapseAllButtonForTree.addEventListener("click", event => {
+        setExpandedStateForTreeContainerId(treeContainerId, false);
     });
 }
 
