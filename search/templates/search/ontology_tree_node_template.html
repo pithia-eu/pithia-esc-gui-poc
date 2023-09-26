@@ -1,6 +1,6 @@
 {% if node.prefLabel %}
 <div class="form-check d-inline-block"
-    {% if registered_ontology_terms and node.value not in registered_ontology_terms %}
+    {% if node.value not in registered_ontology_terms %}
     style="padding-left: 0;"
     {% endif %}>
     <input type="checkbox" id="{{ node.id }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
