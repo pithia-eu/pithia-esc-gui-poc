@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag">
+        <skos:prefLabel xml:lang="en">PITHIA Metadata Quality Flag</skos:prefLabel>
+        <dc:description>Characterization of the metadata quality as managed by the data owner organisaion; multiple flags are allowed.</dc:description>
+        <dc:date>2022-09-06 10:00:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1">
+                <skos:prefLabel xml:lang="en">MQ1(Usage)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Type(s) of provided metadata</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1A"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1S"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1A">
+                <skos:prefLabel xml:lang="en">MQ1A(AdministrativeUsage)</skos:prefLabel>
+                <dc:date>2022-09-06 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Administrative metadata is required to enable permanent access to the research data. This concerns the description of intellectual property, conditions for use and access, and so-called preservation metadata needed for durable archiving of the research data.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1D">
+                <skos:prefLabel xml:lang="en">MQ1D(DescriptiveUsage)</skos:prefLabel>
+                <dc:date>2022-09-06 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Descriptive metadata are data required to be able to find research data and that add transparency to their meaning (definition and value) and importance. Examples of descriptive metadata are the data elements of the Dublin Core Element Set, with fields such as creator, type, and date.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1S">
+                <skos:prefLabel xml:lang="en">MQ1S(StructuralUsage)</skos:prefLabel>
+                <dc:date>2022-09-06 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Structural metadata indicates how different components of a set of associated data relate to one another. These metadata are needed to be able to process the research data. When data are coded, the codebook will be a component of the structural metadata.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ2">
+                <skos:prefLabel xml:lang="en">MQ2(Scope)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Metadata agrees to a project-specific set of semantic elements to describe their data, models and other services and resources. Comprehensive domain ontology is an important contribution to this aspect.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3">
+                <skos:prefLabel xml:lang="en">MQ3(Provenance)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Metadata includes sufficient historical information of data generation that allows replication of the CollectionResults by an independent party.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ4">
+                <skos:prefLabel xml:lang="en">MQ4(Persistence)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Metadata use persistent (rather than temporary or local) identifiers to refer to similarly persistent resources and services.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ5">
+                <skos:prefLabel xml:lang="en">MQ5(Aggregation)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Descriptive metadata that apply to data groupings and provide such groupings with identity (citability).</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ6">
+                <skos:prefLabel xml:lang="en">MQ6(Standardisation)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Descriptive metadata that are based on well-defined element semantics and a schema-based format to cater for presentations for humans and machine operations.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7">
+                <skos:prefLabel xml:lang="en">MQ7(Interoperability)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Descriptive metadata that are open, detailed, and offered for standardised harvesting by other collaborative data infrastructures.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ8">
+                <skos:prefLabel xml:lang="en">MQ8(Quality)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">High quality metadata as a result of suystematic efforts to describe data collections.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9">
+                <skos:prefLabel xml:lang="en">MQ9(Earliness)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Metadata that are built immediately and automatically upon data arrival.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

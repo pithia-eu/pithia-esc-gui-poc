@@ -39,7 +39,7 @@ def get_rdf_text_remotely(ontology_component):
     return ontology_response.text
 
 def get_rdf_text_locally(ontology_component):
-    ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  f'search/ontology/{ontology_component.lower()}.xml'))
+    ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  'ontology', 'local_ontology_files', f'{ontology_component}.xml'))
     return ontology_file.read()
 
 

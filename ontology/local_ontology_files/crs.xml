@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/crs">
+        <skos:prefLabel xml:lang="en">PITHIA CRS</skos:prefLabel>
+        <dc:description>This vocabulary contains the Coordinate Reference Systems (CRS) used when describing the vector components of an observed property.</dc:description>
+        <dc:date>2013-05-31 10:00:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/GEOcartesian">
+                <skos:prefLabel xml:lang="en">Geocentric Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">GEO cartesian</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Cartesian (also known as Cartesian Earth Centered Earth Fixed (ECEF)) (x, y, z)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/GEOspherical">
+                <skos:prefLabel xml:lang="en">Geocentric Spherical</skos:prefLabel>
+                <skos:altLabel xml:lang="en">GEO spherical</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric spherical (also known as Spherical Earth Centred Earth Fixed (ECEF)) in spherical representation    (lat, lon, alt)    where "alt" is the distance from the Earth center in km. (the mean Earth radius is 6371.2 km)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/WGS84cartesian">
+                <skos:prefLabel xml:lang="en">World Geodetic System 84 Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">WGS84 cartesian</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">World Geodetic System 84 in cartesian representation (x, y, z)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/WGS84spherical">
+                <skos:prefLabel xml:lang="en">World Geodetic System 84 Spherical</skos:prefLabel>
+                <skos:altLabel xml:lang="en">WGS84 spherical</skos:altLabel>
+                <skos:definition xml:lang="en">World Geodetic System 84 in spherical representation (lat, lon, alt) where alt is the distance in km above WGS84 ellipsoid.</skos:definition>
+                <dc:date>2015-05-21 12:48:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/J1950cartesian">
+                <skos:prefLabel xml:lang="en">Geocentric Equatorial Inertial system for epoch 1950 (cartesian)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">J1950 cartesian</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Equatorial Inertial system for epoch 1950 (also known as GEI1950, i.e. GEI for epoch 1950.0) in cartesian representation (x, y, z)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/J1950spherical">
+                <skos:prefLabel xml:lang="en">Geocentric Equatorial Inertial system for epoch 1950 (spherical)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">J1950 spherical</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Equatorial Inertial system for epoch 1950 (also known as GEI1950, i.e. GEI for epoch 1950.0) in spherical representation (lat, lon, alt), where "alt" is the distance from Earth center in km (the mean Earth radius is 6371.2 km)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/J2000cartesian">
+                <skos:prefLabel xml:lang="en">Geocentric Equatorial Inertial system for epoch 2000 (cartesian)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">J2000 cartesian</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Equatorial Inertial system for epoch 2000 (also known as GEI2000, i.e. GEI for epoch 2000.0) in cartesian representation (x, y, z)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/J2000spherical">
+                <skos:prefLabel xml:lang="en">Geocentric Equatorial Inertial system for epoch 2000 (spherical)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">J2000 spherical</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Equatorial Inertial system for epoch 2000 (also known as GEI2000, i.e. GEI for epoch 2000.0) in spherical representation (lat, lon, alt), where "alt" is the distance from Earth center in km (the mean Earth radius is 6371.2 km)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/GSE">
+                <skos:prefLabel xml:lang="en">Geocentric Solar Ecliptic</skos:prefLabel>
+                <skos:altLabel xml:lang="en">GSE</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Solar Ecliptic</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/GSM">
+                <skos:prefLabel xml:lang="en">Geocentric Solar Magnetospheric</skos:prefLabel>
+                <skos:altLabel xml:lang="en">GSM</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Solar Magnetospheric</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/CGM">
+                <skos:prefLabel xml:lang="en">Corrected GeoMagnetic</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CGM</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Corrected GeoMagnetic coordinate system</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/GSEQ">
+                <skos:prefLabel xml:lang="en">Geocentric Solar Equatorial</skos:prefLabel>
+                <skos:altLabel xml:lang="en">GSEQ</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geocentric Solar Equatorial</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/NED">
+                <skos:prefLabel xml:lang="en">Geographic North-East-Down Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">NED</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Belongs to the Local Tangent Plane (LTP) class of coordinate systems: Cartesian, XY plane is tangential to Earth surface at the measurement location and Z is normal to the plane. NED: X: points to the geographic North pole. Z: points down to the Earth center, Y: makes the right-hand system, i.e., points to East in the tangential plane.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/HDZ">
+                <skos:prefLabel xml:lang="en">Geomagnetic HDZ Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">HDZ</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Belongs to the Local Tangent Plane (LTP) class of coordinate systems: Cartesian, XY plane is tangential to Earth surface at the observation site and Z is normal to the plane. NED: X: points to the geomagnetic North pole. Z: points down to the Earth center, Y: makes the right-hand system, i.e., points to geomagnetic East in the tangential plane.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/ENU">
+                <skos:prefLabel xml:lang="en">Geographic East-North-Up Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">ENU</skos:altLabel>
+                <skos:definition xml:lang="en">Belongs to the Local Tangent Plane (LTP) class of coordinate systems: Cartesian, XY plane is tangential to Earth surface at the measurement location and Z is normal to the plane. ENU: Y: points to the geographic North pole. Z: points vertically up to zenith, X: makes the right-hand system, i.e., points to East in the tangential plane.</skos:definition>
+                <dc:date>2014-08-31 22:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/SC">
+                <skos:prefLabel xml:lang="en">Spacecraft Cartesian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">SC</skos:altLabel>
+                <dc:date>2013-05-31 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Spacecraft-centered right-hand Cartesian (x,y,z). Specific axis alignment varies by mission.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/MAGcartesian">
+                <skos:prefLabel xml:lang="en">Geomagnetic dipole coordinate system (Cartesian)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">MAG Cartesian</skos:altLabel>
+                <skos:definition xml:lang="en">Geomagnetic dipole coordinate system in Cartesian representation (x, y, z), origin at the centre of the Earth. The Z-axis is parallel to the Earth's dipole and points to the north, the X-axis is within and the Y-axis perpendicular to the plane spanned by the magnetic dipole and the Earth rotation axis. The orientation of the Y-axis is given by the vector product "rotational axis times dipole axis". Because of its dependence on the geomagnetic dipole axis it varies with the secular variation and must therefore always be specified together with the epoch.</skos:definition>
+                <dc:date>2013-12-20 12:20:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/MAGspherical">
+                <skos:prefLabel xml:lang="en">Geomagnetic dipole coordinate system (spherical)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">MAG spherical</skos:altLabel>
+                <skos:definition xml:lang="en">Geomagnetic dipole coordinate system, in spherical representation (lat, lon, alt), origin at the centre of the Earth. The Z-axis is parallel to the Earth's dipole and points to the north, the X-axis is within and the Y-axis perpendicular to the plane spanned by the magnetic dipole and the Earth rotation axis. The orientation of the Y-axis is given by the vector product "rotational axis times dipole axis". Because of its dependence on the geomagnetic dipole axis it varies with the secular variation and must therefore always be specified together with the epoch.</skos:definition>
+                <dc:date>2013-12-20 12:21:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/IGRFgeocentric">
+                <skos:prefLabel xml:lang="en">International Geomagnetic Reference Field (geocentric)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">IGRF geocentric</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-20 12:24:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/IGRFgeodetic">
+                <skos:prefLabel xml:lang="en">International Geomagnetic Reference Field (geodetic)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">IGRF geodetic</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-20 12:24:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/UCL-CMAT2">
+                <skos:prefLabel xml:lang="en">UCL CMAT2 crs</skos:prefLabel>
+                <skos:altLabel xml:lang="en">UCL-CMAT2</skos:altLabel>
+                <skos:definition xml:lang="en">This is the crs needed to describe the 3D grid of the data produced by UCL CMAT2. The 3D grid consists of [latitude (deg north), longitude (deg east), pressure level (Pa)].</skos:definition>
+                <dc:date>2015-03-12 11:03:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith">
+                <skos:prefLabel xml:lang="en">Azimuth Zenith Horizontal crs</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Az-Zenith</skos:altLabel>
+                <skos:definition xml:lang="en">This is the type of horizontal celestial crs for describing the angle to the object without distance to it. This system is like popular Alt/Az system where altitude angle is replaced by the 90-deg complementary Zenith angle. ].</skos:definition>
+                <dc:date>2022-10-04 16:38:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

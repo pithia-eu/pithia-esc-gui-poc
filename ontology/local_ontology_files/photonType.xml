@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:pithia="https://metadata.pithia.eu/ontology/2.2/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType">
+        <skos:prefLabel xml:lang="en">Photon Type Classification by Energy</skos:prefLabel>
+        <dc:description>For those wave phenomena in which EM wave interacts with the medium or sensor as a stream of photons, Photon Type provides classification by its energy (or equivalently, its frequncy or wavelength).</dc:description>
+        <dc:date>2023-02-15 19:45:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/GammaRays">
+                <skos:prefLabel xml:lang="en">Gamma Rays</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 0.00001 to 0.001 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/Infrared">
+                <skos:prefLabel xml:lang="en">Infrared</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 760 to 106 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/Microwave">
+                <skos:prefLabel xml:lang="en">Microwave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 106 to 1.5x107 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/Optical">
+                <skos:prefLabel xml:lang="en">Optical</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 380 to 760 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/Radio">
+                <skos:prefLabel xml:lang="en">Radio</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 105 to 1011 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/Ultraviolet">
+                <skos:prefLabel xml:lang="en">Ultraviolet</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 10 to 400 nm</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/photonType/FUV"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/photonType/EUV"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/FUV">
+                <skos:prefLabel xml:lang="en">Far Ultraviolet (FUV)</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 122 to 200 nm</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/photonType/Ultraviolet"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/EUV">
+                <skos:prefLabel xml:lang="en">Extreme Ultraviolet (EUV)</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 10 to 122 nm</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/photonType/Ultraviolet"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/photonType/X_Rays">
+                <skos:prefLabel xml:lang="en">X-Ray</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photons with a wavelength range from 0.001 to 10 nm</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

@@ -1,6 +1,7 @@
 import os
 from django.http import (
     FileResponse,
+    HttpResponseServerError,
     HttpResponseNotFound,
 )
 from django.shortcuts import render
@@ -57,7 +58,10 @@ def ontology_category_terms_list(request, category):
     })
 
 def ontology_category_terms_list_only(request, category):
-    dictionary = create_dictionary_from_pithia_ontology_component(category)
+    try:
+        dictionary = create_dictionary_from_pithia_ontology_component(category)
+    except FileNotFoundError:
+        return HttpResponseServerError('Could not load terms due to a server error.')
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
     if category.lower() == 'observedproperty':

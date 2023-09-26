@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon">
+        <skos:prefLabel xml:lang="en">PITHIA Phenomenon</skos:prefLabel>
+        <dc:description>This vocabulary describes the underlying phenomenon for which the observation provides an estimate of its value</dc:description>
+        <dc:date>2013-05-31 21:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Field">
+                <skos:prefLabel xml:lang="en">Field</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The space around a radiating body within which its electromagnetic attributes can exert force on another similar body that is not in direct contact</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectricField"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField">
+                <skos:prefLabel xml:lang="en">Magnetic Field</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A region of space near a magnetized body where magnetic forces can be detected</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Field"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectricField">
+                <skos:prefLabel xml:lang="en">Electric Field</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A region of space around a charged particle, or between two voltages within which a force is exerted on charged objects in its vicinity. An electric field is the electric force per unit charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Field"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Particle">
+                <skos:prefLabel xml:lang="en">Particle</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A small localized object to which can be ascribed several physical properties such as volume, mass, and charge</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle">
+                <skos:prefLabel xml:lang="en">Charged Particle</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A particle with an electric charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Particle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/AlphaParticle">
+                <skos:prefLabel xml:lang="en">Alpha Particle</skos:prefLabel>
+                <skos:definition xml:lang="en">Two protons and two neutrons bound together into a particle, classically produced in the process of alpha decay</skos:definition>
+                <dc:date>2013-12-04 16:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Ion"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron">
+                <skos:prefLabel xml:lang="en">Electron</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A subatomic elementary particle with a negative elementary electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Ion">
+                <skos:prefLabel xml:lang="en">Ion</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An atom or molecule in which the total number of electrons is not equal to the total number of protons, giving the ion a net positive or negative electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Proton">
+                <skos:prefLabel xml:lang="en">Proton</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A subatomic elementary particle with a positive elementary electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Ion"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenIon">
+                <skos:prefLabel xml:lang="en">Oxygen Ion</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An oxygen atom or a molecule consisting of oxygen ions that carries a positive electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Ion"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/AtomicOxygenIon"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/AtomicOxygenIon">
+                <skos:prefLabel xml:lang="en">Atomic Oxygen Ion</skos:prefLabel>
+                <skos:altLabel xml:lang="en">O+</skos:altLabel>
+                <skos:definition xml:lang="en">An oxygen atom that carries a positive electrical charge (O+)</skos:definition>
+                <dc:date>2014-04-10 15:13:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenIon"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle">
+                <skos:prefLabel xml:lang="en">Neutral Particle</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An atom or molecule in which the total number of electrons is equal to the total number of protons, giving it no net electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Particle"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Neutron"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenNeutral-Atomic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenNeutral-Dioxygen"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NitrogenNeutral-Dinitrogen"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/HeliumNeutral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Neutron">
+                <skos:prefLabel xml:lang="en">Neutron</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A subatomic hadron particle with no net electrical charge</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenNeutral-Atomic">
+                <skos:prefLabel xml:lang="en">Neutron</skos:prefLabel>
+                <skos:altLabel xml:lang="en">O</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/OxygenNeutral-Dioxygen">
+                <skos:prefLabel xml:lang="en">Neutron</skos:prefLabel>
+                <skos:altLabel xml:lang="en">O2</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/NitrogenNeutral-Dinitrogen">
+                <skos:prefLabel xml:lang="en">Neutron</skos:prefLabel>
+                <skos:altLabel xml:lang="en">O</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Helium">
+                <skos:prefLabel xml:lang="en">Neutral Helium</skos:prefLabel>
+                <skos:altLabel xml:lang="en">He</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Wave">
+                <skos:prefLabel xml:lang="en">Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Periodic or quasi-periodic (AC) variations of physical quantities in time and space, capable of propagating or being trapped within particular regimes</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/HydrodynamicWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave">
+                <skos:prefLabel xml:lang="en">Electromagnetic Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A form of energy transmitted and absorbed by charged particles that exhibits wave-like behavior as it travels through space: its electric and magnetic fields oscillate in phase, perpendicular to each other, perpendicular to direction of energy and wave propagation, and with a fixed ratio of the electric to magnetic intensity</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Wave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave_ElectricComponent"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave_MagneticComponent"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/PlasmaWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave_ElectricComponent">
+                <skos:prefLabel xml:lang="en">Electric Field Component of EM Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The electric field component of EM wave</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave_MagneticComponent">
+                <skos:prefLabel xml:lang="en">Magnetric Field Component of EM Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The magnetic field component of EM wave</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/PlasmaWave">
+                <skos:prefLabel xml:lang="en">Plasma Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An interconnected set of oscillating charged particles and magnetic and electric fields</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectronWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/IonWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectronWave">
+                <skos:prefLabel xml:lang="en">Electron Plasma Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Plasma wave with oscillating electron</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/PlasmaWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/IonWave">
+                <skos:prefLabel xml:lang="en">Ion Plasma Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">P Plasma wave with oscillating ion</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/PlasmaWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ProtonWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ProtonWave">
+                <skos:prefLabel xml:lang="en">Proton Plasma Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Plasma wave with oscillating proton</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/IonWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave">
+                <skos:prefLabel xml:lang="en">Electrostatic Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An interconnected set of oscillations of charged particles and electric field that leaves the magnetic field unperturbed</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Wave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave_ElectricComponent"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave_ElectricComponent">
+                <skos:prefLabel xml:lang="en">Electric Field Component of the Electrostatic Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The oscillating electric field component of the electrostatic wave</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave">
+                <skos:prefLabel xml:lang="en">Electrostatic Plasma Wave</skos:prefLabel>
+                <skos:definition xml:lang="en">An interconnected set of oscillations of charged particles and electric field in plasma that leaves the magnetic field unperturbed</skos:definition>
+                <dc:date>2013-12-04 21:16:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave_Electron"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave_Ion"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/HydrodynamicWave">
+                <skos:prefLabel xml:lang="en">Hydrodynamic Plasma Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Periodic or quasi-periodic oscillations of fluid quantities</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Wave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/GravityWave"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MHD_Wave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/GravityWave">
+                <skos:prefLabel xml:lang="en">Gravity Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Waves in a fluid medium (or at interface of two media) driven by the restoring force of gravity (or buoyancy)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/HydrodynamicWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/MHD_Wave">
+                <skos:prefLabel xml:lang="en">Magneto-Hydro-Dynamic Wave</skos:prefLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Waves in magnetized plasma at frequencies much below the ion cyclotron frequency that are described using a coupled set of the fluid theory (hydrodynamic equation) and the EMF theory (electrodynamic equations), yielding several propagating wave solutions (Alfven mode, slow mode and fast mode, entropy mode)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/HydrodynamicWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/HeliumIon">
+                <skos:prefLabel xml:lang="en">Helium Ion</skos:prefLabel>
+                <skos:definition xml:lang="en">A helium atom or a molecule consisting of helium ions that carries a positive electrical charge</skos:definition>
+                <dc:date>2013-12-02 14:56:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/AtomicHeliumIon"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Ion"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/AtomicHeliumIon">
+                <skos:prefLabel xml:lang="en">Atomic Helium Ion</skos:prefLabel>
+                <skos:definition xml:lang="en">A helium atom that carries a positive electrical charge (He )</skos:definition>
+                <dc:date>2013-12-02 14:56:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/HeliumIon"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave_Electron">
+                <skos:prefLabel xml:lang="en">Electrostatic Electron Plasma Wave</skos:prefLabel>
+                <skos:definition xml:lang="en">An interconnected set of oscillations of electrons and electric field in plasma that leaves the magnetic field unperturbed</skos:definition>
+                <dc:date>2013-12-04 21:14:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave_Ion">
+                <skos:prefLabel xml:lang="en">Electrostatic Ion Plasma Wave</skos:prefLabel>
+                <skos:definition xml:lang="en">An interconnected set of oscillations of ions and electric field in plasma that leaves the magnetic field unperturbed</skos:definition>
+                <dc:date>2013-12-04 21:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectrostaticPlasmaWave"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/phenomenon/Mixed">
+                <skos:prefLabel xml:lang="en">Mixed</skos:prefLabel>
+                <dc:date>2022-12-01 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Mixed is used for certain observed properties that result from contributions of different phenomena</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat">
+        <skos:prefLabel xml:lang="en">PITHIA Result Data Format</skos:prefLabel>
+        <dc:description>This vocabulary is used in the PITHIA_Result object (throught PITHIA_Observation) to describe the format of the results file (media type).e.g. text/sao, image/png.</dc:description>
+        <dc:date>2013-05-31 10:00:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png">
+                <skos:prefLabel xml:lang="en">image/png</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-gif">
+                <skos:prefLabel xml:lang="en">image/gif</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-jpeg">
+                <skos:prefLabel xml:lang="en">image/jpeg</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-fits">
+                <skos:prefLabel xml:lang="en">image/fits</skos:prefLabel>
+                <dc:date>2013-11-13 11:33:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-sao">
+                <skos:prefLabel xml:lang="en">text/sao</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html">
+                <skos:prefLabel xml:lang="en">text/html</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain">
+                <skos:prefLabel xml:lang="en">text/plain</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-eonex">
+                <skos:prefLabel xml:lang="en">text/eonex</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-csv">
+                <skos:prefLabel xml:lang="en">text/csv</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-xml">
+                <skos:prefLabel xml:lang="en">text/xml</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-pdf">
+                <skos:prefLabel xml:lang="en">application/pdf</skos:prefLabel>
+                <dc:date>2013-05-31 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-cef">
+                <skos:prefLabel xml:lang="en">text/cef</skos:prefLabel>
+                <skos:definition xml:lang="en">Cluster Exchange Format (text (ASCII) data files)</skos:definition>
+                <dc:date>2013-11-12 14:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-fits">
+                <skos:prefLabel xml:lang="en">application/fits</skos:prefLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-11-12 14:39:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-netcdf">
+                <skos:prefLabel xml:lang="en">application/netcdf</skos:prefLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-11-12 14:40:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-octet-stream">
+                <skos:prefLabel xml:lang="en">application/octet-stream</skos:prefLabel>
+                <skos:definition xml:lang="en">Arbitrary binary data</skos:definition>
+                <dc:date>2013-12-06 11:19:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-cdf">
+                <skos:prefLabel xml:lang="en">application/cdf</skos:prefLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2014-01-08 12:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-hdf5">
+                <skos:prefLabel xml:lang="en">application/hdf5</skos:prefLabel>
+                <skos:definition xml:lang="en">Hierarchical Data Format (version 5)</skos:definition>
+                <dc:date>2014-02-05 12:06:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/application-json">
+                <skos:prefLabel xml:lang="en">application/json</skos:prefLabel>
+                <dc:date>2023-03-01 12:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

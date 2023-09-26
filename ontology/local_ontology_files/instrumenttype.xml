@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType">
+        <skos:prefLabel xml:lang="en">PITHIA Instrument Type</skos:prefLabel>
+        <dc:description>This vocabulary describes the type of an instrument (e.g. Radar, Digisonde, ..).</dc:description>
+        <dc:date>2013-06-21 21:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/RemoteSensor">
+                <skos:prefLabel xml:lang="en">Remote Sensing Instrument</skos:prefLabel>
+                <skos:definition xml:lang="en">An instrument that observes properties of phenomena at a distance from the feature of interest without a physical contact, typically by detecting electromagnetic or acoustic radiation emitted or scattered by the feature.</skos:definition>
+                <dc:date>2016-01-26 18:38:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/PassiveRemoteSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor">
+                <skos:prefLabel xml:lang="en">Active Remote Sensing Instrument</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A remote sensing instrument that emits energy in order to illuminate the feature of interest and then to detect and evaluate the part of radiated energy that was reflected, refracted, attenuated, or scattered by the feature.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/RemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Radar"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Sounder"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-transmitter"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Radar">
+                <skos:prefLabel xml:lang="en">Radar</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An active remote sensing instrument that uses radio signal to infer range, direction, speed, and other properties of the area that reflected or scattered the signal.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/CoherentScatterRadar"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/IncoherentScatterRadar"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/CoherentScatterRadar">
+                <skos:prefLabel xml:lang="en">Coherent Scatter Radar</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A radar whose signal is scattered in a volume at the boundaries of intrinsic irregularities of the refractive index whose spatial scale is comparable to half the signal wavelength and spatial organization forms a constructive interference pattern to support a particular direction of the scatter.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Radar"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/IncoherentScatterRadar">
+                <skos:prefLabel xml:lang="en">Incoherent Scatter Radar</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A radar whose signal is scattered by density fluctuations due to individual charged particles of the plasma, with total scattered power proportional to the number density of particles and broadening and shifting of the Doppler spectrum indicative of the velocity, temperature, and ion composition of the ambient plasma.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Radar"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Sounder">
+                <skos:prefLabel xml:lang="en">Sounder</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An active remove sensing instrument that uses varying frequency signal to detect and evaluate spectral response of the feature of interest to the sensing signal.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Ionosonde"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Ionosonde">
+                <skos:prefLabel xml:lang="en">Ionosonde</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A sounder operating in the high frequency (HF) band to probe ionospheric plasma by detecting multiple specular reflections of the transmitted signal propagating via different modes from different areas in the plasma.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Sounder"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ObliqueSounder"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder">
+                <skos:prefLabel xml:lang="en">Vertical Ionosonde</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An monostatic ionosonde whose signal specularly reflects from the ionization strata normal to the signal incident angle so that it returns to the ionosonde location for detection, with most of the reflections produced by the horizontal stratum in the vertical direction of signal propagation, but also off vertically from the suitable boundaries of plasma irregularities.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Ionosonde"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ObliqueSounder">
+                <skos:prefLabel xml:lang="en">Oblique Ionosonde</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A bistatic ionosonde with separated time-synchronized transmitter and receiver whose signal travels away from the transmitter site at oblique incidence angle to the ionization layer to refract via the Snell's law and reach the receiver site via one or more hops of propagation.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Ionosonde"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver">
+                <skos:prefLabel xml:lang="en">Receiver of GNSS signals</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An instrument that infers properties of the propagation medium from analysis of received signals from the GNSS spacecraft.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverDualFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverScintillation"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverOccultation"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-transmitter">
+                <skos:prefLabel xml:lang="en">A spaceborne GNSS Transmitter Instrument</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A transmitter on GNSS platform with a precise time measurement of pulse tranmission.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverDualFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Dual Frequency Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A receiver that determines total electron content (TEC) from the difference of travel times of the dual-frequency GNSS signals.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverScintillation">
+                <skos:prefLabel xml:lang="en">GNSS Scintillation Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A GNSS receiver that evaluates degree of fluctuation in the signal characteristics.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverOccultation">
+                <skos:prefLabel xml:lang="en">GNSS Radio Occultation Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A GNSS receiver that evaluates amount of signal refraction as it propagates through the medium between the transmitter and receiver.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/PassiveRemoteSensor">
+                <skos:prefLabel xml:lang="en">Passive Remote Sensing Instrument</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A remote sensing instrument that detects naturally radiated, reflected, or scattered emissions from the feature of interest.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/RemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Interferometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager">
+                <skos:prefLabel xml:lang="en">Imager Instrument</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A scanning instrument that measures 2D array of radiation intensity in one or more spectral ranges.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/PassiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ImagerEUV"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ImagerOptical"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ImagerEUV">
+                <skos:prefLabel xml:lang="en">EUV Imager</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An imager that measures photon intensity in the EUV spectral range.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ImagerOptical">
+                <skos:prefLabel xml:lang="en">Optical Imager</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An imager that measures photon intensity in the optical spectral range.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/AllSkyCamera"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/AllSkyCamera">
+                <skos:prefLabel xml:lang="en">All-sky Camera</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An optical imager with a fisheye lens to produce a distorted hemispherical image of the sky.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ImagerOptical"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver">
+                <skos:prefLabel xml:lang="en">Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A passive instrument that measures intensity of electromagnetic radiation in one or multiple spectral ranges.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/PassiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ReceiverElectric"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ReceiverMagnetic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Riometer"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/RadioTelescope"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ReceiverElectric">
+                <skos:prefLabel xml:lang="en">Electric Antenna Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A receiver that measures electric field component of EM radiation.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ReceiverMagnetic">
+                <skos:prefLabel xml:lang="en">Magnetic    Antenna Receiver</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A receiver that measures magnetic field component of EM radiation.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Riometer">
+                <skos:prefLabel xml:lang="en">Riometer</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A receiver that measures the intensity of known galactic sources of radio emissions to detect effects of various space weather activities on fluctuations of the signal.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/RadioTelescope">
+                <skos:prefLabel xml:lang="en">RadioTelescope</skos:prefLabel>
+                <dc:date>2023-05-04 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+                    A receiver that measures the intensity of radio emissions, usually with a narrow reception beamwidth by means of a parabolic 
+                    antenna system.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Receiver"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/Interferometer">
+                <skos:prefLabel xml:lang="en">Interferometer</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A passive instrument that superimposes two of more EM waves to create the pattern of their interference that reveals finer detail of the wave properties.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/PassiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/FPI"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/FPI">
+                <skos:prefLabel xml:lang="en">Fabry-Perot Interferometer</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An optical interferometer with mirror- or semitransparent plate based system that splits and mixes the incoming ray to create an interference pattern for accurate wavelength measurements.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Interferometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor">
+                <skos:prefLabel xml:lang="en">In Situ Sensing Instrument</skos:prefLabel>
+                <skos:definition xml:lang="en">An instrument that observes properties of the feature of interest at the instrument location.</skos:definition>
+                <dc:date>2013-12-03 05:29:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/EnergeticParticleDetector"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituLangmuirProbe"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituRelaxationSounder"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituRetardingPotentialAnalyser"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/EnergeticParticleDetector">
+                <skos:prefLabel xml:lang="en">Energetic Particle Detector</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An instrument that measures fluxes of charged particles as a function of direction of motion, mass, charge, and/or species.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer">
+                <skos:prefLabel xml:lang="en">Magnetometer</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An in situ instrument that measures the ambient magnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituRelaxationSounder">
+                <skos:prefLabel xml:lang="en">Resonance Relaxation Sounder</skos:prefLabel>
+                <dc:date>2013-06-21 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A sounder that scans its signal frequency to find resonances at which local plasma sustains the oscillations stimulated by the sounder signal. 'Relaxation' refers to the fading of resonant oscillations as the released vibrational energy is damped in the system.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituRetardingPotentialAnalyser">
+                <skos:prefLabel xml:lang="en">Retarding Potential Analyser</skos:prefLabel>
+                <skos:definition xml:lang="en">An in situ instrument that measures ion temperatures and concentrations using a planar ion trap</skos:definition>
+                <dc:date>2013-12-03 05:27:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituLangmuirProbe">
+                <skos:prefLabel xml:lang="en">Langmuir Probe</skos:prefLabel>
+                <skos:definition xml:lang="en">An in situ instrument that measures currents and potentials in the system formed by the carrier satellite and electrode(s) placed in the ambient plasma in order to infer plasma characteristics such as density and temperature</skos:definition>
+                <dc:date>2013-12-03 05:28:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

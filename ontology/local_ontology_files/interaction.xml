@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction">
+        <skos:prefLabel xml:lang="en">PITHIA Interaction</skos:prefLabel>
+        <dc:description>The PITHIA Interaction vocabulary is used to describe the interaction between the wave and propagation medium that defines the observed property</dc:description>
+        <dc:date>2014-03-13 10:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/Absorption">
+                <skos:prefLabel xml:lang="en">Absorption</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Ab</skos:altLabel>
+                <skos:definition xml:lang="en">The reduction of the wave energy via transfer to the propagation medium.</skos:definition>
+                <dc:date>2016-01-27 10:58:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/Diffraction">
+                <skos:prefLabel xml:lang="en">Diffraction</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Df</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Bending and spreading of the propagating wave around obstacles, openings, and regions of varying refractive index.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/FieldAlignedGuidance">
+                <skos:prefLabel xml:lang="en">Field Aligned Guidance</skos:prefLabel>
+                <skos:altLabel xml:lang="en">FAG</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Guided propagation of the wave along the magnetic field flux lines.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/Reflection">
+                <skos:prefLabel xml:lang="en">Reflection</skos:prefLabel>
+                <skos:altLabel xml:lang="en">RI</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Change of the direction of wave propagation at a surface interface into a medium of different refractive index that returns the wave into the medium from which it originated.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/Refraction">
+                <skos:prefLabel xml:lang="en">Refraction</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Rr</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Change of the direction of wave propagation as it crosses a surface interface into a medium of different refractive index where the wave speed is different; governed by the Snell's law.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/Scatter">
+                <skos:prefLabel xml:lang="en">Scatter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Sc</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Forced deviation of the wave from a straight trajectory by one or more localized irregularities in the medium through which it passes, usually resulting in multiplicity of the propagation paths in the medium.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/interaction/WaveParticleInteraction">
+                <skos:prefLabel xml:lang="en">Wave-Particle Interaction</skos:prefLabel>
+                <skos:altLabel xml:lang="en">WPI</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Strong energy exchange between wave and particles of the propagation medium when their phase velocities are close.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

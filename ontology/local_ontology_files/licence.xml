@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:pithia="https://metadata.pithia.eu/ontology/2.2/"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/licence">
+        <skos:prefLabel xml:lang="en">PITHIA Licence</skos:prefLabel>
+        <dc:description>The PITHIA Licence vocabulary corresponds to the Creative Commons copyright licenses providing a standardized way to grant copyright permissions to the various PITHIA data.</dc:description>
+        <dc:date>2014-03-13 10:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CC0">
+                <skos:prefLabel xml:lang="en">Creative Commons No Rights Reserved</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC0</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBY">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBYSA">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution-ShareAlike</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY-SA</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to "copyleft" free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBYND">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution-NoDerivs</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY-ND</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by-nd/4.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNC">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution-NonCommercial</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY-NC</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don't have to license their derivative works on the same terms.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by-nc/4.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCSA">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution-NonCommercial-ShareAlike</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY-NC-SA</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/NOA"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/EDAM"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/NOA">
+                <skos:prefLabel xml:lang="en">NOA's Terms of Reference</skos:prefLabel>
+                <skos:definition xml:lang="en">The data acquired from this service may be used freely for educational and non-commercial academic research purposes by registered users only. Redistribution of the data is subject to the same conditions of use. A heavy investment of time, effort, expertise, and funds continues to be made to produce, collect, quality control, interpret, and store the data and products available from this service. It is important that the DIAS data suppliers and the service developers are appropriately acknowledged in scientific publications that involve analysis of data obtained from this service, making reference to the following basic citations: Belehaki et al., Space Weather, 4, S12002, doi:10.1029/2006SW000270, 2006; Belehaki et al., JASTP, 67, 1092-1099, 2005; Belehaki et al., Acta Geophysica, 55, 3, doi: 10.2478/s11600-007-0010-x, pp 398-409, 2007</skos:definition>
+                <dc:date>2014-05-12 09:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCSA"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/IRI2012">
+                <skos:prefLabel xml:lang="en">IRI's Terms of Reference</skos:prefLabel>
+                <skos:altLabel xml:lang="en"></skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Copyright (c) 2012 International Reference Ionosphere. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE IRI AUTHORS OR THE IRI WORKING GROUP MEMBERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, and modify the Software subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software and the IRI Working Group should be acknowledge in scientific papers that make use of the Software and the scientific paper describing the specific version of the IRI model should be referenced.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCSA"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/EDAM">
+                <skos:prefLabel xml:lang="en">UBIRM's Terms of Reference</skos:prefLabel>
+                <skos:altLabel xml:lang="en"></skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The data acquired from this service may be used freely for educational and non-commercial academic research purposes by registered users only. Redistribution of the data is subject    to the same conditions of use. Please reference:Angling, M. J., and N. K. Jackson-Booth (2011), A short note on the assimilation of collocated and concurrent GPS and ionosonde data into the Electron Density Assimilative Model, Radio Sci, 46(RS0D13).</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCSA"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCND">
+                <skos:prefLabel xml:lang="en">Creative Commons Attribution-NonCommercial-NoDerivs</skos:prefLabel>
+                <skos:altLabel xml:lang="en">CC BY-NC-ND</skos:altLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can't change them in any way or use them commercially.</skos:definition>
+                <pithia:licenceDeed rdf:resource="http://creativecommons.org/licenses/by-nc-nd/4.0/"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/eiscat">
+                <skos:prefLabel xml:lang="en">EISCAT Rules of the Road</skos:prefLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">These data are the intellectual property of the EISCAT Scientific Association. Except where clearly noted as Common Programme (CP), use of these data is restricted to the original experimenter (as noted in the description file available through the schedule system at www.eiscat.se/schedule/schedule.cgi) for one year from the date of the experiment. Otherwise, these data may be used freely for the purpose of illustration for teaching and for non-commercial scientific research, provided that the source is acknowledged and to the extent justified by the non-commercial purpose to be achieved. Substantial use of these data should be discussed at an early stage with knowledgeable scientists within the EISCAT Scientific Association in order to clarify matters of use, calibration and potential co-authorship. Ingemar Haggstrom, at EISCAT Headquarters, can provide advice on suitable contacts. Any further distribution of these data, including installation in any database, must be accompanied by this statement and subject to the same conditions of use.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CAA">
+                <skos:prefLabel xml:lang="en">CAA Rules of the Road</skos:prefLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">All data on the CAA are publicly available to the world-wide science community. However, the data production is often based on routine calibration processes, and so some of the features in the data can be instrumental rather than representing physical processes. Therefore users who are not experts of given data files may wish to be in contact with the PI team or knowledgeable Co-I in order to interpret the measurements correctly. For presentations and publications, please acknowledge the instrument teams and the Cluster Active Archive.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CSA">
+                <skos:prefLabel xml:lang="en">CSA Rules of the Road</skos:prefLabel>
+                <dc:date>2023-03-21 07:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+All data on the CSA are publicly available to the world-wide science community. However, the data production is 
+often based on routine calibration processes, and so some of the features in the data can be instrumental rather 
+than representing physical processes. Therefore users who are not experts of given data files may wish to be in 
+contact with the PI team or knowledgeable co-I in order to interpret the measurements correctly.
+For each instrument on these missions, detailed documentation is available. Users are warmly invited to read the 
+PI recommendations provided in the User Guide and Calibration Report of each instrument.
+For presentations and publications, please acknowledge the instrument teams and the Cluster Science Archive. 
+In publications, please refer to Laakso et al., 2010 when mentioning the usage of the Cluster Science Archive.
+Laakso, H., C. Perry, S. McCaffrey, D. Herment, A.J. Allen, C.C. Harvey, C.P. Escoubet, C. Gruenberger, 
+M.G.G.T. Taylor, and R. Turner, Cluster Active Archive: Overview, 3-37,The Cluster Active Archive, Astrophysics 
+and Space Science Proceedings, H. Laakso et al. (eds.), Springer, 2010
+                </skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/UCL">
+                <skos:prefLabel xml:lang="en">UCL's Terms of Reference</skos:prefLabel>
+                <dc:date>2014-03-13 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">These data are the intellectual property of University College London. They can be accessed on request to the "Planetary Atmospheres and Extrasolar Planets" Group at the Department of Physics and Astronomy of University College London (currently a.aruliah@ucl.ac.uk). These data may be used freely for the purpose of teaching and non-commercial research provided the source is acknowlegded. Any further distribution of these data including installation in database should be discussed and agreed with UCL.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/ingv1">
+                <skos:prefLabel xml:lang="en">INGV's Terms of Reference</skos:prefLabel>
+                <skos:definition xml:lang="en">These data are the intellectual property of the Istituto Nazionale di Geofisica e Vulcanologia (INGV). They are freely available for educational purposes and non-commercial, scientific research by registered users only (partly automated and partly by involving an operator). Any further distribution of these data including installation in database should be discussed and agreed with INGV. INGV must be properly acknowledged when its data are used in publications and presentations, making reference to the following two basic citations:(1) Romano, V., Pau, S., Pezzopane, M., Zuccheretti, E., Zolesi, B., De Franceschi, G., Locatelli, S., 2008. The electronic space weather upper atmosphere (eswua) project at INGV: advancements and state of art. Annales Geophysicae 26,345-351.(2) Romano, V., Pau, S., Pezzopane, M., Spogli, L., Zuccheretti, E., Aquino, M., &amp; Hancock, C. M. (2013). eSWua: a tool to manage and access GNSS ionospheric data from mid-to-high latitudes. Annals of Geophysics, 56(2), R0223. Substantial use of these data should be discussed at an early stage with knowledgeable scientists within INGV in order to clarify matters of use and potential co-authorship.</skos:definition>
+                <dc:date>2014-05-26 10:46:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCND"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/sgo">
+                <skos:prefLabel xml:lang="en">SGO Rules of the Road</skos:prefLabel>
+                <dc:date>2014-06-25 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"><![CDATA[SGO data service<br>Copyright (C) Sodankyla Geophysical Observatory, University of Oulu<br><br>Data provided for scientific and other non-commercial use only subject to the following Data Licence.<br>* Not for publication without prior agreement *<br><br>SGO Data Licence:<br>1. SGO grants to the user a non-exclusive licence to retrieve and use data sets and products from the SGO Data Service in accordance with this licence.<br>2. When the data shall be redistributed, the licensee has to ensure the acceptance of the license agreement by third parties.<br>3. Retrieval, by electronic download, and the use of data sets is free of charge for academic research purposes, unless otherwise stipulated. The use or reproduction of data for commercial purpose requires prior written permission from SGO, and it is generally not free of charge.<br>4. Regardless of whether the data are quality controlled or not, SGO and the data source do not accept any liability for the correctness and/or appropriate interpretation of the data. Interpretation should follow scientific rules and is always the user's responsibility. Correct and appropriate data interpretation is solely the responsibility of data users.<br>5. Typically SGO requires co-authorship if SGO data are to be published in any media. In this case, the user must contact SGO and/or the Observer in Charge and agree on the details of the publication. The Observer in Charge will review the correct and appropriate use of SGO data in the manuscript.<br>6. If new products are derived from SGO data sets, the same rules apply as stated in the previous paragraph.<br>7. Copies of final reports and papers must sent to the SGO Observer in Charge so that the bibliography of the use of the SGO data can be kept up to date.<br>8. The information on SGO service are in the public domain, unless specifically annotated otherwise, and may be used freely by the public. Before using information obtained from this service special attention should be given to the date and time of the data and products being displayed. This information shall not be modified in content and then presented as official material. Users are requested to inform SGO of any problems encountered with the data themselves or the data provision. Such feedback will increase the availability and quality of the data.]]></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/DTUSpace">
+                <skos:prefLabel xml:lang="en">DTU Space Data Policies</skos:prefLabel>
+                <dc:date>2014-11-03 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"><![CDATA[1.The geomagnetic data from the ground magnetic stations, in the following referred to as 'the data', are acquired with the magnetic stations operated by the Technical University of Denmark, National Space Institute (DTU Space). The data are the intellectual property of DTU Space.<br>2. The data may be freely used for the purpose of illustration, for teaching, and for scientific research. DTU Space encourages users of the data to collaborate with the Project Scientist at DTU Space. Users are also encouraged to consider a joint authorship with the Project Scientist in those cases where the data contributes significantly to a publication. DTU Space must be properly acknowledged when the data is used in publications and presentations. Kindly inform the Project Scientist at DTU Space when using the data in presentations, publications or reports and send a copy of all published reports and articles to the Project Scientist at DTU Space to facilitate the documentation of the data's usefulness. When data of the stations MCN, MCG, MCE, MCW, or MCR are used, the National Science Foundation (NSF) and the University of Michigan must also be acknowledged.<br>3. The data must not be passed on to others or must not be included in a distributed data base without explicit agreement from DTU Space.<br>4. The data or products derived from the data must not be used for commercial purposes or in the development of commercial services without the explicit agreement from DTU Space.<br>5. The data and products derived from the data are supplied without warranties, expressed or implicit. In no event shall the DTU Space be held liable for any damage or loss of any kind resulting from the use of the data or derived products.]]></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/licence/CCBYNCSA"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/rob">
+                <skos:prefLabel xml:lang="en">ROB Data policy</skos:prefLabel>
+                <skos:definition xml:lang="en">The user acknowledges that the presented data, including text, photographs, drawings, maps, video, illustrations, logos, slogans, research, are protected by intellectual property rights which belong to the Royal Observatory of Belgium (hereinafter ROB). The user acknowledges that the right of access to the Website and/or data does not result in total or partial transfer of intellectual property rights. Unless expressly stated otherwise, the data presented by the ROB may only be used under the following conditions. Data presented by the ROB, may only be used for private, educational or scientific purposes. On each copy and each publication must be clearly mentioned the source (URL of the webpage) and the name of the project and/or researcher. brbrCommercial use of the presented data regardless in which form and by which means, is only possible after the express written prior consent of the Director general of the ROB. The request for this should be sent by e-mail infoobservatory.be or by post to Royal Observatory of Belgium, Dr. Ronald Van der Linden, Director general, Avenue Circulaire 3, 1180 Brussels.</skos:definition>
+                <dc:date>2014-12-04 20:34:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/NOAA-POES-OULU">
+                <skos:prefLabel xml:lang="en">Rules of the Road - University of Oulu NOAA/POES data products</skos:prefLabel>
+                <skos:definition xml:lang="en">The NOAA/POES data products offered 1here are derived from the publicly available raw data distributed by NOAA/NGDC. These data products have been corrected and calibrated by procedures developed at University of Oulu, and as such are intellectual property of the University of Oulu. The data to be distributed via the PITHIA portal are freely available for scientific and non-commercial use. The users of this data are advised to contact the team at University of Oulu (timo.asikainenoulu.fi) to discuss the applied calibrations, data corrections and other issues of the data, and potential co-authorship. The development of the correction and calibration techniques for NOAA/POES data are a result of years of work. Accordingly, it is required that the University of Oulu, Space Physics team is acknowledged as follows in all presentations and publications using these data:brbr    We acknowledge the Space Physics research group of the University of Oulu, Finland, for providing the calibrated and corrected NOAA/POES data used in this work.</skos:definition>
+                <dc:date>2015-02-11 08:32:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/DLR">
+                <skos:prefLabel xml:lang="en">DLR License Agreement</skos:prefLabel>
+                <skos:definition xml:lang="en"><![CDATA[<ol><li>The licensor grants to the licensee a non-exclusive and non-transferable license to retrieve and use data sets and products from the SWACI service in accordance with this license. </li><li>Retrieval, by electronic download, and the use of data sets is free of charge, unless otherwise stipulated.</li><li>Regardless of whether the data are quality controlled or not, SWACI and the data source do not accept any liability for the correctness and/or appropriate interpretation of the data. Interpretation should follow scientific rules and is always the users responsibility. Correct and appropriate data interpretation is solely the responsibility of data users.</li><li>Any person making substantial use of SWACI data must communicate with the data source prior to publication, and has to consider the data source(s) for co-authorship of published results.</li><li>If the data are used in publications and presentations, the SWACI service must properly be acknowledged mentioning that the Space Weather Application Center Ionosphere (SWACI) is operated by the German Aerospace Center (DLR) at the Neustrelitz location and supported by the German State Government of Mecklenburg-Vorpommern.li liWhen the data shall be redistributed, the licensee has to ensure the acceptance of the license agreement by third parties.</li><li>If new products are derived from SWACI data sets, the licensee has to give proper credit to SWACI.when publishing and/or distributing the new product.</li><li>Data users must respect any and all restrictions on the use or reproduction of data. The use or reproduction of data for commercial purpose might require prior written permission from the SWACI.</li><li>The information on SWACI service are in the public domain, unless specifically annotated otherwise, and may be used freely by the public. Before using information obtained from this service, special attention should be given to the date & time of the data and products being displayed. This information shall not be modified in content and then presented as official material. Users are requested to inform SWACI of any problems encountered with data provision. Such a feedback will increase the availability and quality of the data.</li></ol>]]></skos:definition>
+                <dc:date>2015-02-26 13:42:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies">
+                <skos:prefLabel xml:lang="en">Lowell GIRO Data Center Space Data Policies</skos:prefLabel>
+                <skos:definition xml:lang="en"><![CDATA[<ol><li> The NASA IMAGE Radio Plasma Imager telemetry (Level 0) and calibrated records (Level 1) are U.S. Public Domain without copyright restrictions on their use, except the following regulations:<br>1.1. As NASA materials, RPI data may not be used to state or imply the endorsement by NASA or by any NASA employee of secondary commercial services based on RPI data.<br>1.2. NASA should be acknowledged as the source of its material.<br>1.3. NASA insignia may not be used without permission.</li><li> The NASA IMAGE Radio Plasma Imager derived products (Level 2) and visual products produced by LRIRA software tools are intellectual property of LRIRA as of a NASA subcontractor for the RPI Level 2 data acquisition, management, quality control, and visual presentation.<br>2.1. All RPI plasmagram-derived and spectrogram-derived data products at LGDC are Level 2 data.<br>2.2. All LRIRA Level 2 data products are provided with the name and organization of the Project Scientist responsible for its creation.</li><li>The Level 2 LRIRA data products are licensed under Creative Commons Attribution-Share Alike 3.0 Unported License (CC BY-SA).<br>3.1. The CC BY-SA licensees are granted the right to copy, distribute, display, and make copies of the data into the same or another format.<br>3.2. Users can reuse and build upon the data products, for non-commercial and commercial purposes, with the following attribution given to the creator of the Level 2 copyright work.<br>3.2a. LGDC should be acknowledged as the source of Level 2 material in publications, presentations, and reports.<br>3.2b. For data use statistics, all published material should reference LRIRA by including the following publication in the list of references:<br><br>Galkin, I. A., G. M. Khmyrov, A. V. Kozlov, and B. W. Reinisch, Intelligent resident archive for RPI Level 2 data, in Radio Sounding and Plasma Physics, AIP Conf. Proc. 974, 111-117, 2008<br><br>3.2c. Level 2 data users are encouraged to consider a joint authorship with the RPI Project Scientists as indicated in the data annotation in those cases where the retrieved data contribute significantly to a publication.</li><li>The Level 0 data and Level 1-2 products derived from the data are supplied by LGDC without warranties, expressed or implicit. In no event shall the LGDC be held liable for any damage or loss of any kind resulting from the use of the data or derived products.</li></ol>]]></skos:definition>
+                <dc:date>2015-05-30 15:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/tgo">
+                <skos:prefLabel xml:lang="en">TGO rules of the road</skos:prefLabel>
+                <skos:altLabel xml:lang="en">TGO_ROTR</skos:altLabel>
+                <skos:definition xml:lang="en">These data are the intellectual property of Tromsi&amp;oslash; Geophysical Observatory, UiT - the Arctic University of Norway. They are freely available for educational purposes and non-commercial, scientific research. Substantial use of these data should be discussed at an early stage with personnel at Troms&amp;oslash; Geophysical Observatory in order to clarify matters of use, calibration and other technical properties as well as potential co-authorship. Any further distribution of these data, including installation in any database, must be accompanied by this statement and subject to the same conditions of use. Commercial use of the data is welcome when based on an agreement with Troms&amp;oslash; Geophysical Observatory. In the case where these data are presented or used, they should be accompanied with a brief acknowledgement: Troms&amp;oslash; Geophysical Observatory, UiT - the Arctic University of Norway, is thanked for providing magnetometer data from 'station(s) used'. For queries contact: Magnar.G.Johnsenuit.no</skos:definition>
+                <dc:date>2016-01-22 10:13:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

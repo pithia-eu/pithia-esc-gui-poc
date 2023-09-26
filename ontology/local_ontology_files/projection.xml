@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/projection">
+        <skos:prefLabel xml:lang="en">PITHIA Projection</skos:prefLabel>
+        <dc:description>Projection describes (for vector properties) a plane or a line on which the vector projection is observed by the instrument. The Projection is provided in the data ONLY IN THOSE CASES when observation does not specify the vector property in full. Typical projections are horizontal, line of sight, orbital, perpendicular... The Projection has to be accompanied by a suitable description of the coordinate reference system (crs).</dc:description>
+        <dc:date>2014-03-14 10:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D">
+                <skos:prefLabel xml:lang="en">2D Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on a plane</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D_Horizontal"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D_XY"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D_XZ"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D_YZ"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D_Orbital"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D_Horizontal">
+                <skos:prefLabel xml:lang="en">2D Horizontal Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on a horizontal plane</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D_XY">
+                <skos:prefLabel xml:lang="en">2D Projection on XY Plane</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on the XY plane of the coordinate system</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D_XZ">
+                <skos:prefLabel xml:lang="en">2D Projection on XZ Plane</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on the XZ plane of the coordinate system</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D_YZ">
+                <skos:prefLabel xml:lang="en">2D Projection on YZ Plane</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on the YZ plane of the coordinate system</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/2D_Orbital">
+                <skos:prefLabel xml:lang="en">2D Projection on Orbital Plane</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on the orbital plane of the spacecraft</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/1D">
+                <skos:prefLabel xml:lang="en">1D Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on a line</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D_LineOfSight"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D_Parallel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D_Perpendicular"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/1D_LineOfSight">
+                <skos:prefLabel xml:lang="en">1D Line of Sight Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on line of sight from the instrument to the observed region</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/1D_Parallel">
+                <skos:prefLabel xml:lang="en">1D Parallel Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on line parallel to the reference direction (e.g. magnetic field direction)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/projection/1D_Perpendicular">
+                <skos:prefLabel xml:lang="en">1D Perpendicular Projection</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of a 3D vector on line perpendicular to the reference direction (e.g. magnetic field direction)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/projection/1D"/>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

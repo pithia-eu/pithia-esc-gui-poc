@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel">
+        <skos:prefLabel xml:lang="en">PITHIA Data Level</skos:prefLabel>
+        <dc:description>Characterization of the data processing applied to the input of a procedure to produce the output data product.</dc:description>
+        <dc:date>2022-04-28 10:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0">
+                <skos:prefLabel xml:lang="en">Level 0</skos:prefLabel>
+                <dc:date>10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Raw samples acquired by sensor instrumentation in their entirety and full resolution, presented in the instrument-specific units.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1">
+                <skos:prefLabel xml:lang="en">Level 1</skos:prefLabel>
+                <skos:altLabel xml:lang="en">z</skos:altLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Instrument-specific observed properties derived from Level 0 data by a sequence of computational processes to calibrate, clean, reduce volume, enhance quality, or convert the presentation to physical units. Typical example processes for transitioning to Level 1 are: enhancement of signal-to-noise ratio (pulse compression, excision of interference and outliers, look integration, synthetic aperture beamforming), cross-channel equalization (for the multi-channel or multi-element observations), compensation of distortions such as aberration or defocusing, derivation of secondary physical quantities of the probing signal (e.g., angle of arrival from multi-channel reception), spectral analysis of the observed signal, data reduction to retain only important quantities (e.g., resolution reduction or data compression, thresholding to detect principal signal components).</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2">
+                <skos:prefLabel xml:lang="en">Level 2</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Geophysical properties of the primary Feature of Interest derived from Level 0/1 instrument data by a sequence of computation processes. The spatial extent and time resolution of Level 2 data are usually constrained to those of the source instrument data. Transition to Level 2 commonly includes geolocation of the Feature of Interest and may rely on underlying model assumptions about the feature (such as the slant-to-vertical total electron density transformation or tomography computations). Most commonly, it is the Level 2 resource that the instrument teams release to science community at large for reasoning about the Feature of Interest.</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A">
+                <skos:prefLabel xml:lang="en">Level 2A</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Direct output of autonomous L2 computations without human interaction</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V">
+                <skos:prefLabel xml:lang="en">Level 2V</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">L2 computations that were verified and cleaned by a human-assisted procedure of data quality control</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L3">
+                <skos:prefLabel xml:lang="en">Level 3</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Same as Level 2, but additionally processed to map observed properties to a uniform spatial and temporal grid. Transition to Level 3 is commonly based on underlying model assumptions about Feature of Interest spatial/temporal extent over areas/times outside the sensor coverage. Typical Level 3 processes are spatial interpolation and extrapolation onto a 2D surface grid and compensation of the short-term measurement latency in real-time weather applications.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataLevel/L4">
+                <skos:prefLabel xml:lang="en">Level 4</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Model computations generated with or without analysis of the lower-level data. May include additional resources external to the data collection (such as characterizations of the geospace activity or additional observations in the multi-instrument experiments).</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>
