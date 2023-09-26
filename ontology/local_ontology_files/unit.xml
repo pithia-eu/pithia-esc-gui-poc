@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/unit">
+        <skos:prefLabel xml:lang="en">PITHIA Unit</skos:prefLabel>
+        <dc:description>This vocabulary contains the unit of an observed property.</dc:description>
+        <dc:date>2013-05-31 15:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/m">
+                <skos:prefLabel xml:lang="en">Meter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">m</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-23 18:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/km"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/cm"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/km">
+                <skos:prefLabel xml:lang="en">Kilometer</skos:prefLabel>
+                <skos:altLabel xml:lang="en">km</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-23 18:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/m"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/cm">
+                <skos:prefLabel xml:lang="en">Centimeter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">cm</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2022-12-20 09:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/m"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/MHz">
+                <skos:prefLabel xml:lang="en">Mega Hertz</skos:prefLabel>
+                <skos:altLabel xml:lang="en">MHz</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-23 18:12:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/Hz"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/m-3">
+                <skos:prefLabel xml:lang="en">per meter cubed</skos:prefLabel>
+                <skos:altLabel xml:lang="en">m-3</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/TECu">
+                <skos:prefLabel xml:lang="en">TEC unit</skos:prefLabel>
+                <skos:altLabel xml:lang="en">TECu</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/10_16m-2">
+                <skos:prefLabel xml:lang="en">10^16 m-2</skos:prefLabel>
+                <skos:altLabel xml:lang="en">10^16*m-2</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Used for the TEC in SAO files</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/NeISIS">
+                <skos:prefLabel xml:lang="en">ln(Ne/cm-3)*100000</skos:prefLabel>
+                <skos:altLabel xml:lang="en">ln(Ne/cm-3)*100000</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">ln(Ne/cm-3)*100000: Unit for the electron density values for ISIS 1 and 2.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/cm-2sr-1s-1">
+                <skos:prefLabel xml:lang="en">counts/cm2 sr s</skos:prefLabel>
+                <skos:altLabel xml:lang="en">counts/cm2 sr s</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Used for NOAA/MEPED energetic particle fluxes</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/nT">
+                <skos:prefLabel xml:lang="en">nanoTesla</skos:prefLabel>
+                <skos:altLabel xml:lang="en">nT</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/100s-1">
+                <skos:prefLabel xml:lang="en">counts per 100 seconds</skos:prefLabel>
+                <skos:altLabel xml:lang="en">100s-1</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Used for UCL FPIs</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/ms-1">
+                <skos:prefLabel xml:lang="en">meter per second</skos:prefLabel>
+                <skos:altLabel xml:lang="en">m s-1</skos:altLabel>
+                <dc:date>2015-03-23 12:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/K">
+                <skos:prefLabel xml:lang="en">kelvin</skos:prefLabel>
+                <skos:altLabel xml:lang="en">K</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/edSAO">
+                <skos:prefLabel xml:lang="en">e/cm3</skos:prefLabel>
+                <skos:altLabel xml:lang="en">e/cm3</skos:altLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Units of Electron Density for SAO files (NOA)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/sec">
+                <skos:prefLabel xml:lang="en">Second</skos:prefLabel>
+                <skos:altLabel xml:lang="en">sec</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-10-17 23:11:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/ns">
+                <skos:prefLabel xml:lang="en">Nanosecond</skos:prefLabel>
+                <skos:altLabel xml:lang="en">ns</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2022-12-01 10:11:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/degree">
+                <skos:prefLabel xml:lang="en">Degree</skos:prefLabel>
+                <skos:altLabel xml:lang="en">degree</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-10-17 23:14:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/dB">
+                <skos:prefLabel xml:lang="en">Decibel</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dB</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-10-17 23:12:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/rad">
+                <skos:prefLabel xml:lang="en">Radian</skos:prefLabel>
+                <skos:altLabel xml:lang="en">rad</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-10-17 23:12:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/DNs-1">
+                <skos:prefLabel xml:lang="en">count per second</skos:prefLabel>
+                <skos:altLabel xml:lang="en">count/sec</skos:altLabel>
+                <skos:definition xml:lang="en">in case of SWAP: linearly related to number of photons in the bandpass per second</skos:definition>
+                <dc:date>2013-11-04 09:39:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/Re">
+                <skos:prefLabel xml:lang="en">Mean Earth Radius (Re)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Re</skos:altLabel>
+                <skos:definition xml:lang="en">Mean Earth radius which is 6371 kilometers</skos:definition>
+                <dc:date>2013-11-04 09:45:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/cm-3">
+                <skos:prefLabel xml:lang="en">per cubic centimetre</skos:prefLabel>
+                <skos:altLabel xml:lang="en">cm-3</skos:altLabel>
+                <skos:definition xml:lang="en">centimetre power-3</skos:definition>
+                <dc:date>2014-10-08 11:10:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/gcm-3">
+                <skos:prefLabel xml:lang="en">gram per cubic centimetre</skos:prefLabel>
+                <skos:altLabel xml:lang="en">g*cm-3</skos:altLabel>
+                <skos:definition xml:lang="en">gram * centimetre power-3</skos:definition>
+                <dc:date>2014-10-08 11:10:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/kHz">
+                <skos:prefLabel xml:lang="en">Kilo Hertz</skos:prefLabel>
+                <skos:altLabel xml:lang="en">kHz</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-23 18:12:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/Hz"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/kV">
+                <skos:prefLabel xml:lang="en">kilovolt</skos:prefLabel>
+                <skos:altLabel xml:lang="en">kV</skos:altLabel>
+                <skos:definition xml:lang="en">Unit of electric potential</skos:definition>
+                <dc:date>2013-12-12 12:58:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/Hz">
+                <skos:prefLabel xml:lang="en">Hertz</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Hz</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2013-12-23 18:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/100s-1"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/MHz"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/kHz"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/Vm-1">
+                <skos:prefLabel xml:lang="en">Volt per meter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V/m</skos:altLabel>
+                <skos:definition xml:lang="en">Unit of electric field strength</skos:definition>
+                <dc:date>2013-12-23 18:16:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/dBnVm-1"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/dBnVm-1">
+                <skos:prefLabel xml:lang="en">NanoVolt per meter in dB scale</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBnV/m</skos:altLabel>
+                <skos:definition xml:lang="en">Common unit of electric field strength in log-scale (dB) for electric antenna receivers</skos:definition>
+                <dc:date>2013-12-23 18:14:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/unit/Vm-1"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/dBVHz-0p5">
+                <skos:prefLabel xml:lang="en">Volt-rms per root-Hz in dB scale</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBVrms/root-Hz</skos:altLabel>
+                <skos:definition xml:lang="en">Commonly used for voltage spectral density, this is root-mean-square amplitude of voltage in Volts per unit of bandwidth in root-Hz, expressed in dB scale (20log10)</skos:definition>
+                <dc:date>2014-01-13 21:29:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/logs-1">
+                <skos:prefLabel xml:lang="en">log10(1/s)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">log10(1/s)</skos:altLabel>
+                <skos:definition xml:lang="en">Used for ion-neutral collision frequency in EISCAT data analysis</skos:definition>
+                <dc:date>2014-10-23 10:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/logm-3">
+                <skos:prefLabel xml:lang="en">log10(Ne/m-3)</skos:prefLabel>
+                <skos:altLabel xml:lang="en">log10(Ne/m-3)</skos:altLabel>
+                <skos:definition xml:lang="en">Used in EISCAT data analysis</skos:definition>
+                <dc:date>2014-10-23 10:36:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/T">
+                <skos:prefLabel xml:lang="en">Tesla</skos:prefLabel>
+                <skos:altLabel xml:lang="en">T</skos:altLabel>
+                <skos:definition xml:lang="en">The SI-derived unit of magnetic flux density, equal to the magnitude of the magnetic field vector necessary to produce a force of one newton on a charge of one coulomb moving perpendicular to the direction of the magnetic field vector with a velocity of one meter per second. It is equivalent to one weber per square meter.</skos:definition>
+                <dc:date>2015-09-22 10:17:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/kms-1">
+                <skos:prefLabel xml:lang="en">kilometer per second</skos:prefLabel>
+                <skos:altLabel xml:lang="en">km*s-1</skos:altLabel>
+                <skos:definition xml:lang="en"></skos:definition>
+                <dc:date>2015-03-22 20:23:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/count">
+                <skos:prefLabel xml:lang="en">Count</skos:prefLabel>
+                <skos:altLabel xml:lang="en">ct</skos:altLabel>
+                <skos:definition xml:lang="en">Dimension 1 for countable quantities</skos:definition>
+                <dc:date>2015-10-05 16:43:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/Pascal">
+                <skos:prefLabel xml:lang="en">Pascal</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Pa</skos:altLabel>
+                <skos:definition xml:lang="en">SI unit of pressure</skos:definition>
+                <dc:date>2023-04-06 23:03:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/sfu">
+                <skos:prefLabel xml:lang="en">Solar Flux Unit</skos:prefLabel>
+                <skos:altLabel xml:lang="en">sfu</skos:altLabel>
+                <skos:definition xml:lang="en">Solar flux in 10^-22 Watt per m2 per Hz</skos:definition>
+                <dc:date>2023-05-04 23:03:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation">
+        <skos:prefLabel xml:lang="en">CompressedRepresentation</skos:prefLabel>
+        <dc:description>CompressedRepresentation describes formalism of the compressed representation of voluminous or complex 3D, 2D, and 1D data. Typical examples are spherical harmonics for 2D maps on the sphere, truncated Fourier transforms (harmonics) for diurnal time series, Empirical Orthogonal Functions (EOF).</dc:description>
+        <dc:date>2014-03-14 10:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D">
+                <skos:prefLabel xml:lang="en">2D Maps</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Maps of an observed property on a 2D grid</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_Spherical"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_Spherical">
+                <skos:prefLabel xml:lang="en">2D Maps on a Sphere</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Compressed representation of 2D maps on a Sphere (e.g., Earth)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_SphericalHarmonics"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_JonesGallet"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_SphericalHarmonics">
+                <skos:prefLabel xml:lang="en">Spherical Harmonics for 2D Maps</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">2D map spherical harmonics using orthonormal associated Legendre polynomials</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_Spherical"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_JonesGallet">
+                <skos:prefLabel xml:lang="en">Spherical Jones-Gallet functions for 2D Maps</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Jones-Gallet functions optimized for compressed representation of foF2 2D maps</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/2D_Spherical"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D">
+                <skos:prefLabel xml:lang="en">1D Profiles</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">1D profile of an observed property</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Profile"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Temporal"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Profile">
+                <skos:prefLabel xml:lang="en">PITHIA 1D Profiles</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">1D profile of an observed property</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_IRI-EDP"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_IRI-EDP">
+                <skos:prefLabel xml:lang="en">1D Electron Density Profile in IRI</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">9-parameter representation of the bottomside profile of electron density in the International Reference Ionosphere model</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Profile"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Temporal">
+                <skos:prefLabel xml:lang="en">Time Series</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Time series of an observed property</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_DiurnalHarmonics"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_DiurnalHarmonics">
+                <skos:prefLabel xml:lang="en">Diurnal Harmonics</skos:prefLabel>
+                <dc:date>2014-03-14 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Truncated Fourier series of a 24-hour times series of observed property</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/compressedRepresentation/1D_Temporal"/>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

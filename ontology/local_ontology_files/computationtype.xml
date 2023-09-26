@@ -1,170 +1,558 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:espas="http://ontology.espas-fp7.eu/espasdefinitions#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"  xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#">
-    <skos:ConceptScheme rdf:about="https://ontology.espas-fp7.eu/computationType">
-        <skos:prefLabel>ESPAS Computation Type</skos:prefLabel>
-        <dc:description>This vocabulary is used in the ESPAS_Computation object to describe its type, e.g. mathematical model, software (like ARTIST, etc).           
-        </dc:description>
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType">
+        <skos:prefLabel xml:lang="en">PITHIA Computation Type</skos:prefLabel>
+        <dc:description>This vocabulary is used in the PITHIA_Computation object to describe its type, e.g. mathematical model, software (like ARTIST, etc).</dc:description>
         <dc:date>2013-05-31 15:30:00.0</dc:date>
         <owlxml:versionInfo>0.1</owlxml:versionInfo>
-        <dc:publisher>ESPAS</dc:publisher>
+        <dc:publisher>PITHIA</dc:publisher>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/AssimilativeModel">
-                <skos:prefLabel xml:lang="en">Assimilative Model</skos:prefLabel>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator">
+                <skos:prefLabel xml:lang="en">Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">
+                    A computed value that is interpreted as a level (metric) of activity within the feature of 
+                    interest. While based on underlying acquisitions (measurements) and computations (models) of 
+                    real physical quantities, an activity indicator may or may not directly correspond to an 
+                    observed property with explicit definitions of its phenomenon, measurand, and units of the 
+                    value presentation.
                 </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Model"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SolarActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MagnetosphericActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/SemiTheoreticalModel">
-                <skos:prefLabel xml:lang="en">Semi Theoretical</skos:prefLabel>
-                <skos:altLabel xml:lang="en">Semi Theoretical</skos:altLabel>
-                <skos:definition xml:lang="en">None
-                </skos:definition>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SolarActivityIndicator">
+                <skos:prefLabel xml:lang="en">Solar Activity Indicator</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2014-05-04 14:31:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Model"/>
+                <skos:definition xml:lang="en">Activity indicator pertaining to events on the Sun.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SunspotNumber"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling_Automatic">
-                <skos:prefLabel xml:lang="en">Spectrogram Autoscaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling of spectrograms using an intelligent system software
-                </skos:definition>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SunspotNumber">
+                <skos:prefLabel xml:lang="en">Sunspot Number</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2015-09-14 02:33:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling"/>
+                <skos:definition xml:lang="en">Activity indicator pertaining to events on the Sun.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SolarActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SunspotNumber_2.0"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling_Manual">
-                <skos:prefLabel xml:lang="en">Manual Plasmagram Scaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling plasmagrams using an interactive manual editor software
-                </skos:definition>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SunspotNumber_2.0">
+                <skos:prefLabel xml:lang="en">Sunspot Number version 2.0</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-05 15:19:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling">
-                <skos:prefLabel xml:lang="en">Spectrogram Scaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling of spectrogram image to obtained secondary data products such as electron plasma and electron gyro-frequency
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2015-09-14 02:33:00.0</dc:date>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling_Automatic"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling_Manual"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/Autoscaled">
-                <skos:prefLabel xml:lang="en">Autoscaled</skos:prefLabel>
                 <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/IonogramScaling"/>
+			The sunspot number SN (written with subscript N) is given as the daily total sunspot number 
+			version 2.0 introduced in 2015 and provided by WDC-SILSO, Royal Observatory of Belgium, Brussels.
+		</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SunspotNumber"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling">
-                <skos:prefLabel xml:lang="en">Plasmagram Scaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling plasmagram image to derived secondary products such as traces, resonance frequencies, profiles of electron density
-                </skos:definition>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7">
+                <skos:prefLabel xml:lang="en">F10.7 Solar Radio Flux</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-05 15:22:00.0</dc:date>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling_Automatic"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling_Manual"/>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Software"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/EmpiricalModel">
-                <skos:prefLabel xml:lang="en">Empirical Model</skos:prefLabel>
                 <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Model"/>
+			Local noon-time 10.7 cm solar radio flux provided by Dominion Radio Astrophysical Observatory and 
+			Natural Resources Canada.
+		</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SolarActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7_observed"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7_adjusted"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/ManuallyScaled">
-                <skos:prefLabel xml:lang="en">Manually Scaled</skos:prefLabel>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7_observed">
+                <skos:prefLabel xml:lang="en">F10.7 Solar Radio Flux, Observed</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/IonogramScaling"/>
+			Local noon-time 10.7 cm solar radio flux as observed and provided by Dominion Radio Astrophysical Observatory and 
+			Natural Resources Canada.
+		</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/IonogramScaling">
-                <skos:prefLabel xml:lang="en">Ionogram Scaling Techniques</skos:prefLabel>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7_adjusted">
+                <skos:prefLabel xml:lang="en">F10.7 Solar Radio Flux, Adjusted</skos:prefLabel>
+                <dc:date>2023-02-15 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/Autoscaled"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/ManuallyScaled"/>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Software"/>
+			Local noon-time 10.7 cm solar radio flux, observed, adjusted, and provided by Dominion Radio Astrophysical Observatory and 
+			Natural Resources Canada.
+		</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/F10.7"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling_Automatic">
-                <skos:prefLabel xml:lang="en">Plasmagram Autoscaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling plasmagrams using an intelligent system software
-                </skos:definition>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/MagnetosphericActivityIndicator">
+                <skos:prefLabel xml:lang="en">Magnetospheric Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-05 15:21:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling"/>
+                <skos:definition xml:lang="en">Activity indicator pertaining to events in the Magnetosphere of the Earth.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/Model">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator">
+                <skos:prefLabel xml:lang="en">Ionospheric Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Activity indicator pertaining to events in the Earth's Ionosphere.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/AmplitudeScintillationIndexS4"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PhaseScintillationIndexSigmaPhi"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PhaseScintillationIndexSigmaPhi"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/RateOfTEC"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/RateOfTECIndex"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/AmplitudeScintillationIndexS4">
+                <skos:prefLabel xml:lang="en">GNSS Amplitude Scintillation Index (S4)</skos:prefLabel>
+                <dc:date>2023-02-21 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Scintillation index derived from amplitude variations of GNSS signal.  It is defined as the normalized standard deviation of the detrended 50 Hz raw signal intensity over a given interval of time, typically 60 s.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/PhaseScintillationIndexSigmaPhi">
+                <skos:prefLabel xml:lang="en">GNSS Phase Scintillation Index (SigmaPhi)</skos:prefLabel>
+                <dc:date>2023-02-21 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Scintillation index derived from phase fluctuations of the GNSS signal. It is defined as the standard deviation of the 50 Hz detrended carrier phase over a given interval of time, typically 60 s and is given in radians.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/RateOfTEC">
+                <skos:prefLabel xml:lang="en">Rate of change of TEC (ROT)</skos:prefLabel>
+                <dc:date>2023-05-05 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Rate Of change of TEC (ROT) is the time derivative of the slant Total Electron Content (sTEC) values evaluated between two epochs.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/RateOfTECIndex">
+                <skos:prefLabel xml:lang="en">Rate of TEC Index</skos:prefLabel>
+                <dc:date>2023-05-05 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Rate Of TEC Index (ROTI) is defined as the standard deviation of the Rate of change of TEC (ROT) evaluated for every radio link over a time-interval typically of 1 to 5 minutes.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonosphericActivityIndicator"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator">
+                <skos:prefLabel xml:lang="en">Geomagnetic Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Activity indicator pertaining to disturbances in the geomagnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Local"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Regional"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global">
+                <skos:prefLabel xml:lang="en">Global Geomagnetic Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Activity indicator pertaining to mean global disturbances in the geomagnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Kp_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Hp30_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Hp60_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Ap_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ap_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ap30_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/ap60_index"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Kp_index">
+                <skos:prefLabel xml:lang="en">Kp Index, 3-hourly computation</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Three-hourly sub-auroral geomagnetic activity indicator provided by GFZ Potsdam, Germany.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Kp_index"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Hp30_index">
+                <skos:prefLabel xml:lang="en">Hp30 Index, 30-minute Kp-like computation</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Thirty-minute sub-auroral geomagnetic activity indicator.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Hp60_index">
+                <skos:prefLabel xml:lang="en">Hp60 Index, 60-minute Kp-like computation</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Sixty-minute (hourly) sub-auroral geomagnetic activity indicator.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/ap_index">
+                <skos:prefLabel xml:lang="en">ap Index (Linear representation of Kp)</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Linear representation of the quasi-logarithmic Kp index.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Ap_index">
+                <skos:prefLabel xml:lang="en">Ap Index, Daily Mean of ap Indices</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Daily mean of ap sub-auroral geomagnetic activity indicators.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/ap30_index">
+                <skos:prefLabel xml:lang="en">ap30 Index (Linear representation of Hp30)</skos:prefLabel>
+                <dc:date>2023-05-29 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Linear representation of the quasi-logarithmic Kp30 index.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/ap60_index">
+                <skos:prefLabel xml:lang="en">ap60 Index (Linear representation of Hp60)</skos:prefLabel>
+                <dc:date>2023-05-29 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Linear representation of the quasi-logarithmic Kp60 index.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Global"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Local">
+                <skos:prefLabel xml:lang="en">Local Geomagnetic Activity Indicator</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Activity indicator pertaining to locally observed disturbances in the geomagnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/a_indices"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/K_indices"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/K_indices">
+                <skos:prefLabel xml:lang="en">K indices</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Three-hourly geomagnetic disturbance indicator provided by individual stations.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Local"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/a_indices">
+                <skos:prefLabel xml:lang="en">a indices</skos:prefLabel>
+                <dc:date>2023-04-13 19:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Three-hourly linear representation geomagnetic disturbance indicator provided by individual stations.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Local"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Regional">
+                <skos:prefLabel xml:lang="en">Regional Geomagnetic Activity Indicator</skos:prefLabel>
+                <dc:date>2023-09-13 16:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Activity indicator pertaining to regionally observed disturbances in the geomagnetic field.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PCN_index"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Dst_index"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/PCN_index">
+                <skos:prefLabel xml:lang="en">PCN Index, 1-minute Polar Cap Geomagnetic Activity</skos:prefLabel>
+                <dc:date>2023-09-13 16:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The PCN index monitors geomagnetic activity on the Northern Polar Cap.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Regional"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Dst_index">
+                <skos:prefLabel xml:lang="en">Dst Index, 60-minute Low Latitude Geomagnetic Activity</skos:prefLabel>
+                <dc:date>2023-09-13 16:55:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The Dst index monitors geomagnetic activity using selected four low-latitude stations.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator_Regional"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Model">
                 <skos:prefLabel xml:lang="en">Model</skos:prefLabel>
-                <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/MathematicalModel"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/AssimilativeModel"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/EmpiricalModel"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/TheoreticalModel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/EmpiricalModel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/AssimilativeModel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SemiEmpiricalModel"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SemiTheoreticalModel"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/MathematicalModel">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/TheoreticalModel">
+                <skos:prefLabel xml:lang="en">Theoretical Model</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Model based on theoretical treatment of the system, goverened by underlying physical processes expressed as equations. Also known as First-Principles model.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/EmpiricalModel">
+                <skos:prefLabel xml:lang="en">Empirical Model</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/AssimilativeModel">
+                <skos:prefLabel xml:lang="en">Assimilative Model</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel">
                 <skos:prefLabel xml:lang="en">Mathematic Model</skos:prefLabel>
-                <skos:definition xml:lang="en">
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 15:30:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/Model"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling_Manual">
-                <skos:prefLabel xml:lang="en">Manual Spectrogram Scaling</skos:prefLabel>
-                <skos:definition xml:lang="en">Scaling of spectrograms using manual image editing software
-                </skos:definition>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2015-09-14 02:31:00.0</dc:date>
-                <skos:broader rdf:resource="https://ontology.espas-fp7.eu/computationType/SpectrogramScaling"/>
+                <skos:definition xml:lang="en">Model computation based on purely mathematical considerations. Compare to theoretical model based on first-principle physics approach.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Fitting"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Geometry"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Tomography"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/DiscreteLineIntegral"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MappingFunction"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://ontology.espas-fp7.eu/computationType/Software">
-                <skos:prefLabel xml:lang="en">Software</skos:prefLabel>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Fitting">
+                <skos:prefLabel xml:lang="en">Fitting a parametric model to given data</skos:prefLabel>
+                <dc:date>2022-10-19 10:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Family of techniques that find the best-fit parameters of a model function to given data</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Geometry">
+                <skos:prefLabel xml:lang="en">Computations based on the geometric treatment of the problem</skos:prefLabel>
+                <dc:date>2022-10-19 11:02:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/Tomography">
+                <skos:prefLabel xml:lang="en">Computations based on the tomographic considerations</skos:prefLabel>
+                <dc:date>2022-12-05 08:15:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+                <!-- TODO: this will be likely expanded to add narrower defintiions of different tomography techniques -->
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/DiscreteLineIntegral">
+                <skos:prefLabel xml:lang="en">Line Integral along a path in 1D</skos:prefLabel>
+                <dc:date>2022-12-20 08:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">An integral of a descrete function (i.e., sum of the function values) along a 1D path</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/MappingFunction">
+                <skos:prefLabel xml:lang="en">Slant-to-Vertical TEC Mapping Function</skos:prefLabel>
+                <dc:date>2022-12-20 08:54:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Conversion of slant to vertical TEC</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MathematicalModel"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SemiEmpiricalModel">
+                <skos:prefLabel xml:lang="en">Semi-Empirical Model</skos:prefLabel>
+                <dc:date>2023-04-18 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Semi-empirical models are based on previously observed system behavior (empirical) yet data-driven to match current conditions</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing">
+                <skos:prefLabel xml:lang="en">Measurement Processing</skos:prefLabel>
                 <skos:definition xml:lang="en">
+                    Computation steps applied to measurement data in order to select, condition (improve quality), 
+                    or derive new observed properties
                 </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-12-05 15:18:00.0</dc:date>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/IonogramScaling"/>
-                <skos:narrower rdf:resource="https://ontology.espas-fp7.eu/computationType/PlasmagramScaling"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/DataConditioning"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/GNSS-SignalProcessing"/>
             </skos:Concept>
         </skos:member>
-</skos:ConceptScheme>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling">
+                <skos:prefLabel xml:lang="en">Ionogram Scaling Techniques</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Automatic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Automatic">
+                <skos:prefLabel xml:lang="en">Automatically Scaled Ionogram</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual">
+                <skos:prefLabel xml:lang="en">Manually Scaled Ionogram</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling">
+                <skos:prefLabel xml:lang="en">Plasmagram Scaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling plasmagram image to derived secondary products such as traces, resonance frequencies, profiles of electron density</skos:definition>
+                <dc:date>2013-12-05 15:22:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling_Automatic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling_Manual"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling_Manual">
+                <skos:prefLabel xml:lang="en">Manual Plasmagram Scaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling plasmagrams using an interactive manual editor software</skos:definition>
+                <dc:date>2013-12-05 15:19:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling_Automatic">
+                <skos:prefLabel xml:lang="en">Plasmagram Autoscaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling plasmagrams using an intelligent system software</skos:definition>
+                <dc:date>2013-12-05 15:21:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/PlasmagramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SemiTheoreticalModel">
+                <skos:prefLabel xml:lang="en">Semi Theoretical</skos:prefLabel>
+                <dc:date>2014-05-04 14:31:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/Model"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling">
+                <skos:prefLabel xml:lang="en">Spectrogram Scaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling of spectrogram image to obtained secondary data products such as electron plasma and electron gyro-frequency</skos:definition>
+                <dc:date>2015-09-14 02:33:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Automatic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Manual"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Manual">
+                <skos:prefLabel xml:lang="en">Manual Spectrogram Scaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling of spectrograms using manual image editing software</skos:definition>
+                <dc:date>2015-09-14 02:31:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Automatic">
+                <skos:prefLabel xml:lang="en">Spectrogram Autoscaling</skos:prefLabel>
+                <skos:definition xml:lang="en">Scaling of spectrograms using an intelligent system software</skos:definition>
+                <dc:date>2015-09-14 02:33:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/DataConditioning">
+                <skos:prefLabel xml:lang="en">Data Conditioning</skos:prefLabel>
+                <skos:definition xml:lang="en">
+                    A variety of computational techniques that select/subset and improve quality of measurement data.
+                </skos:definition>
+                <dc:date>2015-09-14 02:33:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Automatic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/SpectrogramScaling_Manual"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/computationType/GNSS-SignalProcessing">
+                <skos:prefLabel xml:lang="en">GNSS Signal Processing</skos:prefLabel>
+                <skos:definition xml:lang="en">
+                    A class of signal processing techniques specific to GNSS (both ground and spaceborn reception)
+                </skos:definition>
+                <dc:date>2022-12-01 09:48:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/computationType/MeasurementProcessing"/>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
 </rdf:RDF>

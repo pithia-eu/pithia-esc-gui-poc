@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag">
+        <skos:prefLabel xml:lang="en">PITHIA Data Quality Flag</skos:prefLabel>
+        <dc:description>DQ flag describes measures taken to clean and validate the data, as well as characterize the residual data noise. It is distinct from another data qualifier used in the specification of Acquisition and Computation called Data Level that does not describe the data quality but rather characterizes the amount of data processing applied to the measurements to obtain higher level data products (in terms of the observed properties). Commonly, Data Level 1 refers to observed properties of the instrument probing signal while Data Level 2 corresponds to the derived geophysical properties of the Feature of Interest.</dc:description>
+        <dc:date>2022-08-15 23:07:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0">
+                <skos:prefLabel xml:lang="en">Data Quality 0 (RAW)</skos:prefLabel>
+                <dc:date>2022-08-15 23:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">When no consideration is made to the evaluation of the data product quality, DQ flag is zero</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1">
+                <skos:prefLabel xml:lang="en">Data Quality 1 (CLEAN)</skos:prefLabel>
+                <dc:date>2022-08-15 23:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The CLEAN flag is assigned to report the data conditioning capability of the Computation that applies automatic measures to exclude data noise. Example data conditioning algorithms are: detection/removal of data outliers, filtering to exclude data jitter, content sanity checks against physical criteria (e.g., exclusion of negative density or altitude values, or other comparisons against established threshold values).</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2">
+                <skos:prefLabel xml:lang="en">Data Quality 2 (EVALUATED)</skos:prefLabel>
+                <dc:date>2022-08-15 23:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The EVALUATED flag is assigned to those Data Collections and their Computation steps that provide confidence and uncertainty metrics evaluated automatically. The metrics may be related to observed data precision (as expressed by the standard deviation of repeated measurements), previous statistical error analysis, inter-comparisons of the ensemble computations running in parallel.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3">
+                <skos:prefLabel xml:lang="en">Data Quality 3 (VERIFIED-CLEAN)</skos:prefLabel>
+                <dc:date>2022-08-15 23:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The VERIFIED-CLEAN flag is given to data collections and their computation steps that involve human experts to ensure the removal of data noise.    A typical example would be manual scaling of ionograms to remove the artifacts of autoscaling.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ4">
+                <skos:prefLabel xml:lang="en">Data Quality 4 (VALIDATED)</skos:prefLabel>
+                <dc:date>2022-04-28 10:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Scientific data of the best quality are additionally validated by comparisons against independent measurements or models. Such Data Collections and Catalog Subsets are part of the consortium of models and measurements used collectively for analysis of the Feature of Interest and confirmed to agree in their descriptions. Typical examples arise in event studies involving multiple instruments and models, or specific �CalVal� campaigns to validate novel instrumentation. For example, joint analysis of the peak density height measurements in the ionosphere as observed by ionosonde, incoherent radar, and radio occultation network can result in a Catalog Entry Subset with the assigned VALIDATED flag.</skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

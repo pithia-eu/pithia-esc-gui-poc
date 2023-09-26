@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole">
+        <skos:prefLabel xml:lang="en">PITHIA Related Party Role</skos:prefLabel>
+        <dc:description>This vocabulary contains the different terms that describe the role of a related party.</dc:description>
+        <dc:date>2013-05-31 15:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PrincipalInvestigator">
+                <skos:prefLabel xml:lang="en">Principal Investigator</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Holder">
+                <skos:prefLabel xml:lang="en">Holder</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider">
+                <skos:prefLabel xml:lang="en">Data Provider</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact">
+                <skos:prefLabel xml:lang="en">Point of contact</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/ServiceProvider">
+                <skos:prefLabel xml:lang="en">Service Provider</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Manager">
+                <skos:prefLabel xml:lang="en">Manager</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Operator">
+                <skos:prefLabel xml:lang="en">Operator</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/CoInvestigator">
+                <skos:prefLabel xml:lang="en">CoInvestigator</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Manufacturer">
+                <skos:prefLabel xml:lang="en">Manufacturer</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Developer">
+                <skos:prefLabel xml:lang="en">Developer</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Participant">
+                <skos:prefLabel xml:lang="en">Participant</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Partner">
+                <skos:prefLabel xml:lang="en">Partner</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PITHIADataProvider">
+                <skos:prefLabel xml:lang="en">PITHIA Data Provider</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Distributor">
+                <skos:prefLabel xml:lang="en">Distributor</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Coordinator">
+                <skos:prefLabel xml:lang="en">Coordinator</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Author">
+                <skos:prefLabel xml:lang="en">Author</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PITHIAPointOfContact">
+                <skos:prefLabel xml:lang="en">PITHIA Point Of Contact</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Director">
+                <skos:prefLabel xml:lang="en">Director</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/BusinessManager">
+                <skos:prefLabel xml:lang="en">Business Manager</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>

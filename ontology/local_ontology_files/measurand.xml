@@ -1,660 +1,626 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:espas="http://ontology.espas-fp7.eu/espasdefinitions#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"  xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#">
-    <skos:ConceptScheme rdf:about="http://ontology.espas-fp7.eu/measurand">
-        <skos:prefLabel>ESPAS Measurand</skos:prefLabel>
-        <dc:description>Measurand is measurable quantity of the Observed Property, whose value is estimated in the course of an observation, a calculation, or a simulation. Top level of the Measurand tree has the following major branches: Altitude, Current, Density, Direction, Distance, Energy, Flux, Frequency, Potential, Pressure, Strength, Temperature, Travel Time, Velocity.           
-        </dc:description>
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand">
+        <skos:prefLabel xml:lang="en">PITHIA Measurand</skos:prefLabel>
+        <dc:description>Measurand is measurable quantity of the Observed Property, whose value is estimated in the course of an observation, a calculation, or a simulation. Top level of the Measurand tree has the following major branches: Altitude, Current, Density, Direction, Distance, Energy, Flux, Frequency, Potential, Pressure, Strength, Temperature, Travel Time, Velocity.</dc:description>
         <dc:date>2013-05-31 21:30:00.0</dc:date>
         <owlxml:versionInfo>0.1</owlxml:versionInfo>
-        <dc:publisher>ESPAS</dc:publisher>
+        <dc:publisher>PITHIA</dc:publisher>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Category">
-                <skos:prefLabel xml:lang="en">Category</skos:prefLabel>
-                <skos:altLabel xml:lang="en">Cat</skos:altLabel>
-                <skos:definition xml:lang="en">A classification of the observed property in one of the abstract concepts using qualitative or quantitative criteria
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/Class"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/Type"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Phase">
-                <skos:prefLabel xml:lang="en">Phase</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;</skos:altLabel>
-                <skos:definition xml:lang="en">Phase of the oscillating quantity
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2015-10-30 18:35:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Strength">
-                <skos:prefLabel xml:lang="en">Strength</skos:prefLabel>
-                <skos:altLabel xml:lang="en">F</skos:altLabel>
-                <skos:definition xml:lang="en">The magnitude of a vector field
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Temperature">
-                <skos:prefLabel xml:lang="en">Temperature</skos:prefLabel>
-                <skos:altLabel xml:lang="en">T</skos:altLabel>
-                <skos:definition xml:lang="en">A measure of the kinetic energy of random motion with respect to the average; temperature is properly defined only for an equilibrium particle distribution (Maxwellian distribution)
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralMagnetic">
-                <skos:prefLabel xml:lang="en">Magnetic Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;b</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of magnetic field through a reference surface
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegral"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Density">
-                <skos:prefLabel xml:lang="en">Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">N</skos:altLabel>
-                <skos:definition xml:lang="en">A measure of a physical quantity per unit of length, area, or volume
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/NumberDensity"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/ColumnarContent"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Altitude">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Altitude">
                 <skos:prefLabel xml:lang="en">Altitude</skos:prefLabel>
                 <skos:altLabel xml:lang="en">h</skos:altLabel>
-                <skos:definition xml:lang="en">The height above sea level
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The height above sea level</skos:definition>
                 <dc:date>2015-09-02 14:05:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Position"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Position"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Frequency_DispersionShift">
-                <skos:prefLabel xml:lang="en">Frequency Shift from Wave Dispersion</skos:prefLabel>
-                <skos:altLabel xml:lang="en">fd</skos:altLabel>
-                <skos:definition xml:lang="en">A shift in the detected frequencies of waves, from those expected from dispersion theory based on a Maxwellian distribution of particle velocities, resulting from high-velocity tails on the velocity-distribution function - often described by a kappa distribution
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-10 18:07:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/CriticalFrequency">
-                <skos:prefLabel xml:lang="en">Critical Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">The limiting frequency of a radio wave at which an ionospheric layer reflects and transmits equally, and above which it penetrates through the layer
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Category">
+                <skos:prefLabel xml:lang="en">Category</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Cat</skos:altLabel>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Thickness">
-                <skos:prefLabel xml:lang="en">Thickness</skos:prefLabel>
-                <skos:altLabel xml:lang="en">t</skos:altLabel>
-                <skos:definition xml:lang="en">The distance between two opposite surfaces of an object, usually along the dimension of smallest measure
-                </skos:definition>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Distance"/>
+                <skos:definition xml:lang="en">A classification of the observed property in one of the abstract concepts using qualitative or quantitative criteria</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Class"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Type"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Current">
-                <skos:prefLabel xml:lang="en">Current</skos:prefLabel>
-                <skos:altLabel xml:lang="en">I</skos:altLabel>
-                <skos:definition xml:lang="en">The flow of electrons through a conductor caused by a potential difference
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Potential">
-                <skos:prefLabel xml:lang="en">Potential</skos:prefLabel>
-                <skos:altLabel xml:lang="en">P</skos:altLabel>
-                <skos:definition xml:lang="en">A field which obeys Laplace&#39;s Equation
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/ElectricPotential"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Velocity">
-                <skos:prefLabel xml:lang="en">Velocity</skos:prefLabel>
-                <skos:altLabel xml:lang="en">V</skos:altLabel>
-                <skos:definition xml:lang="en">Rate of change of position
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/BulkVelocity"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FlowVelocity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Type">
-                <skos:prefLabel xml:lang="en">Type</skos:prefLabel>
-                <skos:altLabel xml:lang="en">Type</skos:altLabel>
-                <skos:definition xml:lang="en">A category of the observed property that may share some of its defining criteria with other categories
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Category"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Composition">
-                <skos:prefLabel xml:lang="en">Composition</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[x]/[y]</skos:altLabel>
-                <skos:definition xml:lang="en">The nature and proportions of the consituent elements
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/ScaleHeight">
-                <skos:prefLabel xml:lang="en">Scale Height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">H</skos:altLabel>
-                <skos:definition xml:lang="en">A distance over which a quantity decreases by a factor of e
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Distance"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/BulkVelocity">
-                <skos:prefLabel xml:lang="en">Bulk Velocity</skos:prefLabel>
-                <skos:altLabel xml:lang="en">V</skos:altLabel>
-                <skos:definition xml:lang="en">Average velocity of a collection of particles
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Velocity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Direction">
-                <skos:prefLabel xml:lang="en">Direction</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;alpha;</skos:altLabel>
-                <skos:definition xml:lang="en">The course along which an object points or moves expressed as a vector in a reference system of coordinates
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Power">
-                <skos:prefLabel xml:lang="en">Power</skos:prefLabel>
-                <skos:altLabel xml:lang="en">W</skos:altLabel>
-                <skos:definition xml:lang="en">Rate at which energy is transferred
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/SpectralDensity">
-                <skos:prefLabel xml:lang="en">Spectral Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">S</skos:altLabel>
-                <skos:definition xml:lang="en">Spectrum of a time-domain series of a wave signal variation showing how signal power or amplitude is distributed in the frequency domain
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/PowerSpectralDensity"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/AmplitudeSpectralDensity"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/VoltageSpectralDensity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/EnergyDensity">
-                <skos:prefLabel xml:lang="en">Energy Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">U</skos:altLabel>
-                <skos:definition xml:lang="en">The amount of energy stored in a system per unit volume
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Energy"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FrequencyBand">
-                <skos:prefLabel xml:lang="en">Frequency Band</skos:prefLabel>
-                <skos:altLabel xml:lang="en">df</skos:altLabel>
-                <skos:definition xml:lang="en">A range of frequencies occupied by a cyclic process
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/AmplitudeSpectralDensity">
-                <skos:prefLabel xml:lang="en">Amplitude Spectral Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">ASD</skos:altLabel>
-                <skos:definition xml:lang="en">The square root of Power Spectral Density
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/SpectralDensity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/TopFrequency">
-                <skos:prefLabel xml:lang="en">Top Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">The highest frequency at which an echo trace is obtained from the layer at vertical incidence
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Pressure">
-                <skos:prefLabel xml:lang="en">Pressure</skos:prefLabel>
-                <skos:altLabel xml:lang="en">P</skos:altLabel>
-                <skos:definition xml:lang="en">The force per unit area exerted by a particle distribution or field
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/DopplerFrequencyShift">
-                <skos:prefLabel xml:lang="en">Doppler Frequency Shift</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">Change in the propagating wave frequency due to relative motion of the source, the observer, the reflector, or the propagation medium
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/CutoffFrequency">
-                <skos:prefLabel xml:lang="en">Cutoff Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">The lowest frequency for which a wave mode will propagate in the medium
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/ColumnarContent">
-                <skos:prefLabel xml:lang="en">Columnar Content</skos:prefLabel>
-                <skos:altLabel xml:lang="en">I</skos:altLabel>
-                <skos:definition xml:lang="en">The number of particles per unit area in the column between observer and target
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Density"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/ResonanceFrequency">
-                <skos:prefLabel xml:lang="en">Resonance Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">Classic definition: a frequency at which a cyclic process produces a large amplitude oscillation in response to a small periodic stimulant force because it stores vibrational energy. Radio sounding in space definition: a frequency observed on space-borne radio sounders where slowly propagating plasma waves, either directly stimulated by the sounder or emitted from the ambient sounder-stimulated plasma, are received after various delay times following the transmitted pulse all within the bandwidth of the receiver giving the appearance of a spike-like signature, which has been traditionally called a resonance, on virtual-range vs. frequency displays.
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-10 18:03:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Class">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Class">
                 <skos:prefLabel xml:lang="en">Class</skos:prefLabel>
                 <skos:altLabel xml:lang="en">Class</skos:altLabel>
-                <skos:definition xml:lang="en">A distinct category of the observed property that does not intersect with other categories
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Category"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A distinct category of the observed property that does not intersect with other categories</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Category"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Count">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Type">
+                <skos:prefLabel xml:lang="en">Type</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Type</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A category of the observed property that may share some of its defining criteria with other categories</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Category"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Composition">
+                <skos:prefLabel xml:lang="en">Composition</skos:prefLabel>
+                <skos:altLabel xml:lang="en">[x]/[y]</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The nature and proportions of the consituent elements</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Count">
                 <skos:prefLabel xml:lang="en">Count</skos:prefLabel>
                 <skos:altLabel xml:lang="en">N</skos:altLabel>
-                <skos:definition xml:lang="en">A whole number of descrete elements, obtained by counting
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/CountRate"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Distance">
-                <skos:prefLabel xml:lang="en">Distance</skos:prefLabel>
-                <skos:altLabel xml:lang="en">d</skos:altLabel>
-                <skos:definition xml:lang="en">A measure of space between two points
-                </skos:definition>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/Thickness"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/SemiThickness"/>
+                <skos:definition xml:lang="en">A whole number of descrete elements, obtained by counting</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/CountRate"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/NumberDensity">
-                <skos:prefLabel xml:lang="en">Number Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">N</skos:altLabel>
-                <skos:definition xml:lang="en">Concentration of countable particles in the three-dimensional physical space
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Density"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/BoundaryPosition">
-                <skos:prefLabel xml:lang="en">Boundary Position</skos:prefLabel>
-                <skos:altLabel xml:lang="en">L</skos:altLabel>
-                <skos:definition xml:lang="en">Position of points enclosing an object or separating two media
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Position"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/DifferentialTravelTime">
-                <skos:prefLabel xml:lang="en">Differential Travel Time</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Delta;t</skos:altLabel>
-                <skos:definition xml:lang="en">Difference between travel times of two signals of different frequencies traveling from the source to the observer
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/TravelTime"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/MaximumUsableFrequency">
-                <skos:prefLabel xml:lang="en">Maximum Usable Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">In radio transmission via reflection from ionized layers of the ionosphere, the upper frequency limit that can be used for transmission between two points
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxTransportParticle">
-                <skos:prefLabel xml:lang="en">Particle Transport Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;n</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of particles per unit area
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxTransport"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/CollisionFrequency">
-                <skos:prefLabel xml:lang="en">Collision Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">v</skos:altLabel>
-                <skos:definition xml:lang="en">The average number of collisions between objects per unit of time
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Flux">
-                <skos:prefLabel xml:lang="en">Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;</skos:altLabel>
-                <skos:definition xml:lang="en">Flow of a physical property in space
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxTransport"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegral"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxTransportEnergy">
-                <skos:prefLabel xml:lang="en">Energy Transport Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;w</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of energy per unit area (irradiance)
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxTransport"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FlowVelocity">
-                <skos:prefLabel xml:lang="en">Bulk Velocity</skos:prefLabel>
-                <skos:altLabel xml:lang="en">V</skos:altLabel>
-                <skos:definition xml:lang="en">The volume of matter passing through a unit area perpendicular to the direction of flow in a unit of time
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Velocity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/ModelParameter">
-                <skos:prefLabel xml:lang="en">Model Parameter</skos:prefLabel>
-                <skos:altLabel xml:lang="en">M</skos:altLabel>
-                <skos:definition xml:lang="en">A value derived from acquired observation data to be used as a model input
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Position">
-                <skos:prefLabel xml:lang="en">Position</skos:prefLabel>
-                <skos:altLabel xml:lang="en">L</skos:altLabel>
-                <skos:definition xml:lang="en">Set of values specifying location of the feature of interest within a reference system of coordinates
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2015-09-02 14:35:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/BoundaryPosition"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralPoynting">
-                <skos:prefLabel xml:lang="en">Poynting Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;p</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of electromagnetic energy through a reference surface
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegral"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/VoltageSpectralDensity">
-                <skos:prefLabel xml:lang="en">Amplitude Spectral Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">VSD</skos:altLabel>
-                <skos:definition xml:lang="en">For voltage signals, VSD is Amplitude Spectral Density expressed in V/root-Hz units
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/SpectralDensity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/SemiThickness">
-                <skos:prefLabel xml:lang="en">SemiThickness</skos:prefLabel>
-                <skos:altLabel xml:lang="en">y</skos:altLabel>
-                <skos:definition xml:lang="en">Half the thickness of an object
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Distance"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Polarization">
-                <skos:prefLabel xml:lang="en">Mode of polarization</skos:prefLabel>
-                <skos:altLabel xml:lang="en">P</skos:altLabel>
-                <skos:definition xml:lang="en">Mode of propagation derived from acquired observation data
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/AbsoluteTravelTime">
-                <skos:prefLabel xml:lang="en">Absolute Travel Time</skos:prefLabel>
-                <skos:altLabel xml:lang="en">t</skos:altLabel>
-                <skos:definition xml:lang="en">Travel time measured in absolute units of time
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/TravelTime"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxTransport">
-                <skos:prefLabel xml:lang="en">Transport Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;t</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of a transported property per unit area
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxTransportParticle"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxTransportEnergy"/>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Flux"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Energy">
-                <skos:prefLabel xml:lang="en">Energy</skos:prefLabel>
-                <skos:altLabel xml:lang="en">E</skos:altLabel>
-                <skos:definition xml:lang="en">The capacity for doing work as measured by the capability of doing work (potential energy) or the conversion of this capability to motion (kinetic energy)
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/EnergyDensity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralElectric">
-                <skos:prefLabel xml:lang="en">Electric Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">&amp;Phi;e</skos:altLabel>
-                <skos:definition xml:lang="en">Flow rate of electric field through a reference surface
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegral"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/PowerSpectralDensity">
-                <skos:prefLabel xml:lang="en">Power Spectral Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">PSD</skos:altLabel>
-                <skos:definition xml:lang="en">The spectral density of a wave signal describing the power carried by the wave per unit frequency
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/SpectralDensity"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/CountRate">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/CountRate">
                 <skos:prefLabel xml:lang="en">Count Rate</skos:prefLabel>
                 <skos:altLabel xml:lang="en">R</skos:altLabel>
-                <skos:definition xml:lang="en">The count per unit time
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Count"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The count per unit time</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Count"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/ElectricPotential">
-                <skos:prefLabel xml:lang="en">Electric Potential</skos:prefLabel>
-                <skos:altLabel xml:lang="en">V</skos:altLabel>
-                <skos:definition xml:lang="en">Amount of potential energy that a unit charge would have when placed in electric field
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Current">
+                <skos:prefLabel xml:lang="en">Current</skos:prefLabel>
+                <skos:altLabel xml:lang="en">I</skos:altLabel>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Potential"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The flow of electrons through a conductor caused by a potential difference</skos:definition>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/Frequency">
-                <skos:prefLabel xml:lang="en">Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">f</skos:altLabel>
-                <skos:definition xml:lang="en">Number of cycles per unit time for a cyclical process
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <dc:date>2013-12-10 18:08:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/BlanketingFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/CollisionFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/CriticalFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/CutoffFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FrequencyBand"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency_DispersionShift"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/MaximumUsableFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/ResonanceFrequency"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/TopFrequency"/>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/BlanketingFrequency">
-                <skos:prefLabel xml:lang="en">Blanketing Frequency</skos:prefLabel>
-                <skos:altLabel xml:lang="en">fb</skos:altLabel>
-                <skos:definition xml:lang="en">The lowest frequency at which an ionospheric layer begins to become transparent
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Density">
+                <skos:prefLabel xml:lang="en">Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">N</skos:altLabel>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Frequency"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A measure of a physical quantity per unit of length, area, or volume</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/NumberDensity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegral">
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/NumberDensity">
+                <skos:prefLabel xml:lang="en">Number Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">N</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Concentration of countable particles in the three-dimensional physical space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Density"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent">
+                <skos:prefLabel xml:lang="en">Columnar Content</skos:prefLabel>
+                <skos:altLabel xml:lang="en">I</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The number of particles per unit area in the column between observer and target</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Density"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Direction">
+                <skos:prefLabel xml:lang="en">Direction</skos:prefLabel>
+                <dc:date>2023-03-21 07:30:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The course along which an object points or moves expressed as a vector in a reference system of coordinates</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Distance">
+                <skos:prefLabel xml:lang="en">Distance</skos:prefLabel>
+                <skos:altLabel xml:lang="en">d</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A measure of space between two points</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Thickness"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/SemiThickness"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ScaleHeight"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Thickness">
+                <skos:prefLabel xml:lang="en">Thickness</skos:prefLabel>
+                <skos:altLabel xml:lang="en">t</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The distance between two opposite surfaces of an object, usually along the dimension of smallest measure</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Distance"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/SemiThickness">
+                <skos:prefLabel xml:lang="en">SemiThickness</skos:prefLabel>
+                <skos:altLabel xml:lang="en">y</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Half the thickness of an object</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Distance"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/ScaleHeight">
+                <skos:prefLabel xml:lang="en">Scale Height</skos:prefLabel>
+                <skos:altLabel xml:lang="en">H</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A distance over which a quantity decreases by a factor of e</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Distance"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Energy">
+                <skos:prefLabel xml:lang="en">Energy</skos:prefLabel>
+                <skos:altLabel xml:lang="en">E</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The capacity for doing work as measured by the capability of doing work (potential energy) or the conversion of this capability to motion (kinetic energy)</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/EnergyDensity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/EnergyDensity">
+                <skos:prefLabel xml:lang="en">Energy Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">U</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The amount of energy stored in a system per unit volume</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Energy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Flux">
+                <skos:prefLabel xml:lang="en">Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow of a physical property in space</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransport"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransport">
+                <skos:prefLabel xml:lang="en">Transport Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;t</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of a transported property per unit area</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Flux"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransportParticle"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransportEnergy"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransportParticle">
+                <skos:prefLabel xml:lang="en">Particle Transport Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;n</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of particles per unit area</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransport"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransportEnergy">
+                <skos:prefLabel xml:lang="en">Energy Transport Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;w</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of energy per unit area (irradiance)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransport"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegral">
                 <skos:prefLabel xml:lang="en">Integral Flux over Surface</skos:prefLabel>
                 <skos:altLabel xml:lang="en">&amp;Phi;f</skos:altLabel>
-                <skos:definition xml:lang="en">Surface integral of a vector field
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralPoynting"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralElectric"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/FluxSurfaceIntegralMagnetic"/>
-                <skos:broader rdf:resource="http://ontology.espas-fp7.eu/measurand/Flux"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Surface integral of a vector field</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Flux"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralPoynting"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralElectric"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralMagnetic"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="http://ontology.espas-fp7.eu/measurand/TravelTime">
-                <skos:prefLabel xml:lang="en">Travel Time</skos:prefLabel>
-                <skos:altLabel xml:lang="en">t</skos:altLabel>
-                <skos:definition xml:lang="en">Time taken by the probing signal to travel from the source to the observer
-                </skos:definition>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralPoynting">
+                <skos:prefLabel xml:lang="en">Poynting Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;p</skos:altLabel>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/DifferentialTravelTime"/>
-                <skos:narrower rdf:resource="http://ontology.espas-fp7.eu/measurand/AbsoluteTravelTime"/>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of electromagnetic energy through a reference surface</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegral"/>
             </skos:Concept>
         </skos:member>
-</skos:ConceptScheme>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralElectric">
+                <skos:prefLabel xml:lang="en">Electric Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;e</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of electric field through a reference surface</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegralMagnetic">
+                <skos:prefLabel xml:lang="en">Magnetic Flux</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Phi;b</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of magnetic field through a reference surface</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxSurfaceIntegral"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency">
+                <skos:prefLabel xml:lang="en">Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <skos:definition xml:lang="en">Number of cycles per unit time for a cyclical process</skos:definition>
+                <dc:date>2013-12-10 18:08:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BlanketingFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/CollisionFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/CriticalFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/CutoffFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FrequencyBand"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency_DispersionShift"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/MaximumUsableFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ResonanceFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/TopFrequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/CriticalFrequency">
+                <skos:prefLabel xml:lang="en">Critical Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The limiting frequency of a radio wave, normally incident at a plasma layer, at which the plasma layer reflects and transmits equally and above which the wave penetrates through the layer</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/CutoffFrequency">
+                <skos:prefLabel xml:lang="en">Cutoff Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The lowest frequency for which a wave mode will propagate in the medium</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/MaximumUsableFrequency">
+                <skos:prefLabel xml:lang="en">Maximum Usable Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">In radio transmission via reflection from ionized layers of the ionosphere, the upper frequency limit that can be used for transmission between two points</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/ResonanceFrequency">
+                <skos:prefLabel xml:lang="en">Resonance Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <skos:definition xml:lang="en">Classic definition: a frequency at which a cyclic process produces a large amplitude oscillation in response to a small periodic stimulant force because it stores vibrational energy. Radio sounding in space definition: a frequency observed on space-borne radio sounders where slowly propagating plasma waves, either directly stimulated by the sounder or emitted from the ambient sounder-stimulated plasma, are received after various delay times following the transmitted pulse all within the bandwidth of the receiver giving the appearance of a spike-like signature, which has been traditionally called a resonance, on virtual-range vs. frequency displays.</skos:definition>
+                <dc:date>2013-12-10 18:03:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FrequencyBand">
+                <skos:prefLabel xml:lang="en">Frequency Band</skos:prefLabel>
+                <skos:altLabel xml:lang="en">df</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A range of frequencies occupied by a cyclic process</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/BlanketingFrequency">
+                <skos:prefLabel xml:lang="en">Blanketing Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">fb</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The lowest frequency at which an ionospheric layer begins to become transparent</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/CollisionFrequency">
+                <skos:prefLabel xml:lang="en">Collision Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">v</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The average number of collisions between objects per unit of time</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/DopplerFrequencyShift">
+                <skos:prefLabel xml:lang="en">Doppler Frequency Shift</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Change in the propagating wave frequency due to relative motion of the source, the observer, the reflector, or the propagation medium</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/TopFrequency">
+                <skos:prefLabel xml:lang="en">Top Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">f</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The highest frequency at which an echo trace is obtained from the layer at vertical incidence</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/ModelParameter">
+                <skos:prefLabel xml:lang="en">Model Parameter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">M</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A value derived from acquired observation data to be used as a model input</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Polarization">
+                <skos:prefLabel xml:lang="en">Mode of polarization</skos:prefLabel>
+                <skos:altLabel xml:lang="en">P</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Mode of propagation derived from acquired observation data</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Time">
+                <skos:prefLabel xml:lang="en">Time</skos:prefLabel>
+                <skos:altLabel xml:lang="en">t</skos:altLabel>
+                <skos:definition xml:lang="en">Time [of an event]</skos:definition>
+                <dc:date>2022-12-01 10:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Position">
+                <skos:prefLabel xml:lang="en">Position</skos:prefLabel>
+                <skos:altLabel xml:lang="en">L</skos:altLabel>
+                <skos:definition xml:lang="en">Set of values specifying location of the feature of interest within a reference system of coordinates</skos:definition>
+                <dc:date>2015-09-02 14:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BoundaryPosition"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/BoundaryPosition">
+                <skos:prefLabel xml:lang="en">Boundary Position</skos:prefLabel>
+                <skos:altLabel xml:lang="en">L</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Position of points enclosing an object or separating two media</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Position"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Potential">
+                <skos:prefLabel xml:lang="en">Potential</skos:prefLabel>
+                <skos:altLabel xml:lang="en">P</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A field which obeys Laplace's Equation</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ElectricPotential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/ElectricPotential">
+                <skos:prefLabel xml:lang="en">Electric Potential</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Amount of potential energy that a unit charge would have when placed in electric field</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Potential"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Pressure">
+                <skos:prefLabel xml:lang="en">Pressure</skos:prefLabel>
+                <skos:altLabel xml:lang="en">P</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The force per unit area exerted by a particle distribution or field</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Power">
+                <skos:prefLabel xml:lang="en">Power</skos:prefLabel>
+                <skos:altLabel xml:lang="en">W</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Rate at which energy is transferred</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/SpectralDensity">
+                <skos:prefLabel xml:lang="en">Spectral Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">S</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Spectrum of a time-domain series of a wave signal variation showing how signal power or amplitude is distributed in the frequency domain</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/PowerSpectralDensity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/AmplitudeSpectralDensity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/VoltageSpectralDensity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/PowerSpectralDensity">
+                <skos:prefLabel xml:lang="en">Power Spectral Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">PSD</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The spectral density of a wave signal describing the power carried by the wave per unit frequency</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/SpectralDensity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/AmplitudeSpectralDensity">
+                <skos:prefLabel xml:lang="en">Amplitude Spectral Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">ASD</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The square root of Power Spectral Density</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/SpectralDensity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/VoltageSpectralDensity">
+                <skos:prefLabel xml:lang="en">Amplitude Spectral Density</skos:prefLabel>
+                <skos:altLabel xml:lang="en">VSD</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">For voltage signals, VSD is Amplitude Spectral Density expressed in V/root-Hz units</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/SpectralDensity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Strength">
+                <skos:prefLabel xml:lang="en">Strength</skos:prefLabel>
+                <skos:altLabel xml:lang="en">F</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The magnitude of a vector field</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Temperature">
+                <skos:prefLabel xml:lang="en">Temperature</skos:prefLabel>
+                <skos:altLabel xml:lang="en">T</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A measure of the kinetic energy of random motion with respect to the average; temperature is properly defined only for an equilibrium particle distribution (Maxwellian distribution)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Duration">
+                <skos:prefLabel xml:lang="en">Duration</skos:prefLabel>
+                <skos:altLabel xml:lang="en">t</skos:altLabel>
+                <dc:date>2023-08-09 08:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Interval of existence time</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/TravelTime"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/TravelTime">
+                <skos:prefLabel xml:lang="en">Travel Time</skos:prefLabel>
+                <skos:altLabel xml:lang="en">t</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Time taken by the probing signal to travel from the source to the observer</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Duration"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/DifferentialTravelTime"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/AbsoluteTravelTime"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/AbsoluteTravelTime">
+                <skos:prefLabel xml:lang="en">Absolute Travel Time</skos:prefLabel>
+                <skos:altLabel xml:lang="en">t</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Travel time measured in absolute units of time</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/TravelTime"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/DifferentialTravelTime">
+                <skos:prefLabel xml:lang="en">Differential Travel Time</skos:prefLabel>
+                <skos:altLabel xml:lang="en">&amp;Delta;t</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Difference between travel times of two signals of different frequencies traveling from the source to the observer</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/TravelTime"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Velocity">
+                <skos:prefLabel xml:lang="en">Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Rate of change of position</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FlowVelocity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity">
+                <skos:prefLabel xml:lang="en">Bulk Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Average velocity of a collection of particles</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Velocity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/FlowVelocity">
+                <skos:prefLabel xml:lang="en">Bulk Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The volume of matter passing through a unit area perpendicular to the direction of flow in a unit of time</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Velocity"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency_DispersionShift">
+                <skos:prefLabel xml:lang="en">Frequency Shift from Wave Dispersion</skos:prefLabel>
+                <skos:altLabel xml:lang="en">fd</skos:altLabel>
+                <skos:definition xml:lang="en">A shift in the detected frequencies of waves, from those expected from dispersion theory based on a Maxwellian distribution of particle velocities, resulting from high-velocity tails on the velocity-distribution function - often described by a kappa distribution</skos:definition>
+                <dc:date>2013-12-10 18:07:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Frequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/Phase">
+                <skos:prefLabel xml:lang="en">Phase</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Phi</skos:altLabel>
+                <skos:definition xml:lang="en">Phase of the oscillating quantity</skos:definition>
+                <dc:date>2015-10-30 18:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
 </rdf:RDF>

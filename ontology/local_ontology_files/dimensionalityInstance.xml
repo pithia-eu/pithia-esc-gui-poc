@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owlxml="http://www.w3.org/2006/12/owl2-xml#"
+>
+    <skos:ConceptScheme rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance">
+        <skos:prefLabel xml:lang="en">PITHIA Dimensionality Instance</skos:prefLabel>
+        <dc:description>It describes the data domain of the single instance of the measured observed property (e.g. 1D.point, 1D.Profile, 2D.Map, 2D.image).</dc:description>
+        <dc:date>2013-05-31 15:30:00.0</dc:date>
+        <owlxml:versionInfo>0.1</owlxml:versionInfo>
+        <dc:publisher>PITHIA</dc:publisher>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/0D">
+                <skos:prefLabel xml:lang="en">0D</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">No input independent variables</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/0DPoint"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/0DPoint">
+                <skos:prefLabel xml:lang="en">0D Point</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated at one point in space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/0D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1D">
+                <skos:prefLabel xml:lang="en">1D</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">One input independent variable</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfile"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrum"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DPoints"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfile">
+                <skos:prefLabel xml:lang="en">1D Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a profile over one independent variable</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileAltitude"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileRange"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileAltitude">
+                <skos:prefLabel xml:lang="en">1D Altitude Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a function of altitude</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfile"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileVertical"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileSlant"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileVertical">
+                <skos:prefLabel xml:lang="en">1D Vertical Altitude Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along the vertical line in geocentric coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileAltitude"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileSlant">
+                <skos:prefLabel xml:lang="en">1D Slant Altitude Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along a slant line in geocentric coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileAltitude"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileRange">
+                <skos:prefLabel xml:lang="en">1D Profile Range</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along a line in space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfile"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileLinearRange"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileFieldAligned"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileLinearRange">
+                <skos:prefLabel xml:lang="en">1D Linear Range Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along a straight line in space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileRange"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileFieldAligned">
+                <skos:prefLabel xml:lang="en">1D Field Aligned Profile</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along the magnetic field line in space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DProfileRange"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrum">
+                <skos:prefLabel xml:lang="en">1D Spectrum</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated over a non-spatial input variable (frequency, energy, angle)</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumEnergy"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumAngle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumFrequency">
+                <skos:prefLabel xml:lang="en">1D Frequency Spectrum</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in frequency domain</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrum"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumDopplerFrequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumDopplerFrequency">
+                <skos:prefLabel xml:lang="en">1D Doppler Frequency Spectrum</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in Doppler frequency domain</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumFrequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumEnergy">
+                <skos:prefLabel xml:lang="en">1D Energy Spectrum</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in energy domain</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrum"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrumAngle">
+                <skos:prefLabel xml:lang="en">1D Angle Spectrum</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated over a range of angles</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DSpectrum"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1DPoints">
+                <skos:prefLabel xml:lang="en">1D set of 0D Points</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated at several points in space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/1D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2D">
+                <skos:prefLabel xml:lang="en">2D</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Two input independent variables</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImage"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMap"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSection"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMultivaluePoints"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImage">
+                <skos:prefLabel xml:lang="en">2D Image</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as an (x,y) image</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageFrequencyRange"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageHeliogram"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageFrequencyRange">
+                <skos:prefLabel xml:lang="en">2DFrequency-Range Image</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a frequency (x) versus range (y) image</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImage"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImagePlasmagram"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram">
+                <skos:prefLabel xml:lang="en">2D Ionogram Image</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a frequency (x) versus range (y) ionogram</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageFrequencyRange"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImagePlasmagram">
+                <skos:prefLabel xml:lang="en">2D Plasmagram Image</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a frequency (x) versus range (y) plasmagram</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageFrequencyRange"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageHeliogram">
+                <skos:prefLabel xml:lang="en">2D Image of the Solar Disk</skos:prefLabel>
+                <dc:date>2023-05-04 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">White-light image of the Solar Disk</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImage"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMap">
+                <skos:prefLabel xml:lang="en">2D Map</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a horizontal map parallel to the Earth surface</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DGeographicMap"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DSkymap"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DGeographicMap">
+                <skos:prefLabel xml:lang="en">2D Geographic Map</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated as a latitude versus longitude map in GEO coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMap"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DSkymap">
+                <skos:prefLabel xml:lang="en">2D Skymap</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated over celestial sphere with radius and polar angle</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMap"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSection">
+                <skos:prefLabel xml:lang="en">2D Cross Section</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in a 2D plane intersecting 3D space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2D"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionOrbitalPlane"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagnetic"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionOrbitalPlane">
+                <skos:prefLabel xml:lang="en">2D Orbital Plane</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in the orbital plane of spacecraft</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagnetic">
+                <skos:prefLabel xml:lang="en">2D Geomagnetic Cross Section</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in a 2D plane oriented in 3D space with respect to magnetic field</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSection"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticMeridional"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticZonal"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticMeridional">
+                <skos:prefLabel xml:lang="en">2D Geomagnetic Meridional Cross Section</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in a 2D plane containing magnetic meridian</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagnetic"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticZonal">
+                <skos:prefLabel xml:lang="en">2D Geomagnetic Zonal Cross Section</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in a 2D plane containing magnetic parallel</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagnetic"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticEquatorial"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticEquatorial">
+                <skos:prefLabel xml:lang="en">2D Geomagnetic Equatorial Cross Section</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in a 2D plane of magnetic equator</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DCrossSectionGeomagneticZonal"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DMultivaluePoints">
+                <skos:prefLabel xml:lang="en">Multi-point 1D dataset with each point reporting a 1D set of values</skos:prefLabel>
+                <dc:date>2022-12-05 08:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated at several points in space, each point presenting a set of values; commonly used for source STEC maps</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3D">
+                <skos:prefLabel xml:lang="en">3D</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Three input independent variables</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3DSurface"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3DVolume"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3DSurface">
+                <skos:prefLabel xml:lang="en">3D Surface</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated along a surface in 3D space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3DVolume">
+                <skos:prefLabel xml:lang="en">3D Volume</skos:prefLabel>
+                <dc:date>2013-05-31 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Observed Property evaluated in 3D volume space</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/3D"/>
+            </skos:Concept>
+        </skos:member>
+    </skos:ConceptScheme>
+</rdf:RDF>
