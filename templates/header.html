@@ -103,6 +103,7 @@
                     <p class="institution-for-login-session mt-4 mb-0"><small class="text-secondary d-block">Current Institution:</small>{{ request.session.institution_for_login_session }}</p>
                 </form>
                 <hr class="dropdown-divider">
+                {% endif %}
                 <div class="dropdown-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear me-1" viewBox="0 0 16 16">
                         <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -113,7 +114,6 @@
                 <a href="{% url 'home' %}#current-institution-management" class="dropdown-item">My Current Institution</a>
                 <a href="{% url 'home' %}#my-institutions-management" class="dropdown-item">My Institutions</a>
                 <hr class="dropdown-divider">
-                {% endif %}
                 {% endif %}
                 <form action="{% url 'logout' %}" method="POST">
                     {% csrf_token %}
