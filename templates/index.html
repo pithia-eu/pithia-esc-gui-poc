@@ -30,7 +30,7 @@
             </p>
             <form action="{% url 'choose_institution_for_login_session' %}" method="POST">
                 {% csrf_token %}
-                {{ request.institution_selection_form.institutions.label_tag }}
+                <label for="{{ request.institution_selection_form.institutions.auto_id }}">Institutions:</label>
                 <select
                     name="{{ request.institution_selection_form.institutions.name }}"
                     id="{{ request.institution_selection_form.institutions.auto_id }}"
