@@ -46,71 +46,83 @@
         </li>
     </ul>
     {% if request.session.is_logged_in %}
-    <div class="dropdown user-dropdown col-xs-auto flex-grow-1">
-        <a
-            href="#"
-            class="d-inline-block text-decoration-none dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            role="button"
-            data-bs-auto-close="outside">
-            {{ request.session.user_given_name }}
-        </a>
-        <div class="dropdown-menu dropdown-menu-md-end">
-            {% if request.session.institution_for_login_session %}
-            {% if request.session.user_institution_subgroups|length > 1 %}
-            <form
-                action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}"
-                method="POST"
-                class="px-3 py-2">
-                {% csrf_token %}
-                <div class="d-flex align-items-center mb-2">
-                    <img
-                        src="{% static 'switch.svg' %}"
-                        alt="Switch"
-                        style="height: 1.5rem;"
-                        class="me-1">
-                    <label
-                        for="{{ request.institution_selection_form.institutions.auto_id }}">
-                        {{ request.institution_selection_form.institutions.label }}
-                    </label>
-                </div>
-                <select
-                    name="{{ request.institution_selection_form.institutions.name }}"
-                    id="{{ request.institution_selection_form.institutions.auto_id }}"
-                    class="form-select mb-2"
-                    required="{{ request.institution_selection_form.institutions.required }}">
-                    <option value="" disabled selected>
-                        {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
-                        {% if num_available_institutions == 1 %}
-                        {{ num_available_institutions }} other available...
-                        {% else %}
-                        {{ num_available_institutions }} others available...
+    <div class="d-flex justify-content-md-end justify-content-center align-items-center flex-grow-1 ms-auto">
+        <div class="dropdown user-dropdown">
+            <a
+                href="#"
+                class="d-inline-block text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                role="button"
+                data-bs-auto-close="outside">
+                {{ request.session.user_given_name }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-md-end">
+                {% if request.session.institution_for_login_session %}
+                {% if request.session.user_institution_subgroups|length > 1 %}
+                <form
+                    action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}"
+                    method="POST"
+                    class="px-3 py-2">
+                    {% csrf_token %}
+                    <div class="d-flex align-items-center mb-2">
+                        <img
+                            src="{% static 'switch.svg' %}"
+                            alt="Switch"
+                            style="height: 1.5rem;"
+                            class="me-1">
+                        <label
+                            for="{{ request.institution_selection_form.institutions.auto_id }}">
+                            {{ request.institution_selection_form.institutions.label }}
+                        </label>
+                    </div>
+                    <select
+                        name="{{ request.institution_selection_form.institutions.name }}"
+                        id="{{ request.institution_selection_form.institutions.auto_id }}"
+                        class="form-select mb-2"
+                        required="{{ request.institution_selection_form.institutions.required }}">
+                        <option value="" disabled selected>
+                            {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
+                            {% if num_available_institutions == 1 %}
+                            {{ num_available_institutions }} other available...
+                            {% else %}
+                            {{ num_available_institutions }} others available...
+                            {% endif %}
+                            {% endwith %}
+                        </option>
+                        {% for value, text in request.institution_selection_form.fields.institutions.choices %}
+                        {% if request.session.institution_for_login_session != text %}
+                        <option value="{{ value }}">{{ text }}</option>
                         {% endif %}
-                        {% endwith %}
-                    </option>
-                    {% for value, text in request.institution_selection_form.fields.institutions.choices %}
-                    {% if request.session.institution_for_login_session != text %}
-                    <option value="{{ value }}">{{ text }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-                {{ request.institution_selection_form.next }}
-                <button href="#" type="submit" class="btn btn-primary">
-                    Switch
-                </button>
-                <p class="institution-for-login-session mt-4 mb-0"><small class="text-secondary d-block">Current Institution:</small>{{ request.session.institution_for_login_session }}</p>
-            </form>
-            <hr class="dropdown-divider">
-            {% endif %}
-            {% endif %}
-            <form action="{% url 'logout' %}" method="POST">
-                {% csrf_token %}
-                <button href="#" type="submit" class="dropdown-item logout-button">
-                    <img src="{% static 'logout.svg' %}" alt="Logout" class="me-1">
-                    Logout
-                </button>
-            </form>
+                        {% endfor %}
+                    </select>
+                    {{ request.institution_selection_form.next }}
+                    <button href="#" type="submit" class="btn btn-primary">
+                        Switch
+                    </button>
+                    <p class="institution-for-login-session mt-4 mb-0"><small class="text-secondary d-block">Current Institution:</small>{{ request.session.institution_for_login_session }}</p>
+                </form>
+                <hr class="dropdown-divider">
+                <div class="dropdown-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear me-1" viewBox="0 0 16 16">
+                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    </svg>
+                    Manage
+                </div>
+                <a href="{% url 'home' %}#current-institution-management" class="dropdown-item">My Current Institution</a>
+                <a href="{% url 'home' %}#my-institutions-management" class="dropdown-item">My Institutions</a>
+                <hr class="dropdown-divider">
+                {% endif %}
+                {% endif %}
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button href="#" type="submit" class="dropdown-item logout-button">
+                        <img src="{% static 'logout.svg' %}" alt="Logout" class="me-1">
+                        Logout
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     {% else %}
