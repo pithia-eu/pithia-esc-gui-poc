@@ -15,27 +15,10 @@
     {% csrf_token %}
     <div class="row gy-4">
         <div class="col-lg-8">
-            <details class="text-muted">
-                <ul>
-                    <li>
-                        Terms referenced within registered metadata are not greyed out and have an adjacent checkbox input to the left.
-                    </li>
-                    <li>
-                        Parent terms containing child terms referenced within registered metadata are not greyed out but have no adjacent checkbox.
-                    </li>
-                    <li>
-                        Terms not referenced within any registered metadata are greyed out and have no adjacent checkbox.
-                    </li>
-                </ul>
-                <summary>
-                    Configure search parameters by selecting from the available
-                    parameters in the <b>Search Parameter Configuration</b>
-                    section below. Click this text for further details.
-                </summary>
-            </details>
+            <p class="lead">Search for Data Collections using terms from the Space Physics Ontology.</p>
         </div>
         <div class="col-lg-12">
-            <h2 class="mb-3">Search Input</h2>
+            <h2 class="mb-3">Input Selection</h2>
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
