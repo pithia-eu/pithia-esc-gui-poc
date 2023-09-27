@@ -19,4 +19,7 @@
     {% include "ontology/ontology_tree_node_template.html" %}
     {% endwith %}
     {% endif %}
+    {% if not parent_node_in_ontology %}
+    <hr>
+    {% endif %}
 </li>
