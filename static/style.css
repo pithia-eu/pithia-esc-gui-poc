@@ -663,7 +663,6 @@ ul.tree ul {
 @media (min-width: 332px) {
     .user-dropdown {
         display: block;
-        width: auto;
     }
 
     .user-dropdown .dropdown-menu {
