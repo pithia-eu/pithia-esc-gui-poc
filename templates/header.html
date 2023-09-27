@@ -59,8 +59,8 @@
             </a>
             <div class="dropdown-menu dropdown-menu-md-end">
                 {% if request.session.institution_for_login_session %}
-                <div class="px-3 py-2 fw-bold">
-                    <div style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</div>
+                <div class="px-4 py-2">
+                    <small class="fw-bold" style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</small>
                     <div class="text-secondary" style="white-space: pre-wrap;">{% if request.session.subgroup_for_login_session == 'admins' %}Admin{% else %}Member{% endif %}</div>
                 </div>
                 <hr class="dropdown-divider">
@@ -68,21 +68,16 @@
                 <form
                     action="{% url 'choose_institution_for_login_session' %}?next={{ request.path }}"
                     method="POST"
-                    class="px-3 pt-2 pb-3">
+                    class="px-4 pt-2 pb-3">
                     {% csrf_token %}
-                    <div class="fw-bold pb-3">
-                        {% comment %} <img
-                            src="{% static 'switch.svg' %}"
-                            alt="Switch"
-                            style="height: 1.3rem;"
-                            class=""> {% endcomment %}
+                    <div class="fw-bold pb-4">
                         Switch Institution
                     </div>
                     {{ request.institution_selection_form.institutions.label_tag }}
                     <select
                         name="{{ request.institution_selection_form.institutions.name }}"
                         id="{{ request.institution_selection_form.institutions.auto_id }}"
-                        class="form-select mb-2"
+                        class="form-select mb-3"
                         required="{{ request.institution_selection_form.institutions.required }}">
                         <option value="" disabled selected>
                             {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
@@ -100,11 +95,11 @@
                         {% endfor %}
                     </select>
                     {{ request.institution_selection_form.next }}
-                    <button href="#" type="submit" class="btn btn-outline-dark">
+                    <button href="#" type="submit" class="btn btn-outline-dark w-100">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
                         </svg>
-                        Switch
+                        Change
                     </button>
                 </form>
                 <hr class="dropdown-divider">
