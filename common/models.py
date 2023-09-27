@@ -46,7 +46,7 @@ class ScientificMetadata(models.Model):
     )
     institution_id = models.CharField(
         max_length=200,
-        db_column='institution_id'
+        db_column='inst_id'
     )
     owner_id = models.CharField(
         max_length=200,
