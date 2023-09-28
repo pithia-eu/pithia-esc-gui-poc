@@ -55,6 +55,10 @@
                 aria-expanded="false"
                 role="button"
                 data-bs-auto-close="outside">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle me-1" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
                 {{ request.session.user_given_name }}
             </a>
             <div class="dropdown-menu dropdown-menu-md-end">
@@ -70,7 +74,7 @@
                     method="POST"
                     class="px-4 pt-2 pb-3">
                     {% csrf_token %}
-                    <div class="fw-bold pb-4">
+                    <div class="fw-bold pb-2">
                         Switch Institution
                     </div>
                     {{ request.institution_selection_form.institutions.label_tag }}

@@ -221,9 +221,15 @@ def choose_institution_for_login_session(request):
             institution_choices=institution_choices,
         )
         if form.is_valid():
-            changed_or_set = 'changed' if get_institution_id_for_login_session(request.session) else 'set'
+            is_institution_for_login_session_set = get_institution_id_for_login_session(request.session)
+            changed_or_set = 'changed' if is_institution_for_login_session_set else 'set'
             set_institution_for_login_session(request.session, institution, subgroup)
-            messages.success(request, f'Institution {changed_or_set} to {institution}.')
+            success_msg = f'Institution {changed_or_set} to {institution}.'
+            messages.success(request, success_msg)
+            if not is_institution_for_login_session_set:
+                user_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" alt="user"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>'
+                info_msg = f'You can switch to another institution from the {user_icon_svg} menu in the navigation bar.'
+                messages.info(request, info_msg)
         else:
             messages.error(request, 'The form submitted was invalid.')
 
