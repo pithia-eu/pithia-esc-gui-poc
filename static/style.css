@@ -634,13 +634,13 @@ ul.tree ul {
     #id_files {
         max-width: 20rem;
     }
-}
-
-@media (min-width: 768px) {
+    
     .user-dropdown {
         text-align: end;
     }
+}
 
+@media (min-width: 768px) {
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
     }

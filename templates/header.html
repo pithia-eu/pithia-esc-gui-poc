@@ -9,7 +9,7 @@
         </div>
     </a>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 flex-grow-1">
+    <ul class="nav col-12 col-md-auto justify-content-center mb-2 mb-md-0 flex-grow-1">
         <li class="nav-item">
             {% url 'home' as base_url %}
             <a href="{{ base_url }}" class="nav-link px-2"
@@ -46,7 +46,7 @@
         </li>
     </ul>
     {% if request.session.is_logged_in %}
-    <div class="d-flex justify-content-md-end justify-content-center align-items-center col-xs-auto flex-grow-1 ms-auto">
+    <div class="d-flex justify-content-lg-end justify-content-center align-items-center col-lg-2 col-12 ms-lg-auto">
         <div class="dropdown user-dropdown">
             <a
                 href="#"
