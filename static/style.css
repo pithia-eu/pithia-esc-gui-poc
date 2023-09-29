@@ -65,6 +65,10 @@ a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)
     text-indent: 1em; /* the width of the icon */
 }
 
+a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+    background-image: url('./external_link_white.svg');
+}
+
 [href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark::after {
     background-image: url('/static/external_link_black.svg');
     transition: filter 150ms ease-in-out;
