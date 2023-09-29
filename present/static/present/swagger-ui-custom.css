@@ -6,6 +6,34 @@ dropdown heading. */
     font-size: 1.2rem !important;
 }
 
+.swagger-ui .opblock-tag-section .opblock-tag {
+    background-color: #FFFFFF;
+    transition: background-color 0.2s ease-in-out !important;
+}
+
+.swagger-ui .opblock-tag-section.is-open .opblock-tag {
+    background-color: #CFE2FF;
+}
+
+.swagger-ui .opblock-tag {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.swagger-ui .opblock-tag a {
+    padding: 1rem 10px;
+}
+
+.swagger-ui .opblock-tag button {
+    margin-inline: auto;
+}
+
+.swagger-ui .opblock-tag {
+    box-shadow: 0 0 3px rgba(0,0,0,.19);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
 /* Increases the font size of the main
 Swagger UI description at the top of the page. */
 .swagger-ui .info p,
@@ -24,7 +52,7 @@ Swagger UI section. */
 /* Removes the left padding of the endpoint
 sections. */
 .swagger-ui .wrapper {
-    padding-left: 0;
+    padding-inline: 0;
 }
 
 /* Removes the margin between Swagger UI and the <h1> */
@@ -56,12 +84,6 @@ bottom border colour). */
 responses table has not been added to the DOM yet. */
 .responses-wrapper:not(:has(.live-responses-table)) {
     display: none;
-}
-
-/* Increases the padding between the endpoints section
-description and its heading. */
-.opblock-tag p {
-    padding-left: 2rem;
 }
 
 
@@ -155,4 +177,21 @@ content fills the full width of the screen. */
 /* Hides the schemas section at the bottom of the page. */
 .models {
     display: none;
+}
+
+@media (min-width: 768px) {
+    /* Increases the padding between the endpoints section
+    description and its heading. */
+    .opblock-tag p {
+        padding-left: 2rem;
+    }
+
+    .swagger-ui .opblock-tag {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .swagger-ui .opblock-tag a {
+        padding: 0 10px;
+    }
 }
