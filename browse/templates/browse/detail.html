@@ -16,15 +16,12 @@
 {% block content %}
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
-        <h1>{{ resource.name }}</h1>
-        <section>
-            <h2 class="visually-hidden">Description</h2>
-            {% if resource.description and resource.description|cut:' ' != '' %}
-            <p class="resource-description">{{ resource.description|urlize }}</p>
-            {% else %}
-            <p class="resource-description text-muted fst-italic">No description</p>
-            {% endif %}
-        </section>
+        <h1 class="mb-3">{{ resource.name }}</h1>
+        {% if resource.description and resource.description|cut:' ' != '' %}
+        <p class="resource-description">{{ resource.description|urlize }}</p>
+        {% else %}
+        <p class="resource-description text-muted fst-italic">No description</p>
+        {% endif %}
         {% block interaction_methods %}{% endblock interaction_methods %}
         {% if scientific_metadata_readable.items|length > 0 %}
         <section>
