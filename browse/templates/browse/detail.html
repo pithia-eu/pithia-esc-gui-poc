@@ -38,7 +38,7 @@
                                 </thead>
                                 <tbody>
                                     {% for key, value in scientific_metadata_readable.items %}
-                                    {% if '_id' not in key %}
+                                    {% if '_id' not in key and 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
                                     <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
                                         <td>{{ key|safe }}</td>
                                         <td>
