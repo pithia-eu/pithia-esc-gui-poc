@@ -1,0 +1,158 @@
+/* Re-style these elements */
+/* Increases the font size of the endpoint
+dropdown heading. */
+.opblock-summary-description {
+    padding-left: 1rem;
+    font-size: 1.2rem !important;
+}
+
+/* Increases the font size of the main
+Swagger UI description at the top of the page. */
+.swagger-ui .info p,
+.swagger-ui .info pre,
+.swagger-ui .info li,
+.swagger-ui .info table {
+    font-size: 1rem;
+}
+
+/* Removes the left padding of the whole
+Swagger UI section. */
+.information-container.wrapper {
+    padding-left: 0;
+}
+
+/* Removes the left padding of the endpoint
+sections. */
+.swagger-ui .wrapper {
+    padding-left: 0;
+}
+
+/* Removes the margin between Swagger UI and the <h1> */
+.information-container.wrapper .info {
+    margin-top: 0;
+}
+
+/* Removes any HTTP method theming (e.g., GET has a blue
+background colour, PUT has an orange background colour). */
+.swagger-ui .opblock {
+    background: white !important;
+    border: none !important;
+}
+
+/* Removes any HTTP method theming related to the bottom border
+(e.g., GET has a blue bottom border colour, PUT has an orange
+bottom border colour). */
+.swagger-ui .opblock .opblock-summary {
+    border-color: #eee !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+/* Overrules the responses table display: none rule. */
+.live-responses-table {
+    display: block !important; 
+}
+
+/* The responses section is not shown if the live
+responses table has not been added to the DOM yet. */
+.responses-wrapper:not(:has(.live-responses-table)) {
+    display: none;
+}
+
+/* Increases the padding between the endpoints section
+description and its heading. */
+.opblock-tag p {
+    padding-left: 2rem;
+}
+
+
+
+/* Hide these elements */
+
+/* Hides the little <pre> stamps in the <h2>. */
+h2.title span {
+    display: none;
+}
+
+/* Hides the link to the OpenAPI specification. */
+.topbar {
+    display: none !important;
+}
+
+/* Hides the copy button for the endpoint URL. */
+.opblock-summary .copy-to-clipboard {
+    display: none;
+}
+
+/* Hides the method type of each endpoint (e.g., GET, POST, PUT, DELETE, etc.). */
+.opblock-summary-method {
+    display: none;
+}
+
+/* Hides the endpoint URL (e.g., /upload/). */
+.opblock-summary-path {
+    display: none !important;
+}
+
+/* Hides the "Response Body" <h4> in the responses section. */
+.responses-inner h4:nth-child(3) {
+    display: none;
+}
+
+/* Hides the <h4> for the example responses table. */
+.responses-inner h4:last-child {
+    display: none;
+}
+
+/* Hides the curl details in the responses section. */
+.responses-inner .curl-command {
+    display: none;
+}
+
+/* Hides the request URL details in the responses section. */
+.responses-inner .request-url {
+    display: none;
+}
+
+/* Hides the Response Headers <h5> in the live responses
+section. */
+.live-responses-table h5 {
+    display: none;
+}
+
+/* Hides the response headers code section in the live
+responses section. */
+.live-responses-table .microlight {
+    display: none;
+}
+
+/* Hides the "Code" table column in the live responses
+table. */
+.live-responses-table tr td:first-child {
+    display: none;
+}
+
+/* Ensures that the cell containing the endpoint response
+content fills the full width of the screen. */
+.live-responses-table tr td:nth-child(2) {
+    width: 1%;
+}
+
+/* Hides the response examples table. */
+.responses-table:last-child {
+    display: none;
+}
+
+/* Hides the schema dropdown at the bottom of the page. */
+.swagger-ui .wrapper:last-child {
+    display: none;
+}
+
+/* Hides the schemes section at the bottom of the page. */
+.scheme-container {
+    display: none;
+}
+
+/* Hides the schemas section at the bottom of the page. */
+.models {
+    display: none;
+}
