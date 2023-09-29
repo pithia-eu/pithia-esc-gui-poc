@@ -27,8 +27,9 @@
                     {% else %}
                     <div class="p-md-2 d-flex align-items-start">
                         <div class="me-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-octagon-fill" viewBox="0 0 16 16">
-                                <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zM5.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-lock2-fill" viewBox="0 0 16 16">
+                                <path d="M7 6a1 1 0 0 1 2 0v1H7V6z"/>
+                                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-2 6v1.076c.54.166 1 .597 1 1.224v2.4c0 .816-.781 1.3-1.5 1.3h-3c-.719 0-1.5-.484-1.5-1.3V8.3c0-.627.46-1.058 1-1.224V6a2 2 0 1 1 4 0z"/>
                             </svg>
                         </div>
                         <div>
@@ -80,6 +81,14 @@
         </div>
         <div class="card">
             <div class="card-body">
+                <a href="{% url 'browse:index' %}">
+                    <img src="{% static 'browse.svg' %}" alt="Browse">
+                    <span>All Scientific Metadata</span>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
                 <a href="{% url 'browse:list_data_collections' %}">
                     <img src="{% static 'browse.svg' %}" alt="Browse">
                     <span>Data Collections</span>
@@ -91,14 +100,6 @@
                 <a href="{% url 'browse:catalogue_related_resource_types' %}">
                     <img src="{% static 'browse.svg' %}" alt="Browse">
                     <span>Catalogues</span>
-                </a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <a href="{% url 'browse:index' %}">
-                    <img src="{% static 'browse.svg' %}" alt="Browse">
-                    <span>All Scientific Metadata</span>
                 </a>
             </div>
         </div>

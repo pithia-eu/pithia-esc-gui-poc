@@ -22,7 +22,8 @@ header .nav-link,
 }
 
 a:not(.btn, .header-logo-link, footer a),
-a:hover:not(.btn, .header-logo-link, footer a) {
+a:hover:not(.btn, .header-logo-link, footer a),
+a:focus:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue);
 }
 
@@ -42,7 +43,9 @@ a {
 }
 
 a:not(.btn, .nav-link):hover,
-a:not(.btn, .nav-link):focus {
+a:not(.btn, .nav-link):focus,
+.logout-button:hover,
+.logout-button:focus {
     text-decoration: underline;
 }
 
