@@ -6,6 +6,9 @@ dropdown heading. */
     font-size: 1.2rem !important;
 }
 
+/* Updates the colour of the opblock heading to help
+differentiate when it's open/closed. Also adds a
+transition between the colour change. */
 .swagger-ui .opblock-tag-section .opblock-tag {
     background-color: #FFFFFF;
     transition: background-color 0.2s ease-in-out !important;
@@ -15,6 +18,8 @@ dropdown heading. */
     background-color: #CFE2FF;
 }
 
+/* Changes the flex direction to "column" on
+smaller screen sizes. */
 .swagger-ui .opblock-tag {
     flex-direction: column;
     align-items: flex-start;
@@ -28,6 +33,8 @@ dropdown heading. */
     margin-inline: auto;
 }
 
+/* Adds a small border shadow and subtle
+curve to the opblock-tag. */
 .swagger-ui .opblock-tag {
     box-shadow: 0 0 3px rgba(0,0,0,.19);
     border-top-left-radius: 4px;
@@ -88,6 +95,14 @@ bottom border colour). */
 responses table has not been added to the DOM yet. */
 .responses-wrapper:not(:has(.live-responses-table)) {
     display: none;
+}
+
+/* Adds wrapping on smaller screen sizes so the
+"* required" text doesn't cause the inputs to
+overflow past the container padding. */
+.parameter__name.required {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 
@@ -197,5 +212,9 @@ content fills the full width of the screen. */
 
     .swagger-ui .opblock-tag a {
         padding: 0 10px;
+    }
+
+    .parameter__name.required {
+        display: block;
     }
 }
