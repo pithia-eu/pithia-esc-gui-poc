@@ -255,6 +255,11 @@ header .dropdown-item {
     overflow: hidden;
 }
 
+.alert-institution-setting svg:first-child {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
