@@ -11,9 +11,9 @@
                     {% if not request.session.user_institution_subgroups %}
                     <div class="p-md-3">
                         <p class="mb-4">
-                            Register or join your institution's e-Science Centre
-                            group to enable content management features for
-                            this account.
+                            You must be a member of an e-Science Centre
+                            institution to enable content management
+                            features for this account.
                         </p>
                         <div class="d-flex flex-wrap justify-content-lg-start justify-content-center">
                             <a href="{% url 'list_joinable_perun_organisations' %}" class="btn btn-primary mx-1 ms-lg-0 me-lg-1 my-1">
