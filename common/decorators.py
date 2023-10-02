@@ -6,14 +6,16 @@ from functools import wraps
 
 from .models import ScientificMetadata
 
-from user_management.services import get_institution_id_for_login_session
+from user_management.services import (
+    get_institution_id_for_login_session,
+)
 
 def login_session_institution_required(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
         institution_id_for_login_session = get_institution_id_for_login_session(request.session)
         if not institution_id_for_login_session:
-            messages.warning(request, 'The page cannot be accessed without setting an institution for this login session.')
+            messages.warning(request, 'The page you were trying to access requires an active login session with an institution.')
             return HttpResponseRedirect(reverse('home'))
         return function(request, *args, **kwargs)
 
