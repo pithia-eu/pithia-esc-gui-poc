@@ -105,6 +105,12 @@ overflow past the container padding. */
     flex-wrap: wrap;
 }
 
+/* Sets the section filter input to take up the
+full width of the screen on smaller screen sizes */
+.swagger-ui .filter .operation-filter-input {
+    max-width: none;
+}
+
 
 
 /* Hide these elements */
