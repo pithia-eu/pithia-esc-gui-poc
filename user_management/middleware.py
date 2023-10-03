@@ -19,14 +19,19 @@ class LoginMiddleware(object):
         # One-time configuration and initialisation.
         self.get_response = get_response
 
-    def _get_user_info_and_set_login_variables(self, request, access_token):
+    def _verify_access_token_and_set_login_session_variables(self, request, access_token):
+        # Access token verification
         user_info = get_user_info(access_token)
         if 'error' in user_info:
+            # The User Info API will return an error if
+            # the access token has been invalidated.
             remove_login_session_variables(request.session)
             return HttpResponseRedirect(reverse('home'))
 
+            
+        # Configuring login session variables
         # Store user info in session to minimise
-        # calls to the UserInfo API.
+        # calls to the User Info API.
         request.session['OIDC_access_token'] = access_token
         request.session['is_logged_in'] = True
         try:
@@ -36,48 +41,65 @@ class LoginMiddleware(object):
         request.session['user_id'] = request.META.get('OIDC_CLAIM_sub')
         request.session['user_given_name'] = user_info.get('given_name')
 
+    def _update_session_access_token_if_possible(self, request):
+        access_token_in_headers = request.META.get('OIDC_access_token')
+        if access_token_in_headers:
+            # Only update the session's access token if
+            # there is one in the headers (setting it whilst
+            # there isn't one may overwrite a valid access
+            # token in the session).
+
+            # Update the session's access token with every request
+            # to ensure that any outdated session access tokens are
+            # overwritten.
+            request.session['OIDC_access_token'] = access_token_in_headers
+
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
         # Verify if the user is logged in or not.
-
         # Check if an OIDC_access_token exists in
-        # request.META.
-        access_token_in_headers = request.META.get('OIDC_access_token')
+        # request.META, and perform the appropriate
+        # action.
+        self._update_session_access_token_if_possible(request)
+
+
+        # The access token should always be retrieved from the
+        # session. This is because the access token may not
+        # always be present in the headers.
         access_token_in_session = request.session.get('OIDC_access_token')
-
-        if access_token_in_headers:
-            # If an OIDC_access_token exists in the headers,
-            # keep an up-to-date copy of it in the session.
-            # This ensures that any outdated tokens in the
-            # session are overwritten with each request.
-            request.session['OIDC_access_token'] = access_token_in_headers
-            access_token_in_session = access_token_in_headers
-
         if access_token_in_session is None:
-            # If there isn't one in the session, can probably
-            # just assume that the user is logged out.
+            # Access token is not present, so assume that the
+            # user is logged out.
             remove_login_session_variables(request.session)
             if '/authorised' in request.path:
                 return HttpResponseRedirect(reverse('home'))
         else:
-            self._get_user_info_and_set_login_variables(request, access_token_in_session)
+            self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
 
+        
         # Check if the user is still a member of the
         # institution they have logged in with. If not,
         # perform the appropriate action.
         logged_in_institution_id = get_institution_id_for_login_session(request.session)
         logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
         user_memberships = get_institution_memberships_of_logged_in_user(request.session)
+
+        is_user_member_of_institution_for_login_session = logged_in_institution_id in user_memberships
+        # user_memberships gets updated with every request,
+        # so it can be used to verify if a user's authorisation
+        # level (decided by the highest level of subgroup they
+        # are currently in), is still valid.
+        is_user_authorisation_level_correct = user_memberships.get(logged_in_institution_id) == logged_in_institution_subgroup_id
         if (logged_in_institution_id is not None
-            and logged_in_institution_id not in user_memberships):
+            and not is_user_member_of_institution_for_login_session):
             delete_institution_for_login_session(request.session)
         elif (logged_in_institution_id is not None
-            and user_memberships.get(logged_in_institution_id) != logged_in_institution_subgroup_id):
+            and not is_user_authorisation_level_correct):
             # If the user's permissions changed whilst
-            # they are logged, update the user's
-            # permission level automatically.
+            # they are logged in, update the user's
+            # permission level here.
             set_institution_for_login_session(
                 request.session,
                 logged_in_institution_id,
