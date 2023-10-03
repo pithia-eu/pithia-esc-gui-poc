@@ -86,12 +86,16 @@ class LoginMiddleware(object):
         logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
         user_memberships = get_institution_memberships_of_logged_in_user(request.session)
 
-        is_user_member_of_institution_for_login_session = logged_in_institution_id in user_memberships
+        is_user_member_of_institution_for_login_session = (logged_in_institution_id is not None 
+                                                            and user_memberships is not None
+                                                            and logged_in_institution_id in user_memberships)
         # user_memberships gets updated with every request,
         # so it can be used to verify if a user's authorisation
         # level (decided by the highest level of subgroup they
         # are currently in), is still valid.
-        is_user_authorisation_level_correct = user_memberships.get(logged_in_institution_id) == logged_in_institution_subgroup_id
+        is_user_authorisation_level_correct = (logged_in_institution_subgroup_id is not None
+                                                and user_memberships is not None
+                                                and logged_in_institution_subgroup_id == user_memberships.get(logged_in_institution_id))
         if (logged_in_institution_id is not None
             and not is_user_member_of_institution_for_login_session):
             delete_institution_for_login_session(request.session)
