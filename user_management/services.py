@@ -83,10 +83,7 @@ def remove_login_session_variables(session):
         del session['user_id']
     if 'user_given_name' in session:
         del session['user_given_name']
-    if 'institution_for_login_session' in session:
-        del session['institution_for_login_session']
-    if 'subgroup_for_login_session' in session:
-        del session['subgroup_for_login_session']
+    delete_institution_for_login_session(session)
 
 def get_user_id_for_login_session(session):
     return session.get('user_id')
@@ -105,8 +102,10 @@ def set_institution_for_login_session(session, institution, subgroup):
     session['subgroup_for_login_session'] = subgroup
 
 def delete_institution_for_login_session(session):
-    del session['institution_for_login_session']
-    del session['subgroup_for_login_session']
+    if 'institution_for_login_session' in session:
+        del session['institution_for_login_session']
+    if 'subgroup_for_login_session' in session:
+        del session['subgroup_for_login_session']
 
 # Templates
 def get_members_by_institution_id(institution_id):
