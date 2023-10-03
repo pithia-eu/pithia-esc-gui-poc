@@ -1,4 +1,10 @@
-from django.test import TestCase
+from django.http import HttpResponse
+from django.test import (
+    Client,
+    TestCase,
+)
+from django.urls import reverse
+from http import HTTPStatus
 
 from .services import (
     _get_institution_subgroup_pairs_from_eduperson_entitlement,
@@ -13,6 +19,29 @@ from .services import (
 )
 
 # Create your tests here.
+class AuthViewDecoratorsTestCase(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+        return super().setUp()
+
+    def test_login_session_institution_required(self):
+        # The view being tested can be any that uses the
+        # login_session_institution_required() decorator.
+        response = self.client.get(reverse('resource_management:index'))
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        
+    def test_institution_ownership_required(self):
+        # The views being tested can be any that use the
+        # institution_ownership_required() decorator.
+        
+        # Check GET requests are redirected
+        response = self.client.get(reverse('register:organisation'))
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        
+        # Check POST requests are redirected before any processing occurs
+        response = self.client.post(reverse('register:organisation'))
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+
 class LoginSessionRegressionTestCase(TestCase):
     test_eduperson_entitlement = {
         'urn:mace:egi.eu:group:vo.abc.test.eu:members:role=member#aai.egi.eu',
