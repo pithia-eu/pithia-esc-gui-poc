@@ -3,15 +3,27 @@ from lxml import etree
 from common import models
 
 def find_metadata_registrations_matching_query(query, model):
-    registrations = model.objects.all()
+    query_sections = query.split()
+    print('query_sections', query_sections)
     registrations_with_match = []
+    if len(query_sections) == 0:
+        return registrations_with_match
+    xpath_match_query = ''
+    for counter, qs in enumerate(query_sections):
+        xpath_match_query += f'contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), translate("{qs}", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))'
+        if counter != len(query_sections) - 1:
+            xpath_match_query += ' and '
+    registrations = model.objects.all()
     for r in registrations:
         parsed_xml = etree.fromstring(r.xml.encode())
-        if parsed_xml.xpath(f'.//*[contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), translate("{query}", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))]'):
-            # If partial case-insensitive text match found.
-            # Credit: https://stackoverflow.com/a/36427554
-            registrations_with_match.append(r)
-    
+        text_nodes_in_parsed_xml = parsed_xml.xpath('.//*/text()')
+        text_nodes_in_parsed_xml = [' '.join(str(tn).strip().replace('\n', '').split()) for tn in text_nodes_in_parsed_xml if str(tn).strip() != '']
+        for tn in text_nodes_in_parsed_xml:
+            if all(qs.lower() in tn.lower() for qs in query_sections):
+                registrations_with_match.append(r)
+
+    # Ensure there are no duplicate data collections
+    registrations_with_match = {r.id: r for r in registrations_with_match}.values()
     return registrations_with_match
 
 def find_metadata_registrations_matching_query_exactly(query, model):
@@ -19,7 +31,7 @@ def find_metadata_registrations_matching_query_exactly(query, model):
     registrations_with_match = []
     for r in registrations:
         parsed_xml = etree.fromstring(r.xml.encode())
-        if parsed_xml.xpath(f'.//*[text()[contains(., "{query}")]]'):
+        if parsed_xml.xpath(f'.//*/text()[contains(., "{query}")]'):
             registrations_with_match.append(r)
 
     return registrations_with_match
