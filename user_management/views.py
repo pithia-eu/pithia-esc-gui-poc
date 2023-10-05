@@ -24,7 +24,6 @@ from django.views.decorators.http import (
     require_POST
 )
 from functools import wraps
-from pathlib import Path
 
 from .services import (
     get_institution_id_for_login_session,
@@ -34,6 +33,7 @@ from .services import (
 )
 
 from common.forms import InstitutionForLoginSessionForm
+from pithiaesc.settings import BASE_DIR
 
 
 JOIN_AN_INSTITUTION_PAGE_TITLE = 'Join an Institution'
@@ -114,7 +114,7 @@ def list_joinable_perun_organisations(request):
     org_list = []
     
     try:
-        with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'r') as org_list_file:
+        with open(os.path.join(BASE_DIR, 'perun', 'ListOfOrganisations.json'), 'r') as org_list_file:
             org_list_raw = [o['name'] for o in json.load(org_list_file)['organizations']]
     except FileNotFoundError:
         print('Cannot find the file. Please provide an existing file!')
@@ -180,7 +180,7 @@ def update_perun_organisation_list(request):
     update_data = json.loads(decompressed_data_string[index_first_curly_bracket:index_last_curly_bracket + 1])
     
     # Store the update by overwriting the locally stored JSON file.
-    with open(os.path.join(Path.home(), 'ListOfOrganisations.json'), 'w') as organisation_list_file:
+    with open(os.path.join(BASE_DIR, 'perun', 'ListOfOrganisations.json'), 'w') as organisation_list_file:
         json.dump(update_data, organisation_list_file)
     return HttpResponse(status=200)
 
