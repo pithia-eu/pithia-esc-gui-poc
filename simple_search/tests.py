@@ -5,6 +5,9 @@ from .services import (
     find_data_collections_for_simple_search,
     find_metadata_registrations_matching_query,
     find_metadata_registrations_matching_query_exactly,
+    get_searchable_text_list_from_ontology_urls,
+    get_ontology_urls_from_registration,
+    get_metadata_urls_from_registration,
 )
 
 from common import models
@@ -17,40 +20,40 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 class SimpleSearchTestCase(TestCase):
     def setUp(self) -> None:
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            models.Organisation.objects.create_from_xml_string(xml_file.read())
+            self.organisation = models.Organisation.objects.create_from_xml_string(xml_file.read())
             
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
-            models.Individual.objects.create_from_xml_string(xml_file.read())
+            self.individual = models.Individual.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test.xml')) as xml_file:
-            models.Project.objects.create_from_xml_string(xml_file.read())
+            self.project = models.Project.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Platform_Test.xml')) as xml_file:
-            models.Platform.objects.create_from_xml_string(xml_file.read())
+            self.platform = models.Platform.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Operation_Test.xml')) as xml_file:
-            models.Operation.objects.create_from_xml_string(xml_file.read())
+            self.operation = models.Operation.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
-            models.Instrument.objects.create_from_xml_string(xml_file.read())
+            self.instrument = models.Instrument.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            models.AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
+            self.acquisition_capabilities = models.AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
-            models.Acquisition.objects.create_from_xml_string(xml_file.read())
+            self.acquisition = models.Acquisition.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
-            models.ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            self.computation_capabilities = models.ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            models.Computation.objects.create_from_xml_string(xml_file.read())
+            self.computation = models.Computation.objects.create_from_xml_string(xml_file.read())
 
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
-            models.Process.objects.create_from_xml_string(xml_file.read())
+            self.process = models.Process.objects.create_from_xml_string(xml_file.read())
             
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            models.DataCollection.objects.create_from_xml_string(xml_file.read())
+            self.data_collection = models.DataCollection.objects.create_from_xml_string(xml_file.read())
 
         return super().setUp()
 
@@ -119,7 +122,7 @@ class SimpleSearchTestCase(TestCase):
         # No match
         data_collections_3 = find_data_collections_for_simple_search('xyz')
 
-        # Attribute matching shouldn't work
+        # (Partially) matching ontology URLs directly shouldn't work
         data_collections_4 = find_data_collections_for_simple_search('image-png')
 
         # Multiple matches across different elements shouldn't work.
@@ -137,6 +140,10 @@ class SimpleSearchTestCase(TestCase):
         # Shouldn't match '\n'
         data_collections_8 = find_data_collections_for_simple_search('\n')
 
+        # (Partially) matching a property corresponding to an ontology URL
+        # should work
+        data_collections_9 = find_data_collections_for_simple_search('image/png')
+
         print('len(data_collections_1)', len(data_collections_1))
         print('len(data_collections_2)', len(data_collections_2))
         print('len(data_collections_3)', len(data_collections_3))
@@ -147,6 +154,7 @@ class SimpleSearchTestCase(TestCase):
         print('len(data_collections_6a)', len(data_collections_6a))
         print('len(data_collections_7)', len(data_collections_7))
         print('len(data_collections_8)', len(data_collections_8))
+        print('len(data_collections_9)', len(data_collections_9))
 
         self.assertEqual(len(data_collections_1), 1)
         self.assertEqual(len(data_collections_2), 1)
@@ -158,4 +166,41 @@ class SimpleSearchTestCase(TestCase):
         self.assertEqual(len(data_collections_6a), 1)
         self.assertEqual(len(data_collections_7), 1)
         self.assertEqual(len(data_collections_8), 0)
+        self.assertEqual(len(data_collections_9), 1)
         
+    def test_get_ontology_urls_from_registration(self):
+        """
+        Find and return in a list all ontology URLs from a
+        registration.
+        """
+        ontology_urls = get_ontology_urls_from_registration(self.data_collection)
+
+        print('ontology_urls', ontology_urls)
+        print('len(ontology_urls)', len(ontology_urls))
+
+        self.assertGreaterEqual(len(ontology_urls), 1)
+        
+    def test_get_metadata_server_urls_from_registration(self):
+        """
+        Find and return in a list all metadata server URLs
+        from a registration.
+        """
+        metadata_server_urls = get_metadata_urls_from_registration(self.data_collection)
+
+        print('metadata_server_urls', metadata_server_urls)
+        print('len(metadata_server_urls)', len(metadata_server_urls))
+
+        self.assertGreaterEqual(len(metadata_server_urls), 1)
+
+    def test_get_searchable_text_list_from_ontology_urls(self):
+        """
+        Gets the searchable text of an ontology node
+        corresponding to given ontology URL.
+        """
+        searchable_ontology_text = get_searchable_text_list_from_ontology_urls([
+            'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+            'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-sao',
+            'https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectricField',
+        ])
+
+        self.assertGreaterEqual(len(searchable_ontology_text), 1)

@@ -1,25 +1,83 @@
 from lxml import etree
+from rdflib import URIRef
+from rdflib.resource import Resource
 
 from common import models
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+from ontology.utils import (
+    get_rdf_text_for_ontology_component,
+    get_rdf_text_locally,
+)
+
+
+def parse_registration_xml(r):
+    return etree.fromstring(r.xml.encode())
+
+def get_and_process_text_nodes_from_registration(r):
+    parsed_xml = parse_registration_xml(r)
+    text_nodes_in_parsed_xml = parsed_xml.xpath('.//*/text()')
+    # Convert all text nodes to strings to make
+    # further processing easier.
+    return [' '.join(str(tn).strip().replace('\n', '').split()) for tn in text_nodes_in_parsed_xml if str(tn).strip() != '']
+
+def get_ontology_urls_from_registration(r):
+    parsed_xml = parse_registration_xml(r)
+    return parsed_xml.xpath(f'.//*[contains(@xlink:href, "{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}")]/@xlink:href', namespaces={
+        'xlink': 'http://www.w3.org/1999/xlink'
+    })
+
+def parse_rdf_text(rdf_text):
+    return etree.fromstring(rdf_text.encode())
+
+def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_rdf):
+    searchable_text = []
+    parsed_rdf = parse_rdf_text(ontology_component_rdf)
+    ontology_url_element = parsed_rdf.xpath(f'.//skos:Concept[@rdf:about="{ontology_url}"]', namespaces={
+        'skos': 'http://www.w3.org/2004/02/skos/core#',
+        'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    })
+    for el in ontology_url_element:
+        searchable_text += el.xpath('.//*/text()')
+        
+    return [' '.join(st.strip().replace('\n', '').split()) for st in searchable_text if st.strip() != '']
+
+def get_searchable_text_list_from_ontology_urls(ontology_urls):
+    ontology_urls = list(set(ontology_urls))
+    searchable_ontology_text = []
+    processed_ontology_component_rdfs = {}
+    for o_url in ontology_urls:
+        o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
+        ontology_component_name, term_id = o_url_shortened.split('/')
+
+        if ontology_component_name not in processed_ontology_component_rdfs:
+            processed_ontology_component_rdfs[ontology_component_name] = get_rdf_text_locally(ontology_component_name)
+        ontology_component_rdf = processed_ontology_component_rdfs[ontology_component_name]
+        searchable_text_for_ontology_url = get_and_process_text_nodes_of_ontology_url(o_url, ontology_component_rdf)
+        searchable_ontology_text += searchable_text_for_ontology_url
+    
+    return list(set(searchable_ontology_text))
+
+
+def get_metadata_urls_from_registration(r):
+    parsed_xml = parse_registration_xml(r)
+    return parsed_xml.xpath('.//*[contains(@xlink:href, "https://metadata.pithia.eu/resources/2.2/")]/@xlink:href', namespaces={
+        'xlink': 'http://www.w3.org/1999/xlink'
+    })
 
 def find_metadata_registrations_matching_query(query, model):
     query_sections = query.split()
-    print('query_sections', query_sections)
     registrations_with_match = []
     if len(query_sections) == 0:
         return registrations_with_match
-    xpath_match_query = ''
-    for counter, qs in enumerate(query_sections):
-        xpath_match_query += f'contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), translate("{qs}", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))'
-        if counter != len(query_sections) - 1:
-            xpath_match_query += ' and '
+    
     registrations = model.objects.all()
     for r in registrations:
-        parsed_xml = etree.fromstring(r.xml.encode())
-        text_nodes_in_parsed_xml = parsed_xml.xpath('.//*/text()')
-        text_nodes_in_parsed_xml = [' '.join(str(tn).strip().replace('\n', '').split()) for tn in text_nodes_in_parsed_xml if str(tn).strip() != '']
-        for tn in text_nodes_in_parsed_xml:
-            if all(qs.lower() in tn.lower() for qs in query_sections):
+        r_text_node_strings = get_and_process_text_nodes_from_registration(r)
+        r_ontology_urls = get_ontology_urls_from_registration(r)
+        r_ontology_url_searchable_strings = get_searchable_text_list_from_ontology_urls(r_ontology_urls)
+        r_searchable_strings = r_text_node_strings + r_ontology_url_searchable_strings
+        for ss in r_searchable_strings:
+            if all(qs.lower() in ss.lower() for qs in query_sections):
                 registrations_with_match.append(r)
 
     # Ensure there are no duplicate data collections
