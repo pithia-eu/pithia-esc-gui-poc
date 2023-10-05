@@ -1,0 +1,12 @@
+{% extends 'search/results.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item simple_search_index_page_breadcrumb_text 'simple_search:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block search_again_section %}
+{% include 'simple_search/search_form.html' %}
+{% endblock search_again_section %}
+{% block num_search_results_found %}
+<p>Found {{ results|length }} results.</p>
+{% endblock num_search_results_found %}

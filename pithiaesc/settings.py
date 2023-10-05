@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'utils.apps.UtilsConfig',
     'ontology.apps.OntologyConfig',
     'handle_management.apps.HandleManagementConfig',
+    'simple_search.apps.SimpleSearchConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
