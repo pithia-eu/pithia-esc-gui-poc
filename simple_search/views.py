@@ -19,7 +19,8 @@ def index(request):
             messages.error('The search query submitted was not valid.')
             return redirect('simple_search:index')
         
-        request.session['query'] = form.cleaned_data.get('query')
+        request.session['simple_search_query'] = form.cleaned_data.get('query')
+        request.session['simple_search_exact'] = form.cleaned_data.get('exact')
         return redirect('simple_search:results')
         
     form = SimpleSearchForm()
@@ -30,13 +31,14 @@ def index(request):
     })
 
 def results(request):
-    query = request.session.get('query')
+    query = request.session.get('simple_search_query')
+    exact = request.session.get('simple_search_exact')
 
     results = []
     form = SimpleSearchForm()
     if query:
         form = SimpleSearchForm(initial={'query': query})
-        results = find_data_collections_for_simple_search(query)
+        results = find_data_collections_for_simple_search(query, exact=exact)
 
     return render(request, 'simple_search/results.html', {
         'title': 'Results',

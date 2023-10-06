@@ -9,3 +9,11 @@ class SimpleSearchForm(forms.Form):
             'placeholder': 'Enter a keyword...',
         })
     )
+
+    exact = forms.BooleanField(
+        label='Exact match',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        })
+    )
