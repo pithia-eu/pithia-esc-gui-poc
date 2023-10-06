@@ -20,9 +20,11 @@
         {% endif %}
     </div>
     {% if node.definition %}
-    <p class="ontology-term-description text-secondary">
+    <div class="ontology-term-description text-secondary mb-3">
+        {% autoescape off %}
         {{ node.definition|default:'' }}
-    </p>
+        {% endautoescape %}
+    </div>
     {% endif %}
     {% if node.prefLabel %}
     <small class="text-muted text-break">
