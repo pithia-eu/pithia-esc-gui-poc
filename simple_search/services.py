@@ -124,10 +124,6 @@ def find_data_collections_for_simple_search(query):
 
     # Ensure there are no duplicate data collections
     data_collections_matching_query = {dc.id: dc for dc in data_collections_matching_query}.values()
-
-    print('query', query)
-    print('data_collections_matching_query', data_collections_matching_query)
-    print('')
     
     return data_collections_matching_query
 
