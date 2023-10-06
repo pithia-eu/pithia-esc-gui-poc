@@ -4,7 +4,6 @@ from django.test import TestCase
 from .services import (
     find_data_collections_for_simple_search,
     find_metadata_registrations_matching_query,
-    find_metadata_registrations_matching_query_exactly,
     get_searchable_text_list_from_ontology_urls,
     get_ontology_urls_from_registration,
     get_metadata_urls_from_registration,
@@ -91,20 +90,26 @@ class SimpleSearchTestCase(TestCase):
         Searches on the given Model's registrations and returns
         registrations matching the query exactly.
         """
-        data_collections_1 = find_metadata_registrations_matching_query_exactly('Lorem', models.DataCollection)
-        data_collections_2 = find_metadata_registrations_matching_query_exactly('lorem', models.DataCollection)
-        data_collections_3 = find_metadata_registrations_matching_query_exactly('Lorem  ', models.DataCollection)
-        data_collections_4 = find_metadata_registrations_matching_query_exactly('Lorem ', models.DataCollection)
+        data_collections_1 = find_metadata_registrations_matching_query('Lorem', models.DataCollection, exact=True)
+        data_collections_2 = find_metadata_registrations_matching_query('lorem', models.DataCollection, exact=True)
+        data_collections_3 = find_metadata_registrations_matching_query('Lorem  ', models.DataCollection, exact=True)
+        data_collections_4 = find_metadata_registrations_matching_query('Lorem ', models.DataCollection, exact=True)
+        data_collections_5 = find_metadata_registrations_matching_query('giro . uml . edu / didbase /', models.DataCollection, exact=True)
+        data_collections_6 = find_metadata_registrations_matching_query('giro.uml.edu/didbase/', models.DataCollection, exact=True)
 
         print('len(data_collections_1)', len(data_collections_1))
         print('len(data_collections_2)', len(data_collections_2))
         print('len(data_collections_3)', len(data_collections_3))
         print('len(data_collections_4)', len(data_collections_4))
+        print('len(data_collections_5)', len(data_collections_5))
+        print('len(data_collections_6)', len(data_collections_6))
 
         self.assertEqual(len(data_collections_1), 1)
         self.assertEqual(len(data_collections_2), 0)
         self.assertEqual(len(data_collections_3), 0)
         self.assertEqual(len(data_collections_4), 1)
+        self.assertEqual(len(data_collections_5), 0)
+        self.assertEqual(len(data_collections_6), 1)
 
 
     def test_for_simple_search(self):
