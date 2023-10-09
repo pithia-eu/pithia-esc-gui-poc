@@ -1,5 +1,9 @@
 {% extends 'search/results.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+<script src="{% static 'simple_search/simple_search.js' %}" defer></script>
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item simple_search_index_page_breadcrumb_text 'simple_search:index' %}
 {% breadcrumb_item_active title %}

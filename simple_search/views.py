@@ -18,7 +18,7 @@ def index(request):
         if not form.is_valid():
             messages.error('The search query submitted was not valid.')
             return redirect('simple_search:index')
-        
+
         request.session['simple_search_query'] = form.cleaned_data.get('query')
         request.session['simple_search_exact'] = form.cleaned_data.get('exact')
         return redirect('simple_search:results')

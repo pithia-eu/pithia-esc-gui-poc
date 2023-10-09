@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-5">
-        <form action="{% url 'simple_search:index' %}" method="POST" class="mb-3">
+        <form action="{% url 'simple_search:index' %}" method="POST" class="mb-3" id="simple-search-form">
             {% csrf_token %}
             <div class="d-flex align-items-center">
                 <div class="input-group me-3">
@@ -13,12 +13,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            {% comment %}
-            TODO:
-            - Automatically check this when loading results.
-            - Perhaps remind the user that "exact matching" was on for these
-              search results too.
-            {% endcomment %}
             <div class="form-check d-flex align-items-center mt-2">
                 {{ form.exact }}
                 <label for="{{ form.exact.auto_id }}" class="form-check-label ms-2"><small>{{ form.fields.exact.label }}</small></label>

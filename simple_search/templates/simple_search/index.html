@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block scripts %}
+<script src="{% static 'simple_search/simple_search.js' %}" defer></script>
+{% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
 {% block content %}
 <h1 class="pb-3">Data Collection Simple Search</h1>
 {% include 'simple_search/search_form.html' %}
