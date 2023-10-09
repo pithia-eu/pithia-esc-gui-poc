@@ -39,9 +39,9 @@ def get_ontology_urls_from_registration(r):
     URLs found within a metadata registration.
     """
     parsed_xml = parse_registration_xml(r)
-    return parsed_xml.xpath(f'.//*[contains(@xlink:href, "{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}")]/@xlink:href', namespaces={
+    return list(set(parsed_xml.xpath(f'.//*[contains(@xlink:href, "{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}")]/@xlink:href', namespaces={
         'xlink': 'http://www.w3.org/1999/xlink'
-    })
+    })))
 
 def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_rdf):
     """
@@ -58,7 +58,7 @@ def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_
     for el in ontology_url_element:
         searchable_text += el.xpath('.//*/text()')
     
-    return searchable_text
+    return list(set(searchable_text))
 
 def get_searchable_text_list_from_ontology_urls(ontology_urls):
     """
@@ -80,6 +80,28 @@ def get_searchable_text_list_from_ontology_urls(ontology_urls):
     
     return list(set(searchable_ontology_text))
 
+def get_and_map_searchable_text_to_ontology_urls(ontology_urls):
+    """
+    Gets and combines each list of text properties for
+    each ontology URL, into one combined list.
+    """
+    ontology_urls = list(set(ontology_urls))
+    ontology_urls_to_text_nodes = {}
+    processed_ontology_component_rdfs = {}
+    for o_url in ontology_urls:
+        o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
+        ontology_component_name, term_id = o_url_shortened.split('/')
+
+        if ontology_component_name not in processed_ontology_component_rdfs:
+            processed_ontology_component_rdfs[ontology_component_name] = get_rdf_text_locally(ontology_component_name)
+        ontology_component_rdf = processed_ontology_component_rdfs[ontology_component_name]
+        searchable_text_for_ontology_url = get_and_process_text_nodes_of_ontology_url(o_url, ontology_component_rdf)
+        if o_url not in ontology_urls_to_text_nodes:
+            ontology_urls_to_text_nodes[o_url] = []
+        ontology_urls_to_text_nodes[o_url] += searchable_text_for_ontology_url
+    
+    return ontology_urls_to_text_nodes
+
 
 # TODO: not needed, remove in future commit.
 def get_metadata_urls_from_registration(r):
@@ -87,6 +109,18 @@ def get_metadata_urls_from_registration(r):
     return parsed_xml.xpath('.//*[contains(@xlink:href, "https://metadata.pithia.eu/resources/2.2/")]/@xlink:href', namespaces={
         'xlink': 'http://www.w3.org/1999/xlink'
     })
+
+def remove_whitespace_from_text_list(text_list, exact=False):
+    processed_text_list = [ss for ss in text_list if ss.strip() != '']
+    if exact:
+        return processed_text_list
+    return [' '.join(pt.replace('\n', '').split()) for pt in processed_text_list]
+
+def is_each_query_section_matching_with_text(query_sections, text):
+    return all(qs.lower() in text.lower() for qs in query_sections)
+
+def is_query_matching_with_text(query, text):
+    return query in text
 
 def find_metadata_registrations_matching_query(query, model, exact=False):
     """
@@ -98,21 +132,45 @@ def find_metadata_registrations_matching_query(query, model, exact=False):
     if len(query_sections) == 0:
         return registrations_with_match
 
+    text_nodes_to_registrations = {}
+    ontology_urls_to_registrations = {}
     registrations = model.objects.all()
     for r in registrations:
-        r_text_node_strings = get_and_process_text_nodes_from_registration(r)
+        # Extract text nodes and ontology URLs from all registrations
+        r_text_node_strings = remove_whitespace_from_text_list(get_and_process_text_nodes_from_registration(r), exact=exact)
+        for tns in r_text_node_strings:
+            if tns not in text_nodes_to_registrations:
+                text_nodes_to_registrations[tns] = []
+            text_nodes_to_registrations[tns].append(r)
+
+        # Ontology URLs are mapped to the registrations they came from
         r_ontology_urls = get_ontology_urls_from_registration(r)
-        r_ontology_url_searchable_strings = get_searchable_text_list_from_ontology_urls(r_ontology_urls)
-        r_searchable_strings = r_text_node_strings + r_ontology_url_searchable_strings
-        r_searchable_strings = [ss for ss in r_searchable_strings if ss.strip() != '']
-        if not exact:
-            r_searchable_strings = [' '.join(ss.replace('\n', '').split()) for ss in r_searchable_strings]
-        for ss in r_searchable_strings:
-            match_criteria = all(qs.lower() in ss.lower() for qs in query_sections)
-            if exact:
-                match_criteria = query in ss
-            if match_criteria:
-                registrations_with_match.append(r)
+        for o_url in r_ontology_urls:
+            if o_url not in ontology_urls_to_registrations:
+                ontology_urls_to_registrations[o_url] = []
+            ontology_urls_to_registrations[o_url].append(r)
+
+    # Go through the text node strings and find matches.
+    for key, value in text_nodes_to_registrations.items():
+        if exact and is_query_matching_with_text(query, key):
+            registrations_with_match += value
+        elif not exact and is_each_query_section_matching_with_text(query_sections, key):
+            registrations_with_match += value
+
+    # Loop through a dict of ontology URLs to their text nodes. If
+    # there is a match with one of the text nodes, go to the ontology
+    # URL to registration dictionary, then, add the registrations that
+    # are mapped to the ontology URL in that
+    ontology_urls_to_ontology_text_node_strings = get_and_map_searchable_text_to_ontology_urls(ontology_urls_to_registrations.keys())
+    for key, value in ontology_urls_to_ontology_text_node_strings.items():
+        value = remove_whitespace_from_text_list(value, exact=exact)
+        for tns in value:
+            if exact and is_query_matching_with_text(query, tns):
+                registrations_with_match += ontology_urls_to_registrations[key]
+                break
+            elif not exact and is_each_query_section_matching_with_text(query_sections, tns):
+                registrations_with_match += ontology_urls_to_registrations[key]
+                break
 
     # Ensure there are no duplicate data collections
     registrations_with_match = {r.id: r for r in registrations_with_match}.values()
