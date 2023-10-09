@@ -19,9 +19,9 @@
             - Perhaps remind the user that "exact matching" was on for these
               search results too.
             {% endcomment %}
-            <div class="form-check mt-2">
+            <div class="form-check d-flex align-items-center mt-2">
                 {{ form.exact }}
-                <label for="{{ form.exact.auto_id }}" class="form-check-label"><small>{{ form.fields.exact.label }}</small></label>
+                <label for="{{ form.exact.auto_id }}" class="form-check-label ms-2"><small>{{ form.fields.exact.label }}</small></label>
             </div>
         </form>
     </div>

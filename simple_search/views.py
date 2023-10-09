@@ -37,7 +37,7 @@ def results(request):
     results = []
     form = SimpleSearchForm()
     if query:
-        form = SimpleSearchForm(initial={'query': query})
+        form = SimpleSearchForm(initial={'query': query, 'exact': exact})
         results = find_data_collections_for_simple_search(query, exact=exact)
 
     return render(request, 'simple_search/results.html', {
@@ -45,5 +45,6 @@ def results(request):
         'results': results,
         'form': form,
         'query': query,
+        'exact': exact,
         'simple_search_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
