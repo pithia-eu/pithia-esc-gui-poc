@@ -4,8 +4,10 @@
 {% breadcrumb_item_active 'Present' %}
 {% endblock breadcrumbs %}
 {% load static %}
+{% block styles %}
 <link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui.css' %}>
-<link rel="stylesheet" type="text/css" href={% static 'present/index.css' %}>
+<link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui-custom.css' %}>
+{% endblock styles %}
 
 {% block scripts %}
 {{ api_specification_url|json_script:'api-specification-url' }}
