@@ -9,7 +9,7 @@ from ontology.utils import (
     get_rdf_text_locally,
 )
 
-
+# Utilities
 def parse_registration_xml(r):
     """
     Parses the XML of a metadata registration.
@@ -22,17 +22,61 @@ def parse_rdf_text(rdf_text):
     """
     return etree.fromstring(rdf_text.encode())
 
+def remove_whitespace_only_strings_from_text_list(text_list):
+    return [ss for ss in text_list if ss.strip() != '']
+
+def remove_newlines_and_normalise_whitespace_in_text_list(text_list):
+    return [' '.join(pt.replace('\n', '').split()) for pt in text_list]
+
+def is_query_in_string(query, string):
+    return query in string
+
+def is_each_query_section_in_string(query_sections, string):
+    return all(qs.lower() in string.lower() for qs in query_sections)
+
+
+# Text node filtering
 def get_and_process_text_nodes_from_registration(r):
     """
     Finds and returns a list of strings retrieved
     from text nodes of a metadata registration.
     """
     parsed_xml = parse_registration_xml(r)
-    text_nodes_in_parsed_xml = parsed_xml.xpath('.//*/text()')
+    text_nodes_in_parsed_xml = []
+    if etree.QName(parsed_xml).localname == models.Individual.root_element_name:
+        text_nodes_in_parsed_xml = parsed_xml.xpath(f'/{etree.QName(parsed_xml).localname}/*[not(self::contactInfo)]/text()')
+    else:
+        text_nodes_in_parsed_xml = parsed_xml.xpath('.//*[not(name()="gco:CharacterString")]/text()')
     # Convert all text nodes to strings to make
     # further processing easier.
     return [str(tn) for tn in text_nodes_in_parsed_xml]
 
+def filter_metadata_registrations_by_text_nodes(query_or_query_sections, registrations, query_matching_fn, text_formatting_fns=[]):
+    registrations_with_match = []
+    for r in registrations:
+        # Extract text nodes and ontology URLs from all registrations
+        r_text_node_strings = get_and_process_text_nodes_from_registration(r)
+        for fn in text_formatting_fns:
+            r_text_node_strings = fn(r_text_node_strings)
+        for tns in r_text_node_strings:
+            if query_matching_fn(query_or_query_sections, tns):
+                registrations_with_match.append(r)
+
+    return list({r.id: r for r in registrations_with_match}.values())
+
+def filter_metadata_registrations_by_text_nodes_default(query_sections, registrations):
+    return filter_metadata_registrations_by_text_nodes(query_sections, registrations, is_each_query_section_in_string, [
+        remove_whitespace_only_strings_from_text_list,
+        remove_newlines_and_normalise_whitespace_in_text_list,
+    ])
+
+def filter_metadata_registrations_by_text_nodes_exact(query, registrations):
+    return filter_metadata_registrations_by_text_nodes(query, registrations, is_query_in_string, [
+        remove_whitespace_only_strings_from_text_list
+    ])
+
+
+# Ontology URL filtering
 def get_ontology_urls_from_registration(r):
     """
     Finds and returns a list of ontology term
@@ -42,6 +86,21 @@ def get_ontology_urls_from_registration(r):
     return list(set(parsed_xml.xpath(f'.//*[contains(@xlink:href, "{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}")]/@xlink:href', namespaces={
         'xlink': 'http://www.w3.org/1999/xlink'
     })))
+
+def get_and_map_ontology_urls_to_registrations(registrations):
+    """
+    Creates a dict of ontology URLs and the registrations
+    that they were found in.
+    """
+    ontology_urls_to_registrations = {}
+    for r in registrations:
+        # Ontology URLs are mapped to the registrations they came from
+        r_ontology_urls = get_ontology_urls_from_registration(r)
+        for o_url in r_ontology_urls:
+            if o_url not in ontology_urls_to_registrations:
+                ontology_urls_to_registrations[o_url] = []
+            ontology_urls_to_registrations[o_url].append(r)
+    return ontology_urls_to_registrations
 
 def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_rdf):
     """
@@ -80,102 +139,78 @@ def get_searchable_text_list_from_ontology_urls(ontology_urls):
     
     return list(set(searchable_ontology_text))
 
-def get_and_map_searchable_text_to_ontology_urls(ontology_urls):
+def get_and_map_searchable_text_to_ontology_urls(ontology_urls, ontology_rdfs):
     """
-    Gets and combines each list of text properties for
-    each ontology URL, into one combined list.
+    Creates a dict mapping each ontology URL to its
+    corresponding text properties, fetched from the
+    Space Physics Ontology.
     """
     ontology_urls = list(set(ontology_urls))
     ontology_urls_to_text_nodes = {}
-    processed_ontology_component_rdfs = {}
     for o_url in ontology_urls:
         o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
         ontology_component_name, term_id = o_url_shortened.split('/')
-
-        if ontology_component_name not in processed_ontology_component_rdfs:
-            processed_ontology_component_rdfs[ontology_component_name] = get_rdf_text_locally(ontology_component_name)
-        ontology_component_rdf = processed_ontology_component_rdfs[ontology_component_name]
+        ontology_component_rdf = ontology_rdfs[ontology_component_name]
         searchable_text_for_ontology_url = get_and_process_text_nodes_of_ontology_url(o_url, ontology_component_rdf)
         if o_url not in ontology_urls_to_text_nodes:
             ontology_urls_to_text_nodes[o_url] = []
         ontology_urls_to_text_nodes[o_url] += searchable_text_for_ontology_url
+        ontology_urls_to_text_nodes[o_url] = list(set(ontology_urls_to_text_nodes[o_url]))
     
     return ontology_urls_to_text_nodes
 
-
-# TODO: not needed, remove in future commit.
-def get_metadata_urls_from_registration(r):
-    parsed_xml = parse_registration_xml(r)
-    return parsed_xml.xpath('.//*[contains(@xlink:href, "https://metadata.pithia.eu/resources/2.2/")]/@xlink:href', namespaces={
-        'xlink': 'http://www.w3.org/1999/xlink'
-    })
-
-def remove_whitespace_from_text_list(text_list, exact=False):
-    processed_text_list = [ss for ss in text_list if ss.strip() != '']
-    if exact:
-        return processed_text_list
-    return [' '.join(pt.replace('\n', '').split()) for pt in processed_text_list]
-
-def is_each_query_section_matching_with_text(query_sections, text):
-    return all(qs.lower() in text.lower() for qs in query_sections)
-
-def is_query_matching_with_text(query, text):
-    return query in text
-
-def find_metadata_registrations_matching_query(query, model, exact=False):
+def get_rdfs_from_ontology_urls(ontology_urls):
     """
-    Finds and returns metadata registrations according to
-    the simple search matching criteria.
+    Creates a dict of ontology component
+    RDFs that the ontology URLs are from.
     """
-    query_sections = query.split()
+    ontology_rdfs = {}
+    for o_url in ontology_urls:
+        o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
+        ontology_component_name, term_id = o_url_shortened.split('/')
+        if ontology_component_name not in ontology_rdfs:
+            ontology_rdfs[ontology_component_name] = ''
+    
+    for key in ontology_rdfs.keys():
+        ontology_rdfs[key] = get_rdf_text_locally(key)
+
+    return ontology_rdfs
+
+def filter_metadata_registrations_by_ontology_urls(query_or_query_sections, ontology_urls_to_registrations, ontology_rdfs, query_matching_fn, text_formatting_fns=[]):
     registrations_with_match = []
-    if len(query_sections) == 0:
-        return registrations_with_match
+    # Pass the ontology URLs and RDFs to map each URL to its text properties
+    ontology_urls_to_ontology_text_node_strings = get_and_map_searchable_text_to_ontology_urls(ontology_urls_to_registrations.keys(), ontology_rdfs)
 
-    text_nodes_to_registrations = {}
-    ontology_urls_to_registrations = {}
-    registrations = model.objects.all()
-    for r in registrations:
-        # Extract text nodes and ontology URLs from all registrations
-        r_text_node_strings = remove_whitespace_from_text_list(get_and_process_text_nodes_from_registration(r), exact=exact)
-        for tns in r_text_node_strings:
-            if tns not in text_nodes_to_registrations:
-                text_nodes_to_registrations[tns] = []
-            text_nodes_to_registrations[tns].append(r)
-
-        # Ontology URLs are mapped to the registrations they came from
-        r_ontology_urls = get_ontology_urls_from_registration(r)
-        for o_url in r_ontology_urls:
-            if o_url not in ontology_urls_to_registrations:
-                ontology_urls_to_registrations[o_url] = []
-            ontology_urls_to_registrations[o_url].append(r)
-
-    # Go through the text node strings and find matches.
-    for key, value in text_nodes_to_registrations.items():
-        if exact and is_query_matching_with_text(query, key):
-            registrations_with_match += value
-        elif not exact and is_each_query_section_matching_with_text(query_sections, key):
-            registrations_with_match += value
-
-    # Loop through a dict of ontology URLs to their text nodes. If
-    # there is a match with one of the text nodes, go to the ontology
-    # URL to registration dictionary, then, add the registrations that
-    # are mapped to the ontology URL in that
-    ontology_urls_to_ontology_text_node_strings = get_and_map_searchable_text_to_ontology_urls(ontology_urls_to_registrations.keys())
+    # Go through the ontology URL to text properties
+    # mappings and find matches.
     for key, value in ontology_urls_to_ontology_text_node_strings.items():
-        value = remove_whitespace_from_text_list(value, exact=exact)
+        for fn in text_formatting_fns:
+            value = fn(value)
         for tns in value:
-            if exact and is_query_matching_with_text(query, tns):
+            if query_matching_fn(query_or_query_sections, tns):
                 registrations_with_match += ontology_urls_to_registrations[key]
                 break
-            elif not exact and is_each_query_section_matching_with_text(query_sections, tns):
-                registrations_with_match += ontology_urls_to_registrations[key]
-                break
+    return list({r.id: r for r in registrations_with_match}.values())
 
-    # Ensure there are no duplicate data collections
-    registrations_with_match = {r.id: r for r in registrations_with_match}.values()
-    return registrations_with_match
+def filter_metadata_registrations_by_ontology_urls_default(query_sections, ontology_urls_to_registrations, ontology_rdfs):
+    return filter_metadata_registrations_by_ontology_urls(
+        query_sections,
+        ontology_urls_to_registrations,
+        ontology_rdfs,
+        is_each_query_section_in_string,
+        [remove_whitespace_only_strings_from_text_list, remove_newlines_and_normalise_whitespace_in_text_list],
+    )
 
+def filter_metadata_registrations_by_ontology_urls_exact(query, ontology_urls_to_registrations, ontology_rdfs):
+    return filter_metadata_registrations_by_ontology_urls(
+        query,
+        ontology_urls_to_registrations,
+        ontology_rdfs,
+        is_query_in_string,
+        [remove_whitespace_only_strings_from_text_list],
+    )
+
+# Find Data Collections referring to pre-Data Collection step registrations.
 def get_data_collections_from_metadata_dependents(metadata_dependents):
     """
     Utility function - gets and returns the metadata dependents
@@ -195,34 +230,110 @@ def get_data_collections_from_other_metadata(registrations):
         data_collections_found += data_collections_from_metadata_dependents
     return data_collections_found
 
+
+def get_registrations_for_simple_search(model):
+    return model.objects.all()
+
 def find_data_collections_for_simple_search(query, exact=False):
     """
     Does a simple search based on the given query.
     """
 
     data_collections_matching_query = []
+    if len(query.split()) == 0:
+        return data_collections_matching_query
+    
+    query_or_query_sections = query.split()
+    text_node_filtering_fn = filter_metadata_registrations_by_text_nodes_default
+    ontology_url_filtering_fn = filter_metadata_registrations_by_ontology_urls_default
+    if exact:
+        text_node_filtering_fn = filter_metadata_registrations_by_text_nodes_exact
+        ontology_url_filtering_fn = filter_metadata_registrations_by_ontology_urls_exact
+        query_or_query_sections = query
 
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Organisation, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Individual, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Project, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Platform, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Operation, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Instrument, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.AcquisitionCapabilities, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Acquisition, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.ComputationCapabilities, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Computation, exact=exact))
-    data_collections_matching_query += get_data_collections_from_other_metadata(find_metadata_registrations_matching_query(query, models.Process, exact=exact))
+    organisations = get_registrations_for_simple_search(models.Organisation)
+    individuals = get_registrations_for_simple_search(models.Individual)
+    projects = get_registrations_for_simple_search(models.Project)
+    platforms = get_registrations_for_simple_search(models.Platform)
+    operations = get_registrations_for_simple_search(models.Operation)
+    instruments = get_registrations_for_simple_search(models.Instrument)
+    acquisition_capabilities = get_registrations_for_simple_search(models.AcquisitionCapabilities)
+    acquisitions = get_registrations_for_simple_search(models.Acquisition)
+    computation_capabilities = get_registrations_for_simple_search(models.ComputationCapabilities)
+    computations = get_registrations_for_simple_search(models.Computation)
+    processes = get_registrations_for_simple_search(models.Process)
+    data_collections = get_registrations_for_simple_search(models.DataCollection)
 
-    data_collections = find_metadata_registrations_matching_query(query, models.DataCollection, exact=exact)
-    data_collections_matching_query += data_collections
+    # Text node filtering
+    organisations_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, organisations)
+    individuals_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, individuals)
+    projects_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, projects)
+    platforms_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, platforms)
+    operations_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, operations)
+    instruments_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, instruments)
+    acquisition_capabilities_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, acquisition_capabilities)
+    acquisitions_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, acquisitions)
+    computation_capabilities_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, computation_capabilities)
+    computations_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, computations)
+    processes_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, processes)
+    data_collections_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, data_collections)
+
+    # Ontology URL filtering
+    ontology_urls_mapped_to_organisations = get_and_map_ontology_urls_to_registrations(organisations)
+    ontology_urls_mapped_to_individuals = get_and_map_ontology_urls_to_registrations(individuals)
+    ontology_urls_mapped_to_projects = get_and_map_ontology_urls_to_registrations(projects)
+    ontology_urls_mapped_to_platforms = get_and_map_ontology_urls_to_registrations(platforms)
+    ontology_urls_mapped_to_operations = get_and_map_ontology_urls_to_registrations(operations)
+    ontology_urls_mapped_to_instruments = get_and_map_ontology_urls_to_registrations(instruments)
+    ontology_urls_mapped_to_acquisition_capabilities = get_and_map_ontology_urls_to_registrations(acquisition_capabilities)
+    ontology_urls_mapped_to_acquisitions = get_and_map_ontology_urls_to_registrations(acquisitions)
+    ontology_urls_mapped_to_computation_capabilities = get_and_map_ontology_urls_to_registrations(computation_capabilities)
+    ontology_urls_mapped_to_computations = get_and_map_ontology_urls_to_registrations(computations)
+    ontology_urls_mapped_to_processes = get_and_map_ontology_urls_to_registrations(processes)
+    ontology_urls_mapped_to_data_collections = get_and_map_ontology_urls_to_registrations(data_collections)
+
+    ontology_rdfs = get_rdfs_from_ontology_urls(list(set(
+        list(ontology_urls_mapped_to_organisations.keys())
+        + list(ontology_urls_mapped_to_individuals.keys())
+        + list(ontology_urls_mapped_to_projects.keys())
+        + list(ontology_urls_mapped_to_platforms.keys())
+        + list(ontology_urls_mapped_to_operations.keys())
+        + list(ontology_urls_mapped_to_instruments.keys())
+        + list(ontology_urls_mapped_to_acquisition_capabilities.keys())
+        + list(ontology_urls_mapped_to_acquisitions.keys())
+        + list(ontology_urls_mapped_to_computation_capabilities.keys())
+        + list(ontology_urls_mapped_to_computations.keys())
+        + list(ontology_urls_mapped_to_processes.keys())
+        + list(ontology_urls_mapped_to_data_collections.keys())
+    )))
+    
+    organisations_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_organisations, ontology_rdfs)
+    individuals_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_individuals, ontology_rdfs)
+    projects_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_projects, ontology_rdfs)
+    platforms_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_platforms, ontology_rdfs)
+    operations_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_operations, ontology_rdfs)
+    instruments_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_instruments, ontology_rdfs)
+    acquisition_capabilities_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_acquisition_capabilities, ontology_rdfs)
+    acquisitions_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_acquisitions, ontology_rdfs)
+    computation_capabilities_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_computation_capabilities, ontology_rdfs)
+    computations_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_computations, ontology_rdfs)
+    processes_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_processes, ontology_rdfs)
+    data_collections_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_data_collections, ontology_rdfs)
+
+    data_collections_matching_query += get_data_collections_from_other_metadata(organisations_filtered_by_text_nodes + organisations_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(individuals_filtered_by_text_nodes + individuals_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(projects_filtered_by_text_nodes + projects_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(platforms_filtered_by_text_nodes + platforms_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(operations_filtered_by_text_nodes + operations_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(instruments_filtered_by_text_nodes + instruments_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(acquisition_capabilities_filtered_by_text_nodes + acquisition_capabilities_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(acquisitions_filtered_by_text_nodes + acquisitions_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(computation_capabilities_filtered_by_text_nodes + computation_capabilities_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(computations_filtered_by_text_nodes + computations_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(processes_filtered_by_text_nodes + processes_filtered_by_ontology_urls)
+    data_collections_matching_query += data_collections_filtered_by_text_nodes + data_collections_filtered_by_ontology_urls
 
     # Ensure there are no duplicate data collections
     data_collections_matching_query = {dc.id: dc for dc in data_collections_matching_query}.values()
     
     return data_collections_matching_query
-
-def find_data_collections_for_case_sensitive_simple_search(query):
-    # https://stackoverflow.com/a/14300008
-    pass
-    

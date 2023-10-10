@@ -2,11 +2,13 @@ import os
 from django.test import TestCase
 
 from .services import (
+    filter_metadata_registrations_by_ontology_urls_default,
+    filter_metadata_registrations_by_ontology_urls_exact,
+    filter_metadata_registrations_by_text_nodes_default,
+    filter_metadata_registrations_by_text_nodes_exact,
     find_data_collections_for_simple_search,
-    find_metadata_registrations_matching_query,
     get_searchable_text_list_from_ontology_urls,
     get_ontology_urls_from_registration,
-    get_metadata_urls_from_registration,
 )
 
 from common import models
@@ -57,32 +59,35 @@ class SimpleSearchTestCase(TestCase):
         return super().setUp()
 
     
-    def test_find_metadata_registrations_matching_query(self):
+    def test_filter_metadata_registrations_by_text_nodes_default(self):
         """
         Searches only the given Model's registrations and returns
         registrations matching the query.
         """
-        organisations = find_metadata_registrations_matching_query('lorem', models.Organisation)
-        data_collections_1 = find_metadata_registrations_matching_query('lorem', models.DataCollection)
-        data_collections_2 = find_metadata_registrations_matching_query('lorem laborum', models.DataCollection)
-        data_collections_3 = find_metadata_registrations_matching_query('lorem didbase', models.DataCollection)
-        data_collections_4 = find_metadata_registrations_matching_query('lorem didbase xyz', models.DataCollection)
-        data_collections_5 = find_metadata_registrations_matching_query('\n', models.DataCollection)
-        data_collections_6 = find_metadata_registrations_matching_query('', models.DataCollection)
-        data_collections_7 = find_metadata_registrations_matching_query('\n\n\n', models.DataCollection)
-        data_collections_8 = find_metadata_registrations_matching_query('\n \n \n', models.DataCollection)
-        data_collections_9 = find_metadata_registrations_matching_query('\n \n DataCollection \n', models.DataCollection)
+        test_organisations = models.Organisation.objects.all()
+        test_data_collections = models.DataCollection.objects.all()
 
-        self.assertEqual(len(organisations), 1)
+        organisations_1 = filter_metadata_registrations_by_text_nodes_default(['lorem'], test_organisations)
+        data_collections_1 = filter_metadata_registrations_by_text_nodes_default(['lorem'], test_data_collections)
+        data_collections_2 = filter_metadata_registrations_by_text_nodes_default(['lorem', 'laborum'], test_data_collections)
+        data_collections_3 = filter_metadata_registrations_by_text_nodes_default(['lorem', 'didbase'], test_data_collections)
+        data_collections_4 = filter_metadata_registrations_by_text_nodes_default(['lorem', 'didbase', 'xyz'], test_data_collections)
+        data_collections_5 = filter_metadata_registrations_by_text_nodes_default(['\\n'], test_data_collections)
+        data_collections_6 = filter_metadata_registrations_by_text_nodes_default([''], test_data_collections)
+        data_collections_7 = filter_metadata_registrations_by_text_nodes_default(['\\n\\n\\n'], test_data_collections)
+        data_collections_8 = filter_metadata_registrations_by_text_nodes_default(['\\n', '\\n', '\\n'], test_data_collections)
+        data_collections_9 = filter_metadata_registrations_by_text_nodes_default(['\\n', '\\n', 'DataCollection', '\\n'], test_data_collections)
+
+        self.assertEqual(len(organisations_1), 1)
         self.assertEqual(len(data_collections_1), 1)
         self.assertEqual(len(data_collections_2), 1)
         self.assertEqual(len(data_collections_3), 0)
         self.assertEqual(len(data_collections_4), 0)
         self.assertEqual(len(data_collections_5), 0)
-        self.assertEqual(len(data_collections_6), 0)
+        self.assertEqual(len(data_collections_6), 1)
         self.assertEqual(len(data_collections_7), 0)
         self.assertEqual(len(data_collections_8), 0)
-        self.assertEqual(len(data_collections_9), 1)
+        self.assertEqual(len(data_collections_9), 0)
         
 
     def test_find_registrations_matching_query_exactly(self):
@@ -90,12 +95,14 @@ class SimpleSearchTestCase(TestCase):
         Searches on the given Model's registrations and returns
         registrations matching the query exactly.
         """
-        data_collections_1 = find_metadata_registrations_matching_query('Lorem', models.DataCollection, exact=True)
-        data_collections_2 = find_metadata_registrations_matching_query('lorem', models.DataCollection, exact=True)
-        data_collections_3 = find_metadata_registrations_matching_query('Lorem  ', models.DataCollection, exact=True)
-        data_collections_4 = find_metadata_registrations_matching_query('Lorem ', models.DataCollection, exact=True)
-        data_collections_5 = find_metadata_registrations_matching_query('giro . uml . edu / didbase /', models.DataCollection, exact=True)
-        data_collections_6 = find_metadata_registrations_matching_query('giro.uml.edu/didbase/', models.DataCollection, exact=True)
+        test_data_collections = models.DataCollection.objects.all()
+
+        data_collections_1 = filter_metadata_registrations_by_text_nodes_exact('Lorem', test_data_collections)
+        data_collections_2 = filter_metadata_registrations_by_text_nodes_exact('lorem', test_data_collections)
+        data_collections_3 = filter_metadata_registrations_by_text_nodes_exact('Lorem  ', test_data_collections)
+        data_collections_4 = filter_metadata_registrations_by_text_nodes_exact('Lorem ', test_data_collections)
+        data_collections_5 = filter_metadata_registrations_by_text_nodes_exact('giro . uml . edu / didbase /', test_data_collections)
+        data_collections_6 = filter_metadata_registrations_by_text_nodes_exact('giro.uml.edu/didbase/', test_data_collections)
 
         print('len(data_collections_1)', len(data_collections_1))
         print('len(data_collections_2)', len(data_collections_2))
@@ -184,18 +191,6 @@ class SimpleSearchTestCase(TestCase):
         print('len(ontology_urls)', len(ontology_urls))
 
         self.assertGreaterEqual(len(ontology_urls), 1)
-        
-    def test_get_metadata_server_urls_from_registration(self):
-        """
-        Find and return in a list all metadata server URLs
-        from a registration.
-        """
-        metadata_server_urls = get_metadata_urls_from_registration(self.data_collection)
-
-        print('metadata_server_urls', metadata_server_urls)
-        print('len(metadata_server_urls)', len(metadata_server_urls))
-
-        self.assertGreaterEqual(len(metadata_server_urls), 1)
 
     def test_get_searchable_text_list_from_ontology_urls(self):
         """
