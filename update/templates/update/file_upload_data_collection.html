@@ -23,6 +23,7 @@ Upload the updated file using the file input below.
 This will start the file validation process.
 Once the file has finished updating, use the submit button to commit the change in the e-Science Centre.
 {% endblock page_description %}
+{% block multiple_allowed %}Multiple files not allowed{% endblock multiple_allowed %}
 {% block file_list %}
 {% include 'register/validation_template.html' %}
 {% endblock file_list %}

@@ -81,6 +81,7 @@ a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a,
 
 h1 {
     color: var(--pithia-blue);
+    font-weight: bold;
 }
 
 /* .card-menu, .list-group combinators */
@@ -363,11 +364,16 @@ header .dropdown-item {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'None';
+    content: 'Uploaded files will appear here.';
+    color: gray;
 }
 
 #id_files {
-    width: 100%;
+    box-shadow: inset;
+}
+
+.form-group {
+    padding: 1rem 0;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -643,8 +649,8 @@ ul.tree ul {
 }
 
 @media (min-width: 992px) {
-    #id_files {
-        max-width: 20rem;
+    .file-upload-container {
+        max-width: 60ch;
     }
     
     .user-dropdown {

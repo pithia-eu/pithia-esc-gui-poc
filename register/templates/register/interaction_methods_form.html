@@ -1,64 +1,56 @@
-<div class="row gy-3">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <p class="d-flex flex-column mb-0">
-                    <span><b>Link to Data Collection <small class="text-muted">(added inside the XML Metadata File)</small></b></span>
-                    <span class="mt-1">
-                        If a URL is put inside a linkage tag, this will be provided as a direct link to the Data Collection.
-                    </span>
-                </p>
-            </div>
+<ul class="list-group list-group-flush">
+    <li class="list-group-item pb-3">
+        <div class="d-flex flex-column mb-0">
+            <span><b>Link to Data Collection <small class="text-muted">(added inside the XML Metadata File)</small></b></span>
+            <span class="mt-1">
+                If a URL is put inside a linkage tag, this will be provided as a direct link to the Data Collection.
+            </span>
         </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex flex-column">
-                    <div class="form-check fw-bold">
-                        {{ form.api_selected }}
-                        <label for="{{ form.api_selected.auto_id }}" class="form-check-label">{{ form.api_selected.label }}</label>
-                    </div>
-                    <span class="mb-2">
-                        A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
-                    </span>
-                </div>
-                <div class="d-flex flex-column">
-                    {% if form.api_specification_url.errors %}
-                        <ul>
-                        {% for error in form.api_specification_url.errors %}
-                            <li>{{ error|escape }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {{ form.api_specification_url.label_tag }}
-                    {{ form.api_specification_url }}
-                    <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
-                    <div class="mt-1 api-specification-url-status-validation d-none">
-                        <ul class="list-group list-group-flush list-group-horizontal mb-0">
-                            <li class="list-group-item border border-0 status-invalid-link d-none p-0">
-                                <div class="d-flex flex-column">
-                                    <small class="status-text text-danger">Invalid link</small>
-                                    <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    {% if form.api_description.errors %}
-                        <ul>
-                        {% for error in form.api_description.errors %}
-                            <li>{{ error|escape }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    <div class="mt-2">
+    </li>
+    <li class="list-group-item py-3">
+        <div class="d-flex flex-column">
+            <div class="form-check fw-bold">
+                {{ form.api_selected }}
+                <label for="{{ form.api_selected.auto_id }}" class="form-check-label">{{ form.api_selected.label }}</label>
+            </div>
+            <span class="mb-2">
+                A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
+            </span>
+        </div>
+        <div class="d-flex flex-column">
+            {% if form.api_specification_url.errors %}
+                <ul>
+                {% for error in form.api_specification_url.errors %}
+                    <li>{{ error|escape }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {{ form.api_specification_url.label_tag }}
+            {{ form.api_specification_url }}
+            <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
+            <div class="mt-1 api-specification-url-status-validation d-none">
+                <ul class="list-group list-group-flush list-group-horizontal mb-0">
+                    <li class="list-group-item border border-0 status-invalid-link d-none p-0">
                         <div class="d-flex flex-column">
-                            {{ form.api_description.label_tag }}
-                            {{ form.api_description }}
+                            <small class="status-text text-danger">Invalid link</small>
+                            <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
                         </div>
-                    </div>
+                    </li>
+                </ul>
+            </div>
+            {% if form.api_description.errors %}
+                <ul>
+                {% for error in form.api_description.errors %}
+                    <li>{{ error|escape }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="mt-2">
+                <div class="d-flex flex-column">
+                    {{ form.api_description.label_tag }}
+                    {{ form.api_description }}
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </li>
+</ul>

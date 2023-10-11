@@ -31,11 +31,18 @@ function resetFileValidationList(listElem) {
 
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
-        <li class="list-group-item file-list-group-item-${index} pb-3">
-            <div class="row g-2">
-                <div class="col-lg-10">
-                    <div class="row g-2">
-                        <div class="col-lg-12 text-truncate">${file.name}</div>
+        <li class="list-group-item file-list-group-item-${index} p-4">
+            <div class="d-flex align-items-md-center align-items-start">
+                <div class="d-flex flex-column flex-grow-1 me-auto pe-md-5 pe-3">
+                    <div class="pb-3">
+                        <div class="d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-xml flex-shrink-0 me-3" viewBox="0 0 16 16" style="width: 1.2rem; height: 1.2rem;">
+                                <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM3.527 11.85h-.893l-.823 1.439h-.036L.943 11.85H.012l1.227 1.983L0 15.85h.861l.853-1.415h.035l.85 1.415h.908l-1.254-1.992 1.274-2.007Zm.954 3.999v-2.66h.038l.952 2.159h.516l.946-2.16h.038v2.661h.715V11.85h-.8l-1.14 2.596h-.025L4.58 11.85h-.806v3.999h.706Zm4.71-.674h1.696v.674H8.4V11.85h.791v3.325Z"/>
+                            </svg>
+                            <span class="text-break">${file.name}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column" style="row-gap: 1rem;">
                         <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>
@@ -47,11 +54,11 @@ function loadFileValidationElemsForFile(file, listElem, index) {
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2">
-                    <div class="d-flex flex-column justify-content-center align-items-end h-100">
-                        <button id="btn-rm-file-${index}" class="btn btn-danger btn-sm btn-rm-file" data-list-item-num="${index}" type="button">Remove</button>
-                    </div>
-                </div>
+                <button id="btn-rm-file-${index}" class="btn btn-outline-dark btn-sm btn-rm-file" data-list-item-num="${index}" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill pe-none" viewBox="0 0 16 16">
+                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                    </svg>
+                </button>
             </div>
         </li>
     `));
@@ -115,7 +122,10 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
     `);
     if (fileValidationStatus.error) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/cross.svg" alt="cross" class="me-3"><span class="text-danger">${fileValidationStatus.error.message}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger flex-shrink-0 me-3" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+        </svg>
+        <span class="text-danger">${fileValidationStatus.error.message}</span>
         `;
     } else if (fileValidationStatus.state === "validating") {
         statusElemContent.innerHTML = `
@@ -128,7 +138,10 @@ function updateXMLFileValidationStatus(fileValidationStatus, statusElem, validat
         `;
     } else if (fileValidationStatus.state === xmlValidationStates.VALID) {
         statusElemContent.innerHTML = `
-            <img src="/static/register/tick.svg" alt="tick" class="me-3"><span class="text-success">Valid</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2 text-success flex-shrink-0 me-3" viewBox="0 0 16 16" style="height: 1.5rem; width: 1.5rem;">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+        </svg>
+        <span class="text-success">Valid</span>
         `;
     }
     
