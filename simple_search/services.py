@@ -39,11 +39,13 @@ def get_and_process_text_nodes_from_registration(r):
     from text nodes of a metadata registration.
     """
     parsed_xml = parse_registration_xml(r)
-    text_nodes_in_parsed_xml = []
-    if etree.QName(parsed_xml).localname == models.Individual.root_element_name:
-        text_nodes_in_parsed_xml = parsed_xml.xpath(f'/{etree.QName(parsed_xml).localname}/*[not(self::contactInfo)]/text()')
+    if (etree.QName(parsed_xml).localname == models.Organisation.root_element_name
+       or etree.QName(parsed_xml).localname == models.Individual.root_element_name):
+        text_nodes_in_parsed_xml = parsed_xml.xpath('//*[not(descendant::gco:CharacterString) and not(ancestor-or-self::gco:CharacterString)]/text()', namespaces={
+            'gco': 'http://www.isotc211.org/2005/gco'
+        })
     else:
-        text_nodes_in_parsed_xml = parsed_xml.xpath('.//*[not(name()="gco:CharacterString")]/text()')
+        text_nodes_in_parsed_xml = parsed_xml.xpath('//*/text()')
     # Convert all text nodes to strings to make
     # further processing easier.
     return [str(tn) for tn in text_nodes_in_parsed_xml]
