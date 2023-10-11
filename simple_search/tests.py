@@ -7,7 +7,9 @@ from .services import (
     filter_metadata_registrations_by_text_nodes_default,
     filter_metadata_registrations_by_text_nodes_exact,
     find_data_collections_for_simple_search,
-    get_searchable_text_list_from_ontology_urls,
+    get_and_process_text_nodes_of_ontology_url,
+    get_rdfs_from_ontology_urls,
+    get_ontology_component_name_from_ontology_url,
     get_ontology_urls_from_registration,
 )
 
@@ -192,15 +194,21 @@ class SimpleSearchTestCase(TestCase):
 
         self.assertGreaterEqual(len(ontology_urls), 1)
 
-    def test_get_searchable_text_list_from_ontology_urls(self):
+    def test_get_and_process_text_nodes_of_ontology_url(self):
         """
-        Gets the searchable text of an ontology node
-        corresponding to given ontology URL.
+        Returns a list of text properties of an ontology
+        node corresponding with a given ontology URL.
         """
-        searchable_ontology_text = get_searchable_text_list_from_ontology_urls([
-            'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
-            'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-sao',
-            'https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectricField',
+        ontology_url = 'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png'
+
+        ontology_rdfs = get_rdfs_from_ontology_urls([
+            ontology_url,
         ])
 
-        self.assertGreaterEqual(len(searchable_ontology_text), 1)
+        ontology_url_text_node_strings = get_and_process_text_nodes_of_ontology_url(
+            ontology_url,
+            ontology_rdfs[get_ontology_component_name_from_ontology_url(ontology_url)]
+        )
+
+        for tns in ontology_url_text_node_strings:
+            self.assertTrue(type(tns) == str)

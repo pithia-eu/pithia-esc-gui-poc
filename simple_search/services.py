@@ -1,11 +1,8 @@
 from lxml import etree
-from rdflib import URIRef
-from rdflib.resource import Resource
 
 from common import models
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from ontology.utils import (
-    get_rdf_text_for_ontology_component,
     get_rdf_text_locally,
 )
 
@@ -117,27 +114,12 @@ def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_
     for el in ontology_url_element:
         searchable_text += el.xpath('.//*/text()')
     
-    return list(set(searchable_text))
+    return list(set([str(tn) for tn in searchable_text]))
 
-def get_searchable_text_list_from_ontology_urls(ontology_urls):
-    """
-    Gets and combines each list of text properties for
-    each ontology URL, into one combined list.
-    """
-    ontology_urls = list(set(ontology_urls))
-    searchable_ontology_text = []
-    processed_ontology_component_rdfs = {}
-    for o_url in ontology_urls:
-        o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
-        ontology_component_name, term_id = o_url_shortened.split('/')
-
-        if ontology_component_name not in processed_ontology_component_rdfs:
-            processed_ontology_component_rdfs[ontology_component_name] = get_rdf_text_locally(ontology_component_name)
-        ontology_component_rdf = processed_ontology_component_rdfs[ontology_component_name]
-        searchable_text_for_ontology_url = get_and_process_text_nodes_of_ontology_url(o_url, ontology_component_rdf)
-        searchable_ontology_text += searchable_text_for_ontology_url
-    
-    return list(set(searchable_ontology_text))
+def get_ontology_component_name_from_ontology_url(ontology_url):
+    o_url_shortened = ontology_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
+    ontology_component_name, term_id = o_url_shortened.split('/')
+    return ontology_component_name
 
 def get_and_map_searchable_text_to_ontology_urls(ontology_urls, ontology_rdfs):
     """
@@ -148,8 +130,7 @@ def get_and_map_searchable_text_to_ontology_urls(ontology_urls, ontology_rdfs):
     ontology_urls = list(set(ontology_urls))
     ontology_urls_to_text_nodes = {}
     for o_url in ontology_urls:
-        o_url_shortened = o_url.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/', '')
-        ontology_component_name, term_id = o_url_shortened.split('/')
+        ontology_component_name = get_ontology_component_name_from_ontology_url(o_url)
         ontology_component_rdf = ontology_rdfs[ontology_component_name]
         searchable_text_for_ontology_url = get_and_process_text_nodes_of_ontology_url(o_url, ontology_component_rdf)
         if o_url not in ontology_urls_to_text_nodes:
