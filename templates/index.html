@@ -10,7 +10,15 @@
             <div class="card-body">
                 <a href="{% url 'search:index' %}">
                     <img src="{% static 'search.svg' %}" alt="Search">
-                    <span>Search Data Collections</span>
+                    <span>Search Data Collections by Content</span>
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'simple_search:index' %}">
+                    <img src="{% static 'search.svg' %}" alt="Search">
+                    <span>Data Collection Simple Search</span>
                 </a>
             </div>
         </div>

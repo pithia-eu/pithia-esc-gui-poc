@@ -19,10 +19,20 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Search & Browse</a>
             <ul class="dropdown-menu">
+                <div class="dropdown-header">
+                    Search
+                </div>
                 <li class="dropdown-item">
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="nav-link px-2">Search Data Collections</a>
+                    <a href="{{ search_url }}" class="nav-link px-2">Search Data Collections by Content</a>
                 </li>
+                <li class="dropdown-item">
+                    {% url 'simple_search:index' as simple_search_url %}
+                    <a href="{{ simple_search_url }}" class="nav-link px-2">Data Collection Simple Search</a>
+                </li>
+                <div class="dropdown-header">
+                    Browse
+                </div>
                 <li class="dropdown-item">
                     {% url 'browse:list_data_collections' as data_collections_url %}
                     <a href="{{ data_collections_url }}" class="nav-link px-2">Browse Data Collections</a>
@@ -35,6 +45,9 @@
                     {% url 'browse:index' as browse_url %}
                     <a href="{{ browse_url }}" class="nav-link px-2">Browse Metadata</a>
                 </li>
+                <div class="dropdown-header">
+                    Space Physics Ontology
+                </div>
                 <li class="dropdown-item">
                     {% url 'ontology:index' as browse_ontology_url %}
                     <a href="{{ browse_ontology_url }}" class="nav-link px-2">Space Physics Ontology</a>
