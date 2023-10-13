@@ -164,7 +164,7 @@ header .dropdown-item:active a {
     width: 100%;
     height: 100%;
     font-size: 1.1em;
-    word-break: break-word;
+    word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
     column-gap: 0.5rem;
