@@ -28,7 +28,7 @@
                             <ul class="list-unstyled">
                                 {% for i in resource_dictionary|get_key_value:p %}
                                 {% if p == 'observedProperty' or p == 'phenomenon' or p == 'measurand' or p == 'featureOfInterest' or p == 'propagationMode' or p == 'interaction' or p == 'qualifier' or p == 'narrower' or p == 'broader' %}
-                                <li>
+                                <li {% if not forloop.first %}class="mt-2"{% endif %}>
                                     {% autoescape off %}
                                     {{ i }}
                                     {% endautoescape %}

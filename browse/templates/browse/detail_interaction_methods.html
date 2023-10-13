@@ -38,16 +38,22 @@
                                 {{ online_resource.description|urlize }}
                             </td>
                             <td>
-                                {% for dataFormat in online_resource.dataFormat %}
-                                <div class="metadata-server-url">
-                                    <div class="placeholder-wrapper">
-                                        <div class="placeholder-wave">
-                                            <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                {% if 'dataFormat' in online_resource %}
+                                <ul class="list-unstyled">
+                                    {% for dataFormat in online_resource.dataFormat %}
+                                    <li {% if not forloop.first %}class="mt-2"{% endif %}>
+                                        <div class="metadata-server-url">
+                                            <div class="placeholder-wrapper">
+                                                <div class="placeholder-wave">
+                                                    <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                                </div>
+                                            </div>
+                                            {{ dataFormat|get_key_value:'@xlink:href'|urlize }}
                                         </div>
-                                    </div>
-                                    {{ dataFormat|get_key_value:'@xlink:href'|urlize }}
-                                </div>
-                                {% endfor %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
                             </td>
                             <td>
                                 <div class="d-flex flex-column">
