@@ -138,39 +138,13 @@ header .dropdown-item:active a {
 }
 
 .card-menu span {
-    margin: 0 0.5rem;
-}
-
-.card-menu a img {
-    margin-bottom: 0.5rem;
-}
-
-.card-menu .card img {
-    width: 3rem;
-    transition: filter 10ms linear;
-}
-
-.card-menu .card:hover img,
-.card-menu .card:focus img {
-    /* filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7477%) hue-rotate(168deg) brightness(107%) contrast(107%); */
-}
-
-.card-menu .card:hover [href^="http"]:not([href*="pithia.eu"]) span::after,
-.card-menu .card:focus [href^="http"]:not([href*="pithia.eu"]) span::after {
-    /* background-image: url('/static/external_link_white.svg'); */
+    margin-inline: 0.5rem;
 }
 
 .card-menu .card:hover,
 .card-menu .card:focus {
     box-shadow: 0px 0px 0px 1.5px var(--pithia-blue);
     background-color: rgb(245, 248, 251);
-}
-
-.card-menu .card:hover a,
-.card-menu .card:focus a,
-.card-menu .card:hover .text-muted,
-.card-menu .card:focus .text-muted {
-    /* color: white !important; */
 }
 
 .card-menu .card-body {
@@ -184,16 +158,24 @@ header .dropdown-item:active a {
 .card-menu a {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
     width: 100%;
     height: 100%;
     font-size: 1.1em;
-    padding: 1.5rem 0.25rem;
     word-break: break-word;
     hyphens: auto;
     overflow: hidden;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
+    padding: 2rem;
+}
+
+.card-menu a svg {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
 }
 
 /* Resource detail page */
@@ -553,6 +535,12 @@ ul.tree ul {
 @media (min-width: 576px) {
     .ontology-browser-terms ul.tree ul li {
         padding-left: 2rem;
+    }
+}
+
+@media (min-width: 450px) {
+    .card-menu a {
+        padding: 1rem 1.25rem;
     }
 }
 
