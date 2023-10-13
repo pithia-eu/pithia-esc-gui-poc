@@ -13,9 +13,9 @@
 <script src="{% static "is_file_upload_ready.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-{% block title %}
 <div class="row flex-wrap gx-md-5 gy-5 pb-4">
     <div class="col-lg-8">
+        {% block title %}
         <h1>{{ title }}</h1>
         {% endblock title %}
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
@@ -46,7 +46,7 @@
             {% endblock register_api_specification %}
             {% block doi_registration %}
             {% endblock doi_registration %}
-            <div class="form-group">
+            <div class="form-group d-flex flex-sm-row flex-column justify-content-sm-start justify-content-stretch">
                 <button type="submit" class="btn btn-outline-primary" disabled>Submit</button>
             </div>
         </form>

@@ -13,11 +13,7 @@
 {% endblock file_list %}
 {% block register_api_specification %}
 <div class="form-group mt-3">
-    <div class="card">
-        <div class="card-body">
-            <h2>Interaction Methods</h2>
-            {% include 'register/interaction_methods_form.html' %}
-        </div>
-    </div>
+    <h2 class="text-secondary fs-4">Configure Interaction Methods</h2>
+    <div class="interaction-methods-form-container">{% include 'register/interaction_methods_form.html' %}</div>
 </div>
 {% endblock register_api_specification %}

@@ -368,12 +368,17 @@ header .dropdown-item {
     color: gray;
 }
 
-#id_files {
-    box-shadow: inset;
-}
-
 .form-group {
     padding: 1rem 0;
+}
+
+.interaction-methods-form-container {
+    max-width: 75ch;
+}
+
+.file-upload-validation-msgs {
+    max-width: 75ch;
+    row-gap: 1rem;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -650,7 +655,7 @@ ul.tree ul {
 
 @media (min-width: 992px) {
     .file-upload-container {
-        max-width: 60ch;
+        max-width: 75ch;
     }
     
     .user-dropdown {

@@ -42,7 +42,7 @@ function loadFileValidationElemsForFile(file, listElem, index) {
                             <span class="text-break">${file.name}</span>
                         </div>
                     </div>
-                    <div class="d-flex flex-column" style="row-gap: 1rem;">
+                    <div class="d-flex flex-column file-upload-validation-msgs">
                         <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
                         <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
                         </div>

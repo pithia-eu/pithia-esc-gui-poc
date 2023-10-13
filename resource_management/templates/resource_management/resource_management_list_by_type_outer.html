@@ -10,12 +10,12 @@
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row gx-3 mb-3">
+<div class="row mb-3">
     <div class="col-lg-9">
         <h1>{{ title }}</h1>
     </div>
     <div class="col-lg-3">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-sm-end justify-content-start">
             <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold mt-2 mb-3"><span>+</span><span class="mt-1"> Register</span></a>
         </div>
     </div>
