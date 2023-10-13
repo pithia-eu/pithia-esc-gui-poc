@@ -31,7 +31,7 @@
                 <div class="file-upload-container mb-3">
                     {{ form.files.label_tag }}
                     {{ form.files }}
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between flex-wrap">
                         <small class="form-text">Supported formats: XML</small>
                         <small class="form-text">{% block multiple_allowed %}Multiple files allowed{% endblock multiple_allowed %}</small>
                     </div>

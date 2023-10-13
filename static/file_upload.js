@@ -32,33 +32,31 @@ function resetFileValidationList(listElem) {
 function loadFileValidationElemsForFile(file, listElem, index) {
     return listElem.append(htmlToElement(`
         <li class="list-group-item file-list-group-item-${index} p-4">
-            <div class="d-flex align-items-md-center align-items-start">
-                <div class="d-flex flex-column flex-grow-1 me-auto pe-md-5 pe-3">
-                    <div class="pb-3">
-                        <div class="d-flex align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-xml flex-shrink-0 me-3" viewBox="0 0 16 16" style="width: 1.2rem; height: 1.2rem;">
-                                <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM3.527 11.85h-.893l-.823 1.439h-.036L.943 11.85H.012l1.227 1.983L0 15.85h.861l.853-1.415h.035l.85 1.415h.908l-1.254-1.992 1.274-2.007Zm.954 3.999v-2.66h.038l.952 2.159h.516l.946-2.16h.038v2.661h.715V11.85h-.8l-1.14 2.596h-.025L4.58 11.85h-.806v3.999h.706Zm4.71-.674h1.696v.674H8.4V11.85h.791v3.325Z"/>
+            <div class="d-flex flex-column flex-grow-1">
+                <div class="pb-3">
+                    <div class="d-flex align-items-center w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-xml flex-shrink-0 me-3" viewBox="0 0 16 16" style="width: 1.2rem; height: 1.2rem;">
+                            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM3.527 11.85h-.893l-.823 1.439h-.036L.943 11.85H.012l1.227 1.983L0 15.85h.861l.853-1.415h.035l.85 1.415h.908l-1.254-1.992 1.274-2.007Zm.954 3.999v-2.66h.038l.952 2.159h.516l.946-2.16h.038v2.661h.715V11.85h-.8l-1.14 2.596h-.025L4.58 11.85h-.806v3.999h.706Zm4.71-.674h1.696v.674H8.4V11.85h.791v3.325Z"/>
+                        </svg>
+                        <span class="text-break me-auto">${file.name}</span>
+                        <button id="btn-rm-file-${index}" class="btn btn-outline-dark btn-sm btn-rm-file" data-list-item-num="${index}" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill pe-none" viewBox="0 0 16 16">
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
                             </svg>
-                            <span class="text-break">${file.name}</span>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column file-upload-validation-msgs">
-                        <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
-                        <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
-                        </div>
-                        <div class="col-lg-12 file-validation-warnings file-validation-warnings-${index} text-break d-none">
-                            <ul class="list-group list-group-warning">
-                            </ul>
-                        </div>
-                        <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break d-none">
-                        </div>
+                        </button>
                     </div>
                 </div>
-                <button id="btn-rm-file-${index}" class="btn btn-outline-dark btn-sm btn-rm-file" data-list-item-num="${index}" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill pe-none" viewBox="0 0 16 16">
-                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-                    </svg>
-                </button>
+                <div class="d-flex flex-column file-upload-validation-msgs">
+                    <input type="hidden" id="is-file-${index}-valid" class="is-file-valid-status" value="false">
+                    <div class="col-lg-12 file-validation-status file-validation-status-${index} text-break">
+                    </div>
+                    <div class="col-lg-12 file-validation-warnings file-validation-warnings-${index} text-break d-none">
+                        <ul class="list-group list-group-warning">
+                        </ul>
+                    </div>
+                    <div class="col-lg-12 file-validation-error file-validation-error-${index} text-break d-none">
+                    </div>
+                </div>
             </div>
         </li>
     `));
