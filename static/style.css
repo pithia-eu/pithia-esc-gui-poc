@@ -210,22 +210,13 @@ header .dropdown-item {
 }
 
 .card-menu .card {
-    box-shadow: 0 .25rem 0.5rem rgba(0,0,0,.15) !important;
+    box-shadow: 0 .1rem 0.2rem rgba(0,0,0,.15) !important;
     transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
 }
 
 .card-menu span {
-    margin: 0 0.5rem;
-}
-
-.card-menu a img {
-    margin-bottom: 0.5rem;
-}
-
-.card-menu .card img {
-    width: 3rem;
-    transition: filter 10ms linear;
+    margin-inline: 0.5rem;
 }
 
 .card-menu .card:hover,
@@ -244,16 +235,24 @@ header .dropdown-item {
 .card-menu a {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
     width: 100%;
     height: 100%;
     font-size: 1.1em;
-    padding: 1.5rem 0.25rem;
-    word-break: break-word;
+    word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
+    padding: 2rem;
+}
+
+.card-menu a svg {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
 }
 
 .alert-institution-setting svg:first-child {
@@ -680,6 +679,12 @@ ul.tree ul {
 
     .ontology-browser-terms ul.tree ul li {
         padding-left: 2rem;
+    }
+}
+
+@media (min-width: 450px) {
+    .card-menu a {
+        padding: 1rem 1.25rem;
     }
 }
 

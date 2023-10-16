@@ -20,10 +20,20 @@
                 data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">Scientific Metadata</a>
             <ul class="dropdown-menu">
+                <div class="dropdown-header">
+                    Search
+                </div>
                 <li>
                     {% url 'search:index' as search_url %}
-                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections</a>
+                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections by Content</a>
                 </li>
+                <li>
+                    {% url 'simple_search:index' as simple_search_url %}
+                    <a href="{{ simple_search_url }}" class="dropdown-item">Data Collection Simple Search</a>
+                </li>
+                <div class="dropdown-header">
+                    Browse
+                </div>
                 <li>
                     {% url 'browse:list_data_collections' as data_collections_url %}
                     <a href="{{ data_collections_url }}" class="dropdown-item">Data Collections</a>

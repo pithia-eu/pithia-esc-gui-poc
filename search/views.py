@@ -29,7 +29,7 @@ from ontology.utils import (
     categorise_observed_property_dict_by_top_level_phenomenons,
 )
 
-_INDEX_PAGE_TITLE = 'Search Data Collections'
+_INDEX_PAGE_TITLE = 'Search Data Collections by Content'
 
 def get_tree_form_for_ontology_component(request, ontology_component):
     terms_load_error_msg = '<span class="text-secondary">The form could not be loaded due to a server error.</span>'
