@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:om="http://www.opengis.net/om/2.0" xmlns:pithia="https://metadata.pithia.eu/schemas/2.2" targetNamespace="https://metadata.pithia.eu/schemas/2.2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+    <import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"/>
+    <import namespace="http://www.opengis.net/om/2.0" schemaLocation="http://schemas.opengis.net/om/2.0/observation.xsd"/>
+    <include schemaLocation="utilities.xsd"/>
+    <include schemaLocation="project.xsd"/>
+    <include schemaLocation="collectionResults.xsd"/>
+    <annotation>
+        <documentation>Version 2.2 08/20/2022</documentation>
+    </annotation>
+    <element name="DataCollection" substitutionGroup="gml:AbstractFeature" type="pithia:DataCollectionType">
+        <annotation>
+            <documentation>-- Definition --
+A collection of model or measurement data with CollectionResults pointing to the data resource URL.
+
+-- Description --
+Data can be aggregated in collections organised by a variety of criteria (by content, by project, by functionalilty, by process type)
+
+EXAMPLE A collection including all the conducted observations under the project DIAS.
+</documentation>
+        </annotation>
+    </element>
+    <complexType name="DataCollectionType">
+        <complexContent>
+            <extension base="om:OM_ObservationType">
+                <sequence>
+                    <element name="identifier" maxOccurs="1" minOccurs="1" type="pithia:PITHIA_IdentifierPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                External identifier of the data collection.
+                                
+                                -- Description --
+                                NOTE The identifier may be used by an external application to reference a data collection.
+                                
+                            </documentation>
+                        </annotation>
+                    </element>    
+                    <element name="name" maxOccurs="1" minOccurs="0" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Name of the Data Collection.
+                                
+                            </documentation>
+                        </annotation>
+                    </element>                    
+                    <element name="description" maxOccurs="1" minOccurs="0" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+Description of the data collection including  the criteria for its  creation.  
+
+-- Description --
+Criteria could be a common observation or modelling process, an observable property etc.
+
+
+</documentation>
+                        </annotation>
+                    </element>
+                    <element name="type" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Type of the data collection (instrument or model) from a controlled vocabulary.
+                            </documentation>
+                        </annotation>
+                    </element>    
+                    <element name="project" maxOccurs="unbounded" minOccurs="0" type="pithia:ProjectPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                A project that the data collection belongs to.</documentation>
+                        </annotation>
+                    </element>   
+                    <element name="relatedParty" maxOccurs="unbounded" minOccurs="0" type="pithia:ResponsiblePartyInfoPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Individual or organisation related to the data collection
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="collectionResults" maxOccurs="1" minOccurs="0" type="pithia:CollectionResultsType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Description of this collection results -- URLs and other online resources
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="subCollection" maxOccurs="unbounded" minOccurs="0" type="pithia:DataCollectionPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Sub-collectiont of the collection.</documentation>
+                        </annotation>
+                    </element>                    
+                    <element name="dataLevel" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Data Level of the computation result from a controlled vocabulary.
+                            </documentation>
+                        </annotation>
+                    </element>    
+                    <element name="qualityAssessment" maxOccurs="unbounded" minOccurs="0" type="pithia:QualityAssessmentType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                Description of the Quality Assessment, including 
+                                (a) scientific quality, 
+                                (b) quality of metadata, and 
+                                (c) operational quality of data resources
+                            </documentation>
+                        </annotation>
+                    </element>    
+                    <element name="permission" maxOccurs="unbounded" minOccurs="0" type="gmd:MD_Constraints_PropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+                              Restrictions on the access and use of  observation's result.
+                                           -- Description --
+                              Restrictions on the access and use of the data collection are known without navigating from the obseravtion to the result. 
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="additionalMetadata" maxOccurs="unbounded" minOccurs="0" type="gmd:CI_OnlineResource_PropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+Resources for any non ISO conformed  metadata about the Data Collection.</documentation>
+                        </annotation>
+                    </element>
+                    <element name="isoMetadata" maxOccurs="unbounded" minOccurs="0" type="gmd:MD_Metadata_PropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+ISO metadata about the Data Collection.
+</documentation>
+                        </annotation>
+                    </element>
+                    <element name="query" maxOccurs="unbounded" minOccurs="0" type="string">
+                        <annotation>
+                            <documentation>-- Definition --
+                                The CQuery query that describes the observation/modelling data that belong to this collection
+                                
+                                -- Description --
+                                The detailed query in CQuery format that describes the data that belong to this collection                             
+                                
+                            </documentation>
+                        </annotation>
+                    </element> 
+                    <!-- we don't use this element, because we use the Query to describe which observations belong to this collection
+                    <element maxOccurs="unbounded" minOccurs="0" name="member" type="pithia:ObservationPropertyType"/>
+                    -->
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="DataCollectionPropertyType">
+        <sequence minOccurs="0">
+            <element ref="pithia:DataCollection"/>
+        </sequence>
+        <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+    </complexType>
+</schema>

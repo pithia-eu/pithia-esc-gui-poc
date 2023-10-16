@@ -1,4 +1,5 @@
 import logging
+import os
 import xmlschema
 from django.core.exceptions import ObjectDoesNotExist
 from requests import get
@@ -31,6 +32,7 @@ from common.models import (
     AcquisitionCapabilities,
     ScientificMetadata,
 )
+from pithiaesc.settings import BASE_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -201,6 +203,10 @@ def validate_xml_file_and_return_summary(
 
     try:
         # XSD Schema validation
+        cwd_before_validation = os.getcwd()
+        # Temporarily change the cwd to so the XSD
+        # validator can see the schema files.
+        os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
         MetadataFileXSDValidator.validate(xml_metadata_file)
     except XMLSchemaException as err:
         logger.exception('Error occurred whilst validating XML for schema correctness.')
@@ -209,6 +215,10 @@ def validate_xml_file_and_return_summary(
             details=str(err),
         )
         return validation_summary
+    finally:
+        # Change the cwd back as XSD validation is
+        # finished.
+        os.chdir(cwd_before_validation)
 
     try:
         # Matching file name and localID tag text validation
