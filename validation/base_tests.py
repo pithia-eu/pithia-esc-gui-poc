@@ -197,10 +197,18 @@ class XSDValidationTestCase:
         try:
             with open(self.xml_file_path) as xml_file:
                 xml_metadata_file = XMLMetadataFile.from_file(xml_file)
+            cwd_before_validation = os.getcwd()
+            # Temporarily change the cwd to so the XSD
+            # validator can see the schema files.
+            os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
             MetadataFileXSDValidator.validate(xml_metadata_file)
             print(f'Passed XSD validation for {Path(xml_file.name).name}.')
         except BaseException:
             self.fail('MetadataFileXSDValidator.validate() raised an exception unexpectedly!')
+        finally:
+            # Change the cwd back as XSD validation is
+            # finished.
+            os.chdir(cwd_before_validation)
 
 class FileNameValidationTestCase:
     @tag('fast', 'filename')
