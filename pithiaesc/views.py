@@ -1,6 +1,7 @@
 import environ
-from django.http import HttpResponseRedirect
 import os
+import re
+from django.http import HttpResponseRedirect
 from django.http import (
     FileResponse,
     HttpResponseNotFound,
@@ -26,7 +27,7 @@ def logout(request):
     # Remove relevant session variables
     remove_login_session_variables(request.session)
 
-    absolute_home_page_uri = request.build_absolute_uri(reverse("home"))
+    absolute_home_page_uri = re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
 def index(request):
