@@ -1,7 +1,6 @@
 import environ
 import os
 import re
-from django.http import HttpResponseRedirect
 from django.http import (
     FileResponse,
     HttpResponseNotFound,
