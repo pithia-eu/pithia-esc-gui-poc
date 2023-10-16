@@ -9,8 +9,13 @@ document.addEventListener("apiInteractionMethodModified", event => {
 });
 
 function enableSubmitButtonIfReady() {
-    if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
-        return document.querySelector("button[type='submit']").disabled = !isApiSpecificationLinkValid;
+    let submitButton = document.querySelector("#file-upload-form button[type='submit']");
+    if (!submitButton) {
+        submitButton = document.querySelector("#interaction-methods-form button[type='submit']");
     }
-    return document.querySelector("button[type='submit']").disabled = false;
+
+    if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
+        return submitButton.disabled = !isApiSpecificationLinkValid;
+    }
+    return submitButton.disabled = false;
 }

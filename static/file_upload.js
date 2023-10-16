@@ -179,7 +179,7 @@ function removeClassNameFromElem(elem, className) {
     return elem.classList.remove(className);
 }
 
-const uploadFormSubmitButton = document.querySelector("form button[type='submit']");
+const uploadFormSubmitButton = document.querySelector("#file-upload-form button[type='submit']");
 export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRegistered, validateUpdatedXmlIsValid) {
     if (!validateNotAlreadyRegistered) {
         validateNotAlreadyRegistered = false
