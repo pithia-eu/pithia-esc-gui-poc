@@ -94,13 +94,24 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         jsonParseError = error;
     }
     if (!response.ok) {
+        let responseError = {
+            message: "An error occurred whilst checking the validation results.",
+            details: jsonParseError
+        };
+        let responseWarnings = [];
+        try {
+            responseError = responseContent.error;
+            responseWarnings = responseContent.warnings;
+        } catch (error) {
+            if (response.status === 504) {
+                responseError.message = "Validation did not finish.";
+                responseError.details = "The connection to the server timed out before validation could finish. Try uploading the file again at a later time.";
+            }
+        }
         return {
             state: "error",
-            error: (responseContent === undefined ? {
-                message: "An error occurred whilst checking the validation results.",
-                details: jsonParseError
-            } : responseContent.error),
-            warnings: (responseContent === undefined ? [] : responseContent.warnings),
+            error: responseError,
+            warnings: responseWarnings,
         };
     }
     return {
