@@ -10,6 +10,7 @@ from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+from pithiaesc.settings import BASE_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,12 @@ def get_rdf_text_remotely(ontology_component):
     return ontology_response.text
 
 def get_rdf_text_locally(ontology_component):
-    ontology_file = open(os.path.join(os.path.dirname(os.path.dirname(__file__)),  'ontology', 'local_ontology_files', f'{ontology_component}.xml'))
+    local_ontology_files_path = os.path.join(BASE_DIR, 'ontology', 'local_ontology_files')
+    local_ontology_file_name = None
+    for filename in os.listdir(local_ontology_files_path):
+        if filename[:-4].lower() == ontology_component.lower():
+            local_ontology_file_name = filename
+    ontology_file = open(os.path.join(BASE_DIR, 'ontology', 'local_ontology_files', local_ontology_file_name))
     return ontology_file.read()
 
 

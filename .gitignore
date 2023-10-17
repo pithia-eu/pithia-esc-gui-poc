@@ -163,3 +163,4 @@ cython_debug/
 # pithiaesc
 credentials.json
 perun/ListOfOrganisations.json
+staticfiles/
