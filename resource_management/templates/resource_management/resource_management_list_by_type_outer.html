@@ -10,10 +10,10 @@
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="d-flex flex-lg-row flex-column align-items-lg-center align-items-stretch justify-content-between flex-wrap gap-2 mb-3">
+<div class="d-flex flex-lg-row flex-column align-items-lg-center align-items-stretch justify-content-between flex-wrap gap-3 mb-3">
     <h1>{{ title }}</h1>
-    <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2 mt-1" viewBox="0 0 16 16" style="width: 1.2rem; height: 1.2rem;">
+    <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1 align-text-bottom" viewBox="0 0 16 16" style="width: 1.2rem; height: 1.2rem;">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
         </svg>
         Register
