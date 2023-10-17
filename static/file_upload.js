@@ -193,6 +193,9 @@ export async function handleFileUpload(fileInput, listElem, validateNotAlreadyRe
 
     function updateIsEachFileValid(finishedValidating) {
         const numValidFiles = document.querySelectorAll(`input[class="is-file-valid-status"][value="true"]`).length;
+        if (numValidFiles.length > 1) {
+            uploadFormSubmitButton.innerHTML = `Register ${numValidFiles} Files`;
+        }
         return isEachFileValid = numValidFiles === fileInput.files.length && finishedValidating.length === fileInput.files.length && fileInput.files.length > 0;
     }
 
