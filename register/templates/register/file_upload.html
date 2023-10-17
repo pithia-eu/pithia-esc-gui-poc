@@ -47,7 +47,11 @@
             {% block doi_registration %}
             {% endblock doi_registration %}
             <div class="form-group d-flex flex-sm-row flex-column justify-content-sm-start justify-content-stretch">
-                <button type="submit" class="btn btn-outline-primary" disabled>Register</button>
+                <button type="submit" class="btn btn-outline-primary" disabled>
+                    {% block submit_button_text %}
+                    Register
+                    {% endblock submit_button_text %}
+                </button>
             </div>
         </form>
     </div>
