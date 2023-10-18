@@ -158,6 +158,16 @@ A process component that defines acquisition capabilities of an instrument for o
                 <sequence>
                     <!-- The InstrumentModePair links capabilities to the instrument -->
                     <element name="instrumentModePair" maxOccurs="1" minOccurs="0" type="pithia:InstrumentOperationalModePairsPropertyType"/>
+                    <element name="inputDescription" maxOccurs="unbounded" minOccurs="0" type="pithia:InputOutputPropertyType">
+                        <annotation>
+                            <documentation>-- Definition --
+Description of a required input  of Acquisition Capabilities. This is used to describe parameters of the experiment configuration, such as direction of the antenna array beam.
+
+.-- Description --
+The description does not involve the values of the input data. The actual values, if required, shall be stored in &lt;i&gt;OM_Observation.parameter&amp;gt;NamedValue&lt;/i&gt; as they are specific to the event of the observation and not to the applied process ( see MO_Observation constraint). 
+                            </documentation>
+                        </annotation>
+                    </element>
                     <element name="outputDescription" maxOccurs="1" minOccurs="0" type="pithia:InputOutputPropertyType">
                         <annotation>
                             <documentation>-- Definition --EE
