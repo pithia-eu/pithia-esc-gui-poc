@@ -34,6 +34,7 @@
             {% include "header.html" %}
         </div>
     </div>
+    {% block breadcrumb_wrapper %}
     <div class="breadcrumb-wrapper mt-2">
         <div class="container">
             <nav aria-label="breadcrumb">
@@ -50,6 +51,7 @@
             </nav>
         </div>
     </div>
+    {% endblock breadcrumb_wrapper %}
     <div class="container">
         <main class="main-content">
             {% block content %}{% endblock content %}
