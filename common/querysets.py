@@ -39,7 +39,11 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
 
 
 class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatabaseQueries):
-    pass
+    def for_simple_search(self, query_sections: list):
+        search_query = Q()
+        for qs in query_sections:
+            search_query &= Q(json__name__icontains=qs)
+        return self.filter(search_query)
 
 class IndividualQuerySet(ScientificMetadataQuerySet, AbstractIndividualDatabaseQueries):
     def referencing_organisation_url(self, organisation_url: str):
@@ -56,6 +60,12 @@ class ProjectQuerySet(ScientificMetadataQuerySet, AbstractProjectDatabaseQueries
     def for_delete_chain(self, metadata_server_url: str):
         referencing_party_url = self.referencing_party_url(metadata_server_url)
         return referencing_party_url
+
+    def for_simple_search(self, query_sections: list):
+        search_query = Q()
+        for qs in query_sections:
+            search_query &= Q(json__name__icontains=qs)
+        return self.filter(search_query)
 
 class PlatformQuerySet(ScientificMetadataQuerySet, AbstractPlatformDatabaseQueries):
     def referencing_party_url(self, party_url: str):
