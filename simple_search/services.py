@@ -74,6 +74,15 @@ def filter_metadata_registrations_by_text_nodes_exact(query, registrations):
         remove_whitespace_only_strings_from_text_list
     ])
 
+# Custom simple search - Organisations and Projects
+def filter_metadata_registrations_by_name_exact(query, registrations):
+    registrations_with_match = []
+    for r in registrations:
+        if query in r.name:
+            registrations_with_match.append(r)
+
+    return list({r.id: r for r in registrations_with_match}.values())
+
 
 # Ontology URL filtering
 def get_ontology_urls_from_registration(r):
@@ -234,9 +243,7 @@ def find_data_collections_for_simple_search(query, exact=False):
         ontology_url_filtering_fn = filter_metadata_registrations_by_ontology_urls_exact
         query_or_query_sections = query
 
-    organisations = get_registrations_for_simple_search(models.Organisation)
     individuals = get_registrations_for_simple_search(models.Individual)
-    projects = get_registrations_for_simple_search(models.Project)
     platforms = get_registrations_for_simple_search(models.Platform)
     operations = get_registrations_for_simple_search(models.Operation)
     instruments = get_registrations_for_simple_search(models.Instrument)
@@ -248,9 +255,7 @@ def find_data_collections_for_simple_search(query, exact=False):
     data_collections = get_registrations_for_simple_search(models.DataCollection)
 
     # Text node filtering
-    organisations_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, organisations)
     individuals_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, individuals)
-    projects_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, projects)
     platforms_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, platforms)
     operations_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, operations)
     instruments_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, instruments)
@@ -262,9 +267,7 @@ def find_data_collections_for_simple_search(query, exact=False):
     data_collections_filtered_by_text_nodes = text_node_filtering_fn(query_or_query_sections, data_collections)
 
     # Ontology URL filtering
-    ontology_urls_mapped_to_organisations = get_and_map_ontology_urls_to_registrations(organisations)
     ontology_urls_mapped_to_individuals = get_and_map_ontology_urls_to_registrations(individuals)
-    ontology_urls_mapped_to_projects = get_and_map_ontology_urls_to_registrations(projects)
     ontology_urls_mapped_to_platforms = get_and_map_ontology_urls_to_registrations(platforms)
     ontology_urls_mapped_to_operations = get_and_map_ontology_urls_to_registrations(operations)
     ontology_urls_mapped_to_instruments = get_and_map_ontology_urls_to_registrations(instruments)
@@ -276,9 +279,7 @@ def find_data_collections_for_simple_search(query, exact=False):
     ontology_urls_mapped_to_data_collections = get_and_map_ontology_urls_to_registrations(data_collections)
 
     ontology_rdfs = get_rdfs_from_ontology_urls(list(set(
-        list(ontology_urls_mapped_to_organisations.keys())
-        + list(ontology_urls_mapped_to_individuals.keys())
-        + list(ontology_urls_mapped_to_projects.keys())
+        list(ontology_urls_mapped_to_individuals.keys())
         + list(ontology_urls_mapped_to_platforms.keys())
         + list(ontology_urls_mapped_to_operations.keys())
         + list(ontology_urls_mapped_to_instruments.keys())
@@ -290,9 +291,7 @@ def find_data_collections_for_simple_search(query, exact=False):
         + list(ontology_urls_mapped_to_data_collections.keys())
     )))
     
-    organisations_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_organisations, ontology_rdfs)
     individuals_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_individuals, ontology_rdfs)
-    projects_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_projects, ontology_rdfs)
     platforms_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_platforms, ontology_rdfs)
     operations_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_operations, ontology_rdfs)
     instruments_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_instruments, ontology_rdfs)
@@ -303,9 +302,15 @@ def find_data_collections_for_simple_search(query, exact=False):
     processes_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_processes, ontology_rdfs)
     data_collections_filtered_by_ontology_urls = ontology_url_filtering_fn(query_or_query_sections, ontology_urls_mapped_to_data_collections, ontology_rdfs)
 
-    data_collections_matching_query += get_data_collections_from_other_metadata(organisations_filtered_by_text_nodes + organisations_filtered_by_ontology_urls)
+    organisations_filtered_by_name = list(models.Organisation.objects.for_simple_search(query_or_query_sections))
+    projects_filtered_by_name = list(models.Project.objects.for_simple_search(query_or_query_sections))
+    if exact:
+        organisations_filtered_by_name = filter_metadata_registrations_by_name_exact(query_or_query_sections, list(models.Organisation.objects.all()))
+        projects_filtered_by_name = filter_metadata_registrations_by_name_exact(query_or_query_sections, list(models.Project.objects.all()))
+
+    data_collections_matching_query += get_data_collections_from_other_metadata(organisations_filtered_by_name)
     data_collections_matching_query += get_data_collections_from_other_metadata(individuals_filtered_by_text_nodes + individuals_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(projects_filtered_by_text_nodes + projects_filtered_by_ontology_urls)
+    data_collections_matching_query += get_data_collections_from_other_metadata(projects_filtered_by_name)
     data_collections_matching_query += get_data_collections_from_other_metadata(platforms_filtered_by_text_nodes + platforms_filtered_by_ontology_urls)
     data_collections_matching_query += get_data_collections_from_other_metadata(operations_filtered_by_text_nodes + operations_filtered_by_ontology_urls)
     data_collections_matching_query += get_data_collections_from_other_metadata(instruments_filtered_by_text_nodes + instruments_filtered_by_ontology_urls)

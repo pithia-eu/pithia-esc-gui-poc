@@ -4,13 +4,14 @@ from django.test import TestCase
 from .services import (
     filter_metadata_registrations_by_ontology_urls_default,
     filter_metadata_registrations_by_ontology_urls_exact,
+    filter_metadata_registrations_by_name_exact,
     filter_metadata_registrations_by_text_nodes_default,
     filter_metadata_registrations_by_text_nodes_exact,
     find_data_collections_for_simple_search,
     get_and_process_text_nodes_of_ontology_url,
-    get_rdfs_from_ontology_urls,
     get_ontology_component_name_from_ontology_url,
     get_ontology_urls_from_registration,
+    get_rdfs_from_ontology_urls,
 )
 
 from common import models
@@ -212,3 +213,57 @@ class SimpleSearchTestCase(TestCase):
 
         for tns in ontology_url_text_node_strings:
             self.assertTrue(type(tns) == str)
+
+    def test_organisations_for_simple_search(self):
+        """
+        Returns a queryset of organisations matching
+        a simple search query.
+        """
+        # Name matches
+        organisations_1 = models.Organisation.objects.for_simple_search(['Organisation', 'Test'])
+        # localID shouldn't be searched
+        organisations_2 = models.Organisation.objects.for_simple_search(['Organisation_Test'])
+        # Description shouldn't be searched
+        organisations_3 = models.Organisation.objects.for_simple_search(['Lorem', 'ipsum'])
+        # Check that text not in the metadata doesn't return any results
+        organisations_4 = models.Organisation.objects.for_simple_search(['xyz'])
+        # Search is case-insensitive
+        organisations_5 = models.Organisation.objects.for_simple_search(['organisation', 'test'])
+        # Name partially matches
+        organisations_6 = models.Organisation.objects.for_simple_search(['organisation'])
+        # Test with unexpected input (string)
+        organisations_7 = models.Organisation.objects.for_simple_search('organisation')
+
+        self.assertEqual(len(organisations_1), 1)
+        self.assertEqual(len(organisations_2), 0)
+        self.assertEqual(len(organisations_3), 0)
+        self.assertEqual(len(organisations_4), 0)
+        self.assertEqual(len(organisations_5), 1)
+        self.assertEqual(len(organisations_6), 1)
+        self.assertEqual(len(organisations_7), 1)
+
+    def test_filter_metadata_registrations_by_name_exact(self):
+        """
+        Returns a list of metadata registrations with
+        names containing (case-sensitive) a given query.
+        """
+        test_organisations = list(models.Organisation.objects.all())
+        # Name matches
+        organisations_1 = filter_metadata_registrations_by_name_exact('Organisation Test', test_organisations)
+        # localID shouldn't be searched
+        organisations_2 = filter_metadata_registrations_by_name_exact('Organisation_Test', test_organisations)
+        # Description shouldn't be searched
+        organisations_3 = filter_metadata_registrations_by_name_exact('Lorem ipsum', test_organisations)
+        # Check that text not in the metadata doesn't return any results
+        organisations_4 = filter_metadata_registrations_by_name_exact('xyz', test_organisations)
+        # Search should be case-sensitive
+        organisations_5 = filter_metadata_registrations_by_name_exact('organisation test', test_organisations)
+        # Name should partially match
+        organisations_6 = filter_metadata_registrations_by_name_exact('Organisation', test_organisations)
+
+        self.assertEqual(len(organisations_1), 1)
+        self.assertEqual(len(organisations_2), 0)
+        self.assertEqual(len(organisations_3), 0)
+        self.assertEqual(len(organisations_4), 0)
+        self.assertEqual(len(organisations_5), 0)
+        self.assertEqual(len(organisations_6), 1)

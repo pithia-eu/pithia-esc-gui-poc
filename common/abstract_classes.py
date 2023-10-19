@@ -38,7 +38,12 @@ class AbstractMetadataDatabaseQueries(ABC):
         pass
 
 class AbstractOrganisationDatabaseQueries(ABC):
-    pass
+    @abstractmethod
+    def for_simple_search(self, query_sections: list):
+        """
+        Organisations with a name containing all of the
+        passed in query sections.
+        """
 
 class AbstractIndividualDatabaseQueries(ABC):
     @abstractmethod
@@ -74,6 +79,13 @@ class AbstractProjectDatabaseQueries(ABC):
         for deletion.
         """
         pass
+
+    @abstractmethod
+    def for_simple_search(self, query_sections: list):
+        """
+        Projects with a name containing all of the
+        passed in query sections.
+        """
 
 class AbstractPlatformDatabaseQueries(ABC):
     @abstractmethod
