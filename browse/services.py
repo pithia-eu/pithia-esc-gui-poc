@@ -179,9 +179,15 @@ def create_readable_scientific_metadata_flattened(scientific_metadata_flattened:
         re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),
         # re.compile(r'.*onlineresource <b>1</b>\.name'),
     ]
+    hidden_key_regex_exceptions = [
+        re.compile(r'^contactinfo(.*).url')
+    ]
     scientific_metadata_readable = {}
     for key in scientific_metadata_flattened:
-        if key.startswith('@') or any(x == key.lower() for x in hidden_keys) or any(regex for regex in hidden_key_regex if re.match(regex, key.lower())):
+        if (key.startswith('@')
+            or any(x == key.lower() for x in hidden_keys)
+            or any(regex for regex in hidden_key_regex if re.match(regex, key.lower()))
+            and not any(regex for regex in hidden_key_regex_exceptions if re.match(regex, key.lower()))):
             continue
         key_split_by_dot = key.split('.')
         human_readable_key_strings = []
