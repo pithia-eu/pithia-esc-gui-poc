@@ -259,11 +259,18 @@ class SimpleSearchTestCase(TestCase):
         # Search should be case-sensitive
         organisations_5 = filter_metadata_registrations_by_name_exact('organisation test', test_organisations)
         # Name should partially match
-        organisations_6 = filter_metadata_registrations_by_name_exact('Organisation', test_organisations)
+        organisations_6a = filter_metadata_registrations_by_name_exact('Organisation', test_organisations)
+        organisations_6b = filter_metadata_registrations_by_name_exact('Test', test_organisations)
+        # Whitespace should be taken into account
+        organisations_7a = filter_metadata_registrations_by_name_exact(' Organisation Test ', test_organisations)
+        organisations_7b = filter_metadata_registrations_by_name_exact('Organisation  Test', test_organisations)
 
         self.assertEqual(len(organisations_1), 1)
         self.assertEqual(len(organisations_2), 0)
         self.assertEqual(len(organisations_3), 0)
         self.assertEqual(len(organisations_4), 0)
         self.assertEqual(len(organisations_5), 0)
-        self.assertEqual(len(organisations_6), 1)
+        self.assertEqual(len(organisations_6a), 1)
+        self.assertEqual(len(organisations_6b), 1)
+        self.assertEqual(len(organisations_7a), 0)
+        self.assertEqual(len(organisations_7b), 0)
