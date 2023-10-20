@@ -24,6 +24,7 @@ openapi-schema-validator==0.3.4
 openapi-spec-validator==0.5.1
 packaging==21.3
 pathable==0.4.3
+psycopg2-binary==2.9.9
 pycodestyle==2.10.0
 pyhandle==1.2.1
 pymongo==3.12.3
@@ -43,6 +44,7 @@ typing_extensions==4.4.0
 tzdata==2022.1
 urllib3==1.26.9
 validators==0.20.0
+whitenoise==6.6.0
 xmlschema==2.1.1
 xmltodict==0.13.0
 zope.interface==5.5.2
