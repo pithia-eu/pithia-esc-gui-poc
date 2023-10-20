@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt --no-deps
     - name: Create and populate .env file
       env:
         SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
