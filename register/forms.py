@@ -7,7 +7,7 @@ class UploadFileForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
-            'multiple': True,
+            'allow_multiple_selected': True,
         })
     )
 
