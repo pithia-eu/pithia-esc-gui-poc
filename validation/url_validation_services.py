@@ -16,6 +16,7 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 
+from common.constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 from common.models import (
     Instrument,
     ScientificMetadata,
@@ -24,12 +25,6 @@ from utils.url_helpers import (
     divide_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
 )
-
-
-PITHIA_METADATA_SERVER_URL_BASE = 'metadata.pithia.eu/resources/2.2'
-SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE = 'metadata.pithia.eu/ontology/2.2'
-PITHIA_METADATA_SERVER_HTTPS_URL_BASE = f'https://{PITHIA_METADATA_SERVER_URL_BASE}'
-SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE = f'https://{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE}'
 
 
 class MetadataFileOntologyURLReferencesValidator:
@@ -75,6 +70,15 @@ class MetadataFileOntologyURLReferencesValidator:
         provided XML metadata file is valid.
         """
         ontology_urls = xml_file.ontology_urls
+        return cls._is_each_ontology_url_valid(ontology_urls)
+    
+    @classmethod
+    def is_each_potential_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
+        """
+        Checks each Space Physics Ontology URL in the
+        provided XML metadata file is valid.
+        """
+        ontology_urls = xml_file.potential_ontology_urls
         return cls._is_each_ontology_url_valid(ontology_urls)
 
 class MetadataFileMetadataURLReferencesValidator:
@@ -175,6 +179,15 @@ class MetadataFileMetadataURLReferencesValidator:
         return cls._is_each_resource_url_valid(resource_urls)
 
     @classmethod
+    def is_each_potential_resource_url_valid(cls, xml_file: XMLMetadataFile) -> dict:
+        """
+        Checks that each potential metadata server URL is valid by
+        meeting a specified set of criteria.
+        """
+        resource_urls = xml_file.potential_metadata_urls
+        return cls._is_each_resource_url_valid(resource_urls)
+
+    @classmethod
     def is_each_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
         """
         Checks that each operational mode URL is well-formed and that
@@ -191,6 +204,40 @@ class MetadataFileMetadataURLReferencesValidator:
 
         for url in resource_urls_with_op_mode_ids:
             print('url', url)
+            try:
+                Instrument.objects.get_by_operational_mode_url(url)
+            except ObjectDoesNotExist:
+                invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(url)
+        
+        return invalid_urls_dict
+
+    @classmethod
+    def is_each_potential_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
+        """
+        Checks that each potential operational mode URL is well-formed
+        and that each URL corresponds with a metadata registration in the
+        e-Science Centre.
+        """
+        try:
+            resource_urls_with_op_mode_ids = xml_file.potential_operational_mode_urls
+        except:
+            return cls._is_each_resource_url_valid([])
+        resource_urls = [itemgetter('resource_url')(divide_resource_url_from_op_mode_id(url)) for url in resource_urls_with_op_mode_ids]
+        invalid_urls_dict = cls._is_each_resource_url_valid(resource_urls)
+        invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'] = []
+        safe_resource_urls_with_op_mode_ids = resource_urls_with_op_mode_ids
+        invalid_urls = []
+        for key in invalid_urls_dict.keys():
+            if key != 'types_of_missing_resources':
+                invalid_urls += invalid_urls_dict[key]
+        invalid_urls = list(set(invalid_urls))
+        for safe_url in safe_resource_urls_with_op_mode_ids:
+            for invalid_url in invalid_urls:
+                if invalid_url in safe_url:
+                    safe_resource_urls_with_op_mode_ids.remove(safe_url)
+        safe_resource_urls_with_op_mode_ids = list(set(safe_resource_urls_with_op_mode_ids))
+
+        for url in safe_resource_urls_with_op_mode_ids:
             try:
                 Instrument.objects.get_by_operational_mode_url(url)
             except ObjectDoesNotExist:

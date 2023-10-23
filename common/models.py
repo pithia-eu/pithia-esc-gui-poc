@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from .managers import *
 from .querysets import *
+from .constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 from .converted_xml_correction_functions import *
 
 # Create your models here.
@@ -107,7 +108,7 @@ class ScientificMetadata(models.Model):
 
     @property
     def _metadata_server_url_base(self):
-        return 'https://metadata.pithia.eu/resources/2.2'
+        return PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 
     @property
     def metadata_server_url(self):
