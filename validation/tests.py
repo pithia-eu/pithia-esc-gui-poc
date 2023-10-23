@@ -229,7 +229,7 @@ class DataCollectionValidationChecklistTestCase(DataCollectionFileTestCase, Vali
 
 
 class UrlValidationTestCase(SimpleTestCase):
-    def test_ontology_url_validation(self):
+    def test_is_ontology_term_url_valid(self):
         """
         MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid() returns an
         True if valid and False if not.
@@ -245,7 +245,7 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid(invalid_ontology_url_1), False)
         self.assertEquals(MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid(invalid_ontology_url_2), False)
 
-    def test_invalid_resource_url_structures_are_detected(self):
+    def test_is_resource_url_structure_valid_with_invalid_urls(self):
         """
         MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
         False for all URLs provided for this test.
@@ -263,6 +263,10 @@ class UrlValidationTestCase(SimpleTestCase):
         domain_name_duplication_result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         acquisition_capability_sets_incorrect_casing_result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
         computation_capability_sets_incorrect_casing_result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/AcquisitionCapabilities_TEST')
+        invalid_individual_url_result_1 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/abc/individual/Individual_ABC_123')
+        invalid_individual_url_result_2 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/abc/individual/Individual_ABC_123')
+        invalid_individual_url_result_3 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/individual/abc/Individual_ABC_123')
+        invalid_individual_url_result_4 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/individual/abc/Individual_ABC_123')
 
         self.assertEquals(blank_string_result, False)
         self.assertEquals(swapped_namespace_and_resource_type_result, False)
@@ -276,8 +280,12 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(domain_name_duplication_result, False)
         self.assertEquals(acquisition_capability_sets_incorrect_casing_result, False)
         self.assertEquals(computation_capability_sets_incorrect_casing_result, False)
+        self.assertEquals(invalid_individual_url_result_1, False)
+        self.assertEquals(invalid_individual_url_result_2, False)
+        self.assertEquals(invalid_individual_url_result_3, False)
+        self.assertEquals(invalid_individual_url_result_4, False)
 
-    def test_valid_resource_urls_pass_validation(self):
+    def test_is_resource_url_structure_valid_with_valid_urls(self):
         """
         MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
         True for all URLs provided for this test.
@@ -310,8 +318,8 @@ class UrlValidationTestCase(SimpleTestCase):
         self.assertEquals(valid_data_collection_url_result, True)
 
 
-class CategoryUrlValidationTestCase(SimpleTestCase):
-    def test_category_url_splitting_function(self):
+class CatalogueUrlValidationTestCase(SimpleTestCase):
+    def test_catalogue_url_splitting_function(self):
         """
         Test divide_catalogue_related_resource_url_into_main_components
         returns the expected main URL components.
@@ -332,7 +340,7 @@ class CategoryUrlValidationTestCase(SimpleTestCase):
         self.assertEquals(catalogue_url_event, 'VolcanoEruption')
         self.assertEquals(catalogue_url_localid, 'Catalogue_VolcanoEruption')
 
-    def test_valid_category_related_resource_url_structure_validation(self):
+    def test_valid_catalogue_related_resource_url_structure_validation(self):
         """
         MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
         True for all the resource urls provided below.
@@ -341,7 +349,7 @@ class CategoryUrlValidationTestCase(SimpleTestCase):
 
         self.assertEquals(MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid(catalogue_resource_url), True)
 
-    def test_invalid_category_related_resource_url_structure_validation(self):
+    def test_invalid_catalogue_related_resource_url_structure_validation(self):
         """
         MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
         True for all the resource urls provided below.
@@ -442,3 +450,61 @@ class URLReferencesValidatorTestCase(TestCase):
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 2)
+
+class XMLMetadataFileTestCase(TestCase):
+    def test_potential_ontology_urls(self):
+        """
+        Returns a list of potential ontology URLs.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test_InvalidDocumentURLs.xml')) as xml_file:
+            xml_file_string = xml_file.read()
+            self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        potential_ontology_urls = self.test_xml_file.potential_ontology_urls
+        print('potential_ontology_urls', potential_ontology_urls)
+        self.assertTrue(any('http://' in url for url in potential_ontology_urls))
+        self.assertTrue(all('metadata.pithia.eu' in url for url in potential_ontology_urls))
+        self.assertTrue(all('metadata.pithia.eu/ontology' in url for url in potential_ontology_urls))
+        self.assertTrue(not all('metadata.pithia.eu/ontology/2.2' in url for url in potential_ontology_urls))
+        self.assertTrue(not any('metadata.pithia.eu/resources' in url for url in potential_ontology_urls))
+
+    def test_potential_metadata_urls(self):
+        """
+        Returns a list of potential metadata URLs.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test_InvalidDocumentURLs.xml')) as xml_file:
+            xml_file_string = xml_file.read()
+            self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        potential_metadata_urls = self.test_xml_file.potential_metadata_urls
+        print('potential_metadata_urls', potential_metadata_urls)
+        self.assertTrue(any('http://' in url for url in potential_metadata_urls))
+        self.assertTrue(all('metadata.pithia.eu/resources' in url for url in potential_metadata_urls))
+        self.assertTrue(not all('metadata.pithia.eu/resources/2.2' in url for url in potential_metadata_urls))
+        self.assertTrue(not any('metadata.pithia.eu/ontology' in url for url in potential_metadata_urls))
+
+    def test_potential_operational_mode_urls(self):
+        """
+        Returns a list of potential operational
+        mode URLs.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test_InvalidOpModeURLs.xml')) as xml_file:
+            xml_file_string = xml_file.read()
+            self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
+
+        potential_op_mode_urls = self.test_xml_file.potential_operational_mode_urls
+        print('potential_op_mode_urls', potential_op_mode_urls)
+        self.assertTrue(any('metadata.pithia.eu/resources' in url and '#' in url for url in potential_op_mode_urls))
+        self.assertTrue(all('metadata.pithia.eu/resources' in url and '#' in url for url in potential_op_mode_urls))
+
+    def test_is_each_potential_operational_mode_url_valid(self):
+        """
+        MetadataFileMetadataURLReferencesValidator._is_each_potential_operational_mode_url_valid()
+        returns False for all URLs provided for this test.
+        """
+        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test_InvalidOpModeURLs.xml')) as xml_file:
+            xml_file_string = xml_file.read()
+            self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
+
+        validation_results = MetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
+        self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
