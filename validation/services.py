@@ -280,8 +280,8 @@ def validate_xml_file_and_return_summary(
     # Resource URL validation
     # Check which resource URLs are valid and return
     # the invalid ones.
-    invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(xml_metadata_file)
-    invalid_operational_mode_urls = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(xml_metadata_file)
+    invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_potential_resource_url_valid(xml_metadata_file)
+    invalid_operational_mode_urls = MetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(xml_metadata_file)
 
     # Keys to access invalid URL categories
     INCORRECTLY_STRUCTURED_URLS = 'urls_with_incorrect_structure'
@@ -323,7 +323,7 @@ def validate_xml_file_and_return_summary(
         return validation_summary
 
     # Ontology URL validation
-    invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(xml_metadata_file)
+    invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_potential_ontology_url_in_xml_file_valid(xml_metadata_file)
     if len(invalid_ontology_urls) > 0:
         error_msg = 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(map_string_to_li_element, invalid_ontology_urls)))
         validation_summary['error'] = create_validation_summary_error(

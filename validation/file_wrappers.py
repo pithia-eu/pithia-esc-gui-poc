@@ -2,7 +2,9 @@ from lxml import etree
 from pathlib import Path
 
 from common.constants import (
+    PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION,
     PITHIA_METADATA_SERVER_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE_NO_VERSION,
     SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
 )
 
@@ -53,6 +55,14 @@ class XMLMetadataFile:
     @property
     def metadata_urls(self):
         return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    
+    @property
+    def potential_ontology_urls(self):
+        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE_NO_VERSION}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    
+    @property
+    def potential_metadata_urls(self):
+        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and not(contains(@xlink:href, '#'))]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
 
     # Helper properties
     @property
@@ -105,3 +115,7 @@ class AcquisitionCapabilitiesXMLMetadataFile(XMLMetadataFile):
     @property
     def operational_mode_urls(self):
         return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+    
+    @property
+    def potential_operational_mode_urls(self):
+        return self._parsed_xml.xpath(f"//*[contains(@xlink:href, '{PITHIA_METADATA_SERVER_URL_BASE_NO_VERSION}') and contains(@xlink:href, '#')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
