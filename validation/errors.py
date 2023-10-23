@@ -21,3 +21,6 @@ class FileRegisteredBefore(ValidationError):
 
 class UpdateFileNotMatching(ValidationError):
     pass
+
+class InvalidNamespaceValue(ValidationError):
+    pass

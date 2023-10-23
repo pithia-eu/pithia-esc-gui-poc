@@ -7,9 +7,10 @@ from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
 from .errors import (
-    InvalidRootElementName,
     FileNameNotMatchingWithLocalID,
     FileRegisteredBefore,
+    InvalidNamespaceValue,
+    InvalidRootElementName,
     UpdateFileNotMatching,
 )
 from .file_wrappers import (
@@ -83,6 +84,21 @@ class MetadataFileNameValidator:
             raise FileNameNotMatchingWithLocalID(
                 f'The file name \"{xml_file_name_with_no_extension}\" must match the localID of the metadata \"{localid_tag_text}\".'
             )
+
+
+class MetadataNamespaceValidator:
+    @classmethod
+    def validate(cls, xml_file: XMLMetadataFile):
+        """
+        Validates the <namespace> value of an
+        XML metadata file.
+        """
+        namespace_tag_text = xml_file.namespace
+        if len(namespace_tag_text.split()) > 1:
+            raise InvalidNamespaceValue(
+                f'The namespace should not contain any whitespace.'
+            )
+
 
 class MetadataFileRegistrationValidator:
     @classmethod
@@ -227,6 +243,17 @@ def validate_xml_file_and_return_summary(
         logger.exception('Error occurred whilst validating XML. Please see error message for details.')
         validation_summary['error'] = create_validation_summary_error(
             message='File name not matching with localID',
+            details=str(err),
+        )
+        return validation_summary
+
+    try:
+        # Namespace validation
+        MetadataNamespaceValidator.validate(xml_metadata_file)
+    except InvalidNamespaceValue as err:
+        logger.exception('Error occurred whilst validating XML. Please see error message for details.')
+        validation_summary['error'] = create_validation_summary_error(
+            message='Invalid namespace.',
             details=str(err),
         )
         return validation_summary
