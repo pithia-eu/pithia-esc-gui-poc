@@ -371,10 +371,22 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         instrument_type_urls: list,
         computation_type_urls: list
     ):
-        return self.referencing_process_urls(process_urls) \
-            | self.referencing_instrument_type_urls(instrument_type_urls) \
-            | self.referencing_computation_type_urls(computation_type_urls) \
-            | self.referencing_feature_of_interest_urls(feature_of_interest_urls)
+        search_results = self.all()
+        results_referencing_process_urls = self.referencing_process_urls(process_urls)
+        results_referencing_instrument_type_urls = self.referencing_instrument_type_urls(instrument_type_urls)
+        results_referencing_computation_type_urls = self.referencing_computation_type_urls(computation_type_urls)
+        results_referencing_feature_of_interest_urls = self.referencing_feature_of_interest_urls(feature_of_interest_urls)
+
+        if results_referencing_process_urls:
+            search_results &= results_referencing_process_urls
+        if results_referencing_instrument_type_urls:
+            search_results &= results_referencing_instrument_type_urls
+        if results_referencing_computation_type_urls:
+            search_results &= results_referencing_computation_type_urls
+        if results_referencing_feature_of_interest_urls:
+            search_results &= results_referencing_feature_of_interest_urls
+
+        return search_results
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_party_url = self.referencing_party_url(metadata_server_url)
