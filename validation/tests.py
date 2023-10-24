@@ -354,6 +354,30 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/abc/individual/Individual_ABC_123')
         self.assertFalse(result)
 
+    def test_collection_resource_type_in_catalogue_metadata_url_fails(self):
+        """
+        A catalogue metadata URL with 'collection' as the
+        resource type fails validation.
+        """
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        self.assertFalse(result)
+    
+    def test_multiple_namespaces_in_catalogue_metadata_url_fails(self):
+        """
+        A catalogue metadata URL with multiple namespaces
+        fails validation.
+        """
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        self.assertFalse(result)
+    
+    def test_multiple_resource_types_in_catalogue_metadata_url_fails(self):
+        """
+        A catalogue metadata URL with multiple resource types
+        fails validation.
+        """
+        result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
+        self.assertFalse(result)
+
 
 class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
     def test_valid_organisation_metadata_url_passes(self):
@@ -477,13 +501,15 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertTrue(result)
 
 
-class CatalogueUrlValidationTestCase(SimpleTestCase):
-    def test_catalogue_url_splitting_function(self):
+class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
+    def test_catalogue_metadata_url_splits_correctly(self):
         """
-        Test divide_catalogue_related_resource_url_into_main_components
-        returns the expected main URL components.
-        catalogue/namespace/Event?/Catalogue metadata type (i.e. Catalogue, CatalogueEntry, CatalogueDataSubset)
+        A catalogue-related metadata URL is split up into
+        its components correctly.
         """
+        # A catalogue-related metadata URL should have the following structure:
+        # 'catalogue/namespace/Event/Catalogue metadata type' (i.e. Catalogue,
+        # CatalogueEntry, CatalogueDataSubset).
         catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
         catalogue_resource_url_components = divide_catalogue_related_resource_url_into_main_components(catalogue_resource_url)
         catalogue_url_base = catalogue_resource_url_components['url_base']
@@ -492,34 +518,11 @@ class CatalogueUrlValidationTestCase(SimpleTestCase):
         catalogue_url_event = catalogue_resource_url_components['event']
         catalogue_url_localid = catalogue_resource_url_components['localid']
 
-        print('catalogue_resource_url_components', catalogue_resource_url_components)
         self.assertEquals(catalogue_url_base, 'https://metadata.pithia.eu/resources/2.2')
         self.assertEquals(catalogue_url_resource_type, 'catalogue')
         self.assertEquals(catalogue_url_namespace, 'pithia')
         self.assertEquals(catalogue_url_event, 'VolcanoEruption')
         self.assertEquals(catalogue_url_localid, 'Catalogue_VolcanoEruption')
-
-    def test_valid_catalogue_related_resource_url_structure_validation(self):
-        """
-        MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
-        True for all the resource urls provided below.
-        """
-        catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
-
-        self.assertEquals(MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid(catalogue_resource_url), True)
-
-    def test_invalid_catalogue_related_resource_url_structure_validation(self):
-        """
-        MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid() returns
-        True for all the resource urls provided below.
-        """
-        catalogue_resource_url_collection_as_resource_type = 'https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
-        catalogue_resource_url_double_namespace = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
-        catalogue_resource_url_double_resource_type = 'https://metadata.pithia.eu/resources/2.2/catalogue/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
-
-        self.assertEquals(MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid(catalogue_resource_url_collection_as_resource_type), False)
-        self.assertEquals(MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid(catalogue_resource_url_double_namespace), False)
-        self.assertEquals(MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid(catalogue_resource_url_double_resource_type), False)
 
 
 class DoiValidationTestCase(SimpleTestCase):
