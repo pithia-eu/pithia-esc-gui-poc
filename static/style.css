@@ -698,6 +698,12 @@ ul.tree ul {
     }
 }
 
+@media (pointer: coarse) {
+    .tree-search-terms .form-check {
+        padding-block: 0.25rem;
+    }
+}
+
 
 :root {
     --tree-search-container-max-height: 26rem;
