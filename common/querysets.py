@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.db.models import Q
 from operator import itemgetter
@@ -32,7 +34,7 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
         localids = [get_namespace_and_localid_from_resource_url(url)[1] for url in metadata_server_urls]
         registrations_for_deletion = list(self.filter(json__identifier__PITHIA_Identifier__localID__in=localids))
         for r in registrations_for_deletion:
-            r.delete(using='esc_rw')
+            r.delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
 
 class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatabaseQueries):
