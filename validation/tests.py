@@ -19,18 +19,16 @@ from .url_validation_services import (
     MetadataFileMetadataURLReferencesValidator,
 )
 
+from common import test_xml_files
 from common.models import (
     Organisation,
     Catalogue,
 )
-from pithiaesc.settings import BASE_DIR
 from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
 
-_TEST_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files')
-_XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
-
 # Create your tests here.
-# The SimpleTestCase class is used to disable the automatic SQL database
+
+# NOTE: The SimpleTestCase class is used to disable the automatic SQL database
 # create/destroy that Django automatically does with the default
 # TestCase class. MongoDB is still used.
 
@@ -531,10 +529,7 @@ class DoiValidationTestCase(SimpleTestCase):
         DataSubsetXMLMetadataFile.contents returns an XML string with a DOI XMLSchema-
         compliant element.
         """
-        xml_file = None
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
-            xml_file = DataSubsetXMLMetadataFile.from_file(test_file)
-        print('xml_file.contents', xml_file.contents)
+        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
         self.assertTrue('10.000' in xml_file.contents)
 
     def test_data_subset_xsd_validation(self):
@@ -542,131 +537,133 @@ class DoiValidationTestCase(SimpleTestCase):
         XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
         a spoofed DOI element.
         """
-        xml_file = None
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as test_file:
-            xml_file = DataSubsetXMLMetadataFile.from_file(test_file)
+        xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
         MetadataFileXSDValidator.validate(xml_file)
 
 
-class URLReferencesValidatorTestCase(TestCase):
+class XMLMetadataFileIntegrationTestCase(TestCase):
     def setUp(self) -> None:
-        with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.xml_metadata_file_with_invalid_urls = XMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.METADATA_AND_ONTOLOGY_URLS_XML
+        xml_file_string = xml_file.read()
+        self.xml_metadata_file_with_invalid_urls = XMLMetadataFile(xml_file_string, xml_file.name)
         return super().setUp()
 
-    def test_is_each_resource_url_valid_on_individual(self):
+    def test_no_invalid_metadata_urls_found_within_valid_file(self):
         """
-        MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid()
-        returns a dict where each value is a list of invalid resource URLs.
+        The validator returns no invalid metadata URLs when validating
+        a valid data collection-related metadata file.
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            Organisation.objects.create_from_xml_string(xml_file.read())
+        organisation_xml_file = test_xml_files.ORGANISATION_METADATA_XML
+        Organisation.objects.create_from_xml_string(organisation_xml_file.read())
         
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
-            invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))
-            print('invalid_resource_urls_dict', invalid_resource_urls_dict)
-            for value in invalid_resource_urls_dict.values():
-                self.assertTrue(len(value) == 0)
+        individual_xml_file = test_xml_files.INDIVIDUAL_METADATA_XML
+        invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
+            XMLMetadataFile.from_file(individual_xml_file)
+        )
+        for key in invalid_resource_urls_dict.keys():
+            self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
-    def test_is_each_resource_url_valid_on_catalogue_entry(self):
+    def test_no_invalid_metadata_urls_found_within_valid_catalogue_related_file(self):
         """
-        MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid()
-        returns a dict where each value is a list of invalid resource URLs.
+        The validator returns no invalid metadata URLs when validating
+        a valid catalogue-related metadata file.
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Catalogue_Test.xml')) as xml_file:
-            Catalogue.objects.create_from_xml_string(xml_file.read())
+        catalogue_xml_file = test_xml_files.CATALOGUE_METADATA_XML
+        Catalogue.objects.create_from_xml_string(catalogue_xml_file.read())
         
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CatalogueEntry_Test_2023-01-01.xml')) as xml_file:
-            invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(XMLMetadataFile.from_file(xml_file))
-            for value in invalid_resource_urls_dict.values():
-                self.assertTrue(len(value) == 0)
+        catalogue_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
+        invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
+            XMLMetadataFile.from_file(catalogue_entry_xml_file)
+        )
+        for key in invalid_resource_urls_dict.keys():
+            self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
-    def test_invalid_ontology_urls_are_detected(self):
+    def test_invalid_ontology_urls_in_file_are_found(self):
         """
-        MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid()
-        returns a list of invalid ontology URLs.
+        The validator returns invalid ontology URLs
+        within a metadata file.
         """
-        invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(self.xml_metadata_file_with_invalid_urls)
+        invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(
+            self.xml_metadata_file_with_invalid_urls
+        )
         self.assertEquals(len(invalid_ontology_urls), 1)
 
-    def test_invalid_resource_urls_are_detected(self):
+    def test_invalid_resource_urls_in_file_are_found(self):
         """
-        MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid()
-        returns a dict where each value is a list of invalid resource URLs.
+        The validator returns invalid metadata files
+        from a metadata file.
         """
-        invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(self.xml_metadata_file_with_invalid_urls)
+        invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
+            self.xml_metadata_file_with_invalid_urls
+        )
         self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 2)
 
-    def test_invalid_resource_urls_with_op_mode_ids_are_detected(self):
+    def test_invalid_op_mode_urls_in_file_are_found(self):
         """
-        MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid()
-        returns a dict where each value is a list of invalid operational mode URLs.
+        The validator returns lists of invalid operational
+        mode URLs sorted into categories.
         """
-        with open(os.path.join(_TEST_FILE_DIR, 'invalid_and_valid_urls.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.xml_metadata_file_with_invalid_urls = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.METADATA_AND_ONTOLOGY_URLS_XML
+        xml_file_string = xml_file.read()
+        self.xml_metadata_file_with_invalid_urls = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
         
         invalid_resource_urls_with_op_mode_ids = MetadataFileMetadataURLReferencesValidator.is_each_operational_mode_url_valid(self.xml_metadata_file_with_invalid_urls)
-        print('invalid_resource_urls_with_op_mode_ids', invalid_resource_urls_with_op_mode_ids)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_with_incorrect_structure']), 1)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_unregistered_resources']), 1)
         self.assertEquals(len(invalid_resource_urls_with_op_mode_ids['urls_pointing_to_registered_resources_with_missing_op_modes']), 2)
 
+
 class XMLMetadataFileTestCase(TestCase):
-    def test_potential_ontology_urls(self):
+    def test_potential_ontology_urls_are_retrieved_correctly(self):
         """
         Returns a list of potential ontology URLs.
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test_InvalidDocumentURLs.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
+        xml_file_string = xml_file.read()
+        self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
         potential_ontology_urls = self.test_xml_file.potential_ontology_urls
-        print('potential_ontology_urls', potential_ontology_urls)
         self.assertTrue(any('http://' in url for url in potential_ontology_urls))
         self.assertTrue(all('metadata.pithia.eu' in url for url in potential_ontology_urls))
         self.assertTrue(all('metadata.pithia.eu/ontology' in url for url in potential_ontology_urls))
         self.assertTrue(not all('metadata.pithia.eu/ontology/2.2' in url for url in potential_ontology_urls))
         self.assertTrue(not any('metadata.pithia.eu/resources' in url for url in potential_ontology_urls))
 
-    def test_potential_metadata_urls(self):
+    def test_potential_metadata_urls_are_retrieved_correctly(self):
         """
         Returns a list of potential metadata URLs.
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test_InvalidDocumentURLs.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
+        xml_file_string = xml_file.read()
+        self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
         potential_metadata_urls = self.test_xml_file.potential_metadata_urls
-        print('potential_metadata_urls', potential_metadata_urls)
         self.assertTrue(any('http://' in url for url in potential_metadata_urls))
         self.assertTrue(all('metadata.pithia.eu/resources' in url for url in potential_metadata_urls))
         self.assertTrue(not all('metadata.pithia.eu/resources/2.2' in url for url in potential_metadata_urls))
         self.assertTrue(not any('metadata.pithia.eu/ontology' in url for url in potential_metadata_urls))
 
-    def test_potential_operational_mode_urls(self):
+    def test_potential_operational_mode_urls_are_retrieved_correctly(self):
         """
         Returns a list of potential operational
         mode URLs.
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test_InvalidOpModeURLs.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML
+        xml_file_string = xml_file.read()
+        self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 
         potential_op_mode_urls = self.test_xml_file.potential_operational_mode_urls
-        print('potential_op_mode_urls', potential_op_mode_urls)
         self.assertTrue(any('metadata.pithia.eu/resources' in url and '#' in url for url in potential_op_mode_urls))
         self.assertTrue(all('metadata.pithia.eu/resources' in url and '#' in url for url in potential_op_mode_urls))
 
     def test_is_each_potential_operational_mode_url_valid(self):
         """
-        MetadataFileMetadataURLReferencesValidator._is_each_potential_operational_mode_url_valid()
-        returns False for all URLs provided for this test.
+        Validator returns lists of invalid opertional
+        mode URLs sorted into categories. 
         """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test_InvalidOpModeURLs.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
+        xml_file = test_xml_files.ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML
+        xml_file_string = xml_file.read()
+        self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 
         validation_results = MetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
         self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
