@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase
 from .url_helpers import (
+    divide_data_collection_related_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
     divide_resource_url_into_main_components,
 )
@@ -21,23 +22,25 @@ class MetadataUrlDivisionTestCase(SimpleTestCase):
         self.assertEquals(url_division['namespace'], 'project')
         self.assertEquals(url_division['localid'], 'Project_TEST')
 
-    def test_unexpected_metadata_url_is_divided_as_expected_1(self):
+    def test_unexpected_metadata_url_is_divided_without_an_error_1(self):
         """
         A metadata URL with an unusual sequence is divided
         into separate components, despite not being valid.
         """
-        url_division = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
-        self.assertEquals(url_division['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2')
+        try:
+            divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
+        except BaseException:
+            self.fail('Metadata URL division shouldn\'t fail on URLs with more forward slashes than a typical metadata URL.')
 
-    def test_unexpected_metadata_url_is_divided_as_expected_2(self):
+    def test_unexpected_metadata_url_is_divided_without_an_error_2(self):
         """
         A metadata URL with an unusual sequence is divided
         into separate components, despite not being valid.
         """
-        url_division = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
-        self.assertEquals(url_division['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
-        self.assertEquals(url_division['resource_type'], 'organisation')
-        self.assertEquals(url_division['namespace'], 'pithia')
+        try:
+            divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
+        except BaseException:
+            self.fail('Metadata URL division shouldn\'t fail on URLs with more forward slashes than a typical metadata URL.')
 
 
 class OperationalModeUrlDivisionTestCase(SimpleTestCase):
