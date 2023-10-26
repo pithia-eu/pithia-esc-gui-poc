@@ -128,16 +128,6 @@ DATABASES = {
 
 if 'test' in sys.argv:
     os.environ['DJANGO_RW_DATABASE_NAME'] = 'default'
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'mydatabase',
-        },
-        os.environ['DJANGO_RW_DATABASE_NAME']: {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'mydatabase',
-        },
-    }
 
 
 # Password validation
