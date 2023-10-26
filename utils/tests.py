@@ -6,46 +6,80 @@ from .url_helpers import (
 
 # Create your tests here.
 
-class UrlDivisionTestCase(SimpleTestCase):
-    def test_resource_urls_are_divided_correctly(self):
+class MetadataUrlDivisionTestCase(SimpleTestCase):
+    def test_valid_metadata_url_is_divided_correctly(self):
         """
-        divide_resource_url_into_main_components() divides resource URLs
-        into their main components:
-        - url_base: e.g., https://metadata.pithia.eu/resources/2.2
-        - resource_type: e.g., organisation
-        - namespace: e.g., pithia
-        - localid: e.g., Organisation_PITHIA
+        A given metadata URL is split up into:
+        - URL base (https://metadata.pithia.eu/resources/2.2)
+        - resource type (e.g. organisation)
+        - namespace (e.g. pithia)
+        - localID (e.g. Organisation_PITHIA)
         """
-        resource_url_division_1 = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
-        resource_url_division_2 = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
-        resource_url_division_3 = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
-        
-        self.assertEquals(resource_url_division_1['url_base'], 'https://metadata.pithia.eu/resources/2.2')
-        self.assertEquals(resource_url_division_1['resource_type'], 'pithia')
-        self.assertEquals(resource_url_division_1['namespace'], 'project')
-        self.assertEquals(resource_url_division_1['localid'], 'Project_TEST')
-        self.assertEquals(resource_url_division_2['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2')
-        self.assertEquals(resource_url_division_3['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
-        self.assertEquals(resource_url_division_3['resource_type'], 'organisation')
-        self.assertEquals(resource_url_division_3['namespace'], 'pithia')
+        url_division = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
+        self.assertEquals(url_division['url_base'], 'https://metadata.pithia.eu/resources/2.2')
+        self.assertEquals(url_division['resource_type'], 'pithia')
+        self.assertEquals(url_division['namespace'], 'project')
+        self.assertEquals(url_division['localid'], 'Project_TEST')
 
-    def test_resource_urls_with_op_mode_ids_are_divided_correctly(self):
+    def test_unexpected_metadata_url_is_divided_as_expected_1(self):
         """
-        divide_resource_url_from_op_mode_id() divides resource URLs into
-        two components:
-        - resource_url: e.g., https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_PITHIA#ionogram
-        - op_mode_id: e.g., https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_PITHIA#ionogram
+        A metadata URL with an unusual sequence is divided
+        into separate components, despite not being valid.
         """
-        resource_url_division_1 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram')
-        resource_url_division_2 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST#sweep')
-        resource_url_division_3 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST#test')
-        resource_url_division_4 = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram#ionogram#ionogram#ionogram')
+        url_division = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
+        self.assertEquals(url_division['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2')
 
-        self.assertEquals(resource_url_division_1['resource_url'], 'https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
-        self.assertEquals(resource_url_division_1['op_mode_id'], 'ionogram')
-        self.assertEquals(resource_url_division_2['resource_url'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
-        self.assertEquals(resource_url_division_2['op_mode_id'], 'sweep')
-        self.assertEquals(resource_url_division_3['resource_url'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
-        self.assertEquals(resource_url_division_3['op_mode_id'], 'test')
-        self.assertEquals(resource_url_division_4['resource_url'], 'https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram#ionogram#ionogram')
-        self.assertEquals(resource_url_division_4['op_mode_id'], 'ionogram')
+    def test_unexpected_metadata_url_is_divided_as_expected_2(self):
+        """
+        A metadata URL with an unusual sequence is divided
+        into separate components, despite not being valid.
+        """
+        url_division = divide_resource_url_into_main_components('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
+        self.assertEquals(url_division['url_base'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
+        self.assertEquals(url_division['resource_type'], 'organisation')
+        self.assertEquals(url_division['namespace'], 'pithia')
+
+
+class OperationalModeUrlDivisionTestCase(SimpleTestCase):
+    def test_valid_operational_mode_url_is_divided_correctly(self):
+        """
+        A given operational mode URL is split up into:
+        - URL base (https://metadata.pithia.eu/resources/2.2)
+        - resource type (e.g. organisation)
+        - namespace (e.g. pithia)
+        - localID (e.g. Organisation_PITHIA)
+        - operational mode (e.g. ionogram)
+        """
+        url_division = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram')
+        self.assertEquals(url_division['resource_url'], 'https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
+        self.assertEquals(url_division['op_mode_id'], 'ionogram')
+
+    def test_unexpected_operational_mode_url_is_divided_as_expected_1(self):
+        """
+        An operational mode URL with an unusual sequence is
+        divded into separate components, despite not being
+        valid.
+        """
+        url_division = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST#sweep')
+        self.assertEquals(url_division['resource_url'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
+        self.assertEquals(url_division['op_mode_id'], 'sweep')
+
+    def test_unexpected_operational_mode_url_is_divided_as_expected_2(self):
+        """
+        An operational mode URL with an unusual sequence is
+        divded into separate components, despite not being
+        valid.
+        """
+        url_division = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST#test')
+        self.assertEquals(url_division['resource_url'], 'https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST/organisation/pithia/Organisation_TEST')
+        self.assertEquals(url_division['op_mode_id'], 'test')
+
+    def test_unexpected_operational_mode_url_is_divided_as_expected_3(self):
+        """
+        An operational mode URL with an unusual sequence is
+        divded into separate components, despite not being
+        valid.
+        """
+        url_division = divide_resource_url_from_op_mode_id('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram#ionogram#ionogram#ionogram')
+        self.assertEquals(url_division['resource_url'], 'https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST#ionogram#ionogram#ionogram')
+        self.assertEquals(url_division['op_mode_id'], 'ionogram')
