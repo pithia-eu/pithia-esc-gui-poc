@@ -1,6 +1,5 @@
 from django.test import SimpleTestCase
 from .url_helpers import (
-    divide_data_collection_related_resource_url_into_main_components,
     divide_resource_url_from_op_mode_id,
     divide_resource_url_into_main_components,
 )
