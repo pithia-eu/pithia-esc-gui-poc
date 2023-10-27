@@ -201,6 +201,11 @@ header .dropdown-item {
     margin-bottom: 0;
 }
 
+/* Footer */
+.footer-link-separator {
+    color: #dee2e6;
+}
+
 /* Home page */
 .card-menu {
     display: grid;
