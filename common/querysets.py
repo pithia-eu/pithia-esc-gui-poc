@@ -156,13 +156,13 @@ class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquis
         # If none are found to be referencing Instrument
         # URLs, just return those that are referencing
         # Observed Property URLs.
-        if not results_referencing_instrument_urls:
+        if not instrument_urls:
             return results_referencing_observed_property_urls
         
         # If none are found to be referencing Observed
         # Property URLs, just return those that are
         # referencing Instrument URLs.
-        if not results_referencing_observed_property_urls:
+        if not observed_property_urls:
             return results_referencing_instrument_urls
 
         return results_referencing_instrument_urls & results_referencing_observed_property_urls
