@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1>{{ title }}</h1>
+<section>
+    <h2>Name of the Service</h2>
+    <p>PITHIA-NRF e-Science Centre</p>
+</section>
+<section>
+    <h2>Description of the Service</h2>
+    <p>The PITHIA-NRF e-Science Centre, an integrated environment with a Web-based portal and underlying e-infrastructure resources to provide centralised access to all Datasets and Models/Applications associated with the PITHIA-NRF community, and to facilitate the integrated use of those for cross-national and cross-disciplinary use cases.</p>
+</section>
+<section>
+    <h2>Data controller and a contact person</h2>
+    <ul>
+        <li>
+            Organisation: ETHNIKO ASTEROSKOPEIO ATHINON (NOA)
+        </li>
+        <li>Address: LOFOS NYMFON, ATHINA 11810, GREECE</li>
+        <li>Contact person: Anna Belehaki</li>
+        <li>Email: <a href="mailto:pp_controller@pithia-nrf.eu">pp_controller@pithia-nrf.eu</a>
+            
+        </li>
+    </ul>
+</section>
+<section>
+    <h2>Jurisdiction and supervisory authority</h2>
+    <ul>
+        <li>Jurisdiction: GR, Greece </li>
+        <li>NOA's lead supervisory authority is the Greece Data Protection Authority. They can be contacted at: <a href="https://www.dpa.gr/en">https://www.dpa.gr/en</a>.
+        </li>
+    </ul>
+</section>
+<section>
+    <h2>Personal data processed and the legal basis</h2>
+    <p>The e-Science Centre may process the following personal data:</p>
+        <ul>
+            <li>Identification numbers (as provided by identity providers like a home institution)</li>
+            <li>E-mail address</li>
+            <li>Affiliation</li>
+            <li>Country</li>
+            <li>IP address</li>
+            <li>Name</li>
+            <li>Given Name</li>
+            <li>Family Name</li>
+            <li>User’s email</li>
+            <li>User’s ID</li>
+            <li>Affiliation</li>
+            <li>Membership information (roles, groups, and communities)</li>
+        </ul>
+    </p>
+</section>
+<section>
+    <h2>Purpose of the processing of personal data</h2>
+    <p>The purpose of the collection, processing and use of the personal data mentioned above is:
+    </p>
+    <ul>
+        <li>To provide the service functions, i.e. to identify, authenticate, and authorise users for accessing the e-Science Centre, as a member of one or more groups or communities identified by Check-in</li>
+        <li>Some personal data may be accessed in case a technical issue needs to be investigated (to ensure the  performance and security of the e-Science Centre)</li>
+    </ul>
+</section>
+<section>
+    <h2>Third parties to whom personal data is disclosed</h2>
+    <p>Based on the consent of the user, the personal data mentioned above are forwarded to e-Science Centre  and processed by these service providers, according to their service-specific privacy policies.</p>
+    <p>In addition, for the purpose given in this privacy policy, personal data may be passed to the following third parties within the EU / EEA:</p>
+    <ul>
+        <li>EGI Cloud Service providers, to provide compute resources for the e-Science Centre</li>
+        <li>EGI DataHub, to provide storage for the e-Science Centre (settings, backups, user datasets, etc.) </li>
+        <li>Group managers</li>
+        <li>The records of your use and technical log files produced by the e-Science Centre may be shared for security incident response purposes with other authorised participants in the academic and research distributed digital infrastructures via secured mechanisms, only for the same purposes and only as far as necessary to provide the incident response capability where doing so is likely to assist in the investigation of suspected misuse of Infrastructure resources.</li>
+    </ul>
+</section>
+<section>
+    <h2>How to access, rectify and delete the personal data and object to its processing</h2>
+    <ul>
+        <li>To access and delete the personal data, reach out to the data controller contact listed above.</li>
+        <li>To rectify the data released by your Home Organisation, contact your Home Organisation’s IT helpdesk.</li>
+    </ul>
+</section>
+<section>
+    <h2>Data retention</h2>
+    <p>Your personal data associated with your account is kept as long as your Check-in account is active. Your account can be deactivated on request.
+    </p>
+    <p>The records of your use and technical log files produced by the Check-in service components will be deleted or anonymised after, at most, 18 months.</p>
+</section>
+<section>
+    <h2>Data Protection Code of Conduct</h2>
+    <p>The PITHIA-NRF e-Science Centre is conforming to the GEANT Code of Conduct and your personal data will be processed in accordance with the <a href="http://www.geant.net/uri/dataprotection-code-of-conduct/v1">GEANT Code of Conduct for Service Providers</a> and the <a href="https://documents.egi.eu/public/ShowDocument?docid=2732">EGI Policy on the Processing of Personal Data</a>.</p>
+</section>
+{% endblock content %}
