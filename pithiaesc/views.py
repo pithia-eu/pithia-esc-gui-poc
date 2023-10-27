@@ -19,7 +19,7 @@ env = environ.Env()
 
 def index(request):
     return render(request, 'index.html', {
-        'title': 'PITHIA-NRF e-Science Centre Home',
+        'title': 'PITHIA e-Science Centre',
     })
 
 def login(request):
@@ -64,10 +64,10 @@ def resource_registration_user_guide(request):
     
 def terms_of_use(request):
     return render(request, 'terms-of-use.html', {
-        'title': 'PITHIA-NRF e-Science Centre Acceptable Use Policy and Conditions of Use'
+        'title': 'PITHIA e-Science Centre Acceptable Use Policy and Conditions of Use'
     })
 
 def privacy_policy(request):
     return render(request, 'privacy-policy.html', {
-        'title': 'PITHIA-NRF e-Science Centre Privacy Policy'
+        'title': 'PITHIA e-Science Centre Privacy Policy'
     })
