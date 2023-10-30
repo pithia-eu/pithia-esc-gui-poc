@@ -18,6 +18,7 @@ from .models import (
 )
 
 def _register_metadata_file_for_test(xml_file, model):
+    xml_file.seek(0)
     return model.objects.create_from_xml_string(xml_file.read())
 
 def register_organisation_for_test():
