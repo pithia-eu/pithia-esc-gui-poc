@@ -1,3 +1,4 @@
+import re
 from dateutil.parser import parse
 from django.http import JsonResponse
 from django.shortcuts import (
@@ -264,9 +265,43 @@ class DataCollectionListView(ResourceListView):
     Lists the detail page links for each Data
     Collection registration.
     """
+    template_name = 'browse/data_collection_list.html'
     model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
+    
+    def get_queryset(self):
+        data_collections = super().get_queryset()
+        ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
+        SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
+        COMPUTATION_MODELS_KEY = 'Computational Models'
+        OTHER_KEY = 'Other'
+        MIXED_KEY = 'Mixed'
+        data_collections_by_type = {
+            ACTIVITY_INDICATORS_KEY: [],
+            SENSOR_MEASUREMENTS_KEY: [],
+            COMPUTATION_MODELS_KEY: [],
+            MIXED_KEY: [],
+            OTHER_KEY: [],
+        }
+        for dc in data_collections:
+            dc_type_urls = dc.type_urls
+            if not dc_type_urls:
+                data_collections_by_type[OTHER_KEY].append(dc)
+                continue
+            
+            is_activity_indicator_type = any([re.search('\/computationType\/(.*)ActivityIndicator$', url) for url in dc_type_urls])
+            is_instrument_type = any([re.search('\/instrumentType\/(.*)$', url) for url in dc_type_urls])
+            is_model_type = any([re.search('\/computationType\/(.*)Model$', url) for url in dc_type_urls])
+            if sum([is_activity_indicator_type, is_instrument_type, is_model_type]) > 1:
+                data_collections_by_type[MIXED_KEY].append(dc)
+            if is_activity_indicator_type:
+                data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
+            elif is_instrument_type:
+                data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
+            elif is_model_type:
+                data_collections_by_type[COMPUTATION_MODELS_KEY].append(dc)
+        return data_collections_by_type
 
 class CatalogueRelatedResourceListView(ResourceListView):
     """
