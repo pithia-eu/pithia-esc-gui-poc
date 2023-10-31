@@ -1,0 +1,19 @@
+{% extends 'browse/resource_list_by_type.html' %}
+{% block resource_list_inner %}
+{% for key, value in resources.items %}
+<section>
+    {% with section_name=key.split|join:'-'|lower %}
+    <h2 id="{{ section_name }}-heading" class="mb-3">
+    {% endwith %}
+        {{ key }}
+    </h2>
+    <ul class="list-group">
+        {% for dc in value %}
+        <li class="list-group-item">
+            <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endfor %}
+{% endblock resource_list_inner %}

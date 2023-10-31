@@ -1,3 +1,4 @@
+import re
 from dateutil.parser import parse
 from django.http import JsonResponse
 from django.shortcuts import (
@@ -264,9 +265,53 @@ class DataCollectionListView(ResourceListView):
     Lists the detail page links for each Data
     Collection registration.
     """
+    template_name = 'browse/data_collection_list.html'
     model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
     description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
+
+    def get_queryset(self):
+        data_collections = super().get_queryset()
+
+        ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
+        SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
+        COMPUTATIONAL_MODELS_KEY = 'Computational Models'
+        MIXED_KEY = 'Mixed'
+        OTHER_KEY = 'Other'
+
+        data_collections_by_type = {
+            ACTIVITY_INDICATORS_KEY: [],
+            SENSOR_MEASUREMENTS_KEY: [],
+            COMPUTATIONAL_MODELS_KEY: [],
+            MIXED_KEY: [],
+            OTHER_KEY: [],
+        }
+        # https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator
+        # https://metadata.pithia.eu/ontology/2.2/computationType/AssimilativeModel
+        # https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager
+
+        for dc in data_collections:
+            if not dc.type_urls:
+                data_collections_by_type[OTHER_KEY].append(dc)
+                continue
+            type_urls = dc.type_urls
+            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator$', url) for url in type_urls])
+            is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
+            is_computational_model = any([re.search('\/computationType/(.*)Model$', url) for url in type_urls])
+
+            if sum([is_activity_indicator, is_sensor_measurement, is_computational_model]) > 1:
+                data_collections_by_type[MIXED_KEY].append(dc)
+            elif is_activity_indicator:
+                data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
+            elif is_sensor_measurement:
+                data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
+            elif is_computational_model:
+                data_collections_by_type[COMPUTATIONAL_MODELS_KEY].append(dc)
+            else:
+                data_collections_by_type[OTHER_KEY].append(dc)
+
+        print('data_collections_by_type', data_collections_by_type)
+        return data_collections_by_type
 
 class CatalogueRelatedResourceListView(ResourceListView):
     """
