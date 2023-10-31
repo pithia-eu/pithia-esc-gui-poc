@@ -6,32 +6,37 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-{% if messages %}
-<div class="registration-alerts mb-3">
-    {% for message in messages %}
-    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-        {{ message }}
+<div class="row gx-5">
+    {% block aside %}{% endblock aside %}
+    <div class="{% block main_col_size %}col-lg-12{% endblock main_col_size %}">
+        {% if messages %}
+        <div class="registration-alerts mb-3">
+            {% for message in messages %}
+            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <h1>{{ title }}</h1>
+        <p class="mb-4">
+            {{ description }}
+        </p>
+        {% if not resources %}
+        <p>{{ empty_resource_list_text }}</p>
+        {% else %}
+        {% block resource_list_inner %}
+        {% with resource_list=resources %}
+        <ul class="list-group">
+            {% for resource in resources %}
+            <li class="list-group-item">
+                <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endwith %}
+        {% endblock resource_list_inner %}
+        {% endif %}
     </div>
-    {% endfor %}
 </div>
-{% endif %}
-<h1>{{ title }}</h1>
-<p>
-    {{ description }}
-</p>
-{% if not resources %}
-<p>{{ empty_resource_list_text }}</p>
-{% else %}
-{% block resource_list_inner %}
-{% with resource_list=resources %}
-<ul class="list-group">
-    {% for resource in resources %}
-    <li class="list-group-item">
-        <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
-    </li>
-    {% endfor %}
-</ul>
-{% endwith %}
-{% endblock resource_list_inner %}
-{% endif %}
 {% endblock content %}

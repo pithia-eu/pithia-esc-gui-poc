@@ -1,10 +1,33 @@
 {% extends 'browse/resource_list_by_type.html' %}
+{% block aside %}
+<div class="col-lg-3">
+    <aside class="sticky-top">
+        <section>
+            <div class="list-group list-group-flush">
+                {% for key, value in resources.items %}
+                {% if value %}
+                <li class="list-group-item">
+                    {% with section_name=key.split|join:'-'|lower %}
+                    <a href="#{{ section_name }}-heading">
+                        {% endwith %}
+                        {{ key }}
+                    </a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    </aside>
+</div>
+{% endblock aside %}
+{% block main_col_size %}col-lg-9{% endblock main_col_size %}
 {% block resource_list_inner %}
 {% for key, value in resources.items %}
+{% if value %}
 <section>
     {% with section_name=key.split|join:'-'|lower %}
     <h2 id="{{ section_name }}-heading" class="mb-3">
-    {% endwith %}
+        {% endwith %}
         {{ key }}
     </h2>
     <ul class="list-group">
@@ -15,5 +38,6 @@
         {% endfor %}
     </ul>
 </section>
+{% endif %}
 {% endfor %}
 {% endblock resource_list_inner %}
