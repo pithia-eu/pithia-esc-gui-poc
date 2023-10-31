@@ -310,7 +310,6 @@ class DataCollectionListView(ResourceListView):
             else:
                 data_collections_by_type[OTHER_KEY].append(dc)
 
-        print('data_collections_by_type', data_collections_by_type)
         return data_collections_by_type
 
 class CatalogueRelatedResourceListView(ResourceListView):
