@@ -62,7 +62,7 @@ header .dropdown-menu {
 
 h1 {
     color: var(--pithia-blue);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 h3.opblock-tag p {
