@@ -1,4 +1,5 @@
 import logging
+import os
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import (
@@ -390,7 +391,7 @@ def data_collection_interaction_methods(request, resource_id):
 
                     if is_api_selected == False:
                         try:
-                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using='esc_rw')
+                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
                         except models.APIInteractionMethod.DoesNotExist:
                             pass
                         messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
