@@ -187,13 +187,17 @@ class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabas
     def referencing_instrument_url(self, instrument_url: str):
         return self.filter(**{'json__instrument__@xlink:href': instrument_url})
 
+    def referencing_platform_url(self, platform_url: str):
+        return self.filter(**{'json__capabilityLinks__capabilityLink__contains': [{'platform': {'@xlink:href': platform_url}}]})
+
     def for_search(self, acquisition_capability_set_urls: list):
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
     
     def for_delete_chain(self, metadata_server_url: str):
         referencing_instrument_url = self.referencing_instrument_url(metadata_server_url)
         referencing_acquisition_capability_set_url = self.referencing_acquisition_capability_set_url(metadata_server_url)
-        return referencing_instrument_url | referencing_acquisition_capability_set_url
+        referencing_platform_url = self.referencing_platform_url(metadata_server_url)
+        return referencing_instrument_url | referencing_acquisition_capability_set_url | referencing_platform_url
 
 class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
