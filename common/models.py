@@ -341,7 +341,8 @@ class Platform(ScientificMetadata):
     def _immediate_metadata_dependents(self):
         operations = Operation.objects.for_delete_chain(self.metadata_server_url)
         platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
-        return list(operations) + list(platforms)
+        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
+        return list(operations) + list(platforms) + list(acquisitions)
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
