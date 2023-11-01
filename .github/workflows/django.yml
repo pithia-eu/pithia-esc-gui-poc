@@ -52,6 +52,7 @@ jobs:
         echo DATABASE_WRITE_PASSWORD="$DATABASE_WRITE_PASSWORD" >> pithiaesc/.env
         echo MONGODB_CONNECTION_STRING="$MONGODB_CONNECTION_STRING" >> pithiaesc/.env
         echo DB_NAME="$DB_NAME" >> pithiaesc/.env
+        echo DJANGO_RW_DATABASE_NAME="$DJANGO_RW_DATABASE_NAME" >> pithiaesc/.env
         
         echo "cat pithiaesc/.env"
         cat pithiaesc/.env
