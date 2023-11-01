@@ -246,14 +246,14 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
         results_referencing_computation_type_urls = self.referencing_computation_type_urls(computation_type_urls)
         results_referencing_observed_property_urls = self.referencing_observed_property_urls(observed_property_urls)
         referencing_available_urls = []
-        if results_referencing_computation_type_urls and results_referencing_observed_property_urls:
+        if computation_type_urls and observed_property_urls:
             referencing_available_urls = list(
                 results_referencing_computation_type_urls \
                 & results_referencing_observed_property_urls
             )
-        elif results_referencing_computation_type_urls:
+        elif computation_type_urls:
             referencing_available_urls = list(results_referencing_computation_type_urls)
-        elif results_referencing_observed_property_urls:
+        elif observed_property_urls:
             referencing_available_urls = list(results_referencing_observed_property_urls)
 
         # Find the Computation Capabilities referencing to the found
@@ -379,13 +379,13 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         results_referencing_computation_type_urls = self.referencing_computation_type_urls(computation_type_urls)
         results_referencing_feature_of_interest_urls = self.referencing_feature_of_interest_urls(feature_of_interest_urls)
 
-        if results_referencing_process_urls:
+        if process_urls:
             search_results &= results_referencing_process_urls
-        if results_referencing_instrument_type_urls:
+        if instrument_type_urls:
             search_results &= results_referencing_instrument_type_urls
-        if results_referencing_computation_type_urls:
+        if computation_type_urls:
             search_results &= results_referencing_computation_type_urls
-        if results_referencing_feature_of_interest_urls:
+        if feature_of_interest_urls:
             search_results &= results_referencing_feature_of_interest_urls
 
         return search_results
