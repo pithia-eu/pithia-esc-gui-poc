@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from lxml import etree
 
 from .managers import *
 from .querysets import *
@@ -128,7 +129,18 @@ class ScientificMetadata(models.Model):
     
     @property
     def _immediate_metadata_dependents(self) -> list:
-        return []
+        scientific_metadata_model_subclasses = ScientificMetadata.__subclasses__()
+        scientific_metadata_models_in_range = scientific_metadata_model_subclasses[scientific_metadata_model_subclasses.index(self.__class__):]
+        potential_dependents = []
+        immediate_dependentts = []
+        for m in scientific_metadata_models_in_range:
+            potential_dependents += list(m.objects.all())
+        for pd in potential_dependents:
+            parsed_xml = etree.fromstring(pd.xml.encode('utf-8'))
+            url_mentions = parsed_xml.xpath(f"//*[contains(@xlink:href, '{self.metadata_server_url}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
+            if len(url_mentions) > 0:
+                immediate_dependentts.append(pd)
+        return immediate_dependentts
 
     def _dependents_of_immedidate_metadata_dependents(self, immediate_metadata_dependents) -> list:
         all_dependents_of_dependents = []
@@ -262,16 +274,6 @@ class Organisation(ScientificMetadata):
     _browse_detail_page_url_name = 'browse:organisation_detail'
     root_element_name = 'Organisation'
 
-    @property
-    def _immediate_metadata_dependents(self):
-        individuals = Individual.objects.for_delete_chain(self.metadata_server_url)
-        projects = Project.objects.for_delete_chain(self.metadata_server_url)
-        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
-        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
-        instruments = Instrument.objects.for_delete_chain(self.metadata_server_url)
-        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
-        return list(individuals) + list(projects) + list(platforms) + list(operations) + list(instruments) + list(data_collections)
-
     objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
     class Meta:
@@ -291,15 +293,6 @@ class Individual(ScientificMetadata):
     def organisation_url(self):
         return self.json['organisation']['@xlink:href']
 
-    @property
-    def _immediate_metadata_dependents(self):
-        projects = Project.objects.for_delete_chain(self.metadata_server_url)
-        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
-        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
-        instruments = Instrument.objects.for_delete_chain(self.metadata_server_url)
-        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
-        return list(projects) + list(platforms) + list(operations) + list(instruments) + list(data_collections)
-
     objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
     class Meta:
@@ -315,11 +308,6 @@ class Project(ScientificMetadata):
     converted_xml_correction_function = correct_project_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:project_detail'
     root_element_name = 'Project'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
-        return list(data_collections)
 
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
@@ -336,13 +324,6 @@ class Platform(ScientificMetadata):
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:platform_detail'
     root_element_name = 'Platform'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        operations = Operation.objects.for_delete_chain(self.metadata_server_url)
-        platforms = Platform.objects.for_delete_chain(self.metadata_server_url)
-        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
-        return list(operations) + list(platforms) + list(acquisitions)
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -375,26 +356,6 @@ class Instrument(ScientificMetadata):
     converted_xml_correction_function = correct_instrument_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:instrument_detail'
     root_element_name = 'Instrument'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        operational_mode_urls = []
-        if 'operationalMode' in self.json:
-            instrument_operational_modes = self.json['operationalMode']
-            for om in instrument_operational_modes:
-                om_id = om['InstrumentOperationalMode']['id']
-                operational_mode_urls.append(f'{self.metadata_server_url}#{om_id}')
-
-        # Referenced by: Acquisition (from instrument prop)
-        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
-        # Referenced by: AcquisitionCapability (from
-        # instrumentModePair.InstrumentOperationalModePair.instrument prop and
-        # instrumentModePair.InstrumentOperationalModePair.mode prop)
-        acquisition_capability_sets = AcquisitionCapabilities.objects.for_delete_chain(
-            self.metadata_server_url,
-            operational_mode_urls
-        )
-        return list(acquisitions) + list(acquisition_capability_sets)
 
     @property
     def operational_mode_ids(self):
@@ -429,11 +390,6 @@ class AcquisitionCapabilities(ScientificMetadata):
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     root_element_name = 'AcquisitionCapabilities'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        acquisitions = Acquisition.objects.for_delete_chain(self.metadata_server_url)
-        return list(acquisitions)
 
     @property
     def observed_property_urls(self):
@@ -457,11 +413,6 @@ class Acquisition(ScientificMetadata):
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_detail'
     root_element_name = 'Acquisition'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        processes = Process.objects.for_delete_chain(self.metadata_server_url)
-        return list(processes)
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -478,12 +429,6 @@ class ComputationCapabilities(ScientificMetadata):
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
     root_element_name = 'ComputationCapabilities'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        computation_capability_sets = ComputationCapabilities.objects.for_delete_chain(self.metadata_server_url)
-        computations = Computation.objects.for_delete_chain(self.metadata_server_url)
-        return list(computation_capability_sets) + list(computations)
 
     @property
     def computation_type_urls(self):
@@ -514,11 +459,6 @@ class Computation(ScientificMetadata):
     converted_xml_correction_function = correct_computation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_detail'
     root_element_name = 'Computation'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        processes = Process.objects.for_delete_chain(self.metadata_server_url)
-        return processes
 
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
@@ -535,11 +475,6 @@ class Process(ScientificMetadata):
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
     root_element_name = 'CompositeProcess'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        data_collections = DataCollection.objects.for_delete_chain(self.metadata_server_url)
-        return list(data_collections)
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -556,11 +491,6 @@ class DataCollection(ScientificMetadata):
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:data_collection_detail'
     root_element_name = 'DataCollection'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        catalogue_data_subsets = CatalogueDataSubset.objects.for_delete_chain(self.metadata_server_url)
-        return list(catalogue_data_subsets)
 
     @property
     def first_related_party_url(self):
@@ -608,11 +538,6 @@ class Catalogue(ScientificMetadata):
     @property
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        catalogue_entries = CatalogueEntry.objects.for_delete_chain(self.metadata_server_url)
-        return list(catalogue_entries)
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -628,11 +553,6 @@ class CatalogueEntry(ScientificMetadata):
     a_or_an = 'a'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
-    
-    @property
-    def _immediate_metadata_dependents(self):
-        catalogue_data_subsets = CatalogueDataSubset.objects.for_delete_chain(self.metadata_server_url)
-        return list(catalogue_data_subsets)
 
     @property
     def name(self):
