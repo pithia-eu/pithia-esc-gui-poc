@@ -516,7 +516,7 @@ PLATFORM_METADATA_XML = SimpleUploadedFile(
 )
 
 PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML = SimpleUploadedFile(
-    'Platform_Test.xml',
+    'Platform_Test_with_Child_Platforms.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>
     <Platform
         xmlns="https://metadata.pithia.eu/schemas/2.2"
@@ -529,7 +529,7 @@ PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML = SimpleUploadedFile(
         gml:id="p_n11">
         <identifier>
             <PITHIA_Identifier>
-                <localID>Platform_Test</localID>
+                <localID>Platform_Test_with_Child_Platforms</localID>
                 <namespace>test</namespace>
                 <version>1</version>
                 <creationDate>2022-03-14T16:00:00Z</creationDate>

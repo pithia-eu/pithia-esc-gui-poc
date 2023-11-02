@@ -7,6 +7,25 @@ from .models import (
     Organisation,
 )
 
+from common.test_setup import (
+    register_acquisition_capabilities_for_test,
+    register_acquisition_for_test,
+    register_catalogue_data_subset_for_test,
+    register_catalogue_entry_for_test,
+    register_catalogue_for_test,
+    register_computation_capabilities_for_test,
+    register_computation_capabilities_2_for_test,
+    register_computation_for_test,
+    register_data_collection_for_test,
+    register_individual_for_test,
+    register_instrument_for_test,
+    register_operation_for_test,
+    register_organisation_for_test,
+    register_platform_for_test,
+    register_platform_with_child_platforms_for_test,
+    register_process_for_test,
+    register_project_for_test,
+)
 from common.test_xml_files import (
     ACQUISITION_CAPABILITIES_METADATA_XML,
     COMPUTATION_CAPABILITIES_METADATA_XML,
@@ -38,6 +57,191 @@ class ScientificMetadataPropertiesTestCase(TestCase):
             print('metadata_server_url', metadata_server_url)
         except BaseException:
             print('Unable to get metadata server URL from registration.')
+
+
+class ImmediateMetadataDependentsTestCase(TestCase):
+    def setUp(self) -> None:
+        self.organisation = register_organisation_for_test()
+        self.individual = register_individual_for_test()
+        self.project = register_project_for_test()
+        self.platform = register_platform_for_test()
+        self.operation = register_operation_for_test()
+        self.instrument = register_instrument_for_test()
+        self.acquisition_capabilities = register_acquisition_capabilities_for_test()
+        self.acquisition = register_acquisition_for_test()
+        self.computation_capabilities = register_computation_capabilities_for_test()
+        self.computation = register_computation_for_test()
+        self.process = register_process_for_test()
+        self.data_collection = register_data_collection_for_test()
+        self.catalogue = register_catalogue_for_test()
+        self.catalogue_entry = register_catalogue_entry_for_test()
+        self.catalogue_data_subset = register_catalogue_data_subset_for_test()
+        return super().setUp()
+
+    def test_organisation_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an organisation
+        metadata URL are correctly identified.
+        """
+        imds = self.organisation._immediate_metadata_dependents
+        self.assertIn(self.individual, imds)
+        self.assertIn(self.project, imds)
+        self.assertIn(self.platform, imds)
+        self.assertIn(self.operation, imds)
+        self.assertIn(self.instrument, imds)
+        self.assertIn(self.data_collection, imds)
+        self.assertEqual(len(imds), 6)
+
+    def test_individual_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an individual
+        metadata URL are correctly identified.
+        """
+        imds = self.individual._immediate_metadata_dependents
+        self.assertIn(self.project, imds)
+        self.assertIn(self.platform, imds)
+        self.assertIn(self.operation, imds)
+        self.assertIn(self.instrument, imds)
+        self.assertIn(self.data_collection, imds)
+        self.assertEqual(len(imds), 5)
+
+    def test_project_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a project
+        metadata URL are correctly identified.
+        """
+        imds = self.project._immediate_metadata_dependents
+        self.assertIn(self.data_collection, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_platform_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a platform
+        metadata URL are correctly identified.
+        """
+        imds = self.platform._immediate_metadata_dependents
+        self.assertIn(self.operation, imds)
+        self.assertIn(self.acquisition, imds)
+        self.assertIn(self.computation, imds)
+        self.assertEqual(len(imds), 3)
+
+    def test_operation_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an operation
+        metadata URL are correctly identified.
+        """
+        imds = self.operation._immediate_metadata_dependents
+        self.assertEqual(len(imds), 0)
+
+    def test_instrument_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an instrument
+        metadata URL are correctly identified.
+        """
+        imds = self.instrument._immediate_metadata_dependents
+        self.assertIn(self.acquisition_capabilities, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_acquisition_capabilities_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an acquisition
+        capabilities metadata URL are correctly identified.
+        """
+        imds = self.acquisition_capabilities._immediate_metadata_dependents
+        self.assertIn(self.acquisition, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_acquisition_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to an acquisition
+        metadata URL are correctly identified.
+        """
+        imds = self.acquisition._immediate_metadata_dependents
+        self.assertIn(self.process, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_computation_capabilities_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a computation
+        capabilities metadata URL are correctly identified.
+        """
+        imds = self.computation_capabilities._immediate_metadata_dependents
+        self.assertIn(self.computation, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_computation_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a computation
+        metadata URL are correctly identified.
+        """
+        imds = self.computation._immediate_metadata_dependents
+        self.assertIn(self.process, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_process_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a process
+        metadata URL are correctly identified.
+        """
+        imds = self.process._immediate_metadata_dependents
+        self.assertIn(self.data_collection, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_data_collection_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a data
+        collection metadata URL are correctly identified.
+        """
+        imds = self.data_collection._immediate_metadata_dependents
+        self.assertIn(self.catalogue_data_subset, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_catalogue_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a catalogue
+        metadata URL are correctly identified.
+        """
+        imds = self.catalogue._immediate_metadata_dependents
+        self.assertIn(self.catalogue_entry, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_catalogue_entry_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a catalogue
+        entry metadata URL are correctly identified.
+        """
+        imds = self.catalogue_entry._immediate_metadata_dependents
+        self.assertIn(self.catalogue_data_subset, imds)
+        self.assertEqual(len(imds), 1)
+
+    def test_catalogue_data_subset_immediate_metadata_dependents_are_correct(self):
+        """
+        Metadata registrations referring to a catalogue
+        data subset metadata URL are correctly identified.
+        """
+        imds = self.catalogue_data_subset._immediate_metadata_dependents
+        self.assertEqual(len(imds), 0)
+
+    def test_child_computation_references_are_included(self):
+        """
+        Check that registrations with child computation
+        references are included in the list of immediate
+        metadata dependents.
+        """
+        computation_capabilities_2 = register_computation_capabilities_2_for_test()
+        imds = self.computation_capabilities._immediate_metadata_dependents
+        self.assertIn(computation_capabilities_2, imds)
+
+
+    def test_child_platform_references_are_included(self):
+        """
+        Check that registrations with child platform
+        references are included in the list of immediate
+        metadata dependents.
+        """
+        platform_with_child_platforms = register_platform_with_child_platforms_for_test()
+        imds = self.platform._immediate_metadata_dependents
+        self.assertIn(platform_with_child_platforms, imds)
 
 
 class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
