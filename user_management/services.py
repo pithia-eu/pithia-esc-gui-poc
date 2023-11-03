@@ -17,7 +17,7 @@ def get_user_info(access_token):
     the logged in user's details - e.g., which
     institution they are a part of, ID, etc.
     """
-    url = 'https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+    url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
     headers = {
         'Content-type': 'application/json',
         'Authorization': 'Bearer' + ' ' + access_token
