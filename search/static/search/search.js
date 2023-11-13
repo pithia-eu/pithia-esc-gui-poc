@@ -34,6 +34,9 @@ function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
     const siblingNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']`);
     const siblingNodeCheckboxesChecked = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']:checked`);
     const parentNodeCheckbox = document.getElementById(childNodeCheckbox.dataset.parentNodeInOntology);
+    if (!parentNodeCheckbox) {
+        return;
+    }
     parentNodeCheckbox.checked = siblingNodeCheckboxes.length === siblingNodeCheckboxesChecked.length;
     if (parentNodeCheckbox.dataset.parentNodeInOntology !== "") {
         updateParentNodeCheckboxesByChildNodeCheckbox(parentNodeCheckbox);
@@ -53,7 +56,7 @@ function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
         if (childNodeCheckboxesOfChildNodeCheckbox.length > 0) {
             updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
         }
-    })
+    });
 }
 
 
@@ -383,6 +386,8 @@ function setupInputsForTreeContainerId(treeContainerId) {
     searchBoxCheckbox.addEventListener("change", event => {
         checkboxesMatchingSearch.forEach(checkbox => {
             checkbox.checked = searchBoxCheckbox.checked;
+            updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
+            updateParentNodeCheckboxesByChildNodeCheckbox(checkbox);
         });
         setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
     });
