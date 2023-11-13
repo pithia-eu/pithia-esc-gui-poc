@@ -132,17 +132,17 @@ class ScientificMetadata(models.Model):
         scientific_metadata_model_subclasses = ScientificMetadata.__subclasses__()
         scientific_metadata_models_in_range = scientific_metadata_model_subclasses[scientific_metadata_model_subclasses.index(self.__class__):]
         potential_dependents = []
-        immediate_dependentts = []
+        immediate_dependents = []
         for m in scientific_metadata_models_in_range:
             potential_dependents += list(m.objects.all())
         for pd in potential_dependents:
             parsed_xml = etree.fromstring(pd.xml.encode('utf-8'))
             url_mentions = parsed_xml.xpath(f"//*[contains(@xlink:href, '{self.metadata_server_url}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
-            if len(url_mentions) > 0:
-                immediate_dependentts.append(pd)
-        return immediate_dependentts
+            if len(url_mentions) > 0 and pd.localid != self.localid:
+                immediate_dependents.append(pd)
+        return immediate_dependents
 
-    def _dependents_of_immedidate_metadata_dependents(self, immediate_metadata_dependents) -> list:
+    def _dependents_of_immediate_metadata_dependents(self, immediate_metadata_dependents) -> list:
         all_dependents_of_dependents = []
         for imd in immediate_metadata_dependents:
             if not any(str(imd.pk) == str(md.pk) for md in all_dependents_of_dependents):
@@ -154,7 +154,7 @@ class ScientificMetadata(models.Model):
     @property
     def metadata_dependents(self) -> list:
         immediate_metadata_dependents = self._immediate_metadata_dependents
-        dependents_of_immediate_metadata_dependents = self._dependents_of_immedidate_metadata_dependents(immediate_metadata_dependents)
+        dependents_of_immediate_metadata_dependents = self._dependents_of_immediate_metadata_dependents(immediate_metadata_dependents)
         all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
         return sorted(list({ str(md.pk): md for md in all_metadata_dependents }.values()), key=lambda md: md.weight)
     
