@@ -12,9 +12,9 @@
         {% if node.instrumentType %}data-instrument-types="{{ node.instrumentType|join:" " }}"{% endif %}
         {% if node.computationType %}data-computation-types="{{ node.computationType|join:" " }}"{% endif %}
         {% if node.value not in registered_ontology_terms %}
-        class="form-check-input d-none" disabled
+        class="search-term-checkbox form-check-input d-none" disabled
         {% else %}
-        class="form-check-input"
+        class="search-term-checkbox form-check-input"
         {% endif %}>
     <label for="{{ node.id }}"
         {% if registered_ontology_terms and node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
