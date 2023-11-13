@@ -3,8 +3,8 @@
 {% block resource_list_inner %}
 {% for key, value in resources.items %}
 <section>
-    <h2>{{ key }}</h2>
-    <ul class="list-group" style="max-height: 12rem; overflow-y: scroll;">
+    <h2 class="mb-3">{{ key }}</h2>
+    <ul class="list-group" style="max-height: 15rem; overflow-y: scroll;">
         {% for dc in value %}
         <li class="list-group-item">
             <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
