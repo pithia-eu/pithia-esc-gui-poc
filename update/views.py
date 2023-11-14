@@ -150,7 +150,7 @@ class ResourceUpdateFormView(FormView):
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
                 messages.error(request, 'An error occurred whilst parsing the XML.')
             except BaseException as err:
-                logger.exception('An unexpected error occurred whilst attempting to update a resource.')
+                logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{self.resource_id}".')
                 messages.error(request, 'An unexpected error occurred.')
         else:
             messages.error(request, 'The form submitted was not valid.')
