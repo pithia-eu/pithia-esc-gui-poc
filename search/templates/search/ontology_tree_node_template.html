@@ -1,6 +1,6 @@
 {% if node.prefLabel %}
 <div class="form-check d-inline-block"
-    {% if node.value not in registered_ontology_terms %}
+    {% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
     style="padding-left: 0;"
     {% endif %}>
     <input type="checkbox" id="{{ node.id }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
@@ -11,7 +11,7 @@
         {% if node.featureOfInterest %}data-features-of-interest="{{ node.featureOfInterest|join:" " }}"{% endif %}
         {% if node.instrumentType %}data-instrument-types="{{ node.instrumentType|join:" " }}"{% endif %}
         {% if node.computationType %}data-computation-types="{{ node.computationType|join:" " }}"{% endif %}
-        {% if node.value not in registered_ontology_terms %}
+        {% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
         class="search-term-checkbox form-check-input d-none" disabled
         {% else %}
         class="search-term-checkbox form-check-input"
