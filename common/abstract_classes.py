@@ -259,6 +259,13 @@ class AbstractAcquisitionDatabaseQueries(ABC):
         pass
 
     @abstractmethod
+    def referencing_platform_url(self, platform_url: str):
+        """
+        Acquisitions referencing a given Platform URL.
+        """
+        pass
+
+    @abstractmethod
     def for_search(self, acquisition_capability_set_urls: list):
         """
         Acquisitions referencing at least one URL from a

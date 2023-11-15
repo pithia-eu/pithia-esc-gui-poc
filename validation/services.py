@@ -56,8 +56,19 @@ class MetadataRootElementNameValidator:
 class MetadataFileXSDValidator:
     @classmethod
     def _validate_xml_file_string_against_schema(cls, xml_file_string: str, schema):
-        xml_schema = xmlschema.XMLSchema(schema)
-        xml_schema.validate(xml_file_string)
+        try:
+            cwd_before_validation = os.getcwd()
+            # Temporarily change the cwd to so the XSD
+            # validator can see the schema files.
+            os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
+            xml_schema = xmlschema.XMLSchema(schema)
+            xml_schema.validate(xml_file_string)
+        except XMLSchemaException as err:
+            raise err
+        finally:
+            # Change the cwd back as XSD validation is
+            # finished.
+            os.chdir(cwd_before_validation)
 
     @classmethod
     def validate(cls, xml_file: XMLMetadataFile):
@@ -219,10 +230,6 @@ def validate_xml_file_and_return_summary(
 
     try:
         # XSD Schema validation
-        cwd_before_validation = os.getcwd()
-        # Temporarily change the cwd to so the XSD
-        # validator can see the schema files.
-        os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
         MetadataFileXSDValidator.validate(xml_metadata_file)
     except XMLSchemaException as err:
         logger.exception('Error occurred whilst validating XML for schema correctness.')
@@ -231,10 +238,6 @@ def validate_xml_file_and_return_summary(
             details=str(err),
         )
         return validation_summary
-    finally:
-        # Change the cwd back as XSD validation is
-        # finished.
-        os.chdir(cwd_before_validation)
 
     try:
         # Matching file name and localID tag text validation

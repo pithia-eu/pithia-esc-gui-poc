@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import environ
+import sys
 
 # Initialise environment variables
 env = environ.Env()
@@ -115,7 +116,7 @@ DATABASES = {
         'HOST': os.environ['DATABASE_HOST'],
         'PORT': os.environ['DATABASE_PORT'],
     },
-    'esc_rw': {
+    os.environ['DJANGO_RW_DATABASE_NAME']: {
         'ENGINE': os.environ['DATABASE_ENGINE'],
         'NAME': os.environ['DATABASE_NAME'],
         'USER': os.environ['DATABASE_WRITE_USER'],
@@ -124,6 +125,9 @@ DATABASES = {
         'PORT': os.environ['DATABASE_PORT'],
     },
 }
+
+if 'test' in sys.argv:
+    os.environ['DJANGO_RW_DATABASE_NAME'] = 'default'
 
 
 # Password validation

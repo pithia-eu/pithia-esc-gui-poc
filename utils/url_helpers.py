@@ -30,7 +30,19 @@ def divide_resource_url_into_main_components(resource_url):
     try:
         return divide_catalogue_related_resource_url_into_main_components(resource_url)
     except IndexError:
+        pass
+    
+    try:
         return divide_data_collection_related_resource_url_into_main_components(resource_url)
+    except IndexError:
+        pass
+
+    return {
+        'url_base': None,
+        'resource_type': None,
+        'namespace': None,
+        'localid': None,
+    }
 
 def divide_resource_url_from_op_mode_id(resource_url_with_op_mode_id):
     resource_url_with_op_mode_id_split = resource_url_with_op_mode_id.split('#')
