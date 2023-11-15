@@ -128,6 +128,10 @@ p {
     fill: currentcolor;
 }
 
+.separator {
+    color: #dee2e6;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;
