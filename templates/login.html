@@ -5,39 +5,18 @@
 {% endblock breadcrumbs %}
 {% load static %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <div class="d-flex flex-column">
-            {% for message in messages %}
-            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-center">
-                    <form action="{% url 'login' %}{% if 'next' != '' %}?next={{ next }}{% endif %}" method="post">
-                        {% csrf_token %}
-                        <div class="row gy-3">
-                            <div class="col-lg-12">
-                                {% if form.password.errors %}
-                                    <ul>
-                                    {% for error in form.password.errors %}
-                                        <li>{{ error|escape }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                {% endif %}
-                                {{ form.password.label_tag }}
-                                {{ form.password }}
-                            </div>
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="alert alert-primary p-4" role="alert">
+    <div class="row">
+        <div class="col-lg-8">
+            <p>
+                e-Science Centre data are currently being migrated over
+                to a new user management system, and cannot be managed
+                from here at this time.
+            </p>
+            If you wish to manage your data in the meantime, please
+            use the data management facilities at the
+            <a href="https://escbeta.pithia.eu/">e-Science Centre beta site</a>
+            instead. Thank you.
         </div>
     </div>
 </div>
