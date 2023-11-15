@@ -1,6 +1,4 @@
-import os
 from django.test import (
-    SimpleTestCase,
     TestCase,
 )
 
@@ -18,48 +16,34 @@ from .views import (
 )
 
 from common.models import (
-    Instrument,
-    AcquisitionCapabilities,
-    Acquisition,
-    ComputationCapabilities,
-    Computation,
-    Process,
     DataCollection,
+)
+from common.test_setup import (
+    register_acquisition_capabilities_for_test,
+    register_acquisition_for_test,
+    register_computation_capabilities_for_test,
+    register_computation_for_test,
+    register_data_collection_for_test,
+    register_instrument_for_test,
+    register_process_for_test,
 )
 from ontology.utils import (
     create_dictionary_from_pithia_ontology_component,
     categorise_observed_property_dict_by_top_level_phenomenons,
     get_nested_phenomenons_in_observed_property,
 )
-from pithiaesc.settings import BASE_DIR
-
-_XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
 # Create your tests here.
 
-class SearchTestCase(TestCase):
+class SearchBehaviourTestCase(TestCase):
     def setUp(self) -> None:
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
-            Instrument.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
-            Acquisition.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
-            Computation.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
-            Process.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
-
+        register_instrument_for_test()
+        register_acquisition_capabilities_for_test()
+        register_acquisition_for_test()
+        register_computation_capabilities_for_test()
+        register_computation_for_test()
+        register_process_for_test()
+        register_data_collection_for_test()
         return super().setUp()
 
     instrument_type_urls = [
@@ -78,11 +62,11 @@ class SearchTestCase(TestCase):
         'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside',
         'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region',
     ]
-    def test_find_matching_data_collections_with_instrument_types(self):
+
+    def test_data_collections_are_found_with_instrument_types(self):
         """
-        find_matching_data_collections() returns a list of
-        data collections when passing in just instrument
-        types.
+        A list of data collections matching any of the
+        instrument types in the list are returned.
         """
         # Register XML files
         # Pass in instrument types
@@ -91,31 +75,44 @@ class SearchTestCase(TestCase):
         # Pass in observed properties
         print('data_collections', data_collections)
         print('len(data_collections)', len(data_collections))
-        self.assertTrue(len(data_collections) > 0)
+        self.assertGreater(len(data_collections), 0)
 
 
-class SearchSetupTestCase(TestCase):
-    def test_distinct_instrument_urls(self):
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
+class SearchFormSetupTestCase(TestCase):
+    # Distinct instrument/model URLs are used as part of
+    # classifying which instrument types and model types
+    # are registered. The registration status of each of
+    # these types are displayed in the search form.
+    def test_distinct_instrument_urls_are_retrieved_from_data_collections(self):
+        """
+        Returns a list of unique instrument type URLs
+        from all registered data collections.
+        """
+        register_data_collection_for_test()
         data_collections = DataCollection.objects.all()
         distinct_instrument_type_urls = get_distinct_instrument_type_urls_from_data_collections(data_collections)
         print('distinct_instrument_type_urls', distinct_instrument_type_urls)
-        self.assertTrue(len(distinct_instrument_type_urls) > 0)
+        self.assertGreater(len(distinct_instrument_type_urls), 0)
+        self.assertEqual(len(distinct_instrument_type_urls), len(set(distinct_instrument_type_urls)))
 
-    def test_distinct_model_urls(self):
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            DataCollection.objects.create_from_xml_string(xml_file.read())
+    def test_distinct_model_urls_are_retrieved_from_data_collections(self):
+        """
+        Returns a list of unique computation type URLs
+        from all registered data collections.
+        """
+        register_data_collection_for_test()
         data_collections = DataCollection.objects.all()
         distinct_model_urls = get_distinct_computation_type_urls_from_data_collections(data_collections)
         print('distinct_model_urls', distinct_model_urls)
-        self.assertTrue(len(distinct_model_urls) == 0)
+        self.assertEqual(len(distinct_model_urls), 0)
+        self.assertEqual(len(distinct_model_urls), len(set(distinct_model_urls)))
 
 
-class ObservedPropertyCategorisationTestCase(SimpleTestCase):
-    def test_get_all_phenomenons_of_observed_property(self):
+class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
+    def test_phenomenons_are_retrieved_from_observed_property_child_terms(self):
         """
-        gen_dict_extract() returns a list of all nested phenomenons in the observed_property_dict
+        Returns a flat list of the phenomenons of an observed property
+        and the observed properties child terms.
         """
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
@@ -126,12 +123,18 @@ class ObservedPropertyCategorisationTestCase(SimpleTestCase):
         )
         first_observed_property = list(observed_property_dict.values())[0]
         phenomenons = get_nested_phenomenons_in_observed_property(first_observed_property)
+        print('phenomenons', phenomenons)
         self.assertIsInstance(phenomenons, list)
     
-    def categorise_observed_property_dict_by_top_level_phenomenons(self):
+    def test_observed_properties_are_categorised_by_top_level_phenomenons(self):
         """
-        categorise_observed_property_dict_by_top_level_phenomenons returns an observed property dict categorised by top level phenomenons, where each dict key is a top-level phenomenon
+        Returns a dict of observed properties where each dict
+        key is a top-level phenomenon that each observed property
+        corresponds to.
         """
+        # The Observed Properties search form is broken up
+        # into sections by headings. These headings are the
+        # highest level phenomenons (e.g. Field, Particle).
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         observed_property_dict = create_dictionary_from_pithia_ontology_component(
@@ -139,18 +142,16 @@ class ObservedPropertyCategorisationTestCase(SimpleTestCase):
             instrument_types_grouped_by_observed_property=instrument_types_grouped_by_observed_property,
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
         )
-        print('observed_property_dict', observed_property_dict)
         categorised_observed_property_dict = categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict)
         print('categorised_observed_property_dict', categorised_observed_property_dict)
         self.assertIsInstance(categorised_observed_property_dict, dict)
 
 
-class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
+class ObservedPropertySearchFormSetupTestCase(TestCase):
     def test_instrument_types_are_grouped_by_observed_property(self):
         """
-        setup_instrument_types_for_observed_property_search_form() returns a dict
-        of instrument types grouped by observed property when passed
-        in a list of instruments
+        Returns a dict of instrument types correctly
+        grouped by their observed properties.
         """
         instrument_types_grouped_by_observed_property = setup_instrument_types_for_observed_property_search_form()
         # print('instrument_types_grouped_by_observed_property', instrument_types_grouped_by_observed_property)
@@ -158,33 +159,30 @@ class ObservedPropertySearchFormUpdateTestCase(SimpleTestCase):
 
     def test_computation_types_are_grouped_by_observed_property(self):
         """
-        setup_computation_types_for_observed_property_search_form() returns a dict
-        of computation types grouped by observed property when passed
-        in a list of computation capabilities
+        Returns a dict of computation types correctly
+        grouped by their observed properties.
         """
         computation_types_grouped_by_observed_property = setup_computation_types_for_observed_property_search_form()
         # print('computation_types_grouped_by_observed_property', computation_types_grouped_by_observed_property)
         self.assertTrue(isinstance(computation_types_grouped_by_observed_property, dict))
 
 
-class RegisteredResourcesTestCase(SimpleTestCase):
-    def test_get_registered_observed_properties(self):
+class RegisteredOntologyTermsTestCase(TestCase):
+    def test_registered_observed_properties_are_correct(self):
         """
-        Test get_registered_observed_properties()
-        returns an accurate list of registered
-        observed properties
+        Returns a list of observed properties mentioned
+        in registered metadata.
         """
         registered_observed_properties = get_registered_observed_properties()
         # print('registered_observed_properties', registered_observed_properties)
         self.assertTrue(isinstance(registered_observed_properties, list))
 
-    def test_get_registered_features_of_interest(self):
+    def test_registered_features_of_interest_are_correct(self):
         """
-        Test get_registered_features_of_interest()
-        returns an accurate list of registered
-        features of interest
+        Returns a list of features of interest mentioned
+        in registered metadata.
         """
         registered_observed_property_ids = get_registered_observed_properties()
         registered_features_of_interest = get_registered_features_of_interest(registered_observed_property_ids)
-        print('registered_features_of_interest', registered_features_of_interest)
+        # print('registered_features_of_interest', registered_features_of_interest)
         self.assertTrue(isinstance(registered_features_of_interest, list))

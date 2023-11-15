@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 import xmltodict
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -45,7 +46,7 @@ class ScientificMetadataManager(models.Manager):
             json=xml_as_dict,
         )
         scientific_metadata.id = scientific_metadata.localid
-        scientific_metadata.save(using='esc_rw')
+        scientific_metadata.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
         return scientific_metadata
 
@@ -64,7 +65,7 @@ class ScientificMetadataManager(models.Manager):
         registration = self.get(pk=pk)
         registration.xml = xml_string
         registration.json = xml_as_dict
-        registration.save(using='esc_rw')
+        registration.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
         return registration
     
     class Meta:
@@ -194,11 +195,11 @@ class APIInteractionMethodManager(models.Manager):
             config=config,
             owner=0
         )
-        return interaction_method.save(using='esc_rw')
+        return interaction_method.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
     def update_config(self, interaction_method_id, specification_url: str, description: str = ''):
         interaction_method = self.get_queryset().get(pk=interaction_method_id)
         interaction_method.specification_url = specification_url
         interaction_method.description = description
-        interaction_method.save(using='esc_rw')
+        interaction_method.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
         return interaction_method

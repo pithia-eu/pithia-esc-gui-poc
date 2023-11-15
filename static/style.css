@@ -91,6 +91,10 @@ p {
     margin-bottom: 0.5rem;
 }
 
+.separator {
+    color: #dee2e6;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;

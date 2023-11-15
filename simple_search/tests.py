@@ -144,7 +144,7 @@ class SimpleSearchTestCase(TestCase):
         data_collections_5 = find_data_collections_for_simple_search('Organisation_Test 123')
         data_collections_5a = find_data_collections_for_simple_search('DataCollection_Test 00z')
 
-        # Multiple non-consecutive matches within the same element should work.
+        # Shouldn't be able to find data collections by addresses.
         data_collections_6 = find_data_collections_for_simple_search('123 Suite')
         # Unordered text here as well
         data_collections_6a = find_data_collections_for_simple_search('28T15 2022')
@@ -159,6 +159,12 @@ class SimpleSearchTestCase(TestCase):
         # should work
         data_collections_9 = find_data_collections_for_simple_search('image/png')
 
+        # Shouldn't be able to find projects other than by name.
+        data_collections_10 = find_data_collections_for_simple_search('_test pr project')
+
+        # Multiple non-consecutive matches within the same element should work.
+        data_collections_11 = find_data_collections_for_simple_search('8 3 1 t a')
+
         print('len(data_collections_1)', len(data_collections_1))
         print('len(data_collections_2)', len(data_collections_2))
         print('len(data_collections_3)', len(data_collections_3))
@@ -170,18 +176,22 @@ class SimpleSearchTestCase(TestCase):
         print('len(data_collections_7)', len(data_collections_7))
         print('len(data_collections_8)', len(data_collections_8))
         print('len(data_collections_9)', len(data_collections_9))
+        print('len(data_collections_10)', len(data_collections_10))
+        print('len(data_collections_11)', len(data_collections_11))
 
         self.assertEqual(len(data_collections_1), 1)
         self.assertEqual(len(data_collections_2), 1)
-        self.assertEqual(len(data_collections_3), 1)
+        self.assertEqual(len(data_collections_3), 0)
         self.assertEqual(len(data_collections_4), 0)
         self.assertEqual(len(data_collections_5), 0)
         self.assertEqual(len(data_collections_5a), 0)
-        self.assertEqual(len(data_collections_6), 1)
+        self.assertEqual(len(data_collections_6), 0)
         self.assertEqual(len(data_collections_6a), 1)
         self.assertEqual(len(data_collections_7), 1)
         self.assertEqual(len(data_collections_8), 0)
         self.assertEqual(len(data_collections_9), 1)
+        self.assertEqual(len(data_collections_10), 0)
+        self.assertEqual(len(data_collections_11), 1)
         
     def test_get_ontology_urls_from_registration(self):
         """

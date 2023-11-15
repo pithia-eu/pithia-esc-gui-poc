@@ -1,4 +1,5 @@
 import logging
+import os
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import (
@@ -149,7 +150,7 @@ class ResourceUpdateFormView(FormView):
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
                 messages.error(request, 'An error occurred whilst parsing the XML.')
             except BaseException as err:
-                logger.exception('An unexpected error occurred whilst attempting to update a resource.')
+                logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{self.resource_id}".')
                 messages.error(request, 'An unexpected error occurred.')
         else:
             messages.error(request, 'The form submitted was not valid.')
@@ -424,7 +425,7 @@ def data_collection_interaction_methods(request, data_collection_id):
 
                     if is_api_selected == False:
                         try:
-                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using='esc_rw')
+                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
                         except models.APIInteractionMethod.DoesNotExist:
                             pass
                         messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
