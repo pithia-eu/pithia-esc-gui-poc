@@ -1,0 +1,20 @@
+const listGroupContainers = document.querySelectorAll(".list-group-container");
+const listGroupScrollContainers = document.querySelectorAll(".list-group-scroll-container");
+
+function setFade(event) {
+    window.requestAnimationFrame(function() {
+        console.log('test');
+        if (event.target.scrollHeight - event.target.scrollTop > event.target.clientHeight) {
+            event.target.parentElement.classList.add('off-bottom');
+        } else {
+            event.target.parentElement.classList.remove('off-bottom');
+        }
+    });
+}
+
+listGroupScrollContainers.forEach(scrollContainer => {
+    if (scrollContainer.scrollHeight === scrollContainer.clientHeight) {
+        return scrollContainer.parentElement.classList.remove("off-bottom");
+    }
+    scrollContainer.addEventListener("scroll", setFade);
+});

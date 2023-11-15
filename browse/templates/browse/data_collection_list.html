@@ -1,16 +1,25 @@
 {% extends 'browse/resource_list_by_type.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+<script src="{% static 'browse/data_collection_list.js' %}" defer></script>
+{% endblock scripts %}
 {% block resource_list_inner %}
 {% for key, value in resources.items %}
 <section>
     <h2 class="mb-3">{{ key }}</h2>
-    <ul class="list-group" style="max-height: 15rem; overflow-y: scroll;">
-        {% for dc in value %}
-        <li class="list-group-item">
-            <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="list-group-container off-bottom">
+        <div class="list-group-scroll-container">
+            <ul class="list-group">
+                {% for dc in value %}
+                <li class="list-group-item">
+                    <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="shadows"></div>
+    </div>
 </section>
 {% endfor %}
 {% endblock resource_list_inner %}
