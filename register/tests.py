@@ -72,9 +72,11 @@ class PyMongoApiTestCase(SimpleTestCase):
         """
         client = mongomock.MongoClient()
         MockCurrentOrganisation = client[env('DB_NAME')]['current-organisations']
+        MockOriginalMetadataXml = client[env('DB_NAME')]['original-metadata-xmls']
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
             _register_with_pymongo(
                 xml_file,
                 MockCurrentOrganisation,
+                MockOriginalMetadataXml,
             )
         print('Passed _register_with_pymongo() test.')

@@ -48,6 +48,7 @@ from utils.url_helpers import create_data_subset_detail_page_url
 from . import xml_conversion_checks_and_fixes
 from .pymongo_api import register_with_pymongo_transaction_if_possible
 
+from common.mongodb_models import OriginalMetadataXml
 from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
 from update.pymongo_api import register_doi_with_pymongo_transaction_if_possible
 from validation.errors import FileRegisteredBefore
@@ -129,6 +130,7 @@ class ResourceRegisterFormView(FormView):
                         register_with_pymongo_transaction_if_possible(
                             xml_file,
                             self.resource_mongodb_model,
+                            OriginalMetadataXml,
                             api_selected=is_api_selected,
                             api_specification_url=api_specification_url,
                             api_description=api_description,
