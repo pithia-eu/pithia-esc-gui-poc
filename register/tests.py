@@ -5,10 +5,10 @@ from django.test import (
     TestCase,
 )
 
-from common.models import (
-    Organisation,
-    DataCollection,
-    InteractionMethod,
+from common.models import InteractionMethod
+from common.test_setup import (
+    register_data_collection_for_test,
+    register_organisation_for_test,
 )
 from pithiaesc.settings import BASE_DIR
 
@@ -29,13 +29,11 @@ class ManagerTestCase(TestCase):
         registration with an ID property.
         """
         try:
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-                organisation = Organisation.objects.create_from_xml_string(xml_file.read())
-                self.assertIn('id', organisation)
-                print('organisation.id', organisation.id)
-        except BaseException as err:
+            organisation = register_organisation_for_test()
+            print('organisation.id', organisation.id)
+        except AttributeError as err:
             print(err)
-            self.fail('test_create_from_xml_string() unexpectedly raised an error!')
+            self.fail("'id' property was not found in ScientificMetadata type object.")
 
 class InteractionMethodTestCase(TestCase):
     def test_create_api_interaction_method(self):
@@ -44,14 +42,13 @@ class InteractionMethodTestCase(TestCase):
         API Interaction Method.
         """
         try:
-            data_collection = None
-            with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-                data_collection = DataCollection.objects.create_from_xml_string(xml_file.read())
+            data_collection = register_data_collection_for_test()
             interaction_method = InteractionMethod.api_interaction_methods.create_api_interaction_method(
                 'https://www.example.com',
                 '',
                 data_collection
             )
+            print('interaction_method', interaction_method)
             print('interaction_method.type', interaction_method.type)
             print('interaction_method.config', interaction_method.config)
             print('interaction_method.data_collection', interaction_method.data_collection)
