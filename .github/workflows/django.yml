@@ -29,13 +29,13 @@ jobs:
       env:
         SECRET_KEY: tlR922803zw9IDmFMHXLqd5sn6WfJSKDRYxdEe_l7ZQ
         DATABASE_ENGINE: django.db.backends.postgresql
-        DATABASE_NAME: test
+        DATABASE_NAME: default
         DATABASE_READ_USER: test
         DATABASE_READ_PASSWORD: test
-        DATABASE_HOST: test
-        DATABASE_PORT: test
         DATABASE_WRITE_USER: test
         DATABASE_WRITE_PASSWORD: test
+        DATABASE_HOST: 127.0.0.1
+        DATABASE_PORT: 5432
         MONGODB_CONNECTION_STRING: mongodb://localhost:27017
         DB_NAME: test
         DJANGO_RW_DATABASE_NAME: default
