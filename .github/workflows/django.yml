@@ -58,4 +58,5 @@ jobs:
         cat pithiaesc/.env
     - name: Verify Organisation XSD validation unit test passes
       run: |
+        python manage.py test --exclude-tag=slow --exclude-tag=manual
         python manage.py test validation.tests.OrganisationXSDValidationTestCase
