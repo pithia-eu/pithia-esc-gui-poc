@@ -250,12 +250,12 @@ class AcquisitionCapabilitiesQuerySetSearchTestCase(TestCase):
         acquisition_capabilities_xml_file = ACQUISITION_CAPABILITIES_METADATA_XML
         acquisition_capabilities_xml_file.seek(0)
         acquisition_capabilities_xml_string = acquisition_capabilities_xml_file.read()
-        AcquisitionCapabilities.objects.create_from_xml_string(acquisition_capabilities_xml_string)
+        AcquisitionCapabilities.objects.create_from_xml_string(acquisition_capabilities_xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         instrument_xml_file = INSTRUMENT_METADATA_XML
         instrument_xml_file.seek(0)
         instrument_xml_string = instrument_xml_file.read()
-        Instrument.objects.create_from_xml_string(instrument_xml_string)
+        Instrument.objects.create_from_xml_string(instrument_xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         return super().setUp()
 
@@ -309,7 +309,7 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
         # Register the Computation Capabilities XML files
         computation_capabilities_file_1 = COMPUTATION_CAPABILITIES_METADATA_XML
         computation_capabilities_file_1.seek(0)
-        test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_1.read())
+        test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_1.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         # Each file in this list references the file
         # preceding it (e.g., CC4a references CC4,
@@ -324,7 +324,7 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
         ]
         for xml_file in computation_capabilities_referer_files:
             xml_file.seek(0)
-            ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
+            ComputationCapabilities.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         # Execute all_computation_capability_set_referers()
         ccs_referers = ComputationCapabilities.objects.all_computation_capability_set_referers(test_computation_capability_set)
@@ -338,23 +338,23 @@ class ComputationCapabilitiesQuerySetSearchTestCase(TestCase):
         # Register the Computation Capabilities XML files
         computation_capabilities_file_1 = COMPUTATION_CAPABILITIES_METADATA_XML
         computation_capabilities_file_1.seek(0)
-        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_1.read())
+        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_1.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         computation_capabilities_file_2 = COMPUTATION_CAPABILITIES_2_METADATA_XML
         computation_capabilities_file_2.seek(0)
-        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_2.read())
+        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_2.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         computation_capabilities_file_3 = COMPUTATION_CAPABILITIES_3_METADATA_XML
         computation_capabilities_file_3.seek(0)
-        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_3.read())
+        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_3.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         computation_capabilities_file_4 = COMPUTATION_CAPABILITIES_4_METADATA_XML
         computation_capabilities_file_4.seek(0)
-        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_4.read())
+        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_4.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
 
         computation_capabilities_file_4a = COMPUTATION_CAPABILITIES_4a_METADATA_XML
         computation_capabilities_file_4a.seek(0)
-        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_4a.read())
+        ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_4a.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         return super().setUp()
 
