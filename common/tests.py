@@ -50,6 +50,7 @@ class ScientificMetadataPropertiesTestCase(TestCase):
         has a metadata server URL.
         """
         xml_file = ORGANISATION_METADATA_XML
+        xml_file.seek(0)
         xml_string = xml_file.read()
         organisation = Organisation.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         try:
@@ -307,6 +308,7 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
         """
         # Register the Computation Capabilities XML files
         computation_capabilities_file_1 = COMPUTATION_CAPABILITIES_METADATA_XML
+        computation_capabilities_file_1.seek(0)
         test_computation_capability_set = ComputationCapabilities.objects.create_from_xml_string(computation_capabilities_file_1.read())
 
         # Each file in this list references the file
@@ -321,6 +323,7 @@ class ComputationCapabilitiesQuerySetTestCase(TestCase):
             COMPUTATION_CAPABILITIES_4a_METADATA_XML,
         ]
         for xml_file in computation_capabilities_referer_files:
+            xml_file.seek(0)
             ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
         
         # Execute all_computation_capability_set_referers()
