@@ -52,6 +52,7 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 env = environ.Env()
 
 # Create your tests here.
+@tag('manual')
 class PyHandleSetupTestCase(TestCase):
     TEST_SUFFIX = 'MYTEST-HANDLE'
     VALUE_ORIGINAL = 'https://www.example.com/1'
@@ -78,6 +79,8 @@ class PyHandleSetupTestCase(TestCase):
         self.handle = create_handle(self.credentials, self.TEST_SUFFIX)
         register_handle(self.handle, self.VALUE_ORIGINAL, self.client)
 
+
+@tag('manual')
 class PyHandleTestCase(PyHandleSetupTestCase):
     @tag('fast', 'handles', 'instantiate_client_and_load_credentials')
     def test_instantiate_client_and_load_credentials(self):
@@ -258,7 +261,8 @@ class PyHandleTestCase(PyHandleSetupTestCase):
 
         print('Passed generate and register handle test.')
 
-        
+
+@tag('manual')
 class DOIDictTestCase(PyHandleSetupTestCase):
     @tag('fast', 'doi_dict_configuration')
     def test_doi_configuration_process(self):
@@ -302,6 +306,7 @@ class DOIDictTestCase(PyHandleSetupTestCase):
         print('Passed flatten DOI dict test.')
 
 
+@tag('manual')
 class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
     @tag('fast', 'register_handle_and_add_to_metadata')
     def test_register_handle_and_add_to_metadata(self):
@@ -382,6 +387,8 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
 
             self.assertEqual(result, True)
 
+
+@tag('manual')
 class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
     @tag('fast', 'get_doi_xml_string_from_metadata_xml_string')
     def test_get_doi_xml_string_from_metadata_xml_string(self):
@@ -429,6 +436,8 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
 
         print('Passed replace_doi_element_from_metadata_xml_string() test.')
 
+
+@tag('manual')
 class PrincipalAgentTestCase(TestCase):
     @tag('fast', 'get_first_related_party_name_from_data_collection')
     def test_get_first_related_party_name_from_data_collection(self):
