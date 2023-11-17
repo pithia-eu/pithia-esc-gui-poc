@@ -225,6 +225,7 @@ class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, Opera
     pass
 
 
+@tag('slow')
 class OntologyUrlValidationTestCase(SimpleTestCase):
     def test_valid_ontology_url_passes(self):
         """
@@ -530,6 +531,7 @@ class DoiValidationTestCase(SimpleTestCase):
         xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
         self.assertTrue('10.000' in xml_file.contents)
 
+    @tag('slow')
     def test_data_subset_xsd_validation(self):
         """
         XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
@@ -579,6 +581,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         for key in invalid_resource_urls_dict.keys():
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
+    @tag('slow')
     def test_invalid_ontology_urls_in_file_are_found(self):
         """
         The validator returns invalid ontology URLs
