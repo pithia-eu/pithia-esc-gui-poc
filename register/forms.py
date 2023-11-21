@@ -1,22 +1,34 @@
 from django import forms
 
 
-class UploadFileForm(forms.Form):
-    files = forms.FileField(
-        label='Multiple File Upload',
-        label_suffix='',
-        widget=forms.ClearableFileInput(attrs={
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('widget', MultipleFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
-            'multiple': True,
-        })
+        }))
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class UploadFileForm(forms.Form):
+    files = MultipleFileField(
+        label='Upload File(s)',
     )
 
 
 class UploadDataCollectionFileForm(forms.Form):
     files = forms.FileField(
-        label='Single File Upload',
-        label_suffix='',
+        label='Upload File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -50,8 +62,7 @@ class UploadDataCollectionFileForm(forms.Form):
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
     files = forms.FileField(
-        label='Single File Upload',
-        label_suffix='',
+        label='Upload File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',

@@ -1,5 +1,5 @@
 function setupDeleteSubmitButton() {
-    const deleteSubmitButton = document.querySelector('button[type="submit"]')
+    const deleteSubmitButton = document.querySelector('#delete-form button[type="submit"]')
     deleteSubmitButton.disabled = true;
 
     const resourceName = JSON.parse(document.getElementById("resource-name").textContent);

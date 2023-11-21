@@ -35,7 +35,12 @@ export function validateOpenApiSpecificationUrl() {
         return;
     }
 
-    document.querySelector("button[type='submit']").disabled = true;
+    try {
+        document.querySelector("#file-upload-form button[type='submit']").disabled = true;
+    } catch (error) {
+        document.querySelector("#interaction-methods-form button[type='submit']").disabled = true;
+    }
+    
     displayValidatingSpinner(true);
     if (userInputTimeout !== undefined) {
         clearTimeout(userInputTimeout);

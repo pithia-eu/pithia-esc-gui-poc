@@ -34,6 +34,9 @@ function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
     const siblingNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']`);
     const siblingNodeCheckboxesChecked = document.querySelectorAll(`input[data-parent-node-in-ontology='${childNodeCheckbox.dataset.parentNodeInOntology}']:checked`);
     const parentNodeCheckbox = document.getElementById(childNodeCheckbox.dataset.parentNodeInOntology);
+    if (!parentNodeCheckbox) {
+        return;
+    }
     parentNodeCheckbox.checked = siblingNodeCheckboxes.length === siblingNodeCheckboxesChecked.length;
     if (parentNodeCheckbox.dataset.parentNodeInOntology !== "") {
         updateParentNodeCheckboxesByChildNodeCheckbox(parentNodeCheckbox);
@@ -53,7 +56,7 @@ function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
         if (childNodeCheckboxesOfChildNodeCheckbox.length > 0) {
             updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
         }
-    })
+    });
 }
 
 
@@ -383,6 +386,8 @@ function setupInputsForTreeContainerId(treeContainerId) {
     searchBoxCheckbox.addEventListener("change", event => {
         checkboxesMatchingSearch.forEach(checkbox => {
             checkbox.checked = searchBoxCheckbox.checked;
+            updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
+            updateParentNodeCheckboxesByChildNodeCheckbox(checkbox);
         });
         setSelectAllCheckboxStateForTreeContainerId(treeContainerId);
     });
@@ -425,3 +430,11 @@ export async function fetchSearchFormComponent(ontologyComponent) {
             console.error(error);
         });
 }
+
+document.getElementById("ontology-search-form").addEventListener("submit", event => {
+    const checkedCheckboxes = document.querySelectorAll("#ontology-search-form input[type=checkbox].search-term-checkbox:checked:not(:disabled, [name=phenomenon], [name=measurand])");
+    if (checkedCheckboxes.length === 0) {
+        event.preventDefault();
+        return alert('Select at least one Feature of Interest, Instrument Type, Computation Type or Observed Property.');
+    }
+});

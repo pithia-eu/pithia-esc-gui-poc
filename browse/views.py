@@ -26,7 +26,7 @@ from handle_management.handle_api import (
 from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
 
-_INDEX_PAGE_TITLE = 'Browse Metadata'
+_INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
 _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
@@ -126,7 +126,7 @@ class ResourceListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.description
-        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} were found.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE

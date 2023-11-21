@@ -113,10 +113,19 @@ def add_handle_data_to_doi_metadata_kernel_dict(handle: str, doi_dict: dict):
     doi_dict['referentCreation']['identifier']['uri']['#text'] = f'https://hdl.handle.net/{handle}'
     return doi_dict
 
-def add_doi_metadata_kernel_to_data_subset(resource_id, doi_dict: dict, metadata_file_xml_string: str):
+def add_doi_metadata_kernel_to_data_subset(
+    resource_id,
+    doi_dict: dict,
+    metadata_file_xml_string: str,
+    owner_id: str
+):
     doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
     xml_string_with_doi = add_doi_xml_string_to_metadata_xml_string(metadata_file_xml_string, doi_xml_string)
-    CatalogueDataSubset.objects.update_from_xml_string(resource_id, xml_string_with_doi)
+    CatalogueDataSubset.objects.update_from_xml_string(
+        resource_id,
+        xml_string_with_doi,
+        owner_id
+    )
     return xml_string_with_doi
 
 def create_lxml_utf8_parser():

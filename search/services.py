@@ -130,12 +130,12 @@ def get_distinct_computation_type_urls_from_computation_capability_sets(computat
     return distinct_model_urls
 
 def get_distinct_instrument_type_urls_from_data_collections(data_collections):
-    distinct_instrument_type_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{INSTRUMENT_TYPE_URL_BASE}', url)]
-    return distinct_instrument_type_urls
+    instrument_type_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{INSTRUMENT_TYPE_URL_BASE}', url)]
+    return list(set(instrument_type_urls))
 
 def get_distinct_computation_type_urls_from_data_collections(data_collections):
-    distinct_model_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{COMPUTATION_TYPE_URL_BASE}', url)]
-    return distinct_model_urls
+    model_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{COMPUTATION_TYPE_URL_BASE}', url)]
+    return list(set(model_urls))
 
 def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]

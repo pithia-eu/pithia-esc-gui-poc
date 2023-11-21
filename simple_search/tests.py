@@ -15,6 +15,20 @@ from .services import (
 )
 
 from common import models
+from common.test_setup import (
+    register_acquisition_capabilities_for_test,
+    register_acquisition_for_test,
+    register_computation_capabilities_for_test,
+    register_computation_for_test,
+    register_data_collection_for_test,
+    register_individual_for_test,
+    register_instrument_for_test,
+    register_operation_for_test,
+    register_organisation_for_test,
+    register_platform_for_test,
+    register_process_for_test,
+    register_project_for_test,
+)
 from pithiaesc.settings import BASE_DIR
 
 
@@ -23,42 +37,19 @@ _XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_met
 # Create your tests here.
 class SimpleSearchTestCase(TestCase):
     def setUp(self) -> None:
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test.xml')) as xml_file:
-            self.organisation = models.Organisation.objects.create_from_xml_string(xml_file.read())
-            
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Individual_Test.xml')) as xml_file:
-            self.individual = models.Individual.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Project_Test.xml')) as xml_file:
-            self.project = models.Project.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Platform_Test.xml')) as xml_file:
-            self.platform = models.Platform.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Operation_Test.xml')) as xml_file:
-            self.operation = models.Operation.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Instrument_Test.xml')) as xml_file:
-            self.instrument = models.Instrument.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'AcquisitionCapabilities_Test.xml')) as xml_file:
-            self.acquisition_capabilities = models.AcquisitionCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Acquisition_Test.xml')) as xml_file:
-            self.acquisition = models.Acquisition.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'Computation_Test.xml')) as xml_file:
-            self.computation_capabilities = models.ComputationCapabilities.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'ComputationCapabilities_Test.xml')) as xml_file:
-            self.computation = models.Computation.objects.create_from_xml_string(xml_file.read())
-
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'CompositeProcess_Test.xml')) as xml_file:
-            self.process = models.Process.objects.create_from_xml_string(xml_file.read())
-            
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            self.data_collection = models.DataCollection.objects.create_from_xml_string(xml_file.read())
-
+        self.organisation = register_organisation_for_test()
+        self.individual = register_individual_for_test()
+        self.project = register_project_for_test()
+        self.platform = register_platform_for_test()
+        self.operation = register_operation_for_test()
+        self.instrument = register_instrument_for_test()
+        self.acquisition_capabilities = register_acquisition_capabilities_for_test()
+        self.acquisition = register_acquisition_for_test()
+        self.computation_capabilities = register_computation_capabilities_for_test()
+        self.computation = register_computation_for_test()
+        self.process = register_process_for_test()
+        self.data_collection = register_data_collection_for_test()
+        
         return super().setUp()
 
     
@@ -144,7 +135,7 @@ class SimpleSearchTestCase(TestCase):
         data_collections_5 = find_data_collections_for_simple_search('Organisation_Test 123')
         data_collections_5a = find_data_collections_for_simple_search('DataCollection_Test 00z')
 
-        # Multiple non-consecutive matches within the same element should work.
+        # Shouldn't be able to find data collections by addresses.
         data_collections_6 = find_data_collections_for_simple_search('123 Suite')
         # Unordered text here as well
         data_collections_6a = find_data_collections_for_simple_search('28T15 2022')
@@ -159,6 +150,12 @@ class SimpleSearchTestCase(TestCase):
         # should work
         data_collections_9 = find_data_collections_for_simple_search('image/png')
 
+        # Shouldn't be able to find projects other than by name.
+        data_collections_10 = find_data_collections_for_simple_search('_test pr project')
+
+        # Multiple non-consecutive matches within the same element should work.
+        data_collections_11 = find_data_collections_for_simple_search('8 3 1 t a')
+
         print('len(data_collections_1)', len(data_collections_1))
         print('len(data_collections_2)', len(data_collections_2))
         print('len(data_collections_3)', len(data_collections_3))
@@ -170,18 +167,22 @@ class SimpleSearchTestCase(TestCase):
         print('len(data_collections_7)', len(data_collections_7))
         print('len(data_collections_8)', len(data_collections_8))
         print('len(data_collections_9)', len(data_collections_9))
+        print('len(data_collections_10)', len(data_collections_10))
+        print('len(data_collections_11)', len(data_collections_11))
 
         self.assertEqual(len(data_collections_1), 1)
         self.assertEqual(len(data_collections_2), 1)
-        self.assertEqual(len(data_collections_3), 1)
+        self.assertEqual(len(data_collections_3), 0)
         self.assertEqual(len(data_collections_4), 0)
         self.assertEqual(len(data_collections_5), 0)
         self.assertEqual(len(data_collections_5a), 0)
-        self.assertEqual(len(data_collections_6), 1)
+        self.assertEqual(len(data_collections_6), 0)
         self.assertEqual(len(data_collections_6a), 1)
         self.assertEqual(len(data_collections_7), 1)
         self.assertEqual(len(data_collections_8), 0)
         self.assertEqual(len(data_collections_9), 1)
+        self.assertEqual(len(data_collections_10), 0)
+        self.assertEqual(len(data_collections_11), 1)
         
     def test_get_ontology_urls_from_registration(self):
         """

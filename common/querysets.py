@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.db.models import Q
 from operator import itemgetter
@@ -32,7 +34,10 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
         localids = [get_namespace_and_localid_from_resource_url(url)[1] for url in metadata_server_urls]
         registrations_for_deletion = list(self.filter(json__identifier__PITHIA_Identifier__localID__in=localids))
         for r in registrations_for_deletion:
-            r.delete(using='esc_rw')
+            r.delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+
+    def owned_by_institution(self, institution_id: str):
+        return self.filter(institution_id=institution_id)
 
 
 class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatabaseQueries):
@@ -154,13 +159,13 @@ class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquis
         # If none are found to be referencing Instrument
         # URLs, just return those that are referencing
         # Observed Property URLs.
-        if not results_referencing_instrument_urls:
+        if not instrument_urls:
             return results_referencing_observed_property_urls
         
         # If none are found to be referencing Observed
         # Property URLs, just return those that are
         # referencing Instrument URLs.
-        if not results_referencing_observed_property_urls:
+        if not observed_property_urls:
             return results_referencing_instrument_urls
 
         return results_referencing_instrument_urls & results_referencing_observed_property_urls
@@ -185,13 +190,17 @@ class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabas
     def referencing_instrument_url(self, instrument_url: str):
         return self.filter(**{'json__instrument__@xlink:href': instrument_url})
 
+    def referencing_platform_url(self, platform_url: str):
+        return self.filter(**{'json__capabilityLinks__capabilityLink__contains': [{'platform': {'@xlink:href': platform_url}}]})
+
     def for_search(self, acquisition_capability_set_urls: list):
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
     
     def for_delete_chain(self, metadata_server_url: str):
         referencing_instrument_url = self.referencing_instrument_url(metadata_server_url)
         referencing_acquisition_capability_set_url = self.referencing_acquisition_capability_set_url(metadata_server_url)
-        return referencing_instrument_url | referencing_acquisition_capability_set_url
+        referencing_platform_url = self.referencing_platform_url(metadata_server_url)
+        return referencing_instrument_url | referencing_acquisition_capability_set_url | referencing_platform_url
 
 class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComputationCapabilitiesDatabaseQueries):
     def referencing_computation_type_urls(self, computation_type_urls: list):
@@ -244,14 +253,14 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
         results_referencing_computation_type_urls = self.referencing_computation_type_urls(computation_type_urls)
         results_referencing_observed_property_urls = self.referencing_observed_property_urls(observed_property_urls)
         referencing_available_urls = []
-        if results_referencing_computation_type_urls and results_referencing_observed_property_urls:
+        if computation_type_urls and observed_property_urls:
             referencing_available_urls = list(
                 results_referencing_computation_type_urls \
                 & results_referencing_observed_property_urls
             )
-        elif results_referencing_computation_type_urls:
+        elif computation_type_urls:
             referencing_available_urls = list(results_referencing_computation_type_urls)
-        elif results_referencing_observed_property_urls:
+        elif observed_property_urls:
             referencing_available_urls = list(results_referencing_observed_property_urls)
 
         # Find the Computation Capabilities referencing to the found
@@ -377,13 +386,13 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         results_referencing_computation_type_urls = self.referencing_computation_type_urls(computation_type_urls)
         results_referencing_feature_of_interest_urls = self.referencing_feature_of_interest_urls(feature_of_interest_urls)
 
-        if results_referencing_process_urls:
+        if process_urls:
             search_results &= results_referencing_process_urls
-        if results_referencing_instrument_type_urls:
+        if instrument_type_urls:
             search_results &= results_referencing_instrument_type_urls
-        if results_referencing_computation_type_urls:
+        if computation_type_urls:
             search_results &= results_referencing_computation_type_urls
-        if results_referencing_feature_of_interest_urls:
+        if feature_of_interest_urls:
             search_results &= results_referencing_feature_of_interest_urls
 
         return search_results

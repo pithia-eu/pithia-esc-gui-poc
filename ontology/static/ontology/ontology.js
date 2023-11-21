@@ -63,6 +63,7 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
     if (searchBoxInput === "") {
         const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
         removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
+        setDetailsNodeOpenStatesForTreeContainerId(treeContainerId, false);
     } else {
         let liNodesToShow = [], liNodesToHide = [];
         keywordSearchableElems.forEach(elem => {
@@ -93,6 +94,12 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
         liNodesToShow = Array.from(new Set(liNodesToShow));
         addSearchBoxInputFiltersToLiNodes(liNodesToHide);
         removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
+        liNodesToShow.forEach(liNode => {
+            const detailsNodes = liNode.querySelectorAll("details");
+            detailsNodes.forEach(detailsNode => {
+                detailsNode.open = true;
+            });
+        });
     }
 }
 

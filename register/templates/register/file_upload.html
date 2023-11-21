@@ -15,66 +15,50 @@
 {% block content %}
 <div class="row flex-wrap gx-md-5 gy-5 pb-4">
     <div class="col-lg-8">
-        {% if messages %}
-        <div class="registration-alerts">
-            {% for message in messages %}
-            <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
         {% block title %}
-        <h1 class="pb-1">{{ title }}</h1>
+        <h1>{{ title }}</h1>
         {% endblock title %}
-        {% block subtitle %}{% endblock subtitle %}
-        <p class="lead-sm pb-4">
-            {% block page_description %}
-            Upload the file you want to register with the file input below.
-            This will start the validation process for the file.
-            Once validation finishes, use the submit button to register it with the e-Science Centre.
-            {% endblock page_description %}
-        </p>
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
             {% csrf_token %}
-            <div class="row gy-4">
-                <div class="col-lg-8">
-                    <section>
-                        {% if form.files.errors %}
-                        <ul>
-                            {% for error in form.files.errors %}
-                            <li>{{ error|escape }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        <h2>{{ form.files.label_tag }}</h2>
-                        {{ form.files }}
-                        <small class="form-text">Accepted file types: xml</small>
-                    </section>
-                    <section>
-                        {% block file_list %}
-                        {% with file_list_title='Uploaded Files' %}
-                        {% include 'register/validation_template.html' %}
-                        {% endwith %}
-                        {% endblock file_list %}
-                    </section>
-                </div>
-                {% block register_api_specification %}
-                {% endblock register_api_specification %}
-                {% block doi_registration %}
-                {% endblock doi_registration %}
-                <div class="col-lg-12 pt-5">
-                    <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
-                        <button type="submit" class="btn btn-primary" disabled>Submit</button>
+            <div class="form-group">
+                {% if form.files.errors %}
+                <ul>
+                    {% for error in form.files.errors %}
+                    <li>{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="file-upload-container mb-3">
+                    {{ form.files.label_tag }}
+                    {{ form.files }}
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <small class="form-text">Supported file types: XML</small>
+                        <small class="form-text">{% block multiple_allowed %}Multiple files allowed{% endblock multiple_allowed %}</small>
                     </div>
                 </div>
+                {% block file_list %}
+                {% with file_list_title='Uploaded Files' %}
+                {% include 'register/validation_template.html' %}
+                {% endwith %}
+                {% endblock file_list %}
+            </div>
+            {% block register_api_specification %}
+            {% endblock register_api_specification %}
+            {% block doi_registration %}
+            {% endblock doi_registration %}
+            <div class="form-group d-flex flex-sm-row flex-column justify-content-sm-start justify-content-stretch">
+                <button type="submit" class="btn btn-outline-primary" disabled>
+                    {% block submit_button_text %}
+                    Register
+                    {% endblock submit_button_text %}
+                </button>
             </div>
         </form>
     </div>
     {% block sidemenu %}
     <div class="col-lg-4">
-        <section class="sidemenu text-secondary">
-            <h2 class="fs-5">Register Other Types of Metadata</h2>
+        <aside class="sidemenu form-group text-secondary">
+            <h2 class="fs-5">Other Metadata</h2>
             <hr class="my-2">
             <nav>
                 <ul class="list-style-none ps-0">
@@ -92,7 +76,7 @@
                     <li>{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
                 </ul>
             </nav>
-        </section>
+        </aside>
     </div>
     {% endblock sidemenu %}
 </div>
