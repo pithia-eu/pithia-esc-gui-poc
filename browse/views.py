@@ -314,6 +314,17 @@ class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     description = ''
 
+def catalogues_updated(request):
+    """
+    Lists Catalogues and their Catalogue Entries
+    and Catalogue Data Subsets in a tree structure.
+    """
+    catalogues = models.Catalogue.objects.all()
+    return render(request, 'browse/catalogues.html', {
+        'title': 'Catalogues',
+        'catalogues': catalogues,
+    })
+
 class ResourceDetailView(TemplateView):
     """
     The detail page for a scientific metadata

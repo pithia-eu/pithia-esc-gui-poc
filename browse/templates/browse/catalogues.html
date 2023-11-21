@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if catalogues %}
+<ul class="list-group">
+    {% for catalogue in catalogues %}
+    <li class="list-group-item">
+        <a href="{% url 'browse:catalogue_detail' catalogue.id %}">{{ catalogue.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock content %}
