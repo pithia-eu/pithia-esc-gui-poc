@@ -3,8 +3,7 @@ from django import forms
 
 class UploadUpdatedFileForm(forms.Form):
     files = forms.FileField(
-        label='Single File Upload',
-        label_suffix='',
+        label='Upload File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control'
@@ -13,8 +12,7 @@ class UploadUpdatedFileForm(forms.Form):
 
 class UploadUpdatedDataCollectionFileForm(forms.Form):
     files = forms.FileField(
-        label='Single File Upload',
-        label_suffix='',
+        label='Upload File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',

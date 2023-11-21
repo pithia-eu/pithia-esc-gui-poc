@@ -9,6 +9,7 @@ from rdflib import (
     SKOS,
 )
 from requests import get
+from typing import List
 
 from .file_wrappers import (
     AcquisitionCapabilitiesXMLMetadataFile,
@@ -63,7 +64,7 @@ class MetadataFileOntologyURLReferencesValidator:
         return invalid_urls
     
     @classmethod
-    def is_each_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
+    def is_each_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> List[str]:
         """
         Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
@@ -91,9 +92,8 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def _is_resource_url_structure_valid(cls, resource_url):
-        try:
-            url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
-        except IndexError:
+        url_base, resource_type_in_resource_url, namespace, localid = itemgetter('url_base', 'resource_type', 'namespace', 'localid')(cls._divide_resource_url_into_components(resource_url))
+        if any(comp is None for comp in [url_base, resource_type_in_resource_url, namespace, localid]):
             return False
 
         # Verify resource type in resource URL is valid
@@ -147,7 +147,7 @@ class MetadataFileMetadataURLReferencesValidator:
         return validation_summary_for_metadata_server_url
 
     @classmethod
-    def _is_each_resource_url_valid(cls, resource_urls: list[str]) -> dict:
+    def _is_each_resource_url_valid(cls, resource_urls: List[str]) -> dict:
         """
         Checks that each metadata server URL is well-formed and that each URL
         corresponds with a metadata registration in the e-Science Centre.

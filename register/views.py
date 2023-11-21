@@ -5,6 +5,7 @@ from django.db import (
     transaction,
 )
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 from pyexpat import ExpatError
 
@@ -15,6 +16,7 @@ from .forms import (
 )
 
 from common import models, mongodb_models
+from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
     create_and_register_handle_for_resource_url,
@@ -36,12 +38,17 @@ from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title
 )
+from user_management.services import (
+    get_user_id_for_login_session,
+    get_institution_id_for_login_session,
+)
 from utils.url_helpers import create_data_subset_detail_page_url
 
 # TODO: remove old code
 from . import xml_conversion_checks_and_fixes
 from .pymongo_api import register_with_pymongo_transaction_if_possible
 
+from common.mongodb_models import OriginalMetadataXml
 from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
 from update.pymongo_api import register_doi_with_pymongo_transaction_if_possible
 from validation.errors import FileRegisteredBefore
@@ -51,6 +58,8 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceRegisterFormView(FormView):
     success_url = ''
     form_class = UploadFileForm
@@ -73,7 +82,7 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register {self.model.type_plural_readable.title()}'
+        context['title'] = f'Register New {self.model.type_plural_readable.title()}'
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
@@ -85,6 +94,9 @@ class ResourceRegisterFormView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
+        institution_id = get_institution_id_for_login_session(request.session)
+        owner_id = get_user_id_for_login_session(request.session)
+
         # Form validation
         form = UploadFileForm(request.POST, request.FILES)
         xml_files = request.FILES.getlist('files')
@@ -99,7 +111,11 @@ class ResourceRegisterFormView(FormView):
                 xml_file_string = xml_file.read()
                 try:
                     with transaction.atomic():
-                        self.new_registration = self.model.objects.create_from_xml_string(xml_file_string)
+                        self.new_registration = self.model.objects.create_from_xml_string(
+                            xml_file_string,
+                            institution_id,
+                            owner_id,
+                        )
                         is_api_selected = 'api_selected' in request.POST
                         api_specification_url = request.POST.get('api_specification_url', None)
                         api_description = request.POST.get('api_description', '')
@@ -114,6 +130,7 @@ class ResourceRegisterFormView(FormView):
                         register_with_pymongo_transaction_if_possible(
                             xml_file,
                             self.resource_mongodb_model,
+                            OriginalMetadataXml,
                             api_selected=is_api_selected,
                             api_specification_url=api_specification_url,
                             api_description=api_description,
@@ -133,7 +150,7 @@ class ResourceRegisterFormView(FormView):
                     messages.error(request, f'{xml_file.name} has been registered before.')
                 except BaseException as err:
                     logger.exception('An unexpected error occurred during metadata registration.')
-                    messages.error(request, 'An unexpected error occurred.')
+                    messages.error(request, 'An unexpected error occurred during metadata registration.')
                 
                 if file_registered == False:
                     return super().post(request, *args, **kwargs)
@@ -165,7 +182,12 @@ class ResourceRegisterFormView(FormView):
                             doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
                             # Add the DOI dict metadata to the handle
                             add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
-                            add_doi_metadata_kernel_to_data_subset(self.new_registration.pk, doi_dict, xml_file_string)
+                            add_doi_metadata_kernel_to_data_subset(
+                                self.new_registration.pk,
+                                doi_dict,
+                                xml_file_string,
+                                owner_id
+                            )
                             add_handle_to_url_mapping(handle, data_subset_url)
 
                             # TODO: remove old code
@@ -382,7 +404,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()}'
+        context['title'] = f'Register a New {self.model.type_readable.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
         
@@ -445,7 +467,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register a Catalogue Data Subset'
+        context['title'] = 'Register a New Catalogue Data Subset'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context

@@ -25,7 +25,7 @@ Entering `deactivate` into your terminal will deactivate the virtual environment
 
 ### Install the project's Python dependencies
 Enter this line into your terminal to install the project's Python dependencies:
-`pip3 install -r requirements.txt`
+`pip3 install -r requirements.txt --no-deps`
 
 ### Set up a .env file
 This project has environment variables which are stored in a `.env` file. To create this file, create a nameless file with the `.env` extension in the `/pithiaesc` folder inside of the project's root folder, then, enter in the variable names and their values - listed below are the variable names and short descriptions on setting up them up:

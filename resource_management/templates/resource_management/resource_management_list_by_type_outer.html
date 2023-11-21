@@ -10,15 +10,6 @@
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-{% if messages %}
-<div class="registration-alerts">
-    {% for message in messages %}
-    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
 <div class="d-flex flex-lg-row flex-column align-items-lg-center align-items-stretch justify-content-between flex-wrap gap-3 mb-3">
     <h1>{{ title }}</h1>
     <a href="{% url resource_register_page_url_name %}" class="btn btn-primary fw-bold">

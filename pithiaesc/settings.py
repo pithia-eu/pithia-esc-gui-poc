@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import environ
+import sys
 
 # Initialise environment variables
 env = environ.Env()
@@ -45,18 +46,19 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
-    'delete.apps.DeleteConfig',
-    'update.apps.UpdateConfig',
     'browse.apps.BrowseConfig',
-    'search.apps.SearchConfig',
-    'register.apps.RegisterConfig',
-    'present.apps.PresentConfig',
-    'validation.apps.ValidationConfig',
-    'resource_management.apps.ResourceManagementConfig',
-    'utils.apps.UtilsConfig',
-    'ontology.apps.OntologyConfig',
+    'delete.apps.DeleteConfig',
     'handle_management.apps.HandleManagementConfig',
+    'ontology.apps.OntologyConfig',
+    'present.apps.PresentConfig',
+    'register.apps.RegisterConfig',
+    'resource_management.apps.ResourceManagementConfig',
+    'search.apps.SearchConfig',
     'simple_search.apps.SimpleSearchConfig',
+    'update.apps.UpdateConfig',
+    'user_management.apps.UserManagementConfig',
+    'utils.apps.UtilsConfig',
+    'validation.apps.ValidationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +76,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'common.middleware.LoginMiddleware',
+    'user_management.middleware.LoginMiddleware',
+    'user_management.middleware.InstitutionSelectionMiddleware',
+    'user_management.middleware.InstitutionSelectionFormMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'
@@ -115,7 +119,7 @@ DATABASES = {
         'HOST': os.environ['DATABASE_HOST'],
         'PORT': os.environ['DATABASE_PORT'],
     },
-    'esc_rw': {
+    os.environ['DJANGO_RW_DATABASE_NAME']: {
         'ENGINE': os.environ['DATABASE_ENGINE'],
         'NAME': os.environ['DATABASE_NAME'],
         'USER': os.environ['DATABASE_WRITE_USER'],
@@ -124,6 +128,9 @@ DATABASES = {
         'PORT': os.environ['DATABASE_PORT'],
     },
 }
+
+if 'test' in sys.argv:
+    os.environ['DJANGO_RW_DATABASE_NAME'] = 'default'
 
 
 # Password validation
@@ -191,34 +198,3 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/login/(.*)$',
     r'/logout/(.*)$',
 )
-# Logging
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'custom': {
-            'format': '[{asctime}] [{levelname}] [{name}]  {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'pithiaesc.log'),
-            'formatter': 'custom',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        '': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}

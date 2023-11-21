@@ -1,3 +1,5 @@
+/* || General styles */
+
 html, body {
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -19,11 +21,20 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link, footer a) {
-    color: var(--pithia-blue) !important;
+a:not(.btn, .header-logo-link, footer a),
+a:hover:not(.btn, .header-logo-link, footer a),
+a:focus:not(.btn, .header-logo-link, footer a) {
+    color: var(--pithia-blue);
 }
 
-a:not(.btn, .header-logo-link, footer a, header a, .breadcrumb a, .card-menu a):visited {
+a:not(
+    .btn,
+    .header-logo-link,
+    footer a,
+    header a,
+    .breadcrumb a,
+    .card-menu a,
+    a.dropdown-item):visited {
     color: #551A8B !important;
 }
 
@@ -32,12 +43,14 @@ a {
 }
 
 a:not(.btn, .nav-link):hover,
-a:not(.btn, .nav-link):focus {
+a:not(.btn, .nav-link):focus,
+.logout-button:hover,
+.logout-button:focus {
     text-decoration: underline;
 }
 
-a[href^="http"]:not([href*="pithia.eu"]):not(footer a, .card-menu a)::after,
-.card-menu a[href^="http"]:not([href*="pithia.eu"]) span::after {
+a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
+.card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -52,17 +65,34 @@ a[href^="http"]:not([href*="pithia.eu"]):not(footer a, .card-menu a)::after,
     text-indent: 1em; /* the width of the icon */
 }
 
-header .nav-item {
-    text-transform: uppercase;
+a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+    background-image: url('./external_link_white.svg');
 }
 
-header .dropdown-menu {
-    text-transform: none;
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark::after {
+    background-image: url('/static/external_link_black.svg');
+    transition: filter 150ms ease-in-out;
+}
+
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:hover::after,
+[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:focus::after {
+    filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
 h1 {
     color: var(--pithia-blue);
     font-weight: 600;
+}
+
+/* .card-menu, .list-group combinators */
+h1 + .card-menu,
+h2 + .card-menu {
+    margin-top: 1.5rem;
+}
+
+h1 + .list-group,
+h2 + .list-group:not(.file-validation-status-list) {
+    margin-top: 1.5rem;
 }
 
 h3.opblock-tag p {
@@ -91,6 +121,17 @@ p {
     margin-bottom: 0.5rem;
 }
 
+.bi {
+    width: 1em;
+    height: 1em;
+    vertical-align: -.125em;
+    fill: currentcolor;
+}
+
+.separator {
+    color: #dee2e6;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;
@@ -103,13 +144,54 @@ p {
     width: 97px;
 }
 
-header .dropdown-item:active a {
-    color: white !important;
-    transition-property: none;
+header .dropdown-item {
+    padding-block: 0.75rem;
+    padding-inline: 1.5rem;
+}
+
+.dropdown-item:active img {
+    filter: invert(100%) sepia(0%) saturate(7478%) hue-rotate(75deg) brightness(99%) contrast(106%);
 }
 
 .dropdown-item:active {
     background-color: var(--pithia-blue);
+    color: white !important;
+    transition-property: none;
+}
+
+.user-dropdown {
+    width: 100%;
+    text-align: center;
+}
+
+.user-dropdown .dropdown-menu {
+    width: 100%;
+}
+
+.user-dropdown .institution-for-login-session {
+    white-space: pre-wrap;
+    line-clamp: 3;
+    overflow-wrap: break-word;
+}
+
+.user-dropdown .dropdown-menu li,
+.user-dropdown .dropdown-menu li a,
+.user-dropdown .dropdown-menu li button {
+    width: 100%;
+}
+
+.user-dropdown .dropdown-menu li a:hover,
+.user-dropdown .dropdown-menu li button:hover {
+    text-decoration: underline;
+}
+
+.user-dropdown .logout-button {
+    display: flex;
+    align-items: center;
+}
+
+.user-dropdown .logout-button img {
+    height: 1.2rem;
 }
 
 /* Breadcrumb */
@@ -121,6 +203,11 @@ header .dropdown-item:active a {
 
 .breadcrumb {
     margin-bottom: 0;
+}
+
+/* Footer */
+.footer-link-separator {
+    color: #dee2e6;
 }
 
 /* Home page */
@@ -143,7 +230,6 @@ header .dropdown-item:active a {
 
 .card-menu .card:hover,
 .card-menu .card:focus {
-    box-shadow: 0px 0px 0px 1.5px var(--pithia-blue);
     background-color: rgb(245, 248, 251);
 }
 
@@ -178,6 +264,11 @@ header .dropdown-item:active a {
     height: 2rem;
 }
 
+.alert-institution-setting svg:first-child {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
@@ -198,6 +289,19 @@ header .dropdown-item:active a {
 }
 
 /* Resource management list page */
+.resource-management-table td:last-child {
+    width: 1px;
+}
+
+.resource-management-table tr {
+    padding-inline: 2rem;
+}
+
+.resource-management-table tr td:first-child {
+    max-width: 20rem;
+    word-wrap: break-word;
+}
+
 .resource-identifier-short-text {
     word-break: break-all;
 }
@@ -206,8 +310,29 @@ header .dropdown-item:active a {
     gap: 0.5rem;
 }
 
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 1rem;
+    width: min-content;
+}
+
+.action-buttons button,
+.action-buttons a {
+    height: 100%;
+}
+
+.action-buttons a img {
+    width: 1.8rem;
+}
+
+.btn-view-xml {
+    display: none;
+}
+
 /* Register page */
-.registration-alerts {
+.messages-container {
     display: flex;
     flex-direction: column;
 }
@@ -247,11 +372,21 @@ header .dropdown-item:active a {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'None';
+    content: 'Uploaded files will appear here.';
+    color: gray;
 }
 
-#id_files {
-    width: 100%;
+.form-group {
+    padding: 1rem 0;
+}
+
+.interaction-methods-form-container {
+    max-width: 75ch;
+}
+
+.file-upload-validation-msgs {
+    max-width: 75ch;
+    row-gap: 1rem;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -527,12 +662,30 @@ ul.tree ul {
 }
 
 @media (min-width: 992px) {
-    #id_files {
-        max-width: 20rem;
+    .file-upload-container {
+        max-width: 75ch;
+    }
+    
+    .user-dropdown {
+        text-align: end;
+    }
+}
+
+@media (min-width: 768px) {
+    .user-dropdown .dropdown-menu {
+        min-width: 20rem;
     }
 }
 
 @media (min-width: 576px) {
+    .btn-view-xml {
+        display: inline;
+    }
+
+    .dropdown-item-container-view-xml {
+        display: none;
+    }
+
     .ontology-browser-terms ul.tree ul li {
         padding-left: 2rem;
     }
@@ -541,6 +694,16 @@ ul.tree ul {
 @media (min-width: 450px) {
     .card-menu a {
         padding: 1rem 1.25rem;
+    }
+}
+
+@media (min-width: 332px) {
+    .user-dropdown {
+        display: block;
+    }
+
+    .user-dropdown .dropdown-menu {
+        max-width: 20rem;
     }
 }
 
