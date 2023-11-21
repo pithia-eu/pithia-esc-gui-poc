@@ -319,10 +319,30 @@ def catalogues_updated(request):
     Lists Catalogues and their Catalogue Entries
     and Catalogue Data Subsets in a tree structure.
     """
+    # Setup Catalogues
     catalogues = models.Catalogue.objects.all()
+    
+    # Setup Catalogue Entries
+    catalogue_entries = models.CatalogueEntry.objects.all()
+    catalogue_entries_by_catalogue = {}
+    for catalogue in catalogues:
+        if catalogue.id not in catalogue_entries_by_catalogue:
+            catalogue_entries_by_catalogue[catalogue.id] = []
+        catalogue_entries_by_catalogue[catalogue.id] = [entry for entry in catalogue_entries if entry.catalogue == catalogue]
+
+    # Setup Catalogue Data Subsets
+    catalogue_data_subsets = models.CatalogueDataSubset.objects.all()
+    catalogue_data_subsets_by_catalogue_entry = {}
+    for entry in catalogue_entries:
+        if entry.id not in catalogue_data_subsets_by_catalogue_entry:
+            catalogue_data_subsets_by_catalogue_entry[entry.id] = []
+        catalogue_data_subsets_by_catalogue_entry[entry.id] = [data_subset for data_subset in catalogue_data_subsets if data_subset.catalogue_entry == entry]
+
     return render(request, 'browse/catalogues.html', {
         'title': 'Catalogues',
         'catalogues': catalogues,
+        'catalogue_entries_by_catalogue': catalogue_entries_by_catalogue,
+        'catalogue_data_subsets_by_catalogue_entry': catalogue_data_subsets_by_catalogue_entry,
     })
 
 class ResourceDetailView(TemplateView):

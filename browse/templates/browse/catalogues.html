@@ -1,18 +1,70 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load project_tags %}
+{% block scripts %}
+<script src="{% static 'browse/catalogues.js' %}" defer></script>
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
 {% if catalogues %}
-<ul class="list-group">
-    {% for catalogue in catalogues %}
-    <li class="list-group-item">
-        <a href="{% url 'browse:catalogue_detail' catalogue.id %}">{{ catalogue.name }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<nav aria-label="Catalogues">
+    <ul class="treeview-navigation" role="tree" aria-label="Catalogues">
+        {% for catalogue in catalogues %}
+        <li role="none">
+            {% url 'browse:catalogue_detail' catalogue.id as catalogue_url %}
+            {% if catalogue_entries_by_catalogue|get_key_value:catalogue.id|length > 0 %}
+            <a role="treeitem" aria-expanded="false" aria-owns="{{ catalogue.id }}-subtree" href="{% url 'browse:catalogue_detail' catalogue.id %}">
+                <span class="label">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10">
+                            <polygon points="2 1, 12, 1, 7 9"></polygon>
+                        </svg>
+                    </span>
+                    {{ catalogue.name }}
+                </span>
+            </a>
+            <ul id="{{ catalogue.id }}-subtree" role="group" aria-label="{{ catalogue.name }}">
+                {% for entry in catalogue_entries_by_catalogue|get_key_value:catalogue.id %}
+                <li role="none">
+                    {% if catalogue_data_subsets_by_catalogue_entry|get_key_value:entry.id|length > 0 %}
+                    <a role="treeitem" aria-expanded="false" aria-owns="{{ entry.id }}-subtree" href="{% url 'browse:catalogue_entry_detail' entry.id %}">
+                        <span class="label">
+                            <span class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10">
+                                    <polygon points="2 1, 12, 1, 7 9"></polygon>
+                                </svg>
+                            </span>
+                            {{ entry.name }}
+                        </span>
+                    </a>
+                    <ul id="{{ entry.id }}-subtree" role="group" aria-label="{{ entry.name }}">
+                        {% for data_subset in catalogue_data_subsets_by_catalogue_entry|get_key_value:entry.id %}
+                        <li role="none">
+                            <a role="treeitem" href="{% url 'browse:catalogue_data_subset_detail' data_subset.id %}">
+                                <span class="label">{{ data_subset.name }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <a role="treeitem" href="{% url 'browse:catalogue_entry_detail' entry.id %}">
+                        <span class="label">{{ entry.name }}</span>
+                    </a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <a role="treeitem" href="{% url 'browse:catalogue_detail' catalogue.id %}">
+                <span class="label">{{ catalogue.name }}</span>
+            </a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
 {% endif %}
 {% endblock content %}
