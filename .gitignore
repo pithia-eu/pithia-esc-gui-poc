@@ -127,6 +127,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+pithiaescenv/
 
 # Spyder project settings
 .spyderproject
@@ -161,4 +162,5 @@ cython_debug/
 
 # pithiaesc
 credentials.json
+perun/ListOfOrganisations.json
 staticfiles/

@@ -1,16 +1,5 @@
 {% extends 'browse/detail.html' %}
 {% load project_tags %}
-{% block messages %}
-{% if messages %}
-<div class="registration-alerts mb-3">
-    {% for message in messages %}
-    <div class="alert{% if message.tags %}{% if 'success' in message.tags %} alert-success{% elif 'error' in message.tags %} alert-danger{% elif 'warning' in message.tags %} alert-warning{% endif %} {{ message.tags }}{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% endblock messages %}
 {% block interaction_methods %}
 <section>
     <h2 class="mb-3">Interact</h2>
@@ -81,7 +70,7 @@
                         <tr>
                             <td>API</td>
                             <td>
-                                {% if 'description' in method.config %}
+                                {% if 'description' in method.config and method.config.description|length > 0 %}
                                 {{ method.config.description|urlize }}
                                 {% else %}
                                 <i class="text-muted">None</i>

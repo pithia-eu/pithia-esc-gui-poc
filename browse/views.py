@@ -26,7 +26,7 @@ from handle_management.handle_api import (
 from utils.dict_helpers import flatten
 from utils.mapping_functions import prepare_resource_for_template
 
-_INDEX_PAGE_TITLE = 'Browse Metadata'
+_INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
 _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
@@ -126,7 +126,7 @@ class ResourceListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.description
-        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} were found.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
@@ -301,6 +301,48 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
             elif is_model_type:
                 data_collections_by_type[COMPUTATION_MODELS_KEY].append(dc)
+        return data_collections_by_type
+
+    def get_queryset(self):
+        data_collections = super().get_queryset()
+
+        ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
+        SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
+        COMPUTATIONAL_MODELS_KEY = 'Computational Models'
+        MIXED_KEY = 'Mixed'
+        OTHER_KEY = 'Other'
+
+        data_collections_by_type = {
+            ACTIVITY_INDICATORS_KEY: [],
+            SENSOR_MEASUREMENTS_KEY: [],
+            COMPUTATIONAL_MODELS_KEY: [],
+            MIXED_KEY: [],
+            OTHER_KEY: [],
+        }
+        # https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator
+        # https://metadata.pithia.eu/ontology/2.2/computationType/AssimilativeModel
+        # https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager
+
+        for dc in data_collections:
+            if not dc.type_urls:
+                data_collections_by_type[OTHER_KEY].append(dc)
+                continue
+            type_urls = dc.type_urls
+            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator$', url) for url in type_urls])
+            is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
+            is_computational_model = any([re.search('\/computationType/(.*)Model$', url) for url in type_urls])
+
+            if sum([is_activity_indicator, is_sensor_measurement, is_computational_model]) > 1:
+                data_collections_by_type[MIXED_KEY].append(dc)
+            elif is_activity_indicator:
+                data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
+            elif is_sensor_measurement:
+                data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
+            elif is_computational_model:
+                data_collections_by_type[COMPUTATIONAL_MODELS_KEY].append(dc)
+            else:
+                data_collections_by_type[OTHER_KEY].append(dc)
+
         return data_collections_by_type
 
 class CatalogueRelatedResourceListView(ResourceListView):

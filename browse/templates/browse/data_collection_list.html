@@ -7,7 +7,11 @@
 {% block resource_list_inner %}
 {% for key, value in resources.items %}
 <section>
-    <h2 class="mb-3">{{ key }}</h2>
+    {% with section_name=key.split|join:'-'|lower %}
+    <h2 id="{{ section_name }}-heading" class="mb-3">
+    {% endwith %}
+        {{ key }}
+    </h2>
     <div class="list-group-container off-bottom">
         <div class="list-group-scroll-container">
             <ul class="list-group">

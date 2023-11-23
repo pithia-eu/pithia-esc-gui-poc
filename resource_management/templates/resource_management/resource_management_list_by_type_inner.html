@@ -1,26 +1,59 @@
-<ul class="list-group">
-    {% for resource in resource_list %}
-    <li class="list-group-item">
-        <div class="row gx-2 gy-4">
-            <div class="col-8">
-                <div class="d-flex flex-column">
-                    <span class="mb-1">{{ resource.name|default:resource.localid }}</span>
-                    <small class="text-muted w-100 resource-identifier-short-text">{{ resource.namespace }}, {{ resource.localid }}</small>
+{% load static %}
+{% load project_tags %}
+<table class="table table-hover resource-management-table">
+    <thead>
+        <tr>
+            <th id="name">Name</th>
+            <th id="updated-by">Updated by</th>
+            <th id="actions">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for resource in resource_list %}
+        <tr>
+            <td headers="name">
+                {{ resource.name|default:resource.localid }}
+            </td>
+            <td headers="updated-by">
+                {{ institution_members_by_id|get_key_value:resource.owner_id|default:'Unknown' }}
+            </td>
+            <td headers="actions">
+                <div class="action-buttons">
+                    <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="btn btn-light btn-view-xml" title="View">
+                        <img src="{% static 'view-file.svg' %}" alt="View">
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item-container-view-xml">
+                                <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="dropdown-item">View</a>
+                            </li>
+                            <li>
+                                <a href="{% url resource_update_page_url_name resource.pk %}" class="dropdown-item">Upload a New XML File</a>
+                            </li>
+                            <li>
+                                {% if interaction_method_update_page_url_name %}
+                                <a href="{% url interaction_method_update_page_url_name resource.pk %}" class="dropdown-item">Update Interaction Methods</a>
+                                {% endif %}
+                            </li>
+                            <li>
+                                <a href="{% url resource_delete_page_url_name resource.pk %}" class="dropdown-item text-danger">Delete...</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% comment %} <button class="btn btn-light">
+                        <img src="{% static 'update-file.svg' %}" alt="View" style="width: 1.5rem;">
+                    </button>
+                    <button class="btn btn-light">
+                        <img src="{% static 'delete-file.svg' %}" alt="View" style="width: 1.5rem;">
+                    </button> {% endcomment %}
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="d-flex justify-content-end"><a href="{% url resource_delete_page_url_name resource.pk %}" role="button" class="btn btn-outline-secondary btn-delete">Delete...</a></div>
-            </div>
-            <div class="col-lg-12">
-                <div class="d-flex flex-wrap justify-content-start align-items-center update-buttons">
-                    <a href="{% url resource_xml_download_page_url_name resource.pk %}" class="btn btn-outline-dark" role="button">View</a>
-                    <a href="{% url resource_update_page_url_name resource.pk %}" class="btn btn-outline-dark" role="button">Upload a New XML File</a>
-                    {% if interaction_method_update_page_url_name %}
-                    <a href="{% url interaction_method_update_page_url_name resource.pk %}" class="btn btn-outline-dark" role="button">Update Interaction Methods</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

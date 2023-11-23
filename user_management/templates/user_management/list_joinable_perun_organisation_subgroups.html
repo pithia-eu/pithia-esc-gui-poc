@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block breadcrumbs %}
+{% breadcrumb_item join_an_institution_breadcrumb_text join_an_institution_breadcrumb_url_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<section>
+    <h1>{{ title }}</h1>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{{ join_url_base }}{{ institution_id }}:admins" target="_blank">Join as an Admin</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ join_url_base }}{{ institution_id }}:members" target="_blank">Join as a Member</a>
+        </li>
+    </ul>
+</section>
+{% endblock content %}

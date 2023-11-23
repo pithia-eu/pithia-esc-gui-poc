@@ -24,6 +24,9 @@ from common.models import (
 )
 from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
 # Create your tests here.
 
 # NOTE: The SimpleTestCase class is used to disable the automatic SQL database
@@ -225,6 +228,7 @@ class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, Opera
     pass
 
 
+@tag('slow')
 class OntologyUrlValidationTestCase(SimpleTestCase):
     def test_valid_ontology_url_passes(self):
         """
@@ -530,6 +534,7 @@ class DoiValidationTestCase(SimpleTestCase):
         xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
         self.assertTrue('10.000' in xml_file.contents)
 
+    @tag('slow')
     def test_data_subset_xsd_validation(self):
         """
         XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
@@ -542,6 +547,7 @@ class DoiValidationTestCase(SimpleTestCase):
 class XMLMetadataFileIntegrationTestCase(TestCase):
     def setUp(self) -> None:
         xml_file = test_xml_files.METADATA_AND_ONTOLOGY_URLS_XML
+        xml_file.seek(0)
         xml_file_string = xml_file.read()
         self.xml_metadata_file_with_invalid_urls = XMLMetadataFile(xml_file_string, xml_file.name)
         return super().setUp()
@@ -552,7 +558,8 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         a valid data collection-related metadata file.
         """
         organisation_xml_file = test_xml_files.ORGANISATION_METADATA_XML
-        Organisation.objects.create_from_xml_string(organisation_xml_file.read())
+        organisation_xml_file.seek(0)
+        Organisation.objects.create_from_xml_string(organisation_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         individual_xml_file = test_xml_files.INDIVIDUAL_METADATA_XML
         invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
@@ -567,7 +574,8 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         a valid catalogue-related metadata file.
         """
         catalogue_xml_file = test_xml_files.CATALOGUE_METADATA_XML
-        Catalogue.objects.create_from_xml_string(catalogue_xml_file.read())
+        catalogue_xml_file.seek(0)
+        Catalogue.objects.create_from_xml_string(catalogue_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         catalogue_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
         invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
@@ -576,6 +584,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         for key in invalid_resource_urls_dict.keys():
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
+    @tag('slow')
     def test_invalid_ontology_urls_in_file_are_found(self):
         """
         The validator returns invalid ontology URLs
@@ -602,6 +611,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         mode URLs sorted into categories.
         """
         xml_file = test_xml_files.METADATA_AND_ONTOLOGY_URLS_XML
+        xml_file.seek(0)
         xml_file_string = xml_file.read()
         self.xml_metadata_file_with_invalid_urls = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
         
@@ -617,6 +627,7 @@ class XMLMetadataFileTestCase(TestCase):
         Returns a list of potential ontology URLs.
         """
         xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
+        xml_file.seek(0)
         xml_file_string = xml_file.read()
         self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
@@ -632,6 +643,7 @@ class XMLMetadataFileTestCase(TestCase):
         Returns a list of potential metadata URLs.
         """
         xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
+        xml_file.seek(0)
         xml_file_string = xml_file.read()
         self.test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
@@ -647,6 +659,7 @@ class XMLMetadataFileTestCase(TestCase):
         mode URLs.
         """
         xml_file = test_xml_files.ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML
+        xml_file.seek(0)
         xml_file_string = xml_file.read()
         self.test_xml_file = AcquisitionCapabilitiesXMLMetadataFile(xml_file_string, xml_file.name)
 

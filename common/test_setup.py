@@ -17,9 +17,13 @@ from .models import (
     Project,
 )
 
-def _register_metadata_file_for_test(xml_file, model):
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
+def _register_metadata_file_for_test(xml_file, model, user_id=SAMPLE_USER_ID, institution_id=SAMPLE_INSTITUTION_ID):
     xml_file.seek(0)
-    return model.objects.create_from_xml_string(xml_file.read())
+    return model.objects.create_from_xml_string(xml_file.read(), user_id, institution_id)
 
 def register_organisation_for_test():
     return _register_metadata_file_for_test(test_xml_files.ORGANISATION_METADATA_XML, Organisation)
