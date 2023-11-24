@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<section>
+    <h1>{{ title }}</h1>
+    <div class="d-flex flex-column align-items-start justify-content-start">
+        <p>
+            The e-Science Centre uses the <a href="https://ggus.eu/">GGUS helpdesk</a> service
+            as a way to provide technical support for the e-Science Centre. An EGI Check-in
+            account is required to use GGUS.
+        </p>
+        <a href="https://ggus.eu/index.php?mode=ticket_submit" role="button" class="btn btn-primary fw-bold">
+            Submit ticket
+        </a>
+    </div>
+</section>
+<section>
+    <h2>How to Submit a Ticket</h2>
+    <ol>
+        <li>
+            To submit a ticket, go to the <a href="https://ggus.eu/index.php?mode=ticket_submit">Submit ticket</a> page in GGUS.
+            You will be asked to sign in with EGI Check-in if you haven't done so already.
+        </li>
+        <li>Fill out all of the required fields (these will have a <em>*</em> next to the field names) for the ticket.</li>
+        <li>Select the <em>PITHIA e-Science Centre Support</em> unit (under <em>PITHIA Community</em>) for the
+            <strong>Assign to support unit</strong> field; we will not receive notification of your ticket otherwise.</li>
+        <li>Submit the form.</li>
+    </ol>
+</section>
+{% endblock content %}
