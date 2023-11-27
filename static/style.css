@@ -778,4 +778,6 @@ ul.tree ul {
     
     --circle-5-y-position: calc(var(--circle-4-y-position) + var(--line-height) + var(--line-spacing));
     --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
+
+    --bs-breadcrumb-divider: '>';
 }
