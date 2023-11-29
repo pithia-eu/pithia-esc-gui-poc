@@ -17,7 +17,8 @@ header .nav-link,
 .breadcrumb-item a,
 .accordion-button a,
 .card-menu a,
-.list-group-item > a {
+.list-group-item > a,
+a.support-link {
     text-decoration: none;
 }
 
@@ -34,7 +35,8 @@ a:not(
     header a,
     .breadcrumb a,
     .card-menu a,
-    a.dropdown-item):visited {
+    a.dropdown-item,
+    a.support-link):visited {
     color: #551A8B !important;
 }
 
@@ -52,12 +54,12 @@ a:not(.btn, .nav-link):focus,
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 .card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
-    width: 1em;
     height: 1em;
-    background-image: url('./external_link_black.svg');
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></svg>');
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center right;
     background-size: 75% auto;
+    filter: invert(21%) sepia(98%) saturate(2462%) hue-rotate(181deg) brightness(101%) contrast(101%);
     /* alternative text rules */
     content: '';
     overflow: hidden;
@@ -65,17 +67,17 @@ a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)
     text-indent: 1em; /* the width of the icon */
 }
 
+a[href^="http"].btn-primary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
-    background-image: url('./external_link_white.svg');
+    filter: invert(98%) sepia(2%) saturate(10%) hue-rotate(41deg) brightness(103%) contrast(105%);
 }
 
-[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark::after {
-    background-image: url('/static/external_link_black.svg');
+a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
     transition: filter 150ms ease-in-out;
 }
 
-[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:hover::after,
-[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a).btn-outline-dark:focus::after {
+a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a):hover::after,
+a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a):focus::after {
     filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
@@ -203,6 +205,12 @@ header .dropdown-item {
 
 .breadcrumb {
     margin-bottom: 0;
+}
+
+.breadcrumb-item::before {
+    /* Only using padding because SVG
+    is being used as a divider. */
+    padding-top: 0.05rem;
 }
 
 /* Footer */
@@ -577,6 +585,11 @@ ul.tree ul {
     border-width: 0 0 2px 2px;
 }
 
+/* Support page */
+.support-page-description {
+    max-width: 70ch;
+}
+
 /* Skeleton loader while search terms are loading */
 @keyframes loading {
     to {
@@ -778,4 +791,6 @@ ul.tree ul {
     
     --circle-5-y-position: calc(var(--circle-4-y-position) + var(--line-height) + var(--line-spacing));
     --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
+
+    --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>');
 }
