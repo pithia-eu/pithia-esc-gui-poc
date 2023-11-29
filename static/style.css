@@ -577,6 +577,11 @@ ul.tree ul {
     border-width: 0 0 2px 2px;
 }
 
+/* Support page */
+.support-page-description {
+    max-width: 70ch;
+}
+
 /* Skeleton loader while search terms are loading */
 @keyframes loading {
     to {
