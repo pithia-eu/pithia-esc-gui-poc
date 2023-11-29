@@ -207,6 +207,12 @@ header .dropdown-item {
     margin-bottom: 0;
 }
 
+.breadcrumb-item::before {
+    /* Only using padding because SVG
+    is being used as a divider. */
+    padding-top: 0.1rem;
+}
+
 /* Footer */
 .footer-link-separator {
     color: #dee2e6;
@@ -786,5 +792,5 @@ ul.tree ul {
     --circle-5-y-position: calc(var(--circle-4-y-position) + var(--line-height) + var(--line-spacing));
     --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
 
-    --bs-breadcrumb-divider: '>';
+    --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>');
 }
