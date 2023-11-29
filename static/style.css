@@ -17,7 +17,8 @@ header .nav-link,
 .breadcrumb-item a,
 .accordion-button a,
 .card-menu a,
-.list-group-item > a {
+.list-group-item > a,
+a.support-link {
     text-decoration: none;
 }
 
@@ -34,7 +35,8 @@ a:not(
     header a,
     .breadcrumb a,
     .card-menu a,
-    a.dropdown-item):visited {
+    a.dropdown-item,
+    a.support-link):visited {
     color: #551A8B !important;
 }
 
@@ -575,6 +577,11 @@ ul.tree ul {
     height: calc(var(--spacing) + 1px);
     border: solid #ddd;
     border-width: 0 0 2px 2px;
+}
+
+/* Support page */
+.support-page-description {
+    max-width: 70ch;
 }
 
 /* Skeleton loader while search terms are loading */
