@@ -210,7 +210,7 @@ header .dropdown-item {
 .breadcrumb-item::before {
     /* Only using padding because SVG
     is being used as a divider. */
-    padding-top: 0.1rem;
+    padding-top: 0.05rem;
 }
 
 /* Footer */
