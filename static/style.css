@@ -19,7 +19,7 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link, footer a) {
+a:not(.btn, .header-logo-link, footer a, .popover-simple-search-help) {
     color: var(--pithia-blue) !important;
 }
 
