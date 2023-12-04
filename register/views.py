@@ -44,13 +44,7 @@ from user_management.services import (
 )
 from utils.url_helpers import create_data_subset_detail_page_url
 
-# TODO: remove old code
 from . import xml_conversion_checks_and_fixes
-from .pymongo_api import register_with_pymongo_transaction_if_possible
-
-from common.mongodb_models import OriginalMetadataXml
-from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
-from update.pymongo_api import register_doi_with_pymongo_transaction_if_possible
 from validation.errors import FileRegisteredBefore
 
 
@@ -125,20 +119,6 @@ class ResourceRegisterFormView(FormView):
                                 api_description,
                                 self.new_registration
                             )
-                        # TODO: remove old code
-                        
-                        register_with_pymongo_transaction_if_possible(
-                            xml_file,
-                            self.resource_mongodb_model,
-                            OriginalMetadataXml,
-                            api_selected=is_api_selected,
-                            api_specification_url=api_specification_url,
-                            api_description=api_description,
-                            resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                        )
-                        self.new_pymongo_registration = self.resource_mongodb_model.find_one({
-                            'identifier.PITHIA_Identifier.localID': self.new_registration.localid
-                        })
                     
                     file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
@@ -182,8 +162,6 @@ class ResourceRegisterFormView(FormView):
                             # Add the handle metadata to the DOI dict
                             doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
                             add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
-                            # TODO: remove old code
-                            add_data_subset_data_to_doi_metadata_kernel_dict_old(self.new_pymongo_registration['_id'], doi_dict)
 
                             # Add DOI metadata kernel to Handle and Data Subset
                             add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
@@ -197,17 +175,6 @@ class ResourceRegisterFormView(FormView):
                             # retrieve information from the Handle in case the
                             # Data Subset ever gets deleted.
                             add_handle_to_url_mapping(handle, data_subset_url)
-
-                            # TODO: remove old code
-                            register_doi_with_pymongo_transaction_if_possible(
-                                doi_dict,
-                                str(self.new_pymongo_registration['_id']),
-                                xml_file,
-                                self.resource_mongodb_model,
-                                handle,
-                                data_subset_url,
-                                resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                            )
 
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
