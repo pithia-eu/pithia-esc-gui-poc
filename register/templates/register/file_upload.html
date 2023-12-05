@@ -18,7 +18,7 @@
         {% block title %}
         <hgroup>
             <h1 class="mb-0">{{ title }}</h1>
-            <p class="text-secondary fs-3">{{ resource_type_plural_readable }}</p>
+            <p>{{ resource_type_plural_readable }}</p>
         </hgroup>
         {% endblock title %}
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">

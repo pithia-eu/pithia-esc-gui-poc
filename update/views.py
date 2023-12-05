@@ -121,7 +121,7 @@ class ResourceUpdateFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Update Scientific Metadata'
+        context['title'] = f'Update'
         context['form'] = self.form_class
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
