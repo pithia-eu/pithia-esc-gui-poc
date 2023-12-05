@@ -63,13 +63,6 @@ from resource_management.views import (
 )
 from user_management.services import get_user_id_for_login_session
 
-# TODO: remove old code
-
-from .pymongo_api import (
-    update_interaction_method_with_pymongo_transaction_if_possible,
-    update_with_pymongo_transaction_if_possible,
-)
-
 from register.xml_conversion_checks_and_fixes import (
     correct_acquisition_capability_set_xml_converted_to_dict,
     correct_acquisition_xml_converted_to_dict,
@@ -141,22 +134,12 @@ class ResourceUpdateFormView(FormView):
             try:
                 if self.xml_file_string is None:
                     self.xml_file_string = xml_file.read()
-                with transaction.atomic():
-                    resource_id_temp = self.resource_id
-                    self.model.objects.update_from_xml_string(
-                        resource_id_temp,
-                        self.xml_file_string,
-                        get_user_id_for_login_session(request.session)
-                    )
-
-                    # TODO: remove old code
-                    update_with_pymongo_transaction_if_possible(
-                        resource_id_temp,
-                        self.resource_mongodb_model,
-                        self.resource_revision_mongodb_model,
-                        xml_file_string=self.xml_file_string,
-                        resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                    )
+                resource_id_temp = self.resource_id
+                self.model.objects.update_from_xml_string(
+                    resource_id_temp,
+                    self.xml_file_string,
+                    get_user_id_for_login_session(request.session)
+                )
 
                 messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
@@ -365,42 +348,32 @@ def data_collection_interaction_methods(request, resource_id):
     if request.method == 'POST':
         form = UpdateDataCollectionInteractionMethodsForm(request.POST)
         if form.is_valid():
-            data_collection_localid = data_collection.localid
             try:
                 is_api_selected = 'api_selected' in request.POST
                 api_specification_url = request.POST.get('api_specification_url')
                 api_description = request.POST.get('api_description')
                 
-                with transaction.atomic():
-                    # TODO: remove old code
-                    update_interaction_method_with_pymongo_transaction_if_possible(
-                        data_collection_localid,
-                        api_selected=is_api_selected,
-                        api_specification_url=api_specification_url,
-                        api_description=api_description
-                    )
-
-                    if is_api_selected == False:
-                        try:
-                            models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
-                        except models.APIInteractionMethod.DoesNotExist:
-                            pass
-                        messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
-                        return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
-
+                if is_api_selected == False:
                     try:
-                        api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
-                        models.APIInteractionMethod.objects.update_config(
-                            api_interaction_method.pk,
-                            api_specification_url,
-                            api_description
-                        )
+                        models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
                     except models.APIInteractionMethod.DoesNotExist:
-                        models.APIInteractionMethod.objects.create_api_interaction_method(
-                            api_specification_url,
-                            api_description,
-                            data_collection
-                        )
+                        pass
+                    messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
+                    return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
+
+                try:
+                    api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+                    models.APIInteractionMethod.objects.update_config(
+                        api_interaction_method.pk,
+                        api_specification_url,
+                        api_description
+                    )
+                except models.APIInteractionMethod.DoesNotExist:
+                    models.APIInteractionMethod.objects.create_api_interaction_method(
+                        api_specification_url,
+                        api_description,
+                        data_collection
+                    )
                 messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
