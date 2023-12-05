@@ -83,7 +83,7 @@ a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer
 
 h1 {
     color: var(--pithia-blue);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 hgroup p {
