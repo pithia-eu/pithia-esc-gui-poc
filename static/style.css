@@ -297,6 +297,10 @@ header .dropdown-item {
 }
 
 /* Resource management list page */
+.resource-management-table td:first-child {
+    width: 40%;
+}
+
 .resource-management-table td:last-child {
     width: 1px;
 }
@@ -320,7 +324,7 @@ header .dropdown-item {
 
 .action-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-auto-rows: 1fr;
     gap: 1rem;
     width: min-content;
@@ -333,6 +337,10 @@ header .dropdown-item {
 
 .action-buttons a img {
     width: 1.8rem;
+}
+
+.action-buttons .dropdown-item {
+    padding-block: 0.5rem;
 }
 
 .btn-view-xml {
@@ -395,6 +403,16 @@ header .dropdown-item {
 .file-upload-validation-msgs {
     max-width: 75ch;
     row-gap: 1rem;
+}
+
+/* Update - file upload page */
+hgroup p.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+hgroup p {
+    max-width: 45ch;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -666,7 +684,7 @@ ul.tree ul {
 /* Search results */
 .search-result-description {
     overflow: hidden;
-} 
+}
 
 .line-clamp {
     display: -webkit-box;
@@ -691,6 +709,10 @@ ul.tree ul {
 }
 
 @media (min-width: 576px) {
+    .action-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+
     .btn-view-xml {
         display: inline;
     }

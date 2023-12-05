@@ -82,7 +82,8 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register New {self.model.type_plural_readable.title()}'
+        context['title'] = 'Register Scientific Metadata'
+        context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url
         context['form'] = self.form_class
@@ -412,7 +413,6 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a New {self.model.type_readable.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
         
@@ -475,7 +475,6 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register a New Catalogue Data Subset'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
