@@ -46,14 +46,14 @@ class ScientificMetadata(models.Model):
         primary_key=True,
         db_column='sm_id'
     )
-    # institution = models.ForeignKey(
-    #   'Institution',
-    #   db_column='institution_id'
-    # )
-    # owner = models.ForeignKey(
-    #   'Member',
-    #   db_column='owner_id'
-    # )
+    institution_id = models.CharField(
+        max_length=200,
+        db_column='inst_id'
+    )
+    owner_id = models.CharField(
+        max_length=200,
+        db_column='owner_id'
+    )
     type = models.CharField(
         max_length=100,
         choices=TYPE_CHOICES,

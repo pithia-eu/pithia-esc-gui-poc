@@ -36,6 +36,9 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
         for r in registrations_for_deletion:
             r.delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
+    def owned_by_institution(self, institution_id: str):
+        return self.filter(institution_id=institution_id)
+
 
 class OrganisationQuerySet(ScientificMetadataQuerySet, AbstractOrganisationDatabaseQueries):
     def for_simple_search(self, query_sections: list):

@@ -2,6 +2,7 @@
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_category_list_page_breadcrumb_text resource_management_category_list_page_breadcrumb_url_name %}
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
@@ -13,19 +14,21 @@
 <script src="{% static 'is_file_upload_ready.js' %}" type="module" defer></script>
 {% endblock scripts %}
 {% block title %}
-<h1 class="pb-0 mb-0">{{ title }}</h1>
+<hgroup>
+    <h1 class="mb-0">{{ title }}</h1>
+    <p class="text-secondary fs-3">{{ resource.name }}</p>
+</hgroup>
 {% endblock title %}
-{% block subtitle %}
-<div class="text-muted mb-4">
-    Updating: {{ resource.name }}
-</div>
-{% endblock subtitle %}
 {% block page_description %}
 Upload the updated file using the file input below.
 This will start the file validation process.
 Once the file has finished updating, use the submit button to commit the change in the e-Science Centre.
 {% endblock page_description %}
+{% block multiple_allowed %}Multiple files not allowed{% endblock multiple_allowed %}
 {% block file_list %}
 {% include 'register/validation_template.html' %}
 {% endblock file_list %}
+{% block submit_button_text %}
+Update
+{% endblock submit_button_text %}
 {% block sidemenu %}{% endblock sidemenu %}

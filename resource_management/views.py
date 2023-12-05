@@ -1,34 +1,44 @@
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from common import models
+from common.decorators import login_session_institution_required
+from user_management.services import (
+    get_institution_id_for_login_session,
+    get_members_by_institution_id,
+)
 
-_INDEX_PAGE_TITLE = 'Register & Manage Metadata'
+_INDEX_PAGE_TITLE = 'Manage Registrations'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
 _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural_readable):
-    return f'Register & Manage {resource_type_plural_readable.title()}'
+    return resource_type_plural_readable.title()
 
 # Create your views here.
+@login_session_institution_required
 def index(request):
     return render(request, 'resource_management/index.html', {
         'title': _INDEX_PAGE_TITLE
     })
 
+@login_session_institution_required
 def data_collection_related_metadata_index(request):
-    num_current_organsations = models.Organisation.objects.count()
-    num_current_individuals = models.Individual.objects.count()
-    num_current_projects = models.Project.objects.count()
-    num_current_platforms = models.Platform.objects.count()
-    num_current_operations = models.Operation.objects.count()
-    num_current_instruments = models.Instrument.objects.count()
-    num_current_acquisition_capability_sets = models.AcquisitionCapabilities.objects.count()
-    num_current_acquisitions = models.Acquisition.objects.count()
-    num_current_computation_capability_sets = models.ComputationCapabilities.objects.count()
-    num_current_computations = models.Computation.objects.count()
-    num_current_processes = models.Process.objects.count()
-    num_current_data_collections = models.DataCollection.objects.count()
+    institution_id = get_institution_id_for_login_session(request.session)
+
+    num_current_organsations = models.Organisation.objects.owned_by_institution(institution_id).count()
+    num_current_individuals = models.Individual.objects.owned_by_institution(institution_id).count()
+    num_current_projects = models.Project.objects.owned_by_institution(institution_id).count()
+    num_current_platforms = models.Platform.objects.owned_by_institution(institution_id).count()
+    num_current_operations = models.Operation.objects.owned_by_institution(institution_id).count()
+    num_current_instruments = models.Instrument.objects.owned_by_institution(institution_id).count()
+    num_current_acquisition_capability_sets = models.AcquisitionCapabilities.objects.owned_by_institution(institution_id).count()
+    num_current_acquisitions = models.Acquisition.objects.owned_by_institution(institution_id).count()
+    num_current_computation_capability_sets = models.ComputationCapabilities.objects.owned_by_institution(institution_id).count()
+    num_current_computations = models.Computation.objects.owned_by_institution(institution_id).count()
+    num_current_processes = models.Process.objects.owned_by_institution(institution_id).count()
+    num_current_data_collections = models.DataCollection.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/data_collection_index.html', {
         'num_current_organisations': num_current_organsations,
         'num_current_individuals': num_current_individuals,
@@ -47,10 +57,13 @@ def data_collection_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
+@login_session_institution_required
 def catalogue_related_metadata_index(request):
-    num_current_catalogues = models.Catalogue.objects.count()
-    num_current_catalogue_entries = models.CatalogueEntry.objects.count()
-    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.count()
+    institution_id = get_institution_id_for_login_session(request.session)
+    
+    num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
+    num_current_catalogue_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
+    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_catalogue_entries': num_current_catalogue_entries,
@@ -60,6 +73,7 @@ def catalogue_related_metadata_index(request):
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class ResourceManagementListView(ListView):
     template_name = 'resource_management/resource_management_list_by_type_outer.html'
     context_object_name = 'resources'
@@ -71,14 +85,21 @@ class ResourceManagementListView(ListView):
     resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
 
+    def get(self, request, *args, **kwargs):
+        self.institution_id = get_institution_id_for_login_session(request.session)
+
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.owned_by_institution(self.institution_id).all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['title'] = _create_manage_resource_page_title(self.model.type_plural_readable)
         context['resource_type_plural'] = self.model.type_plural_readable
-        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered with the e-Science Centre.'
+        context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered by your institution.'
+        context['institution_members_by_id'] = {im['edu_person_unique_id']: im['name'] for im in get_members_by_institution_id(self.institution_id)}
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
@@ -131,8 +152,8 @@ class PlatformManagementListView(ResourceManagementListView):
                 non_pithia_platforms.append(r)
         context['pithia_platforms'] = pithia_platforms
         context['non_pithia_platforms'] = non_pithia_platforms
-        context['no_platform_networks_message'] = 'No platform networks have been registered with the e-Science Centre.'
-        context['no_platforms_message'] = 'No individual platforms have been registered with the e-Science Centre.'
+        context['no_platform_networks_message'] = 'No platform networks have been registered by your institution.'
+        context['no_platforms_message'] = 'No individual platforms have been registered by your institution.'
         return context
 
 class OperationManagementListView(ResourceManagementListView):

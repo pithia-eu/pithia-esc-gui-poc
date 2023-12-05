@@ -7,11 +7,12 @@ from dateutil import parser
 from django.urls import reverse_lazy
 from pyhandle.clientcredentials import PIDClientCredentials
 from pyhandle.handleclient import PyHandleClient, RESTHandleClient
+from typing import Tuple
 from utils.dict_helpers import flatten
 
 logger = logging.getLogger(__name__)
 
-def instantiate_client_and_load_credentials() -> tuple[RESTHandleClient, PIDClientCredentials]:
+def instantiate_client_and_load_credentials() -> Tuple[RESTHandleClient, PIDClientCredentials]:
     handle_api_url = os.environ['HANDLE_API_ENDPOINT_URL']
     credentials = None
     with open('credentials.json', 'w+') as credentials_json_file:
@@ -49,12 +50,12 @@ def register_handle(handle: str, handle_value: str, client: RESTHandleClient, in
 
     return register_result
 
-def create_and_register_handle_for_resource_url(resource_url: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
+def create_and_register_handle_for_resource_url(resource_url: str, initial_doi_dict_values: dict = {}) -> Tuple[str, RESTHandleClient, PIDClientCredentials]:
     client, credentials = instantiate_client_and_load_credentials()
     handle = generate_and_register_handle(resource_url, credentials, client, initial_doi_dict_values=initial_doi_dict_values)
     return handle, client, credentials
 
-def create_and_register_handle_for_resource(resource_id: str, initial_doi_dict_values: dict = {}) -> tuple[str, RESTHandleClient, PIDClientCredentials]:
+def create_and_register_handle_for_resource(resource_id: str, initial_doi_dict_values: dict = {}) -> Tuple[str, RESTHandleClient, PIDClientCredentials]:
     client, credentials = instantiate_client_and_load_credentials()
     handle = create_handle(credentials, resource_id)
     resource_details_page_url = reverse_lazy('browse:catalogue_data_subset_detail', kwargs={ 'catalogue_data_subset_id': resource_id })

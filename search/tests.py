@@ -33,6 +33,11 @@ from ontology.utils import (
     get_nested_phenomenons_in_observed_property,
 )
 
+# For tests where ownership data is required
+SAMPLE_USER_ID        = 'johndoe@example.com'
+SAMPLE_INSTITUTION_ID = 'John Doe Institution'
+
+
 # Create your tests here.
 
 class SearchBehaviourTestCase(TestCase):
@@ -143,7 +148,6 @@ class ObservedPropertyCategorisationForSearchFormTestCase(TestCase):
             computation_types_grouped_by_observed_property=computation_types_grouped_by_observed_property
         )
         categorised_observed_property_dict = categorise_observed_property_dict_by_top_level_phenomenons(observed_property_dict)
-        print('categorised_observed_property_dict', categorised_observed_property_dict)
         self.assertIsInstance(categorised_observed_property_dict, dict)
 
 
