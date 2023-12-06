@@ -282,9 +282,8 @@ header .dropdown-item {
     border-radius: 12.5px;
     cursor: pointer;
     position: absolute;
-    bottom: 0.5rem;
-    left: 0;
-    right: 0;
+    top: 0.5rem;
+    right: 0.5rem;
     margin-inline: auto;
     opacity: 0%;
     text-align: center;
@@ -293,10 +292,6 @@ header .dropdown-item {
 
 .card-menu .card:hover .card-footer.footer-hint {
     opacity: 60%;
-}
-
-.card-menu .card .card-footer.footer-hint svg {
-    margin-right: 0.25rem;
 }
 
 .card-menu .card .card-footer.footer-hint:hover,
