@@ -234,16 +234,11 @@ header .dropdown-item {
 .card-menu .card {
     box-shadow: 0 .1rem 0.2rem rgba(0,0,0,.15) !important;
     transition: box-shadow 150ms linear, background-color 150ms linear;
-    height: 10rem;
+    height: 12rem;
 }
 
 .card-menu span {
     margin-inline: 0.5rem;
-}
-
-.card-menu .card:hover,
-.card-menu .card:focus {
-    background-color: rgb(245, 248, 251);
 }
 
 .card-menu .card-body {
@@ -277,6 +272,39 @@ header .dropdown-item {
     height: 2rem;
 }
 
+.card-menu .card {
+    overflow: hidden;
+    position: relative;
+}
+
+.card-menu .card .card-footer.footer-hint {
+    width: max-content;
+    border-radius: 12.5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    opacity: 0%;
+    text-align: center;
+    border-top-width: 0;
+}
+
+.card-menu .card:hover .card-footer.footer-hint {
+    opacity: 60%;
+}
+
+.card-menu .card .card-footer.footer-hint svg {
+    margin-right: 0.25rem;
+}
+
+.card-menu .card .card-footer.footer-hint:hover,
+.card-menu .card .card-footer.footer-hint:focus {
+    opacity: 100%;
+}
+
+/* Login alert - Institution selection */
 .alert-institution-setting svg:first-child {
     width: 1.2rem;
     height: 1.2rem;
