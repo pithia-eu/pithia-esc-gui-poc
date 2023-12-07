@@ -274,32 +274,57 @@ header .dropdown-item {
 
 /* Card menu - interactive help */
 
-.card-menu .card .card-help-button {
+.card-menu .card .btn-card-help-dialog,
+.card-menu .card .btn-card-help-dialog .btn-icon-container {
+    width: 1.2em;
+    height: 1.2em;
+    font-size: 1.2em;
+}
+
+.card-menu .card .btn-card-help-dialog {
     position: absolute;
     right: 0.5rem;
-    top: 0.3rem;
+    top: 0.5rem;
+    color: #bbb;
     cursor: pointer;
     padding: 0;
     background-color: transparent;
     border: none;
 }
 
-.card-menu .card .card-help-button svg {
-    width: 1rem;
-    height: 1rem;
+.card-menu .card .bg-white {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.card-menu .card .card-help-button svg:nth-child(2) {
+.card-menu .card:has(.btn-card-help-dialog:hover) .bg-white,
+.card-menu .card:has(.btn-card-help-dialog:focus) .bg-white {
+    opacity: 60%;
+}
+
+.card-menu .card .btn-card-help-dialog .btn-icon-container {
+    position: relative;
+}
+
+.card-menu .card .btn-card-help-dialog svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.card-menu .card .btn-card-help-dialog svg:nth-child(2) {
     display: none;
 }
 
-.card-menu .card .card-help-button:hover svg:first-child,
-.card-menu .card .card-help-button:focus svg:first-child {
+.card-menu .card .btn-card-help-dialog:hover svg:first-child,
+.card-menu .card .btn-card-help-dialog:focus svg:first-child {
     display: none;
 }
 
-.card-menu .card .card-help-button:hover svg:nth-child(2),
-.card-menu .card .card-help-button:focus svg:nth-child(2) {
+.card-menu .card .btn-card-help-dialog:hover svg:nth-child(2),
+.card-menu .card .btn-card-help-dialog:focus svg:nth-child(2) {
     display: inline;
 }
 
