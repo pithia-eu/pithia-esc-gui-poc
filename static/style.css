@@ -234,11 +234,11 @@ header .dropdown-item {
 .card-menu .card {
     box-shadow: 0 .1rem 0.2rem rgba(0,0,0,.15) !important;
     transition: box-shadow 150ms linear, background-color 150ms linear;
-    height: 12rem;
-}
-
-.card-menu span {
-    margin-inline: 0.5rem;
+    height: 10rem;
+    /* (pos: rel) For compatibility with
+       interactive help - unless the interactive
+       help is being re-implemented, don't remove! */
+    position: relative;
 }
 
 .card-menu .card-body {
@@ -257,7 +257,7 @@ header .dropdown-item {
     text-align: center;
     width: 100%;
     height: 100%;
-    font-size: 1.1em;
+    font-size: 1em;
     word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
@@ -268,35 +268,34 @@ header .dropdown-item {
 
 .card-menu a svg {
     flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
+    width: 1.75rem;
+    height: 1.75rem;
 }
 
-.card-menu .card {
-    overflow: hidden;
-    position: relative;
-}
+/* Card menu - interactive help */
 
-.card-menu .card .card-footer.footer-hint {
-    width: max-content;
-    border-radius: 12.5px;
-    cursor: pointer;
+.card-menu .card .card-info-popup {
     position: absolute;
-    top: 0.5rem;
     right: 0.5rem;
-    margin-inline: auto;
-    opacity: 0%;
-    text-align: center;
-    border-top-width: 0;
+    top: 0.3rem;
+    cursor: pointer;
 }
 
-.card-menu .card:hover .card-footer.footer-hint {
-    opacity: 60%;
+.card-menu .card .card-info-popup svg {
+    width: 1rem;
+    height: 1rem;
 }
 
-.card-menu .card .card-footer.footer-hint:hover,
-.card-menu .card .card-footer.footer-hint:focus {
-    opacity: 100%;
+.card-menu .card .card-info-popup svg:nth-child(2) {
+    display: none;
+}
+
+.card-menu .card .card-info-popup:hover svg:first-child {
+    display: none;
+}
+
+.card-menu .card .card-info-popup:hover svg:nth-child(2) {
+    display: inline;
 }
 
 /* Login alert - Institution selection */
