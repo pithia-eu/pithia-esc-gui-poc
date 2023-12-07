@@ -321,7 +321,7 @@ dialog .dialog-header {
 }
 
 dialog .btn-close {
-    margin-top: 0.25rem;
+    transform: translateY(0.25rem);
     flex-shrink: 0;
 }
 
