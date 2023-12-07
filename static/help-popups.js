@@ -16,6 +16,9 @@ function setupDialog(dialog, showButton, closeButton) {
     });
 }
 
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 // Search by content help dialog
 const searchByContentHelpDialog = document.querySelector("#dialog-search-by-content-help");
 const searchByContentHelpDialogShowButton = document.querySelector("#btn-show-dialog-search-by-content-help");

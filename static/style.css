@@ -285,7 +285,7 @@ header .dropdown-item {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
-    color: #bbb;
+    color: var(--bs-gray-500);
     cursor: pointer;
     padding: 0;
     background-color: transparent;
@@ -314,6 +314,11 @@ header .dropdown-item {
     top: 0;
 }
 
+.btn-card-help-dialog-tooltip {
+    --bs-tooltip-bg: var(--bs-gray-500);
+    --bs-tooltip-color: var(--bs-white);
+}
+
 .card-menu .card .btn-card-help-dialog svg:nth-child(2) {
     display: none;
 }
@@ -331,7 +336,7 @@ header .dropdown-item {
 dialog {
     width: 30rem;
     padding: 0;
-    border: 1px #dee2e6 solid;
+    border: 1px var(--bs-gray-300) solid;
     border-radius: 12.5px;
 }
 
