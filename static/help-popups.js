@@ -1,4 +1,12 @@
 function setupDialog(dialog, showButton, closeButton) {
+    dialog.addEventListener("click", () => {
+        dialog.close();
+    });
+
+    dialog.querySelector(".dialog-content").addEventListener("click", event => {
+        event.stopPropagation();
+    });
+
     showButton.addEventListener("click", () => {
         dialog.showModal();
     });

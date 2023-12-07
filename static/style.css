@@ -305,9 +305,13 @@ header .dropdown-item {
 
 dialog {
     width: 30rem;
-    padding: 1rem;
+    padding: 0;
     border: none;
     border-radius: 12.5px;
+}
+
+dialog .dialog-content {
+    padding: 2rem;
 }
 
 dialog .dialog-header {
