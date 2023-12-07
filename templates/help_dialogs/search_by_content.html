@@ -1,0 +1,8 @@
+{% extends 'help_dialogs/base.html' %}
+{% block dialog_id %}dialog-search-by-content-help{% endblock dialog_id %}
+{% block dialog_header %}Search Data Collections by Content{% endblock dialog_header %}
+{% block dialog_close_btn_id %}btn-close-dialog-search-by-content-help{% endblock dialog_close_btn_id %}
+{% block dialog_body_text %}
+<p>Search for Data Collections with Features of Interest, Computation Types, Instruments Types or Observed Properties.</p>
+<p>These must all be from the <a href="{% url 'ontology:guide' %}">Space Physics Ontology</a>.</p>
+{% endblock dialog_body_text %}
