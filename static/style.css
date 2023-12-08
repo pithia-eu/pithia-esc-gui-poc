@@ -112,6 +112,12 @@ p {
 }
 
 /* Utilities */
+.list-group-numbered li::before {
+    display: inline-block;
+    width: 1.5em;
+    padding-right: 0.1rem;
+}
+
 .lead-sm {
     font-size: 1.1rem;
 }
@@ -149,6 +155,10 @@ p {
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
+}
+
+.header-logo-link small {
+    transform: translateY(-0.25rem);
 }
 
 header .dropdown-item {
