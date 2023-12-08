@@ -7,7 +7,7 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<ul class="list-group list-group-numbered">
+<ol class="list-group list-group-numbered">
     <li class="list-group-item">
         <a href="{% url 'resource_management:organisations' %}">Organisations</a>
         <span class="text-muted">{{ num_current_organisations }}</span>
@@ -56,5 +56,5 @@
         <a href="{% url 'resource_management:data_collections' %}">Data Collections</a>
         <span class="text-muted">{{ num_current_data_collections }}</span>
     </li>
-</ul>
+</ol>
 {% endblock content %}
