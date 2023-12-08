@@ -15,6 +15,7 @@ from .forms import (
     UploadCatalogueDataSubsetFileForm,
 )
 
+from common import models
 from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
