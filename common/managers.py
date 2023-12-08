@@ -22,8 +22,8 @@ class ScientificMetadataManager(models.Manager):
         # whitespace within strings
         xml_as_json = xml_as_json.replace('\\n', '')
         xml_as_json = ' '.join(xml_as_json.split())
-        # pymongo takes dictionaries when inserting new documents,
-        # so convert the JSON back to a dictionary
+        # Convert JSON back to a dictionary so it's easier to
+        # work with.
         return json.loads(xml_as_json)
 
     def _format_metadata_file_xml_for_db(self, metadata_file_xml):
