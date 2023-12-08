@@ -44,7 +44,7 @@ class ResourceXmlDownloadView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'{self.resource.name} XML'
+        context['title'] = f'Download {self.resource.name}'
         context['resource_name'] = self.resource.name
         context['resource_localid'] = self.resource.localid
         context['xml'] = self.xml
