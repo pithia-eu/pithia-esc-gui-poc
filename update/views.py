@@ -14,38 +14,6 @@ from pyexpat import ExpatError
 
 from common import models
 from common.decorators import login_session_institution_required, institution_ownership_required
-from common.mongodb_models import (
-    AcquisitionCapabilityRevision,
-    AcquisitionRevision,
-    ComputationCapabilityRevision,
-    ComputationRevision,
-    CurrentAcquisition,
-    CurrentAcquisitionCapability,
-    CurrentComputation,
-    CurrentComputationCapability,
-    CurrentDataCollection,
-    CurrentIndividual,
-    CurrentInstrument,
-    CurrentOperation,
-    CurrentOrganisation,
-    CurrentPlatform,
-    CurrentProcess,
-    CurrentProject,
-    DataCollectionRevision,
-    IndividualRevision,
-    InstrumentRevision,
-    OperationRevision,
-    OrganisationRevision,
-    PlatformRevision,
-    ProcessRevision,
-    ProjectRevision,
-    CurrentCatalogue,
-    CatalogueRevision,
-    CurrentCatalogueEntry,
-    CatalogueEntryRevision,
-    CurrentCatalogueDataSubset,
-    CatalogueDataSubsetRevision,
-)
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_from_metadata_xml_string,
@@ -161,11 +129,6 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentOrganisation
-    resource_revision_mongodb_model = OrganisationRevision
-    
-
 class IndividualUpdateFormView(ResourceUpdateFormView):
     model = models.Individual
 
@@ -174,10 +137,6 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentIndividual
-    resource_revision_mongodb_model = IndividualRevision
-
 class ProjectUpdateFormView(ResourceUpdateFormView):
     model = models.Project
 
@@ -185,10 +144,6 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:project'
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentProject
-    resource_revision_mongodb_model = ProjectRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_project_xml_converted_to_dict
@@ -202,10 +157,6 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentPlatform
-    resource_revision_mongodb_model = PlatformRevision
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_platform_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -217,10 +168,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:operation'
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentOperation
-    resource_revision_mongodb_model = OperationRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_operation_xml_converted_to_dict
@@ -234,10 +181,6 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentInstrument
-    resource_revision_mongodb_model = InstrumentRevision
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_instrument_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -249,10 +192,6 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:acquisition_capability_set'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentAcquisitionCapability
-    resource_revision_mongodb_model = AcquisitionCapabilityRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_acquisition_capability_set_xml_converted_to_dict
@@ -266,10 +205,6 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentAcquisition
-    resource_revision_mongodb_model = AcquisitionRevision
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_acquisition_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
@@ -282,14 +217,10 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentComputationCapability
-    resource_revision_mongodb_model = ComputationCapabilityRevision
-
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_computation_capability_set_xml_converted_to_dict
         return super().post(request, *args, **kwargs)
-        
+
 class ComputationUpdateFormView(ResourceUpdateFormView):
     model = models.Computation
 
@@ -297,10 +228,6 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:computation'
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentComputation
-    resource_revision_mongodb_model = ComputationRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_computation_xml_converted_to_dict
@@ -313,10 +240,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentProcess
-    resource_revision_mongodb_model = ProcessRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_process_xml_converted_to_dict
@@ -332,10 +255,6 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentDataCollection
-    resource_revision_mongodb_model = DataCollectionRevision
 
     def post(self, request, *args, **kwargs):
         self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
@@ -412,10 +331,6 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:catalogue')
     success_url = reverse_lazy('resource_management:catalogues')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogue
-    resource_revision_mongodb_model = CatalogueRevision
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -430,10 +345,6 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:catalogue_entry')
     success_url = reverse_lazy('resource_management:catalogue_entries')
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogueEntry
-    resource_revision_mongodb_model = CatalogueEntryRevision
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -447,10 +358,6 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogueDataSubset
-    resource_revision_mongodb_model = CatalogueDataSubsetRevision
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
