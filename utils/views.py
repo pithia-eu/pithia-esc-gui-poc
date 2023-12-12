@@ -17,8 +17,8 @@ from resource_management.views import (
 
 # Create your views here.
 
-@method_decorator(login_session_institution_required, name='dispatch')
-@method_decorator(institution_ownership_required, name='dispatch')
+# @method_decorator(login_session_institution_required, name='dispatch')
+# @method_decorator(institution_ownership_required, name='dispatch')
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
     resource_name = ''
