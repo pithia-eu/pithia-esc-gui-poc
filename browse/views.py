@@ -334,6 +334,7 @@ class ResourceDetailView(TemplateView):
     ontology_server_urls = []
     resource_server_urls = []
     resource_list_by_type_url_name = ''
+    resource_download_url_name = ''
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -353,6 +354,7 @@ class ResourceDetailView(TemplateView):
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
+        context['resource_download_url_name'] = self.resource_download_url_name
         context['resource'] = self.resource
         context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
@@ -372,6 +374,7 @@ class OrganisationDetailView(ResourceDetailView):
     """
     model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
+    resource_download_url_name = 'utils:view_organisation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -386,6 +389,7 @@ class IndividualDetailView(ResourceDetailView):
     """
     model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
+    resource_download_url_name = 'utils:view_individual_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -400,6 +404,7 @@ class ProjectDetailView(ResourceDetailView):
     """
     model = models.Project
     resource_list_by_type_url_name = 'browse:list_projects'
+    resource_download_url_name = 'utils:view_project_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -414,6 +419,7 @@ class PlatformDetailView(ResourceDetailView):
     """
     model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
+    resource_download_url_name = 'utils:view_platform_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -428,6 +434,7 @@ class InstrumentDetailView(ResourceDetailView):
     """
     model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
+    resource_download_url_name = 'utils:view_instrument_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -442,6 +449,7 @@ class OperationDetailView(ResourceDetailView):
     """
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
+    resource_download_url_name = 'utils:view_operation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -456,6 +464,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     """
     model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
+    resource_download_url_name = 'utils:view_acquisition_capability_set_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
@@ -470,6 +479,7 @@ class AcquisitionDetailView(ResourceDetailView):
     """
     model = models.Acquisition
     resource_list_by_type_url_name = 'browse:list_acquisitions'
+    resource_download_url_name = 'utils:view_acquisition_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -484,6 +494,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     """
     model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
+    resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
@@ -498,6 +509,7 @@ class ComputationDetailView(ResourceDetailView):
     """
     model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
+    resource_download_url_name = 'utils:view_computation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -512,6 +524,7 @@ class ProcessDetailView(ResourceDetailView):
     """
     model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
+    resource_download_url_name = 'utils:view_process_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -526,6 +539,7 @@ class DataCollectionDetailView(ResourceDetailView):
     """
     model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
+    resource_download_url_name = 'utils:view_data_collection_as_xml'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
     link_interaction_methods = []
@@ -573,6 +587,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.Catalogue
     resource_list_by_type_url_name = 'browse:list_catalogues'
+    resource_download_url_name = 'utils:view_catalogue_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
@@ -587,6 +602,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueEntry
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
+    resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
@@ -601,6 +617,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueDataSubset
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
+    resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
