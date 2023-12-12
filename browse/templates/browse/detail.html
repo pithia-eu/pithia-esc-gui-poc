@@ -71,50 +71,47 @@
         {% endif %}
     </div>
     <div class="col-lg-3">
-        <section class="text-secondary">
-            <h2 class="fs-5 mb-3">Identifier</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-borderless resource-key-details mb-0 text-secondary">
-                    <tbody>
-                        <tr>
-                            <td><b>Local ID</b></td>
-                            <td class="text-break">{{ resource.identifier.PITHIA_Identifier.localID }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Namespace</b></td>
-                            <td>{{ resource.identifier.PITHIA_Identifier.namespace }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Version</b></td>
-                            <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Created</b></td>
-                            <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i:s' }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Last Modified</b></td>
-                            <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i:s' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <section class="text-secondary">
-            <h2 class="fs-5 mb-3">XML</h2>
-            <hr>
-            <a href="{% url resource_download_url_name resource.id %}" class="btn btn-outline-dark py-2 w-100">
-                <div class="d-flex justify-content-center align-items-center">
-                    <span class="fs-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-code me-2" viewBox="0 0 16 16">
-                            <path d="M6.646 5.646a.5.5 0 1 1 .708.708L5.707 8l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0a.5.5 0 1 0-.708.708L10.293 8 8.646 9.646a.5.5 0 0 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"/>
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
-                        </svg>
-                    </span>View/Download
+        <div class="d-flex flex-column row-gap-4">
+            <section class="text-secondary">
+                <h2 class="fs-5 mb-3">Identifier</h2>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-borderless resource-key-details mb-0 text-secondary">
+                        <tbody>
+                            <tr>
+                                <td><b>Local ID</b></td>
+                                <td class="text-break">{{ resource.identifier.PITHIA_Identifier.localID }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Namespace</b></td>
+                                <td>{{ resource.identifier.PITHIA_Identifier.namespace }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Version</b></td>
+                                <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Created</b></td>
+                                <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i:s' }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Last Modified</b></td>
+                                <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i:s' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </a>
-        </section>
+            </section>
+            <section class="text-secondary">
+                <h2 class="fs-5 mb-3">XML</h2>
+                <hr>
+                <a href="{% url resource_download_url_name resource.id %}" class="py-2" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-2" viewBox="0 0 16 16">
+                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
+                    </svg>View
+                </a>
+            </section>
+        </div>
     </div>
 </div>
 {% endblock content %}
