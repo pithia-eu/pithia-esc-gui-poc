@@ -1,13 +1,8 @@
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from lxml import etree
 
 from common import models
-from common.decorators import (
-    login_session_institution_required,
-    institution_ownership_required,
-)
 from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title,
@@ -17,8 +12,6 @@ from resource_management.views import (
 
 # Create your views here.
 
-# @method_decorator(login_session_institution_required, name='dispatch')
-# @method_decorator(institution_ownership_required, name='dispatch')
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
     resource_name = ''
@@ -44,7 +37,7 @@ class ResourceXmlDownloadView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Download {self.resource.name}'
+        context['title'] = f'{self.resource.name} XML'
         context['resource_name'] = self.resource.name
         context['resource_localid'] = self.resource.localid
         context['xml'] = self.xml
