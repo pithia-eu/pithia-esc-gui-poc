@@ -311,6 +311,10 @@ header .dropdown-item {
     font-size: 1.1rem;
 }
 
+.file-download-link svg {
+    transform: translateY(0.25em);
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
