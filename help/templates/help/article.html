@@ -12,32 +12,37 @@
 {% block content %}
 <div class="row gx-md-5">
     <div class="col-lg-9">
-        <hgroup>
-            <div class="d-flex align-items-center column-gap-3">
-                <h1>
-                    {{ title }}
-                </h1>
-                {% with btn_id='btn-show-dialog-article-hover-text' %}
-                {% include 'help/help_dialogs/btn_help_dialog.html' %}
-                {% endwith %}
-            </div>
-        </hgroup>
-        <hr class="my-2">
+        <h1 class="mb-3">{{ title }}</h1>
+        {% if hover_text %}
         <section>
-            <h2 class="visually-hidden text-secondary">Full Description</h2>
-            {% if main_text %}
+            <h2 class="d-inline-block mb-0">
+                Introduction
+            </h2>
+            <div class="text-secondary mt-4">
             {% autoescape off %}
-            {{ main_text }}
+            {{ hover_text }}
             {% endautoescape %}
-            {% else %}
-            <p><i class="text-secondary">No description yet.</i></p>
-            {% endif %}
+            </div>
+        </section>
+        {% endif %}
+        <section>
+            <h2 class="d-inline-block mb-0">Description</h2>
+            <div class="card mt-4">
+                <div class="card-body p-4">
+                    {% if main_text %}
+                    {% autoescape off %}
+                    {{ main_text }}
+                    {% endautoescape %}
+                    {% else %}
+                    <p><i class="text-secondary">No description yet.</i></p>
+                    {% endif %}
+                </div>
+            </div>
         </section>
         {% if links %}
         <section>
             <h2>Links</h2>
-            <hr>
-            <ul>
+            <ul class="mt-4">
                 {% for link in links %}
                 <li>
                     <a href="{{ link.1 }}">{{ link.0 }}</a>
