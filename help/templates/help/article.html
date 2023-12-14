@@ -27,16 +27,14 @@
         {% endif %}
         <section>
             <h2 class="d-inline-block mb-0">Description</h2>
-            <div class="card mt-4">
-                <div class="card-body p-4">
-                    {% if main_text %}
-                    {% autoescape off %}
-                    {{ main_text }}
-                    {% endautoescape %}
-                    {% else %}
-                    <p><i class="text-secondary">No description yet.</i></p>
-                    {% endif %}
-                </div>
+            <div class="mt-4">
+                {% if main_text %}
+                {% autoescape off %}
+                {{ main_text }}
+                {% endautoescape %}
+                {% else %}
+                <p><i class="text-secondary">No description yet.</i></p>
+                {% endif %}
             </div>
         </section>
         {% if links %}
