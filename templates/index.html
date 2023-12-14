@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block scripts %}
+<script src="{% static 'home_menu_help_dialogs.js' %}" defer></script>
+{% endblock scripts %}
 {% block content %}
 <h1>{{ title }}</h1>
 {% if request.session.is_logged_in and not request.session.institution_for_login_session %}
@@ -72,6 +75,9 @@
                     </svg>
                     <span>Search Data Collections by Content</span>
                 </a>
+                {% with btn_id='btn-show-dialog-search-by-content-help' %}
+                {% include 'help/help_dialogs/btn_card_help_dialog.html' %}
+                {% endwith %}
             </div>
         </div>
         <div class="card">
@@ -83,6 +89,9 @@
                     </svg>
                     <span>Data Collection Simple Search</span>
                 </a>
+                {% with btn_id='btn-show-dialog-simple-search-help' %}
+                {% include 'help/help_dialogs/btn_card_help_dialog.html' %}
+                {% endwith %}
             </div>
         </div>
         <div class="card">
@@ -93,6 +102,9 @@
                     </svg>
                     <span>Data Collections</span>
                 </a>
+                {% with btn_id='btn-show-dialog-data-collections-help' %}
+                {% include 'help/help_dialogs/btn_card_help_dialog.html' %}
+                {% endwith %}
             </div>
         </div>
         <div class="card">
@@ -103,6 +115,9 @@
                     </svg>
                     <span>Catalogues</span>
                 </a>
+                {% with btn_id='btn-show-dialog-catalogues-help' %}
+                {% include 'help/help_dialogs/btn_card_help_dialog.html' %}
+                {% endwith %}
             </div>
         </div>
         <div class="card">
@@ -113,6 +128,9 @@
                     </svg>
                     <span>All Scientific Metadata</span>
                 </a>
+                {% with btn_id='btn-show-dialog-all-scientific-metadata-help' %}
+                {% include 'help/help_dialogs/btn_card_help_dialog.html' %}
+                {% endwith %}
             </div>
         </div>
     </div>
@@ -243,4 +261,9 @@
     </div>
 </section>
 {% endif %}
+{% include 'help/help_dialogs/search_by_content.html' %}
+{% include 'help/help_dialogs/simple_search.html' %}
+{% include 'help/help_dialogs/data_collections.html' %}
+{% include 'help/help_dialogs/catalogues.html' %}
+{% include 'help/help_dialogs/all_scientific_metadata.html' %}
 {% endblock content %}
