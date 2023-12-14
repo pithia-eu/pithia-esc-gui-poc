@@ -44,6 +44,11 @@ class HelpArticleContent(ABC):
     @abstractmethod
     def article_url(self):
         pass
+
+    @classproperty
+    @abstractmethod
+    def dialog_id(self):
+        pass
     
     @classmethod
     def as_dict(cls):
@@ -55,13 +60,15 @@ class HelpArticleContent(ABC):
             'closely_related_links': cls.closely_related_links,
             'broadly_related_links': cls.broadly_related_links,
             'article_url': cls.article_url,
+            'dialog_id': cls.dialog_id,
         }
+
 
 class DataCollectionsHelpArticleContent(HelpArticleContent):
     title = 'Data Collections'
     hover_text = 'List of all Data Collections in e-Science Centre.'
     main_text = '''
-        <p>The e-Science Center holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
+        <p>The e-Science Centre holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
         Data Collections can be sensor measurements, outputs of numerical models, computed indicators of helio- and geospace activity.
         They can be <strong>pre-computed</strong> (stored as permanent datasets) or <strong>run on-demand</strong> with custom parameters.
         The data access can be provided by the <strong>original data owners</strong> using their resources (web pages, standardized API calls) or by <strong>running installed models</strong> at eSC computer park.</p>
@@ -76,6 +83,8 @@ class DataCollectionsHelpArticleContent(HelpArticleContent):
         ('Data Registration Guide', reverse_lazy('resource_registration_user_guide')),
     ]
     article_url = reverse_lazy('help:data_collections')
+    dialog_id = 'dialog-data-collections-help'
+
 
 class SearchDataCollectionsByContentHelpArticleContent(HelpArticleContent):
     title = 'Search Data Collections by Content'
@@ -95,7 +104,25 @@ class SearchDataCollectionsByContentHelpArticleContent(HelpArticleContent):
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
     ]
     broadly_related_links = [
-        ('Space Physics Ontology', reverse_lazy('resource_registration_user_guide')),
-        ('All Scientific Metadata', reverse_lazy('resource_registration_user_guide')),
+        ('Space Physics Ontology', reverse_lazy('ontology:index')),
+        ('All Scientific Metadata', reverse_lazy('browse:index')),
     ]
-    article_url = reverse_lazy('help:data_collections')
+    article_url = reverse_lazy('help:search_data_collections_by_content')
+    dialog_id = 'dialog-search-by-content-help'
+
+
+class DataCollectionsSimpleSearchHelpArticleContent(HelpArticleContent):
+    title = 'Data Collection Simple Search'
+    hover_text = 'Search relevant Data Collections by looking for matching words in various free-text metadata descriptions.'
+    main_text = '''
+        The e-Science Centre holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
+        A subset of relevant Data Collection may be retrieved for inspection by specifying various search criteria.
+    '''
+    closely_related_links = [
+        ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
+    ]
+    broadly_related_links = [
+        ('All Scientific Metadata', reverse_lazy('browse:index')),
+    ]
+    article_url = reverse_lazy('help:data_collection_simple_search')
+    dialog_id = 'dialog-simple-search-help'
