@@ -20,18 +20,6 @@ const dataCollectionsHelpDialogShowButton = document.querySelector("#btn-show-di
 const dataCollectionsHelpDialogCloseButton = document.querySelector("#dialog-data-collections-help .btn-close");
 setupDialog(dataCollectionsHelpDialog, dataCollectionsHelpDialogShowButton, dataCollectionsHelpDialogCloseButton);
 
-// Catalogues help dialog
-const cataloguesHelpDialog = document.querySelector("#dialog-catalogues-help");
-const cataloguesHelpDialogShowButton = document.querySelector("#btn-show-dialog-catalogues-help");
-const cataloguesHelpDialogCloseButton = document.querySelector("#dialog-catalogues-help .btn-close");
-setupDialog(cataloguesHelpDialog, cataloguesHelpDialogShowButton, cataloguesHelpDialogCloseButton);
-
-// All scientific metadata help dialog
-const allScientificMetadataHelpDialog = document.querySelector("#dialog-all-scientific-metadata-help");
-const allScientificMetadataHelpDialogShowButton = document.querySelector("#btn-show-dialog-all-scientific-metadata-help");
-const allScientificMetadataHelpDialogCloseButton = document.querySelector("#dialog-all-scientific-metadata-help .btn-close");
-setupDialog(allScientificMetadataHelpDialog, allScientificMetadataHelpDialogShowButton, allScientificMetadataHelpDialogCloseButton);
-
 window.onload = () => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
