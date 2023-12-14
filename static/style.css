@@ -283,7 +283,6 @@ header .dropdown-item {
 }
 
 /* Card menu - interactive help */
-
 .card-menu .card .btn-card-help-dialog,
 .card-menu .card .btn-card-help-dialog .btn-icon-container {
     width: 1.2em;
@@ -345,9 +344,30 @@ header .dropdown-item {
 
 dialog {
     width: 30rem;
-    padding: 0;
     border: 1px var(--bs-gray-300) solid;
     border-radius: 12.5px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    display: grid;
+    align-content: start;
+    max-inline-size: min(90vw, 60ch);
+    max-block-size: min(80vh, 100%);
+    max-block-size: min(80dvb, 100%);
+    overflow: auto;
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    inset: 0;
+}
+
+dialog[open] {
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
 }
 
 dialog .dialog-content {
@@ -690,32 +710,6 @@ ul.tree ul {
 /* Support page */
 .support-page-description {
     max-width: 70ch;
-}
-
-/* Help dialog */
-dialog {
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.25s;
-    display: grid;
-    align-content: start;
-    max-inline-size: min(90vw, 60ch);
-    max-block-size: min(80vh, 100%);
-    max-block-size: min(80dvb, 100%);
-    overflow: auto;
-    margin: auto;
-    padding: 0;
-    position: fixed;
-    inset: 0;
-}
-
-dialog[open] {
-    opacity: 1;
-    pointer-events: inherit;
-}
-
-html:has(dialog[open]) {
-    overflow: hidden;
 }
 
 /* Skeleton loader while search terms are loading */
