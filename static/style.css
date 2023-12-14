@@ -345,6 +345,8 @@ header .dropdown-item {
     opacity: 60%;
 }
 
+/* Credit: Used this article as reference for dialog implementation:
+https://web.dev/articles/building/a-dialog-component */
 dialog {
     width: 30rem;
     border: 1px var(--bs-gray-300) solid;
@@ -849,6 +851,8 @@ ul.tree ul {
     }
 }
 
+/* Credit: Used this article as reference for dialog implementation:
+https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles */
 @media (max-width: 768px) {
     dialog {
         margin-block-end: 0;
