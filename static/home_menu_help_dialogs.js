@@ -1,39 +1,6 @@
-function setupDialog(dialog, showButton, closeButton) {
-    // Light dismiss - allows dialog to be closed
-    // by clicking on the backdrop.
-    dialog.addEventListener("click", () => {
-        dialog.close();
-    });
-
-    dialog.querySelector(".dialog-content").addEventListener("click", event => {
-        event.stopPropagation();
-    });
-
-
-    closeButton.addEventListener("click", () => {
-        dialog.close();
-    });
-
-    dialog.addEventListener("close", () => {
-        // When the dialog is closed, set the
-        // inert attribute to true so that it's
-        // not focusable by keyboard/assistive
-        // technologies.
-        dialog.setAttribute("inert", "");
-    });
-
-    showButton.addEventListener("click", () => {
-        dialog.removeAttribute("inert");
-        dialog.showModal();
-        // Close button should autofocus with
-        // dialog, but doesn't in Safari for
-        // some reason.
-        closeButton.focus();
-    });
-}
-
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+import {
+    setupDialog,
+} from "/static/help/help_dialogs.js";
 
 // Search by content help dialog
 const searchByContentHelpDialog = document.querySelector("#dialog-search-by-content-help");
@@ -64,3 +31,8 @@ const allScientificMetadataHelpDialog = document.querySelector("#dialog-all-scie
 const allScientificMetadataHelpDialogShowButton = document.querySelector("#btn-show-dialog-all-scientific-metadata-help");
 const allScientificMetadataHelpDialogCloseButton = document.querySelector("#dialog-all-scientific-metadata-help .btn-close");
 setupDialog(allScientificMetadataHelpDialog, allScientificMetadataHelpDialogShowButton, allScientificMetadataHelpDialogCloseButton);
+
+window.onload = () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+}
