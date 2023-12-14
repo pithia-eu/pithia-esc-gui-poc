@@ -283,22 +283,54 @@ header .dropdown-item {
 }
 
 /* Card menu - interactive help */
-.card-menu .card .btn-card-help-dialog,
-.card-menu .card .btn-card-help-dialog .btn-icon-container {
-    width: 1.2em;
-    height: 1.2em;
-    font-size: 1.2em;
+.btn-card-help-dialog,
+.btn-card-help-dialog .btn-icon-container {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.btn-card-help-dialog {
+    color: var(--bs-gray-500);
+    cursor: pointer;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-card-help-dialog .btn-icon-container {
+    position: relative;
+}
+
+.btn-card-help-dialog .btn-icon-container svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.btn-card-help-dialog-tooltip {
+    --bs-tooltip-bg: var(--bs-gray-500);
+    --bs-tooltip-color: var(--bs-white);
+}
+
+.btn-card-help-dialog svg:nth-child(2) {
+    display: none;
+}
+
+.btn-card-help-dialog:hover svg:first-child,
+.btn-card-help-dialog:focus svg:first-child {
+    display: none;
+}
+
+.btn-card-help-dialog:hover svg:nth-child(2),
+.btn-card-help-dialog:focus svg:nth-child(2) {
+    display: inline;
 }
 
 .card-menu .card .btn-card-help-dialog {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
-    color: var(--bs-gray-500);
-    cursor: pointer;
-    padding: 0;
-    background-color: transparent;
-    border: none;
 }
 
 .card-menu .card .bg-white {
@@ -311,35 +343,6 @@ header .dropdown-item {
 .card-menu .card:has(.btn-card-help-dialog:hover) .bg-white,
 .card-menu .card:has(.btn-card-help-dialog:focus) .bg-white {
     opacity: 60%;
-}
-
-.card-menu .card .btn-card-help-dialog .btn-icon-container {
-    position: relative;
-}
-
-.card-menu .card .btn-card-help-dialog svg {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.btn-card-help-dialog-tooltip {
-    --bs-tooltip-bg: var(--bs-gray-500);
-    --bs-tooltip-color: var(--bs-white);
-}
-
-.card-menu .card .btn-card-help-dialog svg:nth-child(2) {
-    display: none;
-}
-
-.card-menu .card .btn-card-help-dialog:hover svg:first-child,
-.card-menu .card .btn-card-help-dialog:focus svg:first-child {
-    display: none;
-}
-
-.card-menu .card .btn-card-help-dialog:hover svg:nth-child(2),
-.card-menu .card .btn-card-help-dialog:focus svg:nth-child(2) {
-    display: inline;
 }
 
 dialog {
