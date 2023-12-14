@@ -59,9 +59,21 @@ class DataCollectionsHelpArticleView(HelpArticleView):
     def get(self, request, *args, **kwargs):
         self.title = 'Data Collections'
         self.hover_text = '''
-        <p>
-            Description coming soon.
-        </p>
+            <p>
+                List of all Data Collections in e-Science Centre.
+            </p>
+        '''
+        self.main_text = '''
+            <p>
+                The e-Science Centre holds <em>metadata documents</em> that describe a wide variety of <em>Data Collections</em> relevant to PITHIA-NRF.
+                Data Collections can be sensor measurements, outputs of numerical models, computed indicators of helio- and geospace activity.
+                They can be <em>pre-computed</em> (stored as permanent datasets) or <em>run on-demand</em> with custom parameters.
+                The data access can be provided by the <em>original data owners</em> using their resources (web pages, standardized API calls) or by
+                <em>running installed models</em> at eSC computer park.
+            </p>
+            <p>
+                The <em>"All Data Collections" function lists all collections</em>, sorted alphabetically by their name.
+            </p>
         '''
         return super().get(request, *args, **kwargs)
 
