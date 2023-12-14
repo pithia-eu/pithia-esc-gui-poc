@@ -33,26 +33,25 @@
             <p><i class="text-secondary">No description yet.</i></p>
             {% endif %}
         </section>
+        {% if links %}
         <section>
             <h2>Links</h2>
             <hr>
-            {% if links %}
-            <ul class="list-group">
+            <ul>
                 {% for link in links %}
-                <li class="list-group-item"><a href="{{ link }}">Link {{ forloop.counter }}</a></li>
+                <li>
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <p><i class="text-secondary">None yet.</i></p>
-            {% endif %}
         </section>
+        {% endif %}
     </div>
     <div class="col-lg-3">
         <section>
             <h2 class="fs-4">Closely Related Topics</h2>
-            <hr>
             {% if closely_related_links %}
-            <ul class="list-group">
+            <ul class="list-group mt-3">
                 {% for link in closely_related_links %}
                 <li class="list-group-item">
                     <a href="{{ link.1 }}">{{ link.0 }}</a>
@@ -65,9 +64,8 @@
         </section>
         <section>
             <h2 class="fs-4">Broadly Related Topics</h2>
-            <hr>
             {% if broadly_related_links %}
-            <ul class="list-group">
+            <ul class="list-group mt-3">
                 {% for link in broadly_related_links %}
                 <li class="list-group-item">
                     <a href="{{ link.1 }}">{{ link.0 }}</a>
