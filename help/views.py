@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from .services import (
     DataCollectionsHelpArticleContent,
+    DataCollectionsSimpleSearchHelpArticleContent,
     SearchDataCollectionsByContentHelpArticleContent,
 )
 
@@ -32,13 +33,7 @@ class SearchDataCollectionsByContentHelpArticleView(HelpArticleView):
     help_article_content = SearchDataCollectionsByContentHelpArticleContent
 
 class DataCollectionSimpleSearchHelpArticleView(HelpArticleView):
-    help_article_content = DataCollectionsHelpArticleContent
+    help_article_content = DataCollectionsSimpleSearchHelpArticleContent
 
 class DataCollectionsHelpArticleView(HelpArticleView):
-    help_article_content = DataCollectionsHelpArticleContent
-
-class CataloguesHelpArticleView(HelpArticleView):
-    help_article_content = DataCollectionsHelpArticleContent
-
-class AllScientificHelpArticleView(HelpArticleView):
     help_article_content = DataCollectionsHelpArticleContent
