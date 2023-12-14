@@ -692,6 +692,32 @@ ul.tree ul {
     max-width: 70ch;
 }
 
+/* Help dialog */
+dialog {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    display: grid;
+    align-content: start;
+    max-inline-size: min(90vw, 60ch);
+    max-block-size: min(80vh, 100%);
+    max-block-size: min(80dvb, 100%);
+    overflow: auto;
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    inset: 0;
+}
+
+dialog[open] {
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
 /* Skeleton loader while search terms are loading */
 @keyframes loading {
     to {
