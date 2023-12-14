@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ title }}</h1>
+<section>
+    <h2>Data Collection Search</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
+        </li>
+    </ul>
+</section>
+<section>
+    <h2>Scientific Metadata</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{% url 'help:data_collections' %}">Data Collections</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'help:catalogues' %}">Catalogues</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'help:all_scientific_metadata' %}">All Scientific Metadata</a>
+        </li>
+    </ul>
+</section>
+{% endblock content %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block scripts %}
+{{ hover_text|json_script:'hover-text' }}
+<script src="{% static 'help/help.js' %}" defer></script>
+{% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Help' 'help:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="row gx-md-5">
+    <div class="col-lg-9">
+        <hgroup>
+            <div class="d-flex align-items-center column-gap-3">
+                <h1 class="mb-0">
+                    Help
+                </h1>
+                {% with btn_id='btn-show-dialog-article-hover-text' %}
+                {% include 'help/help_dialogs/btn_help_dialog.html' %}
+                {% endwith %}
+            </div>
+            <p class="text-secondary">
+                {{ title }}
+            </p>
+        </hgroup>
+        <section>
+            <h2 class="visually-hidden text-secondary">Introduction</h2>
+            {% comment %} <hr> {% endcomment %}
+            {% if introduction %}
+            {{ main_text }}
+            {% else %}
+            <p><i class="text-secondary">Introduction goes here.</i></p>
+            {% endif %}
+        </section>
+        <section>
+            <h2 class="visually-hidden text-secondary">Main Text</h2>
+            {% comment %} <hr> {% endcomment %}
+            {% if main_text %}
+            {{ main_text }}
+            {% else %}
+            <p><i class="text-secondary">Main text goes here.</i></p>
+            {% endif %}
+        </section>
+        <section>
+            <h2>Links</h2>
+            {% if links %}
+            <ul class="list-group">
+                {% for link in links %}
+                <li class="list-group-item"><a href="{{ link }}">Link {{ forloop.counter }}</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section>
+        {% comment %} <section>
+            {% if hover_text %}
+            {% autoescape off %}
+            {{ hover_text }}
+            {% endautoescape %}
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section> {% endcomment %}
+    </div>
+    <div class="col-lg-3">
+        <h2 class="fs-4">Related Topics</h2>
+        <hr>
+        <section>
+            <h3 class="text-secondary fs-5">Closely Related</h3>
+            {% if closely_related_links %}
+            <ul class="list-group">
+                {% for link in closely_related_links %}
+                <li class="list-group-item"><a href="{{ link }}">Link {{ forloop.counter }}</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section>
+        <section>
+            <h3 class="text-secondary fs-5">Broadly Related</h3>
+            {% if broadly_related_links %}
+            <ul class="list-group">
+                {% for link in broadly_related_links %}
+                <li class="list-group-item"><a href="{{ link }}">Link {{ forloop.counter }}</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock content %}
