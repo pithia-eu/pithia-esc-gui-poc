@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load project_tags %}
 {% load static %}
-{% comment %} {% block scripts %}
-{{ hover_text|json_script:'hover-text' }}
-<script src="{% static 'help/help_dialogs.js' %}" defer></script>
-{% endblock scripts %} {% endcomment %}
 {% block breadcrumbs %}
 {% breadcrumb_item 'Help' 'help:index' %}
 {% breadcrumb_item_active title %}
@@ -12,7 +8,10 @@
 {% block content %}
 <div class="row gx-md-5">
     <div class="col-lg-9">
-        <h1 class="mb-3">{{ title }}</h1>
+        <hgroup>
+            <h1 class="mb-0">Help</h1>
+            <p class="text-secondary">{{ title }}</p>
+        </hgroup>
         {% if hover_text %}
         <section>
             <h2 class="d-inline-block mb-0">
