@@ -64,5 +64,5 @@ def privacy_policy(request):
 
 def support(request):
     return render(request, 'support.html', {
-    'title': 'Support'
+    'title': 'Help & Support'
     })
