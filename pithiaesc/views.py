@@ -64,5 +64,8 @@ def privacy_policy(request):
 
 def support(request):
     return render(request, 'support.html', {
-    'title': 'Help & Support'
+        'title': 'Help & Support',
+        'data_collections_help_article_title': DataCollectionsHelpArticleContent.title,
+        'search_data_collections_by_content_help_article_title': SearchDataCollectionsByContentHelpArticleContent.title,
+        'data_collection_simple_search_help_article_title': DataCollectionsSimpleSearchHelpArticleContent.title,
     })

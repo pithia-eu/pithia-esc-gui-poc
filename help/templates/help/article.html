@@ -2,15 +2,16 @@
 {% load project_tags %}
 {% load static %}
 {% block breadcrumbs %}
+{% breadcrumb_item 'Help & Support' 'support' %}
 {% breadcrumb_item 'Help' 'help:index' %}
-{% breadcrumb_item_active title %}
+{% breadcrumb_item_active help_topic %}
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="row gx-md-5">
     <div class="col-lg-9">
         <hgroup>
             <h1 class="mb-0">Help</h1>
-            <p class="text-secondary">{{ title }}</p>
+            <p class="text-secondary">{{ help_topic }}</p>
         </hgroup>
         {% if hover_text %}
         <section>
