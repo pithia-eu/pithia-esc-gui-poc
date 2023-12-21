@@ -5,38 +5,49 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<div class="d-flex flex-column align-items-center text-center mb-5">
-    <h1>{{ title }}</h1>
-    <p style="max-width: 30rem;">
-        See the listed help articles below for general information on various e-Science Centre aspects
-        and functionalities, or <a href="#ggus-instructions-alert">raise a ticket</a> with our support team for more guided help.</p>
-</div>
-<h2 class="text-center">Help Articles</h2>
-<div class="row">
-    <div class="col-lg-6">
-        <section>
-            <h3>Data Collection Search</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
-                </li>
-            </ul>
-        </section>
+<section>
+    <div class="d-flex flex-column align-items-center text-center">
+        <h1>{{ title }}</h1>
+        <p style="max-width: 30rem;">
+            See the listed help articles below for general information on various e-Science Centre aspects
+            and functionalities, or <a href="#ggus-instructions-alert">raise a ticket</a> with our support team for more guided help.</p>
     </div>
-    <div class="col-lg-6">
-        <section>
-            <h3>Scientific Metadata</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{% url 'help:data_collections' %}">Data Collections</a>
-                </li>
-            </ul>
-        </section>
+</section>
+<section class="mt-5">
+    <h2 class="text-center">Help Topics</h2>
+    <div class="row">
+        <div class="col-lg-6">
+            <section>
+                <h3>Data Collection Search</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <div class="col-lg-6">
+            <section>
+                <h3>Scientific Metadata</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="{% url 'help:data_collections' %}">Data Collections</a>
+                    </li>
+                </ul>
+            </section>
+        </div>
     </div>
-</div>
+    <div class="text-center mt-5">
+        <a href="{% url 'help:index' %}">
+            See all help topics<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right ms-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </a>
+    </div>
+</section>
 <section class="mt-5">
     <div class="d-flex flex-column row-gap-5">
         <div>
