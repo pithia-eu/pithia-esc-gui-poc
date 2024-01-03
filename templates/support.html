@@ -6,9 +6,9 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <section>
+    <h1>{{ title }}</h1>
     <div class="row">
-        <div class="col-lg-7">
-            <h1>{{ title }}</h1>
+        <div class="col-lg-8">
             <p class="lead">
                 See the listed help articles below for general information on various e-Science Centre aspects
                 and functionalities, or <a href="#ggus-instructions-alert">raise a ticket</a> with our support
@@ -18,9 +18,9 @@
     </div>
 </section>
 <section class="mt-4">
-    <h2>Available Topics</h2>
+    <h2>Help Articles</h2>
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <section>
                 <h3>Data Collection Search</h3>
                 <ul class="list-group">
@@ -33,7 +33,7 @@
                 </ul>
             </section>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <section>
                 <h3>Scientific Metadata</h3>
                 <ul class="list-group">
@@ -58,21 +58,24 @@
             <div class="col-lg-12">
                 <h2>Support</h2>
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <section>
                     <h3>Raise a Ticket</h3>
                     <p>
-                        You will need to create or log in to an EGI Check-in account to submit a ticket, as
-                        we use the <a href="https://ggus.eu/">GGUS helpdesk</a> service for managing tickets.
+                        You will need to create or log in to an EGI Check-in account to submit a ticket as
+                        we use the GGUS helpdesk service for managing tickets. You will be asked to do so
+                        before starting your ticket.
                     </p>
                 </section>
+            </div>
+            <div class="col-lg-8">
+                <h3 id="ggus-instructions-heading" class="mb-3">Filling out your ticket</h3>
             </div>
         </div>
         <article>
             <div class="row gy-3 gx-4">
-                <div class="col-lg-7">
-                    <h3 id="ggus-instructions-heading">Filling out your ticket</h3>
-                    <div class="alert alert-light my-4">
+                <div class="col-lg-8">
+                    <div class="alert alert-light mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill me-3" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
                         </svg>Please follow the instructions below to ensure your ticket is filled out correctly.
@@ -103,7 +106,7 @@
                         </li>
                     </ol>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <img src="{% static 'ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
                 </div>
                 <div class="col-lg-12">
