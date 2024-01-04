@@ -314,8 +314,8 @@ header .dropdown-item {
 }
 
 .btn-card-help-dialog-tooltip {
-    --bs-tooltip-bg: var(--pithia-blue);
-    --bs-tooltip-color: white
+    --bs-tooltip-bg: white;
+    --bs-tooltip-color: var(--bs-gray-700);
 }
 
 /* When quick help button is not in card menu */
