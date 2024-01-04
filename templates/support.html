@@ -17,7 +17,7 @@
         </div>
     </div>
 </section>
-<section class="mt-4">
+<section class="mt-3">
     <h2>Help Articles</h2>
     <div class="row">
         <div class="col-lg-8">
@@ -69,50 +69,45 @@
                 </section>
             </div>
             <div class="col-lg-8">
-                <h3 id="ggus-instructions-heading" class="mb-3">Filling out your ticket</h3>
+                <h3 id="ggus-instructions-heading" class="mb-3">Before Submitting Your Ticket</h3>
+                <p>
+                    The points below provide instructions and suggestions to follow/consider
+                    before submitting your ticket.
+                </p>
             </div>
         </div>
         <article>
-            <div class="row gy-3 gx-4">
+            <div class="row g-5">
                 <div class="col-lg-8">
-                    <div class="alert alert-light mb-4">
+                    <h4><span class="me-2">1.</span> Assign the right support unit</h4>
+                    <div class="alert alert-light my-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill me-3" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-                        </svg>Please follow the instructions below to ensure your ticket is filled out correctly.
+                        </svg>This point must be followed to ensure your ticket reaches our support team.
                     </div>
-                    <h4>Assign the right support unit</h4>
-                    <ol>
-                        <li>
-                            <p>
-                                Make sure to assign the ticket to the "PITHIA e-Science Centre" support unit as
-                                we will not receive a notification of your ticket otherwise, and, due to how
-                                GGUS Helpdesk works, may also not be able to classify your ticket in the future.
-                            </p>
-                            <p class="text-secondary">
-                                <small>
-                                    The support unit can be assigned from the provided dropdown menu for the <em>Assign
-                                    to support unit</em> field in the bottom-right of the ticket form, within the "PITHIA
-                                    Community" dropdown group.
-                                </small>
-                            </p>
-                            <img src="{% static 'ggus_ticket_form_assign_su.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the 'PITHIA e-Science Centre' support unit option highlighted within the dropdown menu for the 'Assign to support unit' field.">
-                        </li>
-                    </ol>
-                    <h4 class="mt-5">Attach files</h4>
-                    <ol>
-                        <li value="2">
-                            If applicable, attach relevant files (e.g., a file that failed metadata validation) or
-                            screenshots of any errors to help us to better understand your problem.
-                        </li>
-                    </ol>
+                    <p>
+                        The support unit can be assigned from the dropdown menu for the <em>Assign
+                        to support unit</em> field (bottom-right of the ticket form). Within this,
+                        select "PITHIA e-Science Centre" under the "PITHIA Community" dropdown group.
+                    </p>
+                    <img src="{% static 'ggus_ticket_form_assign_su.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the 'PITHIA e-Science Centre' support unit option highlighted within the dropdown menu for the 'Assign to support unit' field.">
+                    <h4 class="mt-5"><span class="me-2">2.</span> Attach files</h4>
+                    <p>
+                        If applicable, attach relevant files (e.g., a file that failed metadata validation) or
+                        screenshots of any errors to help us to better understand your problem.
+                    </p>
                 </div>
                 <div class="col-lg-4">
-                    <img src="{% static 'ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
+                    <div class="d-flex flex-column align-items-end row-gap-5">
+                        <img src="{% static 'ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
+                    </div>
                 </div>
                 <div class="col-lg-12">
-                    <a href="https://ggus.eu/index.php?mode=ticket_submit" target="_blank" id="raise-ticket-link" class="btn btn-primary btn-lg fw-bold">
-                        Raise a ticket
-                    </a>
+                    <div class="d-flex justify-content-lg-start justify-content-center">
+                        <a href="https://ggus.eu/index.php?mode=ticket_submit" target="_blank" id="raise-ticket-link" class="btn btn-outline-dark btn-lg fw-bold">
+                            Raise a ticket
+                        </a>
+                    </div>
                 </div>
             </div>
         </article>
