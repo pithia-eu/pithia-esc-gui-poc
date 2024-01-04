@@ -18,7 +18,7 @@
             <h2 class="d-inline-block mb-0">
                 Introduction
             </h2>
-            <div class="text-secondary mt-4">
+            <div class="mt-2">
             {% autoescape off %}
             {{ hover_text }}
             {% endautoescape %}
@@ -27,7 +27,7 @@
         {% endif %}
         <section>
             <h2 class="d-inline-block mb-0">Description</h2>
-            <div class="mt-4">
+            <div class="mt-2">
                 {% if main_text %}
                 {% autoescape off %}
                 {{ main_text }}
@@ -40,7 +40,7 @@
         {% if links %}
         <section>
             <h2>Links</h2>
-            <ul class="mt-4">
+            <ul class="mt-2">
                 {% for link in links %}
                 <li>
                     <a href="{{ link.1 }}">{{ link.0 }}</a>

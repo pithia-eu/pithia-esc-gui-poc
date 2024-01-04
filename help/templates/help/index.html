@@ -6,9 +6,12 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
+<p>
+    Use the help articles below for help and descriptions on e-Science Centre functionalities.
+</p>
 <section>
     <h2>Data Collection Search</h2>
-    <ul class="list-group">
+    <ul class="list-group mt-3">
         <li class="list-group-item">
             <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
         </li>
@@ -19,7 +22,7 @@
 </section>
 <section>
     <h2>Scientific Metadata</h2>
-    <ul class="list-group">
+    <ul class="list-group mt-3">
         <li class="list-group-item">
             <a href="{% url 'help:data_collections' %}">Data Collections</a>
         </li>
