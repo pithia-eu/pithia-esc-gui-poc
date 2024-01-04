@@ -253,6 +253,7 @@ header .dropdown-item {
        interactive help - unless the interactive
        help is being re-implemented, don't remove! */
     position: relative;
+    overflow: hidden;
 }
 
 .card-menu .card-body {
@@ -317,6 +318,7 @@ header .dropdown-item {
     --bs-tooltip-color: var(--bs-white);
 }
 
+/* When quick help button is not in card menu */
 .btn-card-help-dialog svg:nth-child(2) {
     display: none;
 }
@@ -331,10 +333,32 @@ header .dropdown-item {
     display: inline;
 }
 
+/* When quick help button is in card menu */
 .card-menu .card .btn-card-help-dialog {
     position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+    width: auto;
+    height: auto;
+    right: 0rem;
+    top: 0rem;
+    border-bottom-left-radius: var(--bs-card-border-radius);
+    padding: 0.5rem;
+    overflow: hidden;
+}
+
+.card-menu .card .btn-card-help-dialog:hover,
+.card-menu .card .btn-card-help-dialog:focus {
+    background-color: var(--bs-gray-500);
+}
+
+.card-menu .card .btn-card-help-dialog:hover svg:first-child,
+.card-menu .card .btn-card-help-dialog:focus svg:first-child {
+    display: inline;
+    color: #fff;
+}
+
+.card-menu .card .btn-card-help-dialog:hover svg:nth-child(2),
+.card-menu .card .btn-card-help-dialog:focus svg:nth-child(2) {
+    display: none;
 }
 
 .card-menu .card .bg-white {
