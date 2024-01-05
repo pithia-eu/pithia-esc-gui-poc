@@ -897,6 +897,11 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     .tree-search-terms .form-check {
         padding-block: 0.25rem;
     }
+
+    
+    .card-menu .card .btn-card-help-dialog {
+        padding: 0.5rem;
+    }
 }
 
 
