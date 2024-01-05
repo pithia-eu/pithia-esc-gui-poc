@@ -315,7 +315,7 @@ header .dropdown-item {
 
 .btn-card-help-dialog-tooltip {
     --bs-tooltip-bg: white;
-    --bs-tooltip-color: var(--bs-gray-700);
+    --bs-tooltip-color: var(--bs-gray-800);
 }
 
 /* When quick help button is not in card menu */
@@ -339,10 +339,10 @@ header .dropdown-item {
     width: auto;
     height: auto;
     right: 0rem;
-    top: 0rem;
-    border-bottom-left-radius: var(--bs-card-border-radius);
-    padding: 0.5rem;
-    overflow: hidden;
+    top: 0.5rem;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    padding: 0.25rem;
 }
 
 .card-menu .card .btn-card-help-dialog:hover,
