@@ -1,0 +1,8 @@
+{% extends 'help/help_dialogs/base.html' %}
+{% block dialog_id %}dialog-data-collections-help{% endblock dialog_id %}
+{% block dialog_header %}Data Collections{% endblock dialog_header %}
+{% block dialog_close_btn_id %}btn-close-dialog-data-collections-help{% endblock dialog_close_btn_id %}
+{% block dialog_body_text %}
+<p>List of all Data Collections in e-Science Centre.</p>
+<a href="{% url 'help:data_collections' %}" class="mt-3">See more...</a>
+{% endblock dialog_body_text %}

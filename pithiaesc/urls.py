@@ -11,6 +11,7 @@ urlpatterns = [
     path('present/', include('present.urls')),
     path('search/', include('search.urls')),
     path('simple-search/', include('simple_search.urls')),
+    path('help/', include('help.urls')),
     path('admin/', admin.site.urls),
     path('data-resource-registration-guide', views.resource_registration_user_guide, name='resource_registration_user_guide'),
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
