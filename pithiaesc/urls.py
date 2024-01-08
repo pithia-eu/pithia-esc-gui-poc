@@ -7,6 +7,8 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     # Include URLs
     path('', include('browse.urls')),
+    path('', include('user_management.urls')),
+    path('', include('utils.urls')),
     path('ontology/', include('ontology.urls')),
     path('present/', include('present.urls')),
     path('search/', include('search.urls')),
@@ -18,5 +20,4 @@ urlpatterns = [
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
     path('support', views.support, name='support'),
     path('authorised/', include('pithiaesc.secure_urls')),
-    path('', include('user_management.urls')),
 ]
