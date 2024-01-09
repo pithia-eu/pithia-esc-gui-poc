@@ -10,6 +10,11 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
 
+from help.services import (
+    DataCollectionsHelpArticleContent,
+    DataCollectionsSimpleSearchHelpArticleContent,
+    SearchDataCollectionsByContentHelpArticleContent,
+)
 from pithiaesc.settings import BASE_DIR
 from user_management.services import CREATION_URL_BASE
 
@@ -30,9 +35,15 @@ def logout(request):
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
 def index(request):
+    help_content_dicts = [
+        DataCollectionsHelpArticleContent.as_dict(),
+        DataCollectionsSimpleSearchHelpArticleContent.as_dict(),
+        SearchDataCollectionsByContentHelpArticleContent.as_dict(),
+    ]
     return render(request, 'index.html', {
         'title': 'PITHIA e-Science Centre',
         'create_institution_url': CREATION_URL_BASE,
+        'help_content_dicts': help_content_dicts,
     })
 
 def resource_registration_user_guide(request):
@@ -53,5 +64,8 @@ def privacy_policy(request):
 
 def support(request):
     return render(request, 'support.html', {
-    'title': 'Support'
+        'title': 'Help & Support',
+        'data_collections_help_article_title': DataCollectionsHelpArticleContent.title,
+        'search_data_collections_by_content_help_article_title': SearchDataCollectionsByContentHelpArticleContent.title,
+        'data_collection_simple_search_help_article_title': DataCollectionsSimpleSearchHelpArticleContent.title,
     })

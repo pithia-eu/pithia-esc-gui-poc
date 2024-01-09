@@ -86,6 +86,11 @@ h1 {
     font-weight: 600;
 }
 
+hgroup p {
+    max-width: 45ch;
+    font-size: 1.75rem !important;
+}
+
 /* .card-menu, .list-group combinators */
 h1 + .card-menu,
 h2 + .card-menu {
@@ -107,6 +112,12 @@ p {
 }
 
 /* Utilities */
+.list-group-numbered li::before {
+    display: inline-block;
+    width: 1.5em;
+    padding-right: 0.1rem;
+}
+
 .lead-sm {
     font-size: 1.1rem;
 }
@@ -144,6 +155,10 @@ p {
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
+}
+
+.header-logo-link small {
+    transform: translateY(-0.25rem);
 }
 
 header .dropdown-item {
@@ -230,15 +245,11 @@ header .dropdown-item {
     box-shadow: 0 .1rem 0.2rem rgba(0,0,0,.15) !important;
     transition: box-shadow 150ms linear, background-color 150ms linear;
     height: 10rem;
-}
-
-.card-menu span {
-    margin-inline: 0.5rem;
-}
-
-.card-menu .card:hover,
-.card-menu .card:focus {
-    background-color: rgb(245, 248, 251);
+    /* (pos: rel) For compatibility with
+       interactive help - unless the interactive
+       help is being re-implemented, don't remove! */
+    position: relative;
+    overflow: hidden;
 }
 
 .card-menu .card-body {
@@ -257,7 +268,7 @@ header .dropdown-item {
     text-align: center;
     width: 100%;
     height: 100%;
-    font-size: 1.1em;
+    font-size: 1em;
     word-break: keep-all;
     hyphens: auto;
     overflow: hidden;
@@ -268,10 +279,142 @@ header .dropdown-item {
 
 .card-menu a svg {
     flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
+    width: 1.75rem;
+    height: 1.75rem;
 }
 
+/* Card menu - interactive help */
+.btn-card-help-dialog,
+.btn-card-help-dialog .btn-icon-container {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.btn-card-help-dialog {
+    color: var(--bs-gray-500);
+    cursor: pointer;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-card-help-dialog .btn-icon-container {
+    position: relative;
+}
+
+.btn-card-help-dialog .btn-icon-container svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.btn-card-help-dialog-tooltip {
+    --bs-tooltip-bg: white;
+    --bs-tooltip-color: var(--bs-gray-800);
+}
+
+/* When quick help button is not in card menu */
+.btn-card-help-dialog svg:nth-child(2) {
+    display: none;
+}
+
+.btn-card-help-dialog:hover svg:first-child,
+.btn-card-help-dialog:focus svg:first-child {
+    display: none;
+}
+
+.btn-card-help-dialog:hover svg:nth-child(2),
+.btn-card-help-dialog:focus svg:nth-child(2) {
+    display: inline;
+}
+
+/* When quick help button is in card menu */
+.card-menu .card .btn-card-help-dialog {
+    position: absolute;
+    width: auto;
+    height: auto;
+    right: 0rem;
+    top: 0.5rem;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    padding: 0.25rem;
+}
+
+.card-menu .card .btn-card-help-dialog:hover,
+.card-menu .card .btn-card-help-dialog:focus {
+    background-color: var(--pithia-blue);
+}
+
+.card-menu .card .btn-card-help-dialog:hover svg:first-child,
+.card-menu .card .btn-card-help-dialog:focus svg:first-child {
+    display: inline;
+    color: white
+}
+
+.card-menu .card .btn-card-help-dialog:hover svg:nth-child(2),
+.card-menu .card .btn-card-help-dialog:focus svg:nth-child(2) {
+    display: none;
+}
+
+.card-menu .card .bg-white {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.card-menu .card:has(.btn-card-help-dialog:hover) .bg-white,
+.card-menu .card:has(.btn-card-help-dialog:focus) .bg-white {
+    opacity: 60%;
+}
+
+/* Credit: Used this article as reference for dialog implementation:
+https://web.dev/articles/building/a-dialog-component */
+dialog {
+    width: 30rem;
+    border: 1px var(--bs-gray-300) solid;
+    border-radius: 12.5px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    display: grid;
+    align-content: start;
+    max-inline-size: min(90vw, 60ch);
+    max-block-size: min(80vh, 100%);
+    max-block-size: min(80dvb, 100%);
+    overflow: auto;
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    inset: 0;
+}
+
+dialog[open] {
+    opacity: 1;
+    pointer-events: inherit;
+}
+
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
+dialog .dialog-content {
+    padding: 2rem;
+}
+
+dialog .dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+dialog .btn-close {
+    transform: translateY(0.25rem);
+    flex-shrink: 0;
+}
+
+/* Login alert - Institution selection */
 .alert-institution-setting svg:first-child {
     width: 1.2rem;
     height: 1.2rem;
@@ -294,6 +437,10 @@ header .dropdown-item {
 .resource-description {
     /* font-family: 'Times New Roman', Times, serif; */
     font-size: 1.1rem;
+}
+
+.file-download-link svg {
+    transform: translateY(0.25em);
 }
 
 /* Resource management list page */
@@ -403,16 +550,6 @@ header .dropdown-item {
 .file-upload-validation-msgs {
     max-width: 75ch;
     row-gap: 1rem;
-}
-
-/* Update - file upload page */
-hgroup p.line-clamp {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-hgroup p {
-    max-width: 45ch;
 }
 
 /* Skeleton loading animation for metadata server urls */
@@ -604,6 +741,10 @@ ul.tree ul {
 }
 
 /* Support page */
+a.support-link {
+    transform: translateY(0.25rem);
+}
+
 .support-page-description {
     max-width: 70ch;
 }
@@ -742,9 +883,24 @@ ul.tree ul {
     }
 }
 
+/* Credit: Used this article as reference for dialog implementation:
+https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles */
+@media (max-width: 768px) {
+    dialog {
+        margin-block-end: 0;
+        border-end-end-radius: 0;
+        border-end-start-radius: 0;
+    }
+}
+
 @media (pointer: coarse) {
     .tree-search-terms .form-check {
         padding-block: 0.25rem;
+    }
+
+    
+    .card-menu .card .btn-card-help-dialog {
+        padding: 0.5rem;
     }
 }
 
@@ -758,6 +914,7 @@ ul.tree ul {
     --tree-search-container-padding-y: 1rem;
     --tree-search-container-padding-x: 1rem;
     --pithia-blue: #007bb1;
+    --pithia-blue-2: #086ca3;
 
     /* Search page skeleton loader variables */
     --card-height: calc((var(--line-height) * 6) + (var(--line-spacing) * 5) + var(--card-y-padding));
