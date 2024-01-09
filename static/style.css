@@ -423,7 +423,7 @@ dialog .btn-close {
 
 /* Data Collection browse page */
 summary.data-collection-category {
-    list-style: none;
+    list-style-type: none;
 }
 
 summary.data-collection-category::-webkit-details-marker,
