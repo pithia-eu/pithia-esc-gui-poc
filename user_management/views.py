@@ -189,7 +189,7 @@ def update_perun_organisation_list(request):
     # If the details are correct, decode the data.
     try:
         decompressed_data = zlib.decompress(request.body, 16+zlib.MAX_WBITS)
-        decompressed_data_string = decompressed_data.replace(b'\x00', b'').decode('ascii')
+        decompressed_data_string = decompressed_data.replace(b'\x00', b'').decode('utf-8')
         index_first_curly_bracket = decompressed_data_string.index('{')
         index_last_curly_bracket = decompressed_data_string.rfind('}') 
         update_data = json.loads(decompressed_data_string[index_first_curly_bracket:index_last_curly_bracket + 1])
