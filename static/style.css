@@ -426,6 +426,10 @@ summary.data-collection-category {
     list-style: none;
 }
 
+summary.data-collection-category::-webkit-details-marker {
+    display: none;
+}
+
 
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
