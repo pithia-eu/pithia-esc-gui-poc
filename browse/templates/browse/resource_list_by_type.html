@@ -6,13 +6,15 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<div class="row gx-5">
-    {% block aside %}{% endblock aside %}
-    <div class="{% block main_col_size %}col-lg-12{% endblock main_col_size %}">
+<div class="row">
+    <div class="col-lg-8">
         <h1>{{ title }}</h1>
         <p class="mb-4">
             {{ description }}
         </p>
+    </div>
+    {% block aside %}{% endblock aside %}
+    <div class="col-lg-12">
         {% if not resources %}
         <p>{{ empty_resource_list_text }}</p>
         {% else %}

@@ -18,3 +18,19 @@ listGroupScrollContainers.forEach(scrollContainer => {
     }
     scrollContainer.addEventListener("scroll", setFade);
 });
+
+document.querySelectorAll(".data-collection-category").forEach(summaryElem => {
+    summaryElem.addEventListener("click", e => {
+        if (window.matchMedia("(pointer: fine)").matches) {
+            return e.preventDefault();
+        }
+    });
+});
+
+window.addEventListener("load", () => {
+    if (window.matchMedia("(pointer: coarse)").matches) {
+        document.querySelectorAll(".data-collection-category").forEach(summaryElem => {
+            summaryElem.removeAttribute("tabindex");
+        });
+    }
+});

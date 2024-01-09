@@ -420,26 +420,6 @@ dialog .btn-close {
     height: 1.2rem;
 }
 
-/* Data Collection browse page */
-.list-group-container {
-    position: relative;
-}
-
-.list-group-scroll-container {
-    max-height: 15rem;
-    overflow: auto;
-}
-
-.list-group-container.off-bottom .shadows {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    box-shadow: 0 -3em 3em -1em white inset;
-    pointer-events: none;
-    transition: all 0.2s ease-out;
-}
 
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
@@ -914,14 +894,63 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     }
 }
 
+@media (pointer: fine) {
+    /* Data Collection browse page */
+    summary.data-collection-category {
+        list-style: none;
+        cursor: text;
+    }
+
+    .list-group-container {
+        position: relative;
+    }
+    
+    .list-group-scroll-container {
+        max-height: 15rem;
+        overflow: auto;
+    }
+    
+    .list-group-container.off-bottom .shadows {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        box-shadow: 0 -3em 3em -1em white inset;
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+    }
+}
+
 @media (pointer: coarse) {
     .tree-search-terms .form-check {
         padding-block: 0.25rem;
     }
 
-    
     .card-menu .card .btn-card-help-dialog {
         padding: 0.5rem;
+    }
+
+    summary.data-collection-category::marker {
+        display: none
+    }
+
+    summary.data-collection-category > h2 {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    summary.data-collection-category {
+        display: block
+    }
+
+    summary.data-collection-category::before {
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>');
+        margin: 0px 10px 0 0;
+    }
+
+    details[open] summary.data-collection-category::before {
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>');
     }
 }
 
