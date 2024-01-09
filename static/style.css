@@ -421,6 +421,12 @@ dialog .btn-close {
 }
 
 
+/* Data Collection browse page */
+summary.data-collection-category {
+    list-style: none;
+}
+
+
 /* Resource detail page */
 .col-lg-12 .resource-key-details td:first-child,
 .interaction-method-table td:first-child,
@@ -897,10 +903,9 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
 @media (pointer: fine) {
     /* Data Collection browse page */
     summary.data-collection-category {
-        list-style: none;
         cursor: text;
     }
-
+    
     .list-group-container {
         position: relative;
     }
