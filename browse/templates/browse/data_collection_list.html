@@ -31,12 +31,12 @@
     <details open>
         <summary class="data-collection-category" tabindex="-1">
             {% with section_name=key.split|join:'-'|lower %}
-            <h2 id="{{ section_name }}-heading" class="d-inline-block mb-4">
+            <h2 id="{{ section_name }}-heading" class="d-inline-block">
             {% endwith %}
                 {{ key }}
             </h2>
         </summary>
-        <div class="list-group-container off-bottom">
+        <div class="list-group-container off-bottom mt-3">
             <div class="list-group-scroll-container">
                 <ul class="list-group">
                     {% for dc in value %}

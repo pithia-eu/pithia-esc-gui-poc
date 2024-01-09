@@ -423,13 +423,16 @@ dialog .btn-close {
 
 /* Data Collection browse page */
 summary.data-collection-category {
-    list-style-type: none;
+    list-style: none;
+    padding-left: 0;
 }
 
 summary.data-collection-category::-webkit-details-marker,
 summary.data-collection-category::marker {
     content: '';
     display: none;
+    color: #fff;
+    z-index: -1;
 }
 
 
