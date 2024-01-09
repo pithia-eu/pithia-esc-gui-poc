@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'browse.apps.BrowseConfig',
     'delete.apps.DeleteConfig',
     'handle_management.apps.HandleManagementConfig',
+    'help.apps.HelpConfig',
     'ontology.apps.OntologyConfig',
     'present.apps.PresentConfig',
     'register.apps.RegisterConfig',

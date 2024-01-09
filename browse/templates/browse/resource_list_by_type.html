@@ -7,7 +7,7 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<p class="mb-4">
+<p class="lead">
     {{ description }}
 </p>
 {% if not resources %}
@@ -15,7 +15,7 @@
 {% else %}
 {% block resource_list_inner %}
 {% with resource_list=resources %}
-<ul class="list-group">
+<ul class="list-group mt-4">
     {% for resource in resources %}
     <li class="list-group-item">
         <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
