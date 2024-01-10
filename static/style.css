@@ -83,7 +83,12 @@ a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer
 
 h1 {
     color: var(--pithia-blue);
-    font-weight: bold;
+    font-weight: 600;
+}
+
+hgroup p {
+    max-width: 45ch;
+    font-size: 1.75rem !important;
 }
 
 /* .card-menu, .list-group combinators */
@@ -107,6 +112,12 @@ p {
 }
 
 /* Utilities */
+.list-group-numbered li::before {
+    display: inline-block;
+    width: 1.5em;
+    padding-right: 0.1rem;
+}
+
 .lead-sm {
     font-size: 1.1rem;
 }
@@ -144,6 +155,10 @@ p {
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
+}
+
+.header-logo-link small {
+    transform: translateY(-0.25rem);
 }
 
 header .dropdown-item {
@@ -403,16 +418,6 @@ header .dropdown-item {
 .file-upload-validation-msgs {
     max-width: 75ch;
     row-gap: 1rem;
-}
-
-/* Update - file upload page */
-hgroup p.line-clamp {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-hgroup p {
-    max-width: 45ch;
 }
 
 /* Skeleton loading animation for metadata server urls */

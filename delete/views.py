@@ -12,38 +12,6 @@ from common.decorators import (
     institution_ownership_required,
 )
 from common.models import ScientificMetadata
-from common.mongodb_models import (
-    AcquisitionCapabilityRevision,
-    AcquisitionRevision,
-    ComputationCapabilityRevision,
-    ComputationRevision,
-    CurrentAcquisition,
-    CurrentAcquisitionCapability,
-    CurrentComputation,
-    CurrentComputationCapability,
-    CurrentDataCollection,
-    CurrentIndividual,
-    CurrentInstrument,
-    CurrentOperation,
-    CurrentOrganisation,
-    CurrentPlatform,
-    CurrentProcess,
-    CurrentProject,
-    DataCollectionRevision,
-    IndividualRevision,
-    InstrumentRevision,
-    OperationRevision,
-    OrganisationRevision,
-    PlatformRevision,
-    ProcessRevision,
-    ProjectRevision,
-    CurrentCatalogue,
-    CatalogueRevision,
-    CurrentCatalogueEntry,
-    CatalogueEntryRevision,
-    CurrentCatalogueDataSubset,
-    CatalogueDataSubsetRevision,
-)
 from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title,
@@ -94,7 +62,7 @@ class ResourceDeleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Delete Scientific Metadata'
+        context['title'] = f'Delete'
         context['resource_id'] = self.resource_id
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
@@ -173,10 +141,6 @@ class OrganisationDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     delete_resource_page_breadcrumb_url_name = 'delete:organisation'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentOrganisation
-    resource_revision_mongodb_model = OrganisationRevision
-
 class IndividualDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Individual
@@ -187,10 +151,6 @@ class IndividualDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     delete_resource_page_breadcrumb_url_name = 'delete:individual'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentIndividual
-    resource_revision_mongodb_model = IndividualRevision
 
 class ProjectDeleteView(ResourceDeleteView):
     """
@@ -203,10 +163,6 @@ class ProjectDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     delete_resource_page_breadcrumb_url_name = 'delete:project'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentProject
-    resource_revision_mongodb_model = ProjectRevision
-
 class PlatformDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Platform
@@ -217,10 +173,6 @@ class PlatformDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:platforms')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     delete_resource_page_breadcrumb_url_name = 'delete:platform'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentPlatform
-    resource_revision_mongodb_model = PlatformRevision
 
 class InstrumentDeleteView(ResourceDeleteView):
     """
@@ -233,10 +185,6 @@ class InstrumentDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     delete_resource_page_breadcrumb_url_name = 'delete:instrument'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentInstrument
-    resource_revision_mongodb_model = InstrumentRevision
-
 class OperationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Operation
@@ -247,10 +195,6 @@ class OperationDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:operations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     delete_resource_page_breadcrumb_url_name = 'delete:operation'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentOperation
-    resource_revision_mongodb_model = OperationRevision
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -263,10 +207,6 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentAcquisitionCapability
-    resource_revision_mongodb_model = AcquisitionCapabilityRevision
-
 class AcquisitionDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Acquisition
@@ -277,10 +217,6 @@ class AcquisitionDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:acquisitions')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentAcquisition
-    resource_revision_mongodb_model = AcquisitionRevision
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -293,10 +229,6 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentComputationCapability
-    resource_revision_mongodb_model = ComputationCapabilityRevision
-
 class ComputationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Computation
@@ -307,10 +239,6 @@ class ComputationDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:computations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     delete_resource_page_breadcrumb_url_name = 'delete:computation'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentComputation
-    resource_revision_mongodb_model = ComputationRevision
 
 class ProcessDeleteView(ResourceDeleteView):
     """
@@ -323,10 +251,6 @@ class ProcessDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     delete_resource_page_breadcrumb_url_name = 'delete:process'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentProcess
-    resource_revision_mongodb_model = ProcessRevision
-
 class DataCollectionDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Data
@@ -338,11 +262,6 @@ class DataCollectionDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:data_collections')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     delete_resource_page_breadcrumb_url_name = 'delete:data_collection'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentDataCollection
-    resource_revision_mongodb_model = DataCollectionRevision
-    catalogue_related_resources_to_delete = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -360,10 +279,6 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogue
-    resource_revision_mongodb_model = CatalogueRevision
-
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -375,10 +290,6 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogueEntry
-    resource_revision_mongodb_model = CatalogueEntryRevision
-
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -389,7 +300,3 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
-
-    # TODO: remove old code
-    resource_mongodb_model = CurrentCatalogueDataSubset
-    resource_revision_mongodb_model = CatalogueDataSubsetRevision
