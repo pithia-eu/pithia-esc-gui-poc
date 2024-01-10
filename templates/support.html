@@ -11,34 +11,10 @@
     <div class="row">
         <div class="col-lg-8">
             <p>
-                Get help and information on various e-Science Centre features with the links to
-                their help articles below.
-                We advise <a href="#support-heading">raising a ticket</a> with our support
-                team if you require more specific help with a problem.
+                We are currently working on adding <a href="{% url 'help:index' %}">help articles</a>
+                to the e-Science Centre. If what is currently available does not meet your needs, please
+                <a href="#support-heading">raise a ticket</a> with our support team instead.
             </p>
-        </div>
-        <div class="col-lg-8">
-            <section>
-                <h3 class="mb-3">Data Collection Search</h3>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <a href="{% url 'help:search_data_collections_by_content' %}">{{ search_data_collections_by_content_help_article_title }}</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="{% url 'help:data_collection_simple_search' %}">{{ data_collection_simple_search_help_article_title }}</a>
-                    </li>
-                </ul>
-            </section>
-        </div>
-        <div class="col-lg-8">
-            <section>
-                <h3 class="mb-3">Scientific Metadata</h3>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <a href="{% url 'help:data_collections' %}">{{ data_collections_help_article_title }}</a>
-                    </li>
-                </ul>
-            </section>
         </div>
     </div>
     <div class="mt-3">
