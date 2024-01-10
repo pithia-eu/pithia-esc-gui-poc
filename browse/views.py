@@ -271,7 +271,7 @@ class DataCollectionListView(ResourceListView):
     template_name = 'browse/data_collection_list.html'
     model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
-    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
+    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue.'
     
     def get_queryset(self):
         data_collections = super().get_queryset()
