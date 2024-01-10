@@ -1,0 +1,12 @@
+<dialog id="{% block dialog_id %}{% endblock dialog_id %}" class="help-dialog shadow" inert="true">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <div class="fs-5">{% block dialog_header %}{% endblock dialog_header %}</div>
+            <button autofocus id="{% block dialog_close_btn_id %}{% endblock dialog_close_btn_id %}" class="btn-close btn-close-dialog ms-auto"></button>
+        </div>
+        <hr>
+        <div class="dialog-body">
+            {% block dialog_body_text %}{% endblock dialog_body_text %}
+        </div>
+    </div>
+</dialog>

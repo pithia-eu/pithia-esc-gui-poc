@@ -6,34 +6,30 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<p class="lead text-muted">
-    {{ description }}
-</p>
-{% if not resources %}
-<p>{{ empty_resource_list_text }}</p>
-{% else %}
-{% block resource_list_inner %}
-{% with resource_list=resources %}
-<ul class="list-group">
-    {% for resource in resources %}
-    <li class="list-group-item">
-        <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
-    </li>
-    {% endfor %}
-</ul>
-{% endwith %}
-{% endblock resource_list_inner %}
-{% endif %}
-{% comment %} {% if resource_list|length > 0 %}
-<ul class="list-group">
-    {% for resource in resource_list|dictsort:'name' %}
-    {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
-    <li class="list-group-item"><a href="{% url resource_detail_page_url_name resource.id %}">{{ resource.name|default:pithia_identifier.localID }}</a></li>
-    {% endwith %}
-    {% endfor %}
-</ul>
-{% else %}
-<p>{{ empty_resource_list_text }}</p>
-{% endif %} {% endcomment %}
+<div class="row">
+    <div class="col-lg-8">
+        <h1>{{ title }}</h1>
+        <p class="mb-4">
+            {{ description }}
+        </p>
+    </div>
+    {% block aside %}{% endblock aside %}
+    <div class="col-lg-12">
+        {% if not resources %}
+        <p>{{ empty_resource_list_text }}</p>
+        {% else %}
+        {% block resource_list_inner %}
+        {% with resource_list=resources %}
+        <ul class="list-group">
+            {% for resource in resources %}
+            <li class="list-group-item">
+                <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endwith %}
+        {% endblock resource_list_inner %}
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}

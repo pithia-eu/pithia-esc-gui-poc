@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block breadcrumbs %}
+{% breadcrumb_item 'Help & Support' 'support' %}
+{% breadcrumb_item 'Help' 'help:index' %}
+{% breadcrumb_item_active help_topic %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="row gx-md-5">
+    <div class="col-lg-9">
+        <hgroup>
+            <h1 class="mb-0">Help</h1>
+            <p class="text-secondary">{{ help_topic }}</p>
+        </hgroup>
+        {% if hover_text %}
+        <section>
+            <h2 class="d-inline-block mb-0">
+                Introduction
+            </h2>
+            <div class="mt-2">
+            {% autoescape off %}
+            {{ hover_text }}
+            {% endautoescape %}
+            </div>
+        </section>
+        {% endif %}
+        <section>
+            <h2 class="d-inline-block mb-0">Description</h2>
+            <div class="mt-2">
+                {% if main_text %}
+                {% autoescape off %}
+                {{ main_text }}
+                {% endautoescape %}
+                {% else %}
+                <p><i class="text-secondary">No description yet.</i></p>
+                {% endif %}
+            </div>
+        </section>
+        {% if links %}
+        <section>
+            <h2>Links</h2>
+            <ul class="mt-2">
+                {% for link in links %}
+                <li>
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+    </div>
+    <div class="col-lg-3">
+        <section>
+            <h2 class="fs-4">Closely Related Topics</h2>
+            {% if closely_related_links %}
+            <ul class="list-group mt-3">
+                {% for link in closely_related_links %}
+                <li class="list-group-item">
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section>
+        <section>
+            <h2 class="fs-4">Broadly Related Topics</h2>
+            {% if broadly_related_links %}
+            <ul class="list-group mt-3">
+                {% for link in broadly_related_links %}
+                <li class="list-group-item">
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p><i class="text-secondary">None yet.</i></p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock content %}

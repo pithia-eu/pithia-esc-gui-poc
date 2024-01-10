@@ -1,0 +1,16 @@
+<dialog id="{{ help_content.dialog_id }}" class="help-dialog shadow" inert="true">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <div class="d-flex flex-column">
+                <div class="fs-5">{{ help_content.title }}</div>
+                <small class="text-secondary">Quick help</small>
+            </div>
+            <button autofocus id="" class="btn-close btn-close-dialog ms-auto"></button>
+        </div>
+        <hr>
+        <div class="dialog-body">
+            <div>{{ help_content.hover_text }}</div>
+            <a href="{{ help_content.article_url }}" class="d-inline-block mt-3">View full help article</a>
+        </div>
+    </div>
+</dialog>

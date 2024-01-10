@@ -8,7 +8,6 @@ urlpatterns = [
     path('dashboard/', views.index, name='data_provider_home'),
     path('', include('update.urls')),
     path('', include('delete.urls')),
-    path('', include('utils.urls')),
     path('manage/', include('resource_management.urls')),
     path('register/', include('register.urls')),
     path('schemas/', schemas, name='schemas'),

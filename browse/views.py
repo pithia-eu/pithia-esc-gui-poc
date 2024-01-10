@@ -1,4 +1,5 @@
 import logging
+import re
 from dateutil.parser import parse
 from django.http import JsonResponse
 from django.shortcuts import (
@@ -267,9 +268,85 @@ class DataCollectionListView(ResourceListView):
     Lists the detail page links for each Data
     Collection registration.
     """
+    template_name = 'browse/data_collection_list.html'
     model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
-    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue'
+    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue.'
+    
+    def get_queryset(self):
+        data_collections = super().get_queryset()
+        ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
+        SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
+        COMPUTATION_MODELS_KEY = 'Computational Models'
+        OTHER_KEY = 'Other'
+        MIXED_KEY = 'Mixed'
+        data_collections_by_type = {
+            ACTIVITY_INDICATORS_KEY: [],
+            SENSOR_MEASUREMENTS_KEY: [],
+            COMPUTATION_MODELS_KEY: [],
+            MIXED_KEY: [],
+            OTHER_KEY: [],
+        }
+        for dc in data_collections:
+            dc_type_urls = dc.type_urls
+            if not dc_type_urls:
+                data_collections_by_type[OTHER_KEY].append(dc)
+                continue
+            
+            is_activity_indicator_type = any([re.search('\/computationType\/(.*)ActivityIndicator$', url) for url in dc_type_urls])
+            is_instrument_type = any([re.search('\/instrumentType\/(.*)$', url) for url in dc_type_urls])
+            is_model_type = any([re.search('\/computationType\/(.*)Model$', url) for url in dc_type_urls])
+            if sum([is_activity_indicator_type, is_instrument_type, is_model_type]) > 1:
+                data_collections_by_type[MIXED_KEY].append(dc)
+            if is_activity_indicator_type:
+                data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
+            elif is_instrument_type:
+                data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
+            elif is_model_type:
+                data_collections_by_type[COMPUTATION_MODELS_KEY].append(dc)
+        return data_collections_by_type
+
+    def get_queryset(self):
+        data_collections = super().get_queryset()
+
+        ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
+        SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
+        COMPUTATIONAL_MODELS_KEY = 'Computational Models'
+        MIXED_KEY = 'Mixed'
+        OTHER_KEY = 'Other'
+
+        data_collections_by_type = {
+            ACTIVITY_INDICATORS_KEY: [],
+            SENSOR_MEASUREMENTS_KEY: [],
+            COMPUTATIONAL_MODELS_KEY: [],
+            MIXED_KEY: [],
+            OTHER_KEY: [],
+        }
+        # https://metadata.pithia.eu/ontology/2.2/computationType/GeomagneticActivityIndicator
+        # https://metadata.pithia.eu/ontology/2.2/computationType/AssimilativeModel
+        # https://metadata.pithia.eu/ontology/2.2/instrumentType/Imager
+
+        for dc in data_collections:
+            if not dc.type_urls:
+                data_collections_by_type[OTHER_KEY].append(dc)
+                continue
+            type_urls = dc.type_urls
+            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator$', url) for url in type_urls])
+            is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
+            is_computational_model = any([re.search('\/computationType/(.*)Model$', url) for url in type_urls])
+
+            if sum([is_activity_indicator, is_sensor_measurement, is_computational_model]) > 1:
+                data_collections_by_type[MIXED_KEY].append(dc)
+            elif is_activity_indicator:
+                data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
+            elif is_sensor_measurement:
+                data_collections_by_type[SENSOR_MEASUREMENTS_KEY].append(dc)
+            elif is_computational_model:
+                data_collections_by_type[COMPUTATIONAL_MODELS_KEY].append(dc)
+            else:
+                data_collections_by_type[OTHER_KEY].append(dc)
+
+        return data_collections_by_type
 
 class CatalogueRelatedResourceListView(ResourceListView):
     """
@@ -334,6 +411,7 @@ class ResourceDetailView(TemplateView):
     ontology_server_urls = []
     resource_server_urls = []
     resource_list_by_type_url_name = ''
+    resource_download_url_name = ''
     template_name = 'browse/detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -353,6 +431,7 @@ class ResourceDetailView(TemplateView):
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
         context['resource_list_page_breadcrumb_text'] = self.model.type_plural_readable.title()
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
+        context['resource_download_url_name'] = self.resource_download_url_name
         context['resource'] = self.resource
         context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
@@ -372,6 +451,7 @@ class OrganisationDetailView(ResourceDetailView):
     """
     model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
+    resource_download_url_name = 'utils:view_organisation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -386,6 +466,7 @@ class IndividualDetailView(ResourceDetailView):
     """
     model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
+    resource_download_url_name = 'utils:view_individual_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -400,6 +481,7 @@ class ProjectDetailView(ResourceDetailView):
     """
     model = models.Project
     resource_list_by_type_url_name = 'browse:list_projects'
+    resource_download_url_name = 'utils:view_project_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -414,6 +496,7 @@ class PlatformDetailView(ResourceDetailView):
     """
     model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
+    resource_download_url_name = 'utils:view_platform_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -428,6 +511,7 @@ class InstrumentDetailView(ResourceDetailView):
     """
     model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
+    resource_download_url_name = 'utils:view_instrument_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -442,6 +526,7 @@ class OperationDetailView(ResourceDetailView):
     """
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
+    resource_download_url_name = 'utils:view_operation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -456,6 +541,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     """
     model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
+    resource_download_url_name = 'utils:view_acquisition_capability_set_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
@@ -470,6 +556,7 @@ class AcquisitionDetailView(ResourceDetailView):
     """
     model = models.Acquisition
     resource_list_by_type_url_name = 'browse:list_acquisitions'
+    resource_download_url_name = 'utils:view_acquisition_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -484,6 +571,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     """
     model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
+    resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
@@ -498,6 +586,7 @@ class ComputationDetailView(ResourceDetailView):
     """
     model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
+    resource_download_url_name = 'utils:view_computation_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -512,6 +601,7 @@ class ProcessDetailView(ResourceDetailView):
     """
     model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
+    resource_download_url_name = 'utils:view_process_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -526,6 +616,7 @@ class DataCollectionDetailView(ResourceDetailView):
     """
     model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
+    resource_download_url_name = 'utils:view_data_collection_as_xml'
     template_name = 'browse/detail_interaction_methods.html'
     interaction_methods = []
     link_interaction_methods = []
@@ -573,6 +664,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.Catalogue
     resource_list_by_type_url_name = 'browse:list_catalogues'
+    resource_download_url_name = 'utils:view_catalogue_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
@@ -587,6 +679,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueEntry
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
+    resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
@@ -601,6 +694,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueDataSubset
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
+    resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
