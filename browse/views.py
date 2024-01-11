@@ -302,7 +302,7 @@ class DataCollectionListView(ResourceListView):
             is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
             is_computational_model = any([re.search('\/computationType/(.*)$', url) for url in type_urls])
 
-            if sum([is_activity_indicator, is_sensor_measurement, is_computational_model]) > 1:
+            if sum([is_sensor_measurement, is_computational_model]) > 1:
                 data_collections_by_type[MIXED_KEY].append(dc)
             elif is_activity_indicator:
                 data_collections_by_type[ACTIVITY_INDICATORS_KEY].append(dc)
