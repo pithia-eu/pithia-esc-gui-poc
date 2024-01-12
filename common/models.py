@@ -176,7 +176,7 @@ class ScientificMetadata(models.Model):
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
     catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
     catalogue_data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
-    workflows = WorkflowManager.from_queryset(WorkflowQuerySet())()
+    workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
     def save(self, *args, **kwargs):
         if self.converted_xml_correction_function is not None:
