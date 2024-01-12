@@ -425,6 +425,9 @@ class CatalogueDataSubsetQuerySet(ScientificMetadataQuerySet, AbstractCatalogueD
         referencing_data_collection_url = self.referencing_data_collection_url(metadata_server_url)
         referencing_catalogue_entry_url = self.referencing_catalogue_entry_url(metadata_server_url)
         return referencing_data_collection_url | referencing_catalogue_entry_url
+
+class WorkflowQuerySet(ScientificMetadataQuerySet, AbstractWorkflowDatabaseQueries):
+    pass
     
 class HandleURLMappingQuerySet(AbstractHandleURLMappingDatabaseQueries, models.QuerySet):
     def for_url(self, url):

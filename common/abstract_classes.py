@@ -580,6 +580,9 @@ class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
         """
         pass
 
+class AbstractWorkflowDatabaseQueries(ABC):
+    pass
+
 class AbstractHandleURLMappingDatabaseQueries(ABC):
     @abstractmethod
     def for_url(self, url):

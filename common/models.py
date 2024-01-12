@@ -24,6 +24,7 @@ class ScientificMetadata(models.Model):
     CATALOGUE = 'catalogue'
     CATALOGUE_ENTRY = 'catalogue_entry'
     CATALOGUE_DATA_SUBSET = 'catalogue_data_subset'
+    WORKFLOW = 'workflow'
     TYPE_CHOICES = [
         (ORGANISATION, 'Organisation'),
         (INDIVIDUAL, 'Individual'),
@@ -40,6 +41,7 @@ class ScientificMetadata(models.Model):
         (CATALOGUE, 'Catalogue'),
         (CATALOGUE_ENTRY, 'Catalogue Entry'),
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
+        (WORKFLOW, 'Workflow'),
     ]
     id = models.CharField(
         max_length=200,
@@ -174,6 +176,7 @@ class ScientificMetadata(models.Model):
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
     catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
     catalogue_data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+    workflows = WorkflowManager.from_queryset(WorkflowQuerySet())()
 
     def save(self, *args, **kwargs):
         if self.converted_xml_correction_function is not None:
@@ -621,3 +624,17 @@ class CatalogueDataSubset(ScientificMetadata):
 
     class Meta:
         proxy = True
+
+class Workflow(ScientificMetadata):
+    type_in_metadata_server_url = 'workflow'
+    localid_base = 'Workflow'
+    weight = 16
+    type_readable = 'workflow'
+    type_plural_readable = 'workflows'
+    a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:workflow_detail'
+    root_element_name = 'Workflow'
+
+    @property
+    def data_collection_url(self):
+        return self.json['dataCollection']['@xlink:href']
