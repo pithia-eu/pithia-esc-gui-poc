@@ -188,7 +188,7 @@ class CatalogueDataSubsetManager(ScientificMetadataManager):
 
 class WorkflowManager(ScientificMetadataManager):
     def get_queryset(self):
-        return super().get_queryset(),filter(type=self.model.WORKFLOW)
+        return super().get_queryset().filter(type=self.model.WORKFLOW)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.WORKFLOW, institution_id, owner_id)
