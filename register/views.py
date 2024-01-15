@@ -43,8 +43,6 @@ from user_management.services import (
     get_institution_id_for_login_session,
 )
 from utils.url_helpers import create_data_subset_detail_page_url
-
-from . import xml_conversion_checks_and_fixes
 from validation.errors import FileRegisteredBefore
 
 
@@ -69,10 +67,6 @@ class ResourceRegisterFormView(FormView):
 
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
-
-    # TODO: remove old code
-    resource_mongodb_model = None
-    resource_conversion_validate_and_correct_function = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -222,10 +216,6 @@ class ProjectRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_project_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class PlatformRegisterFormView(ResourceRegisterFormView):
     model = models.Platform
     success_url = reverse_lazy('register:platform')
@@ -234,10 +224,6 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:platform')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
-
-    def post(self, request, *args, **kwargs):
-            self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_platform_xml_converted_to_dict
-            return super().post(request, *args, **kwargs)
 
 class OperationRegisterFormView(ResourceRegisterFormView):
     model = models.Operation
@@ -248,10 +234,6 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_operation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class InstrumentRegisterFormView(ResourceRegisterFormView):
     model = models.Instrument
     success_url = reverse_lazy('register:instrument')
@@ -260,10 +242,6 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:instrument')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_instrument_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.AcquisitionCapabilities
@@ -274,10 +252,6 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
     model = models.Acquisition
     success_url = reverse_lazy('register:acquisition')
@@ -286,10 +260,6 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:acquisition')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.ComputationCapabilities
@@ -300,10 +270,6 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ComputationRegisterFormView(ResourceRegisterFormView):
     model = models.Computation
     success_url = reverse_lazy('register:computation')
@@ -313,10 +279,6 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ProcessRegisterFormView(ResourceRegisterFormView):
     model = models.Process
     success_url = reverse_lazy('register:process')
@@ -325,10 +287,6 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:process')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_process_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
     model = models.DataCollection
@@ -346,10 +304,6 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         context = super().get_context_data(**kwargs)
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
-        
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_data_collection_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class CatalogueRegisterFormView(ResourceRegisterFormView):
     template_name='register/file_upload_catalogue.html'
