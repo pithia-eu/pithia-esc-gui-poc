@@ -1,0 +1,20 @@
+{% extends 'register/file_upload.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block sidemenu %}
+<div class="col-lg-4">
+    <aside class="sidemenu text-secondary">
+        <h2 class="fs-5">Other Metadata</h2>
+        <hr class="my-2">
+        <nav>
+            <ul class="list-style-none ps-0">
+                <li><a href="{% url 'register:data_collection' %}">Data Collections</a></li>
+            </ul>
+        </nav>
+    </aside>
+</div>
+{% endblock sidemenu %}

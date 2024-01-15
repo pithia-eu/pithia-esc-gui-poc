@@ -480,7 +480,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
         return context
 
 class WorkflowRegisterFormView(ResourceRegisterFormView):
-    template_name = 'register/workflow.html'
+    template_name = 'register/file_upload_workflow.html'
     model = models.Workflow
     success_url = reverse_lazy('register:workflow')
 
