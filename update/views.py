@@ -503,6 +503,7 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
         return super().post(request, *args, **kwargs)
 
 class WorkflowUpdateFormView(ResourceUpdateFormView):
+    template_name = 'file_upload_workflow.html'
     model = models.Workflow
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
