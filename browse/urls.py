@@ -22,6 +22,7 @@ urlpatterns = [
     path('catalogues/', views.CatalogueListView.as_view(), name='list_catalogues'),
     path('catalogue-entries/', views.CatalogueEntryListView.as_view(), name='list_catalogue_entries'),
     path('catalogue-data-subsets/', views.CatalogueDataSubsetListView.as_view(), name='list_catalogue_data_subsets'),
+    path('workflows/', views.WorkflowListView.as_view(), name='list_workflows'),
     path('organisations/<organisation_id>/', views.OrganisationDetailView.as_view(), name='organisation_detail'),
     path('individuals/<individual_id>/', views.IndividualDetailView.as_view(), name='individual_detail'),
     path('projects/<project_id>/', views.ProjectDetailView.as_view(), name='project_detail'),
@@ -37,5 +38,6 @@ urlpatterns = [
     path('catalogues/<catalogue_id>/', views.CatalogueDetailView.as_view(), name='catalogue_detail'),
     path('catalogue-entries/<catalogue_entry_id>/', views.CatalogueEntryDetailView.as_view(), name='catalogue_entry_detail'),
     path('catalogue-data-subsets/<catalogue_data_subset_id>/', views.CatalogueDataSubsetDetailView.as_view(), name='catalogue_data_subset_detail'),
+    path('workflows/<workflow_id>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),
     path('utils/convert/urls', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),
 ]
