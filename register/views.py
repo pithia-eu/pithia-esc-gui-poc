@@ -478,3 +478,13 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
+
+class WorkflowRegisterFormView(ResourceRegisterFormView):
+    template_name = 'register/workflow.html'
+    model = models.Workflow
+    success_url = reverse_lazy('register:workflow')
+
+    validation_url = reverse_lazy('validation:workflow')
+    post_url = reverse_lazy('register:workflow')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('workflows')
