@@ -638,3 +638,8 @@ class Workflow(ScientificMetadata):
     @property
     def data_collection_url(self):
         return self.json['dataCollection']['@xlink:href']
+
+    objects = WorkflowManager.from_queryset(WorkflowQuerySet)()
+
+    class Meta:
+        proxy = True
