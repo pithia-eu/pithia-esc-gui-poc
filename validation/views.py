@@ -133,6 +133,9 @@ class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFi
     def prepare_xml_metadata_file(self, xml_file):
         return DataSubsetXMLMetadataFile.from_file(xml_file)
 
+class WorkflowXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
+    model = models.Workflow
+
 
 @require_POST
 @login_session_institution_required
