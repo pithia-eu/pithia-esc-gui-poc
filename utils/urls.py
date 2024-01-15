@@ -19,4 +19,5 @@ urlpatterns = [
     path('catalogues/<resource_id>/xml/', views.CatalogueXmlDownloadView.as_view(), name='view_catalogue_as_xml'),
     path('catalogue-entries/<resource_id>/xml/', views.CatalogueEntryXmlDownloadView.as_view(), name='view_catalogue_entry_as_xml'),
     path('catalogue-data-subsets/<resource_id>/xml/', views.CatalogueDataSubsetXmlDownloadView.as_view(), name='view_catalogue_data_subset_as_xml'),
+    path('workflows/<resource_id>/xml/', views.WorkflowXmlDownloadView.as_view(), name='view_workflow_as_xml'),
 ]
