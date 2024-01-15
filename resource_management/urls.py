@@ -22,4 +22,5 @@ urlpatterns = [
     path('catalogues/', views.CatalogueManagementListView.as_view(), name='catalogues'),
     path('catalogue-entries/', views.CatalogueEntryManagementListView.as_view(), name='catalogue_entries'),
     path('catalogue-data-subsets/', views.CatalogueDataSubsetManagementListView.as_view(), name='catalogue_data_subsets'),
+    path('workflows/', views.WorkflowManagementListView.as_view(), name='workflows'),
 ]
