@@ -488,3 +488,6 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:workflow')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('workflows')
+
+    # TODO: remove old code
+    resource_mongodb_model = mongodb_models.CurrentWorkflow
