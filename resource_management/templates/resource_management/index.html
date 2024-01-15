@@ -5,7 +5,7 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<p class="lead">
+<p class="lead mb-5">
     Add, update and delete metadata. Select the type of metadata you would like to change below.
 </p>
 <div class="card-menu mb-3">
@@ -20,6 +20,13 @@
         <div class="card-body">
             <a href="{% url 'resource_management:catalogue_related_metadata_index' %}">
                 Catalogue-related Metadata
+            </a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <a href="{% url 'resource_management:workflows' %}">
+                Workflows
             </a>
         </div>
     </div>

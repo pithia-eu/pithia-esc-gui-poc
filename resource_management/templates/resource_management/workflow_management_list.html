@@ -1,0 +1,6 @@
+{% extends 'resource_management/resource_management_list_by_type_outer.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}

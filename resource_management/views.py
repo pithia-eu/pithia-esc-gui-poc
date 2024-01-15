@@ -256,6 +256,7 @@ class CatalogueDataSubsetManagementListView(ResourceManagementListView):
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
 class WorkflowManagementListView(ResourceManagementListView):
+    template_name = 'resource_management/workflow_management_list.html'
     model = models.Workflow
 
     resource_delete_page_url_name = 'delete:workflow'
