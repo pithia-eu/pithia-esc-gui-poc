@@ -56,10 +56,6 @@ class ResourceDeleteView(TemplateView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
     delete_resource_page_breadcrumb_url_name = ''
 
-    # TODO: remove old code
-    resource_mongodb_model = None
-    resource_revision_mongodb_model = None
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Delete'
