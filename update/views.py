@@ -17,10 +17,16 @@ from common.decorators import login_session_institution_required, institution_ow
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
+    CatalogueRevision,
+    CatalogueDataSubsetRevision,
+    CatalogueEntryRevision,
     ComputationCapabilityRevision,
     ComputationRevision,
     CurrentAcquisition,
     CurrentAcquisitionCapability,
+    CurrentCatalogue,
+    CurrentCatalogueDataSubset,
+    CurrentCatalogueEntry,
     CurrentComputation,
     CurrentComputationCapability,
     CurrentDataCollection,
@@ -31,6 +37,7 @@ from common.mongodb_models import (
     CurrentPlatform,
     CurrentProcess,
     CurrentProject,
+    CurrentWorkflow,
     DataCollectionRevision,
     IndividualRevision,
     InstrumentRevision,
@@ -39,12 +46,7 @@ from common.mongodb_models import (
     PlatformRevision,
     ProcessRevision,
     ProjectRevision,
-    CurrentCatalogue,
-    CatalogueRevision,
-    CurrentCatalogueEntry,
-    CatalogueEntryRevision,
-    CurrentCatalogueDataSubset,
-    CatalogueDataSubsetRevision,
+    WorkflowRevision,
 )
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
@@ -499,3 +501,15 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
             self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
             self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, resource_doi_xml_string)
         return super().post(request, *args, **kwargs)
+
+class WorkflowUpdateFormView(ResourceUpdateFormView):
+    model = models.Workflow
+
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
+    resource_update_page_url_name = 'update:workflow'
+    validation_url = reverse_lazy('validation:workflow')
+    success_url = reverse_lazy('resource_management:workflows')
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentWorkflow
+    resource_revision_mongodb_model = WorkflowRevision
