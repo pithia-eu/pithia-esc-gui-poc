@@ -1,0 +1,6 @@
+{% extends 'browse/resource_list_by_type.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}

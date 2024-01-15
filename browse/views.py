@@ -368,6 +368,7 @@ class WorkflowListView(ResourceListView):
     Lists the detail page links for each Workflow
     registration.
     """
+    template_name = 'browse/workflow_list.html'
     model = models.Workflow
     resource_detail_page_url_name = 'browse:workflow_detail'
     description = ''
