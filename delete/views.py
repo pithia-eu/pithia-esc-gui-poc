@@ -21,10 +21,16 @@ from common.models import ScientificMetadata
 from common.mongodb_models import (
     AcquisitionCapabilityRevision,
     AcquisitionRevision,
+    CatalogueRevision,
+    CatalogueDataSubsetRevision,
+    CatalogueEntryRevision,
     ComputationCapabilityRevision,
     ComputationRevision,
     CurrentAcquisition,
     CurrentAcquisitionCapability,
+    CurrentCatalogue,
+    CurrentCatalogueDataSubset,
+    CurrentCatalogueEntry,
     CurrentComputation,
     CurrentComputationCapability,
     CurrentDataCollection,
@@ -35,6 +41,7 @@ from common.mongodb_models import (
     CurrentPlatform,
     CurrentProcess,
     CurrentProject,
+    CurrentWorkflow,
     DataCollectionRevision,
     IndividualRevision,
     InstrumentRevision,
@@ -43,12 +50,7 @@ from common.mongodb_models import (
     PlatformRevision,
     ProcessRevision,
     ProjectRevision,
-    CurrentCatalogue,
-    CatalogueRevision,
-    CurrentCatalogueEntry,
-    CatalogueEntryRevision,
-    CurrentCatalogueDataSubset,
-    CatalogueDataSubsetRevision,
+    WorkflowRevision,
 )
 from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -415,3 +417,17 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     # TODO: remove old code
     resource_mongodb_model = CurrentCatalogueDataSubset
     resource_revision_mongodb_model = CatalogueDataSubsetRevision
+
+class WorkflowDeleteView(ResourceDeleteView):
+    """
+    The deletion confirmation page for a Workflow.
+    """
+    model = models.Workflow
+
+    redirect_url = reverse_lazy('resource_management:workflows')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
+    delete_resource_page_breadcrumb_url_name = 'delete:workflow'
+
+    # TODO: remove old code
+    resource_mongodb_model = CurrentWorkflow
+    resource_revision_mongodb_model = WorkflowRevision
