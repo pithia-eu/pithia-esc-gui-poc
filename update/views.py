@@ -1,7 +1,6 @@
 import logging
 import os
 from django.contrib import messages
-from django.db import transaction
 from django.shortcuts import (
     get_object_or_404,
     render,
@@ -25,25 +24,12 @@ from resource_management.forms import (
     UpdateDataCollectionInteractionMethodsForm
 )
 from resource_management.views import (
+    _create_manage_resource_page_title,
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
 )
 from user_management.services import get_user_id_for_login_session
-
-from register.xml_conversion_checks_and_fixes import (
-    correct_acquisition_capability_set_xml_converted_to_dict,
-    correct_acquisition_xml_converted_to_dict,
-    correct_computation_capability_set_xml_converted_to_dict,
-    correct_computation_xml_converted_to_dict,
-    correct_data_collection_xml_converted_to_dict,
-    correct_instrument_xml_converted_to_dict,
-    correct_operation_xml_converted_to_dict,
-    correct_platform_xml_converted_to_dict,
-    correct_process_xml_converted_to_dict,
-    correct_project_xml_converted_to_dict,
-)
-from resource_management.views import _create_manage_resource_page_title
 
 
 logger = logging.getLogger(__name__)
@@ -69,11 +55,6 @@ class ResourceUpdateFormView(FormView):
     form_class = UploadUpdatedFileForm
     success_url = ''
     xml_file_string = None
-
-    # TODO: remove old code
-    resource_mongodb_model = None
-    resource_revision_mongodb_model = None
-    resource_conversion_validate_and_correct_function = None
 
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['resource_id']
@@ -145,10 +126,6 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_project_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class PlatformUpdateFormView(ResourceUpdateFormView):
     model = models.Platform
 
@@ -156,10 +133,6 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:platform'
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_platform_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class OperationUpdateFormView(ResourceUpdateFormView):
     model = models.Operation
@@ -169,10 +142,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_operation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     model = models.Instrument
 
@@ -180,10 +149,6 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:instrument'
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_instrument_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.AcquisitionCapabilities
@@ -193,10 +158,6 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_acquisition_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
     model = models.Acquisition
 
@@ -204,10 +165,6 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:acquisition'
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_acquisition_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.ComputationCapabilities
@@ -217,10 +174,6 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_computation_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ComputationUpdateFormView(ResourceUpdateFormView):
     model = models.Computation
 
@@ -229,10 +182,6 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_computation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ProcessUpdateFormView(ResourceUpdateFormView):
     model = models.Process
 
@@ -240,10 +189,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_process_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
     model = models.DataCollection
@@ -255,10 +200,6 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = correct_data_collection_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 @login_session_institution_required
 @institution_ownership_required
