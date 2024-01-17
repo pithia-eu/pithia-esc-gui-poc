@@ -5,6 +5,36 @@
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block register_api_specification %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <div class="d-flex flex-column">
+                {% if form.api_specification_url.errors %}
+                    <ul>
+                    {% for error in form.api_specification_url.errors %}
+                        <li>{{ error|escape }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {{ form.api_specification_url.label_tag }}
+                {{ form.api_specification_url }}
+                <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
+                <div class="mt-1 api-specification-url-status-validation d-none">
+                    <ul class="list-group list-group-flush list-group-horizontal mb-0">
+                        <li class="list-group-item border border-0 status-invalid-link d-none p-0">
+                            <div class="d-flex flex-column">
+                                <small class="status-text text-danger">Invalid link</small>
+                                <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock register_api_specification %}
 {% block sidemenu %}
 <div class="col-lg-4">
     <aside class="sidemenu text-secondary">

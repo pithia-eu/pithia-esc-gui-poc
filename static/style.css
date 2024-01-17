@@ -550,8 +550,14 @@ summary.data-collection-category::marker {
     width: 1.2rem;
 }
 
+.file-validation-status-list:empty {
+    border: grey 1px dashed;
+    padding: 1rem;
+    border-radius: 0.375rem;
+}
+
 .file-validation-status-list:empty::before {
-    content: 'Uploaded files will appear here.';
+    content: 'When you upload a file, its validation status will be displayed here.';
     color: gray;
 }
 
@@ -559,12 +565,7 @@ summary.data-collection-category::marker {
     padding: 1rem 0;
 }
 
-.interaction-methods-form-container {
-    max-width: 75ch;
-}
-
 .file-upload-validation-msgs {
-    max-width: 75ch;
     row-gap: 1rem;
 }
 
@@ -850,8 +851,12 @@ a.support-link {
 }
 
 @media (min-width: 992px) {
-    .file-upload-container {
-        max-width: 75ch;
+    .interaction-methods-form-container .list-group-item {
+        padding: 1.5rem;
+    }
+
+    .interaction-methods-form-container input {
+        max-width: 45ch;
     }
     
     .user-dropdown {

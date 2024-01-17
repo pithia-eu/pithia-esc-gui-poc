@@ -1,5 +1,5 @@
 <ul class="list-group">
-    <li class="list-group-item pb-3">
+    <li class="list-group-item">
         <div class="d-flex flex-column mb-0">
             <span><b>Link to Data Collection <small class="text-muted">(added inside the XML Metadata File)</small></b></span>
             <span class="mt-1">
@@ -7,13 +7,13 @@
             </span>
         </div>
     </li>
-    <li class="list-group-item py-3">
+    <li class="list-group-item">
         <div class="d-flex flex-column">
             <div class="form-check fw-bold">
                 {{ form.api_selected }}
                 <label for="{{ form.api_selected.auto_id }}" class="form-check-label">{{ form.api_selected.label }}</label>
             </div>
-            <span class="mb-2">
+            <span class="mb-3">
                 A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
             </span>
         </div>

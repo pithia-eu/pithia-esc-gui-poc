@@ -16,13 +16,11 @@
 <div class="row flex-wrap gx-md-5 gy-5 pb-4">
     <div class="col-lg-8">
         {% block title %}
-        <hgroup>
-            <h1 class="mb-0">{{ title }}</h1>
-            <p>{{ resource_type_plural_readable }}</p>
-        </hgroup>
+        <h1>{{ title }} {{ resource_type_plural_readable }}</h1>
         {% endblock title %}
-        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
+        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form" class="mt-4">
             {% csrf_token %}
+            <h2 class="fs-4">Upload and Validate Metadata File(s)</h2>
             <div class="form-group">
                 {% if form.files.errors %}
                 <ul>
@@ -32,12 +30,41 @@
                 </ul>
                 {% endif %}
                 <div class="file-upload-container mb-3">
-                    <div class="fs-5">{{ form.files.label_tag }}</div>
+                    {{ form.files.label_tag }}
                     {{ form.files }}
                     <div class="d-flex justify-content-between flex-wrap">
                         <small class="form-text">Supported file types: XML</small>
                         <small class="form-text">{% block multiple_allowed %}Multiple files allowed{% endblock multiple_allowed %}</small>
                     </div>
+                </div>
+                <div class="alert alert-light">
+                    <small>
+                        <details>
+                            <summary>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
+                                    <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0"/>
+                                </svg>
+                                Upon uploading your metadata files, we will send these to
+                                our servers to validate that their structure and references
+                                are correct. A valid file will usually take a few minutes
+                                to pass through all the checks.
+                            </summary>
+                            <p class="mt-3">Our validation process involves:</p>
+                            <ul>
+                                <li>Syntax validation</li>
+                                <li>XSD validation</li>
+                                <li>Local ID validation</li>
+                                <li>Namespace validation</li>
+                                <li>Validating references to other metadata</li>
+                                <li>Validating references to Space Physics Ontology terms</li>
+                            </ul>
+                            <p class="mb-0">
+                                We will also perform additional checks depending on if the
+                                metadata is being newly registered or if it is for updating
+                                an existing registration.
+                            </p>
+                        </details>
+                    </small>
                 </div>
                 {% block file_list %}
                 {% with file_list_title='Uploaded Files' %}
@@ -50,7 +77,7 @@
             {% block doi_registration %}
             {% endblock doi_registration %}
             <div class="form-group d-flex flex-sm-row flex-column justify-content-sm-start justify-content-stretch">
-                <button type="submit" class="btn btn-outline-primary" disabled>
+                <button type="submit" class="btn btn-outline-primary" style="width: 10rem;" disabled>
                     {% block submit_button_text %}
                     Register
                     {% endblock submit_button_text %}
