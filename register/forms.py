@@ -9,6 +9,7 @@ class MultipleFileField(forms.FileField):
         kwargs.setdefault('widget', MultipleFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
+            'multiple': 'true',
         }))
         super().__init__(*args, **kwargs)
 
@@ -22,13 +23,13 @@ class MultipleFileField(forms.FileField):
 
 class UploadFileForm(forms.Form):
     files = MultipleFileField(
-        label='Upload File(s)',
+        label='Metadata File(s)',
     )
 
 
 class UploadDataCollectionFileForm(forms.Form):
     files = forms.FileField(
-        label='Upload File',
+        label='Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -61,14 +62,14 @@ class UploadDataCollectionFileForm(forms.Form):
 
 class UploadWorkflowFileForm(forms.Form):
     files = forms.FileField(
-        label='Upload File',
+        label='Metadata file',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
         })
     )
     api_specification_url = forms.CharField(
-        label='Link to Workflow API Specification',
+        label='Workflow OpenAPI Specification URL',
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
@@ -78,7 +79,7 @@ class UploadWorkflowFileForm(forms.Form):
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
     files = forms.FileField(
-        label='Upload File',
+        label='Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
