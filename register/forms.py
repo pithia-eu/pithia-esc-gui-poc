@@ -59,6 +59,22 @@ class UploadDataCollectionFileForm(forms.Form):
         })
     )
 
+class UploadWorkflowFileForm(forms.Form):
+    files = forms.FileField(
+        label='Upload File',
+        widget=forms.ClearableFileInput(attrs={
+            'accept': 'application/xml',
+            'class': 'form-control',
+        })
+    )
+    api_specification_url = forms.CharField(
+        label='Link to Workflow API Specification',
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
     files = forms.FileField(
