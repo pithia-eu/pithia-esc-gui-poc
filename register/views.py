@@ -10,9 +10,10 @@ from django.views.generic import FormView
 from pyexpat import ExpatError
 
 from .forms import (
+    UploadCatalogueDataSubsetFileForm,
     UploadDataCollectionFileForm,
     UploadFileForm,
-    UploadCatalogueDataSubsetFileForm,
+    UploadWorkflowFileForm,
 )
 
 from common import models, mongodb_models
@@ -483,6 +484,7 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload_workflow.html'
     model = models.Workflow
     success_url = reverse_lazy('register:workflow')
+    form_class = UploadWorkflowFileForm
 
     validation_url = reverse_lazy('validation:workflow')
     post_url = reverse_lazy('register:workflow')
