@@ -69,7 +69,7 @@ class UploadWorkflowFileForm(forms.Form):
         })
     )
     api_specification_url = forms.CharField(
-        label='Workflow OpenAPI Specification URL',
+        label='OpenAPI Specification URL',
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
