@@ -1,5 +1,13 @@
 {% extends 'register/file_upload.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+{{ validation_url|json_script:'validation-url' }}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+<script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
+<script src="{% static 'workflow_registration_form.js' %}" type="module"></script>
+<script src="{% static "is_workflow_file_upload_ready.js" %}" type="module" defer></script>
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
@@ -8,7 +16,7 @@
 {% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block register_api_specification %}
 <section>
-    <h2 class="fs-4">Link Your Workflow OpenAPI Specification</h2>
+    <h2 class="fs-4 mb-0">Link Your Workflow OpenAPI Specification</h2>
     <div class="row">
         <div class="col-lg-6">
             <div class="form-group">

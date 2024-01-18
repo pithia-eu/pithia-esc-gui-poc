@@ -493,3 +493,8 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
 
     # TODO: remove old code
     resource_mongodb_model = mongodb_models.CurrentWorkflow
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
+        return context
