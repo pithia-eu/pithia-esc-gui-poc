@@ -7,7 +7,7 @@
 {% endblock breadcrumbs %}
 {% block register_api_specification %}
 <section>
-    <h2 class="fs-4">Link Workflow OpenAPI Specification</h2>
+    <h2 class="fs-4">Link Your Workflow OpenAPI Specification</h2>
     <div class="row">
         <div class="col-lg-6">
             <div class="form-group">
@@ -38,16 +38,3 @@
     </div>
 </section>
 {% endblock register_api_specification %}
-{% block sidemenu %}
-<div class="col-lg-4">
-    <aside class="sidemenu text-secondary">
-        <h2 class="fs-5">Other Metadata</h2>
-        <hr class="my-2">
-        <nav>
-            <ul class="list-style-none ps-0">
-                <li><a href="{% url 'register:data_collection' %}">Data Collections</a></li>
-            </ul>
-        </nav>
-    </aside>
-</div>
-{% endblock sidemenu %}

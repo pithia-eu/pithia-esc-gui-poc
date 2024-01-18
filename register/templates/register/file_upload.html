@@ -13,14 +13,14 @@
 <script src="{% static "is_file_upload_ready.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row flex-wrap gx-md-5 gy-5 pb-4">
-    <div class="col-lg-8">
-        {% block title %}
-        <h1>{{ title }} {{ resource_type_plural_readable }}</h1>
-        {% endblock title %}
-        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form" class="mt-4">
+<div class="row flex-wrap justify-content-around gx-md-5 gy-5 pb-4">
+    <div class="col-lg-7">
+        <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
+            {% block title %}
+            <h1 class="pb-2 mb-4">{{ title }} {{ resource_type_plural_readable }}</h1>
+            {% endblock title %}
             {% csrf_token %}
-            <h2 class="fs-4">Upload and Validate Metadata File(s)</h2>
+            <h2 class="fs-4">Upload and Validate Your Metadata File(s)</h2>
             <div class="form-group">
                 {% if form.files.errors %}
                 <ul>
@@ -44,8 +44,8 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
                                 </svg>
-                                Upon uploading your metadata files, we will send these to
-                                our servers to validate that their structure and references
+                                When you upload your metadata file, we will send this to
+                                our servers to validate that its structure and references
                                 are correct. A valid file will usually take a few minutes
                                 to pass through all the checks.
                             </summary>
@@ -86,26 +86,48 @@
         </form>
     </div>
     {% block sidemenu %}
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <aside class="sidemenu form-group text-secondary">
-            <h2 class="fs-5">Other Metadata</h2>
-            <hr class="my-2">
-            <nav>
-                <ul class="list-style-none ps-0">
-                    <li>{% if 'organisation' not in title|lower %}<a href="{% url 'register:organisation' %}" class="pithia-blue">{% endif %}Organisations{% if 'organisation' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'individual' not in title|lower %}<a href="{% url 'register:individual' %}" class="pithia-blue">{% endif %}Individuals{% if 'individual' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'project' not in title|lower %}<a href="{% url 'register:project' %}" class="pithia-blue">{% endif %}Projects{% if 'project' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'platform' not in title|lower %}<a href="{% url 'register:platform' %}" class="pithia-blue">{% endif %}Platforms{% if 'platform' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'operation' not in title|lower %}<a href="{% url 'register:operation' %}" class="pithia-blue">{% endif %}Operations{% if 'operation' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'instrument' not in title|lower %}<a href="{% url 'register:instrument' %}" class="pithia-blue">{% endif %}Instruments{% if 'project' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'acquisition capabilities' not in title|lower %}<a href="{% url 'register:acquisition_capability_set' %}" class="pithia-blue">{% endif %}Acquisition Capabilities{% if 'acquisition capabilities' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'acquisition' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:acquisition' %}" class="pithia-blue">{% endif %}Acquisitions{% if 'acquisition' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'computation capabilities' not in title|lower %}<a href="{% url 'register:computation_capability_set' %}" class="pithia-blue">{% endif %}Computation Capabilities{% if 'computation capabilities' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'computation' not in title|lower or 'capabilities' in title|lower %}<a href="{% url 'register:computation' %}" class="pithia-blue">{% endif %}Computations{% if 'computation' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'process' not in title|lower %}<a href="{% url 'register:process' %}" class="pithia-blue">{% endif %}Processes{% if 'process' not in title|lower %}</a>{% endif %}</li>
-                    <li>{% if 'data collection' not in title|lower %}<a href="{% url 'register:data_collection' %}" class="pithia-blue">{% endif %}Data Collections{% if 'data collection' not in title|lower %}</a>{% endif %}</li>
-                </ul>
-            </nav>
+            <section>
+                <h2 class="fs-5">Data Collection-related Metadata</h2>
+                <hr class="my-2">
+                <nav>
+                    <ul class="list-style-none ps-0">
+                        <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisations</a></li>
+                        <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individuals</a></li>
+                        <li><a href="{% url 'register:project' %}" class="pithia-blue">Projects</a></li>
+                        <li><a href="{% url 'register:platform' %}" class="pithia-blue">Platforms</a></li>
+                        <li><a href="{% url 'register:operation' %}" class="pithia-blue">Operations</a></li>
+                        <li><a href="{% url 'register:instrument' %}" class="pithia-blue">Instruments</a></li>
+                        <li><a href="{% url 'register:acquisition_capability_set' %}" class="pithia-blue">Acquisition Capabilities</a></li>
+                        <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisitions</a></li>
+                        <li><a href="{% url 'register:computation_capability_set' %}" class="pithia-blue">Computation Capabilities</a></li>
+                        <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computations</a></li>
+                        <li><a href="{% url 'register:process' %}" class="pithia-blue">Processes</a></li>
+                        <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collections</a></li>
+                    </ul>
+                </nav>
+            </section>
+            <section>
+                <h2 class="fs-5">Catalogue-related Metadata</h2>
+                <hr class="my-2">
+                <nav>
+                    <ul class="list-style-none ps-0">
+                        <li><a href="{% url 'register:catalogue' %}" class="pithia-blue">Catalogues</a></li>
+                        <li><a href="{% url 'register:catalogue_entry' %}" class="pithia-blue">Catalogue Entries</a></li>
+                        <li><a href="{% url 'register:catalogue_data_subset' %}" class="pithia-blue">Catalogue Data Subsets</a></li>
+                    </ul>
+                </nav>
+            </section>
+            <section>
+                <h2 class="fs-5">Workflows</h2>
+                <hr class="my-2">
+                <nav>
+                    <ul class="list-style-none ps-0">
+                        <li><a href="{% url 'register:workflow' %}" class="pithia-blue">Workflows</a></li>
+                    </ul>
+                </nav>
+            </section>
         </aside>
     </div>
     {% endblock sidemenu %}
