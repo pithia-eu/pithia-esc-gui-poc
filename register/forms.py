@@ -50,7 +50,7 @@ class UploadDataCollectionFileForm(forms.Form):
         })
     )
     api_specification_url = forms.CharField(
-        label='Link to API Specification',
+        label='OpenAPI Specification URL',
         required=False,
         disabled=True,
         widget=forms.TextInput(attrs={

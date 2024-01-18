@@ -28,6 +28,10 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     )
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     api_selected = forms.BooleanField(
         label='API',
         required=False,
@@ -36,7 +40,7 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         })
     )
     api_specification_url = forms.CharField(
-        label='Link to API Specification',
+        label='OpenAPI Specification URL',
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
