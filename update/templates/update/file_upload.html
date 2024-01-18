@@ -15,11 +15,11 @@
 {% endblock scripts %}
 {% block title %}
 <hgroup>
-    <h1 class="mb-0">{{ title }}</h1>
+    <h1 class="mb-0">{{ title_short }}</h1>
     <p>{{ resource.name }}</p>
 </hgroup>
 {% endblock title %}
-{% block multiple_allowed %}Multiple files not allowed{% endblock multiple_allowed %}
+{% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block page_description %}
 Upload the updated file using the file input below.
 This will start the file validation process.

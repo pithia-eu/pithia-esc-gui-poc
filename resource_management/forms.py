@@ -2,8 +2,12 @@ from django import forms
 
 
 class UploadUpdatedFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Metadata File',
+        label='Upload Your Updated Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control'
@@ -11,8 +15,12 @@ class UploadUpdatedFileForm(forms.Form):
     )
 
 class UploadUpdatedDataCollectionFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Metadata File',
+        label='Upload Your Updated Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',

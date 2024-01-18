@@ -83,7 +83,7 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register'
+        context['title'] = f'Register {self.model.type_plural_readable.title()}'
         context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
         context['validation_url'] = self.validation_url
         context['post_url'] = self.post_url

@@ -851,6 +851,7 @@ a.support-link {
 }
 
 @media (min-width: 992px) {
+    #interaction-methods-form .list-group-item,
     .interaction-methods-form-container .list-group-item {
         padding: 1.5rem;
     }

@@ -13,14 +13,13 @@
 <script src="{% static "is_file_upload_ready.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="row flex-wrap justify-content-around gx-md-5 gy-5 pb-4">
+<div class="row flex-wrap justify-content-between gx-md-5 gy-5 pb-4">
     <div class="col-lg-7">
         <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
             {% block title %}
-            <h1 class="pb-2 mb-4">{{ title }} {{ resource_type_plural_readable }}</h1>
+            <h1 class="pb-2 mb-3">{{ title }}</h1>
             {% endblock title %}
             {% csrf_token %}
-            <h2 class="fs-4">Upload and Validate Your Metadata File(s)</h2>
             <div class="form-group">
                 {% if form.files.errors %}
                 <ul>
@@ -30,7 +29,7 @@
                 </ul>
                 {% endif %}
                 <div class="file-upload-container mb-3">
-                    {{ form.files.label_tag }}
+                    <h2 class="fs-4">{{ form.files.label_tag }}</h2>
                     {{ form.files }}
                     <div class="d-flex justify-content-between flex-wrap">
                         <small class="form-text">Supported file types: XML</small>

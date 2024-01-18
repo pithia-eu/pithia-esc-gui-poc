@@ -22,14 +22,22 @@ class MultipleFileField(forms.FileField):
         return result
 
 class UploadFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = MultipleFileField(
-        label='Metadata File(s)',
+        label='Upload Your Metadata File(s)',
     )
 
 
 class UploadDataCollectionFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Metadata File',
+        label='Upload Your Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -61,8 +69,12 @@ class UploadDataCollectionFileForm(forms.Form):
     )
 
 class UploadWorkflowFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Metadata file',
+        label='Upload Your Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -78,8 +90,12 @@ class UploadWorkflowFileForm(forms.Form):
 
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Metadata File',
+        label='Upload Your Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
