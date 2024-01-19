@@ -22,7 +22,7 @@ def interact_with_data_collection_through_api(request, data_collection_id):
         return HttpResponseRedirect(reverse('browse:list_data_collections'))
 
     try:
-        api_interaction_method = APIInteractionMethod.objects.get(data_collection=data_collection)
+        api_interaction_method = APIInteractionMethod.objects.get(scientific_metadata=data_collection)
     except APIInteractionMethod.DoesNotExist:
         messages.error(request, 'No API interaction method was found for this data collection.')
         return HttpResponseRedirect(reverse('browse:data_collection_detail', kwargs={ 'data_collection_id': data_collection_id }))

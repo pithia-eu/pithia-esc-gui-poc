@@ -216,14 +216,14 @@ def data_collection_interaction_methods(request, resource_id):
                 
                 if is_api_selected == False:
                     try:
-                        models.APIInteractionMethod.objects.get(data_collection=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+                        models.APIInteractionMethod.objects.get(scientific_metadata=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
                     except models.APIInteractionMethod.DoesNotExist:
                         pass
                     messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
                     return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
 
                 try:
-                    api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+                    api_interaction_method = models.APIInteractionMethod.objects.get(scientific_metadata=data_collection)
                     models.APIInteractionMethod.objects.update_config(
                         api_interaction_method.pk,
                         api_specification_url,
@@ -245,7 +245,7 @@ def data_collection_interaction_methods(request, resource_id):
     form = UpdateDataCollectionInteractionMethodsForm()
     form_data = {}
     try:
-        api_interaction_method = models.APIInteractionMethod.objects.get(data_collection=data_collection)
+        api_interaction_method = models.APIInteractionMethod.objects.get(scientific_metadata=data_collection)
         form_data['api_selected'] = True
         form_data['api_specification_url'] = api_interaction_method.specification_url
         form_data['api_description'] = api_interaction_method.description

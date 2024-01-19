@@ -44,7 +44,7 @@ class InteractionMethodTestCase(TestCase):
             print('interaction_method', interaction_method)
             print('interaction_method.type', interaction_method.type)
             print('interaction_method.config', interaction_method.config)
-            print('interaction_method.data_collection', interaction_method.data_collection)
+            print('interaction_method.scientific_metadata', interaction_method.scientific_metadata)
             print('data_collection.interactionmethod_set.all()', data_collection.interactionmethod_set.all())
             self.assertTrue(len(list(data_collection.interactionmethod_set.all())) > 0)
             print('Passed create_api_interaction_method() test.')

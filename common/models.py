@@ -192,18 +192,21 @@ class ScientificMetadata(models.Model):
 class InteractionMethod(models.Model):
     # Primary key should be handled automatically in the future
     id = models.CharField(max_length=36, primary_key=True, db_column='intm_id')
-    data_collection = models.ForeignKey(
-        'DataCollection',
+    scientific_metadata = models.ForeignKey(
+        'ScientificMetadata',
         on_delete=models.CASCADE,
         null=True,
-        limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION},
+        limit_choices_to=Q(type=ScientificMetadata.DATA_COLLECTION) | Q(type=ScientificMetadata.WORKFLOW),
         db_column='sm_id'
     )
     # owner = models.ForeignKey(
     #   'Member',
     #   db_column='owner_id'
     # )
-    owner = models.CharField(max_length=9999, db_column='owner_id')
+    owner = models.CharField(
+        max_length=200,
+        db_column='owner_id'
+    )
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
@@ -225,6 +228,7 @@ class InteractionMethod(models.Model):
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
+    workflow_api_interaction_methods = WorkflowAPIInteractionMethodManager()
     
     class Meta:
         db_table = 'int_method'
@@ -247,6 +251,20 @@ class APIInteractionMethod(InteractionMethod):
         self.config['description'] = value
 
     objects = APIInteractionMethodManager()
+
+    class Meta:
+        proxy = True
+
+class WorkflowAPIInteractionMethod(InteractionMethod):
+    @property
+    def specification_url(self):
+        return self.config['specification_url']
+    
+    @specification_url.setter
+    def specification_url(self, value):
+        self.config['specification_url'] = value
+
+    objects = WorkflowAPIInteractionMethodManager()
 
     class Meta:
         proxy = True
