@@ -35,7 +35,7 @@ DATABASE_WRITE_PASSWORD=password123
 ```
 **Note:** This guide does not provide instructions for setting up the Handle features for development, so the environment variables for those features have been excluded here.
 
-## Setup the PostgreSQL database
+## Set up the PostgreSQL database
 Create the development database and database users with the same details you entered in your .env file. Next, create all the project database tables by running the following in the command line:
 ```
 python3 manage.py migrate
