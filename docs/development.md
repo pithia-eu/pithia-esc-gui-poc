@@ -19,7 +19,7 @@ sudo touch .env
 ```
 
 ## Set up the .env file variables
-The project uses environment variables which are stored in a `.env` file in the `/pithiaesc` folder. Enter the variables using whatever method works for you. Below is an example of a filled out .env file which you can follow:
+The project uses environment variables which are stored in a `.env` file in the `/pithiaesc` folder. Use the following example .env file contents as a template to help fill out your .env file:
 ```
 SECRET_KEY=escdevsecretkey
 
@@ -33,10 +33,10 @@ DATABASE_WRITE_USER=escuser-rw
 DATABASE_READ_PASSWORD=password123
 DATABASE_WRITE_PASSWORD=password123
 ```
-**Note:** This guide does not provide instructions for setting up the Handle generation features for development, so the environment variables for those features have been excluded here.
+**Note:** This guide does not provide instructions for setting up the Handle features for development, so the environment variables for those features have been excluded here.
 
 ## Setup the PostgreSQL database
-Create the development database and database users with the same information you entered in the .env file. Next, create all the database tables by running the following in the command line:
+Create the development database and database users with the same details you entered in your .env file. Next, create all the project database tables by running the following in the command line:
 ```
 python3 manage.py migrate
 ```
@@ -46,7 +46,7 @@ To test the project runs enter the following in the command line:
 ```
 python3 manage.py runserver
 ```
-The command line should display output similar to this:
+Upon entering this, the command line should produce output similar to the following:
 ```
 System check identified no issues (0 silenced).
 January 18, 2024 - 17:18:37
@@ -54,6 +54,8 @@ Django version 4.0.5, using settings 'pithiaesc.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-All the e-Science Centre's features should be now be available, with the exception of the Handle features. To view the project in your browser, enter [http://localhost:8000](http://localhost:8000) in your address bar!
+All the e-Science Centre's features should be now be available, with the exception of the Handle features.
+
+To view it in your browser, enter [http://localhost:8000](http://localhost:8000) in your address bar.
 
 
