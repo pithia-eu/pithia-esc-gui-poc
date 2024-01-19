@@ -16,7 +16,7 @@ from .forms import (
     UploadWorkflowFileForm,
 )
 
-from common import models, mongodb_models
+from common import models
 from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
     add_doi_metadata_kernel_to_handle,
@@ -44,14 +44,6 @@ from user_management.services import (
     get_institution_id_for_login_session,
 )
 from utils.url_helpers import create_data_subset_detail_page_url
-
-# TODO: remove old code
-from . import xml_conversion_checks_and_fixes
-from .pymongo_api import register_with_pymongo_transaction_if_possible
-
-from common.mongodb_models import OriginalMetadataXml
-from handle_management.pymongo_api import add_data_subset_data_to_doi_metadata_kernel_dict_old
-from update.pymongo_api import register_doi_with_pymongo_transaction_if_possible
 from validation.errors import FileRegisteredBefore
 
 
@@ -76,10 +68,6 @@ class ResourceRegisterFormView(FormView):
 
     resource_management_list_page_breadcrumb_text = ''
     resource_management_list_page_breadcrumb_url_name = ''
-
-    # TODO: remove old code
-    resource_mongodb_model = None
-    resource_conversion_validate_and_correct_function = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -127,20 +115,6 @@ class ResourceRegisterFormView(FormView):
                                 api_description,
                                 self.new_registration
                             )
-                        # TODO: remove old code
-                        
-                        register_with_pymongo_transaction_if_possible(
-                            xml_file,
-                            self.resource_mongodb_model,
-                            OriginalMetadataXml,
-                            api_selected=is_api_selected,
-                            api_specification_url=api_specification_url,
-                            api_description=api_description,
-                            resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                        )
-                        self.new_pymongo_registration = self.resource_mongodb_model.find_one({
-                            'identifier.PITHIA_Identifier.localID': self.new_registration.localid
-                        })
                     
                     file_registered = True
                     messages.success(request, f'Successfully registered {xml_file.name}.')
@@ -184,8 +158,6 @@ class ResourceRegisterFormView(FormView):
                             # Add the handle metadata to the DOI dict
                             doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
                             add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
-                            # TODO: remove old code
-                            add_data_subset_data_to_doi_metadata_kernel_dict_old(self.new_pymongo_registration['_id'], doi_dict)
 
                             # Add DOI metadata kernel to Handle and Data Subset
                             add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
@@ -199,17 +171,6 @@ class ResourceRegisterFormView(FormView):
                             # retrieve information from the Handle in case the
                             # Data Subset ever gets deleted.
                             add_handle_to_url_mapping(handle, data_subset_url)
-
-                            # TODO: remove old code
-                            register_doi_with_pymongo_transaction_if_possible(
-                                doi_dict,
-                                str(self.new_pymongo_registration['_id']),
-                                xml_file,
-                                self.resource_mongodb_model,
-                                handle,
-                                data_subset_url,
-                                resource_conversion_validate_and_correct_function=self.resource_conversion_validate_and_correct_function
-                            )
 
                         messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
                 except ExpatError as err:
@@ -238,9 +199,6 @@ class OrganisationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentOrganisation
-
 class IndividualRegisterFormView(ResourceRegisterFormView):
     model = models.Individual
     success_url = reverse_lazy('register:individual')
@@ -249,9 +207,6 @@ class IndividualRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:individual')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentIndividual
 
 class ProjectRegisterFormView(ResourceRegisterFormView):
     model = models.Project
@@ -262,13 +217,6 @@ class ProjectRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentProject
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_project_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class PlatformRegisterFormView(ResourceRegisterFormView):
     model = models.Platform
     success_url = reverse_lazy('register:platform')
@@ -277,13 +225,6 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:platform')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentPlatform
-
-    def post(self, request, *args, **kwargs):
-            self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_platform_xml_converted_to_dict
-            return super().post(request, *args, **kwargs)
 
 class OperationRegisterFormView(ResourceRegisterFormView):
     model = models.Operation
@@ -294,13 +235,6 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentOperation
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_operation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class InstrumentRegisterFormView(ResourceRegisterFormView):
     model = models.Instrument
     success_url = reverse_lazy('register:instrument')
@@ -309,13 +243,6 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:instrument')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentInstrument
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_instrument_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.AcquisitionCapabilities
@@ -326,13 +253,6 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentAcquisitionCapability
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
     model = models.Acquisition
     success_url = reverse_lazy('register:acquisition')
@@ -341,13 +261,6 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:acquisition')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentAcquisition
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_acquisition_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.ComputationCapabilities
@@ -358,13 +271,6 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentComputationCapability
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_capability_set_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ComputationRegisterFormView(ResourceRegisterFormView):
     model = models.Computation
     success_url = reverse_lazy('register:computation')
@@ -374,13 +280,6 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentComputation
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_computation_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
-
 class ProcessRegisterFormView(ResourceRegisterFormView):
     model = models.Process
     success_url = reverse_lazy('register:process')
@@ -389,13 +288,6 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:process')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentProcess
-
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_process_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
     model = models.DataCollection
@@ -409,17 +301,10 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data collections')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentDataCollection
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
-        
-    def post(self, request, *args, **kwargs):
-        self.resource_conversion_validate_and_correct_function = xml_conversion_checks_and_fixes.correct_data_collection_xml_converted_to_dict
-        return super().post(request, *args, **kwargs)
 
 class CatalogueRegisterFormView(ResourceRegisterFormView):
     template_name='register/file_upload_catalogue.html'
@@ -430,9 +315,6 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:catalogue')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentCatalogue
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -449,9 +331,6 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:catalogue_entry')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentCatalogueEntry
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -471,9 +350,6 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentCatalogueDataSubset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -490,9 +366,6 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:workflow')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('workflows')
-
-    # TODO: remove old code
-    resource_mongodb_model = mongodb_models.CurrentWorkflow
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
