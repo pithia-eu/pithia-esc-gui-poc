@@ -318,7 +318,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
-    def register_doi(self, request):
+    def register_doi(self, request, xml_file):
         try:
             # POST RESOURCE REGISTRATION
             # Get the DOI
@@ -327,7 +327,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
             # Continue with registration as normal
             if 'register_doi' not in request.POST:
                 return
-            with transaction.atomic():
+            with transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME']):
                 is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
                 if is_doi_in_file_already == True:
                     logger.exception('A DOI has already been issued for this metadata file.')
@@ -381,7 +381,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
         if form.is_valid():
             xml_file = request.FILES['files']
             self.run_registration_actions_safely(request, xml_file)
-            self.register_doi(request)
+            self.register_doi(request, xml_file)
         else:
             messages.error(request, 'The form submitted was not valid.')
         return redirect(self.success_url)
