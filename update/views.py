@@ -240,7 +240,9 @@ def data_collection_interaction_methods(request, resource_id):
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
-            return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
+        else:
+            messages.error(request, 'The form submitted was not valid.')
+        return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
         
     # request.method == 'GET'
     form = UpdateDataCollectionInteractionMethodsForm()
@@ -336,10 +338,29 @@ class WorkflowUpdateFormView(ResourceUpdateFormView):
 @institution_ownership_required
 def workflow_openapi_specification_url(request, resource_id):
     workflow = get_object_or_404(models.Workflow, pk=resource_id)
-    form = UpdateWorkflowOpenAPISpecificationURLForm(initial={'api_specification_url': workflow.interactionmethod_set.first().config.get('specification_url')})
+    workflow_interaction_method = workflow.interactionmethod_set.first()
+    if request.method == 'POST':
+        form = UpdateWorkflowOpenAPISpecificationURLForm(request.POST)
+        if not form.is_valid():
+            messages.error(request, 'The form submitted was not valid.')
+            return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
+        try:
+            models.WorkflowAPIInteractionMethod.objects.update_openapi_specification_url(
+                workflow_interaction_method.id,
+                request.POST.get('api_specification_url')
+            )
+            messages.success(request, f'Successfully updated OpenAPI specification for {workflow.name}.')
+        except BaseException as err:
+            logger.exception('An unexpected error occurred whilst trying to update an OpenAPI specification for a workflow.')
+            messages.error(request, 'An unexpected error occurred.')
+        return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
+    form = UpdateWorkflowOpenAPISpecificationURLForm(initial={'api_specification_url': workflow_interaction_method.config.get('specification_url')})
     return render(request, 'update/workflow_openapi_specification_url.html', {
-        'title': 'Update Workflow OpenAPI Specification Link',
+        'title': 'Update Workflow OpenAPI Specification',
         'workflow': workflow,
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
+        'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+        'resource_management_list_page_breadcrumb_url_name': 'resource_management:workflows',
+        'resource_management_list_page_breadcrumb_text': _create_manage_resource_page_title(models.Workflow.type_plural_readable.title())
     })
