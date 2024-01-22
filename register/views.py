@@ -94,7 +94,7 @@ class ResourceRegisterFormView(FormView):
         # should be implemented.
         try:
             self.new_registration = self.run_registration_actions(request, xml_file)
-            
+
             messages.success(request, f'Successfully registered {xml_file.name}.')
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
@@ -248,15 +248,20 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data collections')
     
     def register_api_interaction_method(self, request):
-        is_api_selected = 'api_selected' in request.POST
-        api_specification_url = request.POST.get('api_specification_url', None)
-        api_description = request.POST.get('api_description', '')
-        if is_api_selected:
+        try:
+            is_api_selected = 'api_selected' in request.POST
+            api_specification_url = request.POST.get('api_specification_url', None)
+            api_description = request.POST.get('api_description', '')
+            if is_api_selected is False:
+                return
             models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
                 api_specification_url,
                 api_description,
                 self.new_registration
             )
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during API interaction method registration.')
+            messages.error(request, 'An unexpected error occurred during API interaction method registration.')
 
     def post(self, request, *args, **kwargs):
         # Form validation
@@ -264,6 +269,8 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         if form.is_valid():
             xml_file = request.FILES['files']
             self.run_registration_actions_safely(request, xml_file)
+            if self.new_registration is None:
+                return redirect(self.success_url)
             self.register_api_interaction_method(request)
         else:
             messages.error(request, 'The form submitted was not valid.')
