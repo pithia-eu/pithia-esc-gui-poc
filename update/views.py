@@ -355,7 +355,12 @@ def workflow_openapi_specification_url(request, resource_id):
             logger.exception('An unexpected error occurred whilst trying to update an OpenAPI specification for a workflow.')
             messages.error(request, 'An unexpected error occurred.')
         return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
-    form = UpdateWorkflowOpenAPISpecificationURLForm(initial={'api_specification_url': workflow_interaction_method.config.get('specification_url')})
+    form = UpdateWorkflowOpenAPISpecificationURLForm(
+        initial={
+            'api_specification_url': workflow_interaction_method.config.get('specification_url'),
+            'api_description': workflow_interaction_method.config.get('description'),
+        }
+    )
     return render(request, 'update/workflow_openapi_specification_url.html', {
         'title': 'Update Workflow OpenAPI Specification',
         'workflow': workflow,
