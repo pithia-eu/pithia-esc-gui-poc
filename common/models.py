@@ -260,9 +260,17 @@ class WorkflowAPIInteractionMethod(InteractionMethod):
     def specification_url(self):
         return self.config['specification_url']
     
+    @property
+    def description(self):
+        return self.config['description']
+    
     @specification_url.setter
     def specification_url(self, value):
         self.config['specification_url'] = value
+    
+    @description.setter
+    def description(self, value):
+        self.config['description'] = value
 
     objects = WorkflowAPIInteractionMethodManager()
 

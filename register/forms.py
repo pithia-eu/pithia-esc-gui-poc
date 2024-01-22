@@ -41,7 +41,9 @@ class UploadDataCollectionFileForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
-        }))
+        })
+    )
+    
     api_selected = forms.BooleanField(
         label='API',
         required=False,
@@ -49,6 +51,7 @@ class UploadDataCollectionFileForm(forms.Form):
             'class': 'form-check-input'
         })
     )
+
     api_specification_url = forms.CharField(
         label='OpenAPI Specification URL',
         required=False,
@@ -57,6 +60,7 @@ class UploadDataCollectionFileForm(forms.Form):
             'class': 'form-control'
         })
     )
+
     api_description = forms.CharField(
         label='Description',
         required=False,
@@ -64,7 +68,6 @@ class UploadDataCollectionFileForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'style': 'resize: none;'
         })
     )
 

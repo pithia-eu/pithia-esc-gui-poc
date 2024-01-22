@@ -345,9 +345,10 @@ def workflow_openapi_specification_url(request, resource_id):
             messages.error(request, 'The form submitted was not valid.')
             return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
         try:
-            models.WorkflowAPIInteractionMethod.objects.update_openapi_specification_url(
+            models.WorkflowAPIInteractionMethod.objects.update_config(
                 workflow_interaction_method.id,
-                request.POST.get('api_specification_url')
+                request.POST.get('api_specification_url'),
+                request.POST.get('api_description')
             )
             messages.success(request, f'Successfully updated OpenAPI specification for {workflow.name}.')
         except BaseException as err:

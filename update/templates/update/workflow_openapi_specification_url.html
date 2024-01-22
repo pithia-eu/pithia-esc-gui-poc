@@ -13,13 +13,13 @@
 {% block content %}
 <hgroup>
     <h1>{{ title }}</h1>
-    <p>{{ workflow.name }}</p>
+    <p class="mb-0">{{ workflow.name }}</p>
 </hgroup>
-<div class="row">
-    <div class="col-lg-5">
-        <form action="{% url 'update:workflow_openapi_specification_url' workflow.id %}" method="POST" id="workflow-openapi-spec-url-update-form">
-            {% csrf_token %}
-            <div class="form-group">
+<form action="{% url 'update:workflow_openapi_specification_url' workflow.id %}" method="POST" id="workflow-openapi-spec-url-update-form">
+    {% csrf_token %}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
                 {{ form.api_specification_url.label_tag }}
                 {{ form.api_specification_url }}
                 <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
@@ -34,8 +34,16 @@
                     </ul>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+        </div>
+        <div class="row mt-5">
+            <div class="col-lg-7">
+                {{ form.api_description.label_tag }}
+                {{ form.api_description }}
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-lg-5"><button type="submit" class="btn btn-primary">Update</button></div>
+        </div>
     </div>
-</div>
+</form>
 {% endblock content %}
