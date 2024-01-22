@@ -4,7 +4,7 @@
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item resource_type_list_page_breadcrumb_text 'browse:data_collection_related_resource_types' %}
 {% breadcrumb_item resource_list_page_breadcrumb_text 'browse:list_data_collections' %}
-{% breadcrumb_item data_collection.name 'browse:data_collection_detail' data_collection.id %}
+{% breadcrumb_item scientific_metadata.name 'browse:data_collection_detail' scientific_metadata.id %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
@@ -23,7 +23,7 @@
 <div class="row">
     <div class="col-lg-8">
         <h1>{{ title }}</h1>
-        <span class="text-muted">{{ data_collection.name }}</span>
+        <span class="text-muted">{{ scientific_metadata.name }}</span>
     </div>
 </div>
     <div id="swagger-ui"></div>

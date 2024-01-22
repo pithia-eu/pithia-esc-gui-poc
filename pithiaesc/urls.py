@@ -7,10 +7,10 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     # Include URLs
     path('', include('browse.urls')),
+    path('', include('present.urls')),
     path('', include('user_management.urls')),
     path('', include('utils.urls')),
     path('ontology/', include('ontology.urls')),
-    path('present/', include('present.urls')),
     path('search/', include('search.urls')),
     path('simple-search/', include('simple_search.urls')),
     path('help/', include('help.urls')),
