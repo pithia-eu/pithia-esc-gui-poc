@@ -68,26 +68,6 @@ class UploadDataCollectionFileForm(forms.Form):
         })
     )
 
-class UploadWorkflowFileForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.label_suffix = ''
-
-    files = forms.FileField(
-        label='Upload Your Metadata File',
-        widget=forms.ClearableFileInput(attrs={
-            'accept': 'application/xml',
-            'class': 'form-control',
-        })
-    )
-    api_specification_url = forms.CharField(
-        label='OpenAPI Specification URL',
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control'
-        })
-    )
-
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -107,5 +87,35 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         required=False,
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input'
+        })
+    )
+
+class UploadWorkflowFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
+    files = forms.FileField(
+        label='Upload Your Metadata File',
+        widget=forms.ClearableFileInput(attrs={
+            'accept': 'application/xml',
+            'class': 'form-control',
+        })
+    )
+
+    api_specification_url = forms.CharField(
+        label='OpenAPI Specification URL',
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    api_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
         })
     )

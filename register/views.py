@@ -412,8 +412,10 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
 
     def register_workflow_api_interaction_method(self, request, new_registration):
         api_specification_url = request.POST.get('api_specification_url', None)
+        api_description = request.POST.get('api_description', None)
         return models.InteractionMethod.workflow_api_interaction_methods.create_api_interaction_method(
             api_specification_url,
+            api_description,
             new_registration
         )
 

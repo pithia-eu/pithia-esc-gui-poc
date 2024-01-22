@@ -228,9 +228,10 @@ class WorkflowAPIInteractionMethodManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(scientific_metadata__type=apps.get_model('common', 'ScientificMetadata').WORKFLOW, type=self.model.API)
     
-    def create_api_interaction_method(self, specification_url: str, workflow):
+    def create_api_interaction_method(self, specification_url: str, description: str, workflow):
         config = {
             'specification_url': specification_url,
+            'description': description,
         }
         interaction_method = self.model(
             id=uuid.uuid4(),

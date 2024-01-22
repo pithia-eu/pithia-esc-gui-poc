@@ -529,8 +529,16 @@ summary.data-collection-category::marker {
     color: #000;
 }
 
+#file-upload-form h2 {
+    margin-bottom: 2rem;
+}
+
 #file-upload-form label {
     margin-bottom: 0.5rem;
+}
+
+#file-upload-form h2 > label {
+    margin-bottom: 0;
 }
 
 .card-header img,
@@ -562,7 +570,7 @@ summary.data-collection-category::marker {
 }
 
 .form-group {
-    padding: 1rem 0;
+    padding: 2.5rem 0;
 }
 
 .file-upload-validation-msgs {
