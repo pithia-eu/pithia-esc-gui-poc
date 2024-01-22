@@ -1,11 +1,16 @@
-export let isApiSpecificationLinkValid = false;
-export let isApiSpecificationInputAvailable = false;
 export const apiSpecificationUrlInput = document.querySelector("#id_api_specification_url");
 const validationStatusList = document.querySelector(".api-specification-url-status-validation");
 const apiSpecificationValidationUrl = JSON.parse(document.getElementById("api-specification-validation-url").textContent);
 export const badApiInteractionMethodModifiedEvent = new Event("badApiInteractionMethodModified");
 export const apiInteractionMethodModifiedEvent = new Event("apiInteractionMethodModified");
+export let isApiSpecificationLinkValid = false;
+export let isApiSpecificationInputAvailable = false;
+let submitButton;
 let userInputTimeout;
+
+export function setSubmitButton(btn) {
+    return submitButton = btn;
+}
 
 export function validateOpenApiSpecificationUrl() {
     const url = apiSpecificationUrlInput.value;
@@ -16,11 +21,7 @@ export function validateOpenApiSpecificationUrl() {
         return;
     }
 
-    try {
-        document.querySelector("#file-upload-form button[type='submit']").disabled = true;
-    } catch (error) {
-        document.querySelector("#interaction-methods-form button[type='submit']").disabled = true;
-    }
+    submitButton.disabled = true;
     
     displayValidatingSpinner(true);
     if (userInputTimeout !== undefined) {

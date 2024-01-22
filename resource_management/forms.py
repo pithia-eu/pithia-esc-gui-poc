@@ -56,3 +56,16 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
             'style': 'resize: none;'
         })
     )
+
+class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
+    api_specification_url = forms.CharField(
+        label='OpenAPI Specification URL',
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )

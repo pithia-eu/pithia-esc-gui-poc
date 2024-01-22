@@ -1,12 +1,13 @@
 import {
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
+    isApiSpecificationLinkValid,
     setSubmitButton,
     validateOpenApiSpecificationUrl,
 } from "/static/api_specification_validation.js"
 
 window.addEventListener("load", event => {
-    setSubmitButton(document.querySelector("#file-upload-form button[type='submit']"));
+    setSubmitButton(document.querySelector("#workflow-openapi-spec-url-update-form button[type='submit']"));
     validateOpenApiSpecificationUrl();
 });
 
@@ -17,3 +18,11 @@ apiSpecificationUrlInput.addEventListener("input", async event => {
     }
     validateOpenApiSpecificationUrl();
 });
+
+document.addEventListener("apiInteractionMethodModified", event => {
+    enableSubmitButtonIfReady();
+});
+
+export function enableSubmitButtonIfReady() {
+    document.querySelector("#workflow-openapi-spec-url-update-form button[type='submit']").disabled = !isApiSpecificationLinkValid;
+}

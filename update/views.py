@@ -21,7 +21,8 @@ from handle_management.xml_utils import (
 from resource_management.forms import (
     UploadUpdatedDataCollectionFileForm,
     UploadUpdatedFileForm,
-    UpdateDataCollectionInteractionMethodsForm
+    UpdateDataCollectionInteractionMethodsForm,
+    UpdateWorkflowOpenAPISpecificationURLForm,
 )
 from resource_management.views import (
     _create_manage_resource_page_title,
@@ -335,6 +336,10 @@ class WorkflowUpdateFormView(ResourceUpdateFormView):
 @institution_ownership_required
 def workflow_openapi_specification_url(request, resource_id):
     workflow = get_object_or_404(models.Workflow, pk=resource_id)
-    return render(request, 'workflow_openapi_specification_url.html', {
-        'title': 'Update Workflow OpenAPI Specification Link'
+    form = UpdateWorkflowOpenAPISpecificationURLForm(initial={'api_specification_url': workflow.interactionmethod_set.first().config.get('specification_url')})
+    return render(request, 'update/workflow_openapi_specification_url.html', {
+        'title': 'Update Workflow OpenAPI Specification Link',
+        'workflow': workflow,
+        'form': form,
+        'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
     })

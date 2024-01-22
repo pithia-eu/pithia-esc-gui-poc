@@ -2,11 +2,13 @@ import {
     apiInteractionMethodModifiedEvent,
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
+    setSubmitButton,
     validateOpenApiSpecificationUrl,
 } from "/static/api_specification_validation.js"
 
 export const apiExecutionMethodCheckbox = document.querySelector('input[type="checkbox"][name="api_selected"]');
 export const apiSpecificationDescriptionTextarea = document.querySelector("#id_api_description");
+let submitButton;
 
 export function toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox) {
     if (apiExecutionMethodCheckbox.checked) {
@@ -27,6 +29,11 @@ export function toggleApiDescriptionTextarea(apiExecutionMethodCheckbox) {
 }
 
 window.addEventListener("load", event => {
+    submitButton = document.querySelector("#file-upload-form button[type='submit']");
+    if (submitButton === null) {
+        submitButton = document.querySelector("#interaction-methods-form button[type='submit']")
+    }
+    setSubmitButton(submitButton);
     toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
     toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
     if (apiExecutionMethodCheckbox.checked) {
