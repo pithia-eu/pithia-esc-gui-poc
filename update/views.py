@@ -330,3 +330,11 @@ class WorkflowUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:workflow'
     validation_url = reverse_lazy('validation:workflow')
     success_url = reverse_lazy('resource_management:workflows')
+
+@login_session_institution_required
+@institution_ownership_required
+def workflow_openapi_specification_url(request, resource_id):
+    workflow = get_object_or_404(models.Workflow, pk=resource_id)
+    return render(request, 'workflow_openapi_specification_url.html', {
+        'title': 'Update Workflow OpenAPI Specification Link'
+    })
