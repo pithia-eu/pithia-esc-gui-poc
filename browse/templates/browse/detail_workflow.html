@@ -26,13 +26,9 @@
                         <tr>
                             <td>API</td>
                             <td>
-                                {% if 'description' in method.config and method.config.description|length > 0 %}
-                                {{ method.config.description|urlize }}
-                                {% else %}
-                                <i class="text-muted">None</i>
-                                {% endif %}
+                                All workflows are executed through APIs.
                             </td>
-                            <td>All workflows are executed through APIs.</td>
+                            <td>N/A</td>
                             <td class="text-center">
                                 <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" target="_blank" rel="noopener noreferrer">
                                     Open API Interface in new tab
