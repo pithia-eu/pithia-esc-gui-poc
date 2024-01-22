@@ -15,7 +15,7 @@
     </identifier>
     <name>Test Workflow</name>
     <description>
-       This is a test workflow with two collections.
+        This is a test workflow with two collections.
     </description>
     <dataCollection
         xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
