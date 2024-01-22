@@ -4,3 +4,8 @@
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block resource_list_inner %}
+{% with resource_list=resources %}
+{% include 'resource_management/workflow_management_list_inner.html' %}
+{% endwith %}
+{% endblock resource_list_inner %}

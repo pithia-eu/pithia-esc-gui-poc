@@ -1,0 +1,6 @@
+{% extends 'resource_management/resource_management_list_by_type_outer.html' %}
+{% block resource_list_inner %}
+{% with resource_list=resources %}
+{% include 'resource_management/data_collection_management_list_inner.html' %}
+{% endwith %}
+{% endblock resource_list_inner %}
