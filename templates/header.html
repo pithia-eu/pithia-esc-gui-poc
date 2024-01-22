@@ -43,6 +43,10 @@
                     <a href="{{ catalogues_url }}" class="dropdown-item">Catalogues</a>
                 </li>
                 <li>
+                    {% url 'browse:list_workflows' as workflows_url %}
+                    <a href="{{ workflows_url }}" class="dropdown-item">Workflows</a>
+                </li>
+                <li>
                     {% url 'browse:index' as browse_url %}
                     <a href="{{ browse_url }}" class="dropdown-item">All Scientific Metadata</a>
                 </li>
