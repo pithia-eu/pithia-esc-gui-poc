@@ -714,6 +714,11 @@ class WorkflowDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_workflows'
     resource_download_url_name = 'utils:view_workflow_as_xml'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['workflow_interaction_method'] = self.resource.interactionmethod_set.first()
+        return context
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['workflow_id']
         return super().get(request, *args, **kwargs)

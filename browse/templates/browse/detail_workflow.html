@@ -26,7 +26,11 @@
                         <tr>
                             <td>API</td>
                             <td>
-                                All workflows are executed through APIs.
+                                {% if workflow_interaction_method.config.description %}
+                                {{ workflow_interaction_method.config.description }}
+                                {% else %}
+                                <span class="text-secondary">None</span>
+                                {% endif %}
                             </td>
                             <td>N/A</td>
                             <td class="text-center">
