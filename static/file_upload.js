@@ -1,5 +1,6 @@
 export let isEachFileValid = false; // Variable is exported to work with the API specification URL input
 const fileValidationStatusUpdatedEvent = new Event("fileValidationStatusUpdated");
+const supportUrl = JSON.parse(document.getElementById("support-url").textContent);
 
 // Source for htmlToElement() function: https://stackoverflow.com/a/35385518
 function htmlToElement(html) {
@@ -85,24 +86,46 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
         formData.append("validate_xml_file_localid_matches_existing_resource_localid", true);
         formData.append("resource_id", JSON.parse(document.getElementById("resource-id").textContent));
     }
-    const response = await fetch(fileValidationUrl, {
-        method: "POST",
-        body: formData
-    });
+
+    // Initial fetch operation
+    let response;
+    try {
+        response = await fetch(fileValidationUrl, {
+            method: "POST",
+            body: formData
+        });
+    } catch (error) {
+        console.log("There was a problem with the fetch operation:", error);
+        return {
+            state: "error",
+            error: {
+                message: "A network error occurred.",
+                details: `Try uploading the file again, or if this problem happens repeatedly, consider <a href='${supportUrl}'>contacting our support team</a>.`,
+            },
+            warnings: undefined,
+        };
+    }
+
+    // Parse the response
     let responseContent = undefined;
     let jsonParseError = undefined;
     try {
         responseContent = await response.json();
     } catch (error) {
+        // Any non-validation related errors will be
+        // caught when trying to parse the response
+        // as JSON.
         console.log("response", response);
         console.log(error);
         jsonParseError = error;
     }
+
     if (!response.ok) {
         let responseError = {
             message: "An error occurred whilst checking the validation results.",
             details: jsonParseError
         };
+
         let responseWarnings = undefined;
         try {
             responseError = responseContent.error;
@@ -113,6 +136,7 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
                 responseError.details = "The connection to the server timed out before validation could finish. Please try uploading the file again at a later time.";
             }
         }
+
         return {
             state: "error",
             error: responseError,

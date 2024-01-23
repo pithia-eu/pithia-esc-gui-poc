@@ -3,6 +3,7 @@
 {% load project_tags %}
 {% block scripts %}
 {{ validation_url|json_script:'validation-url' }}
+{{ support_url|json_script:"support-url" }}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
 <script src="{% static 'workflow_registration_form.js' %}" type="module"></script>

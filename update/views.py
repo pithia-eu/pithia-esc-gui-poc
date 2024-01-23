@@ -70,6 +70,7 @@ class ResourceUpdateFormView(FormView):
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
         context['validation_url'] = self.validation_url
+        context['support_url'] = f'{reverse_lazy("support")}#support-heading'
         context['post_url'] = reverse_lazy(self.resource_update_page_url_name, args=[self.resource_id])
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE

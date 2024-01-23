@@ -2,6 +2,7 @@
 {% load static %}
 {% block scripts %}
 {{ validation_url|json_script:'validation-url' }}
+{{ support_url|json_script:"support-url" }}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register/register.js' %}" id="register-script" type="module" defer></script>
 <script src="{% static 'interaction_methods_form.js' %}" type="module" defer></script>
