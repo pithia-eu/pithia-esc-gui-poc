@@ -39,7 +39,7 @@ graph (DAG) and in its simplest form, a linear sequence of steps.
                             </documentation>
                         </annotation>
                     </element>                    
-                    <element maxOccurs="1" minOccurs="0" name="description" type="string">
+                    <element name="description" maxOccurs="1" minOccurs="0" type="string">
                         <annotation>
                             <documentation>-- Definition --
                                  A free-text description of the workflow: list of individual data collections that are 
@@ -51,10 +51,17 @@ graph (DAG) and in its simplest form, a linear sequence of steps.
                             </documentation>
                         </annotation>
                     </element>
-                    <element maxOccurs="unbounded" minOccurs="2" name="dataCollection" type="gml:ReferenceType">
+                    <element name="dataCollection" maxOccurs="unbounded" minOccurs="2" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
                                 A simple list of data collections contributing to the workflow.
+                            </documentation>
+                        </annotation>
+                    </element>   
+                    <element name="workflowDetails" maxOccurs="1" minOccurs="1" type="gml:ReferenceType">
+                        <annotation>
+                            <documentation>-- Definition --
+                                A link to the file with further details, including graph diagram of the flow.
                             </documentation>
                         </annotation>
                     </element>   
