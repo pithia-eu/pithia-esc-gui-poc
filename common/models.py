@@ -662,6 +662,10 @@ class Workflow(ScientificMetadata):
     root_element_name = 'Workflow'
 
     @property
+    def details_url(self):
+        return self.json['workflowDetails']['@xlink:href']
+
+    @property
     def data_collection_url(self):
         return self.json['dataCollection']['@xlink:href']
 
