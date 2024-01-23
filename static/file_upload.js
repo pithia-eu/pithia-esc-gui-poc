@@ -100,7 +100,7 @@ async function validateXmlFile(file, fileValidationUrl, validateNotAlreadyRegist
             state: "error",
             error: {
                 message: "A network error occurred.",
-                details: `Try uploading the file again, or if this problem happens repeatedly, consider <a href='${supportUrl}'>contacting our support team</a>.`,
+                details: `Please try uploading the file again. If this problem happens repeatedly, consider <a href='${supportUrl}'>contacting our support team</a>.`,
             },
             warnings: undefined,
         };
