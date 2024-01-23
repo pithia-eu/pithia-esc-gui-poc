@@ -262,11 +262,27 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
                 self.all_child_computations(icc, all_child_computations)
         return all_child_computations
 
+    def _merge_computation_capability_set_referers_for_search(self, computation_capability_sets: list):
+        # Find the Computation Capabilities referencing to the found
+        # registrations.
+        related_computation_capability_sets = []
+        for cc in computation_capability_sets:
+            related_computation_capability_sets += self.all_computation_capability_set_referers(cc, initial_referers_list=[])
+        
+        # Merge all results into a list of primary keys
+        merged_list = computation_capability_sets + related_computation_capability_sets
+        merged_list = list(set(cc.pk for cc in merged_list))
+
+        # Convert everything back to QuerySets
+        return self.filter(pk__in=merged_list)
+
     def for_search_by_computation_type_urls(self, computation_type_urls: list):
-        pass
+        computation_capability_sets = self.referencing_computation_type_urls(computation_type_urls)
+        return self._merge_computation_capability_set_referers_for_search(computation_capability_sets)
 
     def for_search_by_observed_property_urls(self, observed_property_urls: list):
-        pass
+        computation_capability_sets = self.referencing_observed_property_urls(observed_property_urls)
+        return self._merge_computation_capability_set_referers_for_search(computation_capability_sets)
 
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         # Find Computation Capabilities registrations by Computation Types
@@ -314,10 +330,10 @@ class ComputationQuerySet(ScientificMetadataQuerySet, AbstractComputationDatabas
         return self.filter(query)
 
     def for_search_by_computation_type_urls(self, computation_capability_set_urls: list):
-        pass
+        return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
 
     def for_search_by_observed_property_urls(self, computation_capability_set_urls: list):
-        pass
+        return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
 
     def for_search(self, computation_capability_set_urls: list):
         return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
@@ -350,13 +366,14 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
         return self.filter(query)
 
     def for_search_by_instrument_type_urls(self, acquisition_urls: list):
-        pass
+        return self.referencing_acquisition_urls(acquisition_urls)
 
     def for_search_by_computation_type_urls(self, computation_urls: list):
-        pass
+        return self.referencing_computation_urls(computation_urls)
 
     def for_search_by_observed_property_urls(self, acquisition_urls: list, computation_urls: list):
-        pass
+        return self.referencing_acquisition_urls(acquisition_urls) \
+            | self.referencing_computation_urls(computation_urls)
 
     def for_search(self, acquisition_urls: list, computation_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) \
@@ -410,13 +427,17 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         return self.filter(**{'json__project__contains': [{'@xlink:href': project_url}]})
 
     def for_search_by_instrument_type_urls(self, instrument_type_urls: list, process_urls: list):
-        pass
+        return self.referencing_instrument_type_urls(instrument_type_urls) \
+            | self.referencing_process_urls(process_urls)
 
     def for_search_by_computation_type_urls(self, computation_type_urls: list, process_urls: list):
-        pass
+        return self.referencing_computation_type_urls(computation_type_urls) \
+            | self.referencing_process_urls(process_urls)
 
-    def for_search_by_observed_property_urls(self, observed_property_urls: list, process_urls: list):
-        pass
+    def for_search_by_observed_property_urls(self, feature_of_interest_urls: list, process_urls: list):
+        # Features of interest can be derived from observed properties.
+        return self.referencing_feature_of_interest_urls(feature_of_interest_urls) \
+            | self.referencing_process_urls(process_urls)
 
     def for_search(
         self,
