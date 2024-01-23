@@ -94,6 +94,9 @@ class OperationQuerySet(ScientificMetadataQuerySet, AbstractOperationDatabaseQue
         return referencing_party_url | referencing_platform_url
 
 class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQueries):
+    def distinct_instrument_type_urls(self):
+        return self.values_list('json__type__@xlink:href', flat=True).distinct()
+
     def get_by_operational_mode_url(self, operational_mode_url: str):
         metadata_server_url, op_mode_id = itemgetter('resource_url', 'op_mode_id')(divide_resource_url_from_op_mode_id(operational_mode_url))
         namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
@@ -114,15 +117,15 @@ class InstrumentQuerySet(ScientificMetadataQuerySet, AbstractInstrumentDatabaseQ
     def referencing_party_url(self, party_url: str):
         return self.filter(**{'json__relatedParty__contains': [{'ResponsiblePartyInfo': {'party': {'@xlink:href': party_url}}}]})
 
+    def for_search_by_instrument_type_urls(self, instrument_type_urls: list):
+        return self.referencing_instrument_type_urls(instrument_type_urls)
+    
     def for_search(self, instrument_type_urls: list):
         return self.referencing_instrument_type_urls(instrument_type_urls)
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_party_url = self.referencing_party_url(metadata_server_url)
         return referencing_party_url
-
-    def distinct_instrument_type_urls(self):
-        return self.values_list('json__type__@xlink:href', flat=True).distinct()
 
 class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionCapabilitiesDatabaseQueries):
     def referencing_instrument_url(self, instrument_url: str):
@@ -151,6 +154,12 @@ class AcquisitionCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractAcquis
         for url in operational_mode_urls:
             query |= Q(**{'json__instrumentModePair__InstrumentOperationalModePair__mode__@xlink:href': url})
         return self.filter(query)
+
+    def for_search_by_instrument_type_urls(self, instrument_urls: list):
+        return self.referencing_instrument_urls(instrument_urls)
+
+    def for_search_by_observed_property_urls(self, observed_property_urls: list):
+        return self.referencing_observed_property_urls(observed_property_urls)
 
     def for_search(self, instrument_urls: list, observed_property_urls: list):
         results_referencing_instrument_urls = self.referencing_instrument_urls(instrument_urls)
@@ -192,6 +201,12 @@ class AcquisitionQuerySet(ScientificMetadataQuerySet, AbstractAcquisitionDatabas
 
     def referencing_platform_url(self, platform_url: str):
         return self.filter(**{'json__capabilityLinks__capabilityLink__contains': [{'platform': {'@xlink:href': platform_url}}]})
+
+    def for_search_by_instrument_type_urls(self, acquisition_capability_set_urls: list):
+        return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
+
+    def for_search_by_observed_property_urls(self, acquisition_capability_set_urls: list):
+        return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
 
     def for_search(self, acquisition_capability_set_urls: list):
         return self.referencing_acquisition_capability_set_urls(acquisition_capability_set_urls)
@@ -247,6 +262,12 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
                 self.all_child_computations(icc, all_child_computations)
         return all_child_computations
 
+    def for_search_by_computation_type_urls(self, computation_type_urls: list):
+        pass
+
+    def for_search_by_observed_property_urls(self, observed_property_urls: list):
+        pass
+
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         # Find Computation Capabilities registrations by Computation Types
         # and Observed Properties
@@ -292,6 +313,12 @@ class ComputationQuerySet(ScientificMetadataQuerySet, AbstractComputationDatabas
             query |= Q(**{'json__capabilityLinks__capabilityLink__contains': [{'computationCapabilities': {'@xlink:href': url}}]})
         return self.filter(query)
 
+    def for_search_by_computation_type_urls(self, computation_capability_set_urls: list):
+        pass
+
+    def for_search_by_observed_property_urls(self, computation_capability_set_urls: list):
+        pass
+
     def for_search(self, computation_capability_set_urls: list):
         return self.referencing_computation_capability_set_urls(computation_capability_set_urls)
     
@@ -321,6 +348,15 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
         for url in computation_urls:
             query |= Q(**{'json__computationComponent__contains': [{'@xlink:href': url}]})
         return self.filter(query)
+
+    def for_search_by_instrument_type_urls(self, acquisition_urls: list):
+        pass
+
+    def for_search_by_computation_type_urls(self, computation_urls: list):
+        pass
+
+    def for_search_by_observed_property_urls(self, acquisition_urls: list, computation_urls: list):
+        pass
 
     def for_search(self, acquisition_urls: list, computation_urls: list):
         return self.referencing_acquisition_urls(acquisition_urls) \
@@ -372,6 +408,15 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
     
     def referencing_project_url(self, project_url: list):
         return self.filter(**{'json__project__contains': [{'@xlink:href': project_url}]})
+
+    def for_search_by_instrument_type_urls(self, instrument_type_urls: list, process_urls: list):
+        pass
+
+    def for_search_by_computation_type_urls(self, computation_type_urls: list, process_urls: list):
+        pass
+
+    def for_search_by_observed_property_urls(self, observed_property_urls: list, process_urls: list):
+        pass
 
     def for_search(
         self,
