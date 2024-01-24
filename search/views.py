@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from .services import (
     find_matching_data_collections,
+    get_data_collections_for_search,
     get_parents_of_registered_ontology_terms,
     get_registered_computation_types,
     get_registered_features_of_interest,
@@ -114,7 +115,7 @@ def results(request):
     computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
     feature_of_interest_urls = [f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])]
     
-    data_collections = find_matching_data_collections(
+    data_collections = get_data_collections_for_search(
         feature_of_interest_urls=feature_of_interest_urls,
         instrument_type_urls=instrument_type_urls,
         computation_type_urls=computation_type_urls,

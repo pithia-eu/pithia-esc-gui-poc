@@ -23,6 +23,93 @@ from ontology.utils import (
 )
 
 
+def get_data_collections_for_search(
+    feature_of_interest_urls: list = [],
+    instrument_type_urls: list = [],
+    computation_type_urls: list = [],
+    observed_property_urls: list = [],
+):
+    if len(feature_of_interest_urls) > 0:
+        additional_observed_property_urls = get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls)
+        observed_property_urls += additional_observed_property_urls
+        observed_property_urls = list(set(observed_property_urls))
+
+    # The way in which data collections are found goes according to the
+    # project data model diagram.
+
+
+    # Search by instrument type
+    # Instruments
+    instruments_found_by_instrument_type = Instrument.objects.for_search_by_instrument_type_urls(instrument_type_urls)
+    ifbit_urls = [i.metadata_server_url for i in instruments_found_by_instrument_type]
+
+    # Acquisition Capabilities
+    acquisition_capabilities_found_by_instrument_type = AcquisitionCapabilities.objects.for_search_by_instrument_type_urls(ifbit_urls)
+    acfbit_urls = [ac.metadata_server_url for ac in acquisition_capabilities_found_by_instrument_type]
+
+    # Acquisitions
+    acquisitions_found_by_instrument_type = Acquisition.objects.for_search_by_instrument_type_urls(acfbit_urls)
+    afbit_urls = [a.metadata_server_url for a in acquisitions_found_by_instrument_type]
+
+    # Processes
+    processes_found_by_instrument_type = Process.objects.for_search_by_instrument_type_urls(afbit_urls)
+    pfbit_urls = [p.metadata_server_url for p in processes_found_by_instrument_type]
+
+    # Data Collections
+    data_collections_found_by_instrument_type = DataCollection.objects.for_search_by_instrument_type_urls(instrument_type_urls, pfbit_urls)
+
+
+    # Search by computation type
+    # Computation Capabilities
+    computation_capabilities_found_by_computation_type = ComputationCapabilities.objects.for_search_by_computation_type_urls(computation_type_urls)
+    ccfbct_urls = [cc.metadata_server_url for cc in computation_capabilities_found_by_computation_type]
+
+    # Computations
+    computations_found_by_computation_type = Computation.objects.for_search_by_computation_type_urls(ccfbct_urls)
+    cfbct_urls = [c.metadata_server_url for c in computations_found_by_computation_type]
+
+    # Processes
+    processes_found_by_computation_type = Process.objects.for_search_by_computation_type_urls(cfbct_urls)
+    pfbct_urls = [p.metadata_server_url for p in processes_found_by_computation_type]
+
+    # Data Collections
+    data_collections_found_by_computation_type = DataCollection.objects.for_search_by_computation_type_urls(computation_type_urls, pfbct_urls)
+
+
+    # Search by observed property
+    # Acquisition Capabilities
+    acquisition_capabilities_found_by_observed_property = AcquisitionCapabilities.objects.for_search_by_observed_property_urls(observed_property_urls)
+    acfbop_urls = [ac.metadata_server_url for ac in acquisition_capabilities_found_by_observed_property]
+
+    # Acquisitions
+    acquisitions_found_by_observed_property = Acquisition.objects.for_search_by_observed_property_urls(acfbop_urls)
+    afbop_urls = [a.metadata_server_url for a in acquisitions_found_by_observed_property]
+
+    # Computation Capabilities
+    computation_capabilities_found_by_observed_property = ComputationCapabilities.objects.for_search_by_observed_property_urls(observed_property_urls)
+    ccfbop_urls = [cc.metadata_server_url for cc in computation_capabilities_found_by_observed_property]
+
+    # Computations
+    computations_found_by_observed_property = Computation.objects.for_search_by_observed_property_urls(ccfbop_urls)
+    cfbop_urls = [c.metadata_server_url for c in computations_found_by_observed_property]
+
+    # Processes
+    processes_found_by_observed_property = Process.objects.for_search_by_observed_property_urls(afbop_urls, cfbop_urls)
+    pfbop_urls = [p.metadata_server_url for p in processes_found_by_observed_property]
+
+    # Data Collections
+    data_collections_found_by_observed_property = DataCollection.objects.for_search_by_observed_property_urls(feature_of_interest_urls, pfbop_urls)
+
+
+    # Merge data collections from prerequisite steps
+    data_collections = DataCollection.objects.for_final_search_step(
+        data_collections_found_by_instrument_type,
+        data_collections_found_by_computation_type,
+        data_collections_found_by_observed_property
+    )
+
+    return list(data_collections)
+
 def find_matching_data_collections(
     feature_of_interest_urls: list = [],
     instrument_type_urls: list = [],

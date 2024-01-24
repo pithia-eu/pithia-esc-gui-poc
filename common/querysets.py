@@ -278,11 +278,11 @@ class ComputationCapabilitiesQuerySet(ScientificMetadataQuerySet, AbstractComput
 
     def for_search_by_computation_type_urls(self, computation_type_urls: list):
         computation_capability_sets = self.referencing_computation_type_urls(computation_type_urls)
-        return self._merge_computation_capability_set_referers_for_search(computation_capability_sets)
+        return self._merge_computation_capability_set_referers_for_search(list(computation_capability_sets))
 
     def for_search_by_observed_property_urls(self, observed_property_urls: list):
         computation_capability_sets = self.referencing_observed_property_urls(observed_property_urls)
-        return self._merge_computation_capability_set_referers_for_search(computation_capability_sets)
+        return self._merge_computation_capability_set_referers_for_search(list(computation_capability_sets))
 
     def for_search(self, computation_type_urls: list, observed_property_urls: list):
         # Find Computation Capabilities registrations by Computation Types
@@ -438,6 +438,21 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         # Features of interest can be derived from observed properties.
         return self.referencing_feature_of_interest_urls(feature_of_interest_urls) \
             | self.referencing_process_urls(process_urls)
+
+    def for_final_search_step(
+        self,
+        data_collections_found_by_instrument_type,
+        data_collections_found_by_computation_type,
+        data_collections_found_by_observed_property
+    ):
+        search_results = self.all()
+        if data_collections_found_by_instrument_type:
+            search_results &= data_collections_found_by_instrument_type
+        if data_collections_found_by_computation_type:
+            search_results &= data_collections_found_by_computation_type
+        if data_collections_found_by_observed_property:
+            search_results &= data_collections_found_by_observed_property
+        return search_results
 
     def for_search(
         self,
