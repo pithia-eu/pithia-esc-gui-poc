@@ -2,6 +2,7 @@ import json
 import os
 import uuid
 import xmltodict
+from django.apps import apps
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from typing import Union
@@ -22,8 +23,8 @@ class ScientificMetadataManager(models.Manager):
         # whitespace within strings
         xml_as_json = xml_as_json.replace('\\n', '')
         xml_as_json = ' '.join(xml_as_json.split())
-        # pymongo takes dictionaries when inserting new documents,
-        # so convert the JSON back to a dictionary
+        # Convert JSON back to a dictionary so it's easier to
+        # work with.
         return json.loads(xml_as_json)
 
     def _format_metadata_file_xml_for_db(self, metadata_file_xml):
@@ -185,13 +186,20 @@ class CatalogueDataSubsetManager(ScientificMetadataManager):
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET, institution_id, owner_id)
+
+class WorkflowManager(ScientificMetadataManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(type=self.model.WORKFLOW)
+
+    def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
+        return super()._create_from_xml_string(xml_string, self.model.WORKFLOW, institution_id, owner_id)
     
 class InteractionMethodManager(models.Manager):
     pass
 
 class APIInteractionMethodManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(type=self.model.API)
+        return super().get_queryset().filter(scientific_metadata__type=apps.get_model('common', 'ScientificMetadata').DATA_COLLECTION, type=self.model.API)
 
     def create_api_interaction_method(self, specification_url: str, description: str, data_collection):
         config = {
@@ -201,7 +209,34 @@ class APIInteractionMethodManager(models.Manager):
         interaction_method = self.model(
             id=uuid.uuid4(),
             type=self.model.API,
-            data_collection=data_collection,
+            scientific_metadata=data_collection,
+            config=config,
+            owner=0
+        )
+        interaction_method.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+
+        return interaction_method
+
+    def update_config(self, interaction_method_id, specification_url: str, description: str = ''):
+        interaction_method = self.get_queryset().get(pk=interaction_method_id)
+        interaction_method.specification_url = specification_url
+        interaction_method.description = description
+        interaction_method.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+        return interaction_method
+    
+class WorkflowAPIInteractionMethodManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(scientific_metadata__type=apps.get_model('common', 'ScientificMetadata').WORKFLOW, type=self.model.API)
+    
+    def create_api_interaction_method(self, specification_url: str, description: str, workflow):
+        config = {
+            'specification_url': specification_url,
+            'description': description,
+        }
+        interaction_method = self.model(
+            id=uuid.uuid4(),
+            type=self.model.API,
+            scientific_metadata=workflow,
             config=config,
             owner=0
         )

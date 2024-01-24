@@ -28,7 +28,7 @@
 <form action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST" id="interaction-methods-form">
     {% csrf_token %}
     <div class="row">
-        <div class="col-lg-6">{% include 'register/interaction_methods_form.html' %}</div>
+        <div class="col-lg-7">{% include 'register/interaction_methods_form.html' %}</div>
     </div>
     <div class="d-flex flex-column align-items-xl-start align-items-lg-start">
         <button type="submit" class="btn btn-primary mt-3">Save</button>

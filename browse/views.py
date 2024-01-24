@@ -361,6 +361,18 @@ class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     description = ''
 
+class WorkflowListView(ResourceListView):
+    """
+    A subclass of ResourceListView.
+
+    Lists the detail page links for each Workflow
+    registration.
+    """
+    template_name = 'browse/workflow_list.html'
+    model = models.Workflow
+    resource_detail_page_url_name = 'browse:workflow_detail'
+    description = ''
+
 class ResourceDetailView(TemplateView):
     """
     The detail page for a scientific metadata
@@ -592,7 +604,7 @@ class DataCollectionDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
         # API Interaction methods
-        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(data_collection=self.resource)
+        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource)
         # Link interaction methods
         self.link_interaction_methods = self.resource.link_interaction_methods
 
@@ -689,6 +701,27 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
         if self.handle_data is not None:
             context['handle_data'] = create_readable_scientific_metadata_flattened(self.handle_data)
         return context
+
+class WorkflowDetailView(ResourceDetailView):
+    """
+    A subclass of ResourceDetailView.
+
+    A detail page displaying the properties of
+    a Workflow registration.
+    """
+    template_name = 'browse/detail_workflow.html'
+    model = models.Workflow
+    resource_list_by_type_url_name = 'browse:list_workflows'
+    resource_download_url_name = 'utils:view_workflow_as_xml'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['workflow_interaction_method'] = self.resource.interactionmethod_set.first()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs['workflow_id']
+        return super().get(request, *args, **kwargs)
 
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
     """

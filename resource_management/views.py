@@ -135,7 +135,7 @@ class ProjectManagementListView(ResourceManagementListView):
 
 class PlatformManagementListView(ResourceManagementListView):
     model = models.Platform
-    template_name = 'resource_management/platform_management_list.html'
+    template_name = 'resource_management/platform_management_list_outer.html'
 
     resource_delete_page_url_name = 'delete:platform'
     resource_update_page_url_name = 'update:platform'
@@ -213,6 +213,7 @@ class ProcessManagementListView(ResourceManagementListView):
     resource_xml_download_page_url_name = 'utils:view_process_as_xml'
 
 class DataCollectionManagementListView(ResourceManagementListView):
+    template_name = 'resource_management/data_collection_management_list_outer.html'
     model = models.DataCollection
 
     resource_delete_page_url_name = 'delete:data_collection'
@@ -254,3 +255,12 @@ class CatalogueDataSubsetManagementListView(ResourceManagementListView):
     resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+
+class WorkflowManagementListView(ResourceManagementListView):
+    template_name = 'resource_management/workflow_management_list_outer.html'
+    model = models.Workflow
+
+    resource_delete_page_url_name = 'delete:workflow'
+    resource_update_page_url_name = 'update:workflow'
+    resource_register_page_url_name = 'register:workflow'
+    resource_xml_download_page_url_name = 'utils:view_workflow_as_xml'

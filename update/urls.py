@@ -20,4 +20,6 @@ urlpatterns = [
     path('catalogues/<resource_id>/update', views.CatalogueUpdateFormView.as_view(), name='catalogue'),
     path('catalogue-entries/<resource_id>/update', views.CatalogueEntryUpdateFormView.as_view(), name='catalogue_entry'),
     path('catalogue-data-subsets/<resource_id>/update', views.CatalogueDataSubsetUpdateFormView.as_view(), name='catalogue_data_subset'),
+    path('workflows/<resource_id>/update', views.WorkflowUpdateFormView.as_view(), name='workflow'),
+    path('workflows/<resource_id>/update/openapi-spec-url', views.workflow_openapi_specification_url, name='workflow_openapi_specification_url'),
 ]

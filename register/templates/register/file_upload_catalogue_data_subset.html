@@ -1,7 +1,7 @@
 {% extends 'register/file_upload_catalogue.html' %}
 {% load static %}
 {{ validation_url|json_script:'validation-url' }}
-{% block multiple_allowed %}Multiple files not allowed{% endblock multiple_allowed %}
+{% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block doi_registration %}
 <div class="form-group">
     <div class="form-check">

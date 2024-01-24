@@ -20,4 +20,5 @@ urlpatterns = [
     path('catalogue-entry/', views.CatalogueEntryXmlMetadataFileValidationFormView.as_view(), name='catalogue_entry'),
     path('catalogue-data-subset/', views.CatalogueDataSubsetXmlMetadataFileValidationFormView.as_view(), name='catalogue_data_subset'),
     path('api-specification-url/', views.api_specification_url, name='api_specification_url'),
+    path('workflow/', views.WorkflowXmlMetadataFileValidationFormView.as_view(), name='workflow'),
 ]

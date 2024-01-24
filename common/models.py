@@ -24,6 +24,7 @@ class ScientificMetadata(models.Model):
     CATALOGUE = 'catalogue'
     CATALOGUE_ENTRY = 'catalogue_entry'
     CATALOGUE_DATA_SUBSET = 'catalogue_data_subset'
+    WORKFLOW = 'workflow'
     TYPE_CHOICES = [
         (ORGANISATION, 'Organisation'),
         (INDIVIDUAL, 'Individual'),
@@ -40,6 +41,7 @@ class ScientificMetadata(models.Model):
         (CATALOGUE, 'Catalogue'),
         (CATALOGUE_ENTRY, 'Catalogue Entry'),
         (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
+        (WORKFLOW, 'Workflow'),
     ]
     id = models.CharField(
         max_length=200,
@@ -174,6 +176,7 @@ class ScientificMetadata(models.Model):
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
     catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
     catalogue_data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+    workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
     def save(self, *args, **kwargs):
         if self.converted_xml_correction_function is not None:
@@ -189,18 +192,21 @@ class ScientificMetadata(models.Model):
 class InteractionMethod(models.Model):
     # Primary key should be handled automatically in the future
     id = models.CharField(max_length=36, primary_key=True, db_column='intm_id')
-    data_collection = models.ForeignKey(
-        'DataCollection',
+    scientific_metadata = models.ForeignKey(
+        'ScientificMetadata',
         on_delete=models.CASCADE,
         null=True,
-        limit_choices_to={'type': ScientificMetadata.DATA_COLLECTION},
+        limit_choices_to=Q(type=ScientificMetadata.DATA_COLLECTION) | Q(type=ScientificMetadata.WORKFLOW),
         db_column='sm_id'
     )
     # owner = models.ForeignKey(
     #   'Member',
     #   db_column='owner_id'
     # )
-    owner = models.CharField(max_length=9999, db_column='owner_id')
+    owner = models.CharField(
+        max_length=200,
+        db_column='owner_id'
+    )
     API = 'api'
     MICADO = 'micado'
     DOWNLOAD = 'download'
@@ -222,6 +228,7 @@ class InteractionMethod(models.Model):
 
     objects = InteractionMethodManager()
     api_interaction_methods = APIInteractionMethodManager()
+    workflow_api_interaction_methods = WorkflowAPIInteractionMethodManager()
     
     class Meta:
         db_table = 'int_method'
@@ -244,6 +251,28 @@ class APIInteractionMethod(InteractionMethod):
         self.config['description'] = value
 
     objects = APIInteractionMethodManager()
+
+    class Meta:
+        proxy = True
+
+class WorkflowAPIInteractionMethod(InteractionMethod):
+    @property
+    def specification_url(self):
+        return self.config['specification_url']
+    
+    @property
+    def description(self):
+        return self.config['description']
+    
+    @specification_url.setter
+    def specification_url(self, value):
+        self.config['specification_url'] = value
+    
+    @description.setter
+    def description(self, value):
+        self.config['description'] = value
+
+    objects = WorkflowAPIInteractionMethodManager()
 
     class Meta:
         proxy = True
@@ -618,6 +647,29 @@ class CatalogueDataSubset(ScientificMetadata):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
 
     objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+
+    class Meta:
+        proxy = True
+
+class Workflow(ScientificMetadata):
+    type_in_metadata_server_url = 'workflow'
+    localid_base = 'Workflow'
+    weight = 16
+    type_readable = 'workflow'
+    type_plural_readable = 'workflows'
+    a_or_an = 'a'
+    _browse_detail_page_url_name = 'browse:workflow_detail'
+    root_element_name = 'Workflow'
+
+    @property
+    def details_url(self):
+        return self.json['workflowDetails']['@xlink:href']
+
+    @property
+    def data_collection_url(self):
+        return self.json['dataCollection']['@xlink:href']
+
+    objects = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
     class Meta:
         proxy = True

@@ -19,4 +19,5 @@ urlpatterns = [
     path('catalogues/<resource_id>/delete/', views.CatalogueDeleteView.as_view(), name='catalogue'),
     path('catalogue-entries/<resource_id>/delete/', views.CatalogueEntryDeleteView.as_view(), name='catalogue_entry'),
     path('catalogue-data-subsets/<resource_id>/delete/', views.CatalogueDataSubsetDeleteView.as_view(), name='catalogue_data_subset'),
+    path('workflows/<resource_id>/delete/', views.WorkflowDeleteView.as_view(), name='workflow'),
 ]

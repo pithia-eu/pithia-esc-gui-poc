@@ -10,7 +10,8 @@
     <include schemaLocation="project.xsd"/>
     <include schemaLocation="dataCollection.xsd"/>
     <include schemaLocation="featureOfInterest.xsd"/>
-    <include schemaLocation="procedure.xsd"/>  
+    <include schemaLocation="procedure.xsd"/>
     <include schemaLocation="collectionResults.xsd"/>
-    <include schemaLocation="catalogue.xsd"/>  
+    <include schemaLocation="catalogue.xsd"/>
+    <include schemaLocation="workflow.xsd"/>
 </schema>

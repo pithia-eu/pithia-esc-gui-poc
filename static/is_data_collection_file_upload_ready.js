@@ -4,8 +4,10 @@ import {
 import {
     isApiSpecificationInputAvailable,
     isApiSpecificationLinkValid,
-    apiExecutionMethodCheckbox,
 } from "/static/api_specification_validation.js";
+import {
+    apiExecutionMethodCheckbox,
+} from "/static/interaction_methods_form.js";
 
 document.addEventListener("apiInteractionMethodModified", event => {
     enableSubmitButtonIfReady();

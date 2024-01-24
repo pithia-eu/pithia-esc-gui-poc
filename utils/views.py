@@ -140,3 +140,8 @@ class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
+
+class WorkflowXmlDownloadView(ResourceXmlDownloadView):
+    model = models.Workflow
+    
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'

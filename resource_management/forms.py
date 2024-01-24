@@ -2,8 +2,12 @@ from django import forms
 
 
 class UploadUpdatedFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Upload File',
+        label='Upload Your Updated Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control'
@@ -11,8 +15,12 @@ class UploadUpdatedFileForm(forms.Form):
     )
 
 class UploadUpdatedDataCollectionFileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     files = forms.FileField(
-        label='Upload File',
+        label='Upload Your Updated Metadata File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -20,6 +28,10 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     )
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
     api_selected = forms.BooleanField(
         label='API',
         required=False,
@@ -27,13 +39,15 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
             'class': 'form-check-input'
         })
     )
+
     api_specification_url = forms.CharField(
-        label='Link to API Specification',
+        label='OpenAPI Specification URL',
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
     )
+
     api_description = forms.CharField(
         label='Description',
         required=False,
@@ -41,6 +55,27 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'style': 'resize: none;'
+        })
+    )
+
+class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
+    api_specification_url = forms.CharField(
+        label='OpenAPI Specification URL',
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    api_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
         })
     )

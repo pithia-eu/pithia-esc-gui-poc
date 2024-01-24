@@ -148,7 +148,7 @@ the result time (with begin and end), and an optional DOI link to the persistent
                     <element name="dataSubsetDescription" maxOccurs="1" minOccurs="0" type="string">
                         <annotation>
                             <documentation>-- Definition --
-                                 A free-text description of the data subset contents.  
+                                A free-text description of the data subset contents.  
                             </documentation>
                         </annotation>
                     </element>

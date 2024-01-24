@@ -29,10 +29,6 @@ SAMPLE_USER_ID        = 'johndoe@example.com'
 SAMPLE_INSTITUTION_ID = 'John Doe Institution'
 # Create your tests here.
 
-# NOTE: The SimpleTestCase class is used to disable the automatic SQL database
-# create/destroy that Django automatically does with the default
-# TestCase class. MongoDB is still used.
-
 
 # Syntax validation tests, based on metadata type.
 class OrganisationSyntaxValidationTestCase(OrganisationFileTestCase, SyntaxValidationTestCase, TestCase):

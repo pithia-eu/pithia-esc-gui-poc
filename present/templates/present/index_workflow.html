@@ -1,0 +1,8 @@
+{% extends 'present/index.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item resource_list_page_breadcrumb_text 'browse:list_workflows' %}
+{% breadcrumb_item scientific_metadata.name 'browse:workflow_detail' scientific_metadata.id %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
