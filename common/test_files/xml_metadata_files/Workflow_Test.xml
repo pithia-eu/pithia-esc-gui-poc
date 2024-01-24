@@ -21,4 +21,5 @@
         xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
     <dataCollection
         xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
+    <workflowDetails xlink:href="" />
 </Workflow>
