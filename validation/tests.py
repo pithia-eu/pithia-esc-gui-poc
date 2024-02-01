@@ -11,6 +11,10 @@ from .file_wrappers import (
 )
 from .services import (
     MetadataFileXSDValidator,
+    validate_instrument_xml_file_update_and_return_errors,
+    validate_xml_file_references_and_return_errors,
+    validate_new_xml_file_registration_and_return_errors,
+    validate_xml_file_update_and_return_errors,
 )
 from .url_validation_services import (
     MetadataFileOntologyURLReferencesValidator,
@@ -19,8 +23,13 @@ from .url_validation_services import (
 
 from common import test_xml_files
 from common.models import (
-    Organisation,
     Catalogue,
+    Organisation,
+    ScientificMetadata,
+)
+from common.test_setup import (
+    register_instrument_for_test,
+    register_organisation_for_test,
 )
 from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
 
@@ -674,3 +683,118 @@ class XMLMetadataFileTestCase(TestCase):
 
         validation_results = MetadataFileMetadataURLReferencesValidator.is_each_potential_operational_mode_url_valid(self.test_xml_file)
         self.assertEqual(len(validation_results['urls_with_incorrect_structure']), 1)
+
+class InlineValidationTestCase(TestCase):
+    def test_inline_reference_validation_returns_no_errors(self):
+        """
+        Returns errors found whilst validating an XML file's
+        references, organised into a dict.
+        """
+        xml_file = test_xml_files.ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_xml_file_references_and_return_errors(test_xml_file)
+        print('results', results)
+        self.assertIs(type(results), dict)
+        self.assertFalse(any(results.values()))
+
+    def test_inline_new_registration_validation_returns_errors(self):
+        """
+        Returns a list of errors found whilst validating a new XML file
+        registration.
+        """
+        register_organisation_for_test()
+        # Attempt to register the same organisation
+        # registered at test setup.
+        xml_file = test_xml_files.ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        print('results', results)
+        self.assertIs(type(results), list)
+        self.assertGreater(len(results), 0)
+
+    def test_inline_new_registration_validation_does_not_return_errors(self):
+        """
+        Returns an empty list of errors found whilst validating a new XML file
+        registration.
+        """
+        xml_file = test_xml_files.ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        print('results', results)
+        self.assertIs(type(results), list)
+        self.assertEqual(len(results), 0)
+
+    def test_inline_update_validation_returns_errors(self):
+        """
+        Returns a list of errors found whilst validating a XML file
+        update.
+        """
+        register_organisation_for_test()
+        # Attempt to submit an updated metadata file with a
+        # different localID to the one registered.
+        xml_file = test_xml_files.ORGANISATION_2_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        print('results', results)
+        self.assertIs(type(results), list)
+        self.assertGreater(len(results), 0)
+
+    def test_inline_update_validation_does_not_return_errors(self):
+        """
+        Returns an empty list of errors found whilst validating a XML file
+        update.
+        """
+        register_organisation_for_test()
+        xml_file = test_xml_files.ORGANISATION_UPDATED_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        print('results', results)
+        self.assertIs(type(results), list)
+        self.assertEqual(len(results), 0)
+
+    def test_inline_instrument_validation_returns_errors(self):
+        """
+        Returns a list of errors found whilst validating an instrument XML
+        file update.
+        """
+        register_instrument_for_test()
+        # Attempt to submit an updated metadata file with all
+        # of the operational modes missing.
+        xml_file = test_xml_files.INSTRUMENT_WITH_NO_OP_MODES_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        print('results', results)
+        self.assertIs(type(results), list)
+
+    def test_inline_instrument_validation_does_not_return_errors(self):
+        """
+        Returns an empty list of errors found whilst validating an instrument XML
+        file update.
+        """
+        register_instrument_for_test()
+        xml_file = test_xml_files.INSTRUMENT_METADATA_XML
+        xml_file.seek(0)
+        xml_file_string = xml_file.read()
+        test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
+
+        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        print('results', results)
+        self.assertIs(type(results), list)
