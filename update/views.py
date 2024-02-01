@@ -69,6 +69,7 @@ class ResourceUpdateFormView(FormView):
         context['form'] = self.form_class
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
+        context['inline_validation_url'] = reverse_lazy('validation:update')
         context['validation_url'] = self.validation_url
         context['support_url'] = f'{reverse_lazy("support")}#support-heading'
         context['post_url'] = reverse_lazy(self.resource_update_page_url_name, args=[self.resource_id])
@@ -152,6 +153,11 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:instrument'
     validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['inline_validation_url'] = reverse_lazy('validation:instrument_update')
+        return context
 
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.AcquisitionCapabilities
