@@ -320,7 +320,7 @@ def validate_xml_file_and_return_summary(
             if not is_each_op_mode_in_update_valid:
                 acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_operational_mode_urls(missing_operational_mode_urls)
                 validation_summary['warnings'].append(create_validation_summary_error(
-                    message='Any references to this instrument\'s operational mode IDs must will be invalidated after this update.',
+                    message='Any references to this instrument\'s operational mode IDs will be invalidated after this update.',
                     details='After updating this instrument, please update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below: <ul>%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
                 ))
         except AttributeError:
