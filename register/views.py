@@ -283,7 +283,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         return context
 
 class CatalogueRegisterFormView(ResourceRegisterFormView):
-    template_name='register/file_upload_catalogue.html'
+    template_name = 'register/file_upload.html'
     model = models.Catalogue
     success_url = reverse_lazy('register:catalogue')
 
@@ -299,7 +299,7 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
         return context
 
 class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
-    template_name='register/file_upload_catalogue.html'
+    template_name = 'register/file_upload.html'
     model = models.CatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
 
