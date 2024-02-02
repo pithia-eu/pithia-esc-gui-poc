@@ -154,7 +154,7 @@ class XmlMetadataFileInlineValidationFormView(FormView):
     form_class = InlineMetadataValidationForm
     error_dict = {}
 
-    def validate(self, xml_metadata_file: XMLMetadataFile):
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update(validate_xml_file_references_and_return_errors(xml_metadata_file))
 
     def get(self, request, *args, **kwargs):
@@ -162,7 +162,7 @@ class XmlMetadataFileInlineValidationFormView(FormView):
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
         xml_metadata_file = XMLMetadataFile(request.GET['xml_file_string'], request.GET['xml_file_name'])
-        self.validate(xml_metadata_file)
+        self.validate(request, xml_metadata_file)
 
         if not any(self.error_dict.values()):
             return JsonResponse(self.error_dict, status=HTTPStatus.OK)
@@ -170,27 +170,38 @@ class XmlMetadataFileInlineValidationFormView(FormView):
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
 class XmlMetadataFileRegistrationInlineValidationFormView(XmlMetadataFileInlineValidationFormView):
-    def validate(self, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_registration_errors'] = validate_new_xml_file_registration_and_return_errors(xml_metadata_file)
-        return super().validate(xml_metadata_file)
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
+        self.error_dict['xml_file_registration_errors'] = validate_new_xml_file_registration_and_return_errors(
+            xml_metadata_file,
+            models.ScientificMetadata
+        )
+        return super().validate(request, xml_metadata_file)
 
 class XmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileInlineValidationFormView):
     form_class = InlineMetadataUpdateValidationForm
 
-    def validate(self, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(xml_metadata_file)
-        return super().validate(xml_metadata_file)
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
+        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
+            xml_metadata_file,
+            models.ScientificMetadata,
+            request.GET['existing_metadata_id']
+        )
+        return super().validate(request, xml_metadata_file)
 
 class InstrumentXmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileUpdateInlineValidationFormView):
-    def validate(self, xml_metadata_file: XMLMetadataFile):
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(xml_metadata_file)
 
         if len(self.error_dict['xml_file_update_errors']) > 0:
             self.error_dict['xml_file_op_mode_errors'] = ['Could not validate operational modes as metadata file did not pass update validation.']
             return super().validate(xml_metadata_file)
         
-        self.error_dict['xml_file_op_mode_errors'] = validate_instrument_xml_file_update_and_return_errors(xml_metadata_file)
-        return super().validate(xml_metadata_file)
+        self.error_dict['xml_file_op_mode_errors'] = validate_instrument_xml_file_update_and_return_errors(
+            xml_metadata_file,
+            models.Instrument,
+            request.GET['existing_metadata_id']
+        )
+        return super().validate(request, xml_metadata_file)
 
 @require_POST
 @login_session_institution_required
