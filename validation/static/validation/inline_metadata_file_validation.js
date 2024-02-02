@@ -392,51 +392,55 @@ class MetadataValidationStatusUIController {
                         <summary class="text-secondary">
                             Validating
                         </summary>
-                        <ul class="list-group list-group-flush mt-2" style="font-size: 0.8rem;">
-                            <li class="list-group-item sv-list-group-item">
-                                <details class="text-danger">
-                                    <summary>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger me-2" viewBox="0 0 16 16">
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                                        </svg>Syntax
-                                    </summary>
-                                    <div class="pt-2">
-                                        Errors:
-                                        <ul>
-                                            <li>error on line 1 at column 1: Document is empty</li>
-                                        </ul>
-                                    </div>
-                                </details>
-                            </li>
-                            <li class="list-group-item renv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                        <ul class="list-unstyled mt-2">
+                            <li class="sv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
                                     <span class="visually-hidden">Loading...</span>
-                                </div>Validating type
+                                    </div>Validating syntax
+                                </div>
                             </li>
-                            <li class="list-group-item liv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <li class="renv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
                                     <span class="visually-hidden">Loading...</span>
-                                </div>Validating local ID
+                                    </div>Validating type
+                                </div>
                             </li>
-                            <li class="list-group-item nsv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>Validating namespace
+                            <li class="liv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating local ID
+                                </div>
                             </li>
-                            <li class="list-group-item mrv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>Validating references to other metadata
+                            <li class="nsv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating namespace
+                                </div>
                             </li>
-                            <li class="list-group-item orv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>Validating references to ontology references
+                            <li class="mrv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating references to other metadata
+                                </div>
                             </li>
-                            <li class="list-group-item xv-list-group-item">
-                                <div class="spinner-border spinner-border-sm me-2" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>Validating with XSD
+                            <li class="orv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating references to ontology references
+                                </div>
+                            </li>
+                            <li class="xv-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating XSD
+                                </div>
                             </li>
                         </ul>
                     </details>
