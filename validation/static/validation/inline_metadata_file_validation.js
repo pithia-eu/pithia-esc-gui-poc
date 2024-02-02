@@ -193,8 +193,8 @@ class MetadataFileValidator {
         }
 
         // Check localID content.
-        const re = new RegExp("^[\w-]+$");
-        if (re.exec(localID.textContent) !== null) {
+        const re = new RegExp("^[\\w-]+$");
+        if (re.test(localID.textContent) === false) {
             errors.push("The localID can only contain alphanumeric characters with optional use of dashes and/or underscores.");
         }
 
@@ -212,8 +212,8 @@ class MetadataFileValidator {
         }
 
         // Check namespace content.
-        const re = new RegExp("^[\w-]+$");
-        if (re.exec(namespace.textContent) !== null) {
+        const re = new RegExp("^[\\w-]+$");
+        if (re.test(namespace.textContent) === false) {
             errors.push("The namespace can only contain alphanumeric characters with optional use of dashes and/or underscores.");
         }
 
@@ -297,7 +297,6 @@ class MetadataValidationStatusUIController {
     }
 
     #addSuccessValidationResults(successText, selector) {
-        console.log("selector", selector);
         const statusElem = document.querySelector(selector);
         statusElem.innerHTML = `
         <div class="text-success">
@@ -307,12 +306,44 @@ class MetadataValidationStatusUIController {
         </div>`;
     }
 
-    #addFailedValidationResults(failureText, failureDetails, selector) {
+    #addFailedValidationResults(failureText, errors, selector) {
+        const statusElem = document.querySelector(selector);
+        let errorLisString = "";
+        errors.forEach(e => errorLisString += `<li>${e}</li>`);
+        statusElem.innerHTML = `
+        <details class="text-danger">
+            <summary>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger me-2" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                </svg>${failureText}
+            </summary>
+            <div class="pt-2">
+                <ul>
+                    ${errorLisString}
+                </ul>
+            </div>
+        </details>`;
+    }
 
+    #setAsValid(selector) {
+        const mainStatusElem = document.querySelector(selector);
+        mainStatusElem.className = "text-success";
+        mainStatusElem.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>Valid`;
+    }
+
+    #setAsInvalid(selector) {
+        const mainStatusElem = document.querySelector(selector);
+        mainStatusElem.className = "text-danger";
+        mainStatusElem.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger me-2" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+        </svg>This metadata file is invalid.`;
     }
 
     #addMetadataFileToValidationStatusList(metadataFile) {
-        console.log("metadataFile", metadataFile);
         this.validationStatusListElem.append(this.#htmlToElement(`
             <li class="list-group-item file-list-group-item-${metadataFile.id} p-4">
                 <div class="d-flex flex-column flex-grow-1">
@@ -405,7 +436,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed syntax validation",
+                "Failed syntax validation.",
                 metadataFile.syntaxErrors,
                 `${fileListGroupItemSelector} ${svSelector}`
             );
@@ -419,7 +450,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed namespace validation",
+                "Failed namespace validation.",
                 metadataFile.namespaceErrors,
                 `${fileListGroupItemSelector} ${nsvSelector}`
             );
@@ -433,7 +464,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed local ID validation",
+                "Failed local ID validation.",
                 metadataFile.localIDErrors,
                 `${fileListGroupItemSelector} ${livSelector}`
             );
@@ -447,7 +478,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed type validation",
+                "Failed type validation.",
                 metadataFile.rootElementNameErrors,
                 `${fileListGroupItemSelector} ${renvSelector}`
             );
@@ -467,7 +498,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed metadata reference validation",
+                "Failed metadata reference validation.",
                 metadataFile.metadataReferenceErrors,
                 `${fileListGroupItemSelector} ${orvSelector}`
             );
@@ -481,7 +512,7 @@ class MetadataValidationStatusUIController {
             );
         } else {
             this.#addFailedValidationResults(
-                "Failed ontology reference validation",
+                "Failed ontology reference validation.",
                 metadataFile.ontologyReferenceErrors,
                 `${fileListGroupItemSelector} ${orvSelector}`
             );
@@ -493,7 +524,12 @@ class MetadataValidationStatusUIController {
     }
 
     endValidation(metadataFile) {
-
+        const fileListGroupItemSelector = `.file-list-group-item-${metadataFile.id}`;
+        const mainSummarySelector = ".details-validation > summary";
+        if (metadataFile.isValid) {
+            return this.#setAsValid(`${fileListGroupItemSelector} ${mainSummarySelector}`);
+        }
+        return this.#setAsInvalid(`${fileListGroupItemSelector} ${mainSummarySelector}`);
     }
 }
 
@@ -522,5 +558,7 @@ window.addEventListener("load", async () => {
         console.log('serverValidationResults', serverValidationResults);
         metadataFile.addReferenceValidationResults(serverValidationResults);
         validationStatusUIController.updateReferenceValidationResults(metadataFile);
+
+        validationStatusUIController.endValidation(metadataFile);
     }
 });
