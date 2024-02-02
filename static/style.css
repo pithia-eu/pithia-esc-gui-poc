@@ -577,6 +577,23 @@ summary.data-collection-category::marker {
     row-gap: 1rem;
 }
 
+.details-validation .error-counter {
+    display: none;
+}
+
+.details-validation:has(ul .text-danger) .error-counter {
+    display: inline;
+}
+
+.file-list-group-item .details-validation > ul {
+    list-style-type: none;
+    padding-left: 30px;
+}
+
+.file-list-group-item .details-validation > ul > li ul {
+    list-style-type: disc;
+}
+
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
     opacity: 1;
