@@ -24,8 +24,9 @@ from .file_wrappers import (
 )
 from .forms import (
     ApiSpecificationUrlValidationForm,
-    InlineMetadataUpdateValidationForm,
-    InlineMetadataValidationForm,
+    InlineXSDMetadataValidationForm,
+    QuickInlineMetadataUpdateValidationForm,
+    QuickInlineMetadataValidationForm,
 )
 from .helpers import create_validation_summary_error
 from .services import (
@@ -34,6 +35,7 @@ from .services import (
     validate_xml_file_and_return_summary,
     validate_xml_file_references_and_return_errors,
     validate_xml_file_update_and_return_errors,
+    validate_xml_file_with_xsd_and_return_errors,
 )
 
 from common import models
@@ -150,8 +152,8 @@ class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFi
 class WorkflowXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
     model = models.Workflow
 
-class XmlMetadataFileInlineValidationFormView(FormView):
-    form_class = InlineMetadataValidationForm
+class QuickInlineValidationFormView(FormView):
+    form_class = QuickInlineMetadataValidationForm
     error_dict = {}
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
@@ -169,7 +171,7 @@ class XmlMetadataFileInlineValidationFormView(FormView):
         
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
-class XmlMetadataFileRegistrationInlineValidationFormView(XmlMetadataFileInlineValidationFormView):
+class QuickInlineRegistrationValidationFormView(QuickInlineValidationFormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict['xml_file_registration_errors'] = validate_new_xml_file_registration_and_return_errors(
             xml_metadata_file,
@@ -177,8 +179,8 @@ class XmlMetadataFileRegistrationInlineValidationFormView(XmlMetadataFileInlineV
         )
         return super().validate(request, xml_metadata_file)
 
-class XmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileInlineValidationFormView):
-    form_class = InlineMetadataUpdateValidationForm
+class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
+    form_class = QuickInlineMetadataUpdateValidationForm
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
@@ -188,7 +190,7 @@ class XmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileInlineValidat
         )
         return super().validate(request, xml_metadata_file)
 
-class InstrumentXmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileUpdateInlineValidationFormView):
+class QuickInlineInstrumentUpdateValidationFormView(QuickInlineUpdateValidationFormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(xml_metadata_file)
 
@@ -202,6 +204,22 @@ class InstrumentXmlMetadataFileUpdateInlineValidationFormView(XmlMetadataFileUpd
             request.GET['existing_metadata_id']
         )
         return super().validate(request, xml_metadata_file)
+
+class InlineXsdValidationFormView(FormView):
+    form_class = InlineXSDMetadataValidationForm
+    error_dict = {}
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(request.GET)
+        if not form.is_valid():
+            return HttpResponseBadRequest('The form submitted was not valid.')
+        xml_metadata_file = XMLMetadataFile(request.GET['xml_file_string'], '')
+        self.error_dict['xml_file_xsd_errors'] = validate_xml_file_with_xsd_and_return_errors(xml_metadata_file)
+
+        if not any(self.error_dict.values()):
+            return JsonResponse(self.error_dict, status=HTTPStatus.OK)
+        
+        return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
 @require_POST
 @login_session_institution_required
