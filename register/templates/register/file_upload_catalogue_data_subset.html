@@ -1,6 +1,8 @@
 {% extends 'register/file_upload_catalogue.html' %}
 {% load static %}
 {{ validation_url|json_script:'validation-url' }}
+{{ inline_validation_url|json_script:"inline-validation-url" }}
+{{ inline_xsd_validation_url|json_script:"inline-xsd-validation-url" }}
 {% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block doi_registration %}
 <div class="form-group">

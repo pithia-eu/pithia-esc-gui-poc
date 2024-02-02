@@ -145,7 +145,7 @@ class MetadataFile {
     }
 
     addXsdValidationResults(results) {
-        
+        this.XSDErrors = results.XSDErrors;
     }
 
     parseXmlString(xmlString) {
@@ -236,7 +236,35 @@ class MetadataFileValidator {
     }
 
     async validateWithXsd(metadataFile) {
+        const validationUrl = JSON.parse(document.getElementById("inline-xsd-validation-url").textContent);
 
+        let response;
+        try {
+            response = await fetch(`${validationUrl}?` + new URLSearchParams({
+                xml_file_string: metadataFile.xmlFileString,
+            }));
+        } catch (error) {
+            console.error("There was a problem whilst validating with XSD.");
+            const errorMsg = "A network error occurred.";
+            return {
+                XSDErrors: [errorMsg],
+            }
+        }
+
+        let results;
+        try {
+            results = await response.json();
+        } catch (error) {
+            if (response.status === 504) {
+                const errorMsg = "Validation did not finish. The connection to the server timed out before validation could finish. Please try uploading the file again at a later time.";
+                return {
+                    XSDErrors: [errorMsg],
+                };
+            }
+        }
+        return {
+            XSDErrors: results.xml_file_xsd_errors
+        };
     }
 
     async validateWithServer(metadataFile) {
@@ -520,7 +548,22 @@ class MetadataValidationStatusUIController {
     }
 
     updateXsdValidationResults(metadataFile) {
+        const fileListGroupItemSelector = `.file-list-group-item-${metadataFile.id}`;
+        const xvSelector = `.xv-list-group-item`;
 
+        // Metadata reference validation results
+        if (metadataFile.isXSDValid) {
+            this.#addSuccessValidationResults(
+                "Passed XSD validation.",
+                `${fileListGroupItemSelector} ${xvSelector}`
+            );
+        } else {
+            this.#addFailedValidationResults(
+                "Failed XSD validation.",
+                metadataFile.XSDErrors,
+                `${fileListGroupItemSelector} ${xvSelector}`
+            );
+        }
     }
 
     endValidation(metadataFile) {
@@ -533,32 +576,43 @@ class MetadataValidationStatusUIController {
     }
 }
 
-window.addEventListener("load", async () => {
+async function validateMetadataFile(metadataFile) {
     const validator = new MetadataFileValidator();
     const metadataFileListElem = document.querySelector(".file-validation-status-list");
     const fileInputElem = document.querySelector("#id_files");
     const validationStatusUIController = new MetadataValidationStatusUIController(metadataFileListElem, fileInputElem);
 
+    validationStatusUIController.startValidation(metadataFile);
+
+    const basicValidationResults = validator.validateBasicComponents(metadataFile);
+    console.log('basicValidationResults', basicValidationResults);
+    metadataFile.addBasicValidationResults(basicValidationResults);
+    validationStatusUIController.updateBasicValidationResults(metadataFile);
+
+    const serverValidationResults = await validator.validateWithServer(metadataFile);
+    console.log('serverValidationResults', serverValidationResults);
+    metadataFile.addReferenceValidationResults(serverValidationResults);
+    validationStatusUIController.updateReferenceValidationResults(metadataFile);
+
+    const XsdValidationResults = await validator.validateWithXsd(metadataFile);
+    console.log('XsdValidationResults', XsdValidationResults);
+    metadataFile.addXsdValidationResults(XsdValidationResults);
+    validationStatusUIController.updateXsdValidationResults(metadataFile);
+
+    validationStatusUIController.endValidation(metadataFile);
+}
+
+window.addEventListener("load", async () => {
     // Files
     const files = [
         testFile,
         testFile,
         testFile,
     ];
+    const fetches = [];
     for (const file of files) {
         const metadataFile = await MetadataFile.fromFile(file);
-        validationStatusUIController.startValidation(metadataFile);
-
-        const basicValidationResults = validator.validateBasicComponents(metadataFile);
-        console.log('basicValidationResults', basicValidationResults);
-        metadataFile.addBasicValidationResults(basicValidationResults);
-        validationStatusUIController.updateBasicValidationResults(metadataFile);
-
-        const serverValidationResults = await validator.validateWithServer(metadataFile);
-        console.log('serverValidationResults', serverValidationResults);
-        metadataFile.addReferenceValidationResults(serverValidationResults);
-        validationStatusUIController.updateReferenceValidationResults(metadataFile);
-
-        validationStatusUIController.endValidation(metadataFile);
-    }
+        fetches.push(validateMetadataFile(metadataFile));
+    };
+    await Promise.all(fetches);
 });

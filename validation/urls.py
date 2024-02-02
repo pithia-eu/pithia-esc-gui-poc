@@ -25,5 +25,5 @@ urlpatterns = [
     path('new-registration/', views.QuickInlineRegistrationValidationFormView.as_view(), name='new_registration'),
     path('update/', views.QuickInlineUpdateValidationFormView.as_view(), name='update'),
     path('instrument-update/', views.QuickInlineInstrumentUpdateValidationFormView.as_view(), name='instrument_update'),
-    path('xsd/', views.InlineXSDMetadataValidationForm.as_view(), name='xsd'),
+    path('xsd/', views.InlineXSDValidationFormView.as_view(), name='xsd'),
 ]

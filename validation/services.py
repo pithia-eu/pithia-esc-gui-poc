@@ -447,6 +447,7 @@ def validate_new_xml_file_registration_and_return_errors(xml_metadata_file: XMLM
     try:
         MetadataFileRegistrationValidator.validate(xml_metadata_file, model)
     except FileRegisteredBefore as err:
+        logger.exception('Error occurred during metadata validation.')
         error_msg = str(err)
         errors.append(error_msg)
     return errors
@@ -456,9 +457,11 @@ def validate_xml_file_update_and_return_errors(xml_metadata_file: XMLMetadataFil
     try:
         MetadataFileUpdateValidator.validate(xml_metadata_file, model, existing_metadata_id)
     except UpdateFileNotMatching as err:
+        logger.exception('Error occurred during metadata validation.')
         error_msg = str(err)
         errors.append(error_msg)
     except ObjectDoesNotExist:
+        logger.exception('Error occurred during metadata validation.')
         error_msg = 'The metadata registration being updated could not be found.'
         errors.append(error_msg)
     return errors
@@ -479,4 +482,14 @@ def validate_instrument_xml_file_update_and_return_errors(xml_metadata_file: Ins
             errors.append(error_msg)
     except AttributeError:
         pass
+    return errors
+
+def validate_xml_file_with_xsd_and_return_errors(xml_metadata_file: XMLMetadataFile):
+    errors = []
+    try:
+        MetadataFileXSDValidator.validate(xml_metadata_file)
+    except XMLSchemaException as err:
+        logger.exception('Error occurred during metadata validation.')
+        error_msg = str(err)
+        errors.append(error_msg)
     return errors

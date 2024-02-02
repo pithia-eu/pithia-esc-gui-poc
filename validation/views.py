@@ -205,7 +205,7 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineUpdateValidationF
         )
         return super().validate(request, xml_metadata_file)
 
-class InlineXsdValidationFormView(FormView):
+class InlineXSDValidationFormView(FormView):
     form_class = InlineXSDMetadataValidationForm
     error_dict = {}
 
