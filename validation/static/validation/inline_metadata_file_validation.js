@@ -1,10 +1,9 @@
 const parser = new DOMParser();
 const expectedRootElementName = "Organisation";
-const fileInput = document.querySelector("#id_files");
 
 // Error messages
 const COULD_NOT_CHECK_ERROR = "Could not check as syntax is invalid.";
-const testFile1 = new File([`<?xml version="1.0" encoding="UTF-8"?>
+export const testFile1 = new File([`<?xml version="1.0" encoding="UTF-8"?>
 <Organisation 
     xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -52,7 +51,7 @@ const testFile1 = new File([`<?xml version="1.0" encoding="UTF-8"?>
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
 </Organisation>`], 'Organisation_Test.xml');
-const testFile2 = new File([`<?xml version="1.0" encoding="UTF-8"?>
+export const testFile2 = new File([`<?xml version="1.0" encoding="UTF-8"?>
 <Organisation 
     xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -100,7 +99,7 @@ const testFile2 = new File([`<?xml version="1.0" encoding="UTF-8"?>
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </description>
 </Organisation>`], 'Organisation_Test.xml');
-const testFile3 = new File([`<?xml version="1.0" encoding="UTF-8"?>
+export const testFile3 = new File([`<?xml version="1.0" encoding="UTF-8"?>
 <Organisation 
     xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -149,7 +148,7 @@ const testFile3 = new File([`<?xml version="1.0" encoding="UTF-8"?>
     </description>
 </Organisation>`], 'Organisation_Test.xml');
 
-class MetadataFile {
+export class MetadataFile {
     constructor(xmlFileString, xmlFileName) {
         this.id = Math.ceil(Math.random()*10000);
         this.xmlFileString = xmlFileString;
@@ -254,6 +253,10 @@ class MetadataFile {
         this.ontologyReferenceErrors = results.ontologyReferenceErrors;
     }
 
+    addServerValidationResults(results) {
+        // Implemented through subclasses
+    }
+
     addXsdValidationResults(results) {
         this.XSDErrors = results.XSDErrors;
     }
@@ -263,7 +266,7 @@ class MetadataFile {
     }
 }
 
-class MetadataFileValidator {
+export class MetadataFileValidator {
     removeFileExtensionFromString(string) {
         return string.replace(/\.[^/.]+$/, "")
     }
@@ -392,30 +395,31 @@ class MetadataFileValidator {
         };
     }
 
-    async validateWithServer(metadataFile) {
-        const validationUrl = JSON.parse(document.getElementById("inline-validation-url").textContent);
+    async serverValidationFetchRequest(metadataFile) {
+        // Implemented by subclasses
+    }
 
+    serverValidationErrorObject(errorMsg) {
+        // Implemented by subclasses
+    }
+
+    serverValidationResultsObject(results) {
+        // Implemented by subclasses
+    }
+
+    async validateWithServer(metadataFile) {
         let response;
         try {
-            response = await fetch(`${validationUrl}?` + new URLSearchParams({
-                xml_file_string: metadataFile.xmlFileString,
-                xml_file_name: metadataFile.name,
-            }));
+            response = await this.serverValidationFetchRequest(metadataFile);
         } catch (error) {
             console.error("There was a problem whilst validating with the server.");
             const errorMsg = "A network error occurred.";
-            return {
-                metadataReferenceErrors: [errorMsg],
-                ontologyReferenceErrors: [errorMsg],
-            }
+            return this.serverValidationErrorObject(errorMsg);
         }
         
         if (response.status === 504) {
             const errorMsg = "Validation did not finish. The connection to the server timed out before validation could finish. Please try uploading the file again at a later time.";
-            return {
-                metadataReferenceErrors: [errorMsg],
-                ontologyReferenceErrors: [errorMsg],
-            };
+            return this.serverValidationErrorObject(errorMsg);
         }
 
         let responseText;
@@ -426,30 +430,21 @@ class MetadataFileValidator {
         } catch (error) {
             if (!response.ok) {
                 const errorMsg = "An unexpected error occurred.";
-                return {
-                    metadataReferenceErrors: [errorMsg],
-                    ontologyReferenceErrors: [errorMsg],
-                };
+                return this.serverValidationErrorObject(errorMsg);
             }
         }
 
-        return {
-            metadataReferenceErrors: results.incorrectly_structured_url_errors
-                                        .concat(results.unregistered_operational_mode_url_errors)
-                                        .concat(results.unregistered_resource_url_errors),
-            ontologyReferenceErrors: results.invalid_ontology_url_errors,
-            registrationErrors: results.xml_file_registration_errors,
-        };
+        return this.serverValidationResultsObject(results);
     }
 }
 
-class MetadataValidationStatusUIController {
+export class MetadataValidationStatusUIController {
     constructor(validationStatusListElem, fileInputElem) {
         this.validationStatusListElem = validationStatusListElem;
         this.fileInputElem = fileInputElem;
     }
 
-    #htmlToElement(html) {
+    htmlToElement(html) {
         const template = document.createElement("template");
         html = html.trim();
         template.innerHTML = html;
@@ -460,7 +455,7 @@ class MetadataValidationStatusUIController {
 
     }
 
-    #addSuccessValidationResultsForFile(successText, selector) {
+    addSuccessValidationResultsForFile(successText, selector) {
         const statusElem = document.querySelector(selector);
         statusElem.innerHTML = `
         <div class="text-success">
@@ -470,7 +465,7 @@ class MetadataValidationStatusUIController {
         </div>`;
     }
 
-    #addFailedValidationResultsForFile(failureText, errors, selector) {
+    addFailedValidationResultsForFile(failureText, errors, selector) {
         const statusElem = document.querySelector(selector);
         let errorLisString = "";
         errors.forEach(e => errorLisString += `<li>${e}</li>`);
@@ -512,8 +507,8 @@ class MetadataValidationStatusUIController {
         errorNumElem.innerHTML = metadataFile.totalErrorCount;
     }
 
-    #addMetadataFileToValidationStatusList(metadataFile) {
-        this.validationStatusListElem.append(this.#htmlToElement(`
+    addGenericListItemForMetadataFile(metadataFile) {
+        this.validationStatusListElem.append(this.htmlToElement(`
             <li class="list-group-item file-list-group-item file-list-group-item-${metadataFile.id} p-4">
                 <div class="d-flex flex-column flex-grow-1">
                     <div class="pb-3">
@@ -546,7 +541,7 @@ class MetadataValidationStatusUIController {
                                 </small>
                             </div>
                             <small class="text-secondary total-time-validated">
-                                (<span class="seconds">-</span> seconds)
+                                (<span class="time-value">-</span>)
                             </small>
                         </summary>
                         <ul class="list-unstyled mt-2">
@@ -606,8 +601,12 @@ class MetadataValidationStatusUIController {
         `));
     }
 
+    addMetadataFileToValidationStatusList(metadataFile) {
+        // Implemented through subclasses
+    }
+
     startValidationForFile(metadataFile) {
-        this.#addMetadataFileToValidationStatusList(metadataFile);
+        this.addMetadataFileToValidationStatusList(metadataFile);
     }
 
     updateBasicValidationResultsForFile(metadataFile) {
@@ -619,12 +618,12 @@ class MetadataValidationStatusUIController {
 
         // Syntax validation results
         if (metadataFile.isSyntaxValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed syntax validation.",
                 `${fileListGroupItemSelector} ${svSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed syntax validation.",
                 metadataFile.syntaxErrors,
                 `${fileListGroupItemSelector} ${svSelector}`
@@ -633,12 +632,12 @@ class MetadataValidationStatusUIController {
         
         // Namespace validation results
         if (metadataFile.isNamespaceValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed namespace validation.",
                 `${fileListGroupItemSelector} ${nsvSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed namespace validation.",
                 metadataFile.namespaceErrors,
                 `${fileListGroupItemSelector} ${nsvSelector}`
@@ -647,12 +646,12 @@ class MetadataValidationStatusUIController {
 
         // Local ID validation results
         if (metadataFile.isLocalIDValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed local ID validation.",
                 `${fileListGroupItemSelector} ${livSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed local ID validation.",
                 metadataFile.localIDErrors,
                 `${fileListGroupItemSelector} ${livSelector}`
@@ -661,12 +660,12 @@ class MetadataValidationStatusUIController {
 
         // Root element name validation results
         if (metadataFile.isRootElementNameValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed type validation.",
                 `${fileListGroupItemSelector} ${renvSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed type validation.",
                 metadataFile.rootElementNameErrors,
                 `${fileListGroupItemSelector} ${renvSelector}`
@@ -683,12 +682,12 @@ class MetadataValidationStatusUIController {
 
         // Metadata reference validation results
         if (metadataFile.isEachMetadataReferenceValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed metadata reference validation.",
                 `${fileListGroupItemSelector} ${mrvSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed metadata reference validation.",
                 metadataFile.metadataReferenceErrors,
                 `${fileListGroupItemSelector} ${mrvSelector}`
@@ -697,12 +696,12 @@ class MetadataValidationStatusUIController {
         
         // Ontology reference validation results
         if (metadataFile.isEachOntologyReferenceValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed ontology reference validation.",
                 `${fileListGroupItemSelector} ${orvSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed ontology reference validation.",
                 metadataFile.ontologyReferenceErrors,
                 `${fileListGroupItemSelector} ${orvSelector}`
@@ -712,18 +711,22 @@ class MetadataValidationStatusUIController {
         this.#updateTotalErrorCountForFile(metadataFile);
     }
 
+    updateServerValidationResultsForFile(metadataFile) {
+        // Implemented through subclasses
+    }
+
     updateXsdValidationResultsForFile(metadataFile) {
         const fileListGroupItemSelector = `.file-list-group-item-${metadataFile.id}`;
         const xvSelector = `.xv-list-group-item`;
 
         // Metadata reference validation results
         if (metadataFile.isXSDValid) {
-            this.#addSuccessValidationResultsForFile(
+            this.addSuccessValidationResultsForFile(
                 "Passed XSD validation.",
                 `${fileListGroupItemSelector} ${xvSelector}`
             );
         } else {
-            this.#addFailedValidationResultsForFile(
+            this.addFailedValidationResultsForFile(
                 "Failed XSD validation.",
                 metadataFile.XSDErrors,
                 `${fileListGroupItemSelector} ${xvSelector}`
@@ -744,17 +747,19 @@ class MetadataValidationStatusUIController {
     }
 
     updateTimeTakenToValidateFile(metadataFile, startTime, endTime) {
-        const secondsElem = document.querySelector(`.file-list-group-item-${metadataFile.id} .total-time-validated .seconds`);
-        secondsElem.innerHTML = (endTime - startTime)/1000;
+        const timeValueElem = document.querySelector(`.file-list-group-item-${metadataFile.id} .total-time-validated .time-value`);
+        // In seconds
+        const timeValue = (endTime - startTime) / 1000;
+         if (timeValue < 60) {
+             // If equal to or over 60s, convert to mins and secs
+            timeValueElem.innerHTML = `${timeValue}s`;
+        } else {
+            timeValueElem.innerHTML = `${parseInt(timeValue / 60)}m, ${Math.round((timeValue % 60))}s`;
+        }
     }
 }
 
-async function validateMetadataFile(metadataFile) {
-    const validator = new MetadataFileValidator();
-    const metadataFileListElem = document.querySelector(".file-validation-status-list");
-    const fileInputElem = document.querySelector("#id_files");
-    const validationStatusUIController = new MetadataValidationStatusUIController(metadataFileListElem, fileInputElem);
-
+export async function validateMetadataFile(metadataFile, validator, validationStatusUIController) {
     const validationStartTime = new Date().getTime();
     validationStatusUIController.startValidationForFile(metadataFile);
 
@@ -762,12 +767,9 @@ async function validateMetadataFile(metadataFile) {
     metadataFile.addBasicValidationResults(basicValidationResults);
     validationStatusUIController.updateBasicValidationResultsForFile(metadataFile);
 
-    const serverValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithServer(metadataFile) : {
-        metadataReferenceErrors: [COULD_NOT_CHECK_ERROR],
-        ontologyReferenceErrors: [COULD_NOT_CHECK_ERROR],
-    };
-    metadataFile.addReferenceValidationResults(serverValidationResults);
-    validationStatusUIController.updateReferenceValidationResultsForFile(metadataFile);
+    const serverValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithServer(metadataFile) : validator.serverValidationErrorObject(COULD_NOT_CHECK_ERROR);
+    metadataFile.addServerValidationResults(serverValidationResults);
+    validationStatusUIController.updateServerValidationResultsForFile(metadataFile);
 
     const XsdValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithXsd(metadataFile) : {
         XSDErrors: [COULD_NOT_CHECK_ERROR],
@@ -780,30 +782,3 @@ async function validateMetadataFile(metadataFile) {
 
     validationStatusUIController.updateTimeTakenToValidateFile(metadataFile, validationStartTime, validationEndTime);
 }
-
-async function startValidationProcess() {
-    // const files = Array.from(fileInput.files);
-    const files = [
-        testFile1,
-        testFile2,
-        testFile3,
-    ];
-    const validationRequests = [];
-    for (const file of files) {
-        const metadataFile = await MetadataFile.fromFile(file);
-        validationRequests.push(validateMetadataFile(metadataFile));
-    };
-    await Promise.all(validationRequests);
-}
-
-fileInput.addEventListener("change", async event => {
-    await startValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    // if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startValidationProcess();
-    // }
-});
