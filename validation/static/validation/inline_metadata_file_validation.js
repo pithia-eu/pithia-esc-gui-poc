@@ -754,7 +754,7 @@ export class MetadataValidationStatusUIController {
              // If equal to or over 60s, convert to mins and secs
             timeValueElem.innerHTML = `${timeValue}s`;
         } else {
-            timeValueElem.innerHTML = `${parseInt(timeValue / 60)}m, ${Math.round((timeValue % 60))}s`;
+            timeValueElem.innerHTML = `${parseInt(timeValue / 60)}m ${Math.round((timeValue % 60))}s`;
         }
     }
 }
