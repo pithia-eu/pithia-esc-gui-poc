@@ -90,7 +90,7 @@ class NewMetadataValidationStatusUIController extends MetadataValidationStatusUI
         const rvSelector = `.rv-list-group-item`;
 
         // New registration validation results
-        if (metadataFile.isEachMetadataReferenceValid) {
+        if (metadataFile.isNotRegisteredAlready) {
             this.addSuccessValidationResultsForFile(
                 "This file has not yet been registered.",
                 `${fileListGroupItemSelector} ${rvSelector}`
