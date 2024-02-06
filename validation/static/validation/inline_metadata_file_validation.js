@@ -1,152 +1,13 @@
 const parser = new DOMParser();
 const expectedRootElementName = JSON.parse(document.querySelector("#expected-root-element-name").textContent);
 
+// Events
+const trackedFilesChangedEvent = new Event("Tracked files changed.");
+
 // Error messages
 const COULD_NOT_CHECK_ERROR = "Could not check as syntax is invalid.";
-export const testFile1 = new File([`<?xml version="1.0" encoding="UTF-8"?>
-<Organisation 
-    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" 
-    xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gco="http://www.isotc211.org/2005/gco" >
 
-    <identifier>
-        <PITHIA_Identifier>
-            <localID>Organisation_Test</localID>
-            <namespace>test</namespace>
-            <version>1</version>
-            <creationDate>2022-02-03T12:50:00Z</creationDate>
-            <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
-        </PITHIA_Identifier>
-    </identifier>
-    <name>Organisation Test</name>
-    <contactInfo>
-        <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
-            <phone>
-                <CI_Telephone><voice><gco:CharacterString>+1 000-000-0000</gco:CharacterString></voice> <!-- telephone -->
-                </CI_Telephone>
-            </phone>           
-            <address>
-                <CI_Address>                   
-                    <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
-                    <city><gco:CharacterString>City</gco:CharacterString></city>
-                    <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
-                    <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
-                    <country><gco:CharacterString>Country</gco:CharacterString></country>
-                    <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
-                </CI_Address>
-            </address>
-            <onlineResource><CI_OnlineResource><linkage><URL>http://test.test.edu</URL></linkage></CI_OnlineResource></onlineResource> 
-            <hoursOfService><gco:CharacterString>0:00am-0:00am</gco:CharacterString></hoursOfService>
-            <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
-        </CI_Contact>
-    </contactInfo>
-    <shortName>TEST</shortName>
-    <description>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </description>
-</Organisation>`], 'Organisation_Test.xml');
-export const testFile2 = new File([`<?xml version="1.0" encoding="UTF-8"?>
-<Organisation 
-    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" 
-    xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gco="http://www.isotc211.org/2005/gco" >
-
-    <identifier>
-        <PITHIA_Identifier>
-            <localID>Organisation_Test_2 </localID>
-            <namespace>test</namespace>
-            <version>1</version>
-            <creationDate>2022-02-03T12:50:00Z</creationDate>
-            <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
-        </PITHIA_Identifier>
-    </identifier>
-    <name>Organisation Test</name>
-    <contactInfo>
-        <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
-            <phone>
-                <CI_Telephone><voice><gco:CharacterString>+1 000-000-0000</gco:CharacterString></voice> <!-- telephone -->
-                </CI_Telephone>
-            </phone>           
-            <address>
-                <CI_Address>                   
-                    <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
-                    <city><gco:CharacterString>City</gco:CharacterString></city>
-                    <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
-                    <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
-                    <country><gco:CharacterString>Country</gco:CharacterString></country>
-                    <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
-                </CI_Address>
-            </address>
-            <onlineResource><CI_OnlineResource><linkage><URL>http://test.test.edu</URL></linkage></CI_OnlineResource></onlineResource> 
-            <hoursOfService><gco:CharacterString>0:00am-0:00am</gco:CharacterString></hoursOfService>
-            <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
-        </CI_Contact>
-    </contactInfo>
-    <shortName>TEST</shortName>
-    <description>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </description>
-</Organisation>`], 'Organisation_Test.xml');
-export const testFile3 = new File([`<?xml version="1.0" encoding="UTF-8"?>
-<Organisation 
-    xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" 
-    xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gco="http://www.isotc211.org/2005/gco" >
-
-    <identifier>
-        <PITHIA_Identifier>
-            <localID>Organisation_Test</localID>
-            <namespace>test</namespace>
-            <version>1</version>
-            <creationDate>2022-02-03T12:50:00Z</creationDate>
-            <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
-        </PITHIA_Identifier>
-    </identifier>
-    <name>Organisation Test Invalid Syntax</name>
-    <contactInfo
-        <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
-            <phone>
-                <CI_Telephone><voice><gco:CharacterString>+1 000-000-0000</gco:CharacterString></voice> <!-- telephone -->
-                </CI_Telephone>
-            </phone>           
-            <address>
-                <CI_Address>                   
-                    <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
-                    <city><gco:CharacterString>City</gco:CharacterString></city>
-                    <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
-                    <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
-                    <country><gco:CharacterString>Country</gco:CharacterString></country>
-                    <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
-                </CI_Address>
-            </address>
-            <onlineResource><CI_OnlineResource><linkage><URL>http://test.test.edu</URL></linkage></CI_OnlineResource></onlineResource> 
-            <hoursOfService><gco:CharacterString>0:00am-0:00am</gco:CharacterString></hoursOfService>
-            <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
-        </CI_Contact>
-    </contactInfo>
-    <shortName>TEST</shortName>
-    <description>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </description>
-</Organisation>`], 'Organisation_Test.xml');
+const trackedMetadataFiles = [];
 
 export class MetadataFile {
     constructor(xmlFileString, xmlFileName) {
@@ -451,8 +312,41 @@ export class MetadataValidationStatusUIController {
         return template.content.firstChild;
     }
 
-    #removeMetadataFileAndRemoveFromValidationStatusList(metadataFile, i) {
+    // Source for removeFileFromFileList() function: https://stackoverflow.com/a/64019766
+    #removeFileFromFileList(index) {
+        const dt = new DataTransfer();
+        const { files } = this.fileInputElem;
+    
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (index !== i) {
+                dt.items.add(file);
+            }
+        }
+    
+        this.fileInputElem.files = dt.files; // Assign the newly constructed file list
+        return this.fileInputElem.files.length;
+    }
 
+    #removeMetadataFileAndRemoveFromValidationStatusList(metadataFile) {
+        const allBtnRmFiles = Array.from(document.querySelectorAll(".btn-rm-file"));
+        const clickedBtnRmFileIndex = allBtnRmFiles.findIndex(btn => btn.id === `btn-rm-file-${metadataFile.id}`);
+
+        // Remove file from file input based on index
+        this.#removeFileFromFileList(clickedBtnRmFileIndex);
+
+        // Remove file from UI
+        document.querySelector(`.file-list-group-item-${metadataFile.id}`).remove();
+
+        // Remove file from code store
+        removeTrackedMetadataFileById(metadataFile.id);
+        document.dispatchEvent(trackedFilesChangedEvent);
+    }
+
+    #addRemoveButtonForFile(metadataFile) {
+        document.querySelector(`#btn-rm-file-${metadataFile.id}`).addEventListener("click", event => {
+            this.#removeMetadataFileAndRemoveFromValidationStatusList(metadataFile);
+        });
     }
 
     addSuccessValidationResultsForFile(successText, selector) {
@@ -607,6 +501,7 @@ export class MetadataValidationStatusUIController {
 
     startValidationForFile(metadataFile) {
         this.addMetadataFileToValidationStatusList(metadataFile);
+        this.#addRemoveButtonForFile(metadataFile);
     }
 
     updateBasicValidationResultsForFile(metadataFile) {
@@ -763,25 +658,56 @@ export class MetadataValidationStatusUIController {
 }
 
 export async function validateMetadataFile(metadataFile, validator, validationStatusUIController) {
-    const validationStartTime = new Date().getTime();
-    validationStatusUIController.startValidationForFile(metadataFile);
+    try {
+        const validationStartTime = new Date().getTime();
+        validationStatusUIController.startValidationForFile(metadataFile);
+    
+        const basicValidationResults = validator.validateBasicComponents(metadataFile);
+        metadataFile.addBasicValidationResults(basicValidationResults);
+        validationStatusUIController.updateBasicValidationResultsForFile(metadataFile);
+    
+        const serverValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithServer(metadataFile) : validator.serverValidationErrorObject(COULD_NOT_CHECK_ERROR);
+        metadataFile.addServerValidationResults(serverValidationResults);
+        validationStatusUIController.updateServerValidationResultsForFile(metadataFile);
+    
+        const XsdValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithXsd(metadataFile) : {
+            XSDErrors: [COULD_NOT_CHECK_ERROR],
+        };
+        metadataFile.addXsdValidationResults(XsdValidationResults);
+        validationStatusUIController.updateXsdValidationResultsForFile(metadataFile);
+    
+        validationStatusUIController.endValidationForFile(metadataFile);
+        const validationEndTime = new Date().getTime();
+    
+        validationStatusUIController.updateTimeTakenToValidateFile(metadataFile, validationStartTime, validationEndTime);
+        document.dispatchEvent(trackedFilesChangedEvent);
+    } catch (error) {
+        console.log(`Validation process for metadata file ${metadataFile.id} did not run to completion. It may have been removed from the file list.`);
+        console.error(error);
+    }
+}
 
-    const basicValidationResults = validator.validateBasicComponents(metadataFile);
-    metadataFile.addBasicValidationResults(basicValidationResults);
-    validationStatusUIController.updateBasicValidationResultsForFile(metadataFile);
+export async function startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn) {
+    const validationRequests = [];
 
-    const serverValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithServer(metadataFile) : validator.serverValidationErrorObject(COULD_NOT_CHECK_ERROR);
-    metadataFile.addServerValidationResults(serverValidationResults);
-    validationStatusUIController.updateServerValidationResultsForFile(metadataFile);
-
-    const XsdValidationResults = metadataFile.isSyntaxValid ? await validator.validateWithXsd(metadataFile) : {
-        XSDErrors: [COULD_NOT_CHECK_ERROR],
+    for (const file of files) {
+        const metadataFile = await newMetadataFileObjectFn(file);
+        addTrackedMetadataFile(metadataFile);
+        validationRequests.push(validateMetadataFile(metadataFile, validator, validationStatusUIController));
     };
-    metadataFile.addXsdValidationResults(XsdValidationResults);
-    validationStatusUIController.updateXsdValidationResultsForFile(metadataFile);
 
-    validationStatusUIController.endValidationForFile(metadataFile);
-    const validationEndTime = new Date().getTime();
+    return Promise.all(validationRequests);
+}
 
-    validationStatusUIController.updateTimeTakenToValidateFile(metadataFile, validationStartTime, validationEndTime);
+export function addTrackedMetadataFile(metadataFile) {
+    return trackedMetadataFiles.push(metadataFile);
+}
+
+function removeTrackedMetadataFileById(metadataFileId) {
+    const metadataFileIndex = trackedMetadataFiles.findIndex(metadataFile => metadataFile.id === metadataFileId);
+    return trackedMetadataFiles.splice(metadataFileIndex, 1);
+}
+
+function isEachTrackedMetadataFileValid() {
+    return trackedMetadataFiles.every(metadataFile => metadataFile.isValid === true);
 }

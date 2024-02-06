@@ -2,7 +2,7 @@ import {
     MetadataFile,
     MetadataFileValidator,
     MetadataValidationStatusUIController,
-    validateMetadataFile,
+    startValidationProcess,
 } from "/static/validation/inline_metadata_file_validation.js";
 const fileInput = document.querySelector("#id_files");
 
@@ -135,29 +135,25 @@ class MetadataUpdateValidationStatusUIController extends MetadataValidationStatu
     }
 }
 
-async function startValidationProcess() {
+async function startMetadataFileUpdateValidationProcess() {
     const files = Array.from(fileInput.files);
     const validator = new MetadataFileUpdateValidator();
 
     const metadataFileListElem = document.querySelector(".file-validation-status-list");
     const validationStatusUIController = new MetadataUpdateValidationStatusUIController(metadataFileListElem, fileInput);
+    const newMetadataFileObjectFn = MetadataFileUpdate.fromFile;
 
-    const validationRequests = [];
-    for (const file of files) {
-        const metadataFile = await MetadataFileUpdate.fromFile(file);
-        validationRequests.push(validateMetadataFile(metadataFile, validator, validationStatusUIController));
-    };
-    await Promise.all(validationRequests);
+    return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
 
 fileInput.addEventListener("change", async event => {
-    await startValidationProcess();
+    await startMetadataFileUpdateValidationProcess();
 });
 
 window.addEventListener("load", async event => {
     if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
-        await startValidationProcess();
+        await startMetadataFileUpdateValidationProcess();
     }
 });
