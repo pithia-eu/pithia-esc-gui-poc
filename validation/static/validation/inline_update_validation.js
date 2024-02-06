@@ -6,7 +6,7 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 const fileInput = document.querySelector("#id_files");
 
-class MetadataFileUpdate extends MetadataFile {
+export class MetadataFileUpdate extends MetadataFile {
     constructor(xmlFileString, xmlFileName) {
         super(xmlFileString, xmlFileName);
         this.updateErrors = undefined;
@@ -60,7 +60,7 @@ class MetadataFileUpdate extends MetadataFile {
     }
 }
 
-class MetadataFileUpdateValidator extends MetadataFileValidator {
+export class MetadataFileUpdateValidator extends MetadataFileValidator {
     async serverValidationFetchRequest(metadataFile) {
         const validationUrl = JSON.parse(document.getElementById("inline-validation-url").textContent);
         const existingMetadataId = JSON.parse(document.getElementById("resource-id").textContent);
@@ -91,7 +91,7 @@ class MetadataFileUpdateValidator extends MetadataFileValidator {
     }
 }
 
-class MetadataUpdateValidationStatusUIController extends MetadataValidationStatusUIController {
+export class MetadataUpdateValidationStatusUIController extends MetadataValidationStatusUIController {
     addUpdateValidationStatusListItemForMetadataFile(metadataFile) {
         const statusList = document.querySelector(`.file-list-group-item-${metadataFile.id} .details-validation ul`);
         statusList.append(this.htmlToElement(`
@@ -135,7 +135,7 @@ class MetadataUpdateValidationStatusUIController extends MetadataValidationStatu
     }
 }
 
-async function startMetadataFileUpdateValidationProcess() {
+export async function startMetadataFileUpdateValidationProcess() {
     const files = Array.from(fileInput.files);
     const validator = new MetadataFileUpdateValidator();
 
@@ -145,15 +145,3 @@ async function startMetadataFileUpdateValidationProcess() {
 
     return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
-
-fileInput.addEventListener("change", async event => {
-    await startMetadataFileUpdateValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startMetadataFileUpdateValidationProcess();
-    }
-});

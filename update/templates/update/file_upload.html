@@ -9,6 +9,7 @@
 {% load static %}
 {% block scripts %}
 {{ validation_url|json_script:"validation-url" }}
+{{ expected_root_element_name|json_script:"expected-root-element-name" }}
 {{ inline_validation_url|json_script:"inline-validation-url" }}
 {{ inline_xsd_validation_url|json_script:"inline-xsd-validation-url" }}
 {{ support_url|json_script:"support-url" }}

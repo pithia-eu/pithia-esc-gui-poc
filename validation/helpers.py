@@ -36,4 +36,4 @@ def create_li_element_with_register_link_from_resource_type_from_resource_url(re
     return f'<li><a href="{reverse_lazy(f"register:{url_name}")}" target="_blank" class="alert-link">{url_base_text} Metadata Registration</a></li>'
 
 def map_acquisition_capability_to_update_link(resource):
-    return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource["_id"]])}" target="_blank" class="alert-link">Update {resource["name"]}</a></li>'
+    return f'<li><a href="{reverse_lazy("update:acquisition_capability_set", args=[resource.id])}" target="_blank" class="alert-link">Update {resource.name}</a></li>'

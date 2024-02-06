@@ -2,7 +2,7 @@ const parser = new DOMParser();
 const expectedRootElementName = JSON.parse(document.querySelector("#expected-root-element-name").textContent);
 
 // Events
-const trackedFilesChangedEvent = new Event("Tracked files changed.");
+const trackedFilesChangedEvent = new Event("trackedfileschanged");
 
 // Error messages
 const COULD_NOT_CHECK_ERROR = "Could not check as syntax is invalid.";
@@ -680,7 +680,6 @@ export async function validateMetadataFile(metadataFile, validator, validationSt
         const validationEndTime = new Date().getTime();
     
         validationStatusUIController.updateTimeTakenToValidateFile(metadataFile, validationStartTime, validationEndTime);
-        document.dispatchEvent(trackedFilesChangedEvent);
     } catch (error) {
         console.log(`Validation process for metadata file ${metadataFile.id} did not run to completion. It may have been removed from the file list.`);
         console.error(error);
@@ -696,7 +695,8 @@ export async function startValidationProcess(files, validator, validationStatusU
         validationRequests.push(validateMetadataFile(metadataFile, validator, validationStatusUIController));
     };
 
-    return Promise.all(validationRequests);
+    await Promise.all(validationRequests);
+    document.dispatchEvent(trackedFilesChangedEvent);
 }
 
 export function addTrackedMetadataFile(metadataFile) {
@@ -708,6 +708,6 @@ function removeTrackedMetadataFileById(metadataFileId) {
     return trackedMetadataFiles.splice(metadataFileIndex, 1);
 }
 
-function isEachTrackedMetadataFileValid() {
+export function isEachTrackedMetadataFileValid() {
     return trackedMetadataFiles.every(metadataFile => metadataFile.isValid === true);
 }

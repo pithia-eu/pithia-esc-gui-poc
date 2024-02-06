@@ -149,6 +149,7 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     success_url = reverse_lazy('resource_management:operations')
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
+    template_name = 'update/file_upload_instrument.html'
     model = models.Instrument
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'

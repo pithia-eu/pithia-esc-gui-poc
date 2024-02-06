@@ -477,11 +477,12 @@ def validate_instrument_xml_file_update_and_return_errors(xml_metadata_file: Ins
         )
         if not is_each_op_mode_in_update_valid:
             acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_operational_mode_urls(missing_operational_mode_urls)
-            error_msg = 'Any references to this instrument\'s operational mode IDs will be invalidated after this update.'
-            error_msg = error_msg + ' ' + 'To fix this, please also update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below, after updating this instrument: <ul>%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
-            errors.append(error_msg)
+            if len(acquisition_capability_sets) > 0:
+                error_msg = 'Any references to this instrument\'s operational mode IDs will be invalidated after this update.'
+                error_msg = error_msg + ' ' + 'To fix this, please also update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below, after updating this instrument: <ul>%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
+                errors.append(error_msg)
     except AttributeError:
-        pass
+        logger.exception('This metadata file doesn\'t have operational modes')
     return errors
 
 def validate_xml_file_with_xsd_and_return_errors(xml_metadata_file: XMLMetadataFile):

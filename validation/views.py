@@ -155,6 +155,7 @@ class WorkflowXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidatio
 class QuickInlineValidationFormView(FormView):
     form_class = QuickInlineMetadataValidationForm
     error_dict = {}
+    file_wrapper_class = XMLMetadataFile
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update(validate_xml_file_references_and_return_errors(xml_metadata_file))
@@ -163,7 +164,7 @@ class QuickInlineValidationFormView(FormView):
         form = self.form_class(request.GET)
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
-        xml_metadata_file = XMLMetadataFile(request.GET['xml_file_string'], request.GET['xml_file_name'])
+        xml_metadata_file = self.file_wrapper_class(request.GET['xml_file_string'], request.GET['xml_file_name'])
         self.validate(request, xml_metadata_file)
 
         if not any(self.error_dict.values()):
@@ -190,19 +191,27 @@ class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
         )
         return super().validate(request, xml_metadata_file)
 
-class QuickInlineInstrumentUpdateValidationFormView(QuickInlineUpdateValidationFormView):
-    def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(xml_metadata_file)
+class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormView):
+    file_wrapper_class = InstrumentXMLMetadataFile
 
-        if len(self.error_dict['xml_file_update_errors']) > 0:
-            self.error_dict['xml_file_op_mode_errors'] = ['Could not validate operational modes as metadata file did not pass update validation.']
-            return super().validate(xml_metadata_file)
-        
-        self.error_dict['xml_file_op_mode_warnings'] = validate_instrument_xml_file_update_and_return_errors(
+    def validate(self, request, xml_metadata_file: XMLMetadataFile):
+        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
             xml_metadata_file,
             models.Instrument,
             request.GET['existing_metadata_id']
         )
+
+        if len(self.error_dict['xml_file_update_errors']) > 0:
+            self.error_dict['xml_file_op_mode_errors'] = ['Could not validate operational modes as metadata file did not pass update validation.']
+            self.error_dict['xml_file_op_mode_warnings'] = ['Could not validate operational modes as metadata file did not pass update validation.']
+            return super().validate(xml_metadata_file)
+        
+        self.error_dict['xml_file_op_mode_errors'] = []
+        self.error_dict['xml_file_op_mode_warnings'] = validate_instrument_xml_file_update_and_return_errors(
+            xml_metadata_file,
+            request.GET['existing_metadata_id']
+        )
+
         return super().validate(request, xml_metadata_file)
 
 class InlineXSDValidationFormView(FormView):

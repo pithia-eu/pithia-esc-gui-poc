@@ -2,8 +2,10 @@ import {
     MetadataFileUpdate,
     MetadataFileUpdateValidator,
     MetadataUpdateValidationStatusUIController,
-    startValidationProcess,
 } from "/static/validation/inline_update_validation.js";
+import {
+    startValidationProcess,
+} from "/static/validation/inline_metadata_file_validation.js";
 const fileInput = document.querySelector("#id_files");
 
 class InstrumentMetadataFileUpdate extends MetadataFileUpdate {
@@ -65,13 +67,14 @@ class InstrumentMetadataFileUpdate extends MetadataFileUpdate {
     }
 
     #addInstrumentUpdateValidationResults(results) {
+        this.operationalModeUpdateErrors = results.operationalModeUpdateErrors;
         this.operationalModeUpdateWarnings = results.operationalModeUpdateWarnings;
     }
 
     addServerValidationResults(results) {
         this.addReferenceValidationResults(results);
-        this.addUpdateValidationResults(results);
         this.#addInstrumentUpdateValidationResults(results);
+        this.addUpdateValidationResults(results);
     }
 }
 
@@ -104,8 +107,8 @@ class InstrumentMetadataFileUpdateValidator extends MetadataFileUpdateValidator 
                                         .concat(results.unregistered_resource_url_errors),
             ontologyReferenceErrors: results.invalid_ontology_url_errors,
             updateErrors: results.xml_file_update_errors,
-            operationalModeUpdateErrors: results.xml_file_instrument_update_errors,
-            operationalModeUpdateWarnings: results.xml_file_instrument_update_warnings,
+            operationalModeUpdateErrors: results.xml_file_op_mode_errors,
+            operationalModeUpdateWarnings: results.xml_file_op_mode_warnings,
         };
     }
 }
@@ -129,10 +132,10 @@ class InstrumentMetadataUpdateValidationStatusUIController extends MetadataUpdat
         let warningLisString = "";
         warnings.forEach(e => warningLisString += `<li>${e}</li>`);
         statusElem.innerHTML = `
-        <details class="text-warning">
+        <details class="text-warning-emphasis">
             <summary>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger me-2" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
                 </svg>${warningText}
             </summary>
             <div class="pt-2">
@@ -145,8 +148,8 @@ class InstrumentMetadataUpdateValidationStatusUIController extends MetadataUpdat
 
     addMetadataFileToValidationStatusList(metadataFile) {
         this.addGenericListItemForMetadataFile(metadataFile);
-        this.addUpdateValidationStatusListItemForMetadataFile(metadataFile);
         this.#addInstrumentUpdateValidationStatusListItemForMetadataFile(metadataFile);
+        this.addUpdateValidationStatusListItemForMetadataFile(metadataFile);
     }
 
     #updateInstrumentUpdateValidationResultsForFile(metadataFile) {
@@ -165,7 +168,7 @@ class InstrumentMetadataUpdateValidationStatusUIController extends MetadataUpdat
             // If no errors, check for warnings
             // Add "addWarningValidationResultsForFile() method"
             return this.#addWarningValidationResultsForFile(
-                "Some operational modes missing in this update.",
+                "Some operational modes are missing in this update.",
                 metadataFile.operationalModeUpdateWarnings,
                 `${fileListGroupItemSelector} ${iuvSelector}`
             );
@@ -185,7 +188,7 @@ class InstrumentMetadataUpdateValidationStatusUIController extends MetadataUpdat
     }
 }
 
-async function startInstrumentMetadataFileUpdateValidationProcess() {
+export async function startInstrumentMetadataFileUpdateValidationProcess() {
     const files = Array.from(fileInput.files);
     const validator = new InstrumentMetadataFileUpdateValidator();
 
@@ -195,15 +198,3 @@ async function startInstrumentMetadataFileUpdateValidationProcess() {
 
     return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
-
-fileInput.addEventListener("change", async event => {
-    await startInstrumentMetadataFileUpdateValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startInstrumentMetadataFileUpdateValidationProcess();
-    }
-});
