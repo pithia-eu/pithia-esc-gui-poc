@@ -24,13 +24,39 @@ class MetadataFileUpdate extends MetadataFile {
         return this.updateErrors.length === 0;
     }
 
-    #addUpdateValidationResults(results) {
+    get isValid() {
+        return [
+            this.isSyntaxValid,
+            this.isNamespaceValid,
+            this.isLocalIDValid,
+            this.isRootElementNameValid,
+            this.isXSDValid,
+            this.isEachMetadataReferenceValid,
+            this.isEachOntologyReferenceValid,
+            this.isUpdateValid,
+        ].every(result => result === true);
+    }
+
+    get totalErrorCount() {
+        return [
+            this.syntaxErrors,
+            this.namespaceErrors,
+            this.localIDErrors,
+            this.rootElementNameErrors,
+            this.XSDErrors ? this.XSDErrors : [],
+            this.metadataReferenceErrors ? this.metadataReferenceErrors : [],
+            this.ontologyReferenceErrors ? this.ontologyReferenceErrors : [],
+            this.updateErrors ? this.updateErrors : [],
+        ].flat().length;
+    }
+
+    addUpdateValidationResults(results) {
         this.updateErrors = results.updateErrors;
     }
 
     addServerValidationResults(results) {
         this.addReferenceValidationResults(results);
-        this.#addUpdateValidationResults(results);
+        this.addUpdateValidationResults(results);
     }
 }
 
@@ -66,7 +92,7 @@ class MetadataFileUpdateValidator extends MetadataFileValidator {
 }
 
 class MetadataUpdateValidationStatusUIController extends MetadataValidationStatusUIController {
-    #addUpdateValidationStatusListItemForMetadataFile(metadataFile) {
+    addUpdateValidationStatusListItemForMetadataFile(metadataFile) {
         const statusList = document.querySelector(`.file-list-group-item-${metadataFile.id} .details-validation ul`);
         statusList.append(this.htmlToElement(`
             <li class="uv-list-group-item py-2">
@@ -81,10 +107,10 @@ class MetadataUpdateValidationStatusUIController extends MetadataValidationStatu
 
     addMetadataFileToValidationStatusList(metadataFile) {
         this.addGenericListItemForMetadataFile(metadataFile);
-        this.#addUpdateValidationStatusListItemForMetadataFile(metadataFile);
+        this.addUpdateValidationStatusListItemForMetadataFile(metadataFile);
     }
 
-    #updateUpdateValidationResultsForFile(metadataFile) {
+    updateUpdateValidationResultsForFile(metadataFile) {
         const fileListGroupItemSelector = `.file-list-group-item-${metadataFile.id}`;
         const uvSelector = `.uv-list-group-item`;
 
@@ -105,7 +131,7 @@ class MetadataUpdateValidationStatusUIController extends MetadataValidationStatu
 
     updateServerValidationResultsForFile(metadataFile) {
         this.updateReferenceValidationResultsForFile(metadataFile);
-        this.#updateUpdateValidationResultsForFile(metadataFile);
+        this.updateUpdateValidationResultsForFile(metadataFile);
     }
 }
 
@@ -129,9 +155,9 @@ fileInput.addEventListener("change", async event => {
 });
 
 window.addEventListener("load", async event => {
-    // if (fileInput.value !== "") {
+    if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
         await startValidationProcess();
-    // }
+    }
 });

@@ -198,7 +198,7 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineUpdateValidationF
             self.error_dict['xml_file_op_mode_errors'] = ['Could not validate operational modes as metadata file did not pass update validation.']
             return super().validate(xml_metadata_file)
         
-        self.error_dict['xml_file_op_mode_errors'] = validate_instrument_xml_file_update_and_return_errors(
+        self.error_dict['xml_file_op_mode_warnings'] = validate_instrument_xml_file_update_and_return_errors(
             xml_metadata_file,
             models.Instrument,
             request.GET['existing_metadata_id']

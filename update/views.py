@@ -70,6 +70,7 @@ class ResourceUpdateFormView(FormView):
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
         context['validation_url'] = self.validation_url
+        context['expected_root_element_name'] = self.model.root_element_name
         context['inline_validation_url'] = reverse_lazy('validation:update')
         context['inline_xsd_validation_url'] = reverse_lazy('validation:xsd')
         context['support_url'] = f'{reverse_lazy("support")}#support-heading'

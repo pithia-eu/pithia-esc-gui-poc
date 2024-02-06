@@ -111,6 +111,7 @@ class ResourceRegisterFormView(FormView):
         context['title'] = f'Register {self.model.type_plural_readable.title()}'
         context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
         context['validation_url'] = self.validation_url
+        context['expected_root_element_name'] = self.model.root_element_name
         context['inline_validation_url'] = reverse_lazy('validation:new_registration')
         context['inline_xsd_validation_url'] = reverse_lazy('validation:xsd')
         context['post_url'] = self.post_url

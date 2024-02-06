@@ -1,5 +1,5 @@
 const parser = new DOMParser();
-const expectedRootElementName = "Organisation";
+const expectedRootElementName = JSON.parse(document.querySelector("#expected-root-element-name").textContent);
 
 // Error messages
 const COULD_NOT_CHECK_ERROR = "Could not check as syntax is invalid.";
@@ -748,12 +748,15 @@ export class MetadataValidationStatusUIController {
 
     updateTimeTakenToValidateFile(metadataFile, startTime, endTime) {
         const timeValueElem = document.querySelector(`.file-list-group-item-${metadataFile.id} .total-time-validated .time-value`);
-        // In seconds
+        // Convert start and end time difference to seconds 
         const timeValue = (endTime - startTime) / 1000;
-         if (timeValue < 60) {
-             // If equal to or over 60s, convert to mins and secs
-            timeValueElem.innerHTML = `${timeValue}s`;
+        if (timeValue < 1) {
+            timeValueElem.innerHTML = "Less than a second";
+        } else if (timeValue < 59.5) {
+            // 59.5 as Math.round() rounds up if more than 59.5.
+            timeValueElem.innerHTML = `${Math.round(timeValue)}s`;
         } else {
+            // If equal to or over 60s, convert to mins and secs
             timeValueElem.innerHTML = `${parseInt(timeValue / 60)}m ${Math.round((timeValue % 60))}s`;
         }
     }

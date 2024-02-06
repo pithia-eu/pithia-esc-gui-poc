@@ -2,9 +2,6 @@ import {
     MetadataFile,
     MetadataFileValidator,
     MetadataValidationStatusUIController,
-    testFile1,
-    testFile2,
-    testFile3,
     validateMetadataFile,
 } from "/static/validation/inline_metadata_file_validation.js";
 const fileInput = document.querySelector("#id_files");
@@ -25,6 +22,32 @@ class NewMetadataFile extends MetadataFile {
             return false;
         }
         return this.newRegistrationErrors.length === 0;
+    }
+
+    get isValid() {
+        return [
+            this.isSyntaxValid,
+            this.isNamespaceValid,
+            this.isLocalIDValid,
+            this.isRootElementNameValid,
+            this.isXSDValid,
+            this.isEachMetadataReferenceValid,
+            this.isEachOntologyReferenceValid,
+            this.isNotRegisteredAlready,
+        ].every(result => result === true);
+    }
+
+    get totalErrorCount() {
+        return [
+            this.syntaxErrors,
+            this.namespaceErrors,
+            this.localIDErrors,
+            this.rootElementNameErrors,
+            this.XSDErrors ? this.XSDErrors : [],
+            this.metadataReferenceErrors ? this.metadataReferenceErrors : [],
+            this.ontologyReferenceErrors ? this.ontologyReferenceErrors : [],
+            this.newRegistrationErrors ? this.newRegistrationErrors : [],
+        ].flat().length;
     }
 
     #addNewRegistrationValidationResults(results) {
@@ -111,12 +134,7 @@ class NewMetadataValidationStatusUIController extends MetadataValidationStatusUI
 }
 
 async function startValidationProcess() {
-    // const files = Array.from(fileInput.files);
-    const files = [
-        testFile1,
-        testFile2,
-        testFile3,
-    ];
+    const files = Array.from(fileInput.files);
     const validator = new NewMetadataFileValidator();
 
     const metadataFileListElem = document.querySelector(".file-validation-status-list");
@@ -135,9 +153,9 @@ fileInput.addEventListener("change", async event => {
 });
 
 window.addEventListener("load", async event => {
-    // if (fileInput.value !== "") {
+    if (fileInput.value !== "") {
         // In case files have been entered into the file input
         // and the user refreshes the page.
         await startValidationProcess();
-    // }
+    }
 });
