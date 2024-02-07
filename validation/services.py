@@ -18,10 +18,10 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .helpers import (
-    create_validation_summary_error,
-    map_string_to_li_element,
     create_li_element_with_register_link_from_resource_type_from_resource_url,
+    create_validation_summary_error,
     map_acquisition_capability_to_update_link,
+    map_string_to_li_element,
 )
 from .url_validation_services import (
     MetadataFileMetadataURLReferencesValidator,
@@ -478,8 +478,9 @@ def validate_instrument_xml_file_update_and_return_errors(xml_metadata_file: Ins
         if not is_each_op_mode_in_update_valid:
             acquisition_capability_sets = AcquisitionCapabilities.objects.referencing_operational_mode_urls(missing_operational_mode_urls)
             if len(acquisition_capability_sets) > 0:
-                error_msg = 'Any references to this instrument\'s operational mode IDs will be invalidated after this update.'
-                error_msg = error_msg + ' ' + 'To fix this, please also update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below, after updating this instrument: <ul>%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
+                error_msg = '<div class="mt-2">Any references to the following operational modes will be invalidated after this update:<div>'
+                error_msg = error_msg + '<ul class="mt-3">%s</ul>' % ''.join(list(map(map_string_to_li_element, missing_operational_mode_urls)))
+                error_msg = error_msg + '<div class="mt-3">To fix this, please also update any references to this instrument\'s operational mode IDs in the acquisition capabilities listed below, after updating this instrument:</div><ul class="mt-3">%s</ul>' % ''.join(list(map(map_acquisition_capability_to_update_link, acquisition_capability_sets)))
                 errors.append(error_msg)
     except AttributeError:
         logger.exception('This metadata file doesn\'t have operational modes')

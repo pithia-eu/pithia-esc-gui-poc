@@ -585,6 +585,14 @@ summary.data-collection-category::marker {
     display: inline;
 }
 
+.details-validation .warning-counter {
+    display: none;
+}
+
+.details-validation:has(ul .text-warning) .warning-counter {
+    display: inline;
+}
+
 .file-list-group-item .total-time-validated {
     display: none;
 }

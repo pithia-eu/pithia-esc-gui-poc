@@ -398,7 +398,7 @@ export class MetadataValidationStatusUIController {
 
     #updateTotalErrorCountForFile(metadataFile) {
         const errorNumElem = document.querySelector(`.file-list-group-item-${metadataFile.id} .num-errors`);
-        errorNumElem.innerHTML = metadataFile.totalErrorCount;
+        errorNumElem.innerHTML = metadataFile.totalErrorCount > 1 ? metadataFile.totalErrorCount + " errors" : metadataFile.totalErrorCount + " error";
     }
 
     addGenericListItemForMetadataFile(metadataFile) {
@@ -421,22 +421,29 @@ export class MetadataValidationStatusUIController {
                     <details class="details-validation p-2">
                         <summary>
                             <div class="d-inline-flex flex-column row-gap-2">
-                                <span class="main-validation-status">
-                                    <span class="text-secondary">
-                                        <div class="spinner-grow spinner-grow-sm me-2" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>Validating
+                                <div class="d-inline-flex align-items-center column-gap-2">
+                                    <span class="main-validation-status">
+                                        <span class="text-secondary">
+                                            <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>Validating
+                                        </span>
                                     </span>
-                                </span>
+                                    <small class="text-secondary total-time-validated">
+                                        (<span class="time-value">-</span>)
+                                    </small>
+                                </div>
                                 <small class="error-counter text-danger">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-danger me-2" viewBox="0 0 16 16">
                                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                                    </svg><span class="num-errors">0</span> errors
+                                    </svg><span class="num-errors">0 errors</span>
+                                </small>
+                                <small class="warning-counter">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill text-warning me-2" viewBox="0 0 16 16">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                                    </svg><span class="num-warnings">0 warnings</span>
                                 </small>
                             </div>
-                            <small class="text-secondary total-time-validated">
-                                (<span class="time-value">-</span>)
-                            </small>
                         </summary>
                         <ul class="list-unstyled mt-2">
                             <li class="sv-list-group-item py-2">
