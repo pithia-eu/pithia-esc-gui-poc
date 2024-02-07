@@ -6,11 +6,11 @@ import {
 } from "/static/validation/inline_instrument_update_validation.js";
 
 const fileInput = document.querySelector("#id_files");
-const submitBtn = document.querySelector("#file-upload-form button[type=submit]");
+const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 
 document.addEventListener("trackedfileschanged", event => {
-    const isSubmitBtnEnabled = !isEachTrackedMetadataFileValid();
-    submitBtn.disabled = isSubmitBtnEnabled;
+    const isSubmitButtonEnabled = !isEachTrackedMetadataFileValid();
+    submitButton.disabled = isSubmitButtonEnabled;
 });
 
 fileInput.addEventListener("change", async event => {

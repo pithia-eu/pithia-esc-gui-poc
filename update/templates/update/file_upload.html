@@ -7,15 +7,10 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
-{% block scripts %}
-{{ validation_url|json_script:"validation-url" }}
-{{ expected_root_element_name|json_script:"expected-root-element-name" }}
-{{ inline_validation_url|json_script:"inline-validation-url" }}
-{{ inline_xsd_validation_url|json_script:"inline-xsd-validation-url" }}
-{{ support_url|json_script:"support-url" }}
+{% block page_specific_scripts %}
 {{ resource_id|json_script:"resource-id" }}
-<script src="{% static 'validation/inline_update_validation.js' %}" id="update-script" type="module" defer></script>
-{% endblock scripts %}
+<script src="{% static 'update/update_form.js' %}" type="module" defer></script>
+{% endblock page_specific_scripts %}
 {% block title %}
 <hgroup>
     <h1 class="mb-0">{{ title_short }}</h1>

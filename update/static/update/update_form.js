@@ -3,13 +3,14 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 import {
     startMetadataFileUpdateValidationProcess,
-} from "/static/validation/inline_update_file_validation.js";
+} from "/static/validation/inline_update_validation.js";
 
-const submitBtn = document.querySelector("#file-upload-form button[type=submit]");
+const submitButton = document.querySelector("#file-upload-form button[type=submit]");
+const fileInput = document.querySelector("#id_files");
 
 document.addEventListener("trackedfileschanged", event => {
-    const isSubmitBtnEnabled = !isEachTrackedMetadataFileValid();
-    submitBtn.disabled = isSubmitBtnEnabled;
+    const isSubmitButtonEnabled = !isEachTrackedMetadataFileValid();
+    submitButton.disabled = isSubmitButtonEnabled;
 });
 
 fileInput.addEventListener("change", async event => {

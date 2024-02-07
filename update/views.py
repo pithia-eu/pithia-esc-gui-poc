@@ -204,8 +204,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
     model = models.DataCollection
-
-    template_name = 'update/file_upload_data_collection.html'
     form_class = UploadUpdatedDataCollectionFileForm
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
