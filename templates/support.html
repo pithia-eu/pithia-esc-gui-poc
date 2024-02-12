@@ -6,10 +6,10 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ title }}</h1>
-<section class="mt-3">
+<section class="mt-4">
     <h2 class="mb-3">Help</h2>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <p>
                 We are currently working on adding <a href="{% url 'help:index' %}">help articles</a>
                 to the e-Science Centre. If what is currently available does not meet your needs, we
@@ -27,11 +27,11 @@
 </section>
 <section class="mt-4">
     <div class="d-flex flex-column row-gap-2">
-        <div class="row">
+        <div class="row gy-3">
             <div class="col-lg-12">
                 <h2 id="support-heading" class="mb-3">Support</h2>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-7">
                 <section>
                     <h3>Raise a Ticket</h3>
                     <p>
@@ -41,7 +41,7 @@
                     </p>
                 </section>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-7">
                 <h3 id="ggus-instructions-heading" class="mb-3">Before Submitting Your Ticket</h3>
                 <p>
                     The points below provide instructions and suggestions to follow/consider
@@ -50,8 +50,8 @@
             </div>
         </div>
         <article>
-            <div class="row g-5">
-                <div class="col-lg-8">
+            <div class="row g-md-5 g-4">
+                <div class="col-lg-7">
                     <h4><span class="me-2">1.</span> Assign the right support unit</h4>
                     <div class="alert alert-light my-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill me-3" viewBox="0 0 16 16">
@@ -70,7 +70,7 @@
                         screenshots of any errors to help us to better understand your problem.
                     </p>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <div class="d-flex flex-column align-items-end row-gap-5">
                         <img src="{% static 'help/ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
                     </div>
