@@ -314,6 +314,10 @@ export class MetadataValidationStatusUIController {
         return template.content.firstChild;
     }
 
+    resetFileList() {
+        this.validationStatusListElem.innerHTML = "";
+    }
+
     // Source for removeFileFromFileList() function: https://stackoverflow.com/a/64019766
     #removeFileFromFileList(index) {
         const dt = new DataTransfer();
@@ -698,6 +702,13 @@ export async function validateMetadataFile(metadataFile, validator, validationSt
 export async function startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn) {
     const validationRequests = [];
 
+    // Only files from the file input are acknowledged
+    // upon form submission, so should reset any record
+    // of the file input's previous file list before
+    // adding on any new files.
+    resetTrackedFiles();
+    validationStatusUIController.resetFileList();
+
     for (const file of files) {
         const metadataFile = await newMetadataFileObjectFn(file);
         addTrackedMetadataFile(metadataFile);
@@ -716,6 +727,10 @@ export function addTrackedMetadataFile(metadataFile) {
 function removeTrackedMetadataFileById(metadataFileId) {
     const metadataFileIndex = trackedMetadataFiles.findIndex(metadataFile => metadataFile.id === metadataFileId);
     return trackedMetadataFiles.splice(metadataFileIndex, 1);
+}
+
+function resetTrackedFiles() {
+    trackedMetadataFiles.length = 0;
 }
 
 export function isEachTrackedMetadataFileValid() {
