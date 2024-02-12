@@ -2,7 +2,9 @@ const parser = new DOMParser();
 const expectedRootElementName = JSON.parse(document.querySelector("#expected-root-element-name").textContent);
 
 // Events
-const trackedFilesChangedEvent = new Event("trackedfileschanged");
+const trackedFilesChangedEvent = new Event("trackedFilesChanged");
+const trackedFileValidationStartedEvent = new Event("trackedFileValidationStarted");
+const trackedFileValidationEndedEvent = new Event("trackedFileValidationEnded");
 
 // Error messages
 const COULD_NOT_CHECK_ERROR = "Could not check as syntax is invalid.";
@@ -702,8 +704,9 @@ export async function startValidationProcess(files, validator, validationStatusU
         validationRequests.push(validateMetadataFile(metadataFile, validator, validationStatusUIController));
     };
 
+    document.dispatchEvent(trackedFileValidationStartedEvent);
     await Promise.all(validationRequests);
-    document.dispatchEvent(trackedFilesChangedEvent);
+    document.dispatchEvent(trackedFileValidationEndedEvent);
 }
 
 export function addTrackedMetadataFile(metadataFile) {
@@ -716,5 +719,13 @@ function removeTrackedMetadataFileById(metadataFileId) {
 }
 
 export function isEachTrackedMetadataFileValid() {
+    if (trackedMetadataFiles.length === 0) {
+        return false;
+    }
     return trackedMetadataFiles.every(metadataFile => metadataFile.isValid === true);
+}
+
+// Credit: https://stackoverflow.com/a/45096932
+export function addMultipleEventListener(element, events, handler) {
+    events.forEach(e => element.addEventListener(e, handler));
 }

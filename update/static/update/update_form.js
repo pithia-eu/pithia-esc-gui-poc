@@ -1,4 +1,5 @@
 import {
+    addMultipleEventListener,
     isEachTrackedMetadataFileValid,
 } from "/static/validation/inline_metadata_file_validation.js";
 import {
@@ -8,10 +9,18 @@ import {
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 const fileInput = document.querySelector("#id_files");
 
-document.addEventListener("trackedfileschanged", event => {
-    const isSubmitButtonEnabled = !isEachTrackedMetadataFileValid();
-    submitButton.disabled = isSubmitButtonEnabled;
-});
+addMultipleEventListener(
+    document,
+    [
+        "trackedFilesChanged",
+        "trackedFileValidationStarted",
+        "trackedFileValidationEnded",
+    ],
+    event => {
+        const isSubmitButtonEnabled = !isEachTrackedMetadataFileValid();
+        submitButton.disabled = isSubmitButtonEnabled;
+    }
+);
 
 fileInput.addEventListener("change", async event => {
     await startMetadataFileUpdateValidationProcess();

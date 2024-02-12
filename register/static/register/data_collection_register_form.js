@@ -1,4 +1,5 @@
 import {
+    addMultipleEventListener,
     isEachTrackedMetadataFileValid,
 } from "/static/validation/inline_metadata_file_validation.js";
 import {
@@ -18,10 +19,15 @@ function enableSubmitButtonIfFormIsFilledOutCorrectly() {
     return submitButton.disabled = isSubmitButtonEnabled;
 }
 
-document.addEventListener("trackedfileschanged", event => {
-    enableSubmitButtonIfFormIsFilledOutCorrectly();
-});
-
-document.addEventListener("apiInteractionMethodModified", event => {
-    enableSubmitButtonIfFormIsFilledOutCorrectly();
-});
+addMultipleEventListener(
+    document,
+    [
+        "trackedFilesChanged",
+        "trackedFileValidationStarted",
+        "trackedFileValidationEnded",
+        "apiInteractionMethodModified",
+    ],
+    event => {
+        enableSubmitButtonIfFormIsFilledOutCorrectly();
+    }
+);
