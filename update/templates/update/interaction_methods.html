@@ -10,7 +10,7 @@
 {% block scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 {{ data_collection_id|json_script:"resource-id" }}
-<script src="{% static 'api_specification_validation.js' %}" type="module" defer></script>
+<script src="{% static 'validation/api_specification_validation.js' %}" type="module" defer></script>
 <script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
 {% endblock scripts %}
 {% block content %}

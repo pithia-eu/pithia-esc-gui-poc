@@ -4,7 +4,7 @@ import {
     isApiSpecificationLinkValid,
     setSubmitButton,
     validateOpenApiSpecificationUrl,
-} from "/static/api_specification_validation.js"
+} from "/static/validation/api_specification_validation.js"
 
 window.addEventListener("load", event => {
     setSubmitButton(document.querySelector("#workflow-openapi-spec-url-update-form button[type='submit']"));

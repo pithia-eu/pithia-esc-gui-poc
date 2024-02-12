@@ -5,7 +5,7 @@ import {
 import {
     isApiSpecificationInputAvailable,
     isApiSpecificationLinkValid,
-} from "/static/api_specification_validation.js";
+} from "/static/validation/api_specification_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 

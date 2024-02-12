@@ -4,7 +4,7 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 import {
     isApiSpecificationLinkValid,
-} from "/static/api_specification_validation.js";
+} from "/static/validation/api_specification_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 

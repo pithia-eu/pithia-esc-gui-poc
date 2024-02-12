@@ -1,10 +1,10 @@
 import {
     isApiSpecificationInputAvailable,
     isApiSpecificationLinkValid,
-} from "/static/api_specification_validation.js";
+} from "/static/validation/api_specification_validation.js";
 import {
     apiExecutionMethodCheckbox,
-} from "/static/interaction_methods_form.js";
+} from "/static/validation/interaction_methods_form.js";
 let submitButton;
 
 window.addEventListener("load", () => {
