@@ -660,8 +660,7 @@ export class MetadataValidationStatusUIController {
         const timeValue = (endTime - startTime) / 1000;
         if (timeValue < 1) {
             timeValueElem.innerHTML = "Less than a second";
-        } else if (timeValue < 59.5) {
-            // 59.5 as Math.round() rounds up if more than 59.5.
+        } else if (timeValue < 60) {
             timeValueElem.innerHTML = `${Math.round(timeValue)}s`;
         } else {
             // If equal to or over 60s, convert to mins and secs
