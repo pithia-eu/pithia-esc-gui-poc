@@ -2,6 +2,6 @@
 {% load static %}
 {% block page_specific_scripts %}
 {{ resource_id|json_script:"resource-id" }}
-<script src="{% static 'validation/inline_instrument_update_validation.js' %}" type="module" defer></script>
-<script src="{% static 'update/instrument_update_form.js' %}" type="module" defer></script>
+<script src="{% static 'validation/inline_instrument_update_validation.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'update/instrument_update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}

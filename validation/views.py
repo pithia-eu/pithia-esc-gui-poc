@@ -160,11 +160,11 @@ class QuickInlineValidationFormView(FormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update(validate_xml_file_references_and_return_errors(xml_metadata_file))
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(request.GET)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
-        xml_metadata_file = self.file_wrapper_class(request.GET['xml_file_string'], request.GET['xml_file_name'])
+        xml_metadata_file = self.file_wrapper_class(request.POST.get('xml_file_string'), request.POST.get('xml_file_name'))
         self.validate(request, xml_metadata_file)
 
         if not any(self.error_dict.values()):
@@ -187,7 +187,7 @@ class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
         self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
             xml_metadata_file,
             models.ScientificMetadata,
-            request.GET['existing_metadata_id']
+            request.POST.get('existing_metadata_id')
         )
         return super().validate(request, xml_metadata_file)
 
@@ -198,7 +198,7 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
             xml_metadata_file,
             models.Instrument,
-            request.GET['existing_metadata_id']
+            request.POST.get('existing_metadata_id')
         )
 
         if len(self.error_dict['xml_file_update_errors']) > 0:
@@ -209,7 +209,7 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
         self.error_dict['xml_file_op_mode_errors'] = []
         self.error_dict['xml_file_op_mode_warnings'] = validate_instrument_xml_file_update_and_return_errors(
             xml_metadata_file,
-            request.GET['existing_metadata_id']
+            request.POST.get('existing_metadata_id')
         )
 
         return super().validate(request, xml_metadata_file)
@@ -218,11 +218,11 @@ class InlineXSDValidationFormView(FormView):
     form_class = InlineXSDMetadataValidationForm
     error_dict = {}
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(request.GET)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
-        xml_metadata_file = XMLMetadataFile(request.GET['xml_file_string'], '')
+        xml_metadata_file = XMLMetadataFile(request.POST.get('xml_file_string'), '')
         self.error_dict['xml_file_xsd_errors'] = validate_xml_file_with_xsd_and_return_errors(xml_metadata_file)
 
         if not any(self.error_dict.values()):

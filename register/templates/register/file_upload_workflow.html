@@ -3,8 +3,8 @@
 {% load project_tags %}
 {% block page_specific_scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
-<script src="{% static 'validation/inline_registration_validation.js' %}" type="module" defer></script>
-<script src="{% static 'register/workflow_register_form.js' %}" type="module"></script>
+<script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'register/workflow_register_form.js' %}?{% now 'U' %}" type="module"></script>
 {% endblock page_specific_scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}

@@ -9,7 +9,7 @@
 {% load static %}
 {% block page_specific_scripts %}
 {{ resource_id|json_script:"resource-id" }}
-<script src="{% static 'update/update_form.js' %}" type="module" defer></script>
+<script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
 {% block title %}
 <hgroup>

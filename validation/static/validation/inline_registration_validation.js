@@ -64,10 +64,16 @@ class NewMetadataFileValidator extends MetadataFileValidator {
     async serverValidationFetchRequest(metadataFile) {
         const validationUrl = JSON.parse(document.getElementById("inline-validation-url").textContent);
 
-        return fetch(`${validationUrl}?` + new URLSearchParams({
-            xml_file_string: metadataFile.xmlFileString,
-            xml_file_name: metadataFile.name,
-        }));
+        const formData = new FormData();
+        const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
+        formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
+        formData.append("xml_file_string", metadataFile.xmlFileString);
+        formData.append("xml_file_name", metadataFile.name);
+
+        return fetch(validationUrl, {
+            method: "POST",
+            body: formData,
+        });
     }
 
     serverValidationErrorObject(errorMsg) {

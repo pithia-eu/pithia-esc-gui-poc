@@ -220,10 +220,15 @@ export class MetadataFileValidator {
         const validationUrl = JSON.parse(document.getElementById("inline-xsd-validation-url").textContent);
 
         let response;
+        const formData = new FormData();
+        const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
+        formData.append("csrfmiddlewaretoken", csrfMiddlewareToken);
+        formData.append("xml_file_string", metadataFile.xmlFileString);
         try {
-            response = await fetch(`${validationUrl}?` + new URLSearchParams({
-                xml_file_string: metadataFile.xmlFileString,
-            }));
+            response = await fetch(validationUrl, {
+                method: "POST",
+                body: formData,
+            });
         } catch (error) {
             console.error("There was a problem whilst validating with XSD.");
             const errorMsg = "A network error occurred.";

@@ -1,18 +1,21 @@
 import {
+    isApiSpecificationInputAvailable,
+    isApiSpecificationLinkValid,
+} from "/static/validation/api_specification_validation.js";
+import {
     addMultipleEventListener,
     isEachTrackedMetadataFileValid,
 } from "/static/validation/inline_metadata_file_validation.js";
 import {
-    isApiSpecificationInputAvailable,
-    isApiSpecificationLinkValid,
-} from "/static/validation/api_specification_validation.js";
+    apiExecutionMethodCheckbox,
+} from "/static/validation/interaction_methods_form.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 
 function enableSubmitButtonIfFormIsFilledOutCorrectly() {
     let isSubmitButtonEnabled = !isEachTrackedMetadataFileValid();
 
-    if (isApiSpecificationInputAvailable) {
+    if (isApiSpecificationInputAvailable && apiExecutionMethodCheckbox.checked) {
         isSubmitButtonEnabled = !(isEachTrackedMetadataFileValid() && isApiSpecificationLinkValid);
     }
 
