@@ -671,7 +671,7 @@ export class MetadataValidationStatusUIController {
         } else {
             // If equal to or over 60s, convert to mins and secs
             const validationTimeRemainingSeconds = Math.round((validationTimeInSeconds % 60));
-            timeValueElem.innerHTML = `${validationTimeInMinutes}m ${validationTimeRemainingSeconds === 0 ? "" : `${validationTimeRemainingSeconds}s`}`;
+            timeValueElem.innerHTML = `${validationTimeInMinutes}m` + `${validationTimeRemainingSeconds === 0 ? "" : ` ${validationTimeRemainingSeconds}s`}`;
         }
     }
 }
