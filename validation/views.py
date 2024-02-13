@@ -161,6 +161,7 @@ class QuickInlineValidationFormView(FormView):
         self.error_dict.update(validate_xml_file_references_and_return_errors(xml_metadata_file))
 
     def post(self, request, *args, **kwargs):
+        self.error_dict = {}
         form = self.form_class(request.POST)
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
