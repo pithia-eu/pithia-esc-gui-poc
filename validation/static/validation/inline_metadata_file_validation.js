@@ -662,14 +662,16 @@ export class MetadataValidationStatusUIController {
     updateTimeTakenToValidateFile(metadataFile, startTime, endTime) {
         const timeValueElem = document.querySelector(`.file-list-group-item-${metadataFile.id} .total-time-validated .time-value`);
         // Convert start and end time difference to seconds 
-        const timeValue = (endTime - startTime) / 1000;
-        if (timeValue < 1) {
+        const validationTimeInSeconds = (endTime - startTime) / 1000;
+        const validationTimeInMinutes = parseInt(validationTimeInSeconds / 60);
+        if (validationTimeInSeconds < 1) {
             timeValueElem.innerHTML = "Less than a second";
-        } else if (timeValue < 60) {
-            timeValueElem.innerHTML = `${Math.round(timeValue)}s`;
+        } else if (validationTimeInMinutes === 0) {
+            timeValueElem.innerHTML = `${Math.round(validationTimeInSeconds)}s`;
         } else {
             // If equal to or over 60s, convert to mins and secs
-            timeValueElem.innerHTML = `${parseInt(timeValue / 60)}m ${Math.round((timeValue % 60))}s`;
+            const validationTimeRemainingSeconds = Math.round((validationTimeInSeconds % 60));
+            timeValueElem.innerHTML = `${validationTimeInMinutes}m ${validationTimeRemainingSeconds === 0 ? "" : `${validationTimeRemainingSeconds}s`}`;
         }
     }
 }
