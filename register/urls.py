@@ -20,4 +20,5 @@ urlpatterns = [
     path('catalogue-entry/', views.CatalogueEntryRegisterFormView.as_view(), name='catalogue_entry'),
     path('catalogue-data-subset/', views.CatalogueDataSubsetRegisterFormView.as_view(), name='catalogue_data_subset'),
     path('workflow/', views.WorkflowRegisterFormView.as_view(), name='workflow'),
+    path('organisation-wizard/', views.ResourceRegisterWithoutFileFormView.as_view(), name='organisation_no_file'),
 ]

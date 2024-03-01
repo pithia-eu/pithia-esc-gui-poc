@@ -1,4 +1,7 @@
 from django import forms
+from django_countries import countries
+from django_countries.fields import CountryField
+from django_countries.widgets import CountrySelectWidget
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -120,5 +123,138 @@ class UploadWorkflowFileForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
+        })
+    )
+
+# Metadata input support
+class BaseInputSupportForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
+    local_id = forms.CharField(
+        label='Local ID',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    namespace = forms.CharField(
+        label='Namespace',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+    name = forms.CharField(
+        label='Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    description = forms.CharField(
+        label='Description',
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+class ContactInfoInputSupportForm(BaseInputSupportForm):
+    phone = forms.CharField(
+        label="Phone",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    delivery_point = forms.CharField(
+        label="Street Name",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    city = forms.CharField(
+        label="City",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    administrative_area = forms.CharField(
+        label="State/County",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    postal_code = forms.CharField(
+        label="Postal Code",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    country = CountryField(
+                blank_label='(Select country)',
+                
+            ).formfield(
+                label='Country',
+                choices=countries,
+                widget=CountrySelectWidget(attrs={
+                    'class': 'form-select'
+                })
+            )
+
+    online_resource = forms.CharField(
+        label="Link to Organisation Website",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    hours_of_service_start = forms.DateTimeField(
+        widget=forms.TimeInput(
+            format='%H:%M',
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    hours_of_service_end = forms.DateTimeField(
+        widget=forms.TimeInput(
+            format='%H:%M',
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    contact_instructions = forms.CharField(
+        label="Contact Instructions",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    email_address = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+class OrganisationInputSupportForm(ContactInfoInputSupportForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+
+    short_name = forms.CharField(
+        label="Short Name",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
         })
     )

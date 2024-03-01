@@ -1,0 +1,62 @@
+<section>
+    <div class="row flex-column gy-3 mb-4">
+        <div class="col-lg-12">
+            <h2>Contact Info</h2>
+        </div>
+        <div class="col-lg-4">
+            {{ form.email_address.label_tag }}
+            {{ form.email_address }}
+        </div>
+        <div class="col-lg-3">
+            <div class="d-flex flex-column">
+                {{ form.phone.label_tag }}
+                <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control" autocomplete="true">
+            </div>
+        </div>
+    </div>
+    <div class="row flex-column gy-3 my-4">
+        <div class="col-lg-12">
+            <h3>Address</h3>
+        </div>
+        <div class="col-lg-4">
+            {{ form.delivery_point.label_tag }}
+            {{ form.delivery_point }}
+        </div>
+        <div class="col-lg-3">
+            {{ form.administrative_area.label_tag }}
+            {{ form.administrative_area }}
+        </div>
+        <div class="col-lg-3">
+            {{ form.city.label_tag }}
+            {{ form.city }}
+        </div>
+        <div class="col-lg-2">
+            {{ form.postal_code.label_tag }}
+            {{ form.postal_code }}
+        </div>
+        <div class="col-lg-4">
+            {{ form.country.label_tag }}
+            {{ form.country }}
+        </div>
+    </div>
+    <div class="row flex-column gy-3 my-4">
+        <h3>Other Information</h3>
+        <div class="col-lg-5">
+            {{ form.online_resource.label_tag }}
+            {{ form.online_resource }}
+        </div>
+        <div class="col-lg-7">
+            <label for="{{ form.hours_of_service_start.id_for_label }}">Hours of Service</label>
+            <div class="d-flex align-items-center column-gap-2">
+                <input type="time" name="{{ form.hours_of_service_start.name }}" id="{{ form.hours_of_service_start.auto_id }}" class="form-control w-auto">
+                <div>-</div>
+                <input type="time" name="{{ form.hours_of_service_end.name }}" id="{{ form.hours_of_service_end.auto_id }}" class="form-control w-auto">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            {{ form.contact_instructions.label_tag }}
+            {{ form.contact_instructions }}
+        </div>
+    </div>
+    <input type="hidden" name="hello" value="hi">
+</section>
