@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'user_management.apps.UserManagementConfig',
     'utils.apps.UtilsConfig',
     'validation.apps.ValidationConfig',
+    'django_countries',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
