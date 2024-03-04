@@ -1,3 +1,4 @@
+import dateutil.parser
 import json
 import logging
 import os
@@ -63,50 +64,39 @@ logger = logging.getLogger(__name__)
 
 @method_decorator(login_session_institution_required, name='dispatch')
 class ResourceRegisterWithoutFileFormView(FormView):
-    success_url = reverse_lazy('register:organisation_no_file')
-    form_class = OrganisationInputSupportForm
-    template_name = 'register/no_file_register_form.html'
+    success_url = ''
+    form_class = None
+    template_name = ''
 
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
+    model = None
+    metadata_builder_class = None
+    resource_management_list_page_breadcrumb_url_name = ''
+    resource_management_list_page_breadcrumb_text = ''
 
     institution_id = None
     owner_id = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class
+        context['success_url'] = self.success_url
+        context['title'] = f'New {self.model.type_readable.title()}'
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
-        context['form'] = self.form_class
-        context['success_url'] = self.success_url
-        context['title'] = 'New Organisation'
         return context
+
+    def process_form(self, form):
+        pass
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        print('form', form)
+        self.process_form(request.POST)
         if form.is_valid():
-            organisation_metadata_dict = form.cleaned_data
-            organisation_metadata_dict['contact_info'] = {
-                'phone': form.cleaned_data.get('phone'),
-                'address': {
-                    'delivery_point': form.cleaned_data.get('delivery_point'),
-                    'city': form.cleaned_data.get('city'),
-                    'administrative_area': form.cleaned_data.get('administrative_area'),
-                    'postal_code': form.cleaned_data.get('postal_code'),
-                    'country': form.cleaned_data.get('country'),
-                    'electronic_mail_address': form.cleaned_data.get('email_address'),
-                },
-                'online_resource': form.cleaned_data.get('online_resource'),
-                'hours_of_service': form.cleaned_data.get('hours_of_service'),
-                'contact_instructions': form.cleaned_data.get('contact_instructions'),
-            }
-            print('organisation_metadata_dict', json.dumps(organisation_metadata_dict, indent=4))
-            organisation_metadata = OrganisationMetadata(organisation_metadata_dict)
-            print('organisation_metadata.xml', organisation_metadata.xml)
+            metadata_builder = self.metadata_builder_class(form.cleaned_data)
+            print('metadata_builder.xml', metadata_builder.xml)
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
@@ -115,6 +105,49 @@ class ResourceRegisterWithoutFileFormView(FormView):
         self.institution_id = get_institution_id_for_login_session(request.session)
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
+
+class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
+    success_url = reverse_lazy('register:organisation_no_file')
+    form_class = OrganisationInputSupportForm
+    template_name = 'register/metadata_form_templates/organisation_form.html'
+
+    model = models.Organisation
+    metadata_builder_class = OrganisationMetadata
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
+
+    def _format_time_to_12_hour_format(self, time_unformatted):
+        return time_unformatted.strftime('%I:%M%p').lstrip('0').lower()
+
+    def process_form(self, form):
+        processed_form = {}
+
+        # Time
+        time_start_parsed = dateutil.parser.parse(form.get('hours_of_service_start'))
+        time_end_parsed = dateutil.parser.parse(form.get('hours_of_service_end'))
+
+        time_start_formatted = self._format_time_to_12_hour_format(time_start_parsed)
+        time_end_formatted = self._format_time_to_12_hour_format(time_end_parsed)
+        processed_form['hours_of_service'] = f'{time_start_formatted}-{time_end_formatted}'
+        
+        processed_form['contact_info'] = {
+            'phone': form.cleaned_data.get('phone'),
+            'address': {
+                'delivery_point': form.cleaned_data.get('delivery_point'),
+                'city': form.cleaned_data.get('city'),
+                'administrative_area': form.cleaned_data.get('administrative_area'),
+                'postal_code': form.cleaned_data.get('postal_code'),
+                'country': form.cleaned_data.get('country'),
+                'electronic_mail_address': form.cleaned_data.get('email_address'),
+            },
+            'online_resource': form.cleaned_data.get('online_resource'),
+            'hours_of_service': form.cleaned_data.get('hours_of_service'),
+            'contact_instructions': form.cleaned_data.get('contact_instructions'),
+        }
+        print('processed_form', json.dumps(processed_form, indent=4))
+        return processed_form
+
 
 @method_decorator(login_session_institution_required, name='dispatch')
 class ResourceRegisterFormView(FormView):

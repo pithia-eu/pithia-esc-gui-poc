@@ -610,6 +610,12 @@ summary.data-collection-category::marker {
     list-style-type: disc;
 }
 
+/* No upload register form */
+label.required::after {
+    content: ' *';
+    color: red;
+}
+
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
     opacity: 1;

@@ -96,6 +96,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         })
     )
 
+
 class UploadWorkflowFileForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -126,14 +127,18 @@ class UploadWorkflowFileForm(forms.Form):
         })
     )
 
+
 # Metadata input support
 class BaseInputSupportForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
 
     local_id = forms.CharField(
         label='Local ID',
+        required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -141,12 +146,15 @@ class BaseInputSupportForm(forms.Form):
 
     namespace = forms.CharField(
         label='Namespace',
+        required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
     )
+
     name = forms.CharField(
         label='Name',
+        required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -154,6 +162,7 @@ class BaseInputSupportForm(forms.Form):
 
     description = forms.CharField(
         label='Description',
+        required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control'
@@ -164,6 +173,7 @@ class BaseInputSupportForm(forms.Form):
 class ContactInfoInputSupportForm(BaseInputSupportForm):
     phone = forms.CharField(
         label="Phone",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -171,6 +181,7 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
 
     delivery_point = forms.CharField(
         label="Street Name",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -178,13 +189,15 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
 
     city = forms.CharField(
         label="City",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
     )
 
     administrative_area = forms.CharField(
-        label="State/County",
+        label="Administrative Area",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -192,16 +205,15 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
 
     postal_code = forms.CharField(
         label="Postal Code",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
     )
 
-    country = CountryField(
-                blank_label='(Select country)',
-                
-            ).formfield(
+    country = CountryField(blank_label='(Select country)',).formfield(
                 label='Country',
+                required=False,
                 choices=countries,
                 widget=CountrySelectWidget(attrs={
                     'class': 'form-select'
@@ -210,31 +222,35 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
 
     online_resource = forms.CharField(
         label="Link to Organisation Website",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
     )
 
     hours_of_service_start = forms.DateTimeField(
+        required=False,
         widget=forms.TimeInput(
             format='%H:%M',
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
             }
         )
     )
 
     hours_of_service_end = forms.DateTimeField(
+        required=False,
         widget=forms.TimeInput(
             format='%H:%M',
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
             }
         )
     )
 
     contact_instructions = forms.CharField(
         label="Contact Instructions",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -242,6 +258,7 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
 
     email_address = forms.EmailField(
         label="Email Address",
+        required=False,
         widget=forms.EmailInput(attrs={
             'class': 'form-control'
         })
@@ -251,9 +268,11 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
+        self.fields['name'].label = 'Long Name'
 
     short_name = forms.CharField(
         label="Short Name",
+        required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
