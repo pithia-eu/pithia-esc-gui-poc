@@ -77,6 +77,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
         context['success_url'] = self.success_url
         context['localid_base'] = self.model.localid_base
         context['title'] = f'New {self.model.type_readable.title()}'
+        context['localid_validation_url'] = reverse_lazy('validation:new_localid')
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'

@@ -6,7 +6,10 @@ from django.http import (
     JsonResponse,
 )
 from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+)
 from django.views.generic import (
     FormView,
     View,
@@ -22,14 +25,10 @@ from .file_wrappers import (
     InstrumentXMLMetadataFile,
     XMLMetadataFile,
 )
-from .forms import (
-    ApiSpecificationUrlValidationForm,
-    InlineXSDMetadataValidationForm,
-    QuickInlineMetadataUpdateValidationForm,
-    QuickInlineMetadataValidationForm,
-)
+from .forms import *
 from .helpers import create_validation_summary_error
 from .services import (
+    is_localid_valid,
     validate_instrument_xml_file_update_and_return_errors,
     validate_new_xml_file_registration_and_return_errors,
     validate_xml_file_and_return_summary,
@@ -230,6 +229,18 @@ class InlineXSDValidationFormView(FormView):
             return JsonResponse(self.error_dict, status=HTTPStatus.OK)
         
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
+
+@require_GET
+@login_session_institution_required
+def localid(request):
+    form = LocalIDValidationForm(request.GET)
+    if not form.is_valid():
+        return HttpResponseBadRequest('The submitted form was invalid.')
+    
+    localid = form.cleaned_data.get('localid')
+    return JsonResponse({
+        'result': is_localid_valid(localid)
+    })
 
 @require_POST
 @login_session_institution_required

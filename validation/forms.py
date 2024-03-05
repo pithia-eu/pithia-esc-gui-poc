@@ -12,3 +12,6 @@ class QuickInlineMetadataUpdateValidationForm(QuickInlineMetadataValidationForm)
 
 class InlineXSDMetadataValidationForm(forms.Form):
     xml_file_string = forms.CharField()
+
+class LocalIDValidationForm(forms.Form):
+    localid = forms.CharField()

@@ -26,4 +26,5 @@ urlpatterns = [
     path('update/', views.QuickInlineUpdateValidationFormView.as_view(), name='update'),
     path('instrument-update/', views.QuickInlineInstrumentUpdateValidationFormView.as_view(), name='instrument_update'),
     path('xsd/', views.InlineXSDValidationFormView.as_view(), name='xsd'),
+    path('new-localid/', views.localid, name='new_localid'),
 ]

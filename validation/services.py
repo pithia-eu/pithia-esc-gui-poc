@@ -132,20 +132,22 @@ class MetadataNamespaceValidator:
 
 class MetadataFileRegistrationValidator:
     @classmethod
+    def _is_localid_already_in_use(cls, localid: str, model: ScientificMetadata = ScientificMetadata):
+        try:
+            model.objects.get(pk=localid)
+        except ObjectDoesNotExist:
+            return True
+        return False
+
+    @classmethod
     def validate(cls, xml_file: XMLMetadataFile, model: ScientificMetadata):
         """
         Validates whether an XML metadata file has been
         registered before or not.
         """
         xml_file_localid = xml_file.localid
-        xml_file_namespace = xml_file.namespace
-        try:
-            model.objects.get_by_namespace_and_localid(
-                namespace=xml_file_namespace,
-                localid=xml_file_localid
-            )
-        except ObjectDoesNotExist:
-            return
+        if not cls._is_localid_already_in_use(xml_file_localid, model):
+            return False
         
         raise FileRegisteredBefore(
             f'Metadata sharing the same localID of "{xml_file_localid}" has already been registered with the e-Science Centre.',
@@ -495,3 +497,6 @@ def validate_xml_file_with_xsd_and_return_errors(xml_metadata_file: XMLMetadataF
         error_msg = str(err)
         errors.append(error_msg)
     return errors
+
+def is_localid_valid(localid: str):
+    return MetadataFileRegistrationValidator._is_localid_already_in_use(localid)

@@ -4,12 +4,12 @@
             <h2 class="mb-3">Identifier</h2>
         </div>
         <div class="col-lg-4">
-            {{ form.local_id.label_tag }}
-            <div class="input-group">
+            {{ form.localid.label_tag }}
+            <div class="input-group local-id-input-group has-validation">
                 <span class="input-group-text">{{ localid_base }}_</span>
-                {{ form.local_id }}
+                {{ form.localid }}
+                <div class="invalid-feedback">This local ID is already in use.</div>
             </div>
-            <div class="form-text">{{ form.local_id.help_text }}</div>
         </div>
         <div class="col-lg-3">
             {{ form.namespace.label_tag }}

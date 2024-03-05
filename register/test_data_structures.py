@@ -1,6 +1,6 @@
 # Organisation
 ORGANISATION_PROPERTIES = {
-    'local_id': 'Organisation_Test',
+    'localid': 'Organisation_Test',
     'namespace': 'test',
     'name': 'Organisation Test',
     'short_name': 'OTD',
@@ -23,7 +23,7 @@ ORGANISATION_PROPERTIES = {
 
 # Individual
 INDIVIDUAL_PROPERTIES = {
-    'local_id': 'Individual_Test',
+    'localid': 'Individual_Test',
     'namespace': 'test',
     'name': 'Individual Test',
     'description': 'Description',
@@ -47,7 +47,7 @@ INDIVIDUAL_PROPERTIES = {
 
 # Project
 PROJECT_PROPERTIES = {
-    'local_id': 'Project_Test',
+    'localid': 'Project_Test',
     'namespace': 'test',
     'name': 'Project Test',
     'description': 'Description',
@@ -106,7 +106,7 @@ PROJECT_PROPERTIES = {
 
 # Platform
 PLATFORM_PROPERTIES = {
-    'local_id': 'Platform_Test',
+    'localid': 'Platform_Test',
     'namespace': 'test',
     'name': 'Platform Test',
     'short_name': 'PT',
@@ -138,7 +138,7 @@ PLATFORM_PROPERTIES = {
 
 # Operation
 OPERATION_PROPERTIES = {
-    'local_id': 'Operation_Test',
+    'localid': 'Operation_Test',
     'namespace': 'test',
     'name': 'Operation Test',
     'description': 'Operation description',
@@ -175,7 +175,7 @@ OPERATION_PROPERTIES = {
 
 # Instrument
 INSTRUMENT_PROPERTIES = {
-    'local_id': 'Instrument_Test',
+    'localid': 'Instrument_Test',
     'namespace': 'test',
     'name': 'Instrument Test',
     'description': 'Description',
@@ -206,7 +206,7 @@ INSTRUMENT_PROPERTIES = {
 
 # Acquisition Capabilities
 ACQUISITION_CAPABILITIES_PROPERTIES = {
-    'local_id': 'AcquisitionCapabilities_Test',
+    'localid': 'AcquisitionCapabilities_Test',
     'namespace': 'test',
     'name': 'Acquisition Capabilities Test',
     'description': 'Description',
@@ -246,7 +246,7 @@ ACQUISITION_CAPABILITIES_PROPERTIES = {
 
 # Acquisition
 ACQUISITION_PROPERTIES = {
-    'local_id': 'Acquisition_Test',
+    'localid': 'Acquisition_Test',
     'namespace': 'test',
     'name': 'Acquisition Test',
     'description': 'Description',
@@ -272,7 +272,7 @@ ACQUISITION_PROPERTIES = {
 
 # Computation Capabilities
 COMPUTATION_CAPABILITIES_PROPERTIES = {
-    'local_id': 'ComputationCapabilities_Test',
+    'localid': 'ComputationCapabilities_Test',
     'namespace': 'test',
     'name': 'Computation Capabilities Test',
     'description': 'Description',
@@ -310,7 +310,7 @@ COMPUTATION_CAPABILITIES_PROPERTIES = {
 
 # Computation
 COMPUTATION_PROPERTIES = {
-    'local_id': 'Computation_Test',
+    'localid': 'Computation_Test',
     'namespace': 'test',
     'name': 'Computation Test',
     'description': 'Description',
@@ -336,7 +336,7 @@ COMPUTATION_PROPERTIES = {
 
 # Process
 PROCESS_PROPERTIES = {
-    'local_id': 'Process_Test',
+    'localid': 'Process_Test',
     'namespace': 'test',
     'name': 'Process Test',
     'description': 'Description',
@@ -358,7 +358,7 @@ PROCESS_PROPERTIES = {
 
 # Data Collection
 DATA_COLLECTION_PROPERTIES = {
-    'local_id': 'DataCollection_Test',
+    'localid': 'DataCollection_Test',
     'namespace': 'test',
     'name': 'Data Collection Test',
     'description': 'Description',
@@ -414,7 +414,7 @@ DATA_COLLECTION_PROPERTIES = {
 
 # Catalogue
 CATALOGUE_PROPERTIES = {
-    'local_id': 'Catalogue_Test',
+    'localid': 'Catalogue_Test',
     'namespace': 'test',
     'name': 'Catalogue Test',
     'description': 'Description',
@@ -423,7 +423,7 @@ CATALOGUE_PROPERTIES = {
 
 # Catalogue Entry
 CATALOGUE_ENTRY_PROPERTIES = {
-    'local_id': 'Catalogue_Entry_Test',
+    'localid': 'Catalogue_Entry_Test',
     'namespace': 'test',
     'entry_name': 'Catalogue Entry Test',
     'entry_description': 'Entry description',
@@ -448,7 +448,7 @@ CATALOGUE_ENTRY_PROPERTIES = {
 
 # Catalogue Data Subset
 CATALOGUE_DATA_SUBSET_PROPERTIES = {
-    'local_id': 'Catalogue_Data_Subset_Test',
+    'localid': 'Catalogue_Data_Subset_Test',
     'namespace': 'test',
     'data_subset_name': 'Catalogue Data Subset Test',
     'data_subset_description': 'Catalogue data subset description',
@@ -499,7 +499,7 @@ CATALOGUE_DATA_SUBSET_PROPERTIES = {
 }
 
 WORKFLOW_PROPERTIES = {
-    'local_id': 'Workflow_Test',
+    'localid': 'Workflow_Test',
     'namespace': 'test',
     'name': 'Workflow Test',
     'description': 'Workflow description',

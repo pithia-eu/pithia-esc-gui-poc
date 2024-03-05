@@ -135,7 +135,7 @@ class BaseInputSupportForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
 
-    local_id = forms.CharField(
+    localid = forms.CharField(
         label='Local ID',
         required=True,
         widget=forms.TextInput(attrs={
