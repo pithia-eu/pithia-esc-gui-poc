@@ -141,8 +141,7 @@ class BaseInputSupportForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'disabled': True,
-        }),
-        help_text='The short name of this organisation. e.g. NOA'
+        })
     )
 
     namespace = forms.CharField(
@@ -286,7 +285,6 @@ class IndividualInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        self.fields['local_id'].help_text = 'The short name of this registration.'
 
     organisation = forms.CharField(
         label='Organisation',
