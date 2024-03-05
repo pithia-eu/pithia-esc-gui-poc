@@ -140,8 +140,9 @@ class BaseInputSupportForm(forms.Form):
         label='Local ID',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control'
-        })
+            'class': 'form-control',
+        }),
+        help_text='The short name of this organisation. e.g. NOA'
     )
 
     namespace = forms.CharField(
@@ -253,7 +254,8 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
-        })
+        }),
+        help_text='E.g. Contact by email or phone'
     )
 
     email_address = forms.EmailField(
@@ -269,6 +271,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         self.fields['name'].label = 'Long Name'
+        self.fields['delivery_point'].help_text = 'The delivery address for this organisation.'
 
     short_name = forms.CharField(
         label="Short Name",

@@ -23,10 +23,11 @@
         <h2 class="mb-3">{{ form.local_id.label_tag }}</h2>
     </div>
     <div class="col-lg-4">
-        <div class="d-flex align-items-center">
-            <div>Organisation_</div>
+        <div class="input-group">
+            <span class="input-group-text">Organisation_</span>
             {{ form.local_id }}
         </div>
+        <div class="form-text">{{ form.local_id.help_text }}</div>
     </div>
 </div>
 <hr class="my-5">
