@@ -14,14 +14,9 @@ from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 from pyexpat import ExpatError
 
-from .forms import (
-    OrganisationInputSupportForm,
-    UploadCatalogueDataSubsetFileForm,
-    UploadDataCollectionFileForm,
-    UploadFileForm,
-    UploadWorkflowFileForm,
-)
+from .forms import *
 from .metadata_builder.metadata_structures import (
+    IndividualMetadata,
     OrganisationMetadata,
 )
 
@@ -80,6 +75,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
         context['success_url'] = self.success_url
+        context['localid_base'] = self.model.localid_base
         context['title'] = f'New {self.model.type_readable.title()}'
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
@@ -147,6 +143,17 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
         }
         print('processed_form', json.dumps(processed_form, indent=4))
         return processed_form
+
+class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
+    success_url = reverse_lazy('register:individual_no_file')
+    form_class = IndividualInputSupportForm
+    template_name = 'register/metadata_form_templates/individual_form.html'
+
+    model = models.Individual
+    metadata_builder_class = IndividualMetadata
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
 
 @method_decorator(login_session_institution_required, name='dispatch')

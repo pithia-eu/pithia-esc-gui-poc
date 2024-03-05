@@ -281,3 +281,23 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         }),
         help_text='This will be used as the namespace for future registrations associated with this organisation.'
     )
+
+class IndividualInputSupportForm(ContactInfoInputSupportForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.fields['local_id'].help_text = 'The short name of this registration.'
+
+    organisation = forms.CharField(
+        label='Organisation',
+        required=False,
+        widget=forms.Select(
+            choices=[
+                ('', ''),
+                *[(o.metadata_server_url, o.name) for o in Organisation.objects.all()],
+            ],
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )

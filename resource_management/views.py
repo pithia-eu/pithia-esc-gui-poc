@@ -81,6 +81,7 @@ class ResourceManagementListView(ListView):
     resource_delete_page_url_name = ''
     resource_update_page_url_name = ''
     resource_register_page_url_name = ''
+    resource_register_no_file_name = ''
     resource_xml_download_page_url_name = ''
     resource_management_category_list_page_breadcrumb_text = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:data_collection_related_metadata_index'
@@ -103,6 +104,7 @@ class ResourceManagementListView(ListView):
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
+        context['resource_register_no_file_name'] = self.resource_register_no_file_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = self.resource_management_category_list_page_breadcrumb_text
@@ -115,6 +117,7 @@ class OrganisationManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:organisation'
     resource_update_page_url_name = 'update:organisation'
     resource_register_page_url_name = 'register:organisation'
+    resource_register_no_file_name = 'register:organisation_no_file'
     resource_xml_download_page_url_name = 'utils:view_organisation_as_xml'
 
 class IndividualManagementListView(ResourceManagementListView):
@@ -123,6 +126,7 @@ class IndividualManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:individual'
     resource_update_page_url_name = 'update:individual'
     resource_register_page_url_name = 'register:individual'
+    resource_register_no_file_name = 'register:individual_no_file'
     resource_xml_download_page_url_name = 'utils:view_individual_as_xml'
 
 class ProjectManagementListView(ResourceManagementListView):
