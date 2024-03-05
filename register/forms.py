@@ -1,7 +1,6 @@
 from django import forms
-from django_countries import countries
-from django_countries.fields import CountryField
-from django_countries.widgets import CountrySelectWidget
+
+from common.models import Organisation
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -141,6 +140,7 @@ class BaseInputSupportForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
+            'disabled': True,
         }),
         help_text='The short name of this organisation. e.g. NOA'
     )
@@ -149,7 +149,8 @@ class BaseInputSupportForm(forms.Form):
         label='Namespace',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control'
+            'class': 'form-control',
+            'disabled': True,
         })
     )
 
@@ -197,7 +198,7 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
     )
 
     administrative_area = forms.CharField(
-        label="Administrative Area",
+        label="County/State",
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
@@ -212,14 +213,13 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
         })
     )
 
-    country = CountryField(blank_label='(Select country)',).formfield(
-                label='Country',
-                required=False,
-                choices=countries,
-                widget=CountrySelectWidget(attrs={
-                    'class': 'form-select'
-                })
-            )
+    country = forms.CharField(
+        label='Country',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
 
     online_resource = forms.CharField(
         label="Link to Organisation Website",
@@ -272,12 +272,12 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         self.label_suffix = ''
         self.fields['name'].label = 'Long Name'
         self.fields['namespace'].widget = forms.HiddenInput()
-        self.fields['delivery_point'].help_text = 'The delivery address for this organisation.'
 
     short_name = forms.CharField(
         label="Short Name",
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
-        })
+        }),
+        help_text='This will be used as the namespace for future registrations associated with this organisation.'
     )
