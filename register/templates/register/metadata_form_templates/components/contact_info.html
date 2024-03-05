@@ -5,8 +5,9 @@
             <h2>Contact Info</h2>
         </div>
         <div class="col-lg-4">
-            {{ form.email_address.label_tag }}
-            {{ form.email_address }}
+            {% with field=form.email_address %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-3">
             <div class="d-flex flex-column">
@@ -20,38 +21,37 @@
             <h3>Address</h3>
         </div>
         <div class="col-lg-4">
-            {{ form.delivery_point.label_tag }}
-            {{ form.delivery_point }}
-            <div class="form-text">{{ form.delivery_point.help_text }}</div>
+            {% with field=form.delivery_point %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-3">
-            {{ form.city.label_tag }}
-            {{ form.city }}
+            {% with field=form.city %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-3">
-            {{ form.administrative_area.label_tag }}
-            {{ form.administrative_area }}
+            {% with field=form.administrative_area %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-2">
-            {{ form.postal_code.label_tag }}
-            {{ form.postal_code }}
+            {% with field=form.postal_code %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-4">
-            {{ form.country.label_tag }}
-            {% get_countries as countries %}
-            <select name="{{ form.country.name }}" id="{{ form.country.auto_id }}" class="form-select">
-                <option value="" selected disabled></option>
-                {% for country in countries %}
-                <option value="{{ country.code }}">{{ country.name }}</option>
-                {% endfor %}
-            </select>
+            {% with field=form.country %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
     </div>
     <div class="row flex-column gy-3 my-4">
         <h3>Other Information</h3>
         <div class="col-lg-5">
-            {{ form.online_resource.label_tag }}
-            {{ form.online_resource }}
+            {% with field=form.online_resource %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-7">
             <label for="{{ form.hours_of_service_start.id_for_label }}">Hours of Service</label>
@@ -62,9 +62,9 @@
             </div>
         </div>
         <div class="col-lg-4">
-            {{ form.contact_instructions.label_tag }}
-            {{ form.contact_instructions }}
-            <div class="form-text">{{ form.contact_instructions.help_text }}</div>
+            {% with field=form.contact_instructions %}
+            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% endwith %}
         </div>
     </div>
     <input type="hidden" name="hello" value="hi">

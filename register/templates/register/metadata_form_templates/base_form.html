@@ -7,6 +7,7 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
 <script src="{% static 'register/no_file_register_form.js' %}" defer></script>
+{% block extra_scripts %}{% endblock extra_scripts %}
 {% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}

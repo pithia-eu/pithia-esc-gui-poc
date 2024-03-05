@@ -5,10 +5,11 @@
         </div>
         <div class="col-lg-4">
             {{ form.local_id.label_tag }}
-            <div class="d-flex align-items-center">
-                <div class="text-body-secondary">Organisation_</div>
+            <div class="input-group">
+                <span class="input-group-text">{{ localid_base }}_</span>
                 {{ form.local_id }}
             </div>
+            <div class="form-text">{{ form.local_id.help_text }}</div>
         </div>
         <div class="col-lg-3">
             {{ form.namespace.label_tag }}
