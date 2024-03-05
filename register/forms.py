@@ -271,6 +271,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         self.fields['name'].label = 'Long Name'
+        self.fields['namespace'].widget = forms.HiddenInput()
         self.fields['delivery_point'].help_text = 'The delivery address for this organisation.'
 
     short_name = forms.CharField(
