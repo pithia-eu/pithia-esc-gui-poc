@@ -1,6 +1,8 @@
 from datetime import datetime
 from lxml import etree
 
+from utils.dict_helpers import flatten
+
 
 class NamespacePrefix:
     GCO = 'gco'
@@ -61,7 +63,7 @@ class NameMetadataComponent(BaseMetadataComponent):
 
 
 class DescriptionMetadataComponent(BaseMetadataComponent):
-    def append_description(self, description):
+    def append_description(self, description=''):
         description_element = etree.SubElement(self.root, 'description')
         description_element.text = description
     
@@ -117,34 +119,40 @@ class CapabilityLinksMetadataComponent(BaseMetadataComponent):
 
 
 class ContactInfoMetadataComponent(BaseMetadataComponent):
-    def _append_contact_info_address(self, ci_contact_element, delivery_point, city, administrative_area, postal_code, country, eletronic_mail_address):
+    def _append_contact_info_address(self, ci_contact_element, address):
         # Address container element
         address_element = etree.SubElement(ci_contact_element, 'address')
         ci_address_element = etree.SubElement(address_element, 'CI_Address')
         
         # Delivery point
-        delivery_point_element = etree.SubElement(ci_address_element, 'deliveryPoint')
-        self._append_gco_character_string_sub_element(delivery_point_element, delivery_point)
+        if len(address['delivery_point']) > 0:
+            delivery_point_element = etree.SubElement(ci_address_element, 'deliveryPoint')
+            self._append_gco_character_string_sub_element(delivery_point_element, address['delivery_point'])
         
         # City
-        city_element = etree.SubElement(ci_address_element, 'city')
-        self._append_gco_character_string_sub_element(city_element, city)
+        if len(address['city']) > 0:
+            city_element = etree.SubElement(ci_address_element, 'city')
+            self._append_gco_character_string_sub_element(city_element, address['city'])
         
         # Administrative area
-        administrative_area_element = etree.SubElement(ci_address_element, 'administrativeArea')
-        self._append_gco_character_string_sub_element(administrative_area_element, administrative_area)
+        if len(address['administrative_area']) > 0:
+            administrative_area_element = etree.SubElement(ci_address_element, 'administrativeArea')
+            self._append_gco_character_string_sub_element(administrative_area_element, address['administrative_area'])
         
         # Postal code
-        postal_code_element = etree.SubElement(ci_address_element, 'postalCode')
-        self._append_gco_character_string_sub_element(postal_code_element, postal_code)
+        if len(address['postal_code']) > 0:
+            postal_code_element = etree.SubElement(ci_address_element, 'postalCode')
+            self._append_gco_character_string_sub_element(postal_code_element, address['postal_code'])
         
         # Country
-        country_element = etree.SubElement(ci_address_element, 'country')
-        self._append_gco_character_string_sub_element(country_element, country)
+        if len(address['country']) > 0:
+            country_element = etree.SubElement(ci_address_element, 'country')
+            self._append_gco_character_string_sub_element(country_element, address['country'])
         
         # Email
-        electronic_mail_address_element = etree.SubElement(ci_address_element, 'electronicMailAddress')
-        self._append_gco_character_string_sub_element(electronic_mail_address_element, eletronic_mail_address)
+        if len(address['electronic_mail_address']) > 0:
+            electronic_mail_address_element = etree.SubElement(ci_address_element, 'electronicMailAddress')
+            self._append_gco_character_string_sub_element(electronic_mail_address_element, address['electronic_mail_address'])
 
     def _append_contact_info_online_resource(self, ci_contact_element, url):
         online_resource_element = etree.SubElement(ci_contact_element, 'onlineResource')
@@ -162,27 +170,35 @@ class ContactInfoMetadataComponent(BaseMetadataComponent):
         self._append_gco_character_string_sub_element(contact_instructions_element, contact_instructions)
 
     def append_contact_info(self, contact_info):
+        if not any(flatten(contact_info).values()):
+            return
+
         # Container elements
         contact_info_element = etree.SubElement(self.root, 'contactInfo')
         ci_contact_element = etree.SubElement(contact_info_element, 'CI_Contact', xmlns='http://www.isotc211.org/2005/gmd')
 
         # Phone
-        phone_element = etree.SubElement(ci_contact_element, 'phone')
-        ci_telephone_element = etree.SubElement(phone_element, 'CI_Telephone')
-        voice_element = etree.SubElement(ci_telephone_element, 'voice')
-        self._append_gco_character_string_sub_element(voice_element, contact_info['phone'])
+        if len(contact_info['phone']) > 0:
+            phone_element = etree.SubElement(ci_contact_element, 'phone')
+            ci_telephone_element = etree.SubElement(phone_element, 'CI_Telephone')
+            voice_element = etree.SubElement(ci_telephone_element, 'voice')
+            self._append_gco_character_string_sub_element(voice_element, contact_info['phone'])
         
         # Address
-        self._append_contact_info_address(ci_contact_element, *contact_info['address'])
+        if any(contact_info['address'].values()):
+            self._append_contact_info_address(ci_contact_element, contact_info['address'])
 
         # Online resource
-        self._append_contact_info_online_resource(ci_contact_element, contact_info['online_resource'])
+        if len(contact_info['online_resource']) > 0:
+            self._append_contact_info_online_resource(ci_contact_element, contact_info['online_resource'])
 
         # Hours of service
-        self._append_contact_info_hours_of_service(ci_contact_element, contact_info['hours_of_service'])
+        if len(contact_info['hours_of_service']) > 0:
+            self._append_contact_info_hours_of_service(ci_contact_element, contact_info['hours_of_service'])
 
         # Contact instructions
-        self._append_contact_info_contact_instructions(ci_contact_element, contact_info['contact_instructions'])
+        if len(contact_info['contact_instructions']) > 0:
+            self._append_contact_info_contact_instructions(ci_contact_element, contact_info['contact_instructions'])
 
 
 class DataLevelMetadataComponent(BaseMetadataComponent):

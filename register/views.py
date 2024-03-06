@@ -19,7 +19,7 @@ from .metadata_builder.metadata_structures import (
     IndividualMetadata,
     OrganisationMetadata,
 )
-
+from .metadata_builder.utils import *
 from common import models
 from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
@@ -86,14 +86,17 @@ class ResourceRegisterWithoutFileFormView(FormView):
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
-    def process_form(self, form):
-        pass
+    def process_form(self, form_cleaned_data):
+        # Make copy of cleaned data
+        processed_form = form_cleaned_data
+        processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
+        return processed_form
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        self.process_form(request.POST)
         if form.is_valid():
-            metadata_builder = self.metadata_builder_class(form.cleaned_data)
+            processed_form = self.process_form(form.cleaned_data)
+            metadata_builder = self.metadata_builder_class(processed_form)
             print('metadata_builder.xml', metadata_builder.xml)
         else:
             messages.error(request, 'The form submitted was not valid.')
@@ -115,36 +118,24 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
-    def _format_time_to_12_hour_format(self, time_unformatted):
-        return time_unformatted.strftime('%I:%M%p').lstrip('0').lower()
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
 
-    def process_form(self, form):
-        processed_form = {}
+        processed_form['namespace'] = 'pithia'
 
-        # Time
-        time_start_parsed = dateutil.parser.parse(form.get('hours_of_service_start'))
-        time_end_parsed = dateutil.parser.parse(form.get('hours_of_service_end'))
-
-        time_start_formatted = self._format_time_to_12_hour_format(time_start_parsed)
-        time_end_formatted = self._format_time_to_12_hour_format(time_end_parsed)
-        processed_form['hours_of_service'] = f'{time_start_formatted}-{time_end_formatted}'
+        # Hours of service
+        hours_of_service = process_hours_of_service_in_form(form_cleaned_data)
+        processed_form['hours_of_service'] = hours_of_service
         
-        processed_form['contact_info'] = {
-            'phone': form.cleaned_data.get('phone'),
-            'address': {
-                'delivery_point': form.cleaned_data.get('delivery_point'),
-                'city': form.cleaned_data.get('city'),
-                'administrative_area': form.cleaned_data.get('administrative_area'),
-                'postal_code': form.cleaned_data.get('postal_code'),
-                'country': form.cleaned_data.get('country'),
-                'electronic_mail_address': form.cleaned_data.get('email_address'),
-            },
-            'online_resource': form.cleaned_data.get('online_resource'),
-            'hours_of_service': form.cleaned_data.get('hours_of_service'),
-            'contact_instructions': form.cleaned_data.get('contact_instructions'),
-        }
-        print('processed_form', json.dumps(processed_form, indent=4))
+        # Contact info
+        processed_form['contact_info'] = process_contact_info_in_form(form_cleaned_data)
+
         return processed_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(initial={'namespace': 'pithia'})
+        return context
 
 class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:individual_no_file')
