@@ -47,7 +47,7 @@
             <select name="{{ form.country.name }}" id="{{ form.country.auto_id }}" class="form-select">
                 <option value="" selected disabled></option>
                 {% for country in countries %}
-                <option value="{{ country.code }}">{{ country.name }}</option>
+                <option value="{{ country.name }}">{{ country.name }}</option>
                 {% endfor %}
             </select>
         </div>
