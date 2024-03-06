@@ -616,6 +616,11 @@ label.required::after {
     color: red;
 }
 
+.input-group > .form-control {
+    border-top-right-radius: var(--bs-border-radius) !important;
+    border-bottom-right-radius: var(--bs-border-radius) !important;
+}
+
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
     opacity: 1;
