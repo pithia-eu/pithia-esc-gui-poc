@@ -231,20 +231,18 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
         })
     )
 
-    hours_of_service_start = forms.DateTimeField(
+    hours_of_service_start = forms.TimeField(
         required=False,
         widget=forms.TimeInput(
-            format='%H:%M',
             attrs={
                 'class': 'form-control',
             }
         )
     )
 
-    hours_of_service_end = forms.DateTimeField(
+    hours_of_service_end = forms.TimeField(
         required=False,
         widget=forms.TimeInput(
-            format='%H:%M',
             attrs={
                 'class': 'form-control',
             }
