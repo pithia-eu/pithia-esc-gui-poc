@@ -1,4 +1,8 @@
 {% extends 'register/metadata_form_templates/base_form.html' %}
+{% load static %}
+{% block extra_scripts %}
+<script src="{% static 'register/individual_form.js' %}" defer></script>
+{% endblock extra_scripts %}
 {% block form_content %}
 <section>
     <div class="row gy-3 mb-3">

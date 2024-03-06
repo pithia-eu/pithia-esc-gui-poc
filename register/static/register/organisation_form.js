@@ -19,9 +19,9 @@ shortNameInput.addEventListener("input", async () => {
     localIdSuffixInput.value = localIdSuffix;
     const isLocalIdUnique = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
     if (!isLocalIdUnique) {
-        localIdInputGroup.classList.add('.was-validated');
-        localIdSuffixInput.classList.add('is-invalid');
+        localIdInputGroup.classList.add(".was-validated");
+        localIdSuffixInput.classList.add("is-invalid");
     } else {
-        localIdSuffixInput.classList.remove('is-invalid');
+        localIdSuffixInput.classList.remove("is-invalid");
     }
 });

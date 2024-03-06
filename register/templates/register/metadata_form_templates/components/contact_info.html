@@ -13,6 +13,7 @@
             <div class="d-flex flex-column">
                 {{ form.phone.label_tag }}
                 <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" autocomplete="true">
+                <div class="form-text">{{ form.phone.help_text }}</div>
             </div>
         </div>
     </div>
@@ -41,9 +42,14 @@
             {% endwith %}
         </div>
         <div class="col-lg-4">
-            {% with field=form.country %}
-            {% include 'register/metadata_form_templates/form_field_template.html' %}
-            {% endwith %}
+            {{ form.country.label_tag }}
+            {% get_countries as countries %}
+            <select name="{{ form.country.name }}" id="{{ form.country.auto_id }}" class="form-select">
+                <option value="" selected disabled></option>
+                {% for country in countries %}
+                <option value="{{ country.code }}">{{ country.name }}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
     <div class="row flex-column gy-3 my-4">

@@ -141,7 +141,8 @@ class BaseInputSupportForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'disabled': True,
-        })
+        }),
+        help_text=f'This is automatically generated using the name of this registration.'
     )
 
     namespace = forms.CharField(
@@ -150,11 +151,12 @@ class BaseInputSupportForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'disabled': True,
-        })
+        }),
+        help_text=f'This is automatically generated with the short name of the selected organisation.'
     )
 
     name = forms.CharField(
-        label='Name',
+        label='Full Name',
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
@@ -177,7 +179,8 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control'
-        })
+        }),
+        help_text='Start the number with the country code - e.g. "+33" for phone numbers in France.'
     )
 
     delivery_point = forms.CharField(
@@ -269,7 +272,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        self.fields['name'].label = 'Long Name'
+        self.fields['localid'].help_text = None
         self.fields['namespace'].widget = forms.HiddenInput()
 
     short_name = forms.CharField(
@@ -278,8 +281,16 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         }),
-        help_text='This will be used as the namespace for future registrations associated with this organisation.'
+        help_text='This will be used to automatically generate this registration\'s local ID suffix as well as the namespace for future registrations associated with this organisation.'
     )
+
+class OrganisationSelect(forms.Select):
+    def create_option(self, *args, **kwargs):
+        option = super().create_option(*args, **kwargs)
+        if not option.get('value'):
+            option['attrs']['disabled'] = 'disabled'
+
+        return option
 
 class IndividualInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
@@ -288,8 +299,8 @@ class IndividualInputSupportForm(ContactInfoInputSupportForm):
 
     organisation = forms.CharField(
         label='Organisation',
-        required=False,
-        widget=forms.Select(
+        required=True,
+        widget=OrganisationSelect(
             choices=[
                 ('', ''),
                 *[(o.metadata_server_url, o.name) for o in Organisation.objects.all()],
@@ -297,5 +308,6 @@ class IndividualInputSupportForm(ContactInfoInputSupportForm):
             attrs={
                 'class': 'form-select'
             }
-        )
+        ),
+        help_text='The chosen organisation\'s short name will be used as this registration\'s namespace.'
     )

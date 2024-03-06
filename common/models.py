@@ -305,6 +305,10 @@ class Organisation(ScientificMetadata):
 
     objects = OrganisationManager.from_queryset(OrganisationQuerySet)()
 
+    @property
+    def short_name(self):
+        return self.json['shortName']
+
     class Meta:
         proxy = True
 
