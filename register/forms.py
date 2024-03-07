@@ -291,19 +291,17 @@ class OrganisationSelect(forms.Select):
         return option
 
 class IndividualInputSupportForm(ContactInfoInputSupportForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, organisation_choices=(), **kwargs):
+        super(IndividualInputSupportForm, self).__init__(*args, **kwargs)
         self.label_suffix = ''
         self.fields['online_resource'].label = 'Link to Organisation Website/Staff Page'
+        self.fields['organisation'].choices = organisation_choices
 
-    organisation = forms.CharField(
+    organisation = forms.ChoiceField(
+        choices=(),
         label='Organisation',
         required=True,
         widget=OrganisationSelect(
-            choices=[
-                ('', ''),
-                *[(o.metadata_server_url, o.name) for o in Organisation.objects.all()],
-            ],
             attrs={
                 'class': 'form-select'
             }

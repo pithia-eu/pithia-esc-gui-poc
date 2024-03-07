@@ -1,8 +1,7 @@
-import dateutil.parser
-import json
 import logging
 import os
 from django.contrib import messages
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import (
     IntegrityError,
     transaction,
@@ -92,13 +91,34 @@ class ResourceRegisterWithoutFileFormView(FormView):
         processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
         processed_form['namespace'] = processed_form["namespace"]
         return processed_form
+
+    def register_xml_file(self, request, xml_file):
+        try:
+            self.model.objects.create_from_xml_string(
+                xml_file.read(),
+                self.institution_id,
+                self.owner_id,
+            )
+            messages.success(request, f'Successfully registered {xml_file.name}.')
+        except ExpatError as err:
+            logger.exception('Expat error occurred during registration process.')
+            messages.error(request, f'There was a problem during XML generation. Please report this error to a member of the support team.')
+        except (FileRegisteredBefore, IntegrityError) as err:
+            logger.exception('The local ID submitted is already in use.')
+            messages.error(request, 'The local ID submitted is already in use.')
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during registration.')
+            messages.error(request, 'An unexpected error occurred during registration.')
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
             processed_form = self.process_form(form.cleaned_data)
             metadata_builder = self.metadata_builder_class(processed_form)
-            print('metadata_builder.xml', metadata_builder.xml)
+            xml = metadata_builder.xml
+            localid = processed_form['localid']
+            xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
+            self.register_xml_file(request, xml_file)
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
@@ -160,6 +180,14 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
         processed_form['contact_info'] = process_contact_info_in_form(form_cleaned_data)
 
         return processed_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(organisation_choices=[
+            ('', ''),
+            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.all()],
+        ])
+        return context
 
 
 @method_decorator(login_session_institution_required, name='dispatch')
