@@ -42,7 +42,6 @@ class IndividualMetadata(ContactInfoMetadataComponent, GCOCharacterStringMetadat
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
-        self.append_description(properties['description'])
         self.append_contact_info(properties['contact_info'])
         self.append_organisation(properties['organisation'])
 
