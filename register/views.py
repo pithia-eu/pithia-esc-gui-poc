@@ -90,6 +90,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
         # Make copy of cleaned data
         processed_form = form_cleaned_data
         processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
+        processed_form['namespace'] = processed_form["namespace"]
         return processed_form
     
     def post(self, request, *args, **kwargs):
@@ -147,6 +148,18 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
+
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        # Hours of service
+        hours_of_service = process_hours_of_service_in_form(form_cleaned_data)
+        processed_form['hours_of_service'] = hours_of_service
+        
+        # Contact info
+        processed_form['contact_info'] = process_contact_info_in_form(form_cleaned_data)
+
+        return processed_form
 
 
 @method_decorator(login_session_institution_required, name='dispatch')
