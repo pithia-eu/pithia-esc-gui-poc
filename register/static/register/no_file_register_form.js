@@ -14,4 +14,6 @@ window.intlTelInput(input, {
 inputSupportForm.addEventListener("submit", () => {
     const localIdInput = document.querySelector("input[name='localid']");
     localIdInput.disabled = false;
+    const namespaceInput = document.querySelector("input[name='namespace']");
+    namespaceInput.disabled = false;
 });
