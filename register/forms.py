@@ -294,6 +294,7 @@ class IndividualInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
+        self.fields['online_resource'].label = 'Link to Organisation Website/Staff Page'
 
     organisation = forms.CharField(
         label='Organisation',
