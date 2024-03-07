@@ -1,5 +1,7 @@
+import copy
+
 # Organisation
-ORGANISATION_PROPERTIES = {
+ORGANISATION_PROPERTIES_FULL = {
     'localid': 'Organisation_Test',
     'namespace': 'test',
     'name': 'Organisation Test',
@@ -21,12 +23,31 @@ ORGANISATION_PROPERTIES = {
     },
 }
 
+def _blank_out_string_properties_of_dict(property_dict):
+    for key in property_dict:
+        if isinstance(property_dict[key], dict):
+            _blank_out_string_properties_of_dict(property_dict[key])
+            continue
+        property_dict[key] = ''
+
+ORGANISATION_PROPERTIES_NO_CONTACT_INFO = copy.deepcopy(ORGANISATION_PROPERTIES_FULL)
+_blank_out_string_properties_of_dict(ORGANISATION_PROPERTIES_NO_CONTACT_INFO['contact_info'])
+
+ORGANISATION_PROPERTIES_PARTIAL_CONTACT_INFO = copy.deepcopy(ORGANISATION_PROPERTIES_NO_CONTACT_INFO)
+ORGANISATION_PROPERTIES_PARTIAL_CONTACT_INFO['contact_info']['address'] = ORGANISATION_PROPERTIES_FULL['contact_info']['address']
+ORGANISATION_PROPERTIES_PARTIAL_CONTACT_INFO['contact_info']['hours_of_service'] = ORGANISATION_PROPERTIES_FULL['contact_info']['hours_of_service']
+
+ORGANISATION_PROPERTIES_NO_ADDRESS = copy.deepcopy(ORGANISATION_PROPERTIES_FULL)
+_blank_out_string_properties_of_dict(ORGANISATION_PROPERTIES_NO_ADDRESS['contact_info']['address'])
+
+ORGANISATION_PROPERTIES_PARTIAL_ADDRESS = copy.deepcopy(ORGANISATION_PROPERTIES_NO_ADDRESS)
+ORGANISATION_PROPERTIES_PARTIAL_ADDRESS['contact_info']['address']['delivery_point'] = ORGANISATION_PROPERTIES_FULL['contact_info']['address']['delivery_point']
+
 # Individual
-INDIVIDUAL_PROPERTIES = {
+INDIVIDUAL_PROPERTIES_FULL = {
     'localid': 'Individual_Test',
     'namespace': 'test',
     'name': 'Individual Test',
-    'description': 'Description',
     'contact_info': {
         'phone': '12345',
         'address': {
@@ -45,8 +66,11 @@ INDIVIDUAL_PROPERTIES = {
     'organisation': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
 }
 
+INDIVIDUAL_PROPERTIES_NO_CONTACT_INFO = copy.deepcopy(INDIVIDUAL_PROPERTIES_FULL)
+_blank_out_string_properties_of_dict(INDIVIDUAL_PROPERTIES_NO_CONTACT_INFO['contact_info'])
+
 # Project
-PROJECT_PROPERTIES = {
+PROJECT_PROPERTIES_FULL = {
     'localid': 'Project_Test',
     'namespace': 'test',
     'name': 'Project Test',
@@ -105,7 +129,7 @@ PROJECT_PROPERTIES = {
 }
 
 # Platform
-PLATFORM_PROPERTIES = {
+PLATFORM_PROPERTIES_FULL = {
     'localid': 'Platform_Test',
     'namespace': 'test',
     'name': 'Platform Test',
@@ -137,7 +161,7 @@ PLATFORM_PROPERTIES = {
 }
 
 # Operation
-OPERATION_PROPERTIES = {
+OPERATION_PROPERTIES_FULL = {
     'localid': 'Operation_Test',
     'namespace': 'test',
     'name': 'Operation Test',
@@ -174,7 +198,7 @@ OPERATION_PROPERTIES = {
 }
 
 # Instrument
-INSTRUMENT_PROPERTIES = {
+INSTRUMENT_PROPERTIES_FULL = {
     'localid': 'Instrument_Test',
     'namespace': 'test',
     'name': 'Instrument Test',
@@ -205,7 +229,7 @@ INSTRUMENT_PROPERTIES = {
 }
 
 # Acquisition Capabilities
-ACQUISITION_CAPABILITIES_PROPERTIES = {
+ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
     'localid': 'AcquisitionCapabilities_Test',
     'namespace': 'test',
     'name': 'Acquisition Capabilities Test',
@@ -245,7 +269,7 @@ ACQUISITION_CAPABILITIES_PROPERTIES = {
 }
 
 # Acquisition
-ACQUISITION_PROPERTIES = {
+ACQUISITION_PROPERTIES_FULL = {
     'localid': 'Acquisition_Test',
     'namespace': 'test',
     'name': 'Acquisition Test',
@@ -271,7 +295,7 @@ ACQUISITION_PROPERTIES = {
 }
 
 # Computation Capabilities
-COMPUTATION_CAPABILITIES_PROPERTIES = {
+COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
     'localid': 'ComputationCapabilities_Test',
     'namespace': 'test',
     'name': 'Computation Capabilities Test',
@@ -309,7 +333,7 @@ COMPUTATION_CAPABILITIES_PROPERTIES = {
 }
 
 # Computation
-COMPUTATION_PROPERTIES = {
+COMPUTATION_PROPERTIES_FULL = {
     'localid': 'Computation_Test',
     'namespace': 'test',
     'name': 'Computation Test',
@@ -335,7 +359,7 @@ COMPUTATION_PROPERTIES = {
 }
 
 # Process
-PROCESS_PROPERTIES = {
+PROCESS_PROPERTIES_FULL = {
     'localid': 'Process_Test',
     'namespace': 'test',
     'name': 'Process Test',
@@ -357,7 +381,7 @@ PROCESS_PROPERTIES = {
 }
 
 # Data Collection
-DATA_COLLECTION_PROPERTIES = {
+DATA_COLLECTION_PROPERTIES_FULL = {
     'localid': 'DataCollection_Test',
     'namespace': 'test',
     'name': 'Data Collection Test',
@@ -413,7 +437,7 @@ DATA_COLLECTION_PROPERTIES = {
 }
 
 # Catalogue
-CATALOGUE_PROPERTIES = {
+CATALOGUE_PROPERTIES_FULL = {
     'localid': 'Catalogue_Test',
     'namespace': 'test',
     'name': 'Catalogue Test',
@@ -422,7 +446,7 @@ CATALOGUE_PROPERTIES = {
 }
 
 # Catalogue Entry
-CATALOGUE_ENTRY_PROPERTIES = {
+CATALOGUE_ENTRY_PROPERTIES_FULL = {
     'localid': 'Catalogue_Entry_Test',
     'namespace': 'test',
     'entry_name': 'Catalogue Entry Test',
@@ -447,7 +471,7 @@ CATALOGUE_ENTRY_PROPERTIES = {
 }
 
 # Catalogue Data Subset
-CATALOGUE_DATA_SUBSET_PROPERTIES = {
+CATALOGUE_DATA_SUBSET_PROPERTIES_FULL = {
     'localid': 'Catalogue_Data_Subset_Test',
     'namespace': 'test',
     'data_subset_name': 'Catalogue Data Subset Test',
@@ -498,7 +522,7 @@ CATALOGUE_DATA_SUBSET_PROPERTIES = {
     },
 }
 
-WORKFLOW_PROPERTIES = {
+WORKFLOW_PROPERTIES_FULL = {
     'localid': 'Workflow_Test',
     'namespace': 'test',
     'name': 'Workflow Test',

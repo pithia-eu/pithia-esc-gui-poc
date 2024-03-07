@@ -55,37 +55,24 @@ class MetadataRootElementNameValidator:
 
 class MetadataFileXSDValidator:
     @classmethod
-    def _validate_xml_file_string_against_schema(cls, xml_file_string: str, schema):
+    def _instantiate_pithia_schema(cls):
         try:
             cwd_before_validation = os.getcwd()
             # Temporarily change the cwd to so the XSD
             # validator can see the schema files.
             os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
-            xml_schema = xmlschema.XMLSchema(schema)
-            xml_schema.validate(xml_file_string)
-        except XMLSchemaException as err:
-            raise err
+            with open(os.path.join('pithia.xsd')) as schema_file:
+                schema = xmlschema.XMLSchema(schema_file)
         finally:
             # Change the cwd back as XSD validation is
             # finished.
             os.chdir(cwd_before_validation)
+        
+        return schema
 
     @classmethod
-    def _temporary_validate_xml_file_string_against_schema(cls, xml_file_string: str):
-        try:
-            cwd_before_validation = os.getcwd()
-            # Temporarily change the cwd to so the XSD
-            # validator can see the schema files.
-            os.chdir(os.path.join(BASE_DIR, 'validation', 'local_schema_files'))
-            with open('pithia.xsd') as schema:
-                xml_schema = xmlschema.XMLSchema(schema)
-            xml_schema.validate(xml_file_string)
-        except XMLSchemaException as err:
-            raise err
-        finally:
-            # Change the cwd back as XSD validation is
-            # finished.
-            os.chdir(cwd_before_validation)
+    def _validate_xml_file_string_against_schema(cls, xml_file_string: str, schema: xmlschema.XMLSchema):
+        schema.validate(xml_file_string)
 
     @classmethod
     def validate(cls, xml_file: XMLMetadataFile):
@@ -93,12 +80,8 @@ class MetadataFileXSDValidator:
         Validates an XML metadata file against the schema it
         specifies at its schemaLocation URL.
         """
-        # ** TEMPORARILY DISABLED UNTIL pithia.xsd ON SERVER IS UPDATED **
-        # xml_file_schema_url = xml_file.schema_url
-        # schema_response = get(xml_file_schema_url)
-        # schema = schema_response.text.encode()
-        # return cls._validate_xml_file_string_against_schema(xml_file.contents, schema)
-        return cls._temporary_validate_xml_file_string_against_schema(xml_file.contents)
+        schema = cls._instantiate_pithia_schema()
+        return cls._validate_xml_file_string_against_schema(xml_file.contents, schema)
 
 
 class MetadataFileNameValidator:
