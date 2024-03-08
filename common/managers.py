@@ -47,15 +47,14 @@ class ScientificMetadataManager(models.Manager):
         except (UnicodeDecodeError, AttributeError):
             pass
 
-        scientific_metadata = self.model(
+        scientific_metadata = self.using(os.environ['DJANGO_RW_DATABASE_NAME']).create(
+            id=xml_as_dict['identifier']['PITHIA_Identifier']['localID'],
             type=type,
             xml=xml_string,
             json=xml_as_dict,
             institution_id=institution_id,
             owner_id=owner_id
         )
-        scientific_metadata.id = scientific_metadata.localid
-        scientific_metadata.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
         return scientific_metadata
 

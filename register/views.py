@@ -37,7 +37,6 @@ from handle_management.xml_utils import (
     initialise_default_doi_kernel_metadata_dict,
     is_doi_element_present_in_xml_file,
 )
-from pithiaesc.settings import BASE_DIR
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -49,7 +48,6 @@ from user_management.services import (
     get_institution_id_for_login_session,
 )
 from utils.url_helpers import create_data_subset_detail_page_url
-from validation.errors import FileRegisteredBefore
 from validation.file_wrappers import XMLMetadataFile
 from validation.services import MetadataFileXSDValidator
 
@@ -145,7 +143,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
             logger.exception('Expat error occurred during registration process.')
             messages.error(self.request, f'There was a problem during XML generation. Please report this error to our support team.')
             return self.render_to_response(self.get_context_data(form=form))
-        except (FileRegisteredBefore, IntegrityError) as err:
+        except IntegrityError as err:
             logger.exception('The local ID submitted is already in use.')
             messages.error(self.request, 'The local ID submitted is already in use.')
             return self.render_to_response(self.get_context_data(form=form))
@@ -276,7 +274,7 @@ class ResourceRegisterFormView(FormView):
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
             messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
-        except (FileRegisteredBefore, IntegrityError) as err:
+        except IntegrityError as err:
             logger.exception('The XML file submitted for registration has been registered before.')
             messages.error(request, f'{xml_file.name} has been registered before.')
         except BaseException as err:
