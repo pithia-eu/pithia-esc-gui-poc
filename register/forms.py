@@ -1,6 +1,5 @@
 from django import forms
-
-from common.models import Organisation
+from django_countries import countries
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -215,11 +214,12 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
         })
     )
 
-    country = forms.CharField(
+    country = forms.ChoiceField(
         label='Country',
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control'
+        choices=((c.name, c.name) for c in countries),
+        widget=forms.Select(attrs={
+            'class': 'form-select'
         })
     )
 
