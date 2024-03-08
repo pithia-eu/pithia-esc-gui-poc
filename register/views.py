@@ -67,7 +67,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
 
     model = None
     metadata_builder_class = None
-    form_with_errors = None
+    file_upload_registration_url = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_management_list_page_breadcrumb_text = ''
 
@@ -82,22 +82,12 @@ class ResourceRegisterWithoutFileFormView(FormView):
         return processed_form
 
     def register_xml_file(self, request, xml_file, name):
-        try:
-            self.model.objects.create_from_xml_string(
-                xml_file.read(),
-                self.institution_id,
-                self.owner_id,
-            )
-            messages.success(request, f'Successfully registered {name}.')
-        except ExpatError as err:
-            logger.exception('Expat error occurred during registration process.')
-            messages.error(request, f'There was a problem during XML generation. Please report this error to our support team.')
-        except (FileRegisteredBefore, IntegrityError) as err:
-            logger.exception('The local ID submitted is already in use.')
-            messages.error(request, 'The local ID submitted is already in use.')
-        except BaseException as err:
-            logger.exception('An unexpected error occurred during registration.')
-            messages.error(request, 'An unexpected error occurred during registration.')
+        self.model.objects.create_from_xml_string(
+            xml_file.read(),
+            self.institution_id,
+            self.owner_id,
+        )
+        messages.success(request, f'Successfully registered {name}.')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -147,8 +137,23 @@ class ResourceRegisterWithoutFileFormView(FormView):
             '''
             messages.error(self.request, form_error_msg)
             return self.render_to_response(self.get_context_data(form=form))
-        xml_file.seek(0)
-        self.register_xml_file(self.request, xml_file, name)
+        
+        try:
+            xml_file.seek(0)
+            self.register_xml_file(self.request, xml_file, name)
+        except ExpatError as err:
+            logger.exception('Expat error occurred during registration process.')
+            messages.error(self.request, f'There was a problem during XML generation. Please report this error to our support team.')
+            return self.render_to_response(self.get_context_data(form=form))
+        except (FileRegisteredBefore, IntegrityError) as err:
+            logger.exception('The local ID submitted is already in use.')
+            messages.error(self.request, 'The local ID submitted is already in use.')
+            return self.render_to_response(self.get_context_data(form=form))
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during registration.')
+            messages.error(self.request, 'An unexpected error occurred during registration.')
+            return self.render_to_response(self.get_context_data(form=form))
+        
         return super().form_valid(form)
 
     def form_invalid(self, form):
