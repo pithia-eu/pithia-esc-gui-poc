@@ -6,5 +6,8 @@
         <div class="col-lg-7">
             {{ form.description }}
         </div>
+        {% for error in form.description.errors  %}
+        <div class="form-text text-danger">{{ error }}</div>
+        {% endfor %}
     </div>
 </section>
