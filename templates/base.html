@@ -78,20 +78,20 @@
             </svg>
             <div class="messages-container row mb-5 px-3">
                 {% for message in messages %}
-                <div role="alert" class="d-flex align-items-center alert 
+                <div role="alert" class="d-flex align-items-center column-gap-3 alert 
                     {% if message.tags %}
                         {% if 'success' in message.tags %}
                         alert-success">
-                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                        <svg class="bi flex-shrink-0" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
                         {% elif 'error' in message.tags %}
                         alert-danger">
-                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <svg class="bi flex-shrink-0" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                         {% elif 'warning' in message.tags %}
                         alert-warning">
-                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <svg class="bi flex-shrink-0" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                         {% elif 'info' in message.tags %}
                         alert-info">
-                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                        <svg class="bi flex-shrink-0" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
                         {% endif %}
                     {% endif %}
                     <div>{{ message|safe }}</div>

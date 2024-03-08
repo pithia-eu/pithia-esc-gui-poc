@@ -67,26 +67,12 @@ class ResourceRegisterWithoutFileFormView(FormView):
 
     model = None
     metadata_builder_class = None
+    form_with_errors = None
     resource_management_list_page_breadcrumb_url_name = ''
     resource_management_list_page_breadcrumb_text = ''
 
     institution_id = None
     owner_id = None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class
-        context['success_url'] = self.success_url
-        context['localid_base'] = self.model.localid_base
-        context['title'] = f'New {self.model.type_readable.title()}'
-        context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
-        context['localid_validation_url'] = reverse_lazy('validation:new_localid')
-        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
-        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
-        return context
 
     def process_form(self, form_cleaned_data):
         # Make copy of cleaned data
@@ -105,7 +91,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
             messages.success(request, f'Successfully registered {name}.')
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
-            messages.error(request, f'There was a problem during XML generation. Please report this error to a member of the support team.')
+            messages.error(request, f'There was a problem during XML generation. Please report this error to our support team.')
         except (FileRegisteredBefore, IntegrityError) as err:
             logger.exception('The local ID submitted is already in use.')
             messages.error(request, 'The local ID submitted is already in use.')
@@ -113,31 +99,61 @@ class ResourceRegisterWithoutFileFormView(FormView):
             logger.exception('An unexpected error occurred during registration.')
             messages.error(request, 'An unexpected error occurred during registration.')
 
-    def bind_form(self, request):
-        return self.form_class(request.POST)
-    
-    def post(self, request, *args, **kwargs):
-        form = self.bind_form(request)
-        if form.is_valid():
-            processed_form = self.process_form(form.cleaned_data)
-            metadata_builder = self.metadata_builder_class(processed_form)
-            xml = metadata_builder.xml
-            localid = processed_form['localid']
-            name = processed_form['name']
-            xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
-            try:
-                MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
-            except XMLSchemaException as err:
-                logger.exception('Generated XML failed schema validation.')
-                messages.error('This form was unable to be processed into schema-valid XML. Until the problem is fixed, please use the file upload form instead. We apologise for any inconvenience.')
-            except BaseException as err:
-                logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
-                messages.error('An unexpected error occurred whilst validating the generated against the schema. Please contact our support team if the issue persists.')
-            xml_file.seek(0)
-            self.register_xml_file(request, xml_file, name)
-        else:
-            messages.error(request, 'The form submitted was not valid.')
-        return super().post(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'form' not in kwargs:
+            context['form'] = self.get_form()
+        context['success_url'] = self.success_url
+        context['localid_base'] = self.model.localid_base
+        context['title'] = f'New {self.model.type_readable.title()}'
+        context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
+        context['localid_validation_url'] = reverse_lazy('validation:new_localid')
+        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
+        context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
+        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        return context
+
+    def form_valid(self, form):
+        processed_form = self.process_form(form.cleaned_data)
+        metadata_builder = self.metadata_builder_class(processed_form)
+        xml = metadata_builder.xml
+        localid = processed_form['localid']
+        name = processed_form['name']
+        xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
+        try:
+            MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
+        except XMLSchemaException as err:
+            logger.exception('Generated XML failed schema validation.')
+            form_error_msg = f'''
+            This form was unable to be processed into schema-valid XML due to the translation
+            code becoming outdated with the metadata schema.
+            <br><br>
+            Whilst this functionality is unavailable, the <a href="{self.file_upload_registration_url}">file upload functionality</a> can be used
+            as an alternative to register your metadata. Please also consider <a href="{reverse_lazy('support')}" target="_blank">
+            notifying our support team</a> about this problem.
+            <br><br>
+            We apologise for any inconvenience caused.
+            '''
+            messages.error(self.request, form_error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
+        except BaseException as err:
+            logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
+            form_error_msg = f'''
+            An unexpected error occurred whilst validating the generated XML against the schema.
+            Please try submitting the form again, or if the issue persists, <a href="{reverse_lazy('support')}" target="_blank">
+            let our support team know</a>.
+            '''
+            messages.error(self.request, form_error_msg)
+            return self.render_to_response(self.get_context_data(form=form))
+        xml_file.seek(0)
+        self.register_xml_file(self.request, xml_file, name)
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'The form submitted was not valid.')
+        return super().form_invalid(form)
     
     def dispatch(self, request, *args, **kwargs):
         self.institution_id = get_institution_id_for_login_session(request.session)
@@ -151,6 +167,7 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
 
     model = models.Organisation
     metadata_builder_class = OrganisationMetadata
+    file_upload_registration_url = reverse_lazy('register:organisation')
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
@@ -169,10 +186,10 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
 
         return processed_form
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(initial={'namespace': 'pithia'})
-        return context
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['initial'] = {'namespace': 'pithia'}
+        return kwargs
 
 class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:individual_no_file')
@@ -181,6 +198,7 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
 
     model = models.Individual
     metadata_builder_class = IndividualMetadata
+    file_upload_registration_url = reverse_lazy('register:individual')
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
@@ -198,18 +216,15 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
         return processed_form
 
     def get_organisation_choices_for_form(self):
-        return [
+        return (
             ('', ''),
             *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.all().order_by('json__name')],
-        ]
+        )
 
-    def bind_form(self, request):
-        return self.form_class(request.POST, organisation_choices=self.get_organisation_choices_for_form())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(organisation_choices=self.get_organisation_choices_for_form())
-        return context
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        return kwargs
 
 
 @method_decorator(login_session_institution_required, name='dispatch')
