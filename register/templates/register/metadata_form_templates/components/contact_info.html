@@ -12,8 +12,11 @@
         <div class="col-lg-3">
             <div class="d-flex flex-column">
                 {{ form.phone.label_tag }}
-                <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" autocomplete="true">
+                <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" value="{{ form.phone.value }}">
                 <div class="form-text">{{ form.phone.help_text }}</div>
+                {% for error in form.phone.errors %}
+                <div class="form-text text-danger">{{ error }}</div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -47,9 +50,12 @@
             <select name="{{ form.country.name }}" id="{{ form.country.auto_id }}" class="form-select">
                 <option value="" selected disabled></option>
                 {% for country in countries %}
-                <option value="{{ country.name }}">{{ country.name }}</option>
+                <option value="{{ country.name }}" {% if form.country.value == country.name %}selected{% endif %}>{{ country.name }}</option>
                 {% endfor %}
             </select>
+            {% for error in form.country.errors %}
+            <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
     </div>
     <div class="row flex-column gy-3 my-4">
@@ -62,10 +68,16 @@
         <div class="col-lg-7">
             <label for="{{ form.hours_of_service_start.id_for_label }}">Hours of Service</label>
             <div class="d-flex align-items-center column-gap-2">
-                <input type="time" name="{{ form.hours_of_service_start.name }}" id="{{ form.hours_of_service_start.auto_id }}" class="form-control w-auto">
+                <input type="time" name="{{ form.hours_of_service_start.name }}" id="{{ form.hours_of_service_start.auto_id }}" class="form-control w-auto" value="{{ form.hours_of_service_start.value }}">
                 <div>-</div>
-                <input type="time" name="{{ form.hours_of_service_end.name }}" id="{{ form.hours_of_service_end.auto_id }}" class="form-control w-auto">
+                <input type="time" name="{{ form.hours_of_service_end.name }}" id="{{ form.hours_of_service_end.auto_id }}" class="form-control w-auto" value="{{ form.hours_of_service_end.value }}">
             </div>
+            {% for error in form.hours_of_service_start.errors %}
+            <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
+            {% for error in form.hours_of_service_end.errors %}
+            <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
         <div class="col-lg-4">
             {% with field=form.contact_instructions %}
