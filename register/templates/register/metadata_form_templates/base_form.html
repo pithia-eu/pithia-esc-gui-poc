@@ -23,6 +23,8 @@
 <form action="{{ success_url }}" method="POST" id="metadata-input-support-form">
     {% csrf_token %}
     {% block form_content %}{% endblock form_content %}
-    <input type="submit" class="btn btn-primary" value="Submit">
+    <button type="submit" class="btn btn-primary">
+        Validate and Register
+    </button>
 </form>
 {% endblock content %}

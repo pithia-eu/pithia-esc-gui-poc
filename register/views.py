@@ -6,12 +6,12 @@ from django.db import (
     IntegrityError,
     transaction,
 )
-from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 from pyexpat import ExpatError
+from xmlschema import XMLSchemaException
 
 from .forms import *
 from .metadata_builder.metadata_structures import (
@@ -19,6 +19,7 @@ from .metadata_builder.metadata_structures import (
     OrganisationMetadata,
 )
 from .metadata_builder.utils import *
+
 from common import models
 from common.decorators import login_session_institution_required
 from handle_management.handle_api import (
@@ -49,6 +50,8 @@ from user_management.services import (
 )
 from utils.url_helpers import create_data_subset_detail_page_url
 from validation.errors import FileRegisteredBefore
+from validation.file_wrappers import XMLMetadataFile
+from validation.services import MetadataFileXSDValidator
 
 
 logger = logging.getLogger(__name__)
@@ -92,14 +95,14 @@ class ResourceRegisterWithoutFileFormView(FormView):
         processed_form['namespace'] = processed_form["namespace"]
         return processed_form
 
-    def register_xml_file(self, request, xml_file):
+    def register_xml_file(self, request, xml_file, name):
         try:
             self.model.objects.create_from_xml_string(
                 xml_file.read(),
                 self.institution_id,
                 self.owner_id,
             )
-            messages.success(request, f'Successfully registered {xml_file.name}.')
+            messages.success(request, f'Successfully registered {name}.')
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
             messages.error(request, f'There was a problem during XML generation. Please report this error to a member of the support team.')
@@ -109,16 +112,29 @@ class ResourceRegisterWithoutFileFormView(FormView):
         except BaseException as err:
             logger.exception('An unexpected error occurred during registration.')
             messages.error(request, 'An unexpected error occurred during registration.')
+
+    def bind_form(self, request):
+        return self.form_class(request.POST)
     
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.bind_form(request)
         if form.is_valid():
             processed_form = self.process_form(form.cleaned_data)
             metadata_builder = self.metadata_builder_class(processed_form)
             xml = metadata_builder.xml
             localid = processed_form['localid']
+            name = processed_form['name']
             xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
-            self.register_xml_file(request, xml_file)
+            try:
+                MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
+            except XMLSchemaException as err:
+                logger.exception('Generated XML failed schema validation.')
+                messages.error('This form was unable to be processed into schema-valid XML. Until the problem is fixed, please use the file upload form instead. We apologise for any inconvenience.')
+            except BaseException as err:
+                logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
+                messages.error('An unexpected error occurred whilst validating the generated against the schema. Please contact our support team if the issue persists.')
+            xml_file.seek(0)
+            self.register_xml_file(request, xml_file, name)
         else:
             messages.error(request, 'The form submitted was not valid.')
         return super().post(request, *args, **kwargs)
@@ -181,12 +197,18 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
 
         return processed_form
 
+    def get_organisation_choices_for_form(self):
+        return [
+            ('', ''),
+            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.all().order_by('json__name')],
+        ]
+
+    def bind_form(self, request):
+        return self.form_class(request.POST, organisation_choices=self.get_organisation_choices_for_form())
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class(organisation_choices=[
-            ('', ''),
-            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.all()],
-        ])
+        context['form'] = self.form_class(organisation_choices=self.get_organisation_choices_for_form())
         return context
 
 
