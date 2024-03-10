@@ -226,7 +226,7 @@ class ContactInfoInputSupportForm(BaseInputSupportForm):
     online_resource = forms.CharField(
         label="Link to Organisation Website",
         required=False,
-        widget=forms.TextInput(attrs={
+        widget=forms.URLInput(attrs={
             'class': 'form-control'
         })
     )
