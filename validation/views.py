@@ -28,7 +28,7 @@ from .file_wrappers import (
 from .forms import *
 from .helpers import create_validation_summary_error
 from .services import (
-    is_localid_valid,
+    is_localid_taken,
     validate_instrument_xml_file_update_and_return_errors,
     validate_new_xml_file_registration_and_return_errors,
     validate_xml_file_and_return_summary,
@@ -238,9 +238,7 @@ def localid(request):
         return HttpResponseBadRequest('The submitted form was invalid.')
     
     localid = form.cleaned_data.get('localid')
-    return JsonResponse({
-        'result': is_localid_valid(localid)
-    })
+    return JsonResponse(is_localid_taken(localid))
 
 @require_POST
 @login_session_institution_required

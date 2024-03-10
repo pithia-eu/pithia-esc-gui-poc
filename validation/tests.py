@@ -10,6 +10,7 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .services import (
+    is_localid_taken,
     MetadataFileXSDValidator,
     validate_instrument_xml_file_update_and_return_errors,
     validate_xml_file_references_and_return_errors,
@@ -798,3 +799,14 @@ class InlineValidationTestCase(TestCase):
         results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
         print('results', results)
         self.assertIs(type(results), list)
+
+class LocalIDServiceTestCase(TestCase):
+    def setUp(self) -> None:
+        organisation_xml_file = test_xml_files.ORGANISATION_METADATA_XML
+        organisation_xml_file.seek(0)
+        self.organisation = Organisation.objects.create_from_xml_string(organisation_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        return super().setUp()
+
+    def test_is_localid_taken_suggestion(self):
+        results = is_localid_taken(self.organisation.localid)
+        print('results', results)

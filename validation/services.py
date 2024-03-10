@@ -1,8 +1,11 @@
 import logging
 import os
 import xmlschema
+from datetime import (
+    datetime,
+    timezone,
+)
 from django.core.exceptions import ObjectDoesNotExist
-from requests import get
 from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
@@ -481,5 +484,11 @@ def validate_xml_file_with_xsd_and_return_errors(xml_metadata_file: XMLMetadataF
         errors.append(error_msg)
     return errors
 
-def is_localid_valid(localid: str):
-    return MetadataFileRegistrationValidator._is_localid_already_in_use(localid)
+def is_localid_taken(localid: str):
+    result = MetadataFileRegistrationValidator._is_localid_already_in_use(localid)
+    result_dict = {
+        'result': result,
+    }
+    if result is False:
+        result_dict['suggestion'] = f'{localid}{int(datetime.now(timezone.utc).timestamp())}'
+    return result_dict
