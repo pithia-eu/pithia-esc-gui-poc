@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timezone
 from lxml import etree
 
 from utils.dict_helpers import flatten
@@ -28,7 +29,7 @@ class BaseMetadataComponent:
             **nsmap_extensions,
         })
 
-    def append_identifier(self, localid, namespace, version='1', creation_date=datetime.now().isoformat(), last_modification_date=datetime.now().isoformat()):
+    def append_identifier(self, localid, namespace, version='1', creation_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z'), last_modification_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')):
         # Container elements
         identifier = etree.SubElement(self.root, 'identifier')
         pithia_identifier = etree.SubElement(identifier, 'PITHIA_Identifier')
