@@ -1,18 +1,14 @@
+import {
+    validateLocalIdAndProcessResults,
+} from "/static/register/localid_validation.js";
+
 const nameInput = document.querySelector("input[name='name']");
 const organisationInput = document.querySelector("select[name='organisation']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
-const localIdValidationUrl = JSON.parse(document.getElementById("local-id-validation-url").textContent);
 const organisationShortNames = JSON.parse(document.getElementById("organisation-short-names").textContent);
 const namespaceInput = document.querySelector("input[name='namespace']");
-
-async function checkLocalIdIsUnique(localId) {
-    const response = await fetch(`${localIdValidationUrl}?` + new URLSearchParams({
-        localid: localId
-    }));
-    const responseBody = await response.json();
-    return responseBody.result;
-}
+const localIdSuffixInput = document.querySelector("input[name='localid']");
 
 // Utility function
 function titleCaseString(inputString) {
@@ -23,21 +19,27 @@ function titleCaseString(inputString) {
     return inputStringSplit.join(" ");
 }
 
+function generateLocalId(name) {
+    return titleCaseString(name).replace(/\s/g, "_");
+}
+
 nameInput.addEventListener("input", async () => {
-    const name = nameInput.value;
-    const localIdSuffix = titleCaseString(name).replace(/\s/g, "_");
-    const localIdSuffixInput = document.querySelector("input[name='localid']");
+    const localIdSuffix = generateLocalId(nameInput.value);
     localIdSuffixInput.value = localIdSuffix;
-    const isLocalIdUnique = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
-    if (!isLocalIdUnique) {
-        localIdInputGroup.classList.add(".was-validated");
-        localIdSuffixInput.classList.add("is-invalid");
-    } else {
-        localIdSuffixInput.classList.remove("is-invalid");
-    }
+
+    await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
 });
 
 organisationInput.addEventListener("input", () => {
     const organisation = organisationInput.value;
     namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
+});
+
+window.addEventListener("load", async () => {
+    if (nameInput.value !== "") {
+        const localIdSuffix = generateLocalId(nameInput.value);
+        localIdSuffixInput.value = localIdSuffix;
+
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+    }
 });

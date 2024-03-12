@@ -621,6 +621,14 @@ label.required::after {
     border-bottom-right-radius: var(--bs-border-radius) !important;
 }
 
+.alert-localid-taken {
+    display: none;
+}
+
+.input-group:has(.is-invalid) .alert-localid-taken {
+    display: block;
+}
+
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {
     opacity: 1;

@@ -2,5 +2,7 @@
     <span class="input-group-text" id="input-group-prepend">{{ localid_base }}_</span>
     <input type="text" class="form-control" name="{{ form.localid.name }}" id="{{ form.localid.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.localid.value|default:'' }}" disabled>
     <div class="form-text">{{ form.localid.help_text }}</div>
-    <div class="invalid-feedback">This local ID is already in use.</div>
+    <div class="invalid-feedback">
+        Local ID with suffix "<span class="taken-localid"></span>" is already in use so "<span class="localid-suggestion"></span>" will be used instead.
+    </div>
 </div>

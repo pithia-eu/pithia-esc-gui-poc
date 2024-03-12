@@ -1,27 +1,28 @@
+import {
+    validateLocalIdAndProcessResults,
+} from "/static/register/localid_validation.js";
+
 const shortNameInput = document.querySelector("input[name='short_name']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
-const localIdValidationUrl = JSON.parse(document.getElementById("local-id-validation-url").textContent);
+const localIdSuffixInput = document.querySelector("input[name='localid']");
 
-async function checkLocalIdIsUnique(localId) {
-    console.log('localId', localId);
-    const response = await fetch(`${localIdValidationUrl}?` + new URLSearchParams({
-        localid: localId
-    }));
-    const responseBody = await response.json();
-    return responseBody.result;
+function generateLocalId(shortName) {
+    return shortName.toUpperCase().replace(/\s/g, "");
 }
 
 shortNameInput.addEventListener("input", async () => {
-    const shortName = shortNameInput.value;
-    const localIdSuffix = shortName.toUpperCase().replace(/\s/g, "");
-    const localIdSuffixInput = document.querySelector("input[name='localid']");
+    const localIdSuffix = generateLocalId(shortNameInput.value);
     localIdSuffixInput.value = localIdSuffix;
-    const isLocalIdUnique = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
-    if (!isLocalIdUnique) {
-        localIdInputGroup.classList.add(".was-validated");
-        localIdSuffixInput.classList.add("is-invalid");
-    } else {
-        localIdSuffixInput.classList.remove("is-invalid");
+
+    await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+});
+
+window.addEventListener("load", async () => {
+    if (shortNameInput.value !== "") {
+        const localIdSuffix = generateLocalId(shortNameInput.value);
+        localIdSuffixInput.value = localIdSuffix;
+
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
     }
 });
