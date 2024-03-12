@@ -6,6 +6,8 @@ from django.db import (
     IntegrityError,
     transaction,
 )
+from django.db.models.fields.json import KeyTextTransform
+from django.db.models.functions import Lower
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -221,7 +223,7 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
     def get_organisation_choices_for_form(self):
         return (
             ('', ''),
-            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.all().order_by('json__name')],
+            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
     def get_form_kwargs(self):
