@@ -489,6 +489,6 @@ def is_localid_taken(localid: str):
     result_dict = {
         'result': result,
     }
-    if result is False:
+    if result is True:
         result_dict['suggestion'] = f'{localid}{int(datetime.now(timezone.utc).timestamp())}'
     return result_dict

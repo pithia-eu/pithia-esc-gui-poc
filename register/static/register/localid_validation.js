@@ -12,9 +12,9 @@ async function checkLocalIdIsUnique(localId) {
 
 export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup) {
     const localIdResponse = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
-    const isLocalIdUnique = localIdResponse.result;
+    const isLocalIdInUse = localIdResponse.result;
 
-    if (!isLocalIdUnique) {
+    if (isLocalIdInUse) {
         localIdInputGroup.classList.add("was-validated");
         localIdSuffixInput.classList.add("is-invalid");   
         if ("suggestion" in localIdResponse) {
