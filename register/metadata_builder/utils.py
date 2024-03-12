@@ -1,3 +1,5 @@
+from unidecode import unidecode
+
 # Contact info
 def process_contact_info_in_form(form_cleaned_data):
     return {
@@ -7,7 +9,7 @@ def process_contact_info_in_form(form_cleaned_data):
             'city': form_cleaned_data.get('city'),
             'administrative_area': form_cleaned_data.get('administrative_area'),
             'postal_code': form_cleaned_data.get('postal_code'),
-            'country': form_cleaned_data.get('country'),
+            'country': unidecode(form_cleaned_data.get('country')),
             'electronic_mail_address': form_cleaned_data.get('email_address'),
         },
         'online_resource': form_cleaned_data.get('online_resource'),
