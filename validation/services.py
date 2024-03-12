@@ -122,8 +122,8 @@ class MetadataFileRegistrationValidator:
         try:
             model.objects.get(pk=localid)
         except ObjectDoesNotExist:
-            return True
-        return False
+            return False
+        return True
 
     @classmethod
     def validate(cls, xml_file: XMLMetadataFile, model: ScientificMetadata):
