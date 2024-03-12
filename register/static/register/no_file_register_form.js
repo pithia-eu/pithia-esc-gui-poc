@@ -11,15 +11,17 @@ export async function validateAndRegister() {
     `;
 
     inputSupportForm.submit();
+
+    disableLocalIdAndNamespaceFields(true);
 }
 
-export function enableLocalIdAndNamespaceFields() {
+export function disableLocalIdAndNamespaceFields(disabled) {
     // Enable required disabled inputs
     // Local ID
     const localIdInput = document.querySelector("input[name='localid']");
-    localIdInput.disabled = false;
+    localIdInput.disabled = disabled;
 
     // Namespace
     const namespaceInput = document.querySelector("input[name='namespace']");
-    namespaceInput.disabled = false;
+    namespaceInput.disabled = disabled;
 }

@@ -2,7 +2,7 @@ import {
     validateLocalIdAndProcessResults,
 } from "/static/register/localid_validation.js";
 import {
-    enableLocalIdAndNamespaceFields,
+    disableLocalIdAndNamespaceFields,
     inputSupportForm,
     validateAndRegister,
 } from "/static/register/no_file_register_form.js";
@@ -52,8 +52,14 @@ window.addEventListener("load", async () => {
 inputSupportForm.addEventListener("submit", async e => {
     e.preventDefault();
 
-    // Enable required disabled inputs
-    enableLocalIdAndNamespaceFields();
+    const inputs = Array.from(inputSupportForm.querySelectorAll("input"));
+    const selectMenus = Array.from(inputSupportForm.querySelectorAll("select"));
+    const formControls = inputs.concat(selectMenus);
 
-    validateAndRegister();
+    if (formControls.every(fc => fc.checkValidity())) {
+        // Enable required disabled inputs
+        disableLocalIdAndNamespaceFields(false);
+    
+        validateAndRegister();
+    }
 });
