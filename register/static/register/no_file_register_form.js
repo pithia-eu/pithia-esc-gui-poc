@@ -1,17 +1,7 @@
-const inputSupportForm = document.getElementById("metadata-input-support-form");
-const input = document.querySelector("#id_phone");
+export const inputSupportForm = document.getElementById("metadata-input-support-form");
+export const inputSupportFormSubmitButton = document.getElementById("metadata-input-support-form");
 
-window.intlTelInput(input, {
-    allowDropdown: false,
-    autoPlaceholder: false,
-    defaultToFirstCountry: false,
-    nationalMode: false,
-    placeholderNumberType: "FIXED_LINE",
-    showFlags: false,
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/utils.js",
-});
-
-async function validateAndRegister() {
+export async function validateAndRegister() {
     const formSubmitButton = inputSupportForm.querySelector("button[type='submit']");
     
     formSubmitButton.disabled = true;
@@ -23,9 +13,7 @@ async function validateAndRegister() {
     inputSupportForm.submit();
 }
 
-inputSupportForm.addEventListener("submit", async e => {
-    e.preventDefault();
-
+export function enableLocalIdAndNamespaceFields() {
     // Enable required disabled inputs
     // Local ID
     const localIdInput = document.querySelector("input[name='localid']");
@@ -34,6 +22,4 @@ inputSupportForm.addEventListener("submit", async e => {
     // Namespace
     const namespaceInput = document.querySelector("input[name='namespace']");
     namespaceInput.disabled = false;
-
-    validateAndRegister();
-});
+}

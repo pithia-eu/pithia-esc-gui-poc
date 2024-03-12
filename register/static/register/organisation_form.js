@@ -1,6 +1,11 @@
 import {
     validateLocalIdAndProcessResults,
 } from "/static/register/localid_validation.js";
+import {
+    enableLocalIdAndNamespaceFields,
+    inputSupportForm,
+    validateAndRegister,
+} from "/static/register/no_file_register_form.js";
 
 const shortNameInput = document.querySelector("input[name='short_name']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
@@ -25,4 +30,13 @@ window.addEventListener("load", async () => {
 
         await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
     }
+});
+
+inputSupportForm.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    // Enable required disabled inputs
+    enableLocalIdAndNamespaceFields();
+
+    validateAndRegister();
 });
