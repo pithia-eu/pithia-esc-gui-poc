@@ -153,7 +153,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         }),
-        help_text='This will be used to automatically generate this registration\'s local ID suffix and will be also used as the namespace for future registrations associated with this organisation.'
+        help_text='This will be used to automatically generate this registration\'s local ID suffix and will also be used as the namespace for future registrations associated with this organisation.'
     )
 
 class OrganisationSelect(forms.Select):
