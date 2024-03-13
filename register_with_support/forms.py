@@ -144,7 +144,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        self.fields['localid'].help_text = f'A more complex local ID will be generated if there is another organisation sharing the same short name.'
+        self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. A more complex local ID will be generated if there is another organisation sharing the same short name.'
         self.fields['namespace'].widget = forms.HiddenInput()
 
     short_name = forms.CharField(
@@ -153,7 +153,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         }),
-        help_text='This will be used to automatically generate this registration\'s local ID suffix as well as the namespace for future registrations associated with this organisation.'
+        help_text='This will be used to automatically generate this registration\'s local ID suffix and will be also used as the namespace for future registrations associated with this organisation.'
     )
 
 class OrganisationSelect(forms.Select):
