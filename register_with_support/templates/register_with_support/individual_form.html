@@ -1,8 +1,8 @@
-{% extends 'register/metadata_form_templates/base_form.html' %}
+{% extends 'register_with_support/base_form.html' %}
 {% load static %}
 {% block extra_scripts %}
-<script src="{% static 'register/individual_form.js' %}" type="module" defer></script>
-<script src="{% static 'register/contact_info.js' %}" type="module" defer></script>
+<script src="{% static 'register_with_support/individual_form.js' %}" type="module" defer></script>
+<script src="{% static 'register_with_support/contact_info.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}
 {% block form_content %}
 <section>
@@ -27,7 +27,7 @@
     </div>
 </section>
 <hr class="my-5">
-{% include 'register/metadata_form_templates/components/identifier.html' %}
+{% include 'register_with_support/components/identifier.html' %}
 <hr class="my-5">
-{% include 'register/metadata_form_templates/components/contact_info.html' %}
+{% include 'register_with_support/components/contact_info.html' %}
 {% endblock form_content %}

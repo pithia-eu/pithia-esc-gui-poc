@@ -146,7 +146,7 @@ class ResourceRegisterWithoutFileFormView(FormView):
 class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:organisation_no_file')
     form_class = OrganisationInputSupportForm
-    template_name = 'register/metadata_form_templates/organisation_form.html'
+    template_name = 'register_with_support/organisation_form.html'
 
     model = models.Organisation
     metadata_builder_class = OrganisationMetadata
@@ -177,7 +177,7 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
 class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:individual_no_file')
     form_class = IndividualInputSupportForm
-    template_name = 'register/metadata_form_templates/individual_form.html'
+    template_name = 'register_with_support/individual_form.html'
 
     model = models.Individual
     metadata_builder_class = IndividualMetadata

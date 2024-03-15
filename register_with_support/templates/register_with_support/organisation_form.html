@@ -1,8 +1,8 @@
-{% extends 'register/metadata_form_templates/base_form.html' %}
+{% extends 'register_with_support/base_form.html' %}
 {% load static %}
 {% block extra_scripts %}
-<script src="{% static 'register/organisation_form.js' %}" type="module" defer></script>
-<script src="{% static 'register/contact_info.js' %}" type="module" defer></script>
+<script src="{% static 'register_with_support/organisation_form.js' %}" type="module" defer></script>
+<script src="{% static 'register_with_support/contact_info.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}
 {% block form_content %}
 <section class="d-flex flex-column row-gap-4">
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-5">
             {% with field=form.name %}
-            {% include 'register/metadata_form_templates/form_field_template.html' %}
+            {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
     </div>
@@ -39,12 +39,12 @@
         <small class="d-block text-secondary mb-2">{{ form.localid.help_text }}</small>
     </div>
     <div class="col-lg-4">
-        {% include 'register/metadata_form_templates/components/localid-input-group.html' %}
+        {% include 'register_with_support/components/localid-input-group.html' %}
     </div>
     {{ form.namespace }}
 </div>
 <hr class="my-5">
-{% include 'register/metadata_form_templates/components/description.html' %}
+{% include 'register_with_support/components/description.html' %}
 <hr class="my-5">
-{% include 'register/metadata_form_templates/components/contact_info.html' %}
+{% include 'register_with_support/components/contact_info.html' %}
 {% endblock form_content %}
