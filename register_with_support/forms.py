@@ -12,8 +12,8 @@ class BaseInputSupportForm(forms.Form):
         label='Local ID',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'disabled': True,
+            'class': 'form-control text-secondary-emphasis bg-body-secondary',
+            'readonly': True,
         }),
         help_text=f'A basic local ID is automatically generated using this registration\'s full name. If this is local ID is already in use, a more complex local ID will be generated.'
     )
@@ -22,8 +22,8 @@ class BaseInputSupportForm(forms.Form):
         label='Namespace',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'disabled': True,
+            'class': 'form-control text-secondary-emphasis bg-body-secondary',
+            'readonly': True,
         }),
         help_text=f'This is automatically generated with the short name of the selected organisation.'
     )
