@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'ontology.apps.OntologyConfig',
     'present.apps.PresentConfig',
     'register.apps.RegisterConfig',
+    'register_with_support.apps.RegisterWithSupportConfig',
     'resource_management.apps.ResourceManagementConfig',
     'search.apps.SearchConfig',
     'simple_search.apps.SimpleSearchConfig',
