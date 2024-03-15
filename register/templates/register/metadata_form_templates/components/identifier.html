@@ -1,16 +1,29 @@
-<section>
-    <div class="row flex-column gy-3 mb-4">
+<section class="d-flex flex-column row-gap-4">
+    <div class="row">
         <div class="col-lg-12">
-            <h2 class="mb-3">Identifier</h2>
+            <h2 class="mb-0">Identifier</h2>
         </div>
+    </div>
+    <div class="row flex-column gy-2">
         <div class="col-lg-4">
             {{ form.localid.label_tag }}
+        </div>
+        <div class="col-lg-7">
+            <small class="d-block text-secondary mb-2">{{ form.localid.help_text }}</small>
+        </div>
+        <div class="col-lg-4">
             {% include 'register/metadata_form_templates/components/localid-input-group.html' %}
         </div>
+    </div>
+    <div class="row flex-column gy-2">
         <div class="col-lg-3">
-            {% with field=form.namespace %}
-            {% include 'register/metadata_form_templates/form_field_template.html' %}
-            {% endwith %}
+            {{ form.namespace.label_tag }}
+        </div>
+        <div class="col-lg-7">
+            <small class="d-block text-secondary mb-2">{{ form.namespace.help_text }}</small>
+        </div>
+        <div class="col-lg-3">
+            {{ form.namespace }}
         </div>
     </div>
 </section>

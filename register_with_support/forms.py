@@ -15,7 +15,7 @@ class BaseInputSupportForm(forms.Form):
             'class': 'form-control',
             'disabled': True,
         }),
-        help_text=f'A basic local ID is automatically generated using this registration\'s full name. If this is taken, a more complex local ID will be generated.'
+        help_text=f'A basic local ID is automatically generated using this registration\'s full name. If this is local ID is already in use, a more complex local ID will be generated.'
     )
 
     namespace = forms.CharField(
@@ -144,7 +144,7 @@ class OrganisationInputSupportForm(ContactInfoInputSupportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. A more complex local ID will be generated if there is another organisation sharing the same short name.'
+        self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. If there is another organisation sharing the same short name, a more complex local ID will be generated.'
         self.fields['namespace'].widget = forms.HiddenInput()
 
     short_name = forms.CharField(
