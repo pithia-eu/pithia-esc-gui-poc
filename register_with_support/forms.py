@@ -167,7 +167,7 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
     )
 
     citation_online_resource = forms.URLField(
-        label='Online Resource',
+        label='Link to Online Resource',
         required=False,
         widget=forms.URLInput()
     )
@@ -231,7 +231,28 @@ class ProjectInputSupportForm(
         widget=forms.URLInput()
     )
 
-    keywords = forms.JSONField(
-        label="Keywords",
+    # Following keyword-related fields are only used to help render form
+    keyword_type_code = forms.CharField(
+        label='Keyword Type Code',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    keyword_type = forms.CharField(
+        label='Keyword Type',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    keyword = forms.CharField(
+        label='Keyword',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter a keyword'
+        })
+    )
+
+    # Only keyword-related field that gets processed
+    keywords_dict = forms.JSONField(
         required=False,
     )

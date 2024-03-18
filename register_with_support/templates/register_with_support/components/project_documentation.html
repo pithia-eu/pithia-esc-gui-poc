@@ -11,17 +11,17 @@
             {{ form.citation_publication_date.label_tag }}
             <input type="date" name="{{ form.citation_publication_date.name }}" id="{{ form.citation_publication_date.auto_id }}" class="form-control">
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-3">
             {{ form.citation_doi.label_tag }}
             {{ form.citation_doi }}
         </div>
         <div class="col-lg-5">
-            {{ form.other_citation_details.label_tag }}
-            {{ form.other_citation_details }}
-        </div>
-        <div class="col-lg-5">
             {{ form.citation_online_resource.label_tag }}
             {{ form.citation_online_resource }}
+        </div>
+        <div class="col-lg-5">
+            {{ form.other_citation_details.label_tag }}
+            {{ form.other_citation_details }}
         </div>
     </div>
 </section>

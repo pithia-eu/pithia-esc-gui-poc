@@ -1,3 +1,35 @@
 <section>
-    <h2>Keywords</h2>
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h2>Keywords</h2>
+        </div>
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Keyword Type</th>
+                            <th>Keyword Type Code</th>
+                            <th>Keywords</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-lg-3">
+                                {{ form.keyword_type }}
+                            </td>
+                            <td class="col-lg-1">
+                                {{ form.keyword_type_code }}
+                            </td>
+                            <td class="col-lg-3">
+                                <ul class="list-unstyled">
+                                    <li class="pb-2">{{ form.keyword }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </section>
