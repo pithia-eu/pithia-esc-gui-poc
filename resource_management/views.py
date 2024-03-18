@@ -135,6 +135,7 @@ class ProjectManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:project'
     resource_update_page_url_name = 'update:project'
     resource_register_page_url_name = 'register:project'
+    resource_register_no_file_name = 'register:project_no_file'
     resource_xml_download_page_url_name = 'utils:view_project_as_xml'
 
 class PlatformManagementListView(ResourceManagementListView):

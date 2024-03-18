@@ -6,15 +6,15 @@ from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import FormView
+from django.views.generic import (
+    FormView,
+    View,
+)
 from pyexpat import ExpatError
 from xmlschema import XMLSchemaException
 
 from .forms import *
-from .metadata_builder.metadata_structures import (
-    IndividualMetadata,
-    OrganisationMetadata,
-)
+from .metadata_builder.metadata_structures import *
 from .metadata_builder.utils import *
 
 from common import models
@@ -143,6 +143,25 @@ class ResourceRegisterWithoutFileFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+class OrganisationSelectFormViewMixin(View):
+    def get_organisation_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+class RelatedPartiesSelectFormViewMixin(View):
+    def get_related_party_choices_for_form(self):
+        return (
+            ('', ''),
+            ('Organisations', (
+                (o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+            )),
+            ('Individuals', (
+                (o.metadata_server_url, o.name) for o in models.Individual.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+            ))
+        )
+
 class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:organisation_no_file')
     form_class = OrganisationInputSupportForm
@@ -174,7 +193,7 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
         kwargs['initial'] = {'namespace': 'pithia'}
         return kwargs
 
-class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
+class IndividualRegisterWithoutFileFormView(OrganisationSelectFormViewMixin, ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:individual_no_file')
     form_class = IndividualInputSupportForm
     template_name = 'register_with_support/individual_form.html'
@@ -198,13 +217,35 @@ class IndividualRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView)
 
         return processed_form
 
-    def get_organisation_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        return kwargs
+
+class ProjectRegisterWithoutFileFormView(
+    OrganisationSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
+    ResourceRegisterWithoutFileFormView):
+    success_url = reverse_lazy('register:project_no_file')
+    form_class = ProjectInputSupportForm
+    template_name = 'register_with_support/project_form.html'
+
+    model = models.Project
+    metadata_builder_class = ProjectMetadata
+    file_upload_registration_url = reverse_lazy('register_project')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        
+
+        return processed_form
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs

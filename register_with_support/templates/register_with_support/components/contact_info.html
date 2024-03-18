@@ -1,6 +1,6 @@
 {% load countries %}
-<section>
-    <div class="row flex-column gy-3 mb-4">
+<section class="d-flex flex-column row-gap-5">
+    <div class="row flex-column gy-3">
         <div class="col-lg-12">
             <h2>Contact Info</h2>
         </div>
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="row flex-column gy-3 my-4">
+    <div class="row flex-column gy-3">
         <div class="col-lg-12">
             <h3>Address</h3>
         </div>
@@ -58,7 +58,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="row flex-column gy-3 my-4">
+    <div class="row flex-column gy-3">
         <h3>Other Information</h3>
         <div class="col-lg-5">
             {% with field=form.online_resource %}

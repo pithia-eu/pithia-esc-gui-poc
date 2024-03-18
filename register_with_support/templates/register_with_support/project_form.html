@@ -1,0 +1,55 @@
+{% extends 'register_with_support/base_form.html' %}
+{% block form_content %}
+<section>
+    <div class="row flex-column gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">Name</h2>
+        </div>
+        <div class="col-lg-5">
+            {% with field=form.name %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-lg-3">
+            {% with field=form.short_name %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+<section>
+    <div class="row gy-3 mb-3">
+        <div class="col-lg-12">
+            <h2>{{ form.organisation.label_tag }}</h2>
+        </div>
+        <div class="col-lg-5">
+            {{ form.organisation }}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'register_with_support/components/identifier.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/description.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/abstract.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/project_url.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/project_documentation.html' %}
+<hr class="my-5">
+<section>
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h2>{{ form.keywords.label_tag }}</h2>
+        </div>
+        <div class="col-lg-5">
+            {{ form.keywords }}
+            <div class="form-text">{{ form.keywords.help_text }}</div>
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'register_with_support/components/related_parties.html' %}
+{% endblock form_content %}
