@@ -1,6 +1,18 @@
+import {
+    generateLocalId,
+} from "/static/register_with_support/localid_generation.js";
+
 const localIdValidationUrl = JSON.parse(document.getElementById("local-id-validation-url").textContent);
 const localIdTakenElement = document.querySelector(".local-id-input-group .taken-localid");
 const localIdSuggestionElement = document.querySelector(".local-id-input-group .localid-suggestion");
+
+const nameInput = document.querySelector("input[name='name']");
+const organisationInput = document.querySelector("select[name='organisation']");
+const localIdInputGroup = document.querySelector(".local-id-input-group");
+const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
+const organisationShortNames = JSON.parse(document.getElementById("organisation-short-names").textContent);
+const namespaceInput = document.querySelector("input[name='namespace']");
+const localIdSuffixInput = document.querySelector("input[name='localid']");
 
 async function checkLocalIdIsUnique(localId) {
     const response = await fetch(`${localIdValidationUrl}?` + new URLSearchParams({
@@ -8,6 +20,29 @@ async function checkLocalIdIsUnique(localId) {
     }));
     const responseBody = await response.json();
     return responseBody;
+}
+
+export function setupLocalIdAndNamespaceRelatedEventListeners() {
+    nameInput.addEventListener("input", async () => {
+        const localIdSuffix = generateLocalId(nameInput.value);
+        localIdSuffixInput.value = localIdSuffix;
+    
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+    });
+    
+    organisationInput.addEventListener("input", () => {
+        const organisation = organisationInput.value;
+        namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
+    });
+    
+    window.addEventListener("load", async () => {
+        if (nameInput.value !== "") {
+            const localIdSuffix = generateLocalId(nameInput.value);
+            localIdSuffixInput.value = localIdSuffix;
+    
+            await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+        }
+    });
 }
 
 export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup) {

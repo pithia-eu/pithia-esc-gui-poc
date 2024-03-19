@@ -11,6 +11,8 @@ const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
 const localIdSuffixInput = document.querySelector("input[name='localid']");
 
+// Organisation local ID is generated using a different method
+// to all other metadata types.
 function generateLocalId(shortName) {
     return shortName.toUpperCase().replace(/\s/g, "");
 }
