@@ -1,4 +1,8 @@
 {% extends 'register_with_support/base_form.html' %}
+{% load static %}
+{% block extra_scripts %}
+<script src="{% static 'register_with_support/project_form.js' %}" type="module" defer></script>
+{% endblock extra_scripts %}
 {% block form_content %}
 <section>
     <div class="row flex-column gy-4">
@@ -42,4 +46,13 @@
 {% include 'register_with_support/components/project_keywords.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/related_parties.html' %}
+<hr class="my-5">
+<section>
+    <div class="row gy-3">
+        <h2>{{ form.status.label_tag }}</h2>
+        <div class="col-lg-5">
+            {{ form.status }}
+        </div>
+    </div>
+</section>
 {% endblock form_content %}

@@ -237,10 +237,11 @@ class ProjectRegisterWithoutFileFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
+    def get_status_choices_for_form():
+        pass
+
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
-
-        
 
         return processed_form
 

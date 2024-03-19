@@ -87,7 +87,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         documentation_element = etree.SubElement(self.root, 'Documentation')
         citation_element = etree.SubElement(documentation_element, 'Citation')
 
-        # GMD title
+        # GMD title - required
         gmd_title_element = etree.SubElement(citation_element, '{%s}title' % Namespace.GMD)
         self._append_gco_character_string_sub_element(gmd_title_element, documentation['citation_title'])
 
@@ -96,12 +96,17 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         ci_date_element = etree.SubElement(date_element, 'CI_Date')
         ci_date_date_element = etree.SubElement(ci_date_element, 'date')
         gco_date_element = etree.SubElement(ci_date_date_element, '{%s}Date' % Namespace.GCO)
+        # Citation date - required
         gco_date_element.text = documentation['citation_date']
         ci_date_date_type_element = etree.SubElement(ci_date_element, 'dateType')
+        # Assume <CI_DateTypeCode> will be the same for every XML file.
+        # Citation date - code list and code list value need to be present
+        # but can be left blank.
         ci_date_type_code_element = etree.SubElement(ci_date_date_type_element, 'CI_DateTypeCode', codeList=documentation['ci_date_type_code_code_list'], codeListValue=documentation['ci_date_type_code_code_list_value'])
+        # Date type code is normally 'Publication date'.
         ci_date_type_code_element.text = documentation['ci_date_type_code']
 
-        # Identifier
+        # Identifier (DOI)
         identifier_element = etree.SubElement(citation_element, 'identifier', xmlns=Namespace.GMD)
         md_identifier_element = etree.SubElement(identifier_element, 'MD_Identifier')
         code_element = etree.SubElement(md_identifier_element, 'code')

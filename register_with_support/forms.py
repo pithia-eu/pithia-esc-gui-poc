@@ -166,7 +166,7 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
         widget=forms.Textarea()
     )
 
-    citation_online_resource = forms.URLField(
+    citation_linkage_url = forms.URLField(
         label='Link to Online Resource',
         required=False,
         widget=forms.URLInput()
@@ -255,4 +255,12 @@ class ProjectInputSupportForm(
     # Only keyword-related field that gets processed
     keywords_dict = forms.JSONField(
         required=False,
+        widget=forms.HiddenInput()
+    )
+
+    status = forms.ChoiceField(
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
     )

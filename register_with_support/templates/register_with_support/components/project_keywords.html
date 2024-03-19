@@ -5,7 +5,7 @@
         </div>
         <div class="col-lg-12">
             <div class="table-responsive">
-                <table class="table">
+                <table id="table-project-keywords" class="table">
                     <thead>
                         <tr>
                             <th>Keyword Type</th>
@@ -19,7 +19,10 @@
                                 {{ form.keyword_type }}
                             </td>
                             <td class="col-lg-1">
-                                {{ form.keyword_type_code }}
+                                <div class="input-group">
+                                    <span class="input-group-text" id="input-group-prepend">#</span>
+                                    <input type="text" class="{{ form.keyword_type_code.field.widget.attrs.class }}" name="{{ form.keyword_type_code.name }}" id="{{ form.keyword_type_code.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.keyword_type_code.value|default:'' }}">
+                                </div>
                             </td>
                             <td class="col-lg-3">
                                 <ul class="list-unstyled">
@@ -27,9 +30,15 @@
                                 </ul>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="3">
+                                <button class="btn btn-light" type="button">+ Add new keyword type</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    {{ form.keywords_dict }}
 </section>
