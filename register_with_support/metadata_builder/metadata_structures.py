@@ -118,21 +118,24 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         ci_date_type_code_element.text = documentation['ci_date_type_code']
 
         # Identifier (DOI)
-        identifier_element = etree.SubElement(citation_element, 'identifier', xmlns=Namespace.GMD)
-        md_identifier_element = etree.SubElement(identifier_element, 'MD_Identifier')
-        code_element = etree.SubElement(md_identifier_element, 'code')
-        self._append_gco_character_string_sub_element(code_element, documentation['doi'])
+        if 'doi' in documentation:
+            identifier_element = etree.SubElement(citation_element, 'identifier', xmlns=Namespace.GMD)
+            md_identifier_element = etree.SubElement(identifier_element, 'MD_Identifier')
+            code_element = etree.SubElement(md_identifier_element, 'code')
+            self._append_gco_character_string_sub_element(code_element, documentation['doi'])
 
         # GMD other citation details
-        gmd_other_citation_details_element = etree.SubElement(citation_element, '{%s}otherCitationDetails' % Namespace.GMD)
-        self._append_gco_character_string_sub_element(gmd_other_citation_details_element, documentation['other_citation_details'])
+        if 'other_citation_details' in documentation:
+            gmd_other_citation_details_element = etree.SubElement(citation_element, '{%s}otherCitationDetails' % Namespace.GMD)
+            self._append_gco_character_string_sub_element(gmd_other_citation_details_element, documentation['other_citation_details'])
 
         # Online Resource
-        online_resource_element = etree.SubElement(citation_element, 'onlineResource')
-        ci_online_resource_element = etree.SubElement(online_resource_element, 'CI_OnlineResource', xmlns=Namespace.GMD)
-        linkage_element = etree.SubElement(ci_online_resource_element, 'linkage')
-        url_element = etree.SubElement(linkage_element, 'URL')
-        url_element.text = documentation['ci_linkage_url']
+        if 'ci_linkage_url' in documentation:
+            online_resource_element = etree.SubElement(citation_element, 'onlineResource')
+            ci_online_resource_element = etree.SubElement(online_resource_element, 'CI_OnlineResource', xmlns=Namespace.GMD)
+            linkage_element = etree.SubElement(ci_online_resource_element, 'linkage')
+            url_element = etree.SubElement(linkage_element, 'URL')
+            url_element.text = documentation['ci_linkage_url']
 
     def append_keywords(self, keyword_dict_list):
         for keyword_dict in keyword_dict_list:
