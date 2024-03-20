@@ -177,6 +177,7 @@ class RelatedPartiesInputSupportFormComponent(forms.Form):
     def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['related_parties'].choices = related_party_choices
+        self.fields['related_party_roles'].choices = related_party_role_choices
 
     related_party_roles = forms.ChoiceField(
         label='Role',

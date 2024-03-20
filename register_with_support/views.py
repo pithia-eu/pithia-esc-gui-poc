@@ -164,6 +164,17 @@ class RelatedPartiesSelectFormViewMixin(View):
             ))
         )
 
+    def get_related_party_role_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('relatedPartyRole')
+        status_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            status_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in status_dict.items())
+        )
+
 class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
     success_url = reverse_lazy('register:organisation_no_file')
     form_class = OrganisationInputSupportForm
@@ -250,7 +261,6 @@ class ProjectRegisterWithoutFileFormView(
             *((key, value) for key, value in status_dict.items())
         )
 
-
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
@@ -261,6 +271,7 @@ class ProjectRegisterWithoutFileFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
         print("kwargs['status_choices']", kwargs['status_choices'])
