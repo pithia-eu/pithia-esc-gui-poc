@@ -178,12 +178,25 @@ class RelatedPartiesInputSupportFormComponent(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['related_parties'].choices = related_party_choices
 
-    related_parties = forms.ChoiceField(
-        label='Name',
+    related_party_roles = forms.ChoiceField(
+        label='Role',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select'
         })
+    )
+
+    related_parties = forms.ChoiceField(
+        label='Party',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
+    )
+
+    related_parties_json = forms.JSONField(
+        required=False,
+        widget=forms.HiddenInput()
     )
 
 
