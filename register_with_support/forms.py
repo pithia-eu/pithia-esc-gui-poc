@@ -176,10 +176,10 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
 class RelatedPartiesInputSupportFormComponent(forms.Form):
     def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['related_parties'].choices = related_party_choices
-        self.fields['related_party_roles'].choices = related_party_role_choices
+        self.fields['related_party'].choices = related_party_choices
+        self.fields['related_party_role'].choices = related_party_role_choices
 
-    related_party_roles = forms.ChoiceField(
+    related_party_role = forms.ChoiceField(
         label='Role',
         required=False,
         widget=forms.Select(attrs={
@@ -187,7 +187,7 @@ class RelatedPartiesInputSupportFormComponent(forms.Form):
         })
     )
 
-    related_parties = forms.ChoiceField(
+    related_party = forms.ChoiceField(
         label='Party',
         required=False,
         widget=forms.Select(attrs={
