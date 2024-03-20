@@ -11,6 +11,7 @@ from django.views.generic import (
     View,
 )
 from pyexpat import ExpatError
+from rdflib.namespace._SKOS import SKOS
 from xmlschema import XMLSchemaException
 
 from .forms import *
@@ -19,6 +20,7 @@ from .metadata_builder.utils import *
 
 from common import models
 from common.decorators import login_session_institution_required
+from ontology.utils import get_graph_of_pithia_ontology_component
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -237,8 +239,17 @@ class ProjectRegisterWithoutFileFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
 
-    def get_status_choices_for_form():
-        pass
+    def get_status_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('status')
+        status_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            status_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in status_dict.items())
+        )
+
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -251,4 +262,6 @@ class ProjectRegisterWithoutFileFormView(
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        kwargs['status_choices'] = self.get_status_choices_for_form()
+        print("kwargs['status_choices']", kwargs['status_choices'])
         return kwargs

@@ -52,6 +52,9 @@
         <h2>{{ form.status.label_tag }}</h2>
         <div class="col-lg-5">
             {{ form.status }}
+            {% for error in form.status.errors %}
+            <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
         </div>
     </div>
 </section>

@@ -174,7 +174,7 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
 
 
 class RelatedPartiesInputSupportFormComponent(forms.Form):
-    def __init__(self, *args, related_party_choices=(), **kwargs):
+    def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['related_parties'].choices = related_party_choices
 
@@ -225,6 +225,10 @@ class ProjectInputSupportForm(
     OrganisationInputSupportFormComponent,
     ProjectDocumentationInputSupportFormComponent,
     RelatedPartiesInputSupportFormComponent):
+    def __init__(self, *args, status_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].choices = status_choices
+
     short_name = forms.CharField(
         label="Short Name",
         required=False,
