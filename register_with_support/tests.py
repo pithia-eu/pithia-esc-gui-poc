@@ -122,3 +122,7 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
 
     def test_individual_no_contact_info(self):
         self.create_xml_and_validate_against_schema(IndividualMetadata, INDIVIDUAL_PROPERTIES_NO_CONTACT_INFO)
+
+    # Project
+    def test_project(self):
+        self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_FULL)

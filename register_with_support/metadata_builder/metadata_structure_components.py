@@ -266,10 +266,11 @@ class RelatedPartyMetadataComponent(BaseMetadataComponent):
                 '{%s}href' % Namespace.XLINK: rp['role']
             }
             role_element = etree.SubElement(responsible_party_info_element, 'role', **role_element_attributes)
-            party_element_attributes = {
-                '{%s}href' % Namespace.XLINK: rp['party']
-            }
-            party_element = etree.SubElement(responsible_party_info_element, 'party', **party_element_attributes)
+            for party in rp['parties']:
+                party_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: party
+                }
+                party_element = etree.SubElement(responsible_party_info_element, 'party', **party_element_attributes)
 
 
 class ShortNameMetadataComponent(BaseMetadataComponent):

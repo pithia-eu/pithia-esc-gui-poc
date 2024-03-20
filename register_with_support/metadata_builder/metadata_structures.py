@@ -56,7 +56,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, GCOCharacterStringMetadat
         etree.SubElement(self.root, 'organisation', **organisation_element_attributes)
 
 
-class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
+class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Project.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -65,6 +65,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
+        self.append_short_name(properties['short_name'])
         self.append_abstract(properties['abstract'])
         self.append_description(properties['description'])
         self.append_url(properties['url'])
@@ -95,7 +96,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
             return
 
         # Container elements
-        documentation_element = etree.SubElement(self.root, 'Documentation')
+        documentation_element = etree.SubElement(self.root, 'documentation')
         citation_element = etree.SubElement(documentation_element, 'Citation')
 
         # GMD title - required
@@ -140,11 +141,12 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
     def append_keywords(self, keyword_dict_list):
         for keyword_dict in keyword_dict_list:
             keywords_element = etree.SubElement(self.root, 'keywords')
-            md_keywords_element = etree.SubElement(keywords_element, 'MD_Keywords', xmlns="http://www.isotc211.org/2005/gmd")
+            md_keywords_element = etree.SubElement(keywords_element, 'MD_Keywords', xmlns=Namespace.GMD)
             for keyword in keyword_dict['keywords']:
                 keyword_element = etree.SubElement(md_keywords_element, 'keyword')
                 self._append_gco_character_string_sub_element(keyword_element, keyword)
-            type_element = etree.SubElement(md_keywords_element, 'type', codeList=keyword_dict['type']['code_list'], codeListValue=keyword_dict['type']['code_list_value'])
+            type_element = etree.SubElement(md_keywords_element, 'type')
+            md_keyword_type_code_element = etree.SubElement(type_element, 'MD_KeywordTypeCode', codeList=keyword_dict['type']['code_list'], codeListValue=keyword_dict['type']['code_list_value'])
 
 
 class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, TypeMetadataComponent):

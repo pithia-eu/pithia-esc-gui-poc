@@ -74,13 +74,14 @@ PROJECT_PROPERTIES_FULL = {
     'localid': 'Project_Test',
     'namespace': 'test',
     'name': 'Project Test',
+    'short_name': 'Project Test short name',
     'description': 'Description',
     'abstract': 'Abstract',
     'url': 'https://www.example.com/',
     'documentation': {
         'citation_title': 'citation',
-        'citation_date': 'citation date',
-        'ci_date_type_code': 'Publication List',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
         'ci_date_type_code_code_list': 'something',
         'ci_date_type_code_code_list_value': 'something else',
         'ci_linkage_url': 'https://www.example.com/',
@@ -118,11 +119,14 @@ PROJECT_PROPERTIES_FULL = {
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-            'party': 'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
         },
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-            'party': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
     'status': 'https://metadata.pithia.eu/ontology/2.2/status/OnGoing',
@@ -151,11 +155,14 @@ PLATFORM_PROPERTIES_FULL = {
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-            'party': 'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
         },
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-            'party': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
 }
@@ -187,11 +194,14 @@ OPERATION_PROPERTIES_FULL = {
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-            'party': 'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
         },
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-            'party': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
     'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
@@ -219,11 +229,14 @@ INSTRUMENT_PROPERTIES_FULL = {
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-            'party': 'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
         },
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-            'party': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
 }
@@ -396,11 +409,14 @@ DATA_COLLECTION_PROPERTIES_FULL = {
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-            'party': 'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
         },
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-            'party': 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
     'collection_results': [
