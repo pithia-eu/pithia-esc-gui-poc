@@ -83,6 +83,17 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         gmd_url_element.text = url
 
     def append_documentation(self, documentation):
+        # Since CI_DateTypeCode 
+        # If no title, date, identifier, other citation details, online resource
+        if (not any([
+            documentation.get('citation_title'),
+            documentation.get('citation_date'),
+            documentation.get('other_citation_details'),
+            documentation.get('doi'),
+            documentation.get('ci_linkage_url'),
+        ])):
+            return
+
         # Container elements
         documentation_element = etree.SubElement(self.root, 'Documentation')
         citation_element = etree.SubElement(documentation_element, 'Citation')
@@ -96,7 +107,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         ci_date_element = etree.SubElement(date_element, 'CI_Date')
         ci_date_date_element = etree.SubElement(ci_date_element, 'date')
         gco_date_element = etree.SubElement(ci_date_date_element, '{%s}Date' % Namespace.GCO)
-        # Citation date - required
+        # Citation date - required, if container elements are included.
         gco_date_element.text = documentation['citation_date']
         ci_date_date_type_element = etree.SubElement(ci_date_element, 'dateType')
         # Assume <CI_DateTypeCode> will be the same for every XML file.

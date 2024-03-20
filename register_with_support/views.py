@@ -243,6 +243,8 @@ class ProjectRegisterWithoutFileFormView(
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
+        processed_form['documentation'] = process_documentation(form_cleaned_data)
+
         return processed_form
 
     def get_form_kwargs(self):

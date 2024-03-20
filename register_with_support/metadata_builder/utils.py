@@ -36,13 +36,13 @@ def process_hours_of_service_in_form(form_cleaned_data):
 def process_documentation(form_cleaned_data):
     return {
         'citation_title': form_cleaned_data['citation_title'],
-        'citation_date': form_cleaned_data['citation date'],
+        'citation_date': form_cleaned_data['citation_publication_date'],
         # CI_DateTypeCode values are normally the values
         # used below.
         'ci_date_type_code': 'Publication Date',
         'ci_date_type_code_code_list': '',
         'ci_date_type_code_code_list_value': '',
-        'ci_linkage_url': form_cleaned_data['ci_linkage_url'],
+        'ci_linkage_url': form_cleaned_data['citation_linkage_url'],
         'other_citation_details': form_cleaned_data['other_citation_details'],
         'doi': form_cleaned_data['citation_doi'],
     }
