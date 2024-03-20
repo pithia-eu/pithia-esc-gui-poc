@@ -253,7 +253,7 @@ class ProjectInputSupportForm(
     )
 
     # Only keyword-related field that gets processed
-    keywords_dict = forms.JSONField(
+    keywords_json = forms.JSONField(
         required=False,
         widget=forms.HiddenInput()
     )
