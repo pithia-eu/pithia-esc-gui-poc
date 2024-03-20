@@ -1,3 +1,5 @@
+"""Prepares cleaned form data for XML conversion.
+"""
 from unidecode import unidecode
 
 # Contact info
@@ -35,14 +37,37 @@ def process_hours_of_service_in_form(form_cleaned_data):
 
 def process_documentation(form_cleaned_data):
     return {
-        'citation_title': form_cleaned_data['citation_title'],
-        'citation_date': form_cleaned_data['citation_publication_date'],
+        'citation_title': form_cleaned_data.get('citation_title'),
+        'citation_date': form_cleaned_data.get('citation_publication_date'),
         # CI_DateTypeCode values are normally the values
         # used below.
         'ci_date_type_code': 'Publication Date',
         'ci_date_type_code_code_list': '',
         'ci_date_type_code_code_list_value': '',
-        'ci_linkage_url': form_cleaned_data['citation_linkage_url'],
-        'other_citation_details': form_cleaned_data['other_citation_details'],
-        'doi': form_cleaned_data['citation_doi'],
+        'ci_linkage_url': form_cleaned_data.get('citation_linkage_url'),
+        'other_citation_details': form_cleaned_data.get('other_citation_details'),
+        'doi': form_cleaned_data.get('citation_doi'),
     }
+
+def process_project_keywords(form_cleaned_data):
+    keyword_dict_from_form = form_cleaned_data.get('keywords_json')
+    keyword_dict_list = []
+    for key, value in keyword_dict_from_form.items():
+        keyword_dict_list.append({
+            'keywords': value.get('keywords', []),
+            'type': {
+                'code_list': value.get('code', ''),
+                'code_list_value': key,
+            }
+        })
+    return keyword_dict_list
+
+def process_related_parties(form_cleaned_data):
+    related_parties_dict_from_form = form_cleaned_data.get('related_parties_json')
+    related_parties_dict_list = []
+    for key, value in related_parties_dict_from_form.items():
+        related_parties_dict_list.append({
+            'role': key,
+            'party': value,
+        })
+    return related_parties_dict_list
