@@ -126,3 +126,13 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     # Project
     def test_project(self):
         self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_FULL)
+
+    def test_project_no_citation_title(self):
+        self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_TITLE)
+
+    def test_project_no_citation_date(self):
+        """
+        Fails the test as a valid date is required if
+        other citation details are provided.
+        """
+        self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_DATE)

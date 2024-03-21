@@ -132,6 +132,12 @@ PROJECT_PROPERTIES_FULL = {
     'status': 'https://metadata.pithia.eu/ontology/2.2/status/OnGoing',
 }
 
+PROJECT_PROPERTIES_NO_CITATION_TITLE = copy.deepcopy(PROJECT_PROPERTIES_FULL)
+PROJECT_PROPERTIES_NO_CITATION_TITLE['documentation']['citation_title'] = ''
+
+PROJECT_PROPERTIES_NO_CITATION_DATE = copy.deepcopy(PROJECT_PROPERTIES_FULL)
+PROJECT_PROPERTIES_NO_CITATION_DATE['documentation']['citation_date'] = ''
+
 # Platform
 PLATFORM_PROPERTIES_FULL = {
     'localid': 'Platform_Test',
