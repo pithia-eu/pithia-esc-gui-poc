@@ -245,7 +245,7 @@ class ProjectRegisterWithoutFileFormView(
 
     model = models.Project
     metadata_builder_class = ProjectMetadata
-    file_upload_registration_url = reverse_lazy('register_project')
+    file_upload_registration_url = reverse_lazy('register:project')
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
