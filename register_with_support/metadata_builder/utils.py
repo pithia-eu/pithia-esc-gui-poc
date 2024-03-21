@@ -68,6 +68,6 @@ def process_related_parties(form_cleaned_data):
     for key, value in related_parties_dict_from_form.items():
         related_parties_dict_list.append({
             'role': key,
-            'party': value,
+            'parties': value,
         })
     return related_parties_dict_list
