@@ -97,12 +97,12 @@ class ResourceRegisterWithoutFileFormView(FormView):
         except XMLSchemaException as err:
             logger.exception('Generated XML failed schema validation.')
             form_error_msg = f'''
-            This form was unable to be processed into schema-valid XML due to the translation
-            code becoming outdated with the metadata schema.
+            This form was unable to be processed into schema-valid XML due to an error.
+            Please try submitting the form again, or if the issue persists,
+            <a href="{reverse_lazy('support')}" target="_blank">let our support team know</a>.
             <br><br>
-            Whilst this functionality is unavailable, the <a href="{self.file_upload_registration_url}">file upload functionality</a> can be used
-            as an alternative to register your metadata. Please also consider <a href="{reverse_lazy('support')}" target="_blank">
-            notifying our support team</a> about this problem.
+            If this functionality is down, the <a href="{self.file_upload_registration_url}">file upload functionality</a>
+            may alternatively be used to register your metadata.
             <br><br>
             We apologise for any inconvenience caused.
             '''
@@ -112,8 +112,13 @@ class ResourceRegisterWithoutFileFormView(FormView):
             logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
             form_error_msg = f'''
             An unexpected error occurred whilst validating the generated XML against the schema.
-            Please try submitting the form again, or if the issue persists, <a href="{reverse_lazy('support')}" target="_blank">
-            let our support team know</a>.
+            Please try submitting the form again, or if the issue persists,
+            <a href="{reverse_lazy('support')}" target="_blank">let our support team know</a>.
+            <br><br>
+            If this functionality is down, the <a href="{self.file_upload_registration_url}">file upload functionality</a>
+            may alternatively be used to register your metadata.
+            <br><br>
+            We apologise for any inconvenience caused.
             '''
             messages.error(self.request, form_error_msg)
             return self.render_to_response(self.get_context_data(form=form))
