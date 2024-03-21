@@ -1,4 +1,4 @@
-<section class="">
+<section id="citation-section">
     <div class="row flex-column gy-3">
         <div class="col-lg-12">
             <h2>Citation Details</h2>
@@ -11,6 +11,9 @@
         <div class="col-lg-3">
             {{ form.citation_publication_date.label_tag }}
             <input type="date" name="{{ form.citation_publication_date.name }}" id="{{ form.citation_publication_date.auto_id }}" class="form-control">
+            <div class="invalid-feedback">
+                A date must be provided if other citation details have been entered.
+            </div>
         </div>
         <div class="col-lg-3">
             {% with field=form.citation_doi %}

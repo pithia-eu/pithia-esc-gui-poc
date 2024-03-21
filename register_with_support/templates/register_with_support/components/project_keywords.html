@@ -17,26 +17,39 @@
                         <tr>
                             <td class="col-lg-3">
                                 {{ form.keyword_type }}
+                                <div class="invalid-feedback">
+                                    Enter a keyword type
+                                </div>
                             </td>
                             <td class="col-lg-1">
                                 <div class="input-group">
                                     <span class="input-group-text" id="input-group-prepend">#</span>
                                     <input type="text" class="{{ form.keyword_type_code.field.widget.attrs.class }}" name="{{ form.keyword_type_code.name }}" id="{{ form.keyword_type_code.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.keyword_type_code.value|default:'' }}">
+                                    <div class="invalid-feedback">
+                                        Enter a keyword type code
+                                    </div>
                                 </div>
                             </td>
                             <td class="col-lg-3">
                                 <ul class="list-unstyled">
-                                    <li class="pb-2">{{ form.keyword }}</li>
+                                    <li class="pb-2">
+                                        {{ form.keyword }}
+                                        <div class="invalid-feedback">
+                                            Enter a keyword
+                                        </div>
+                                    </li>
+                                    <li class="pb-2">
+                                        {{ form.keyword }}
+                                        <div class="invalid-feedback">
+                                            Enter a keyword
+                                        </div>
+                                    </li>
                                 </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <button class="btn btn-light" type="button">+ Add new keyword type</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <button id="add-kwrow-button" class="btn btn-light" type="button">+ Add new keyword type</button>
             </div>
         </div>
     </div>
