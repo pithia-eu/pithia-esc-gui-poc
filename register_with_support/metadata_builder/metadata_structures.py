@@ -121,19 +121,19 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         ci_date_type_code_element.text = documentation['ci_date_type_code']
 
         # Identifier (DOI)
-        if 'doi' in documentation:
+        if documentation.get('doi'):
             identifier_element = etree.SubElement(citation_element, 'identifier', xmlns=Namespace.GMD)
             md_identifier_element = etree.SubElement(identifier_element, 'MD_Identifier')
             code_element = etree.SubElement(md_identifier_element, 'code')
             self._append_gco_character_string_sub_element(code_element, documentation['doi'])
 
         # GMD other citation details
-        if 'other_citation_details' in documentation:
+        if documentation.get('other_citation_details'):
             gmd_other_citation_details_element = etree.SubElement(citation_element, '{%s}otherCitationDetails' % Namespace.GMD)
             self._append_gco_character_string_sub_element(gmd_other_citation_details_element, documentation['other_citation_details'])
 
         # Online Resource
-        if 'ci_linkage_url' in documentation:
+        if documentation.get('ci_linkage_url'):
             online_resource_element = etree.SubElement(citation_element, 'onlineResource')
             ci_online_resource_element = etree.SubElement(online_resource_element, 'CI_OnlineResource', xmlns=Namespace.GMD)
             linkage_element = etree.SubElement(ci_online_resource_element, 'linkage')
