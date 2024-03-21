@@ -157,11 +157,13 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
     citation_doi = forms.CharField(
         label='DOI',
         required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={
+            'placeholder': 'doi:10.xxxxx'
+        })
     )
 
     other_citation_details = forms.CharField(
-        label='Other Citation Details',
+        label='Full Citation',
         required=False,
         widget=forms.Textarea()
     )
@@ -169,7 +171,9 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
     citation_linkage_url = forms.URLField(
         label='Link to Online Resource',
         required=False,
-        widget=forms.URLInput()
+        widget=forms.URLInput(attrs={
+            'placeholder': 'https://'
+        })
     )
 
 
