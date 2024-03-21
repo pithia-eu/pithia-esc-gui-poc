@@ -308,6 +308,8 @@ class SourceMetadataComponent(BaseMetadataComponent):
 
 class StatusMetadataComponent(BaseMetadataComponent):
     def append_status(self, status):
+        if not status:
+            return
         status_element_attributes = {
             '{%s}href' % Namespace.XLINK: status
         }

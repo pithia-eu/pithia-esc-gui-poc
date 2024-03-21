@@ -79,6 +79,8 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         abstract_element.text = abstract
 
     def append_url(self, url):
+        if not url:
+            return
         url_element = etree.SubElement(self.root, 'URL')
         gmd_url_element = etree.SubElement(url_element, '{%s}URL' % Namespace.GMD)
         gmd_url_element.text = url
