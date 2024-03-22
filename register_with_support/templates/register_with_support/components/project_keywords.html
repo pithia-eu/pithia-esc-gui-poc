@@ -11,11 +11,12 @@
                             <th>Keyword Type</th>
                             <th>Keyword Type Code</th>
                             <th>Keywords</th>
+                            <th>Row Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="col-lg-3">
+                            <td class="col-lg-5">
                                 {{ form.keyword_type }}
                                 <div class="invalid-feedback">
                                     Enter a keyword type
@@ -30,26 +31,42 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="col-lg-3">
+                            <td class="td-keywords col-lg-5">
                                 <ul class="list-unstyled">
                                     <li class="pb-2">
-                                        {{ form.keyword }}
-                                        <div class="invalid-feedback">
-                                            Enter a keyword
-                                        </div>
-                                    </li>
-                                    <li class="pb-2">
-                                        {{ form.keyword }}
-                                        <div class="invalid-feedback">
-                                            Enter a keyword
+                                        <div class="input-group">
+                                            <input type="text" class="{{ form.keyword.field.widget.attrs.class }}" name="{{ form.keyword.name }}" id="{{ form.keyword.auto_id }}" aria-describedby="remove-kw-button" placeholder="{{ form.keyword.field.widget.attrs.placeholder }}" value="{{ form.keyword.value|default:'' }}">
+                                            <button class="btn btn-outline-dark rounded-end-2 remove-kw-button" type="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+                                                </svg>
+                                            </button>
+                                            <div class="invalid-feedback">
+                                                Enter a keyword
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
+                                <button class="btn btn-light add-kw-button" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                    </svg> Add new keyword
+                                </button>
+                            </td>
+                            <td class="col-lg-1">
+                                <button class="btn btn-outline-danger" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                    </svg>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button id="add-kwrow-button" class="btn btn-light" type="button">+ Add new keyword type</button>
+                <button id="add-kwrow-button" class="btn btn-light" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                    </svg> Add new keyword type</button>
             </div>
         </div>
     </div>
