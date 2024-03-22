@@ -2,10 +2,11 @@ import {
     inputSupportForm,
 } from "/static/register_with_support/no_file_register_form.js";
 
+const keywordsTable = inputSupportForm.querySelector("#table-project-keywords");
+const keywordsTableBody = keywordsTable.querySelector("tbody");
 const addKeywordsRowButton = document.getElementById("add-kwrow-button");
 
 function getKeywordTableRowByChildNode(childNode) {
-    const keywordsTable = inputSupportForm.querySelector("#table-project-keywords");
     const keywordsTableRows = keywordsTable.querySelectorAll("tbody tr");
     for (const row of keywordsTableRows) {
         if (row.contains(childNode)) {
@@ -14,8 +15,12 @@ function getKeywordTableRowByChildNode(childNode) {
     }
 }
 
-function checkRemainingKeywordInputsOfRow(tableRow) {
-    const keywordInputs = tableRow.querySelectorAll("input[name='keyword']");
+function getNumRemainingKeywordInputsOfRow(tableRow) {
+    return tableRow.querySelectorAll("input[name='keyword']").length;
+}
+
+function getNumRemainingKeywordRows() {
+    return keywordsTableBody.querySelectorAll("tr").length;
 }
 
 function setupRemoveKeywordButton(removeKeywordButton) {
@@ -28,6 +33,10 @@ function setupRemoveKeywordButton(removeKeywordButton) {
                 keywordsListElement.removeChild(liElement);
                 break;
             }
+        }
+        const remainingKeywordInputsInRow = getNumRemainingKeywordInputsOfRow(containingTableRow);
+        if (remainingKeywordInputsInRow === 1) {
+            containingTableRow.querySelector(".td-keywords .remove-kw-button").disabled = true;
         }
     });
 }
@@ -44,12 +53,27 @@ function setupAddKeywordButton(addKeywordButton) {
         removeKeywordButton.disabled = false;
         setupRemoveKeywordButton(removeKeywordButton);
         keywordsListElement.appendChild(newKeywordLiElement);
+        const remainingKeywordInputsInRow = getNumRemainingKeywordInputsOfRow(containingTableRow);
+        if (remainingKeywordInputsInRow > 1) {
+            containingTableRow.querySelector(".td-keywords .remove-kw-button").disabled = false;
+        }
+    });
+}
+
+function setupRemoveKeywordsRowButton(removeKeywordsRowButton) {
+    removeKeywordsRowButton.addEventListener("click", () => {
+        const containingTableRow = getKeywordTableRowByChildNode(removeKeywordsRowButton);
+        keywordsTableBody.removeChild(containingTableRow);
+        const numRemainingTableRows = getNumRemainingKeywordRows();
+        if (numRemainingTableRows === 1) {
+            const firstRemoveRowButton = keywordsTableBody.querySelector(".remove-kwrow-button");
+            firstRemoveRowButton.disabled = true;
+        }
     });
 }
 
 function setupAddKeywordsRowButton() {
     addKeywordsRowButton.addEventListener("click", () => {
-        const keywordsTableBody = inputSupportForm.querySelector("#table-project-keywords tbody");
         const keywordsTableFirstRow = keywordsTableBody.querySelector("tr");
         const newRow = document.createElement("TR");
         newRow.innerHTML = keywordsTableFirstRow.innerHTML;
@@ -58,23 +82,35 @@ function setupAddKeywordsRowButton() {
             newRowKeywordsList.innerHTML = newRowKeywordsList.querySelector("li").outerHTML;
         }
         const newRowHighlightedInputs = newRow.querySelectorAll("input.was-validated");
-        console.log('newRowHighlightedInputs', newRowHighlightedInputs);
         newRowHighlightedInputs.forEach(input => {
             input.classList.remove("was-validated");
             input.classList.remove("is-invalid");
         });
+        const addKeywordButton = newRow.querySelector(".add-kw-button");
+        setupAddKeywordButton(addKeywordButton);
+        const removeKeywordButton = newRow.querySelector(".remove-kw-button");
+        setupRemoveKeywordButton(removeKeywordButton);
+        const removeKeywordsRowButton = newRow.querySelector(".remove-kwrow-button");
+        removeKeywordsRowButton.disabled = false;
+        setupRemoveKeywordsRowButton(removeKeywordsRowButton);
         keywordsTableBody.appendChild(newRow);
+        const numRemainingTableRows = getNumRemainingKeywordRows();
+        if (numRemainingTableRows > 1) {
+            const firstRemoveRowButton = keywordsTableBody.querySelector(".remove-kwrow-button");
+            firstRemoveRowButton.disabled = false;
+        }
     });
 }
 
 export function setupKeywordsTable() {
-    setupAddKeywordsRowButton();
-    const keywordsTable = document.getElementById("table-project-keywords");
-    const keywordsTableRows = keywordsTable.querySelectorAll("tbody tr");
+    const keywordsTableRows = keywordsTableBody.querySelectorAll("tr");
     keywordsTableRows.forEach(row => {
         const addKeywordButton = row.querySelector(".add-kw-button");
         setupAddKeywordButton(addKeywordButton);
         const removeKeywordButton = row.querySelector(".remove-kw-button");
         setupRemoveKeywordButton(removeKeywordButton);
+        const removeKeywordsRowButton = document.querySelector(".remove-kwrow-button");
+        setupRemoveKeywordsRowButton(removeKeywordsRowButton);
     });
+    setupAddKeywordsRowButton();
 }
