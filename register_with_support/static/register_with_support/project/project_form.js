@@ -12,6 +12,9 @@ import {
 import {
     setupKeywordsTable,
 } from "/static/register_with_support/project/keywords_table.js";
+import {
+    setupRelatedPartiesTable,
+} from "/static/register_with_support/project/related_parties_table.js";
 
 function prepareKeywordsJSON() {
     const keywordsCategorised = {};
@@ -65,4 +68,5 @@ inputSupportForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupKeywordsTable();
+    setupRelatedPartiesTable();
 });
