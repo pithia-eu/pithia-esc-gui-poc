@@ -109,8 +109,14 @@ export function setupKeywordsTable() {
         setupAddKeywordButton(addKeywordButton);
         const removeKeywordButton = row.querySelector(".remove-kw-button");
         setupRemoveKeywordButton(removeKeywordButton);
+        if (getNumRemainingKeywordInputsOfRow(row) === 1) {
+            removeKeywordButton.disabled = true;
+        }
         const removeKeywordsRowButton = document.querySelector(".remove-kwrow-button");
         setupRemoveKeywordsRowButton(removeKeywordsRowButton);
+        if (keywordsTableRows.length === 1) {
+            removeKeywordsRowButton.disabled = true;
+        }
     });
     setupAddKeywordsRowButton();
 }
