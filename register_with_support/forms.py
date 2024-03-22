@@ -269,9 +269,7 @@ class ProjectInputSupportForm(
     keyword = forms.CharField(
         label='Keyword',
         required=False,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Enter a keyword'
-        })
+        widget=forms.TextInput()
     )
 
     # Only keyword-related field that gets processed
