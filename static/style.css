@@ -36,7 +36,8 @@ a:not(
     .breadcrumb a,
     .card-menu a,
     a.dropdown-item,
-    a.support-link):visited {
+    a.support-link,
+    .toc-container a):visited {
     color: #551A8B !important;
 }
 

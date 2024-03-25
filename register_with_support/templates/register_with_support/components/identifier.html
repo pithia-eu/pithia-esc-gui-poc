@@ -1,4 +1,4 @@
-<section class="d-flex flex-column row-gap-4">
+<section id="identifier-section" class="d-flex flex-column row-gap-4">
     <div class="row">
         <div class="col-lg-12">
             <h2 class="mb-0">Identifier</h2>
@@ -8,21 +8,21 @@
         <div class="col-lg-4">
             {{ form.localid.label_tag }}
         </div>
-        <div class="col-lg-7">
+        <div class="col-xl-7 col-lg-8">
             <small class="d-block text-secondary mb-2">{{ form.localid.help_text }}</small>
         </div>
-        <div class="col-lg-4">
+        <div class="col-xl-7 col-lg-8">
             {% include 'register_with_support/components/localid-input-group.html' %}
         </div>
     </div>
     <div class="row flex-column gy-2">
-        <div class="col-lg-3">
+        <div class="col-lg-5">
             {{ form.namespace.label_tag }}
         </div>
-        <div class="col-lg-7">
+        <div class="col-xl-7 col-lg-8">
             <small class="d-block text-secondary mb-2">{{ form.namespace.help_text }}</small>
         </div>
-        <div class="col-lg-3">
+        <div class="col-xl-3 col-lg-4">
             {{ form.namespace }}
         </div>
     </div>
