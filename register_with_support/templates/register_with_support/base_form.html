@@ -18,11 +18,20 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
 <form action="{{ success_url }}" method="POST" id="metadata-input-support-form">
     {% csrf_token %}
     <div class="row gx-xl-5 gx-lg-5 gx-sm-0">
-        <div class="col-lg-9">
+        <div class="col-xl-2 col-lg-3 d-lg-block d-none">
+            <section class="toc-container sticky-top">
+                <h2 class="fw-normal fs-6 mt-3">Metadata Sections</h2>
+                <ul class="list-group">
+                    {% block table_of_contents %}{% endblock table_of_contents %}
+                </ul>
+            </section>
+        </div>
+        <div class="col-xl-10 col-lg-9">
+            <h1>{{ title }}</h1>
+            <hr class="my-4">
             {% block form_content %}{% endblock form_content %}
             <div class="d-flex flex-column mt-5">
                 <div class="col-xl-7 col-lg-8">
@@ -39,14 +48,6 @@
                         Validate and Register
                     </button>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-3 d-lg-block d-none">
-            <div class="toc-container sticky-top pt-3">
-                <h2 class="fw-normal fs-5">Table of Contents</h2>
-                <ul class="list-group">
-                    {% block table_of_contents %}{% endblock table_of_contents %}
-                </ul>
             </div>
         </div>
     </div>

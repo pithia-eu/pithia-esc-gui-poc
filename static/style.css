@@ -920,7 +920,7 @@ a.support-link {
 #table-project-keywords td,
 #table-related-parties td {
     display: block;
-    border-bottom: none;
+    border-bottom-width: 0;
 }
 
 #table-project-keywords tr td:first-of-type,
@@ -985,6 +985,7 @@ a.support-link {
     #table-project-keywords td,
     #table-related-parties td {
         display: table-cell;
+        border-bottom-width: var(--bs-border-width);
     }
 
     #table-project-keywords tr td:first-of-type,
@@ -995,6 +996,11 @@ a.support-link {
     #table-project-keywords tr td:last-of-type,
     #table-related-parties tr td:last-of-type {
         padding-bottom: 0.5rem;
+    }
+
+    #table-project-keywords tr,
+    #table-related-parties tr {
+        border-bottom-width: 0;
     }
 
     #table-project-keywords button:not(.input-group button),
