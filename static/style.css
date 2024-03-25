@@ -911,6 +911,58 @@ a.support-link {
     -webkit-box-orient: vertical;
 }
 
+/* Metadata editor */
+#table-project-keywords thead,
+#table-related-parties thead {
+    display: none;
+}
+
+#table-project-keywords td,
+#table-related-parties td {
+    display: block;
+    border-bottom: none;
+}
+
+#table-project-keywords tr td:first-of-type,
+#table-related-parties tr td:first-of-type {
+    padding-top: 1.5rem;
+}
+
+#table-project-keywords tr td:last-of-type,
+#table-related-parties tr td:last-of-type {
+    padding-bottom: 1rem;
+}
+
+#table-project-keywords tr,
+#table-related-parties tr {
+    border-bottom-width: 1px;
+}
+
+#table-project-keywords button:not(.input-group button),
+#table-related-parties button:not(.input-group button),
+#add-kwrow-button,
+#add-rprrow-button {
+    display: block;
+    margin-inline: auto;
+}
+
+.add-rp-button,
+.add-kw-button,
+#add-kwrow-button,
+#add-rprrow-button {
+    width: 100%;
+}
+
+#add-kwrow-button,
+#add-rprrow-button {
+    padding-block: 1rem;
+}
+
+.input-group > .form-control {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
 @media (min-width: 992px) {
     #interaction-methods-form .list-group-item,
     .interaction-methods-form-container .list-group-item {
@@ -923,6 +975,36 @@ a.support-link {
     
     .user-dropdown {
         text-align: end;
+    }
+
+    #table-project-keywords thead,
+    #table-related-parties thead {
+        display: table-header-group;
+    }
+
+    #table-project-keywords td,
+    #table-related-parties td {
+        display: table-cell;
+    }
+
+    #table-project-keywords tr td:first-of-type,
+    #table-related-parties tr td:first-of-type {
+        padding-top: 0.5rem;
+    }
+
+    #table-project-keywords tr td:last-of-type,
+    #table-related-parties tr td:last-of-type {
+        padding-bottom: 0.5rem;
+    }
+
+    #table-project-keywords button:not(.input-group button),
+    #table-related-parties button:not(.input-group button) {
+        display: inline;
+    }
+
+    #add-kwrow-button,
+    #add-rprrow-button {
+        display: block;
     }
 }
 
