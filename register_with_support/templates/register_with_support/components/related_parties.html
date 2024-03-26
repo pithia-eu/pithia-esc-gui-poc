@@ -15,9 +15,15 @@
                 <tbody>
                     <tr>
                         <td class="col-lg-6">
+                            <div class="d-lg-none d-block">
+                                {{ form.related_party_role.label_tag }}
+                            </div>
                             {{ form.related_party_role }}
                         </td>
                         <td class="col-lg-6 td-related-parties">
+                            <div class="d-lg-none d-block">
+                                {{ form.related_party.label_tag }}
+                            </div>
                             <ul class="list-unstyled">
                                 <li class="pb-2">
                                     <div class="input-group">
