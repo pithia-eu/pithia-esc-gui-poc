@@ -192,7 +192,7 @@ class RelatedPartiesInputSupportFormComponent(forms.Form):
     )
 
     related_party = forms.ChoiceField(
-        label='Parties',
+        label='Party',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select'
@@ -267,7 +267,7 @@ class ProjectInputSupportForm(
     )
 
     keyword = forms.CharField(
-        label='Keywords',
+        label='Keyword',
         required=False,
         widget=forms.TextInput()
     )
