@@ -39,7 +39,7 @@
                                     <div class="input-group">
                                         <input type="text" class="{{ form.keyword.field.widget.attrs.class }}" name="{{ form.keyword.name }}" id="{{ form.keyword.auto_id }}" aria-describedby="remove-kw-button" placeholder="{{ form.keyword.field.widget.attrs.placeholder }}" value="{{ form.keyword.value|default:'' }}">
                                         <button class="btn btn-outline-dark rounded-end-2 remove-kw-button" type="button" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16" aria-label="Remove keyword">
                                                 <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
                                             </svg>
                                         </button>
@@ -57,7 +57,7 @@
                         </td>
                         <td>
                             <button class="btn btn-outline-danger remove-kwrow-button" type="button" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16" aria-label="Remove keyword type">
                                     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                                 </svg>
                             </button>
