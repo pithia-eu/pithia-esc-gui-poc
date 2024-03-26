@@ -21,7 +21,7 @@ function prepareKeywordsJSON() {
     const keywordsTableRows = document.querySelectorAll("#table-project-keywords tbody tr");
     keywordsTableRows.forEach(row => {
         const keywordTypeInput = row.querySelector("input[name='keyword_type']");
-        if (keywordTypeInput.value) {
+        if (keywordTypeInput.value.trim() !== "") {
             const keywordTypeCodeInput = row.querySelector("input[name='keyword_type_code']");
             const keywordsForTypeInputs = Array.from(row.querySelectorAll("input[name='keyword']"));
             keywordsCategorised[keywordTypeInput.value] = {
@@ -39,7 +39,7 @@ function prepareRelatedPartiesJSON() {
     const relatedPartyTableRows = document.querySelectorAll("#table-related-parties tbody tr");
     relatedPartyTableRows.forEach(row => {
         const relatedPartyRoleSelect = row.querySelector("select[name='related_party_role']");
-        if (relatedPartyRoleSelect !== null && relatedPartyRoleSelect.value) {
+        if (relatedPartyRoleSelect !== null && relatedPartyRoleSelect.value.trim() !== "") {
             const relatedPartySelects = Array.from(row.querySelectorAll("select[name='related_party']"));
             relatedPartiesCategorised[relatedPartyRoleSelect.value] = relatedPartySelects.map(select => select.value);
         }
