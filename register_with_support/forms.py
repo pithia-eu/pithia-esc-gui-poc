@@ -1,7 +1,7 @@
 from django import forms
 from django_countries import countries
 
-class BaseInputSupportForm(forms.Form):
+class BaseEditorForm(forms.Form):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
@@ -52,9 +52,9 @@ class OrganisationSelect(forms.Select):
 
         return option
 
-class OrganisationInputSupportFormComponent(forms.Form):
+class OrganisationEditorFormComponent(forms.Form):
     def __init__(self, *args, organisation_choices=(), **kwargs):
-        super(OrganisationInputSupportFormComponent, self).__init__(*args, **kwargs)
+        super(OrganisationEditorFormComponent, self).__init__(*args, **kwargs)
         self.fields['organisation'].choices = organisation_choices
 
     organisation = forms.ChoiceField(
@@ -70,7 +70,7 @@ class OrganisationInputSupportFormComponent(forms.Form):
     )
 
 
-class ContactInfoInputSupportFormComponent(forms.Form):
+class ContactInfoEditorFormComponent(forms.Form):
     phone = forms.CharField(
         label="Phone",
         required=False,
@@ -141,7 +141,7 @@ class ContactInfoInputSupportFormComponent(forms.Form):
     )
 
 
-class ProjectDocumentationInputSupportFormComponent(forms.Form):
+class ProjectDocumentationEditorFormComponent(forms.Form):
     citation_title = forms.CharField(
         label='Title',
         required=False,
@@ -177,7 +177,7 @@ class ProjectDocumentationInputSupportFormComponent(forms.Form):
     )
 
 
-class RelatedPartiesInputSupportFormComponent(forms.Form):
+class RelatedPartiesEditorFormComponent(forms.Form):
     def __init__(self, *args, related_party_role_choices=(), related_party_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['related_party'].choices = related_party_choices
@@ -205,7 +205,7 @@ class RelatedPartiesInputSupportFormComponent(forms.Form):
     )
 
 
-class OrganisationInputSupportForm(BaseInputSupportForm, ContactInfoInputSupportFormComponent):
+class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. If there is another organisation sharing the same short name, a more complex local ID will be generated.'
@@ -219,17 +219,17 @@ class OrganisationInputSupportForm(BaseInputSupportForm, ContactInfoInputSupport
     )
 
 
-class IndividualInputSupportForm(BaseInputSupportForm, ContactInfoInputSupportFormComponent, OrganisationInputSupportFormComponent):
+class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent, OrganisationEditorFormComponent):
     def __init__(self, *args, **kwargs):
-        super(IndividualInputSupportForm, self).__init__(*args, **kwargs)
+        super(IndividualEditorForm, self).__init__(*args, **kwargs)
         self.fields['online_resource'].label = 'Link to Organisation Website/Staff Page'
 
 
-class ProjectInputSupportForm(
-    BaseInputSupportForm,
-    OrganisationInputSupportFormComponent,
-    ProjectDocumentationInputSupportFormComponent,
-    RelatedPartiesInputSupportFormComponent):
+class ProjectEditorForm(
+    BaseEditorForm,
+    OrganisationEditorFormComponent,
+    ProjectDocumentationEditorFormComponent,
+    RelatedPartiesEditorFormComponent):
     def __init__(self, *args, status_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['status'].choices = status_choices

@@ -1,10 +1,10 @@
 import {
-    inputSupportForm,
-} from "/static/register_with_support/components/no_file_register_form.js";
+    editorForm,
+} from "/static/register_with_support/components/base_editor.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 
-const relatedPartiesTable = inputSupportForm.querySelector("#table-related-parties");
+const relatedPartiesTable = editorForm.querySelector("#table-related-parties");
 const relatedPartiesTableBody = relatedPartiesTable.querySelector("tbody");
 const addRelatedPartyRoleButton = document.getElementById("add-rprrow-button");
 

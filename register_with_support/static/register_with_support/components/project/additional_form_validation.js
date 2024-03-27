@@ -1,6 +1,6 @@
 import {
-    inputSupportForm,
-} from "/static/register_with_support/components/no_file_register_form.js";
+    editorForm,
+} from "/static/register_with_support/components/base_editor.js";
 
 function isCitationSectionValid() {
     const citationDateInput = document.querySelector("#citation-section input[name='citation_publication_date']");
@@ -19,7 +19,7 @@ function isCitationSectionValid() {
 }
 
 export function checkCitationSectionValidity() {
-    const citationDateInput = inputSupportForm.querySelector("input[name='citation_publication_date']");
+    const citationDateInput = editorForm.querySelector("input[name='citation_publication_date']");
     if (!isCitationSectionValid()) {
         citationDateInput.classList.add("was-validated");
         citationDateInput.classList.add("is-invalid");
@@ -32,7 +32,7 @@ export function checkCitationSectionValidity() {
 }
 
 function validateKeywordsTableAndReturnInvalidInputs() {
-    const keywordsTableRows = Array.from(inputSupportForm.querySelectorAll("#table-project-keywords tbody tr"));
+    const keywordsTableRows = Array.from(editorForm.querySelectorAll("#table-project-keywords tbody tr"));
     let invalidInputs = [];
     for (const row of keywordsTableRows) {
         const keywordTypeInput = row.querySelector("td:nth-of-type(1) input");
@@ -61,7 +61,7 @@ function validateKeywordsTableAndReturnInvalidInputs() {
 
 export function checkKeywordsSectionValidity() {
     const invalidInputs = validateKeywordsTableAndReturnInvalidInputs();
-    const validatedInputs = inputSupportForm.querySelectorAll("#table-project-keywords tbody tr input.was-validated");
+    const validatedInputs = editorForm.querySelectorAll("#table-project-keywords tbody tr input.was-validated");
     validatedInputs.forEach(input => {
         input.classList.remove("was-validated");
         input.classList.remove("is-invalid");

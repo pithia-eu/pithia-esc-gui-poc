@@ -2,9 +2,9 @@ import {
     validateLocalIdAndProcessResults,
 } from "/static/register_with_support/components/localid_validation.js";
 import {
-    inputSupportForm,
+    editorForm,
     validateAndRegister,
-} from "/static/register_with_support/components/no_file_register_form.js";
+} from "/static/register_with_support/components/base_editor.js";
 
 const shortNameInput = document.querySelector("input[name='short_name']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
@@ -33,7 +33,7 @@ window.addEventListener("load", async () => {
     }
 });
 
-inputSupportForm.addEventListener("submit", async e => {
+editorForm.addEventListener("submit", async e => {
     e.preventDefault();
     validateAndRegister();
 });

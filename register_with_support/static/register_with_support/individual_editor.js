@@ -2,11 +2,11 @@ import {
     setupLocalIdAndNamespaceRelatedEventListeners,
 } from "/static/register_with_support/components/localid_validation.js";
 import {
-    inputSupportForm,
+    editorForm,
     validateAndRegister,
-} from "/static/register_with_support/components/no_file_register_form.js";
+} from "/static/register_with_support/components/base_editor.js";
 
-inputSupportForm.addEventListener("submit", async e => {
+editorForm.addEventListener("submit", async e => {
     e.preventDefault();
 
     validateAndRegister();

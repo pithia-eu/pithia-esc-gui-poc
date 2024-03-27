@@ -1,10 +1,10 @@
 import {
-    inputSupportForm,
-} from "/static/register_with_support/components/no_file_register_form.js";
+    editorForm,
+} from "/static/register_with_support/components/base_editor.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 
-const keywordsTable = inputSupportForm.querySelector("#table-project-keywords");
+const keywordsTable = editorForm.querySelector("#table-project-keywords");
 const keywordsTableBody = keywordsTable.querySelector("tbody");
 const addKeywordsRowButton = document.getElementById("add-kwrow-button");
 
