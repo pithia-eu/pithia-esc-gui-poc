@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 @method_decorator(login_session_institution_required, name='dispatch')
-class ResourceRegisterWithoutFileFormView(FormView):
+class ResourceRegisterWithEditorFormView(FormView):
     success_url = ''
     form_class = None
     template_name = ''
@@ -180,10 +180,10 @@ class RelatedPartiesSelectFormViewMixin(View):
             *((key, value) for key, value in status_dict.items())
         )
 
-class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormView):
-    success_url = reverse_lazy('register:organisation_no_file')
-    form_class = OrganisationInputSupportForm
-    template_name = 'register_with_support/organisation_form.html'
+class OrganisationRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
+    success_url = reverse_lazy('register:organisation_with_editor')
+    form_class = OrganisationEditorForm
+    template_name = 'register_with_support/organisation_editor.html'
 
     model = models.Organisation
     metadata_builder_class = OrganisationMetadata
@@ -211,10 +211,10 @@ class OrganisationRegisterWithoutFileFormView(ResourceRegisterWithoutFileFormVie
         kwargs['initial'] = {'namespace': 'pithia'}
         return kwargs
 
-class IndividualRegisterWithoutFileFormView(OrganisationSelectFormViewMixin, ResourceRegisterWithoutFileFormView):
-    success_url = reverse_lazy('register:individual_no_file')
-    form_class = IndividualInputSupportForm
-    template_name = 'register_with_support/individual_form.html'
+class IndividualRegisterWithEditorFormView(OrganisationSelectFormViewMixin, ResourceRegisterWithEditorFormView):
+    success_url = reverse_lazy('register:individual_with_editor')
+    form_class = IndividualEditorForm
+    template_name = 'register_with_support/individual_editor.html'
 
     model = models.Individual
     metadata_builder_class = IndividualMetadata
@@ -240,13 +240,13 @@ class IndividualRegisterWithoutFileFormView(OrganisationSelectFormViewMixin, Res
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         return kwargs
 
-class ProjectRegisterWithoutFileFormView(
+class ProjectRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
-    ResourceRegisterWithoutFileFormView):
-    success_url = reverse_lazy('register:project_no_file')
-    form_class = ProjectInputSupportForm
-    template_name = 'register_with_support/project_form.html'
+    ResourceRegisterWithEditorFormView):
+    success_url = reverse_lazy('register:project_with_editor')
+    form_class = ProjectEditorForm
+    template_name = 'register_with_support/project_editor.html'
 
     model = models.Project
     metadata_builder_class = ProjectMetadata
@@ -286,10 +286,10 @@ class ProjectRegisterWithoutFileFormView(
 class PlatformRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
-    ResourceRegisterWithoutFileFormView):
-    success_url = reverse_lazy('register:platform_no_file')
-    form_class = PlatformInputSupportForm
-    template_name = 'register_with_support/platform_form.html'
+    ResourceRegisterWithEditorFormView):
+    success_url = reverse_lazy('register:platform_with_editor')
+    form_class = PlatformEditorForm
+    template_name = 'register_with_support/platform_editor.html'
 
     model = models.Platform
     metadata_builder_class = PlatformMetadata

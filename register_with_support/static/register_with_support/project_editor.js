@@ -1,20 +1,21 @@
 import {
     setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/register_with_support/localid_validation.js";
+} from "/static/register_with_support/components/localid_validation.js";
 import {
-    inputSupportForm,
+    editorForm,
     validateAndRegister,
-} from "/static/register_with_support/no_file_register_form.js";
+} from "/static/register_with_support/components/base_editor.js";
+import {
+    setupRelatedPartiesTable,
+} from "/static/register_with_support/components/related_parties_table.js";
 import {
     checkCitationSectionValidity,
     checkKeywordsSectionValidity,
-} from "/static/register_with_support/project/additional_form_validation.js";
+    checkRelatedPartiesSectionValidity,
+} from "/static/register_with_support/components/project/additional_form_validation.js";
 import {
     setupKeywordsTable,
-} from "/static/register_with_support/project/keywords_table.js";
-import {
-    setupRelatedPartiesTable,
-} from "/static/register_with_support/project/related_parties_table.js";
+} from "/static/register_with_support/components/project/keywords_table.js";
 
 function prepareKeywordsJSON() {
     const keywordsCategorised = {};
@@ -53,12 +54,18 @@ function prepareFormForSubmission() {
     prepareRelatedPartiesJSON();
 }
 
-inputSupportForm.addEventListener("submit", async e => {
+editorForm.addEventListener("submit", async e => {
     e.preventDefault();
 
     // Run custom form validation
-    checkCitationSectionValidity();
-    checkKeywordsSectionValidity();
+    const checks = [
+        checkCitationSectionValidity(),
+        checkKeywordsSectionValidity(),
+        checkRelatedPartiesSectionValidity(),
+    ];
+    if (checks.some(check => check === false)) {
+        return false;
+    }
 
     prepareFormForSubmission();
 

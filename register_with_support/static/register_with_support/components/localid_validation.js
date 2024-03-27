@@ -1,6 +1,6 @@
 import {
     generateLocalId,
-} from "/static/register_with_support/localid_generation.js";
+} from "/static/register_with_support/components/localid_generation.js";
 
 const localIdValidationUrl = JSON.parse(document.getElementById("local-id-validation-url").textContent);
 const localIdTakenElement = document.querySelector(".local-id-input-group .taken-localid");
