@@ -284,3 +284,14 @@ class ProjectInputSupportForm(
             'class': 'form-select',
         })
     )
+
+class PlatformInputSupportForm(
+    BaseInputSupportForm,
+    OrganisationInputSupportFormComponent,
+    RelatedPartiesInputSupportFormComponent):
+    short_name = forms.CharField(
+        label="Short Name",
+        required=False,
+        widget=forms.TextInput(),
+        help_text='An acronym or abbreviation of the platform\'s name.'
+    )

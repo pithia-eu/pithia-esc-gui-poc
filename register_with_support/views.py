@@ -281,5 +281,31 @@ class ProjectRegisterWithoutFileFormView(
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
-        print("kwargs['status_choices']", kwargs['status_choices'])
+        return kwargs
+
+class PlatformRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
+    ResourceRegisterWithoutFileFormView):
+    success_url = reverse_lazy('register:platform_no_file')
+    form_class = PlatformInputSupportForm
+    template_name = 'register_with_support/platform_form.html'
+
+    model = models.Platform
+    metadata_builder_class = PlatformMetadata
+    file_upload_registration_url = reverse_lazy('register:platform')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Platform.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
+
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        return processed_form
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs
