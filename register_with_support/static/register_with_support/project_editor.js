@@ -6,6 +6,9 @@ import {
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
 import {
+    prepareRelatedPartiesJSON,
+} from "/static/register_with_support/components/json_field_processing.js";
+import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
@@ -33,20 +36,6 @@ function prepareKeywordsJSON() {
     });
     const keywordsHiddenInput = document.querySelector("input[name='keywords_json']");
     keywordsHiddenInput.value = JSON.stringify(keywordsCategorised);
-}
-
-function prepareRelatedPartiesJSON() {
-    const relatedPartiesCategorised = {};
-    const relatedPartyTableRows = document.querySelectorAll("#table-related-parties tbody tr");
-    relatedPartyTableRows.forEach(row => {
-        const relatedPartyRoleSelect = row.querySelector("select[name='related_party_role']");
-        if (relatedPartyRoleSelect !== null && relatedPartyRoleSelect.value.trim() !== "") {
-            const relatedPartySelects = Array.from(row.querySelectorAll("select[name='related_party']"));
-            relatedPartiesCategorised[relatedPartyRoleSelect.value] = relatedPartySelects.map(select => select.value);
-        }
-    });
-    const relatedPartiesHiddenInput = document.querySelector("input[name='related_parties_json']");
-    relatedPartiesHiddenInput.value = JSON.stringify(relatedPartiesCategorised);
 }
 
 function prepareFormForSubmission() {
