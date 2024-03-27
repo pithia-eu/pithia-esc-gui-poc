@@ -11,6 +11,7 @@ import {
 import {
     checkCitationSectionValidity,
     checkKeywordsSectionValidity,
+    checkRelatedPartiesSectionValidity,
 } from "/static/register_with_support/components/project/additional_form_validation.js";
 import {
     setupKeywordsTable,
@@ -57,8 +58,14 @@ editorForm.addEventListener("submit", async e => {
     e.preventDefault();
 
     // Run custom form validation
-    checkCitationSectionValidity();
-    checkKeywordsSectionValidity();
+    const checks = [
+        checkCitationSectionValidity(),
+        checkKeywordsSectionValidity(),
+        checkRelatedPartiesSectionValidity(),
+    ];
+    if (!checks.some(check => check === true)) {
+        return false;
+    }
 
     prepareFormForSubmission();
 
