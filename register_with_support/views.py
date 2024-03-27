@@ -304,6 +304,17 @@ class PlatformRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Platform.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
+    def get_type_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("platformType")
+        type_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            type_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in type_dict.items())
+        )
+
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
@@ -314,4 +325,5 @@ class PlatformRegisterWithoutFormView(
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        kwargs['type_choices'] = self.get_type_choices_for_form()
         return kwargs

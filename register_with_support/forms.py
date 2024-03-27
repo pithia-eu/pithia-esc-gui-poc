@@ -289,9 +289,21 @@ class PlatformEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
+    def __init__(self, *args, type_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].choices = type_choices
+
     short_name = forms.CharField(
         label="Short Name",
         required=False,
         widget=forms.TextInput(),
         help_text='An acronym or abbreviation of the platform\'s name.'
+    )
+
+    type = forms.ChoiceField(
+        label="Type",
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
     )
