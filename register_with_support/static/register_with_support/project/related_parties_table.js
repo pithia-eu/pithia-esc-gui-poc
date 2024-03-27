@@ -2,6 +2,8 @@ import {
     inputSupportForm,
 } from "/static/register_with_support/no_file_register_form.js";
 
+const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
+
 const relatedPartiesTable = inputSupportForm.querySelector("#table-related-parties");
 const relatedPartiesTableBody = relatedPartiesTable.querySelector("tbody");
 const addRelatedPartyRoleButton = document.getElementById("add-rprrow-button");
@@ -21,6 +23,14 @@ function getNumRemainingRelatedPartySelectsOfRow(tableRow) {
 
 function getNumRemainingRelatedPartyRoles() {
     return relatedPartiesTableBody.querySelectorAll("tr").length;
+}
+
+function generateUniqueElemIdFromCurrentElemId(currentElemId) {
+    const isTimestampAddedAlready = Number.isInteger(Number.parseInt(currentElemId.slice(-UNIX_TIMESTAMP_LENGTH)));
+    if (isTimestampAddedAlready) {
+        return `${currentElemId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
+    }
+    return `${currentElemId}${Date.now()}`;
 }
 
 function removeRelatedParty(event) {
@@ -58,7 +68,7 @@ function addRelatedParty(event) {
     // Update any IDs that are duplicated
     const childElementsWithIdAttribute = newRelatedPartyLiElement.querySelectorAll("[id]");
     childElementsWithIdAttribute.forEach(elem => {
-        const newId = `${elem.id}${Date.now()}`;
+        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
         const relatedPartyLabel = containingTableRow.querySelector(`label[for="${elem.id}"]`);
         elem.id = newId;
         elem.setAttribute("aria-label", relatedPartyLabel.innerHTML);
@@ -124,8 +134,8 @@ function addRelatedPartyRole(event) {
     // unique.
     const childElementsWithIdAttribute = newRow.querySelectorAll("[id]");
     childElementsWithIdAttribute.forEach(elem => {
-        const newId = `${elem.id}${Date.now()}`;
-        const correspondingLabels = newRow.querySelectorAll(`label[for="${elem.id}"]`)
+        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
+        const correspondingLabels = newRow.querySelectorAll(`label[for="${elem.id}"]`);
         elem.id = newId;
         correspondingLabels.forEach(label => {
             label.htmlFor = newId;
