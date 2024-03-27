@@ -63,7 +63,7 @@ editorForm.addEventListener("submit", async e => {
         checkKeywordsSectionValidity(),
         checkRelatedPartiesSectionValidity(),
     ];
-    if (!checks.some(check => check === true)) {
+    if (checks.some(check => check === false)) {
         return false;
     }
 
