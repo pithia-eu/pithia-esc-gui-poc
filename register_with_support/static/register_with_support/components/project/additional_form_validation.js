@@ -25,10 +25,10 @@ export function checkCitationSectionValidity() {
         citationDateInput.classList.add("is-invalid");
         citationDateInput.focus();
         return false;
-    } else {
-        citationDateInput.classList.remove("was-validated");
-        citationDateInput.classList.remove("is-invalid");
     }
+    citationDateInput.classList.remove("was-validated");
+    citationDateInput.classList.remove("is-invalid");
+    return true;
 }
 
 function validateKeywordsTableAndReturnInvalidInputs() {
@@ -70,13 +70,50 @@ export function checkKeywordsSectionValidity() {
         input.classList.add("was-validated");
         input.classList.add("is-invalid");
     });
-    if (invalidInputs.length > 0) invalidInputs[0].focus();
+    if (invalidInputs.length > 0) {
+        invalidInputs[0].focus();
+        return false;
+    }
+    return true;
 }
 
-function isRelatedPartiesSectionValid() {
-
+function validateRelatedPartiesTableAndReturnInvalidSelects() {
+    const relatedPartiesTableRows = Array.from(editorForm.querySelectorAll("#table-related-parties tbody tr"));
+    let invalidSelects = [];
+    for (const row of relatedPartiesTableRows) {
+        const roleSelect = row.querySelector("td:nth-of-type(1) select");
+        const partySelects = Array.from(row.querySelectorAll("td:nth-of-type(2) select"));
+        if (!roleSelect) {
+            continue;
+        }
+        if (!(roleSelect.value.length > 0)
+            && !(partySelects.every(select => select.value.length > 0))) {
+            continue;
+        }
+        if (!roleSelect.value.length > 0) {
+            invalidSelects.push(roleSelect);
+        }
+        if (!partySelects.some(select => select.value.length > 0)) {
+            invalidSelects.push(partySelects[0]);
+        }
+    }
+    return invalidSelects;
 }
 
-function checkRelatedPartiesSectionValidity() {
-
+export function checkRelatedPartiesSectionValidity() {
+    const invalidSelects = validateRelatedPartiesTableAndReturnInvalidSelects();
+    const validatedSelects = editorForm.querySelectorAll("#table-related-parties tbody tr select.was-validated");
+    validatedSelects.forEach(input => {
+        input.classList.remove("was-validated");
+        input.classList.remove("is-invalid");
+    });
+    invalidSelects.forEach(input => {
+        input.classList.add("was-validated");
+        input.classList.add("is-invalid");
+    });
+    if (invalidSelects.length > 0) {
+        invalidSelects[0].focus();
+        return false;
+    }
+    return true;
 }
