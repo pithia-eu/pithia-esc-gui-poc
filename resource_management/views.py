@@ -145,6 +145,7 @@ class PlatformManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:platform'
     resource_update_page_url_name = 'update:platform'
     resource_register_page_url_name = 'register:platform'
+    resource_register_with_editor_name = 'register:platform_with_editor'
     resource_xml_download_page_url_name = 'utils:view_platform_as_xml'
 
     def get_context_data(self, **kwargs):
