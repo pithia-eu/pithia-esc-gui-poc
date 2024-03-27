@@ -12,7 +12,7 @@ import {
     checkCitationSectionValidity,
     checkKeywordsSectionValidity,
     checkRelatedPartiesSectionValidity,
-} from "/static/register_with_support/components/project/additional_form_validation.js";
+} from "/static/register_with_support/components/additional_form_validation.js";
 import {
     setupKeywordsTable,
 } from "/static/register_with_support/components/project/keywords_table.js";
