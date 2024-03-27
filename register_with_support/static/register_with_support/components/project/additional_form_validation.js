@@ -1,6 +1,6 @@
 import {
     inputSupportForm,
-} from "/static/register_with_support/no_file_register_form.js";
+} from "/static/register_with_support/components/no_file_register_form.js";
 
 function isCitationSectionValid() {
     const citationDateInput = document.querySelector("#citation-section input[name='citation_publication_date']");

@@ -1,6 +1,6 @@
 import {
     inputSupportForm,
-} from "/static/register_with_support/no_file_register_form.js";
+} from "/static/register_with_support/components/no_file_register_form.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 

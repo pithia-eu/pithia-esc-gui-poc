@@ -1,20 +1,20 @@
 import {
     setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/register_with_support/localid_validation.js";
+} from "/static/register_with_support/components/localid_validation.js";
 import {
     inputSupportForm,
     validateAndRegister,
-} from "/static/register_with_support/no_file_register_form.js";
+} from "/static/register_with_support/components/no_file_register_form.js";
+import {
+    setupRelatedPartiesTable,
+} from "/static/register_with_support/components/related_parties_table.js";
 import {
     checkCitationSectionValidity,
     checkKeywordsSectionValidity,
-} from "/static/register_with_support/project/additional_form_validation.js";
+} from "/static/register_with_support/components/project/additional_form_validation.js";
 import {
     setupKeywordsTable,
-} from "/static/register_with_support/project/keywords_table.js";
-import {
-    setupRelatedPartiesTable,
-} from "/static/register_with_support/project/related_parties_table.js";
+} from "/static/register_with_support/components/project/keywords_table.js";
 
 function prepareKeywordsJSON() {
     const keywordsCategorised = {};
