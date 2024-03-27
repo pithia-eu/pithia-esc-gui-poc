@@ -2,6 +2,8 @@ import {
     inputSupportForm,
 } from "/static/register_with_support/no_file_register_form.js";
 
+const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
+
 const keywordsTable = inputSupportForm.querySelector("#table-project-keywords");
 const keywordsTableBody = keywordsTable.querySelector("tbody");
 const addKeywordsRowButton = document.getElementById("add-kwrow-button");
@@ -21,6 +23,14 @@ function getNumRemainingKeywordInputsOfRow(tableRow) {
 
 function getNumRemainingKeywordRows() {
     return keywordsTableBody.querySelectorAll("tr").length;
+}
+
+function generateUniqueElemIdFromCurrentElemId(currentElemId) {
+    const isTimestampAddedAlready = Number.isInteger(Number.parseInt(currentElemId.slice(-UNIX_TIMESTAMP_LENGTH)));
+    if (isTimestampAddedAlready) {
+        return `${currentElemId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
+    }
+    return `${currentElemId}${Date.now()}`;
 }
 
 
@@ -46,6 +56,8 @@ function setupRemoveKeywordButton(removeKeywordButton) {
 }
 
 function addKeyword(event) {
+    // Copy the first keyword input HTML to
+    // add a new keyword input.
     const addKeywordButton = event.currentTarget;
     const containingTableRow = getKeywordTableRowByChildNode(addKeywordButton);
     const keywordsListElement = containingTableRow.querySelector("ul");
@@ -53,10 +65,30 @@ function addKeyword(event) {
     const newKeywordLiElement = document.createElement("li");
     newKeywordLiElement.classList = firstKeywordLiElement.classList;
     newKeywordLiElement.innerHTML = firstKeywordLiElement.innerHTML;
+
+    // Ensure any IDs in the copied HTML are
+    // not duplicated
+    const childElementsWithIdAttribute = newKeywordLiElement.querySelectorAll("[id]");
+    childElementsWithIdAttribute.forEach(elem => {
+        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
+        const keywordLabel = containingTableRow.querySelector(`label[for="${elem.id}"]`);
+        elem.id = newId;
+        if (keywordLabel) {
+            elem.setAttribute("aria-label", keywordLabel.innerHTML);
+        }
+    });
+
+    // Setup the remove button
     const removeKeywordButton = newKeywordLiElement.querySelector(".remove-kw-button");
     removeKeywordButton.disabled = false;
     setupRemoveKeywordButton(removeKeywordButton);
+
+    // Add the new keyword input
     keywordsListElement.appendChild(newKeywordLiElement);
+
+    // Enable the first remove keyword button
+    // if not enabled already as there are
+    // more than two inputs now.
     const remainingKeywordInputsInRow = getNumRemainingKeywordInputsOfRow(containingTableRow);
     if (remainingKeywordInputsInRow > 1) {
         containingTableRow.querySelector(".td-keywords .remove-kw-button").disabled = false;
@@ -102,11 +134,15 @@ function addKeywordsRow(event) {
     // unique.
     const childElementsWithIdAttribute = newRow.querySelectorAll("[id]");
     childElementsWithIdAttribute.forEach(elem => {
-        const newId = `${elem.id}${Date.now()}`;
-        const correspondingLabels = newRow.querySelectorAll(`label[for="${elem.id}"]`)
+        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
+        const correspondingLabels = newRow.querySelectorAll(`label[for="${elem.id}"]`);
+        const correspondingAriaDescBys = newRow.querySelectorAll(`[aria-describedby="${elem.id}"]`);
         elem.id = newId;
         correspondingLabels.forEach(label => {
             label.htmlFor = newId;
+        });
+        correspondingAriaDescBys.forEach(elem => {
+            elem.setAttribute("aria-describedby", newId);
         });
     });
 
