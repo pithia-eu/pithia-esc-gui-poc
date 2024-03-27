@@ -86,12 +86,18 @@ class ResourceRegisterWithEditorFormView(FormView):
         return context
 
     def form_valid(self, form):
-        processed_form = self.process_form(form.cleaned_data)
-        metadata_builder = self.metadata_builder_class(processed_form)
-        xml = metadata_builder.xml
-        localid = processed_form['localid']
-        name = processed_form['name']
-        xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
+        try:
+            processed_form = self.process_form(form.cleaned_data)
+            metadata_builder = self.metadata_builder_class(processed_form)
+            xml = metadata_builder.xml
+            localid = processed_form['localid']
+            name = processed_form['name']
+            xml_file = SimpleUploadedFile(f'{localid}.xml', xml.encode('utf-8'))
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during XML generation.')
+            messages.error(self.request, 'An unexpected error occurred during XML generation.')
+            return self.render_to_response(self.get_context_data(form=form))
+
         try:
             MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
         except XMLSchemaException as err:
