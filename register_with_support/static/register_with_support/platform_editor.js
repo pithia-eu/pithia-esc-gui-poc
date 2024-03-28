@@ -14,6 +14,9 @@ import {
 import {
     checkRelatedPartiesSectionValidity,
 } from "/static/register_with_support/components/additional_form_validation.js";
+import {
+    setupChildPlatformsList,
+} from "/static/register_with_support/components/platform/child_platforms.js";
 
 function prepareFormForSubmission() {
     prepareRelatedPartiesJSON();
@@ -35,4 +38,5 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupRelatedPartiesTable();
+    setupChildPlatformsList();
 });

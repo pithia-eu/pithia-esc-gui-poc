@@ -289,9 +289,10 @@ class PlatformEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
-    def __init__(self, *args, type_choices=(), **kwargs):
+    def __init__(self, *args, type_choices=(), child_platform_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['type'].choices = type_choices
+        self.fields['child_platform'].choices = child_platform_choices
 
     short_name = forms.CharField(
         label="Short Name",
@@ -303,6 +304,14 @@ class PlatformEditorForm(
     type = forms.ChoiceField(
         label="Type",
         required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    child_platform = forms.ChoiceField(
+        label="Child Platforms",
+        required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
         })

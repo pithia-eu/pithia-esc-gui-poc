@@ -315,6 +315,12 @@ class PlatformRegisterWithoutFormView(
             *((key, value) for key, value in type_dict.items())
         )
 
+    def get_child_platform_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(o.metadata_server_url, o.name) for o in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
@@ -326,4 +332,5 @@ class PlatformRegisterWithoutFormView(
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['type_choices'] = self.get_type_choices_for_form()
+        kwargs['child_platform_choices'] = self.get_child_platform_choices_for_form()
         return kwargs
