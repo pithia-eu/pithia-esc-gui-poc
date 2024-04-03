@@ -50,14 +50,14 @@ def process_documentation(form_cleaned_data):
     }
 
 def process_project_keywords(form_cleaned_data):
-    keyword_dict_from_form = form_cleaned_data.get('keywords_json')
+    keywords_from_form = form_cleaned_data.get('keywords_json')
     keyword_dict_list = []
-    for key, value in keyword_dict_from_form.items():
+    for keyword_dict in keywords_from_form:
         keyword_dict_list.append({
-            'keywords': value.get('keywords', []),
+            'keywords': keyword_dict.get('keywords', []),
             'type': {
-                'code_list': value.get('code', ''),
-                'code_list_value': key,
+                'code_list': keyword_dict.get('type', {}).get('codeList', ''),
+                'code_list_value': keyword_dict.get('type', {}).get('codeListValue', '')
             }
         })
     return keyword_dict_list
