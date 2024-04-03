@@ -1,6 +1,9 @@
 import {
     editorForm,
 } from "/static/register_with_support/components/base_editor.js";
+import {
+    prepareRelatedPartiesJSON,
+} from "/static/register_with_support/components/json_field_processing.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 
@@ -33,13 +36,12 @@ function generateUniqueElemIdFromCurrentElemId(currentElemId) {
     return `${currentElemId}${Date.now()}`;
 }
 
-function removeRelatedParty(event) {
-    const removeRelatedPartyButton = event.currentTarget;
-    const containingTableRow = getRelatedPartiesTableRowByChildNode(removeRelatedPartyButton);
+function removeRelatedParty(liChildElement) {
+    const containingTableRow = getRelatedPartiesTableRowByChildNode(liChildElement);
     const relatedPartiesListElement = containingTableRow.querySelector("ul");
     const relatedPartyLiElements = relatedPartiesListElement.querySelectorAll("li");
     for (const liElement of relatedPartyLiElements) {
-        if (liElement.contains(removeRelatedPartyButton)) {
+        if (liElement.contains(liChildElement)) {
             relatedPartiesListElement.removeChild(liElement);
             break;
         }
@@ -51,14 +53,16 @@ function removeRelatedParty(event) {
 }
 
 function setupRemoveRelatedPartyButton(removeRelatedPartyButton) {
-    removeRelatedPartyButton.addEventListener("click", removeRelatedParty);
+    removeRelatedPartyButton.addEventListener("click", e => {
+        removeRelatedParty(e.currentTarget);
+        prepareRelatedPartiesJSON();
+    });
 }
 
-function addRelatedParty(event) {
+function addRelatedParty(rowChildElement) {
     // Create a new related party input by
     // copying the first one in the list.
-    const addRelatedPartyButton = event.currentTarget;
-    const containingTableRow = getRelatedPartiesTableRowByChildNode(addRelatedPartyButton);
+    const containingTableRow = getRelatedPartiesTableRowByChildNode(rowChildElement);
     const relatedPartiesListElement = containingTableRow.querySelector("ul");
     const firstRelatedPartyLiElement = relatedPartiesListElement.querySelector("li");
     const newRelatedPartyLiElement = document.createElement("li");
@@ -90,15 +94,18 @@ function addRelatedParty(event) {
     if (remainingRelatedPartySelectsInRow > 1) {
         containingTableRow.querySelector(".td-related-parties .remove-rp-button").disabled = false;
     }
+    return newRelatedPartyLiElement;
 }
 
 function setupAddRelatedPartyButton(addRelatedPartyButton) {
-    addRelatedPartyButton.addEventListener("click", addRelatedParty);
+    addRelatedPartyButton.addEventListener("click", e => {
+        addRelatedParty(e.currentTarget);
+        prepareRelatedPartiesJSON();
+    });
 }
 
-function removeRelatedPartyRole(event) {
-    const removeRelatedPartyRoleButton = event.currentTarget;
-    const containingTableRow = getRelatedPartiesTableRowByChildNode(removeRelatedPartyRoleButton);
+function removeRelatedPartyRole(rowChildElement) {
+    const containingTableRow = getRelatedPartiesTableRowByChildNode(rowChildElement);
     relatedPartiesTableBody.removeChild(containingTableRow);
     const numRemainingTableRows = getNumRemainingRelatedPartyRoles();
     if (numRemainingTableRows === 1) {
@@ -108,10 +115,13 @@ function removeRelatedPartyRole(event) {
 }
 
 function setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton) {
-    removeRelatedPartyRoleButton.addEventListener("click", removeRelatedPartyRole);
+    removeRelatedPartyRoleButton.addEventListener("click", e => {
+        removeRelatedPartyRole(e.currentTarget);
+        prepareRelatedPartiesJSON();
+    });
 }
 
-function addRelatedPartyRole(event) {
+function addRelatedPartyRole() {
     // Create new table row by copying HTML of
     // first table row.
     const relatedPartiesTableFirstRow = relatedPartiesTableBody.querySelector("tr");
@@ -129,6 +139,14 @@ function addRelatedPartyRole(event) {
         input.classList.remove("was-validated");
         input.classList.remove("is-invalid");
     });
+    const rowSelects = newRow.querySelectorAll("select");
+    rowSelects.forEach(select => {
+        select.value = "";
+    });
+    const removeRelatedPartyButton = newRow.querySelector(".remove-rp-button");
+    removeRelatedPartyButton.disabled = true;
+    const removeRelatedPartyRoleButton = newRow.querySelector(".remove-rprrow-button");
+    removeRelatedPartyRoleButton.disabled = false;
 
     // Ensure the IDs of any child elements are
     // unique.
@@ -142,14 +160,8 @@ function addRelatedPartyRole(event) {
         });
     });
     
-    // Set up each of the buttons in the row
-    const addRelatedPartyButton = newRow.querySelector(".add-rp-button");
-    setupAddRelatedPartyButton(addRelatedPartyButton);
-    const removeRelatedPartyButton = newRow.querySelector(".remove-rp-button");
-    setupRemoveRelatedPartyButton(removeRelatedPartyButton);
-    const removeRelatedPartyRoleButton = newRow.querySelector(".remove-rprrow-button");
-    removeRelatedPartyRoleButton.disabled = false;
-    setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton);
+    // Set up the row's event listeners
+    setupRowEventListeners(newRow);
 
     // Add the row to the table
     relatedPartiesTableBody.appendChild(newRow);
@@ -161,27 +173,69 @@ function addRelatedPartyRole(event) {
         const firstRemoveRoleButton = relatedPartiesTableBody.querySelector(".remove-rprrow-button");
         firstRemoveRoleButton.disabled = false;
     }
+
+    return newRow;
+}
+
+function setupSelectEventMappingForRow(tableRow) {
+    const selects = tableRow.querySelectorAll("select");
+    selects.forEach(input => {
+        input.addEventListener("change", () => {
+            prepareRelatedPartiesJSON();
+        });
+    });
+}
+
+function setupRowEventListeners(tableRow) {
+    setupSelectEventMappingForRow(tableRow);
+    const addRelatedPartyButton = tableRow.querySelector(".add-rp-button");
+    setupAddRelatedPartyButton(addRelatedPartyButton);
+    const removeRelatedPartyButton = tableRow.querySelector(".remove-rp-button");
+    setupRemoveRelatedPartyButton(removeRelatedPartyButton);
+    const removeRelatedPartyRoleButton = tableRow.querySelector(".remove-rprrow-button");
+    setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton);
 }
 
 function setupAddRelatedPartyRoleButton() {
-    addRelatedPartyRoleButton.addEventListener("click", addRelatedPartyRole);
+    addRelatedPartyRoleButton.addEventListener("click", () => {
+        addRelatedPartyRole();
+        prepareRelatedPartiesJSON();
+    });
+}
+
+function loadPreviousData() {
+    const previousData = JSON.parse(editorForm.querySelector("input[name='related_parties_json']").value);
+    if (!previousData) {
+        return;
+    }
+    for (let i = 0; i < previousData.length - 1; i++) {
+        addRelatedPartyRole();
+    }
+    let rowIndex = 1;
+    for (const relatedPartyObject of previousData) {
+        const role = relatedPartyObject.role;
+        const parties = relatedPartyObject.parties;
+        const correspondingRow = relatedPartiesTableBody.querySelector(`tr:nth-of-type(${rowIndex})`);
+        // Role
+        const roleSelect = correspondingRow.querySelector("select[name='related_party_role']");
+        roleSelect.value = role;
+        // Parties
+        const partySelect = correspondingRow.querySelector("select[name='related_party']");
+        partySelect.value = parties[0];
+        if (parties.length > 1) {
+            for (let i = 1; i < parties.length; i++) {
+                const newPartyLiElement = addRelatedParty(partySelect);
+                const correspondingPartySelect = newPartyLiElement.querySelector("select[name='related_party']");
+                correspondingPartySelect.value = parties[i];
+            }
+        }
+        rowIndex += 1;
+    }
 }
 
 export function setupRelatedPartiesTable() {
-    const relatedPartiesTableRows = relatedPartiesTableBody.querySelectorAll("tr");
-    relatedPartiesTableRows.forEach(row => {
-        const addRelatedPartyButton = row.querySelector(".add-rp-button");
-        setupAddRelatedPartyButton(addRelatedPartyButton);
-        const removeRelatedPartyButton = row.querySelector(".remove-rp-button");
-        setupRemoveRelatedPartyButton(removeRelatedPartyButton);
-        if (getNumRemainingRelatedPartySelectsOfRow(row) === 1) {
-            removeRelatedPartyButton.disabled = true;
-        }
-        const removeRelatedPartyRoleButton = document.querySelector(".remove-rprrow-button");
-        setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton);
-        if (relatedPartiesTableRows.length === 1) {
-            removeRelatedPartyRoleButton.disabled = true;
-        }
-    });
+    const firstRelatedPartiesTableRow = relatedPartiesTableBody.querySelector("tr");
+    loadPreviousData();
+    setupRowEventListeners(firstRelatedPartiesTableRow);
     setupAddRelatedPartyRoleButton();
 }
