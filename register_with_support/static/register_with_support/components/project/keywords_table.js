@@ -218,7 +218,7 @@ function loadPreviousData() {
     if (!previousData) {
         return;
     }
-    for (let i = 0; i < Object.keys(previousData).length - 1; i++) {
+    for (let i = 0; i < previousData.length - 1; i++) {
         addKeywordsRow();
     }
     let rowIndex = 1;
