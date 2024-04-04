@@ -7,17 +7,6 @@ function initialiseDefaultSelectControls(selectControls) {
     });
 }
 
-function initialiseKeywordsInput(keywordsInput) {
-    new TomSelect(keywordsInput, {
-        create: true,
-        persist: false,
-        render: {
-            no_results: null,
-        },
-    });
-}
-
 window.addEventListener("load", () => {
     initialiseDefaultSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector})`));
-    initialiseKeywordsInput(document.querySelector(keywordsInputSelector));
 });
