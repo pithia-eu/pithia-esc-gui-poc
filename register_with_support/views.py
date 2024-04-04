@@ -167,10 +167,10 @@ class RelatedPartiesSelectFormViewMixin(View):
     def get_related_party_choices_for_form(self):
         return (
             ('', ''),
-            ('Organisations', (
+            ('Organisations', list(
                 (o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
             )),
-            ('Individuals', (
+            ('Individuals', list(
                 (o.metadata_server_url, o.name) for o in models.Individual.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
             ))
         )
