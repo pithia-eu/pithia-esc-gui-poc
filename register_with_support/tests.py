@@ -1,4 +1,5 @@
 from django.test import SimpleTestCase
+from xmlschema.validators.exceptions import XMLSchemaDecodeError
 
 from .metadata_builder.metadata_structures import (
     AcquisitionCapabilitiesMetadata,
@@ -130,9 +131,9 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     def test_project_no_citation_title(self):
         self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_TITLE)
 
-    def test_project_no_citation_date(self):
+    def test_project_no_citation_date_fails(self):
         """
         Fails the test as a valid date is required if
         other citation details are provided.
         """
-        self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_DATE)
+        self.assertRaises(XMLSchemaDecodeError, self.create_xml_and_validate_against_schema, ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_DATE)

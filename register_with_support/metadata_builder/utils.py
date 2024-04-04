@@ -50,24 +50,33 @@ def process_documentation(form_cleaned_data):
     }
 
 def process_project_keywords(form_cleaned_data):
-    keyword_dict_from_form = form_cleaned_data.get('keywords_json')
+    keywords_from_form = form_cleaned_data.get('keywords_json')
     keyword_dict_list = []
-    for key, value in keyword_dict_from_form.items():
+    for keyword_dict in keywords_from_form:
+        keywords = keyword_dict.get('keywords')
+        code_list = keyword_dict.get('type', {}).get('codeList')
+        code_list_value = keyword_dict.get('type', {}).get('codeListValue')
+        if any(not x for x in (keywords, code_list, code_list_value)):
+            continue
         keyword_dict_list.append({
-            'keywords': value.get('keywords', []),
+            'keywords': keywords,
             'type': {
-                'code_list': value.get('code', ''),
-                'code_list_value': key,
+                'code_list': code_list,
+                'code_list_value': code_list_value,
             }
         })
     return keyword_dict_list
 
 def process_related_parties(form_cleaned_data):
-    related_parties_dict_from_form = form_cleaned_data.get('related_parties_json')
-    related_parties_dict_list = []
-    for key, value in related_parties_dict_from_form.items():
-        related_parties_dict_list.append({
-            'role': key,
-            'parties': value,
+    related_parties_from_form = form_cleaned_data.get('related_parties_json')
+    related_party_dict_list = []
+    for related_party_dict in related_parties_from_form:
+        role = related_party_dict.get('role')
+        party = related_party_dict.get('parties')
+        if any(not x for x in (role, party)):
+            continue
+        related_party_dict_list.append({
+            'role': role,
+            'parties': party,
         })
-    return related_parties_dict_list
+    return related_party_dict_list
