@@ -95,7 +95,15 @@
                         name="{{ request.institution_selection_form.institutions.name }}"
                         id="{{ request.institution_selection_form.institutions.auto_id }}"
                         class="form-select mb-3"
-                        required="{{ request.institution_selection_form.institutions.required }}">
+                        required="{{ request.institution_selection_form.institutions.required }}"
+                        {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
+                        {% if num_available_institutions == 1 %}
+                        placeholder="{{ num_available_institutions }} other available..."
+                        {% else %}
+                        placeholder="{{ num_available_institutions }} others available..."
+                        {% endif %}
+                        {% endwith %}
+                        >
                         <option value="" disabled selected>
                             {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length|add:-1 %}
                             {% if num_available_institutions == 1 %}
