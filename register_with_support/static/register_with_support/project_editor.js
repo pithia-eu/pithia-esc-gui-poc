@@ -33,7 +33,7 @@ editorForm.addEventListener("submit", async e => {
     const checks = [
         checkCitationSectionValidity(),
         checkKeywordsSectionValidity(),
-        checkRelatedPartiesSectionValidity(),
+        // checkRelatedPartiesSectionValidity(),
     ];
     if (checks.some(check => check === false)) {
         return false;

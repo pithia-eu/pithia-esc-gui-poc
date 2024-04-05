@@ -2,6 +2,7 @@
 {% load static %}
 {% block extra_scripts %}
 <script src="{% static 'register_with_support/project_editor.js' %}" type="module" defer></script>
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template'}}
 {% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-section">

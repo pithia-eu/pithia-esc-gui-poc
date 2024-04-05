@@ -14,31 +14,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="col-lg-6">
-                            <div class="d-lg-none d-block">
-                                {{ form.related_party_role.label_tag }}
-                            </div>
-                            {{ form.related_party_role }}
-                            <div class="invalid-feedback">
-                                Select a role
-                            </div>
-                        </td>
-                        <td class="col-lg-6 td-related-parties">
-                            <div class="d-lg-none d-block">
-                                {{ form.related_party.label_tag }}
-                            </div>
-                            {{ form.related_party }}
-                            <div class="invalid-feedback">
-                                Select a related party
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-outline-danger remove-rprrow-button" type="button" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16" aria-label="Remove related party role">
-                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                                </svg>
-                            </button>
-                        </td>
+                        {% include 'register_with_support/components/related_parties_row_content_template.html' %}
                     </tr>
                 </tbody>
             </table>

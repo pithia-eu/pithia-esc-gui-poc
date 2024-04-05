@@ -4,6 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -185,6 +186,15 @@ class RelatedPartiesSelectFormViewMixin(View):
             ('', ''),
             *((key, value) for key, value in status_dict.items())
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_parties_row_content_template'] = render_to_string(
+            'register_with_support/components/related_parties_row_content_template.html',
+            context=context
+        )
+        return context
+    
 
 class OrganisationRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:organisation_with_editor')

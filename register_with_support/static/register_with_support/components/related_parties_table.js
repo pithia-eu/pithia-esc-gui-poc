@@ -4,12 +4,16 @@ import {
 import {
     prepareRelatedPartiesJSON,
 } from "/static/register_with_support/components/json_field_processing.js";
+import {
+    checkAndConfigureRequiredAttributesOfSelects,
+} from "/static/register_with_support/components/project/conditional_required_fields.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 
 const relatedPartiesTable = editorForm.querySelector("#table-related-parties");
 const relatedPartiesTableBody = relatedPartiesTable.querySelector("tbody");
 const addRelatedPartyRoleButton = document.getElementById("add-rprrow-button");
+const relatedPartiesTableRowContentTemplate = JSON.parse(document.getElementById("related-parties-row-content-template").textContent);
 
 // Utils
 function getRelatedPartiesTableRowByChildNode(childNode) {
@@ -51,14 +55,6 @@ function setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton) {
 }
 
 function resetDuplicatedRowElements(newRow) {
-    // Remove any validation styling if there
-    // is any
-    const newRowHighlightedSelects = newRow.querySelectorAll("select.was-validated");
-    newRowHighlightedSelects.forEach(select => {
-        select.classList.remove("was-validated");
-        select.classList.remove("is-invalid");
-    });
-
     // Reset any selected choices
     const rowSelects = newRow.querySelectorAll("select");
     rowSelects.forEach(select => {
@@ -66,6 +62,7 @@ function resetDuplicatedRowElements(newRow) {
             option.selected = false;
         });
         select.className = "form-select";
+        select.removeAttribute("required");
     });
 
     // Remove any custom select elements
@@ -94,9 +91,8 @@ function fixDuplicatedRowElementIds(newRow) {
 function addRelatedPartyRole() {
     // Create new table row by copying HTML of
     // first table row.
-    const relatedPartiesTableFirstRow = relatedPartiesTableBody.querySelector("tr");
     const newRow = document.createElement("TR");
-    newRow.innerHTML = relatedPartiesTableFirstRow.innerHTML;
+    newRow.innerHTML = relatedPartiesTableRowContentTemplate;
     
     // Reset any child elements to their default
     // states if not already.
@@ -134,6 +130,7 @@ function setupSelectEventMappingForRow(tableRow) {
     const selects = Array.from(tableRow.querySelectorAll("select"));
     selects.forEach(s => {
         s.addEventListener("change", e => {
+            checkAndConfigureRequiredAttributesOfSelects(selects);
             prepareRelatedPartiesJSON();
         });
     });
@@ -157,14 +154,13 @@ function loadPreviousData() {
     if (!previousData) {
         return;
     }
-    for (let i = 0; i < previousData.length - 1; i++) {
-        addRelatedPartyRole();
-    }
-    let rowIndex = 1;
-    for (const relatedPartyObject of previousData) {
+    previousData.forEach((relatedPartyObject, i) => {
+        if (i !== 0) {
+            addRelatedPartyRole();
+        }
         const role = relatedPartyObject.role;
         const parties = relatedPartyObject.parties;
-        const correspondingRow = relatedPartiesTableBody.querySelector(`tr:nth-of-type(${rowIndex})`);
+        const correspondingRow = relatedPartiesTableBody.querySelector(`tr:nth-of-type(${i + 1})`);
 
         // Load role
         const roleSelect = correspondingRow.querySelector("select[name='related_party_role']");
@@ -175,6 +171,7 @@ function loadPreviousData() {
 
         // Load parties
         const partySelect = correspondingRow.querySelector("select[name='related_party']");
+        partySelect.value = "";
         parties.forEach(party => {
             partySelect.querySelector(`option[value="${party}"]`).selected = true;
         });
@@ -182,8 +179,8 @@ function loadPreviousData() {
             detail: partySelect.id,
         }));
 
-        rowIndex += 1;
-    }
+        checkAndConfigureRequiredAttributesOfSelects(Array.from(correspondingRow.querySelectorAll("select")));
+    });
 }
 
 export function setupRelatedPartiesTable() {
