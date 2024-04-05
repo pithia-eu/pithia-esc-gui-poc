@@ -11,6 +11,7 @@ const relatedPartiesTable = editorForm.querySelector("#table-related-parties");
 const relatedPartiesTableBody = relatedPartiesTable.querySelector("tbody");
 const addRelatedPartyRoleButton = document.getElementById("add-rprrow-button");
 
+// Utils
 function getRelatedPartiesTableRowByChildNode(childNode) {
     const relatedPartiesTableRows = relatedPartiesTableBody.querySelectorAll("tr");
     for (const row of relatedPartiesTableRows) {
@@ -18,10 +19,6 @@ function getRelatedPartiesTableRowByChildNode(childNode) {
             return row;
         }
     }
-}
-
-function getNumRemainingRelatedPartySelectsOfRow(tableRow) {
-    return tableRow.querySelectorAll("select[name='related_party']").length;
 }
 
 function getNumRemainingRelatedPartyRoles() {
@@ -34,74 +31,6 @@ function generateUniqueElemIdFromCurrentElemId(currentElemId) {
         return `${currentElemId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
     }
     return `${currentElemId}${Date.now()}`;
-}
-
-function removeRelatedParty(liChildElement) {
-    const containingTableRow = getRelatedPartiesTableRowByChildNode(liChildElement);
-    const relatedPartiesListElement = containingTableRow.querySelector("ul");
-    const relatedPartyLiElements = relatedPartiesListElement.querySelectorAll("li");
-    for (const liElement of relatedPartyLiElements) {
-        if (liElement.contains(liChildElement)) {
-            relatedPartiesListElement.removeChild(liElement);
-            break;
-        }
-    }
-    const remainingRelatedPartySelectsInRow = getNumRemainingRelatedPartySelectsOfRow(containingTableRow);
-    if (remainingRelatedPartySelectsInRow === 1) {
-        containingTableRow.querySelector(".td-related-parties .remove-rp-button").disabled = true;
-    }
-}
-
-function setupRemoveRelatedPartyButton(removeRelatedPartyButton) {
-    removeRelatedPartyButton.addEventListener("click", e => {
-        removeRelatedParty(e.currentTarget);
-        prepareRelatedPartiesJSON();
-    });
-}
-
-function addRelatedParty(rowChildElement) {
-    // Create a new related party input by
-    // copying the first one in the list.
-    const containingTableRow = getRelatedPartiesTableRowByChildNode(rowChildElement);
-    const relatedPartiesListElement = containingTableRow.querySelector("ul");
-    const firstRelatedPartyLiElement = relatedPartiesListElement.querySelector("li");
-    const newRelatedPartyLiElement = document.createElement("li");
-    newRelatedPartyLiElement.classList = firstRelatedPartyLiElement.classList;
-    newRelatedPartyLiElement.innerHTML = firstRelatedPartyLiElement.innerHTML;
-    
-    // Update any IDs that are duplicated
-    const childElementsWithIdAttribute = newRelatedPartyLiElement.querySelectorAll("[id]");
-    childElementsWithIdAttribute.forEach(elem => {
-        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
-        const relatedPartyLabel = containingTableRow.querySelector(`label[for="${elem.id}"]`);
-        elem.id = newId;
-        elem.setAttribute("aria-label", relatedPartyLabel.innerHTML);
-    });
-
-    // Enable the remove button if it's
-    // disabled as there's more than one
-    // related party input now.
-    const removeRelatedPartyButton = newRelatedPartyLiElement.querySelector(".remove-rp-button");
-    removeRelatedPartyButton.disabled = false;
-    // Setup the remove button
-    setupRemoveRelatedPartyButton(removeRelatedPartyButton);
-    // Add the new related party input
-    relatedPartiesListElement.appendChild(newRelatedPartyLiElement);
-    
-    // Enable the first select menu's remove
-    // button if it's not already enabled.
-    const remainingRelatedPartySelectsInRow = getNumRemainingRelatedPartySelectsOfRow(containingTableRow);
-    if (remainingRelatedPartySelectsInRow > 1) {
-        containingTableRow.querySelector(".td-related-parties .remove-rp-button").disabled = false;
-    }
-    return newRelatedPartyLiElement;
-}
-
-function setupAddRelatedPartyButton(addRelatedPartyButton) {
-    addRelatedPartyButton.addEventListener("click", e => {
-        addRelatedParty(e.currentTarget);
-        prepareRelatedPartiesJSON();
-    });
 }
 
 function removeRelatedPartyRole(rowChildElement) {
@@ -121,35 +50,36 @@ function setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton) {
     });
 }
 
-function addRelatedPartyRole() {
-    // Create new table row by copying HTML of
-    // first table row.
-    const relatedPartiesTableFirstRow = relatedPartiesTableBody.querySelector("tr");
-    const newRow = document.createElement("TR");
-    newRow.innerHTML = relatedPartiesTableFirstRow.innerHTML;
-    
-    // Reset any child elements to their default
-    // states if not already.
-    const newRowRelatedPartiesList = newRow.querySelector("td.td-related-parties ul");
-    if (newRowRelatedPartiesList.querySelectorAll("li").length > 0) {
-        newRowRelatedPartiesList.innerHTML = newRowRelatedPartiesList.querySelector("li").outerHTML;
-    }
-    const newRowHighlightedInputs = newRow.querySelectorAll("input.was-validated");
-    newRowHighlightedInputs.forEach(input => {
-        input.classList.remove("was-validated");
-        input.classList.remove("is-invalid");
+function resetDuplicatedRowElements(newRow) {
+    // Remove any validation styling if there
+    // is any
+    const newRowHighlightedSelects = newRow.querySelectorAll("select.was-validated");
+    newRowHighlightedSelects.forEach(select => {
+        select.classList.remove("was-validated");
+        select.classList.remove("is-invalid");
     });
+
+    // Reset any selected choices
     const rowSelects = newRow.querySelectorAll("select");
     rowSelects.forEach(select => {
-        select.value = "";
+        select.querySelectorAll("option[selected]").forEach(option => {
+            option.selected = false;
+        });
+        select.className = "form-select";
     });
-    const removeRelatedPartyButton = newRow.querySelector(".remove-rp-button");
-    removeRelatedPartyButton.disabled = true;
+
+    // Remove any custom select elements
+    const tsWrappers = newRow.querySelectorAll(".ts-wrapper");
+    tsWrappers.forEach(tsw => {
+        tsw.remove();
+    });
+
+    // Enable remove related party role button
     const removeRelatedPartyRoleButton = newRow.querySelector(".remove-rprrow-button");
     removeRelatedPartyRoleButton.disabled = false;
+}
 
-    // Ensure the IDs of any child elements are
-    // unique.
+function fixDuplicatedRowElementIds(newRow) {
     const childElementsWithIdAttribute = newRow.querySelectorAll("[id]");
     childElementsWithIdAttribute.forEach(elem => {
         const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
@@ -159,6 +89,22 @@ function addRelatedPartyRole() {
             label.htmlFor = newId;
         });
     });
+}
+
+function addRelatedPartyRole() {
+    // Create new table row by copying HTML of
+    // first table row.
+    const relatedPartiesTableFirstRow = relatedPartiesTableBody.querySelector("tr");
+    const newRow = document.createElement("TR");
+    newRow.innerHTML = relatedPartiesTableFirstRow.innerHTML;
+    
+    // Reset any child elements to their default
+    // states if not already.
+    resetDuplicatedRowElements(newRow);
+
+    // Ensure the IDs of any child elements are
+    // unique.
+    fixDuplicatedRowElementIds(newRow);
     
     // Set up the row's event listeners
     setupRowEventListeners(newRow);
@@ -174,13 +120,20 @@ function addRelatedPartyRole() {
         firstRemoveRoleButton.disabled = false;
     }
 
+    window.dispatchEvent(new CustomEvent("newSelectsAdded", {
+        detail: Array.from(newRow.querySelectorAll("select:not([multiple])")).map(select => select.id),
+    }));
+    window.dispatchEvent(new CustomEvent("newMultipleChoiceSelectsAdded", {
+        detail: Array.from(newRow.querySelectorAll("select[multiple]")).map(select => select.id),
+    }));
+
     return newRow;
 }
 
 function setupSelectEventMappingForRow(tableRow) {
-    const selects = tableRow.querySelectorAll("select");
-    selects.forEach(input => {
-        input.addEventListener("change", () => {
+    const selects = Array.from(tableRow.querySelectorAll("select"));
+    selects.forEach(s => {
+        s.addEventListener("change", e => {
             prepareRelatedPartiesJSON();
         });
     });
@@ -188,10 +141,6 @@ function setupSelectEventMappingForRow(tableRow) {
 
 function setupRowEventListeners(tableRow) {
     setupSelectEventMappingForRow(tableRow);
-    const addRelatedPartyButton = tableRow.querySelector(".add-rp-button");
-    setupAddRelatedPartyButton(addRelatedPartyButton);
-    const removeRelatedPartyButton = tableRow.querySelector(".remove-rp-button");
-    setupRemoveRelatedPartyButton(removeRelatedPartyButton);
     const removeRelatedPartyRoleButton = tableRow.querySelector(".remove-rprrow-button");
     setupRemoveRelatedPartyRoleButton(removeRelatedPartyRoleButton);
 }
@@ -216,19 +165,23 @@ function loadPreviousData() {
         const role = relatedPartyObject.role;
         const parties = relatedPartyObject.parties;
         const correspondingRow = relatedPartiesTableBody.querySelector(`tr:nth-of-type(${rowIndex})`);
-        // Role
+
+        // Load role
         const roleSelect = correspondingRow.querySelector("select[name='related_party_role']");
         roleSelect.value = role;
-        // Parties
+        window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+            detail: roleSelect.id,
+        }));
+
+        // Load parties
         const partySelect = correspondingRow.querySelector("select[name='related_party']");
-        partySelect.value = parties[0];
-        if (parties.length > 1) {
-            for (let i = 1; i < parties.length; i++) {
-                const newPartyLiElement = addRelatedParty(partySelect);
-                const correspondingPartySelect = newPartyLiElement.querySelector("select[name='related_party']");
-                correspondingPartySelect.value = parties[i];
-            }
-        }
+        parties.forEach(party => {
+            partySelect.querySelector(`option[value="${party}"]`).selected = true;
+        });
+        window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+            detail: partySelect.id,
+        }));
+
         rowIndex += 1;
     }
 }

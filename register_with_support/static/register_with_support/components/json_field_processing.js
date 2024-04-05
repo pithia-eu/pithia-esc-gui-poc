@@ -22,10 +22,11 @@ export function prepareRelatedPartiesJSON() {
     const relatedPartyTableRows = document.querySelectorAll("#table-related-parties tbody tr");
     relatedPartyTableRows.forEach(row => {
         const relatedPartyRoleSelect = row.querySelector("select[name='related_party_role']");
-        const relatedPartySelects = Array.from(row.querySelectorAll("select[name='related_party']"));
+        const relatedPartyMultipleChoiceSelect = row.querySelector("select[name='related_party']");
+        const relatedPartySelectedOptions = Array.from(relatedPartyMultipleChoiceSelect.selectedOptions);
         relatedPartyObjects.push({
             role: relatedPartyRoleSelect.value,
-            parties: relatedPartySelects.map(select => select.value),
+            parties: relatedPartySelectedOptions.map(option => option.value),
         });
     });
     const relatedPartiesHiddenInput = document.querySelector("input[name='related_parties_json']");

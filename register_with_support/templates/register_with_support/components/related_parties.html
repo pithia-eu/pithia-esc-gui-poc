@@ -27,26 +27,10 @@
                             <div class="d-lg-none d-block">
                                 {{ form.related_party.label_tag }}
                             </div>
-                            <ul class="list-unstyled">
-                                <li class="pb-2">
-                                    <div class="input-group">
-                                        {{ form.related_party }}
-                                        <button class="btn btn-outline-dark rounded-end-2 remove-rp-button" type="button" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16" aria-label="Remove related party">
-                                                <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
-                                            </svg>
-                                        </button>
-                                        <div class="invalid-feedback">
-                                            Select a related party
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <button class="btn btn-light add-rp-button" type="button">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                                </svg> Add related party
-                            </button>
+                            {{ form.related_party }}
+                            <div class="invalid-feedback">
+                                Select a related party
+                            </div>
                         </td>
                         <td>
                             <button class="btn btn-outline-danger remove-rprrow-button" type="button" disabled>

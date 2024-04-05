@@ -191,11 +191,12 @@ class RelatedPartiesEditorFormComponent(forms.Form):
         })
     )
 
-    related_party = forms.ChoiceField(
+    related_party = forms.MultipleChoiceField(
         label='Parties',
         required=False,
         widget=forms.Select(attrs={
-            'class': 'form-select'
+            'class': 'form-select',
+            'multiple': 'multiple',
         })
     )
 
