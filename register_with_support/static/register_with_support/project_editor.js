@@ -18,6 +18,9 @@ import {
     checkRelatedPartiesSectionValidity,
 } from "/static/register_with_support/components/project/additional_form_validation.js";
 import {
+    setupCitationSection,
+} from "/static/register_with_support/components/project/citation_section.js";
+import {
     setupKeywordsTable,
 } from "/static/register_with_support/components/project/keywords_table.js";
 
@@ -31,7 +34,7 @@ editorForm.addEventListener("submit", async e => {
 
     // Run custom form validation
     const checks = [
-        checkCitationSectionValidity(),
+        // checkCitationSectionValidity(),
         checkKeywordsSectionValidity(),
         // checkRelatedPartiesSectionValidity(),
     ];
@@ -46,6 +49,7 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
+    setupCitationSection();
     setupKeywordsTable();
     setupRelatedPartiesTable();
 });
