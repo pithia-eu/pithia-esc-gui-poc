@@ -297,5 +297,13 @@ class ProjectRegisterWithEditorFormView(
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
-        print("kwargs['status_choices']", kwargs['status_choices'])
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['keywords_row_content_template'] = render_to_string(
+            'register_with_support/components/project/keywords_row_content.html',
+            context=context
+        )
+        return context
+    

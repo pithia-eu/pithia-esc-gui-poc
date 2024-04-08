@@ -4,9 +4,10 @@ export function prepareKeywordsJSON() {
     keywordsTableRows.forEach(row => {
         const keywordTypeInput = row.querySelector("input[name='keyword_type']");
         const keywordTypeCodeInput = row.querySelector("input[name='keyword_type_code']");
-        const keywordsForTypeInputs = Array.from(row.querySelectorAll("input[name='keyword']"));
+        const keywordMultipleChoiceSelect = row.querySelector("select[name='keyword']");
+        const selectedKeywordOptions = Array.from(keywordMultipleChoiceSelect.selectedOptions);
         keywordObjects.push({
-            keywords: keywordsForTypeInputs.map(keywordInput => keywordInput.value),
+            keywords: selectedKeywordOptions.map(option => option.value),
             type: {
                 codeList: keywordTypeCodeInput.value,
                 codeListValue: keywordTypeInput.value,

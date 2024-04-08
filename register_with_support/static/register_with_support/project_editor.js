@@ -35,7 +35,7 @@ editorForm.addEventListener("submit", async e => {
     // Run custom form validation
     const checks = [
         // checkCitationSectionValidity(),
-        checkKeywordsSectionValidity(),
+        // checkKeywordsSectionValidity(),
         // checkRelatedPartiesSectionValidity(),
     ];
     if (checks.some(check => check === false)) {

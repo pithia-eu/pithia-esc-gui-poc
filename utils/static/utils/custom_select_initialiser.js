@@ -24,7 +24,7 @@ function initialiseMultipleChoiceSelectControls(selectControls) {
     });
 }
 
-function initialiseKeywordMultipleChoiceSelectControl(selectControls) {
+function initialiseKeywordMultipleChoiceSelectControls(selectControls) {
     selectControls.forEach(sc => {
         const cs = new TomSelect(sc, {
             create: true,
@@ -41,7 +41,7 @@ function initialiseKeywordMultipleChoiceSelectControl(selectControls) {
 window.addEventListener("load", () => {
     initialiseDefaultSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${multipleChoiceSelectControlSelector})`));
     initialiseMultipleChoiceSelectControls(document.querySelectorAll(`${multipleChoiceSelectControlSelector}:not(${keywordsInputSelector})`));
-    initialiseKeywordMultipleChoiceSelectControl(document.querySelectorAll(`${keywordsInputSelector}`));
+    initialiseKeywordMultipleChoiceSelectControls(document.querySelectorAll(`${keywordsInputSelector}`));
 });
 
 // Custom event listeners
@@ -55,6 +55,12 @@ window.addEventListener("newMultipleChoiceSelectsAdded", e => {
     const newMultipleChoiceSelectIds = e.detail;
     const newMultipleChoiceSelects = document.querySelectorAll(newMultipleChoiceSelectIds.map(id => `#${id}`).join(","));
     initialiseMultipleChoiceSelectControls(newMultipleChoiceSelects);
+});
+
+window.addEventListener("newKeywordsSelectsAdded", e => {
+    const newKeywordsSelectIds = e.detail;
+    const newKeywordsSelects = document.querySelectorAll(newKeywordsSelectIds.map(id => `#${id}`).join(","));
+    initialiseKeywordMultipleChoiceSelectControls(newKeywordsSelects);
 });
 
 window.addEventListener("selectOptionsSetProgrammatically", e => {

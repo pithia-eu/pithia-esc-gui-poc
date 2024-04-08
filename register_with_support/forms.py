@@ -266,7 +266,7 @@ class ProjectEditorForm(
         widget=forms.TextInput()
     )
 
-    keyword = forms.MultipleChoiceField(
+    keyword = forms.CharField(
         label='Keywords',
         required=False,
         widget=forms.SelectMultiple(attrs={
