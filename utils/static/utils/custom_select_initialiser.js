@@ -24,11 +24,27 @@ function initialiseMultipleChoiceSelectControls(selectControls) {
     });
 }
 
+function initialiseKeywordMultipleChoiceSelectControl(selectControls) {
+    selectControls.forEach(sc => {
+        const cs = new TomSelect(sc, {
+            create: true,
+            persist: false,
+            render: {
+                no_results: null,
+            }
+        });
+        customSelects[sc.id] = cs;
+    });
+}
+
+// Initialise all selects on window load
 window.addEventListener("load", () => {
     initialiseDefaultSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${multipleChoiceSelectControlSelector})`));
-    initialiseMultipleChoiceSelectControls(document.querySelectorAll(multipleChoiceSelectControlSelector));
+    initialiseMultipleChoiceSelectControls(document.querySelectorAll(`${multipleChoiceSelectControlSelector}:not(${keywordsInputSelector})`));
+    initialiseKeywordMultipleChoiceSelectControl(document.querySelectorAll(`${keywordsInputSelector}`));
 });
 
+// Custom event listeners
 window.addEventListener("newSelectsAdded", e => {
     const newSelectIds = e.detail;
     const newSelects = document.querySelectorAll(newSelectIds.map(id => `#${id}`).join(","));

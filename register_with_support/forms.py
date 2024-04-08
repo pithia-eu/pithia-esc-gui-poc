@@ -266,10 +266,12 @@ class ProjectEditorForm(
         widget=forms.TextInput()
     )
 
-    keyword = forms.CharField(
+    keyword = forms.MultipleChoiceField(
         label='Keywords',
         required=False,
-        widget=forms.TextInput()
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control',
+        })
     )
 
     # Only keyword-related field that gets processed

@@ -20,10 +20,6 @@ function getKeywordTableRowByChildNode(childNode) {
     }
 }
 
-function getNumRemainingKeywordInputsOfRow(tableRow) {
-    return tableRow.querySelectorAll("input[name='keyword']").length;
-}
-
 function getNumRemainingKeywordRows() {
     return keywordsTableBody.querySelectorAll("tr").length;
 }
@@ -36,82 +32,6 @@ function generateUniqueElemIdFromCurrentElemId(currentElemId) {
     return `${currentElemId}${Date.now()}`;
 }
 
-
-function removeKeyword(liChildElement) {
-    const containingTableRow = getKeywordTableRowByChildNode(liChildElement);
-    const keywordsListElement = containingTableRow.querySelector("ul");
-    const keywordLiElements = keywordsListElement.querySelectorAll("li");
-    for (const liElement of keywordLiElements) {
-        if (liElement.contains(liChildElement)) {
-            keywordsListElement.removeChild(liElement);
-            break;
-        }
-    }
-    const remainingKeywordInputsInRow = getNumRemainingKeywordInputsOfRow(containingTableRow);
-    if (remainingKeywordInputsInRow === 1) {
-        containingTableRow.querySelector(".td-keywords .remove-kw-button").disabled = true;
-    }
-}
-
-function setupRemoveKeywordButton(removeKeywordButton) {
-    removeKeywordButton.addEventListener("click", e => {
-        removeKeyword(e.currentTarget);
-        prepareKeywordsJSON();
-    });
-}
-
-function addKeyword(rowChildElement) {
-    // Copy the first keyword input HTML to
-    // add a new keyword input.
-    const containingTableRow = getKeywordTableRowByChildNode(rowChildElement);
-    const keywordsListElement = containingTableRow.querySelector("ul");
-    const firstKeywordLiElement = keywordsListElement.querySelector("li");
-    const newKeywordLiElement = document.createElement("li");
-    newKeywordLiElement.classList = firstKeywordLiElement.classList;
-    newKeywordLiElement.innerHTML = firstKeywordLiElement.innerHTML;
-    const keywordInput = newKeywordLiElement.querySelector("input");
-    keywordInput.value = "";
-    keywordInput.addEventListener("input", () => {
-        prepareKeywordsJSON();
-    });
-
-    // Ensure any IDs in the copied HTML are
-    // not duplicated
-    const childElementsWithIdAttribute = newKeywordLiElement.querySelectorAll("[id]");
-    childElementsWithIdAttribute.forEach(elem => {
-        const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
-        const keywordLabel = containingTableRow.querySelector(`label[for="${elem.id}"]`);
-        elem.id = newId;
-        if (keywordLabel) {
-            elem.setAttribute("aria-label", keywordLabel.innerHTML);
-        }
-    });
-
-    // Setup the remove button
-    const removeKeywordButton = newKeywordLiElement.querySelector(".remove-kw-button");
-    removeKeywordButton.disabled = false;
-    setupRemoveKeywordButton(removeKeywordButton);
-
-    // Add the new keyword input
-    keywordsListElement.appendChild(newKeywordLiElement);
-
-    // Enable the first remove keyword button
-    // if not enabled already as there are
-    // more than two inputs now.
-    const remainingKeywordInputsInRow = getNumRemainingKeywordInputsOfRow(containingTableRow);
-    if (remainingKeywordInputsInRow > 1) {
-        containingTableRow.querySelector(".td-keywords .remove-kw-button").disabled = false;
-    }
-
-    return newKeywordLiElement;
-}
-
-function setupAddKeywordButton(addKeywordButton) {
-    addKeywordButton.addEventListener("click", e => {
-        addKeyword(e.currentTarget);
-        prepareKeywordsJSON();
-    });
-}
 
 function removeKeywordsRow(rowChildElement) {
     const containingTableRow = getKeywordTableRowByChildNode(rowChildElement);
@@ -205,10 +125,6 @@ function setupInputEventMappingForRow(tableRow) {
 
 function setupRowEventListeners(tableRow) {
     setupInputEventMappingForRow(tableRow);
-    const addKeywordButton = tableRow.querySelector(".add-kw-button");
-    setupAddKeywordButton(addKeywordButton);
-    const removeKeywordButton = tableRow.querySelector(".remove-kw-button");
-    setupRemoveKeywordButton(removeKeywordButton);
     const removeKeywordsRowButton = tableRow.querySelector(".remove-kwrow-button");
     setupRemoveKeywordsRowButton(removeKeywordsRowButton);
 }
@@ -234,15 +150,9 @@ function loadPreviousData() {
         const keywordTypeCodeInput = correspondingRow.querySelector("input[name='keyword_type_code']");
         keywordTypeCodeInput.value = keywordTypeCode.replace("#", "");
         // Keywords
+        // Populate the keyword select with the
+        // data saved to the JSON field
         const keywordInput = correspondingRow.querySelector("input[name='keyword']");
-        keywordInput.value = keywords[0];
-        if (keywords.length > 1) {
-            for (let i = 1; i < keywords.length; i++) {
-                const newKeywordLiElement = addKeyword(keywordInput);
-                const correspondingKeywordInput = newKeywordLiElement.querySelector("input[name='keyword']");
-                correspondingKeywordInput.value = keywords[i];
-            }
-        }
         rowIndex += 1;
     }
 }
