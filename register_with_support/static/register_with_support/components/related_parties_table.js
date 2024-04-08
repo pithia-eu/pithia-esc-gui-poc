@@ -65,12 +65,6 @@ function resetDuplicatedRowElements(newRow) {
         select.removeAttribute("required");
     });
 
-    // Remove any custom select elements
-    const tsWrappers = newRow.querySelectorAll(".ts-wrapper");
-    tsWrappers.forEach(tsw => {
-        tsw.remove();
-    });
-
     // Enable remove related party role button
     const removeRelatedPartyRoleButton = newRow.querySelector(".remove-rprrow-button");
     removeRelatedPartyRoleButton.disabled = false;
