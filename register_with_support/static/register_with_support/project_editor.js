@@ -13,11 +13,6 @@ import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
-    checkCitationSectionValidity,
-    checkKeywordsSectionValidity,
-    checkRelatedPartiesSectionValidity,
-} from "/static/register_with_support/components/project/additional_form_validation.js";
-import {
     setupCitationSection,
 } from "/static/register_with_support/components/project/citation_section.js";
 import {
@@ -31,17 +26,6 @@ function prepareFormForSubmission() {
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
-
-    // Run custom form validation
-    const checks = [
-        // checkCitationSectionValidity(),
-        // checkKeywordsSectionValidity(),
-        // checkRelatedPartiesSectionValidity(),
-    ];
-    if (checks.some(check => check === false)) {
-        return false;
-    }
-
     prepareFormForSubmission();
 
     validateAndRegister();
