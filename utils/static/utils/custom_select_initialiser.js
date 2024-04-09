@@ -12,14 +12,7 @@ function initialiseDefaultSelectControls(selectControls) {
 
 function initialiseMultipleChoiceSelectControls(selectControls) {
     selectControls.forEach(sc => {
-        const cs = new TomSelect(sc, {
-            plugins: {
-                checkbox_options: {
-                    checkedClassNames: ["ts-checked"],
-                    uncheckedClassNames: ["ts-unchecked"],
-                }
-            }
-        });
+        const cs = new TomSelect(sc, {});
         customSelects[sc.id] = cs;
     });
 }
