@@ -8,7 +8,7 @@ class BaseEditorForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         for field in self.fields.values():
-            if not isinstance(field.widget, forms.Select):
+            if not 'class' in field.widget.attrs:
                 field.widget.attrs.update({'class': 'form-control'})
 
     localid = forms.CharField(
@@ -40,7 +40,9 @@ class BaseEditorForm(forms.Form):
     description = forms.CharField(
         label='Description',
         required=False,
-        widget=forms.Textarea()
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+        })
     )
 
 
@@ -244,7 +246,7 @@ class ProjectEditorForm(
 
     abstract = forms.CharField(
         label='Abstract',
-        required=False,
+        required=True,
         widget=forms.Textarea()
     )
 
