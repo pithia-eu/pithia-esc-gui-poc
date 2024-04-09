@@ -12,10 +12,7 @@ import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
-    checkRelatedPartiesSectionValidity,
-} from "/static/register_with_support/components/additional_form_validation.js";
-import {
-    setupChildPlatformsList,
+    
 } from "/static/register_with_support/components/platform/child_platforms.js";
 
 function prepareFormForSubmission() {
@@ -25,11 +22,6 @@ function prepareFormForSubmission() {
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
 
-    // Run custom form validation
-    if (!checkRelatedPartiesSectionValidity()) {
-        return false;
-    }
-
     prepareFormForSubmission();
 
     validateAndRegister();
@@ -38,5 +30,5 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupRelatedPartiesTable();
-    setupChildPlatformsList();
+    
 });
