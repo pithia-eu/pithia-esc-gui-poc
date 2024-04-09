@@ -7,9 +7,9 @@ class BaseEditorForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
-        for visible in self.visible_fields():
-            if not isinstance(visible.field.widget, forms.Select):
-                visible.field.widget.attrs['class'] = 'form-control'
+        for field in self.fields.values():
+            if not isinstance(field.widget, forms.Select):
+                field.widget.attrs.update({'class': 'form-control'})
 
     localid = forms.CharField(
         label='Local ID',
@@ -231,8 +231,9 @@ class ProjectEditorForm(
     ProjectDocumentationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
     def __init__(self, *args, status_choices=(), **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ProjectEditorForm, self).__init__(*args, **kwargs)
         self.fields['status'].choices = status_choices
+        self.fields['description'].label = 'Additional Description'
 
     short_name = forms.CharField(
         label="Short Name",
