@@ -611,15 +611,10 @@ summary.data-collection-category::marker {
     list-style-type: disc;
 }
 
-/* No upload register form */
+/* Metadata editor */
 label.required::after {
     content: ' *';
     color: red;
-}
-
-.input-group > .form-control {
-    border-top-right-radius: var(--bs-border-radius) !important;
-    border-bottom-right-radius: var(--bs-border-radius) !important;
 }
 
 .alert-localid-taken {
@@ -629,6 +624,12 @@ label.required::after {
 .input-group:has(.is-invalid) .alert-localid-taken {
     display: block;
 }
+/* Metadata editor - custom select */
+.ts-wrapper.multi .ts-control > div {
+    display: inline-block;
+    word-break: break-word;
+}
+
 
 /* Skeleton loading animation for metadata server urls */
 .metadata-server-url {

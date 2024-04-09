@@ -32,6 +32,9 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
     
     organisationInput.addEventListener("input", () => {
         const organisation = organisationInput.value;
+        if (organisation === "") {
+            return namespaceInput.value = "";
+        }
         namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
     });
     

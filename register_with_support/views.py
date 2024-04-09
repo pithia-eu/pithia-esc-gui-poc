@@ -4,6 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -167,10 +168,10 @@ class RelatedPartiesSelectFormViewMixin(View):
     def get_related_party_choices_for_form(self):
         return (
             ('', ''),
-            ('Organisations', (
+            ('Organisations', list(
                 (o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
             )),
-            ('Individuals', (
+            ('Individuals', list(
                 (o.metadata_server_url, o.name) for o in models.Individual.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
             ))
         )
@@ -185,6 +186,15 @@ class RelatedPartiesSelectFormViewMixin(View):
             ('', ''),
             *((key, value) for key, value in status_dict.items())
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_parties_row_content_template'] = render_to_string(
+            'register_with_support/components/related_parties_row_content_template.html',
+            context=context
+        )
+        return context
+    
 
 class OrganisationRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:organisation_with_editor')
@@ -288,6 +298,14 @@ class ProjectRegisterWithEditorFormView(
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
         return kwargs
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['keywords_row_content_template'] = render_to_string(
+            'register_with_support/components/project/keywords_row_content.html',
+            context=context
+        )
+        return context
 
 class PlatformRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,

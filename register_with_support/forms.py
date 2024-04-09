@@ -191,11 +191,11 @@ class RelatedPartiesEditorFormComponent(forms.Form):
         })
     )
 
-    related_party = forms.ChoiceField(
+    related_party = forms.MultipleChoiceField(
         label='Parties',
         required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-select'
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
         })
     )
 
@@ -269,7 +269,9 @@ class ProjectEditorForm(
     keyword = forms.CharField(
         label='Keywords',
         required=False,
-        widget=forms.TextInput()
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control',
+        })
     )
 
     # Only keyword-related field that gets processed
