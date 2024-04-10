@@ -1,3 +1,4 @@
+import copy
 import logging
 import re
 from dateutil.parser import parse
@@ -393,12 +394,15 @@ class ResourceDetailView(TemplateView):
     resource_download_url_name = ''
     template_name = 'browse/detail.html'
 
+    def process_scientific_metadata(self):
+        return prepare_resource_for_template(self.resource.json)
+
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
-        self.scientific_metadata = prepare_resource_for_template(self.resource.json)
+        self.scientific_metadata = self.process_scientific_metadata()
         self.scientific_metadata_flattened = flatten(self.scientific_metadata)
-        self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
         self.scientific_metadata_readable = create_readable_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
         self.title = self.resource.name
         return super().get(request, *args, **kwargs)
 
@@ -459,8 +463,16 @@ class ProjectDetailView(ResourceDetailView):
     a Project registration.
     """
     model = models.Project
+    template_name = 'browse/detail_project.html'
     resource_list_by_type_url_name = 'browse:list_projects'
     resource_download_url_name = 'utils:view_project_as_xml'
+
+    def process_scientific_metadata(self):
+        scientific_metadata = copy.deepcopy(prepare_resource_for_template(self.resource.json))
+        if (self.resource.abstract
+            and len(self.resource.abstract.strip()) > 0):
+            scientific_metadata.pop('abstract', None)
+        return scientific_metadata
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']

@@ -342,6 +342,10 @@ class Project(ScientificMetadata):
     _browse_detail_page_url_name = 'browse:project_detail'
     root_element_name = 'Project'
 
+    @property
+    def abstract(self):
+        return self.json['abstract']
+
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
     class Meta:
