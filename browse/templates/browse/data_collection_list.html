@@ -6,9 +6,9 @@
 {% endblock scripts %}
 {% block aside %}
 <div class="col-lg-8">
-    <section>
+    <section class="mt-2">
         <h2 class="fs-3 mb-3">On This Page:</h2>
-        <ul>
+        <ul class="list-unstyled">
             {% for key, value in resources.items %}
             {% if value %}
             <li class="my-1">
@@ -27,7 +27,7 @@
 {% block resource_list_inner %}
 {% for key, value in resources.items %}
 {% if value %}
-<section>
+<section class="my-4">
     <details open>
         <summary class="data-collection-category" tabindex="-1">
             {% with section_name=key.split|join:'-'|lower %}
@@ -37,7 +37,7 @@
             </h2>
         </summary>
         <div class="list-group-container off-bottom mt-3">
-            <div class="list-group-scroll-container">
+            <div class="list-group-scroll-container default-view">
                 <ul class="list-group">
                     {% for dc in value %}
                     <li class="list-group-item">
@@ -49,6 +49,15 @@
             <div class="shadows"></div>
         </div>
     </details>
+    <div class="show-all-dcs-button-container px-3 pt-4">
+        <a role="button" class="show-all-dcs-button">
+            {% if key|lower == 'mixed' or key|lower == 'other' %}
+            Show all {{ value|length }} {{ key|lower }} data collections...
+            {% else %}
+            Show all {{ value|length }} {{ key|lower }}...
+            {% endif %}
+        </a>
+    </div>
 </section>
 {% endif %}
 {% endfor %}
