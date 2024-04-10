@@ -1074,9 +1074,12 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     .list-group-container {
         position: relative;
     }
+
+    .list-group-scroll-container.default-view {
+        max-height: 15rem;
+    }
     
     .list-group-scroll-container {
-        max-height: 15rem;
         overflow: auto;
     }
     
@@ -1121,6 +1124,10 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
 
     details[open] summary.data-collection-category::before {
         content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>');
+    }
+
+    .show-all-dcs-button-container {
+        display: none;
     }
 }
 

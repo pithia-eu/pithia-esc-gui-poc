@@ -1,0 +1,25 @@
+{% extends 'browse/detail.html' %}
+{% block abstract %}
+{% if resource.abstract.strip|length > 0 %}
+<section class="mt-4">
+    <h2 class="mb-3">Abstract</h2>
+    <p class="resource-description">{{ resource.abstract }}</p>
+</section>
+{% endif %}
+{% endblock abstract %}
+
+{% block description_heading_text %}
+{% if resource.abstract.strip|length > 0 %}
+Additional Description
+{% else %}
+Description
+{% endif %}
+{% endblock description_heading_text %}
+
+{% block no_description_text %}
+{% if resource.abstract.strip|length > 0 %}
+No additional description
+{% else %}
+No description
+{% endif %}
+{% endblock no_description_text %}
