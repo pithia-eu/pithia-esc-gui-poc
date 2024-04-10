@@ -143,7 +143,7 @@ class ContactInfoEditorFormComponent(forms.Form):
     )
 
 
-class ProjectDocumentationEditorFormComponent(forms.Form):
+class CitationDocumentationEditorFormComponent(forms.Form):
     citation_title = forms.CharField(
         label='Title',
         required=False,
@@ -230,7 +230,7 @@ class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent, Organ
 class ProjectEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
-    ProjectDocumentationEditorFormComponent,
+    CitationDocumentationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
     def __init__(self, *args, status_choices=(), **kwargs):
         super(ProjectEditorForm, self).__init__(*args, **kwargs)
@@ -292,6 +292,7 @@ class ProjectEditorForm(
 
 class PlatformEditorForm(
     BaseEditorForm,
+    CitationDocumentationEditorFormComponent,
     OrganisationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
     def __init__(self, *args, type_choices=(), child_platform_choices=(), **kwargs):
@@ -320,4 +321,28 @@ class PlatformEditorForm(
         widget=forms.Select(attrs={
             'class': 'form-select',
         })
+    )
+
+    location_name = forms.CharField(
+        label="Name",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    geometry_location_point_id = forms.CharField(
+        label="Point ID",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    geometry_location_point_srs_name = forms.CharField(
+        label="SRS Name",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    geometry_location_point_pos = forms.CharField(
+        label="Pos",
+        required=False,
+        widget=forms.TextInput()
     )
