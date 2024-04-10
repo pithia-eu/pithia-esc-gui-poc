@@ -3,7 +3,6 @@ const listGroupScrollContainers = document.querySelectorAll(".list-group-scroll-
 
 function setFade(event) {
     window.requestAnimationFrame(function() {
-        console.log('test');
         if (event.target.scrollHeight - event.target.scrollTop > event.target.clientHeight) {
             event.target.parentElement.classList.add('off-bottom');
         } else {
