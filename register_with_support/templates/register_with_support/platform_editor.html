@@ -10,7 +10,7 @@
         <div class="col-lg-12">
             <h2 class="mb-0">Name and Organisation</h2>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-10">
             {% with field=form.name %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
@@ -20,8 +20,23 @@
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-10">
             {% with field=form.organisation %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-10">
+            {% with field=form.type %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-10">
+            {% with field=form.description %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-10">
+            {% with field=form.child_platform %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
@@ -30,24 +45,11 @@
 <hr class="my-5">
 {% include 'register_with_support/components/identifier.html' %}
 <hr class="my-5">
-{% include 'register_with_support/components/description.html' %}
+{% include 'register_with_support/components/platform/location.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/related_parties.html' %}
 <hr class="my-5">
-<section id="type-section">
-    <div class="row gy-3">
-        <div class="col-lg-12">
-            <h2>
-                {{ form.type.label_tag }}
-            </h2>
-        </div>
-        <div class="col-xl-7 col-lg-8">
-            {{ form.type }}
-        </div>
-    </div>
-</section>
-<hr class="my-5">
-{% include 'register_with_support/components/platform/child_platforms.html' %}
+{% include 'register_with_support/components/project/citation.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
