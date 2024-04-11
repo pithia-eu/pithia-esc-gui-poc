@@ -145,7 +145,7 @@ class ContactInfoEditorFormComponent(forms.Form):
 
 class CitationDocumentationEditorFormComponent(forms.Form):
     citation_title = forms.CharField(
-        label='Title',
+        label='Title of Documentation',
         required=False,
         widget=forms.TextInput()
     )
