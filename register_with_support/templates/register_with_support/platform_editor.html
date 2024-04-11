@@ -25,6 +25,16 @@
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'register_with_support/components/identifier.html' %}
+<hr class="my-5">
+<section id="description-and-type-section">
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h2>Type, Description and Child Platforms</h2>
+        </div>
         <div class="col-xl-9 col-lg-10">
             {% with field=form.type %}
             {% include 'register_with_support/components/form_field_template.html' %}
@@ -42,8 +52,6 @@
         </div>
     </div>
 </section>
-<hr class="my-5">
-{% include 'register_with_support/components/identifier.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/platform/location.html' %}
 <hr class="my-5">

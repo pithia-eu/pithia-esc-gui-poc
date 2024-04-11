@@ -305,6 +305,7 @@ class ProjectRegisterWithEditorFormView(
             'register_with_support/components/project/keywords_row_content.html',
             context=context
         )
+        context['citation_section_help_text'] = 'Reference to documentation describing the project.'
         return context
 
 class PlatformRegisterWithoutFormView(
@@ -352,3 +353,8 @@ class PlatformRegisterWithoutFormView(
         kwargs['type_choices'] = self.get_type_choices_for_form()
         kwargs['child_platform_choices'] = self.get_child_platform_choices_for_form()
         return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citation_section_help_text'] = 'Reference to documentation describing the platform.'
+        return context
