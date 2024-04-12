@@ -303,7 +303,7 @@ class PlatformEditorForm(
     def __init__(self, *args, type_choices=(), child_platform_choices=(), crs_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['type'].choices = type_choices
-        self.fields['child_platform'].choices = child_platform_choices
+        self.fields['child_platforms'].choices = child_platform_choices
         self.fields['geometry_location_point_srs_name'].choices = crs_choices
 
     short_name = forms.CharField(
@@ -321,10 +321,10 @@ class PlatformEditorForm(
         })
     )
 
-    child_platform = forms.ChoiceField(
+    child_platforms = forms.MultipleChoiceField(
         label="Child Platforms",
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         })
     )
