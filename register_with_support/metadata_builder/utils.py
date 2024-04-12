@@ -80,3 +80,22 @@ def process_related_parties(form_cleaned_data):
             'parties': party,
         })
     return related_party_dict_list
+
+def process_geometry_location_point_pos(form_cleaned_data):
+    pos_point_1_from_form = form_cleaned_data.get('geometry_location_point_pos_1')
+    pos_point_2_from_form = form_cleaned_data.get('geometry_location_point_pos_2')
+    return f'{pos_point_1_from_form} {pos_point_2_from_form}'
+
+def process_location(form_cleaned_data):
+    return {
+        'geometry_location': {
+            'point': {
+                'id': form_cleaned_data.get('geometry_location_point_id'),
+                'srs_name': form_cleaned_data.get('geometry_location_point_srs_name'),
+                'pos': process_geometry_location_point_pos(form_cleaned_data),
+            },
+        },
+        'name_location': {
+            'code': form_cleaned_data.get('location_name')
+        },
+    }
