@@ -51,7 +51,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, GCOCharacterStringMetadat
 
     def append_organisation(self, organisation_url):
         organisation_element_attributes = {
-            '{http://www.w3.org/1999/xlink}href': organisation_url,
+            '{%s}href' % Namespace.XLINK: organisation_url,
         }
         etree.SubElement(self.root, 'organisation', **organisation_element_attributes)
 
@@ -165,6 +165,7 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         self.append_type(properties['type'])
         self.append_location(properties['location'])
         self.append_related_parties(properties['related_parties'])
+        self.append_child_platforms(properties['child_platforms'])
 
     def append_location(self, location_dict):
         location_wrapper_element = etree.SubElement(self.root, 'location')
@@ -190,6 +191,13 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         # Code
         code_element = etree.SubElement(md_identifier_element, 'code')
         self._append_gco_character_string_sub_element(code_element, location_dict['name_location']['code'])
+
+    def append_child_platforms(self, child_platforms):
+        for cp in child_platforms:
+            child_platform_element_attributes = {
+                '{%s}href' % Namespace.XLINK: cp,
+            }
+            etree.SubElement(self.root, 'childPlatform', **child_platform_element_attributes)
 
 
 class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GMLTimePeriodMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
