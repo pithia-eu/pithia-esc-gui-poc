@@ -5,10 +5,10 @@
         </div>
         <div class="col-xl-9 col-lg-10">
             <p>
-                Location of the platform operation.
+                Location of the platform. Note, that it is only applicable to static platforms or geo-stationairy satellites.
             </p>
         </div>
-        <div class="col-lg-10">
+        <div class="col-xl-6 col-lg-7">
             {% with field=form.location_name %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
@@ -19,17 +19,19 @@
                     <div class="col-lg-12">
                         <h3 class="fw-bold fs-6">Geometry</h3>
                     </div>
-                    <div class="col-xl-5 col-lg-6">
+                    <div class="col-lg-2">
                         {% with field=form.geometry_location_point_id %}
                         {% include 'register_with_support/components/form_field_template.html' %}
                         {% endwith %}
                     </div>
-                    <div class="col-xl-5 col-lg-6">
-                        {% with field=form.geometry_location_point_pos %}
-                        {% include 'register_with_support/components/form_field_template.html' %}
-                        {% endwith %}
+                    <div class="col-lg-3">
+                        {{ form.geometry_location_point_pos_1.label_tag }}
+                        <div class="d-flex column-gap-2">
+                            {{ form.geometry_location_point_pos_1 }}
+                            {{ form.geometry_location_point_pos_2 }}
+                        </div>
                     </div>
-                    <div class="col-xl-9 col-lg-10">
+                    <div class="col-xl-6 col-lg-7">
                         {% with field=form.geometry_location_point_srs_name %}
                         {% include 'register_with_support/components/form_field_template.html' %}
                         {% endwith %}

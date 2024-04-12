@@ -65,7 +65,7 @@ class OrganisationEditorFormComponent(forms.Form):
         required=True,
         widget=OrganisationSelect(
             attrs={
-                'class': 'form-select'
+                'class': 'form-select',
             }
         ),
         help_text='The chosen organisation\'s short name will be used as this registration\'s namespace.'
@@ -295,10 +295,16 @@ class PlatformEditorForm(
     CitationDocumentationEditorFormComponent,
     OrganisationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
-    def __init__(self, *args, type_choices=(), child_platform_choices=(), **kwargs):
+    MIN_POS_1 = -90
+    MAX_POS_1 = 90
+    MIN_POS_2 = -180
+    MAX_POS_2 = 180
+
+    def __init__(self, *args, type_choices=(), child_platform_choices=(), crs_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['type'].choices = type_choices
         self.fields['child_platform'].choices = child_platform_choices
+        self.fields['geometry_location_point_srs_name'].choices = crs_choices
 
     short_name = forms.CharField(
         label="Short Name",
@@ -335,14 +341,31 @@ class PlatformEditorForm(
         widget=forms.TextInput()
     )
 
-    geometry_location_point_srs_name = forms.CharField(
+    geometry_location_point_srs_name = forms.ChoiceField(
         label="SRS Name",
         required=False,
-        widget=forms.TextInput()
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
     )
 
-    geometry_location_point_pos = forms.CharField(
+    geometry_location_point_pos_1 = forms.FloatField(
         label="Pos",
         required=False,
-        widget=forms.TextInput()
+        min_value=MIN_POS_1,
+        max_value=MAX_POS_1,
+        widget=forms.NumberInput(attrs={
+            'min': MIN_POS_1,
+            'max': MAX_POS_1,
+        })
+    )
+
+    geometry_location_point_pos_2 = forms.FloatField(
+        required=False,
+        min_value=MIN_POS_2,
+        max_value=MAX_POS_2,
+        widget=forms.NumberInput(attrs={
+            'min': MIN_POS_2,
+            'max': MAX_POS_2,
+        })
     )

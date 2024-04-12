@@ -337,7 +337,18 @@ class PlatformRegisterWithoutFormView(
     def get_child_platform_choices_for_form(self):
         return (
             ('', ''),
-            *[(o.metadata_server_url, o.name) for o in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+            *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+    def get_crs_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("crs")
+        crs_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            crs_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in crs_dict.items()],
         )
 
     def process_form(self, form_cleaned_data):
@@ -352,6 +363,7 @@ class PlatformRegisterWithoutFormView(
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['type_choices'] = self.get_type_choices_for_form()
         kwargs['child_platform_choices'] = self.get_child_platform_choices_for_form()
+        kwargs['crs_choices'] = self.get_crs_choices_for_form()
         return kwargs
     
     def get_context_data(self, **kwargs):
