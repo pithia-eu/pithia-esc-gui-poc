@@ -155,17 +155,34 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
     def __init__(self, properties) -> None:
         super().__init__(Platform.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_short_name(properties['short_name'])
+        self.append_standard_identifier(properties['standard_identifier'])
+        self.append_url(properties['url'])
         self.append_description(properties['description'])
         self.append_type(properties['type'])
         self.append_location(properties['location'])
         self.append_related_parties(properties['related_parties'])
         self.append_child_platforms(properties['child_platforms'])
+
+    def append_standard_identifier(self, standard_identifier):
+        standard_identifier_element_attributes = {
+            'authority': standard_identifier['authority']
+        }
+        standard_identifier_element = etree.SubElement(self.root, 'standardIdentifier', **standard_identifier_element_attributes)
+        standard_identifier_element.text = standard_identifier['value']
+
+    def append_url(self, url):
+        # Container element
+        url_element = etree.SubElement(self.root, 'URL')
+        # GMD URL
+        gmd_url_element = etree.SubElement(url_element, '{%s}URL' % Namespace.GMD)
+        gmd_url_element.text = url
 
     def append_location(self, location_dict):
         location_wrapper_element = etree.SubElement(self.root, 'location')

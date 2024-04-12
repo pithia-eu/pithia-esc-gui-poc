@@ -144,6 +144,11 @@ PLATFORM_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Platform Test',
     'short_name': 'PT',
+    'standard_identifier': {
+        'authority': 'authority',
+        'value': 'ABC123',
+    },
+    'url': 'https://www.example.com/',
     'description': 'Platform description',
     'type': 'https://metadata.pithia.eu/ontology/2.2/instrumentType/AssimilativeModel/',
     'location': {
@@ -170,6 +175,9 @@ PLATFORM_PROPERTIES_FULL = {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
             'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
+    ],
+    'child_platforms': [
+        'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
     ],
 }
 
