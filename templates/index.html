@@ -43,7 +43,11 @@
                                     name="{{ request.institution_selection_form.institutions.name }}"
                                     id="{{ request.institution_selection_form.institutions.auto_id }}"
                                     class="form-select"
-                                    required="{{ request.institution_selection_form.institutions.required }}">
+                                    required="{{ request.institution_selection_form.institutions.required }}"
+                                    {% with num_available_institutions=request.institution_selection_form.fields.institutions.choices|length %}
+                                    placeholder="Member of {{ num_available_institutions }} institutions..."
+                                    {% endwith %}
+                                    >
                                     <option value="" disabled selected>
                                         Member of {{ request.institution_selection_form.fields.institutions.choices|length }} institutions...
                                     </option>
