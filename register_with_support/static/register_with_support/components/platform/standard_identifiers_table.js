@@ -6,7 +6,7 @@ import {
 } from "/static/register_with_support/components/json_field_processing.js";
 import {
     checkAndSetRequiredAttributesForFields,
-} from "/static/register_with_support/components/project/conditional_required_fields.js";
+} from "/static/register_with_support/components/conditional_required_fields.js";
 import {
     generateUniqueElemIdFromCurrentElemId,
     getNumRemainingRowsInTable,

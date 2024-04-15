@@ -3,7 +3,7 @@ import {
 } from "/static/register_with_support/components/base_editor.js";
 import {
     checkAndSetRequiredAttributesForFields,
-} from "/static/register_with_support/components/project/conditional_required_fields.js";
+} from "/static/register_with_support/components/conditional_required_fields.js";
 const citationSection = editorForm.querySelector("#citation-section");
 const citationSectionRequiredFieldsSelector = "input[name='citation_title'], input[name='citation_publication_date']";
 const citationSectionFields = citationSection.querySelectorAll("input, textarea");

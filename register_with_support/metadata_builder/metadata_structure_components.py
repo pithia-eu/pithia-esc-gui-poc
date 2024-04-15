@@ -101,6 +101,11 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
 class StandardIdentifierComponent(BaseMetadataComponent):
     def append_standard_identifiers(self, parent_element, standard_identifiers):
         for standard_identifier in standard_identifiers:
+            if (not any([
+                standard_identifier['authority'],
+                standard_identifier['value'],
+            ])):
+                return
             standard_identifier_element_attributes = {
                 'authority': standard_identifier['authority']
             }

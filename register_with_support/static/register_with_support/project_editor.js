@@ -6,15 +6,15 @@ import {
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
 import {
+    setupCitationSection,
+} from "/static/register_with_support/components/citation_section.js";
+import {
     prepareKeywordsJSON,
     prepareRelatedPartiesJSON,
 } from "/static/register_with_support/components/json_field_processing.js";
 import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
-import {
-    setupCitationSection,
-} from "/static/register_with_support/components/project/citation_section.js";
 import {
     setupKeywordsTable,
 } from "/static/register_with_support/components/project/keywords_table.js";

@@ -6,7 +6,7 @@ import {
 } from "/static/register_with_support/components/json_field_processing.js";
 import {
     checkAndConfigureRequiredAttributesOfSelects,
-} from "/static/register_with_support/components/project/conditional_required_fields.js";
+} from "/static/register_with_support/components/conditional_required_fields.js";
 
 const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 

@@ -171,6 +171,8 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         self.append_child_platforms(properties['child_platforms'])
 
     def append_url(self, url):
+        if not url:
+            return
         # Container element
         url_element = etree.SubElement(self.root, 'URL')
         # GMD URL
@@ -178,29 +180,44 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         gmd_url_element.text = url
 
     def append_location(self, location_dict):
+        if (not any([
+            location_dict.get('name_location').get('code'),
+            location_dict.get('geometry_location').get('point').get('id'),
+            location_dict.get('geometry_location').get('point').get('srs_name'),
+            location_dict.get('geometry_location').get('point').get('pos'),
+        ])):
+            return
         location_wrapper_element = etree.SubElement(self.root, 'location')
         location_element = etree.SubElement(location_wrapper_element, 'Location')
         
         # Geometry location
-        geometry_location_element = etree.SubElement(location_element, 'geometryLocation')
-        gml_point_element_attributes = {
-            '{%s}id' % Namespace.GML: location_dict['geometry_location']['point']['id'],
-            'srsName': location_dict['geometry_location']['point']['srs_name'],
-        }
-        gml_point_element = etree.SubElement(geometry_location_element, '{%s}Point' % Namespace.GML, **gml_point_element_attributes)
-        gml_pos_element = etree.SubElement(gml_point_element, '{%s}pos' % Namespace.GML)
-        gml_pos_element.text = location_dict['geometry_location']['point']['pos']
+        if (any([
+            location_dict.get('geometry_location').get('point').get('id'),
+            location_dict.get('geometry_location').get('point').get('srs_name'),
+            location_dict.get('geometry_location').get('point').get('pos'),
+        ])):
+            geometry_location_element = etree.SubElement(location_element, 'geometryLocation')
+            gml_point_element_attributes = {
+                '{%s}id' % Namespace.GML: location_dict['geometry_location']['point']['id'],
+                'srsName': location_dict['geometry_location']['point']['srs_name'],
+            }
+            gml_point_element = etree.SubElement(geometry_location_element, '{%s}Point' % Namespace.GML, **gml_point_element_attributes)
+            gml_pos_element = etree.SubElement(gml_point_element, '{%s}pos' % Namespace.GML)
+            gml_pos_element.text = location_dict['geometry_location']['point']['pos']
 
         # Name location
-        name_location_element = etree.SubElement(location_element, 'nameLocation')
-        ex_geographic_description_element = etree.SubElement(name_location_element, 'EX_GeographicDescription', xmlns=Namespace.GMD)
-        # Geographic identifier
-        geographic_identifier_element = etree.SubElement(ex_geographic_description_element, 'geographicIdentifier')
-        # MD identifier
-        md_identifier_element = etree.SubElement(geographic_identifier_element, 'MD_Identifier')
-        # Code
-        code_element = etree.SubElement(md_identifier_element, 'code')
-        self._append_gco_character_string_sub_element(code_element, location_dict['name_location']['code'])
+        if (any([
+            location_dict.get('name_location').get('code'),
+        ])):
+            name_location_element = etree.SubElement(location_element, 'nameLocation')
+            ex_geographic_description_element = etree.SubElement(name_location_element, 'EX_GeographicDescription', xmlns=Namespace.GMD)
+            # Geographic identifier
+            geographic_identifier_element = etree.SubElement(ex_geographic_description_element, 'geographicIdentifier')
+            # MD identifier
+            md_identifier_element = etree.SubElement(geographic_identifier_element, 'MD_Identifier')
+            # Code
+            code_element = etree.SubElement(md_identifier_element, 'code')
+            self._append_gco_character_string_sub_element(code_element, location_dict['name_location']['code'])
 
     def append_child_platforms(self, child_platforms):
         for cp in child_platforms:
