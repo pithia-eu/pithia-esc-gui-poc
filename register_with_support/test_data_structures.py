@@ -186,6 +186,11 @@ PLATFORM_PROPERTIES_FULL = {
         'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
     ],
 }
+PLATFORM_PROPERTIES_NO_URL = copy.deepcopy(PLATFORM_PROPERTIES_FULL)
+PLATFORM_PROPERTIES_NO_URL['url'] = ''
+
+PLATFORM_PROPERTIES_NO_GEOMETRY_LOCATION = copy.deepcopy(PLATFORM_PROPERTIES_FULL)
+_blank_out_string_properties_of_dict(PLATFORM_PROPERTIES_NO_GEOMETRY_LOCATION['location']['geometry_location']['point'])
 
 # Operation
 OPERATION_PROPERTIES_FULL = {

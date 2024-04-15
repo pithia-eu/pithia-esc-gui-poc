@@ -1,4 +1,8 @@
-from django.test import SimpleTestCase
+from django.test import (
+    SimpleTestCase,
+    tag,
+)
+from lxml import etree
 from xmlschema.validators.exceptions import XMLSchemaDecodeError
 
 from .metadata_builder.metadata_structures import (
@@ -41,6 +45,16 @@ class MetadataBuilderTestCase(SimpleTestCase):
     def test_platform(self):
         platform = PlatformMetadata(PLATFORM_PROPERTIES_FULL)
         print('platform.xml', platform.xml)
+
+    def test_platform_no_url(self):
+        platform = PlatformMetadata(PLATFORM_PROPERTIES_NO_URL)
+        platform_parsed = etree.fromstring(platform.xml)
+        self.assertFalse(hasattr(platform_parsed, 'URL'))
+
+    def test_platform_no_geometry_location(self):
+        platform = PlatformMetadata(PLATFORM_PROPERTIES_NO_GEOMETRY_LOCATION)
+        platform_parsed = etree.fromstring(platform.xml)
+        self.assertEqual(len(platform_parsed.xpath('//geometryLocation')), 0)
 
     def test_operation(self):
         operation = OperationMetadata(OPERATION_PROPERTIES_FULL)
@@ -102,38 +116,61 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
         MetadataFileXSDValidator._validate_xml_file_string_against_schema(xml, self.schema)
 
     # Organisation
+    @tag('organisation')
     def test_organisation(self):
         self.create_xml_and_validate_against_schema(OrganisationMetadata, ORGANISATION_PROPERTIES_FULL)
 
+    @tag('organisation')
     def test_organisation_no_contact_info(self):
         self.create_xml_and_validate_against_schema(OrganisationMetadata, ORGANISATION_PROPERTIES_NO_CONTACT_INFO)
 
+    @tag('organisation')
     def test_organisation_partial_contact_info(self):
         self.create_xml_and_validate_against_schema(OrganisationMetadata, ORGANISATION_PROPERTIES_PARTIAL_CONTACT_INFO)
 
+    @tag('organisation')
     def test_organisation_no_address(self):
         self.create_xml_and_validate_against_schema(OrganisationMetadata, ORGANISATION_PROPERTIES_NO_ADDRESS)
 
+    @tag('organisation')
     def test_organisation_partial_address(self):
         self.create_xml_and_validate_against_schema(OrganisationMetadata, ORGANISATION_PROPERTIES_PARTIAL_ADDRESS)
 
     # Individual
+    @tag('individual')
     def test_individual(self):
         self.create_xml_and_validate_against_schema(IndividualMetadata, INDIVIDUAL_PROPERTIES_FULL)
 
+    @tag('individual')
     def test_individual_no_contact_info(self):
         self.create_xml_and_validate_against_schema(IndividualMetadata, INDIVIDUAL_PROPERTIES_NO_CONTACT_INFO)
 
     # Project
+    @tag('project')
     def test_project(self):
         self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_FULL)
 
+    @tag('project')
     def test_project_no_citation_title(self):
         self.create_xml_and_validate_against_schema(ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_TITLE)
 
+    @tag('project')
     def test_project_no_citation_date_fails(self):
         """
         Fails the test as a valid date is required if
         other citation details are provided.
         """
         self.assertRaises(XMLSchemaDecodeError, self.create_xml_and_validate_against_schema, ProjectMetadata, PROJECT_PROPERTIES_NO_CITATION_DATE)
+
+    # Platform
+    @tag('platform')
+    def test_platform(self):
+        self.create_xml_and_validate_against_schema(PlatformMetadata, PLATFORM_PROPERTIES_FULL)
+
+    @tag('platform')
+    def test_platform_no_url(self):
+        self.create_xml_and_validate_against_schema(PlatformMetadata, PLATFORM_PROPERTIES_NO_URL)
+
+    @tag('platform')
+    def test_platform_no_geometry_location(self):
+        self.create_xml_and_validate_against_schema(PlatformMetadata, PLATFORM_PROPERTIES_NO_GEOMETRY_LOCATION)
