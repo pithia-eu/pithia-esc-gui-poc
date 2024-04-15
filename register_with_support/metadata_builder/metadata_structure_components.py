@@ -29,6 +29,12 @@ class BaseMetadataComponent:
             **nsmap_extensions,
         })
 
+    @property
+    def xml(self) -> str:
+        return etree.tostring(self.root, pretty_print=True).decode()
+
+
+class IdentifierMetadataComponent(BaseMetadataComponent):
     def append_identifier(self, localid, namespace, version='1', creation_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z'), last_modification_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')):
         # Container elements
         identifier = etree.SubElement(self.root, 'identifier')
@@ -51,10 +57,6 @@ class BaseMetadataComponent:
         creation_date_element.text = creation_date
         last_modification_date_element = etree.SubElement(pithia_identifier, 'lastModificationDate')
         last_modification_date_element.text = last_modification_date
-
-    @property
-    def xml(self) -> str:
-        return etree.tostring(self.root, pretty_print=True).decode()
 
 
 class NameMetadataComponent(BaseMetadataComponent):
@@ -96,7 +98,16 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
             units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
 
 
-class CapabilityLinksMetadataComponent(BaseMetadataComponent):
+class StandardIdentifierComponent(BaseMetadataComponent):
+    def append_standard_identifier(self, parent_element, standard_identifier):
+        standard_identifier_element_attributes = {
+            'authority': standard_identifier['authority']
+        }
+        standard_identifier_element = etree.SubElement(parent_element, 'standardIdentifier', **standard_identifier_element_attributes)
+        standard_identifier_element.text = standard_identifier['value']
+
+
+class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadataComponent):
     capabilities_key = ''
     capabilities_element_name = ''
 
@@ -108,11 +119,7 @@ class CapabilityLinksMetadataComponent(BaseMetadataComponent):
                 '{%s}href' % Namespace.XLINK: cld['platform']
             }
             platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
-            standard_identifier_element_attributes = {
-                'authority': cld['standard_identifier']['authority'],
-            }
-            standard_identifier_element = etree.SubElement(capability_link_element, 'standardIdentifier', **standard_identifier_element_attributes)
-            standard_identifier_element.text = cld['standard_identifier']['value']
+            self.append_standard_identifier(capability_link_element, cld['standard_identifier'])
             capabilities_element_attributes = {
                 '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
             }

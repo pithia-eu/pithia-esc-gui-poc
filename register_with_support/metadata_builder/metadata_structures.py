@@ -22,7 +22,7 @@ from common.models import (
 )
 
 
-class OrganisationMetadata(ContactInfoMetadataComponent, DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, ShortNameMetadataComponent):
+class OrganisationMetadata(ContactInfoMetadataComponent, DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, ShortNameMetadataComponent):
     def __init__(self, properties: dict) -> None:
         super().__init__(Organisation.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -34,7 +34,7 @@ class OrganisationMetadata(ContactInfoMetadataComponent, DescriptionMetadataComp
         self.append_description(properties['description'])
 
 
-class IndividualMetadata(ContactInfoMetadataComponent, GCOCharacterStringMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent):
+class IndividualMetadata(ContactInfoMetadataComponent, DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Individual.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -56,7 +56,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, GCOCharacterStringMetadat
         etree.SubElement(self.root, 'organisation', **organisation_element_attributes)
 
 
-class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StatusMetadataComponent):
+class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Project.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -151,7 +151,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
             md_keyword_type_code_element = etree.SubElement(type_element, 'MD_KeywordTypeCode', codeList=keyword_dict['type']['code_list'], codeListValue=keyword_dict['type']['code_list_value'])
 
 
-class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, TypeMetadataComponent):
+class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StandardIdentifierComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Platform.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -162,20 +162,13 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_short_name(properties['short_name'])
-        self.append_standard_identifier(properties['standard_identifier'])
+        self.append_standard_identifier(self.root, properties['standard_identifier'])
         self.append_url(properties['url'])
         self.append_description(properties['description'])
         self.append_type(properties['type'])
         self.append_location(properties['location'])
         self.append_related_parties(properties['related_parties'])
         self.append_child_platforms(properties['child_platforms'])
-
-    def append_standard_identifier(self, standard_identifier):
-        standard_identifier_element_attributes = {
-            'authority': standard_identifier['authority']
-        }
-        standard_identifier_element = etree.SubElement(self.root, 'standardIdentifier', **standard_identifier_element_attributes)
-        standard_identifier_element.text = standard_identifier['value']
 
     def append_url(self, url):
         # Container element
@@ -217,7 +210,7 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
             etree.SubElement(self.root, 'childPlatform', **child_platform_element_attributes)
 
 
-class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GMLTimePeriodMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
+class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Operation.root_element_name, nsmap_extensions={
             NamespacePrefix.GML: Namespace.GML,
@@ -244,7 +237,7 @@ class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GML
         etree.SubElement(self.root, 'platform', **platform_element_attributes)
 
 
-class InstrumentMetadata(DescriptionMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, TypeMetadataComponent):
+class InstrumentMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Instrument.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
@@ -272,7 +265,7 @@ class InstrumentMetadata(DescriptionMetadataComponent, NameMetadataComponent, Re
             id_element.text = operational_mode_dict['description']
 
 
-class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
+class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(AcquisitionCapabilities.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
@@ -299,7 +292,7 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         mode_element = etree.SubElement(instrument_operational_mode_pair_element, 'mode', **mode_element_attributes)
 
 
-class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent):
+class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     capabilities_key = 'acquisition_capabilities'
     capabilities_element_name = 'acquisitionCapabilities'
 
@@ -313,7 +306,7 @@ class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
         self.append_capability_links(properties['capability_links'])
 
 
-class ComputationCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, TypeMetadataComponent):
+class ComputationCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(ComputationCapabilities.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
@@ -333,7 +326,7 @@ class ComputationCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         etree.SubElement(self.root, 'algorithm')
 
 
-class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent):
+class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     capabilities_key = 'computation_capabilities'
     capabilities_element_name = 'computationCapabilities'
 
@@ -347,7 +340,7 @@ class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
         self.append_capability_links(properties['capability_links'])
 
 
-class ProcessMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
+class ProcessMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Process.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
@@ -373,7 +366,7 @@ class ProcessMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, 
         etree.SubElement(self.root, 'computationComponent', **computation_element_attributes)
 
 
-class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent, SourceMetadataComponent, TypeMetadataComponent):
+class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent, SourceMetadataComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(DataCollection.root_element_name, nsmap_extensions={
             NamespacePrefix.GMD: Namespace.GMD,
@@ -444,7 +437,7 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
         etree.SubElement(self.root, '{%s}observedProperty' % Namespace.OM)
 
 
-class CatalogueMetadata(DescriptionMetadataComponent, NameMetadataComponent):
+class CatalogueMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Catalogue.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
@@ -461,7 +454,7 @@ class CatalogueMetadata(DescriptionMetadataComponent, NameMetadataComponent):
         etree.SubElement(self.root, 'catalogueCategory', **catalogue_category_element_attributes)
 
 
-class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent):
+class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(CatalogueEntry.root_element_name, nsmap_extensions={
             NamespacePrefix.GML: Namespace.GML,
@@ -491,7 +484,7 @@ class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent):
         self.append_gml_time_period(phenomenon_time_element, phenomenon_time_dict['time_period'])
 
 
-class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetadataComponent, QualityAssessmentMetadataComponent, SourceMetadataComponent):
+class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, SourceMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(CatalogueDataSubset.root_element_name, nsmap_extensions={
             NamespacePrefix.GMD: Namespace.GMD,
