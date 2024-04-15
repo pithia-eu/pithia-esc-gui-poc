@@ -144,10 +144,16 @@ PLATFORM_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Platform Test',
     'short_name': 'PT',
-    'standard_identifier': {
-        'authority': 'authority',
-        'value': 'ABC123',
-    },
+    'standard_identifiers': [
+        {
+            'authority': 'authority1',
+            'value': 'ABC123',
+        },
+        {
+            'authority': 'authority2',
+            'value': 'DEF456',
+        },
+    ],
     'url': 'https://www.example.com/',
     'description': 'Platform description',
     'type': 'https://metadata.pithia.eu/ontology/2.2/instrumentType/AssimilativeModel/',
@@ -304,18 +310,22 @@ ACQUISITION_PROPERTIES_FULL = {
     'capability_links': [
         {
             'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
-            'standard_identifier': {
-                'authority': 'URSI',
-                'value': 'AT138',
-            },
+            'standard_identifiers': [
+                {
+                    'authority': 'URSI',
+                    'value': 'AT138',
+                }
+            ],
             'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
         },
         {
             'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
-            'standard_identifier': {
-                'authority': 'URSI',
-                'value': 'AT138',
-            },
+            'standard_identifiers': [
+                {
+                    'authority': 'URSI',
+                    'value': 'AT138',
+                }
+            ],
             'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
         },
     ],
@@ -368,18 +378,22 @@ COMPUTATION_PROPERTIES_FULL = {
     'capability_links': [
         {
             'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
-            'standard_identifier': {
-                'authority': 'URSI',
-                'value': 'AT138',
-            },
+            'standard_identifiers': [
+                {
+                    'authority': 'URSI',
+                    'value': 'AT138',
+                }
+            ],
             'computation_capabilities': 'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
         },
         {
             'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
-            'standard_identifier': {
-                'authority': 'URSI',
-                'value': 'AT138',
-            },
+            'standard_identifiers': [
+                {
+                    'authority': 'URSI',
+                    'value': 'AT138',
+                }
+            ],
             'computation_capabilities': 'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
         },
     ],

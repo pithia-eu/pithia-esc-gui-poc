@@ -162,7 +162,7 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_short_name(properties['short_name'])
-        self.append_standard_identifier(self.root, properties['standard_identifier'])
+        self.append_standard_identifiers(self.root, properties['standard_identifiers'])
         self.append_url(properties['url'])
         self.append_description(properties['description'])
         self.append_type(properties['type'])
@@ -527,7 +527,7 @@ class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetad
         self.append_gml_time_period(result_time_element, time_period_dict)
 
 
-class WorkflowMetadata(DescriptionMetadataComponent, NameMetadataComponent):
+class WorkflowMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Workflow.root_element_name, nsmap_extensions={
             'xlink': Namespace.XLINK,

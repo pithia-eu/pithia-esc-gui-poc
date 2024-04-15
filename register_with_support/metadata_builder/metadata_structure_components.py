@@ -99,12 +99,13 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
 
 
 class StandardIdentifierComponent(BaseMetadataComponent):
-    def append_standard_identifier(self, parent_element, standard_identifier):
-        standard_identifier_element_attributes = {
-            'authority': standard_identifier['authority']
-        }
-        standard_identifier_element = etree.SubElement(parent_element, 'standardIdentifier', **standard_identifier_element_attributes)
-        standard_identifier_element.text = standard_identifier['value']
+    def append_standard_identifiers(self, parent_element, standard_identifiers):
+        for standard_identifier in standard_identifiers:
+            standard_identifier_element_attributes = {
+                'authority': standard_identifier['authority']
+            }
+            standard_identifier_element = etree.SubElement(parent_element, 'standardIdentifier', **standard_identifier_element_attributes)
+            standard_identifier_element.text = standard_identifier['value']
 
 
 class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadataComponent):
@@ -119,7 +120,7 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
                 '{%s}href' % Namespace.XLINK: cld['platform']
             }
             platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
-            self.append_standard_identifier(capability_link_element, cld['standard_identifier'])
+            self.append_standard_identifiers(capability_link_element, cld['standard_identifiers'])
             capabilities_element_attributes = {
                 '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
             }

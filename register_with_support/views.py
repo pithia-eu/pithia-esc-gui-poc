@@ -369,6 +369,7 @@ class PlatformRegisterWithoutFormView(
         processed_form['documentation'] = process_documentation(form_cleaned_data)
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
         processed_form['location'] = process_location(form_cleaned_data)
+        processed_form['standard_identifiers'] = form_cleaned_data['standard_identifiers_json']
 
         return processed_form
 
