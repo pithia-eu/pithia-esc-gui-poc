@@ -11,9 +11,6 @@ import {
 import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
-import {
-    
-} from "/static/register_with_support/components/platform/child_platforms.js";
 
 function prepareFormForSubmission() {
     prepareRelatedPartiesJSON();
