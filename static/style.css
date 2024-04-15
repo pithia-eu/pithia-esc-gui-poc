@@ -914,35 +914,42 @@ a.support-link {
 
 /* Metadata editor */
 #table-project-keywords thead,
-#table-related-parties thead {
+#table-related-parties thead,
+#table-standard-identifiers thead {
     display: none;
 }
 
 #table-project-keywords td,
-#table-related-parties td {
+#table-related-parties td,
+#table-standard-identifiers td {
     display: block;
     border-bottom-width: 0;
 }
 
 #table-project-keywords tr td:first-of-type,
-#table-related-parties tr td:first-of-type {
+#table-related-parties tr td:first-of-type,
+#table-standard-identifiers tr td:first-of-type {
     padding-top: 1.5rem;
 }
 
 #table-project-keywords tr td:last-of-type,
-#table-related-parties tr td:last-of-type {
+#table-related-parties tr td:last-of-type,
+#table-standard-identifiers tr td:last-of-type {
     padding-bottom: 1rem;
 }
 
 #table-project-keywords tr,
-#table-related-parties tr {
+#table-related-parties tr,
+#table-standard-identifiers tr {
     border-bottom-width: 1px;
 }
 
 #table-project-keywords button:not(.input-group button),
 #table-related-parties button:not(.input-group button),
+#table-standard-identifiers button:not(.input-group button),
 #add-kwrow-button,
-#add-rprrow-button {
+#add-rprrow-button,
+#add-sirow-button {
     display: block;
     margin-inline: auto;
 }
@@ -950,12 +957,14 @@ a.support-link {
 .add-rp-button,
 .add-kw-button,
 #add-kwrow-button,
-#add-rprrow-button {
+#add-rprrow-button,
+#add-sirow-button {
     width: 100%;
 }
 
 #add-kwrow-button,
-#add-rprrow-button {
+#add-rprrow-button,
+#add-sirow-button {
     padding-block: 1rem;
 }
 
@@ -979,38 +988,45 @@ a.support-link {
     }
 
     #table-project-keywords thead,
-    #table-related-parties thead {
+    #table-related-parties thead,
+    #table-standard-identifiers thead {
         display: table-header-group;
     }
 
     #table-project-keywords td,
-    #table-related-parties td {
+    #table-related-parties td,
+    #table-standard-identifiers td {
         display: table-cell;
         border-bottom-width: var(--bs-border-width);
     }
 
     #table-project-keywords tr td:first-of-type,
-    #table-related-parties tr td:first-of-type {
+    #table-related-parties tr td:first-of-type,
+    #table-standard-identifiers tr td:first-of-type {
         padding-top: 0.5rem;
     }
 
     #table-project-keywords tr td:last-of-type,
-    #table-related-parties tr td:last-of-type {
+    #table-related-parties tr td:last-of-type,
+    #table-standard-identifiers tr td:last-of-type {
         padding-bottom: 0.5rem;
     }
 
     #table-project-keywords tr,
-    #table-related-parties tr {
+    #table-related-parties tr,
+    #table-standard-identifiers tr {
         border-bottom-width: 0;
     }
 
     #table-project-keywords button:not(.input-group button),
-    #table-related-parties button:not(.input-group button) {
+    #table-related-parties button:not(.input-group button),
+    #table-standard-identifiers button:not(.input-group-button) {
         display: inline;
     }
 
     #add-kwrow-button,
-    #add-rprrow-button {
+    #add-rprrow-button,
+    #add-sirow-button {
         display: block;
     }
 }

@@ -33,3 +33,18 @@ export function prepareRelatedPartiesJSON() {
     const relatedPartiesHiddenInput = document.querySelector("input[name='related_parties_json']");
     relatedPartiesHiddenInput.value = JSON.stringify(relatedPartyObjects);
 }
+
+export function prepareStandardIdentifiersJSON() {
+    const standardIdentifierObjects = [];
+    const standardIdentifiersTableRows = document.querySelectorAll("#table-standard-identifiers tbody tr");
+    standardIdentifiersTableRows.forEach(row => {
+        const standardIdentifierAuthorityInput = row.querySelector("input[name='standard_identifier_authority']");
+        const standardIdentifierValueInput = row.querySelector("input[name='standard_identifier']");
+        standardIdentifierObjects.push({
+            authority: standardIdentifierAuthorityInput.value,
+            value: standardIdentifierValueInput.value,
+        });
+    });
+    const standardIdentifiersHiddenInput = document.querySelector("input[name='standard_identifiers_json']");
+    standardIdentifiersHiddenInput.value = JSON.stringify(standardIdentifierObjects);
+}

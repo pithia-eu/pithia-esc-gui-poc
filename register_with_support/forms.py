@@ -369,3 +369,26 @@ class PlatformEditorForm(
             'max': MAX_POS_2,
         })
     )
+
+    url = forms.URLField(
+        label="Link to Platform Website",
+        required=False,
+        widget=forms.URLInput()
+    )
+
+    standard_identifier_authority = forms.CharField(
+        label='Authority',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    standard_identifier = forms.CharField(
+        label='Value',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    standard_identifiers_json = forms.JSONField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
