@@ -56,7 +56,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, DescriptionMetadataCompon
         etree.SubElement(self.root, 'organisation', **organisation_element_attributes)
 
 
-class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StatusMetadataComponent):
+class ProjectMetadata(DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Project.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -85,61 +85,6 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
         gmd_url_element = etree.SubElement(url_element, '{%s}URL' % Namespace.GMD)
         gmd_url_element.text = url
 
-    def append_documentation(self, documentation):
-        # Since CI_DateTypeCode 
-        # If no title, date, identifier, other citation details, online resource
-        if (not any([
-            documentation.get('citation_title'),
-            documentation.get('citation_date'),
-            documentation.get('other_citation_details'),
-            documentation.get('doi'),
-            documentation.get('ci_linkage_url'),
-        ])):
-            return
-
-        # Container elements
-        documentation_element = etree.SubElement(self.root, 'documentation')
-        citation_element = etree.SubElement(documentation_element, 'Citation')
-
-        # GMD title - required
-        gmd_title_element = etree.SubElement(citation_element, '{%s}title' % Namespace.GMD)
-        self._append_gco_character_string_sub_element(gmd_title_element, documentation['citation_title'])
-
-        # Date
-        date_element = etree.SubElement(citation_element, 'date', xmlns=Namespace.GMD)
-        ci_date_element = etree.SubElement(date_element, 'CI_Date')
-        ci_date_date_element = etree.SubElement(ci_date_element, 'date')
-        gco_date_element = etree.SubElement(ci_date_date_element, '{%s}Date' % Namespace.GCO)
-        # Citation date - required, if container elements are included.
-        gco_date_element.text = documentation['citation_date']
-        ci_date_date_type_element = etree.SubElement(ci_date_element, 'dateType')
-        # Assume <CI_DateTypeCode> will be the same for every XML file.
-        # Citation date - code list and code list value need to be present
-        # but can be left blank.
-        ci_date_type_code_element = etree.SubElement(ci_date_date_type_element, 'CI_DateTypeCode', codeList=documentation['ci_date_type_code_code_list'], codeListValue=documentation['ci_date_type_code_code_list_value'])
-        # Date type code is normally 'Publication date'.
-        ci_date_type_code_element.text = documentation['ci_date_type_code']
-
-        # Identifier (DOI)
-        if documentation.get('doi'):
-            identifier_element = etree.SubElement(citation_element, 'identifier', xmlns=Namespace.GMD)
-            md_identifier_element = etree.SubElement(identifier_element, 'MD_Identifier')
-            code_element = etree.SubElement(md_identifier_element, 'code')
-            self._append_gco_character_string_sub_element(code_element, documentation['doi'])
-
-        # GMD other citation details
-        if documentation.get('other_citation_details'):
-            gmd_other_citation_details_element = etree.SubElement(citation_element, '{%s}otherCitationDetails' % Namespace.GMD)
-            self._append_gco_character_string_sub_element(gmd_other_citation_details_element, documentation['other_citation_details'])
-
-        # Online Resource
-        if documentation.get('ci_linkage_url'):
-            online_resource_element = etree.SubElement(citation_element, 'onlineResource')
-            ci_online_resource_element = etree.SubElement(online_resource_element, 'CI_OnlineResource', xmlns=Namespace.GMD)
-            linkage_element = etree.SubElement(ci_online_resource_element, 'linkage')
-            url_element = etree.SubElement(linkage_element, 'URL')
-            url_element.text = documentation['ci_linkage_url']
-
     def append_keywords(self, keyword_dict_list):
         for keyword_dict in keyword_dict_list:
             keywords_element = etree.SubElement(self.root, 'keywords')
@@ -151,7 +96,7 @@ class ProjectMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataCo
             md_keyword_type_code_element = etree.SubElement(type_element, 'MD_KeywordTypeCode', codeList=keyword_dict['type']['code_list'], codeListValue=keyword_dict['type']['code_list_value'])
 
 
-class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StandardIdentifierComponent, TypeMetadataComponent):
+class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StandardIdentifierComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Platform.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -166,6 +111,7 @@ class PlatformMetadata(DescriptionMetadataComponent, GCOCharacterStringMetadataC
         self.append_url(properties['url'])
         self.append_description(properties['description'])
         self.append_type(properties['type'])
+        self.append_documentation(properties['documentation'])
         self.append_location(properties['location'])
         self.append_related_parties(properties['related_parties'])
         self.append_child_platforms(properties['child_platforms'])
