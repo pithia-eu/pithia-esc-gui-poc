@@ -317,6 +317,7 @@ class ProjectRegisterWithEditorFormView(
             context=context
         )
         context['citation_section_help_text'] = 'Reference to documentation describing the project.'
+        context['related_parties_section_help_text'] = 'Individual or organisation related to the project.'
         return context
 
 class PlatformRegisterWithoutFormView(
@@ -386,4 +387,5 @@ class PlatformRegisterWithoutFormView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['citation_section_help_text'] = 'Reference to documentation describing the platform.'
+        context['related_parties_section_help_text'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
         return context
