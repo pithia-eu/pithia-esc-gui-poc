@@ -12,6 +12,7 @@ class NamespacePrefix:
     OM = 'om'
     PITHIA = None
     XLINK = 'xlink'
+    XSI = 'xsi'
 
 class Namespace:
     GCO = 'http://www.isotc211.org/2005/gco'
@@ -20,17 +21,27 @@ class Namespace:
     OM = 'http://www.opengis.net/om/2.0'
     PITHIA = 'https://metadata.pithia.eu/schemas/2.2'
     XLINK = 'http://www.w3.org/1999/xlink'
+    XSI = 'http://www.w3.org/2001/XMLSchema-instance'
 
 
 class BaseMetadataComponent:
     def __init__(self, root_tag, nsmap_extensions={}) -> None:
-        self.root = etree.Element(root_tag, nsmap={
-            NamespacePrefix.PITHIA: Namespace.PITHIA,
-            **nsmap_extensions,
-        })
+        root_element_attributes = {
+            '{%s}schemaLocation' % Namespace.XSI: 'https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd'
+        }
+        self.root = etree.Element(
+            root_tag, 
+            **root_element_attributes,
+            nsmap={
+                NamespacePrefix.PITHIA: Namespace.PITHIA,
+                NamespacePrefix.XSI: Namespace.XSI,
+                **nsmap_extensions,
+            }
+        )
 
     @property
     def xml(self) -> str:
+        etree.indent(self.root, space="    ")
         return etree.tostring(self.root, pretty_print=True).decode()
 
 
