@@ -1,7 +1,10 @@
+import os
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
+from django.views.generic import TemplateView
+
+from .forms import SwaggerViewModeForm
 
 from common.models import (
     APIInteractionMethod,
@@ -13,48 +16,79 @@ from browse.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
 )
+from user_management.services import get_institution_id_for_login_session
 
 # Create your views here.
 
-def interact_with_data_collection_through_api(request, data_collection_id):
-    try:
-        data_collection = DataCollection.objects.get(pk=data_collection_id)
-    except DataCollection.DoesNotExist:
-        messages.error(request, 'A data collection matching the specified ID was not found.')
-        return HttpResponseRedirect(reverse('browse:list_data_collections'))
+class APIInteractionMethodView(TemplateView):
+    template_name = ''
 
-    try:
-        api_interaction_method = APIInteractionMethod.objects.get(scientific_metadata=data_collection)
-    except APIInteractionMethod.DoesNotExist:
-        messages.error(request, 'No API interaction method was found for this data collection.')
-        return HttpResponseRedirect(reverse('browse:data_collection_detail', kwargs={'data_collection_id': data_collection_id}))
+    scientific_metadata = None
+    api_interaction_method = None
+    api_specification_url = None
 
-    return render(request, 'present/index.html', {
-        'title': f'Interact with {data_collection.name} via API',
-        'scientific_metadata': data_collection,
-        'api_specification_url': api_interaction_method.specification_url,
-        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'resource_type_list_page_breadcrumb_text': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-        'resource_list_page_breadcrumb_text': DataCollection.type_plural_readable.title(),
-    })
+    def get(self, request, *args, **kwargs):
+        self.api_specification_url = self.api_interaction_method.specification_url
+        return super().get(request, *args, **kwargs)
 
-def interact_with_workflow_through_api(request, workflow_id):
-    try:
-        workflow = Workflow.objects.get(pk=workflow_id)
-    except Workflow.DoesNotExist:
-        messages.error(request, 'A workflow matching the specified ID was not found.')
-        return HttpResponseRedirect(reverse('browse:list_workflows'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Interact with {self.scientific_metadata.name} via API'
+        context['scientific_metadata'] = self.scientific_metadata
+        context['api_specification_url'] = self.api_specification_url
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        if (os.environ.get('API_INTERACTION_METHOD_DEV_GROUP')
+            and os.environ.get('API_INTERACTION_METHOD_DEV_GROUP') == get_institution_id_for_login_session(self.request.session)):
+            context['form'] = SwaggerViewModeForm(initial={'mode': 'dev'})
+            context['developer'] = True
+        return context
     
-    try:
-        workflow_api_interaction_method = WorkflowAPIInteractionMethod.objects.get(scientific_metadata=workflow)
-    except WorkflowAPIInteractionMethod.DoesNotExist:
-        messages.error(request, 'No API interaction method was found for this workflow.')
-        return HttpResponseRedirect(reverse('browse:workflow_details', kwargs={'workflow_id': workflow_id}))
-    
-    return render(request, 'present/index_workflow.html', {
-        'title': f'Interact with {workflow.name} via API',
-        'scientific_metadata': workflow,
-        'api_specification_url': workflow_api_interaction_method.specification_url,
-        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'resource_list_page_breadcrumb_text': Workflow.type_plural_readable.title(),
-    })
+
+class DataCollectionAPIInteractionMethodView(APIInteractionMethodView):
+    template_name = 'present/index.html'
+
+    def get(self, request, *args, **kwargs):
+        data_collection_id = self.kwargs['data_collection_id']
+        try:
+            self.scientific_metadata = DataCollection.objects.get(pk=data_collection_id)
+        except DataCollection.DoesNotExist:
+            messages.error(request, 'A data collection matching the specified ID was not found.')
+            return HttpResponseRedirect(reverse('browse:list_data_collections'))
+
+        try:
+            self.api_interaction_method = APIInteractionMethod.objects.get(scientific_metadata=self.scientific_metadata)
+        except APIInteractionMethod.DoesNotExist:
+            messages.error(request, 'No API interaction method was found for this data collection.')
+            return HttpResponseRedirect(reverse('browse:data_collection_detail', kwargs={'data_collection_id': data_collection_id}))
+        
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
+        context['resource_list_page_breadcrumb_text'] = DataCollection.type_plural_readable.title()
+        return context
+
+class WorkflowAPIInteractionMethodView(APIInteractionMethodView):
+    template_name = 'present/index_workflow.html'
+
+    def get(self, request, *args, **kwargs):
+        workflow_id = self.kwargs['workflow_id']
+        try:
+            self.scientific_metadata = Workflow.objects.get(pk=workflow_id)
+        except Workflow.DoesNotExist:
+            messages.error(request, 'A workflow matching the specified ID was not found.')
+            return HttpResponseRedirect(reverse('browse:list_workflows'))
+        
+        try:
+            self.api_interaction_method = WorkflowAPIInteractionMethod.objects.get(scientific_metadata=self.scientific_metadata)
+        except WorkflowAPIInteractionMethod.DoesNotExist:
+            messages.error(request, 'No API interaction method was found for this workflow.')
+            return HttpResponseRedirect(reverse('browse:workflow_details', kwargs={'workflow_id': workflow_id}))
+        
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_list_page_breadcrumb_text'] = Workflow.type_plural_readable.title()
+        return context

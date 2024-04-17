@@ -10,6 +10,7 @@
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui.css' %}>
+<link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui-custom-base.css' %}>
 <link rel="stylesheet" type="text/css" href={% static 'present/swagger-ui-custom.css' %}>
 {% endblock styles %}
 
@@ -18,15 +19,22 @@
 <script src="{% static "present/swagger-ui-bundle.js" %}" id="swagger-ui-bundle-script" defer></script>
 <script src="{% static "present/swagger-ui-standalone-preset.js" %}" id="swagger-ui-standalone-script" defer></script>
 <script src="{% static "present/swagger-initializer.js" %}" id="swagger-initializer-script" defer></script>
+{% if developer %}
+<script src="{% static "present/swagger-ui-mode.js" %}" id="swagger-ui-mode-script" defer></script>
+{% endif %}
 {% endblock scripts %}
 {% block content %}
-<div class="row">
+<div class="row align-items-start justify-content-between gy-4 mb-3">
     <div class="col-lg-8">
         <h1>{{ title }}</h1>
         <span class="text-muted">{{ scientific_metadata.name }}</span>
     </div>
+    {% if developer %}
+    <div class="col-lg-2">
+        {{ form.mode.label_tag }}
+        {{ form.mode }}
+    </div>
+    {% endif %}
 </div>
-    <div id="swagger-ui"></div>
-</div>
-
+<div id="swagger-ui" data-mode="user"></div>
 {% endblock content %}

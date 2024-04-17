@@ -1,226 +1,92 @@
-/* Re-style these elements */
-/* Increases the font size of the endpoint
-dropdown heading. */
-.opblock-summary-description {
-    padding-left: 1rem;
-    font-size: 1.2rem !important;
-}
-
-/* Updates the colour of the opblock heading to help
-differentiate when it's open/closed. Also adds a
-transition between the colour change. */
-.swagger-ui .opblock-tag-section .opblock-tag {
-    background-color: #FFFFFF;
-    transition: background-color 0.2s ease-in-out !important;
-}
-
-.swagger-ui .opblock-tag-section.is-open .opblock-tag {
-    background-color: #CFE2FF;
-}
-
-/* Changes the flex direction to "column" on
-smaller screen sizes. */
-.swagger-ui .opblock-tag {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.swagger-ui .opblock-tag a {
-    padding: 1rem 10px;
-}
-
-.swagger-ui .opblock-tag button {
-    margin-inline: auto;
-}
-
-/* Adds a small border shadow and subtle
-curve to the opblock-tag. */
-.swagger-ui .opblock-tag {
-    box-shadow: 0 0 3px rgba(0,0,0,.19);
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-.swagger-ui .filter.wrapper {
-    display: block !important;
-}
-
-/* Increases the font size of the main
-Swagger UI description at the top of the page. */
-.swagger-ui .info p,
-.swagger-ui .info pre,
-.swagger-ui .info li,
-.swagger-ui .info table {
-    font-size: 1rem;
-}
-
-/* Removes the left padding of the whole
-Swagger UI section. */
-.information-container.wrapper {
-    padding-left: 0;
-}
-
-/* Removes the left padding of the endpoint
-sections. */
-.swagger-ui .wrapper {
-    padding-inline: 0;
-}
-
-/* Removes the margin between Swagger UI and the <h1> */
-.information-container.wrapper .info {
-    margin-top: 0;
-}
-
-/* Removes any HTTP method theming (e.g., GET has a blue
-background colour, PUT has an orange background colour). */
-.swagger-ui .opblock {
-    background: white !important;
-    border: none !important;
-}
-
-/* Removes any HTTP method theming related to the bottom border
-(e.g., GET has a blue bottom border colour, PUT has an orange
-bottom border colour). */
-.swagger-ui .opblock .opblock-summary {
-    border-color: #eee !important;
-    border-bottom: 1px solid #eee !important;
-}
-
-/* Overrules the responses table display: none rule. */
-.live-responses-table {
-    display: block !important; 
-}
-
+/* Conditional hiding */
 /* The responses section is not shown if the live
 responses table has not been added to the DOM yet. */
-.responses-wrapper:not(:has(.live-responses-table)) {
+#swagger-ui[data-mode="user"] .responses-wrapper:not(:has(.live-responses-table)) {
     display: none;
 }
-
-/* Adds wrapping on smaller screen sizes so the
-"* required" text doesn't cause the inputs to
-overflow past the container padding. */
-.parameter__name.required {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-/* Sets the section filter input to take up the
-full width of the screen on smaller screen sizes */
-.swagger-ui .filter .operation-filter-input {
-    max-width: none;
-}
-
-
 
 /* Hide these elements */
 
 /* Hides the little <pre> stamps in the <h2>. */
-h2.title span {
+#swagger-ui[data-mode="user"] h2.title span {
     display: none;
 }
 
-/* Hides the link to the OpenAPI specification. */
-.topbar {
-    display: none !important;
-}
-
 /* Hides the copy button for the endpoint URL. */
-.opblock-summary .copy-to-clipboard {
+#swagger-ui[data-mode="user"] .opblock-summary .copy-to-clipboard {
     display: none;
 }
 
 /* Hides the method type of each endpoint (e.g., GET, POST, PUT, DELETE, etc.). */
-.opblock-summary-method {
+#swagger-ui[data-mode="user"] .opblock-summary-method {
     display: none;
 }
 
 /* Hides the endpoint URL (e.g., /upload/). */
-.opblock-summary-path {
+#swagger-ui[data-mode="user"] .opblock-summary-path {
     display: none !important;
 }
 
 /* Hides the "Response Body" <h4> in the responses section. */
-.responses-inner h4:nth-child(3) {
+#swagger-ui[data-mode="user"] .responses-inner h4:nth-child(3) {
     display: none;
 }
 
 /* Hides the <h4> for the example responses table. */
-.responses-inner h4:last-child {
+#swagger-ui[data-mode="user"] .responses-inner h4:last-child {
     display: none;
 }
 
 /* Hides the curl details in the responses section. */
-.responses-inner .curl-command {
+#swagger-ui[data-mode="user"] .responses-inner .curl-command {
     display: none;
 }
 
 /* Hides the request URL details in the responses section. */
-.responses-inner .request-url {
+#swagger-ui[data-mode="user"] .responses-inner .request-url {
     display: none;
 }
 
 /* Hides the Response Headers <h5> in the live responses
 section. */
-.live-responses-table h5 {
+#swagger-ui[data-mode="user"] .live-responses-table h5 {
     display: none;
 }
 
 /* Hides the response headers code section in the live
 responses section. */
-.live-responses-table .microlight {
+#swagger-ui[data-mode="user"] .live-responses-table .microlight {
     display: none;
 }
 
 /* Hides the "Code" table column in the live responses
 table. */
-.live-responses-table tr td:first-child {
+#swagger-ui[data-mode="user"] .live-responses-table tr td:first-child {
     display: none;
 }
 
 /* Ensures that the cell containing the endpoint response
 content fills the full width of the screen. */
-.live-responses-table tr td:nth-child(2) {
+#swagger-ui[data-mode="user"] .live-responses-table tr td:nth-child(2) {
     width: 1%;
 }
 
 /* Hides the response examples table. */
-.responses-table:last-child {
+#swagger-ui[data-mode="user"] .responses-table:last-child {
     display: none;
 }
 
 /* Hides the schema dropdown at the bottom of the page. */
-.swagger-ui .wrapper:last-child {
+#swagger-ui[data-mode="user"] .wrapper:last-child {
     display: none;
 }
 
 /* Hides the schemes section at the bottom of the page. */
-.scheme-container {
+#swagger-ui[data-mode="user"] .scheme-container {
     display: none;
 }
 
 /* Hides the schemas section at the bottom of the page. */
-.models {
+#swagger-ui[data-mode="user"] .models {
     display: none;
-}
-
-@media (min-width: 768px) {
-    /* Increases the padding between the endpoints section
-    description and its heading. */
-    .opblock-tag p {
-        padding-left: 2rem;
-    }
-
-    .swagger-ui .opblock-tag {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .swagger-ui .opblock-tag a {
-        padding: 0 10px;
-    }
-
-    .parameter__name.required {
-        display: block;
-    }
 }

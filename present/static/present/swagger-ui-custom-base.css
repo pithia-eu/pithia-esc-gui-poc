@@ -1,0 +1,134 @@
+/* Re-style these elements */
+/* Increases the font size of the endpoint
+dropdown heading. */
+.opblock-summary-description {
+    padding-left: 1rem;
+    font-size: 1.2rem !important;
+}
+
+/* Updates the colour of the opblock heading to help
+differentiate when it's open/closed. Also adds a
+transition between the colour change. */
+.swagger-ui .opblock-tag-section .opblock-tag {
+    background-color: #FFFFFF;
+    transition: background-color 0.2s ease-in-out !important;
+}
+
+.swagger-ui .opblock-tag-section.is-open .opblock-tag {
+    background-color: #CFE2FF;
+}
+
+/* Changes the flex direction to "column" on
+smaller screen sizes. */
+.swagger-ui .opblock-tag {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.swagger-ui .opblock-tag a {
+    padding: 1rem 10px;
+}
+
+.swagger-ui .opblock-tag button {
+    margin-inline: auto;
+}
+
+/* Adds a small border shadow and subtle
+curve to the opblock-tag. */
+.swagger-ui .opblock-tag {
+    box-shadow: 0 0 3px rgba(0,0,0,.19);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.swagger-ui .filter.wrapper {
+    display: block !important;
+}
+
+/* Increases the font size of the main
+Swagger UI description at the top of the page. */
+.swagger-ui .info p,
+.swagger-ui .info pre,
+.swagger-ui .info li,
+.swagger-ui .info table {
+    font-size: 1rem;
+}
+
+/* Removes the left padding of the whole
+Swagger UI section. */
+.information-container.wrapper {
+    padding-left: 0;
+}
+
+/* Removes the left padding of the endpoint
+sections. */
+.swagger-ui .wrapper {
+    padding-inline: 0;
+}
+
+/* Removes the margin between Swagger UI and the <h1> */
+.information-container.wrapper .info {
+    margin-top: 0;
+}
+
+/* Removes any HTTP method theming (e.g., GET has a blue
+background colour, PUT has an orange background colour). */
+.swagger-ui .opblock {
+    background: white !important;
+    border: none !important;
+}
+
+/* Removes any HTTP method theming related to the bottom border
+(e.g., GET has a blue bottom border colour, PUT has an orange
+bottom border colour). */
+.swagger-ui .opblock .opblock-summary {
+    border-color: #eee !important;
+    border-bottom: 1px solid #eee !important;
+}
+
+/* Overrules the responses table display: none rule. */
+.live-responses-table {
+    display: block !important; 
+}
+
+/* Adds wrapping on smaller screen sizes so the
+"* required" text doesn't cause the inputs to
+overflow past the container padding. */
+.parameter__name.required {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Sets the section filter input to take up the
+full width of the screen on smaller screen sizes */
+.swagger-ui .filter .operation-filter-input {
+    max-width: none;
+}
+
+
+/* Hide these elements */
+/* Hides the link to the OpenAPI specification. */
+.topbar {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    /* Increases the padding between the endpoints section
+    description and its heading. */
+    .opblock-tag p {
+        padding-left: 2rem;
+    }
+
+    .swagger-ui .opblock-tag {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .swagger-ui .opblock-tag a {
+        padding: 0 10px;
+    }
+
+    .parameter__name.required {
+        display: block;
+    }
+}

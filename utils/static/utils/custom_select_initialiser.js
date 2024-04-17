@@ -1,18 +1,19 @@
 const customSelects = {};
-const selectControlWithSearchSelector = "select:has(option:nth-child(6))";
-const multipleChoiceSelectControlSelector = "select[multiple]";
+const selectControlWithNoSearchSelector = "select.no-search";
 const keywordsInputSelector = "select[name='keyword']";
 
-function initialiseDefaultSelectControls(selectControls) {
+function initialiseSelectControls(selectControls) {
     selectControls.forEach(sc => {
         const cs = new TomSelect(sc, {});
         customSelects[sc.id] = cs;
     });
 }
 
-function initialiseMultipleChoiceSelectControls(selectControls) {
+function initialiseSelectControlsWithNoSearch(selectControls) {
     selectControls.forEach(sc => {
-        const cs = new TomSelect(sc, {});
+        const cs = new TomSelect(sc, {
+            controlInput: null,
+        });
         customSelects[sc.id] = cs;
     });
 }
@@ -32,8 +33,8 @@ function initialiseKeywordMultipleChoiceSelectControls(selectControls) {
 
 // Initialise all selects on window load
 window.addEventListener("load", () => {
-    initialiseDefaultSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${multipleChoiceSelectControlSelector})`));
-    initialiseMultipleChoiceSelectControls(document.querySelectorAll(`${multipleChoiceSelectControlSelector}:not(${keywordsInputSelector})`));
+    initialiseSelectControls(document.querySelectorAll(`select:not(${keywordsInputSelector}, ${selectControlWithNoSearchSelector})`));
+    initialiseSelectControlsWithNoSearch(document.querySelectorAll(`${selectControlWithNoSearchSelector}:not(${keywordsInputSelector})`));
     initialiseKeywordMultipleChoiceSelectControls(document.querySelectorAll(`${keywordsInputSelector}`));
 });
 
@@ -41,13 +42,13 @@ window.addEventListener("load", () => {
 window.addEventListener("newSelectsAdded", e => {
     const newSelectIds = e.detail;
     const newSelects = document.querySelectorAll(newSelectIds.map(id => `#${id}`).join(","));
-    initialiseDefaultSelectControls(newSelects);
+    initialiseSelectControls(newSelects);
 });
 
 window.addEventListener("newMultipleChoiceSelectsAdded", e => {
     const newMultipleChoiceSelectIds = e.detail;
     const newMultipleChoiceSelects = document.querySelectorAll(newMultipleChoiceSelectIds.map(id => `#${id}`).join(","));
-    initialiseMultipleChoiceSelectControls(newMultipleChoiceSelects);
+    initialiseSelectControls(newMultipleChoiceSelects);
 });
 
 window.addEventListener("newKeywordsSelectsAdded", e => {

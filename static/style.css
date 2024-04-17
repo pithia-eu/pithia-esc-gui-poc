@@ -624,11 +624,6 @@ label.required::after {
 .input-group:has(.is-invalid) .alert-localid-taken {
     display: block;
 }
-/* Metadata editor - custom select */
-.ts-wrapper.multi .ts-control > div {
-    display: inline-block;
-    word-break: break-word;
-}
 
 
 /* Skeleton loading animation for metadata server urls */
@@ -968,10 +963,17 @@ a.support-link {
     padding-block: 1rem;
 }
 
-.input-group > .form-control {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+
+/* Tom select */
+.ts-wrapper.multi .ts-control > div {
+    display: inline-block;
+    word-break: break-word;
 }
+
+.ts-wrapper.no-search .ts-control, .ts-wrapper.single.input-active .ts-control {
+    cursor: pointer;
+}
+
 
 @media (min-width: 992px) {
     #interaction-methods-form .list-group-item,
