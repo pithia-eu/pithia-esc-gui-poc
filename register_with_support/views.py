@@ -337,7 +337,7 @@ class ProjectRegisterWithEditorFormView(
             'register_with_support/components/project/keywords_row_content.html',
             context=context
         )
-        context['citation_section_help_text'] = 'Reference to documentation describing the project.'
+        context['citation_section_description'] = 'Reference to documentation describing the project.'
         context['related_parties_section_help_text'] = 'Individual or organisation related to the project.'
         return context
 
@@ -397,7 +397,7 @@ class PlatformRegisterWithoutFormView(
         context = super().get_context_data(**kwargs)
         context['location_section_description'] = 'Location of the platform. Note, that it is only applicable to static platforms or geo-stationary satellites.'
         context['geo_location_description'] = f'The LAT, LON coordinates of the position of the platform. "{context.get("form").fields.get("geometry_location_point_srs_name").label}" describes the coordinate system.'
-        context['citation_section_help_text'] = 'Reference to documentation describing the platform.'
+        context['citation_section_description'] = 'Reference to documentation describing the platform.'
         context['related_parties_section_help_text'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
         return context
 
@@ -429,6 +429,7 @@ class OperationRegisterWithoutFormView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['citation_section_description'] = 'Reference to documentation describing the operation.'
         context['location_section_description'] = 'Location of the platform operation.'
         context['location_section_example'] = 'A flight line or a ship track for a platform such as an aircraft or a ship respectively.'
         return context

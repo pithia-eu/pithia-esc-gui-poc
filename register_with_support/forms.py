@@ -409,6 +409,7 @@ class PlatformEditorForm(
 class OperationEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
+    CitationDocumentationEditorFormComponent,
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
     StatusEditorFormComponent
