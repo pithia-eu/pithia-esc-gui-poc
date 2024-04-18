@@ -7,4 +7,5 @@ urlpatterns = [
     path('individual-wizard/', views.IndividualRegisterWithEditorFormView.as_view(), name='individual_with_editor'),
     path('project-wizard/', views.ProjectRegisterWithEditorFormView.as_view(), name='project_with_editor'),
     path('platform-wizard/', views.PlatformRegisterWithoutFormView.as_view(), name='platform_with_editor'),
+    path('operation-wizard/', views.OperationRegisterWithoutFormView.as_view(), name='operation_with_editor'),
 ]

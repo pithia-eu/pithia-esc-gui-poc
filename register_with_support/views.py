@@ -389,3 +389,19 @@ class PlatformRegisterWithoutFormView(
         context['citation_section_help_text'] = 'Reference to documentation describing the platform.'
         context['related_parties_section_help_text'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
         return context
+
+
+class OperationRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:operation_with_editor')
+    form_class = OperationEditorForm
+    template_name = 'register_with_support/operation_editor.html'
+
+    model = models.Operation
+    metadata_builder_class = OperationMetadata
+    file_upload_registration_url = reverse_lazy('register:operation')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Operation.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'

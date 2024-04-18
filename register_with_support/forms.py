@@ -392,3 +392,9 @@ class PlatformEditorForm(
         required=False,
         widget=forms.HiddenInput()
     )
+
+class OperationEditorForm(
+    BaseEditorForm,
+    OrganisationEditorFormComponent
+):
+    pass

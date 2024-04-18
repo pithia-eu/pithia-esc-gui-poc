@@ -168,6 +168,7 @@ class OperationManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:operation'
     resource_update_page_url_name = 'update:operation'
     resource_register_page_url_name = 'register:operation'
+    resource_register_with_editor_name = 'register:operation_with_editor'
     resource_xml_download_page_url_name = 'utils:view_operation_as_xml'
 
 class InstrumentManagementListView(ResourceManagementListView):
