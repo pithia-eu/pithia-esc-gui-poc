@@ -164,6 +164,13 @@ class OrganisationSelectFormViewMixin(View):
             *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+class PlatformSelectFormViewMixin(View):
+    def get_platform_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
 class RelatedPartiesSelectFormViewMixin(View):
     def get_related_party_choices_for_form(self):
         return (
@@ -322,6 +329,7 @@ class ProjectRegisterWithEditorFormView(
 
 class PlatformRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
+    PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     StandardIdentifiersFormViewMixin,
     ResourceRegisterWithEditorFormView):
@@ -348,10 +356,7 @@ class PlatformRegisterWithoutFormView(
         )
 
     def get_child_platform_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+        return self.get_platform_choices_for_form()
 
     def get_crs_choices_for_form(self):
         g = get_graph_of_pithia_ontology_component("crs")
@@ -393,6 +398,8 @@ class PlatformRegisterWithoutFormView(
 
 class OperationRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
+    PlatformSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:operation_with_editor')
@@ -405,3 +412,18 @@ class OperationRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Operation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+
+    def get_child_operation_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(operation.metadata_server_url, operation.name) for operation in Operation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['platform_choices'] = self.get_platform_choices_for_form()
+        kwargs['child_operation_choices'] = self.get_child_operation_choices_for_form()
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        return kwargs

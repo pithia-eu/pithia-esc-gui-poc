@@ -395,6 +395,56 @@ class PlatformEditorForm(
 
 class OperationEditorForm(
     BaseEditorForm,
-    OrganisationEditorFormComponent
+    OrganisationEditorFormComponent,
+    RelatedPartiesEditorFormComponent,
 ):
-    pass
+    def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['platforms'].choices = platform_choices
+        self.fields['child_operations'].choices = child_operation_choices
+
+    time_period_id = forms.CharField(
+        label='Time Period ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_id = forms.CharField(
+        label='Time Instant ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    time_instant_end_id = forms.CharField(
+        label='Time Instant ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_end_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    platforms = forms.MultipleChoiceField(
+        label='Platforms',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select'
+        })
+    )
+
+    child_operations = forms.MultipleChoiceField(
+        label='Child Operations',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select'
+        })
+    )
