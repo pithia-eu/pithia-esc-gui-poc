@@ -1,4 +1,9 @@
 {% extends 'register_with_support/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+<script src="{% static 'register_with_support/operation_editor.js' %}" type="module" defer></script>
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
+{% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-and-organisation-section">
     <div class="row flex-column gy-4">
