@@ -412,13 +412,13 @@ class OperationEditorForm(
         self.fields['child_operations'].choices = child_operation_choices
 
     time_period_id = forms.CharField(
-        label='Time Period ID',
+        label='ID',
         required=False,
         widget=forms.TextInput()
     )
 
     time_instant_begin_id = forms.CharField(
-        label='Time Instant ID',
+        label='ID',
         required=False,
         widget=forms.TextInput()
     )
@@ -430,7 +430,7 @@ class OperationEditorForm(
     )
 
     time_instant_end_id = forms.CharField(
-        label='Time Instant ID',
+        label='ID',
         required=False,
         widget=forms.TextInput()
     )
