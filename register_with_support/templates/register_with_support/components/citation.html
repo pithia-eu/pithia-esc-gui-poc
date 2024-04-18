@@ -15,7 +15,7 @@
         </div>
         <div class="col-xl-4 col-lg-5">
             {{ form.citation_publication_date.label_tag }}
-            <input type="date" name="{{ form.citation_publication_date.name }}" id="{{ form.citation_publication_date.auto_id }}" class="form-control">
+            <input type="date" name="{{ form.citation_publication_date.name }}" id="{{ form.citation_publication_date.auto_id }}" class="form-control" value="{{ form.citation_publication_date.value|default:'' }}">
             <div class="invalid-feedback">
                 A date must be provided if other citation details have been entered.
             </div>

@@ -30,7 +30,7 @@
         </div>
         <div class="col-lg-3">
             {{ form.time_instant_begin_position.label_tag }}
-            <input type="date" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control">
+            <input type="date" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control" value="{{ form.time_instant_begin_position.value|default:'' }}">
         </div>
     </div>
     <div class="row gy-2">
@@ -44,7 +44,7 @@
         </div>
         <div class="col-lg-3">
             {{ form.time_instant_end_position.label_tag }}
-            <input type="date" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control">
+            <input type="date" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control" value="{{ form.time_instant_end_position.value|default:'' }}">
         </div>
     </div>
 </section>
