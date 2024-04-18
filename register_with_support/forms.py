@@ -416,6 +416,7 @@ class OperationEditorForm(
 ):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['platforms'].help_text = 'The operated platform(s).'
         self.fields['platforms'].choices = platform_choices
         self.fields['child_operations'].choices = child_operation_choices
 
