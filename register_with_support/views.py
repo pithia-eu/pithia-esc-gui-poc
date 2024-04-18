@@ -157,6 +157,18 @@ class ResourceRegisterWithEditorFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+class SrsNameSelectFormViewMixin(View):
+    def get_crs_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("crs")
+        crs_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            crs_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in crs_dict.items()],
+        )
+
 class OrganisationSelectFormViewMixin(View):
     def get_organisation_choices_for_form(self):
         return (
@@ -331,6 +343,7 @@ class PlatformRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
+    SrsNameSelectFormViewMixin,
     StandardIdentifiersFormViewMixin,
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:platform_with_editor')
@@ -358,17 +371,6 @@ class PlatformRegisterWithoutFormView(
     def get_child_platform_choices_for_form(self):
         return self.get_platform_choices_for_form()
 
-    def get_crs_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("crs")
-        crs_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            crs_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *[(key, value) for key, value in crs_dict.items()],
-        )
-
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
@@ -391,6 +393,8 @@ class PlatformRegisterWithoutFormView(
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['location_section_description'] = 'Location of the platform. Note, that it is only applicable to static platforms or geo-stationary satellites.'
+        context['geo_location_description'] = f'The LAT, LON coordinates of the position of the platform. "{context.get("form").fields.get("geometry_location_point_srs_name").label}" describes the coordinate system.'
         context['citation_section_help_text'] = 'Reference to documentation describing the platform.'
         context['related_parties_section_help_text'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
         return context
@@ -400,6 +404,7 @@ class OperationRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
+    SrsNameSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:operation_with_editor')
@@ -419,6 +424,12 @@ class OperationRegisterWithoutFormView(
             *[(operation.metadata_server_url, operation.name) for operation in Operation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['location_section_description'] = 'Location of the platform operation.'
+        context['location_section_example'] = 'A flight line or a ship track for a platform such as an aircraft or a ship respectively.'
+        return context
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
@@ -426,4 +437,5 @@ class OperationRegisterWithoutFormView(
         kwargs['child_operation_choices'] = self.get_child_operation_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        kwargs['crs_choices'] = self.get_crs_choices_for_form()
         return kwargs

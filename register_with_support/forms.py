@@ -206,6 +206,58 @@ class RelatedPartiesEditorFormComponent(forms.Form):
         widget=forms.HiddenInput()
     )
 
+class LocationEditorFormComponent(forms.Form):
+    MIN_POS_1 = -90
+    MAX_POS_1 = 90
+    MIN_POS_2 = -180
+    MAX_POS_2 = 180
+    
+    def __init__(self, *args, crs_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['geometry_location_point_srs_name'].choices = crs_choices
+
+    location_name = forms.CharField(
+        label="Name",
+        required=False,
+        widget=forms.TextInput(),
+        help_text='Geographic description of the location using text or an identifier.'
+    )
+
+    geometry_location_point_id = forms.CharField(
+        label="Point ID",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    geometry_location_point_srs_name = forms.ChoiceField(
+        label="SRS Name",
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    geometry_location_point_pos_1 = forms.FloatField(
+        label="Pos",
+        required=False,
+        min_value=MIN_POS_1,
+        max_value=MAX_POS_1,
+        widget=forms.NumberInput(attrs={
+            'min': MIN_POS_1,
+            'max': MAX_POS_1,
+        })
+    )
+
+    geometry_location_point_pos_2 = forms.FloatField(
+        required=False,
+        min_value=MIN_POS_2,
+        max_value=MAX_POS_2,
+        widget=forms.NumberInput(attrs={
+            'min': MIN_POS_2,
+            'max': MAX_POS_2,
+        })
+    )
+
 
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
@@ -294,17 +346,13 @@ class PlatformEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
     OrganisationEditorFormComponent,
+    LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
-    MIN_POS_1 = -90
-    MAX_POS_1 = 90
-    MIN_POS_2 = -180
-    MAX_POS_2 = 180
 
-    def __init__(self, *args, type_choices=(), child_platform_choices=(), crs_choices=(), **kwargs):
+    def __init__(self, *args, type_choices=(), child_platform_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['type'].choices = type_choices
         self.fields['child_platforms'].choices = child_platform_choices
-        self.fields['geometry_location_point_srs_name'].choices = crs_choices
 
     short_name = forms.CharField(
         label="Short Name",
@@ -326,47 +374,6 @@ class PlatformEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
-    )
-
-    location_name = forms.CharField(
-        label="Name",
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    geometry_location_point_id = forms.CharField(
-        label="Point ID",
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    geometry_location_point_srs_name = forms.ChoiceField(
-        label="SRS Name",
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-        })
-    )
-
-    geometry_location_point_pos_1 = forms.FloatField(
-        label="Pos",
-        required=False,
-        min_value=MIN_POS_1,
-        max_value=MAX_POS_1,
-        widget=forms.NumberInput(attrs={
-            'min': MIN_POS_1,
-            'max': MAX_POS_1,
-        })
-    )
-
-    geometry_location_point_pos_2 = forms.FloatField(
-        required=False,
-        min_value=MIN_POS_2,
-        max_value=MAX_POS_2,
-        widget=forms.NumberInput(attrs={
-            'min': MIN_POS_2,
-            'max': MAX_POS_2,
         })
     )
 
@@ -396,6 +403,7 @@ class PlatformEditorForm(
 class OperationEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
+    LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
 ):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
