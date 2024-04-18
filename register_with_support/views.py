@@ -223,6 +223,18 @@ class StandardIdentifiersFormViewMixin(View):
             context=context
         )
         return context
+
+class StatusSelectFormViewMixin(View):
+    def get_status_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('status')
+        status_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            status_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in status_dict.items())
+        )
     
 
 
@@ -289,7 +301,8 @@ class IndividualRegisterWithEditorFormView(OrganisationSelectFormViewMixin, Reso
 class ProjectRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
-    ResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView,
+    StatusSelectFormViewMixin):
     success_url = reverse_lazy('register:project_with_editor')
     form_class = ProjectEditorForm
     template_name = 'register_with_support/project_editor.html'
@@ -300,17 +313,6 @@ class ProjectRegisterWithEditorFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
-
-    def get_status_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('status')
-        status_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            status_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *((key, value) for key, value in status_dict.items())
-        )
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -405,7 +407,8 @@ class OperationRegisterWithoutFormView(
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
-    ResourceRegisterWithEditorFormView
+    ResourceRegisterWithEditorFormView,
+    StatusSelectFormViewMixin
 ):
     success_url = reverse_lazy('register:operation_with_editor')
     form_class = OperationEditorForm
@@ -438,4 +441,5 @@ class OperationRegisterWithoutFormView(
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['crs_choices'] = self.get_crs_choices_for_form()
+        kwargs['status_choices'] = self.get_status_choices_for_form()
         return kwargs

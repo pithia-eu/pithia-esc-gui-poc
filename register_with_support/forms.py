@@ -259,6 +259,19 @@ class LocationEditorFormComponent(forms.Form):
     )
 
 
+class StatusEditorFormComponent(forms.Form):
+    def __init__(self, *args, status_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].choices = status_choices
+
+    status = forms.ChoiceField(
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -283,10 +296,10 @@ class ProjectEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
     CitationDocumentationEditorFormComponent,
-    RelatedPartiesEditorFormComponent):
-    def __init__(self, *args, status_choices=(), **kwargs):
+    RelatedPartiesEditorFormComponent,
+    StatusEditorFormComponent):
+    def __init__(self, *args, **kwargs):
         super(ProjectEditorForm, self).__init__(*args, **kwargs)
-        self.fields['status'].choices = status_choices
         self.fields['description'].label = 'Additional Description'
 
     short_name = forms.CharField(
@@ -333,13 +346,6 @@ class ProjectEditorForm(
     keywords_json = forms.JSONField(
         required=False,
         widget=forms.HiddenInput()
-    )
-
-    status = forms.ChoiceField(
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-        })
     )
 
 class PlatformEditorForm(
@@ -405,6 +411,7 @@ class OperationEditorForm(
     OrganisationEditorFormComponent,
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
+    StatusEditorFormComponent
 ):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
