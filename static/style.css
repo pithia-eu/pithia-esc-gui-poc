@@ -964,6 +964,7 @@ a.support-link {
 }
 
 
+/* Customisation */
 /* Tom select */
 .ts-wrapper.multi .ts-control > div {
     display: inline-block;
@@ -972,6 +973,13 @@ a.support-link {
 
 .ts-wrapper.no-search .ts-control, .ts-wrapper.single.input-active .ts-control {
     cursor: pointer;
+}
+
+/* Bootstrap tooltips */
+.custom-tooltip {
+    --bs-tooltip-bg: var(--bs-light);
+    --bs-tooltip-color: var(--bs-light-text-emphasis);
+  
 }
 
 
