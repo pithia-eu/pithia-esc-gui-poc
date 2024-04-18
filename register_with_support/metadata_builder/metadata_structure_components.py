@@ -70,6 +70,48 @@ class IdentifierMetadataComponent(BaseMetadataComponent):
         last_modification_date_element.text = last_modification_date
 
 
+class LocationMetadataComponent(BaseMetadataComponent):
+    def append_location(self, location_dict):
+        if (not any([
+            location_dict.get('name_location').get('code'),
+            location_dict.get('geometry_location').get('point').get('id'),
+            location_dict.get('geometry_location').get('point').get('srs_name'),
+            location_dict.get('geometry_location').get('point').get('pos'),
+        ])):
+            return
+        location_wrapper_element = etree.SubElement(self.root, 'location')
+        location_element = etree.SubElement(location_wrapper_element, 'Location')
+        
+        # Geometry location
+        if (any([
+            location_dict.get('geometry_location').get('point').get('id'),
+            location_dict.get('geometry_location').get('point').get('srs_name'),
+            location_dict.get('geometry_location').get('point').get('pos'),
+        ])):
+            geometry_location_element = etree.SubElement(location_element, 'geometryLocation')
+            gml_point_element_attributes = {
+                '{%s}id' % Namespace.GML: location_dict['geometry_location']['point']['id'],
+                'srsName': location_dict['geometry_location']['point']['srs_name'],
+            }
+            gml_point_element = etree.SubElement(geometry_location_element, '{%s}Point' % Namespace.GML, **gml_point_element_attributes)
+            gml_pos_element = etree.SubElement(gml_point_element, '{%s}pos' % Namespace.GML)
+            gml_pos_element.text = location_dict['geometry_location']['point']['pos']
+
+        # Name location
+        if (any([
+            location_dict.get('name_location').get('code'),
+        ])):
+            name_location_element = etree.SubElement(location_element, 'nameLocation')
+            ex_geographic_description_element = etree.SubElement(name_location_element, 'EX_GeographicDescription', xmlns=Namespace.GMD)
+            # Geographic identifier
+            geographic_identifier_element = etree.SubElement(ex_geographic_description_element, 'geographicIdentifier')
+            # MD identifier
+            md_identifier_element = etree.SubElement(geographic_identifier_element, 'MD_Identifier')
+            # Code
+            code_element = etree.SubElement(md_identifier_element, 'code')
+            self._append_gco_character_string_sub_element(code_element, location_dict['name_location']['code'])
+
+
 class NameMetadataComponent(BaseMetadataComponent):
     def append_name(self, name):
         name_element = etree.SubElement(self.root, 'name')
@@ -304,7 +346,7 @@ class GMLTimePeriodMetadataComponent(BaseMetadataComponent):
             '{%s}id' % Namespace.GML: time_instant_id
         }
         time_instant_element = etree.SubElement(parent_element, '{%s}TimeInstant' % Namespace.GML, **time_instant_element_attributes)
-        time_position_element = etree.SubElement(time_instant_element, '{%s}TimePosition' % Namespace.GML)
+        time_position_element = etree.SubElement(time_instant_element, '{%s}timePosition' % Namespace.GML)
         time_position_element.text = time_position
 
     def append_gml_time_period(self, parent_element, time_period_dict):
@@ -320,7 +362,7 @@ class GMLTimePeriodMetadataComponent(BaseMetadataComponent):
 
         # Time period end
         gml_end_element = etree.SubElement(gml_time_period_element, '{%s}end' % Namespace.GML)
-        self._append_time_instant_element(gml_end_element, time_period_dict['begin']['time_instant']['id'], time_period_dict['begin']['time_instant']['time_position'])
+        self._append_time_instant_element(gml_end_element, time_period_dict['end']['time_instant']['id'], time_period_dict['end']['time_instant']['time_position'])
 
 
 class QualityAssessmentMetadataComponent(BaseMetadataComponent):

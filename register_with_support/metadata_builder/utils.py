@@ -1,5 +1,6 @@
 """Prepares cleaned form data for XML conversion.
 """
+import datetime as dt
 from unidecode import unidecode
 
 # Contact info
@@ -100,5 +101,30 @@ def process_location(form_cleaned_data):
         },
         'name_location': {
             'code': form_cleaned_data.get('location_name')
+        },
+    }
+
+def _process_time_position(time_position):
+    if not time_position:
+        return ''
+    d = dt.datetime.strptime(time_position, '%Y-%m-%d')
+    return d.date().isoformat()
+
+def process_operation_time(form_cleaned_data):
+    return {
+        'time_period': {
+            'id': form_cleaned_data.get('time_period_id'),
+            'begin': {
+                'time_instant': {
+                    'id': form_cleaned_data.get('time_instant_begin_id'),
+                    'time_position': _process_time_position(form_cleaned_data.get('time_instant_begin_position')),
+                }
+            },
+            'end': {
+                'time_instant': {
+                    'id': form_cleaned_data.get('time_instant_end_id'),
+                    'time_position': _process_time_position(form_cleaned_data.get('time_instant_end_position')),
+                }
+            },
         },
     }

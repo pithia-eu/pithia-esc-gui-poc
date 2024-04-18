@@ -174,3 +174,8 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     @tag('platform')
     def test_platform_no_geometry_location(self):
         self.create_xml_and_validate_against_schema(PlatformMetadata, PLATFORM_PROPERTIES_NO_GEOMETRY_LOCATION)
+
+    # Operation
+    @tag('operation')
+    def test_operation(self):
+        self.create_xml_and_validate_against_schema(OperationMetadata, OPERATION_PROPERTIES_FULL)

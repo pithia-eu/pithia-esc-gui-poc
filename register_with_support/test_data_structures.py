@@ -208,6 +208,18 @@ OPERATION_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Operation Test',
     'description': 'Operation description',
+    'location': {
+        'geometry_location': {
+            'point': {
+                'id': 'n11',
+                'srs_name': 'https://metadata.pithia.eu/ontology/2.2/crs/WGS84spherical',
+                'pos': ''
+            },
+        },
+        'name_location': {
+            'code': 'Polar orbit in the magnetosphere and solar wind'
+        },
+    },
     'operation_time': {
         'time_period': {
             'id': 't_esr_dsnd',
@@ -225,6 +237,16 @@ OPERATION_PROPERTIES_FULL = {
             },
         },
     },
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
     'status': 'https://metadata.pithia.eu/ontology/2.2/status/OnGoing',
     'related_parties': [
         {
@@ -239,7 +261,8 @@ OPERATION_PROPERTIES_FULL = {
             'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
     ],
-    'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+    'platforms': ['https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test'],
+    'child_operations': ['https://metadata.pithia.eu/resources/2.2/operation/test/Operation_Test'],
 }
 
 # Instrument

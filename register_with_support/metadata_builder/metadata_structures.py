@@ -96,7 +96,7 @@ class ProjectMetadata(DescriptionMetadataComponent, DocumentationMetadataCompone
             md_keyword_type_code_element = etree.SubElement(type_element, 'MD_KeywordTypeCode', codeList=keyword_dict['type']['code_list'], codeListValue=keyword_dict['type']['code_list_value'])
 
 
-class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StandardIdentifierComponent, TypeMetadataComponent):
+class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, LocationMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, ShortNameMetadataComponent, StandardIdentifierComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Platform.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -125,46 +125,6 @@ class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataCompon
         gmd_url_element = etree.SubElement(url_element, '{%s}URL' % Namespace.GMD)
         gmd_url_element.text = url
 
-    def append_location(self, location_dict):
-        if (not any([
-            location_dict.get('name_location').get('code'),
-            location_dict.get('geometry_location').get('point').get('id'),
-            location_dict.get('geometry_location').get('point').get('srs_name'),
-            location_dict.get('geometry_location').get('point').get('pos'),
-        ])):
-            return
-        location_wrapper_element = etree.SubElement(self.root, 'location')
-        location_element = etree.SubElement(location_wrapper_element, 'Location')
-        
-        # Geometry location
-        if (any([
-            location_dict.get('geometry_location').get('point').get('id'),
-            location_dict.get('geometry_location').get('point').get('srs_name'),
-            location_dict.get('geometry_location').get('point').get('pos'),
-        ])):
-            geometry_location_element = etree.SubElement(location_element, 'geometryLocation')
-            gml_point_element_attributes = {
-                '{%s}id' % Namespace.GML: location_dict['geometry_location']['point']['id'],
-                'srsName': location_dict['geometry_location']['point']['srs_name'],
-            }
-            gml_point_element = etree.SubElement(geometry_location_element, '{%s}Point' % Namespace.GML, **gml_point_element_attributes)
-            gml_pos_element = etree.SubElement(gml_point_element, '{%s}pos' % Namespace.GML)
-            gml_pos_element.text = location_dict['geometry_location']['point']['pos']
-
-        # Name location
-        if (any([
-            location_dict.get('name_location').get('code'),
-        ])):
-            name_location_element = etree.SubElement(location_element, 'nameLocation')
-            ex_geographic_description_element = etree.SubElement(name_location_element, 'EX_GeographicDescription', xmlns=Namespace.GMD)
-            # Geographic identifier
-            geographic_identifier_element = etree.SubElement(ex_geographic_description_element, 'geographicIdentifier')
-            # MD identifier
-            md_identifier_element = etree.SubElement(geographic_identifier_element, 'MD_Identifier')
-            # Code
-            code_element = etree.SubElement(md_identifier_element, 'code')
-            self._append_gco_character_string_sub_element(code_element, location_dict['name_location']['code'])
-
     def append_child_platforms(self, child_platforms):
         for cp in child_platforms:
             child_platform_element_attributes = {
@@ -173,7 +133,7 @@ class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataCompon
             etree.SubElement(self.root, 'childPlatform', **child_platform_element_attributes)
 
 
-class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
+class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, LocationMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Operation.root_element_name, nsmap_extensions={
             NamespacePrefix.GML: Namespace.GML,
@@ -181,23 +141,46 @@ class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, GML
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
-        self.append_name(properties['description'])
+        self.append_description(properties['description'])
+        self.append_location(properties['location'])
         self.append_operation_time(properties['operation_time'])
+        self.append_documentation(properties['documentation'])
         self.append_status(properties['status'])
         self.append_related_parties(properties['related_parties'])
-        self.append_platform(properties['platform'])
+        self.append_platforms(properties['platforms'])
+        self.append_child_operations(properties['child_operations'])
 
     def append_operation_time(self, operation_time_dict):
+        # If no time period details are provided, do
+        # not add to the XML
+        time_period_dict = operation_time_dict['time_period']
+        if (not any([
+            time_period_dict.get('id'),
+            time_period_dict.get('begin').get('time_instant').get('id'),
+            time_period_dict.get('begin').get('time_instant').get('time_position'),
+            time_period_dict.get('end').get('time_instant').get('id'),
+            time_period_dict.get('end').get('time_instant').get('time_position'),
+        ])):
+            return
+
         # Operation time wrapper element
         operation_time_element = etree.SubElement(self.root, 'operationTime')
 
-        self.append_gml_time_period(operation_time_element, operation_time_dict['time_period'])
+        self.append_gml_time_period(operation_time_element, time_period_dict)
 
-    def append_platform(self, platform):
-        platform_element_attributes = {
-            '{%s}href' % Namespace.XLINK: platform,
-        }
-        etree.SubElement(self.root, 'platform', **platform_element_attributes)
+    def append_platforms(self, platforms):
+        for platform in platforms:
+            platform_element_attributes = {
+                '{%s}href' % Namespace.XLINK: platform,
+            }
+            etree.SubElement(self.root, 'platform', **platform_element_attributes)
+
+    def append_child_operations(self, child_operations):
+        for child_operation in child_operations:
+            child_operation_element_attributes = {
+                '{%s}href' % Namespace.XLINK: child_operation
+            }
+            etree.SubElement(self.root, 'childOperation', **child_operation_element_attributes)
 
 
 class InstrumentMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, TypeMetadataComponent):
