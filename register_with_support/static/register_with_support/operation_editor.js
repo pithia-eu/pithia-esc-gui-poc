@@ -17,6 +17,9 @@ import {
 import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
+import {
+    setupOperationTimeSection,
+} from "/static/register_with_support/components/operation/operation_time_section.js";
 
 function prepareFormForSubmission() {
     prepareRelatedPartiesJSON();
@@ -35,4 +38,5 @@ window.addEventListener("load", () => {
     setupGeometryLocationSection();
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupRelatedPartiesTable();
+    setupOperationTimeSection();
 });

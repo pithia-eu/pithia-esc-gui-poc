@@ -8,9 +8,6 @@ const geometryLocationSection = editorForm.querySelector("#geometry-location-sec
 
 
 export function setupGeometryLocationSection() {
-    // The citation title and date fields only
-    // become required when other citation
-    // fields are filled in.
     const geometryLocationInputs = geometryLocationSection.querySelectorAll("input[name^='geometry']");
     const geometryLocationSelects = geometryLocationSection.querySelectorAll("select");
     const allGeometryLocationFields = [
@@ -26,7 +23,7 @@ export function setupGeometryLocationSection() {
     );
 
     // Set event listeners for each field in the
-    // citation section
+    // geolocation section
     geometryLocationInputs.forEach(input => {
         input.addEventListener("input", () => {
             checkAndSetRequiredAttributesForFields(
