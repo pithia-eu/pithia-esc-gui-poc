@@ -1,6 +1,5 @@
 """Prepares cleaned form data for XML conversion.
 """
-import datetime as dt
 from unidecode import unidecode
 
 # Contact info
@@ -107,8 +106,7 @@ def process_location(form_cleaned_data):
 def _process_time_position(time_position):
     if not time_position:
         return ''
-    d = dt.datetime.strptime(time_position, '%Y-%m-%d')
-    return d.date().isoformat()
+    return time_position.isoformat()
 
 def process_operation_time(form_cleaned_data):
     return {
