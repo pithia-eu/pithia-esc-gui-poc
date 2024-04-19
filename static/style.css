@@ -974,6 +974,12 @@ a.support-link {
     padding-block: 1rem;
 }
 
+#table-operational-modes textarea {
+    height: 1rem;
+    overflow-y: hidden;
+    resize: none;
+}
+
 
 /* Customisation */
 /* Tom select */

@@ -522,7 +522,7 @@ class InstrumentEditorForm(
         label="Description",
         required=False,
         widget=forms.Textarea(attrs={
-            'rows': '4'
+            'rows': '1',
         })
     )
 
