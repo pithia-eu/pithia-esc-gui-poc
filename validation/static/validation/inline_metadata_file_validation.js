@@ -18,6 +18,7 @@ export class MetadataFile {
         this.name = xmlFileName;
         this.xmlDoc = this.parseXmlString(xmlFileString);
         this.syntaxErrors = undefined;
+        this.textEncodingErrors = undefined;
         this.namespaceErrors = undefined;
         this.localIDErrors = undefined;
         this.rootElementNameErrors = undefined;
@@ -36,6 +37,13 @@ export class MetadataFile {
             return false;
         }
         return this.syntaxErrors.length === 0;
+    }
+
+    get isTextEncodingValid() {
+        if (this.textEncodingErrors === undefined) {
+            return false;
+        }
+        return this.textEncodingErrors.length === 0;
     }
 
     get isNamespaceValid() {
@@ -83,6 +91,7 @@ export class MetadataFile {
     get isValid() {
         return [
             this.isSyntaxValid,
+            this.isTextEncodingValid,
             this.isNamespaceValid,
             this.isLocalIDValid,
             this.isRootElementNameValid,
@@ -95,6 +104,7 @@ export class MetadataFile {
     get totalErrorCount() {
         return [
             this.syntaxErrors,
+            this.textEncodingErrors,
             this.namespaceErrors,
             this.localIDErrors,
             this.rootElementNameErrors,
@@ -106,6 +116,7 @@ export class MetadataFile {
 
     addBasicValidationResults(results) {
         this.syntaxErrors = results.syntaxErrors;
+        this.textEncodingErrors = results.textEncodingErrors;
         this.namespaceErrors = results.namespaceErrors;
         this.localIDErrors = results.localIDErrors;
         this.rootElementNameErrors = results.rootElementNameErrors;
@@ -145,6 +156,22 @@ export class MetadataFileValidator {
                 const errorDetails = errorNode.textContent;
                 errors.push(errorDetails);
             }
+        }
+        return errors;
+    }
+
+    validateTextEncoding(xmlFileString) {
+        // Encoding should be UTF-8 valid
+        const errors = [];
+        const invalidCharacterIndexes = Array.from(xmlFileString.matchAll(new RegExp("�", "gi"))).map(m => m.index);
+        if (invalidCharacterIndexes.length > 0) {
+            invalidCharacterIndexes.forEach(index => {
+                const temp = xmlFileString.substring(0, index);
+                const tempSplit = temp.split("\n");
+                const lineNumber = tempSplit.length;
+                const columnNumber = tempSplit[tempSplit.length - 1].length + 1;
+                errors.push(`Illegal character "�" found in line ${lineNumber}, column ${columnNumber}.`);
+            });
         }
         return errors;
     }
@@ -204,12 +231,14 @@ export class MetadataFileValidator {
     validateBasicComponents(metadataFile) {
         const xmlDoc = metadataFile.xmlDoc;
         const syntaxErrors = this.validateSyntax(xmlDoc);
+        const textEncodingErrors = syntaxErrors.length > 0 ? [COULD_NOT_CHECK_ERROR] : this.validateTextEncoding(metadataFile.xmlFileString);
         const rootElementNameErrors = syntaxErrors.length > 0 ? [COULD_NOT_CHECK_ERROR] : this.validateRootElementName(xmlDoc);
         const localIDErrors = syntaxErrors.length > 0 ? [COULD_NOT_CHECK_ERROR] : this.validateLocalID(xmlDoc, metadataFile.name);
         const namespaceErrors = syntaxErrors.length > 0 ? [COULD_NOT_CHECK_ERROR] : this.validateNamespace(xmlDoc);
         
         return {
             syntaxErrors: syntaxErrors,
+            textEncodingErrors: textEncodingErrors,
             rootElementNameErrors: rootElementNameErrors,
             localIDErrors: localIDErrors,
             namespaceErrors: namespaceErrors,
@@ -464,6 +493,13 @@ export class MetadataValidationStatusUIController {
                                     </div>Validating syntax
                                 </div>
                             </li>
+                            <li class="tev-list-group-item py-2">
+                                <div class="text-secondary">
+                                    <div class="spinner-grow spinner-grow-sm me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>Validating UTF-8 encoding
+                                </div>
+                            </li>
                             <li class="renv-list-group-item py-2">
                                 <div class="text-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
@@ -525,6 +561,7 @@ export class MetadataValidationStatusUIController {
     updateBasicValidationResultsForFile(metadataFile) {
         const fileListGroupItemSelector = `.file-list-group-item-${metadataFile.id}`;
         const svSelector = `.sv-list-group-item`;
+        const tevSelector = `.tev-list-group-item`;
         const nsvSelector = `.nsv-list-group-item`;
         const livSelector = `.liv-list-group-item`;
         const renvSelector = `.renv-list-group-item`;
@@ -540,6 +577,20 @@ export class MetadataValidationStatusUIController {
                 "Failed syntax validation.",
                 metadataFile.syntaxErrors,
                 `${fileListGroupItemSelector} ${svSelector}`
+            );
+        }
+
+        // Text encoding validation results
+        if (metadataFile.isTextEncodingValid) {
+            this.addSuccessValidationResultsForFile(
+                "Passed UTF-8 encoding validation.",
+                `${fileListGroupItemSelector} ${tevSelector}`
+            );
+        } else {
+            this.addFailedValidationResultsForFile(
+                "Failed UTF-8 encoding validation.",
+                metadataFile.textEncodingErrors,
+                `${fileListGroupItemSelector} ${tevSelector}`
             );
         }
         

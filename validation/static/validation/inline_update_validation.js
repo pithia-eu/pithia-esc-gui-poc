@@ -25,29 +25,16 @@ export class MetadataFileUpdate extends MetadataFile {
     }
 
     get isValid() {
+        const isEachBaseCheckValid = super.isValid;
         return [
-            this.isSyntaxValid,
-            this.isNamespaceValid,
-            this.isLocalIDValid,
-            this.isRootElementNameValid,
-            this.isXSDValid,
-            this.isEachMetadataReferenceValid,
-            this.isEachOntologyReferenceValid,
+            isEachBaseCheckValid,
             this.isUpdateValid,
         ].every(result => result === true);
     }
 
     get totalErrorCount() {
-        return [
-            this.syntaxErrors,
-            this.namespaceErrors,
-            this.localIDErrors,
-            this.rootElementNameErrors,
-            this.XSDErrors ? this.XSDErrors : [],
-            this.metadataReferenceErrors ? this.metadataReferenceErrors : [],
-            this.ontologyReferenceErrors ? this.ontologyReferenceErrors : [],
-            this.updateErrors ? this.updateErrors : [],
-        ].flat().length;
+        const baseTotalErrorCount = super.totalErrorCount;
+        return baseTotalErrorCount + (this.updateErrors ? this.updateErrors : []).length;
     }
 
     addUpdateValidationResults(results) {
