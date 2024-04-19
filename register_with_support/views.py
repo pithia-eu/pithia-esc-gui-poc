@@ -484,7 +484,14 @@ class InstrumentRegisterWithoutFormView(
             *((key, value) for key, value in type_dict.items())
         )
 
+    def get_member_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(instrument.metadata_server_url, instrument.name) for instrument in Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()
+        kwargs['member_choices'] = self.get_instrument_type_choices_for_form()
         return kwargs

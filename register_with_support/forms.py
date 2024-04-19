@@ -472,9 +472,10 @@ class InstrumentEditorForm(
     CitationDocumentationEditorFormComponent,
     RelatedPartiesEditorFormComponent
 ):
-    def __init__(self, *args, instrument_type_choices=(), **kwargs):
+    def __init__(self, *args, instrument_type_choices=(), member_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['instrument_type'].choices = instrument_type_choices
+        self.fields['type'].choices = instrument_type_choices
+        self.fields['members'].choices = member_choices
     
     version = forms.FloatField(
         label='Version',
@@ -488,10 +489,43 @@ class InstrumentEditorForm(
         widget=forms.URLInput()
     )
     
-    instrument_type = forms.ChoiceField(
+    type = forms.ChoiceField(
         label='Type',
         required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
         })
+    )
+
+    members = forms.MultipleChoiceField(
+        label='Members',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    operational_mode_id = forms.CharField(
+        label="ID",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    operational_mode_name = forms.CharField(
+        label="Name",
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    operational_mode_description = forms.CharField(
+        label="Description",
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': '4'
+        })
+    )
+
+    operational_modes_json = forms.JSONField(
+        required=False,
+        widget=forms.HiddenInput()
     )
