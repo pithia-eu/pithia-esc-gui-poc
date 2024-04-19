@@ -177,6 +177,7 @@ class InstrumentManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:instrument'
     resource_update_page_url_name = 'update:instrument'
     resource_register_page_url_name = 'register:instrument'
+    resource_register_with_editor_name = 'register:instrument_with_editor'
     resource_xml_download_page_url_name = 'utils:view_instrument_as_xml'
 
 class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):

@@ -465,3 +465,33 @@ class OperationEditorForm(
             'class': 'form-select'
         })
     )
+
+class InstrumentEditorForm(
+    BaseEditorForm,
+    OrganisationEditorFormComponent,
+    CitationDocumentationEditorFormComponent,
+    RelatedPartiesEditorFormComponent
+):
+    def __init__(self, *args, instrument_type_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['instrument_type'].choices = instrument_type_choices
+    
+    version = forms.FloatField(
+        label='Version',
+        required=False,
+        widget=forms.NumberInput()
+    )
+
+    url = forms.URLField(
+        label="Link to Instrument Website",
+        required=False,
+        widget=forms.URLInput()
+    )
+    
+    instrument_type = forms.ChoiceField(
+        label='Type',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )

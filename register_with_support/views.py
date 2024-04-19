@@ -455,3 +455,36 @@ class OperationRegisterWithoutFormView(
         kwargs['crs_choices'] = self.get_crs_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
         return kwargs
+
+
+class InstrumentRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView,
+):
+    success_url = reverse_lazy('register:instrument_with_editor')
+    form_class = InstrumentEditorForm
+    template_name = 'register_with_support/instrument_editor.html'
+
+    model = models.Instrument
+    metadata_builder_class = InstrumentMetadata
+    file_upload_registration_url = reverse_lazy('register:instrument')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Instrument.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
+
+    def get_instrument_type_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("instrumentType")
+        type_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            type_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in type_dict.items())
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()
+        return kwargs
