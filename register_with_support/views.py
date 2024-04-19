@@ -490,6 +490,12 @@ class InstrumentRegisterWithoutFormView(
             *[(instrument.metadata_server_url, instrument.name) for instrument in Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_parties_section_description'] = 'Information regarding organisations and/or individuals related to instrument.'
+        context['citation_section_description'] = 'Reference to documentation describing the instrument.'
+        return context
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()

@@ -502,7 +502,8 @@ class InstrumentEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Member of a group of instruments.'
     )
 
     operational_mode_id = forms.CharField(
