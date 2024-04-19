@@ -515,6 +515,7 @@ summary.data-collection-category::marker {
 .messages-container {
     display: flex;
     flex-direction: column;
+    word-break: break-word;
 }
 
 .metadata-file-for-reg-name {
@@ -604,7 +605,8 @@ summary.data-collection-category::marker {
 
 .file-list-group-item .details-validation > ul {
     list-style-type: none;
-    padding-left: 30px;
+    padding-left: 0;
+    word-break: break-word;
 }
 
 .file-list-group-item .details-validation > ul > li ul {
@@ -1062,6 +1064,10 @@ a.support-link {
 
     .ontology-browser-terms ul.tree ul li {
         padding-left: 2rem;
+    }
+
+    .file-list-group-item .details-validation > ul {
+        padding-left: 30px;
     }
 }
 
