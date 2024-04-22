@@ -183,17 +183,38 @@ class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, Doc
             etree.SubElement(self.root, 'childOperation', **child_operation_element_attributes)
 
 
-class InstrumentMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, TypeMetadataComponent):
+class InstrumentMetadata(DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, RelatedPartyMetadataComponent, TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Instrument.root_element_name, nsmap_extensions={
+            NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
+        self.append_version(properties['version'])
         self.append_type(properties['type'])
         self.append_operational_modes(properties['operational_modes'])
+        self.append_url(properties['url'])
+        self.append_documentation(properties['documentation'])
         self.append_related_parties(properties['related_parties'])
+        self.append_members(properties['members'])
+
+    def append_version(self, version):
+        if not version:
+            return
+        version_element = etree.SubElement(self.root, 'version')
+        version_element.text = version
+
+    def append_url(self, url):
+        if not url:
+            return
+        # Container element
+        url_element = etree.SubElement(self.root, 'URL')
+        # GMD URL
+        gmd_url_element = etree.SubElement(url_element, '{%s}URL' % Namespace.GMD)
+        gmd_url_element.text = url
 
     def append_operational_modes(self, operational_mode_dict_list):
         for operational_mode_dict in operational_mode_dict_list:
@@ -212,6 +233,13 @@ class InstrumentMetadata(DescriptionMetadataComponent, IdentifierMetadataCompone
             # Description
             description_element = etree.SubElement(instrument_operational_mode_element, 'description')
             description_element.text = operational_mode_dict['description']
+
+    def append_members(self, members):
+        for member in members:
+            member_attributes = {
+                '{%s}href' % Namespace.XLINK: member,
+            }
+            etree.SubElement(self.root, 'member', **member_attributes)
 
 
 class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
