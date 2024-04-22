@@ -505,4 +505,6 @@ class InstrumentRegisterWithoutFormView(
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()
         kwargs['member_choices'] = self.get_instrument_type_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         return kwargs
