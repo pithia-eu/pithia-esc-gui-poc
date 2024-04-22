@@ -490,6 +490,15 @@ class InstrumentRegisterWithoutFormView(
             *[(instrument.metadata_server_url, instrument.name) for instrument in Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        processed_form['documentation'] = process_documentation(form_cleaned_data)
+        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
+        processed_form['operational_modes'] = form_cleaned_data.get('operational_modes_json')
+
+        return processed_form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Information regarding organisations and/or individuals related to instrument.'
