@@ -478,10 +478,10 @@ class InstrumentEditorForm(
         self.fields['type'].choices = instrument_type_choices
         self.fields['members'].choices = member_choices
     
-    version = forms.FloatField(
+    version = forms.CharField(
         label='Version',
         required=False,
-        widget=forms.NumberInput()
+        widget=forms.TextInput()
     )
 
     url = forms.URLField(
