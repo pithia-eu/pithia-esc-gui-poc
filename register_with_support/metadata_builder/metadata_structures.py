@@ -200,15 +200,18 @@ class InstrumentMetadata(DescriptionMetadataComponent, IdentifierMetadataCompone
             # Container elements
             operational_mode_element = etree.SubElement(self.root, 'operationalMode')
             instrument_operational_mode_element = etree.SubElement(operational_mode_element, 'InstrumentOperationalMode')
+            
             # ID
             id_element = etree.SubElement(instrument_operational_mode_element, 'id')
             id_element.text = operational_mode_dict['id']
+            
             # Name
             name_element = etree.SubElement(instrument_operational_mode_element, 'name')
-            id_element.text = operational_mode_dict['name']
+            name_element.text = operational_mode_dict['name']
+            
             # Description
-            description_element = etree.SubElement(instrument_operational_mode_element, 'name')
-            id_element.text = operational_mode_dict['description']
+            description_element = etree.SubElement(instrument_operational_mode_element, 'description')
+            description_element.text = operational_mode_dict['description']
 
 
 class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
