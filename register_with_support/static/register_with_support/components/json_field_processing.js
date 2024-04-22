@@ -48,3 +48,20 @@ export function prepareStandardIdentifiersJSON() {
     const standardIdentifiersHiddenInput = document.querySelector("input[name='standard_identifiers_json']");
     standardIdentifiersHiddenInput.value = JSON.stringify(standardIdentifierObjects);
 }
+
+export function prepareOperationalModesJSON() {
+    const operationalModeObjects = [];
+    const operationalModesTableRows = document.querySelectorAll("#table-operational-modes tbody tr");
+    operationalModesTableRows.forEach(row => {
+        const operationalModeIdInput = row.querySelector("input[name='operational_mode_id']");
+        const operationalModeNameInput = row.querySelector("input[name='operational_mode_name']");
+        const operationalModeDescriptionTextarea = row.querySelector("textarea[name='operational_mode_description']");
+        operationalModeObjects.push({
+            id: operationalModeIdInput.value,
+            name: operationalModeNameInput.value,
+            description: operationalModeDescriptionTextarea.value,
+        });
+    });
+    const operationalModesHiddenInput = document.querySelector("input[name='operational_modes_json']");
+    operationalModesHiddenInput.value = JSON.stringify(operationalModeObjects);
+}

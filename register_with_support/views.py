@@ -494,10 +494,15 @@ class InstrumentRegisterWithoutFormView(
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Information regarding organisations and/or individuals related to instrument.'
         context['citation_section_description'] = 'Reference to documentation describing the instrument.'
+        context['operational_mode_row_content_template'] = render_to_string(
+            'register_with_support/components/instrument/operational_mode_row_content_template.html',
+            context=context
+        )
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()
         kwargs['member_choices'] = self.get_instrument_type_choices_for_form()
         return kwargs

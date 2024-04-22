@@ -14,7 +14,10 @@
     <div class="d-lg-none d-block">
         {{ form.operational_mode_description.label_tag }}
     </div>
-    {{ form.operational_mode_description }}
+    <div class="position-relative">
+        {{ form.operational_mode_description }}
+        <div class="operational-mode-description-div" aria-hidden="true"></div>
+    </div>
 </td>
 <td>
     <button class="btn btn-outline-danger remove-omrow-button" type="button" disabled>

@@ -1,13 +1,7 @@
-const opModeIdDescriptionTextarea = document.querySelector("textarea[name='operational_mode_description']");
+import {
+    setupOperationalModesTable,
+} from "/static/register_with_support/components/instrument/operational_modes_table.js";
 
-opModeIdDescriptionTextarea.addEventListener("focus", () => {
-    opModeIdDescriptionTextarea.style.height = opModeIdDescriptionTextarea.scrollHeight + "px";
-});
-
-opModeIdDescriptionTextarea.addEventListener("input", () => {
-    opModeIdDescriptionTextarea.style.height = opModeIdDescriptionTextarea.scrollHeight + "px";
-});
-
-opModeIdDescriptionTextarea.addEventListener("blur", () => {
-    opModeIdDescriptionTextarea.removeAttribute("style");
+window.addEventListener("load", () => {
+    setupOperationalModesTable();
 });

@@ -975,9 +975,31 @@ a.support-link {
 }
 
 #table-operational-modes textarea {
+    opacity: 0;
     height: 1rem;
-    overflow-y: hidden;
     resize: none;
+    max-height: 20rem;
+}
+
+#table-operational-modes textarea:focus {
+    opacity: 100%;
+}
+
+.operational-mode-description-div {
+    position: absolute;
+    border-width: 1px;
+    overflow: hidden;
+    inset: 0;
+    pointer-events: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: .375rem .75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+#table-operational-modes textarea:focus ~ .operational-mode-description-div {
+    display: none;
 }
 
 
