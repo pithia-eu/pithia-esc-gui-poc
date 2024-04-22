@@ -271,6 +271,7 @@ INSTRUMENT_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Instrument Test',
     'description': 'Description',
+    'version': '1',
     'type': 'https://metadata.pithia.eu/ontology/2.2/instrumentType/AssimilativeModel/',
     'operational_modes': [
         {
@@ -284,6 +285,17 @@ INSTRUMENT_PROPERTIES_FULL = {
             'description': 'operational mode 2 description',
         },
     ],
+    'url': 'https://www.example.com/',
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
@@ -296,6 +308,11 @@ INSTRUMENT_PROPERTIES_FULL = {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
             'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
         },
+    ],
+    'members': [
+        'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
+        'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2',
+        'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_3',
     ],
 }
 

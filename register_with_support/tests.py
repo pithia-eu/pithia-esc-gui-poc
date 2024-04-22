@@ -179,3 +179,8 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     @tag('operation')
     def test_operation(self):
         self.create_xml_and_validate_against_schema(OperationMetadata, OPERATION_PROPERTIES_FULL)
+
+    # Instrument
+    @tag('instrument')
+    def test_instrument(self):
+        self.create_xml_and_validate_against_schema(InstrumentMetadata, INSTRUMENT_PROPERTIES_FULL)
