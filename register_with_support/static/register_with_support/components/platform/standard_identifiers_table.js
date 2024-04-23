@@ -79,4 +79,5 @@ class StandardIdentifiersTable extends DynamicEditorTable {
 export function setupStandardIdentifiersTable() {
     const newStandardIdentifiersTable = new StandardIdentifiersTable();
     newStandardIdentifiersTable.setup();
+    return newStandardIdentifiersTable;
 }

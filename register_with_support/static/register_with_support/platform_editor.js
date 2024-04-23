@@ -12,19 +12,19 @@ import {
     setupGeometryLocationSection,
 } from "/static/register_with_support/components/geometry_location_section.js";
 import {
-    prepareStandardIdentifiersJSON,
-    prepareRelatedPartiesJSON,
-} from "/static/register_with_support/components/json_field_processing.js";
-import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
     setupStandardIdentifiersTable,
 } from "/static/register_with_support/components/platform/standard_identifiers_table.js";
 
+let relatedPartiesTable;
+let standardIdentifiersTable;
+
+
 function prepareFormForSubmission() {
-    prepareRelatedPartiesJSON();
-    prepareStandardIdentifiersJSON();
+    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+    standardIdentifiersTable.exportTableDataToJsonAndStoreInOutputElement();
 }
 
 editorForm.addEventListener("submit", async e => {
@@ -39,6 +39,6 @@ window.addEventListener("load", () => {
     setupCitationSection();
     setupGeometryLocationSection();
     setupLocalIdAndNamespaceRelatedEventListeners();
-    setupRelatedPartiesTable();
-    setupStandardIdentifiersTable();
+    relatedPartiesTable = setupRelatedPartiesTable();
+    standardIdentifiersTable = setupStandardIdentifiersTable();
 });

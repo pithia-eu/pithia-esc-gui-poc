@@ -110,4 +110,5 @@ class RelatedPartiesTable extends DynamicEditorTable {
 export function setupRelatedPartiesTable() {
     const newRelatedPartiesTable = new RelatedPartiesTable();
     newRelatedPartiesTable.setup();
+    return newRelatedPartiesTable;
 }

@@ -115,4 +115,5 @@ class KeywordsTable extends DynamicEditorTable {
 export function setupKeywordsTable() {
     const newKeywordsTable = new KeywordsTable();
     newKeywordsTable.setup();
+    return newKeywordsTable;
 }

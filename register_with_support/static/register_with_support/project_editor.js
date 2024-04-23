@@ -9,19 +9,19 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
-    prepareKeywordsJSON,
-    prepareRelatedPartiesJSON,
-} from "/static/register_with_support/components/json_field_processing.js";
-import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
     setupKeywordsTable,
 } from "/static/register_with_support/components/project/keywords_table.js";
 
+let keywordsTable;
+let relatedPartiesTable;
+
+
 function prepareFormForSubmission() {
-    prepareKeywordsJSON();
-    prepareRelatedPartiesJSON();
+    keywordsTable.exportTableDataToJsonAndStoreInOutputElement();
+    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
 }
 
 editorForm.addEventListener("submit", async e => {
@@ -34,6 +34,6 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
-    setupKeywordsTable();
-    setupRelatedPartiesTable();
+    keywordsTable = setupKeywordsTable();
+    relatedPartiesTable = setupRelatedPartiesTable();
 });

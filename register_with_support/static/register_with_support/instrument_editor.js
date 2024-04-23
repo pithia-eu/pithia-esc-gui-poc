@@ -9,19 +9,19 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
-    prepareOperationalModesJSON,
-    prepareRelatedPartiesJSON,
-} from "/static/register_with_support/components/json_field_processing.js";
-import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
     setupOperationalModesTable,
 } from "/static/register_with_support/components/instrument/operational_modes_table.js";
 
+let operationalModesTable;
+let relatedPartiesTable;
+
+
 function prepareFormForSubmission() {
-    prepareOperationalModesJSON();
-    prepareRelatedPartiesJSON();
+    operationalModesTable.exportTableDataToJsonAndStoreInOutputElement();
+    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
 }
 
 editorForm.addEventListener("submit", async e => {
@@ -35,6 +35,6 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
-    setupRelatedPartiesTable();
-    setupOperationalModesTable();
+    relatedPartiesTable = setupRelatedPartiesTable();
+    operationalModesTable = setupOperationalModesTable();
 });

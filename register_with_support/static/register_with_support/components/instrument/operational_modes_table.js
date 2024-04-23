@@ -109,4 +109,5 @@ class OperationalModesTable extends DynamicEditorTable {
 export function setupOperationalModesTable() {
     const newOperationalModesTable = new OperationalModesTable();
     newOperationalModesTable.setup();
+    return newOperationalModesTable;
 }
