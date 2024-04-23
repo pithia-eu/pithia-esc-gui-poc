@@ -3,7 +3,10 @@ from django.test import (
     tag,
 )
 from lxml import etree
-from xmlschema.validators.exceptions import XMLSchemaDecodeError
+from xmlschema.validators.exceptions import (
+    XMLSchemaChildrenValidationError,
+    XMLSchemaDecodeError,
+)
 
 from .metadata_builder.metadata_structures import (
     AcquisitionCapabilitiesMetadata,
@@ -184,3 +187,10 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     @tag('instrument')
     def test_instrument(self):
         self.create_xml_and_validate_against_schema(InstrumentMetadata, INSTRUMENT_PROPERTIES_FULL)
+
+    @tag('instrument')
+    def test_instrument_no_type(self):
+        """
+        Test fails as type is a required a field.
+        """
+        self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, InstrumentMetadata, INSTRUMENT_PROPERTIES_NO_TYPE)

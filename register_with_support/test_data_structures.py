@@ -315,6 +315,8 @@ INSTRUMENT_PROPERTIES_FULL = {
         'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_3',
     ],
 }
+INSTRUMENT_PROPERTIES_NO_TYPE = copy.deepcopy(INSTRUMENT_PROPERTIES_FULL)
+INSTRUMENT_PROPERTIES_NO_TYPE['type'] = ''
 
 # Acquisition Capabilities
 ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {

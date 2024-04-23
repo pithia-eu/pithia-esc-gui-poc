@@ -441,6 +441,8 @@ class StatusMetadataComponent(BaseMetadataComponent):
 
 class TypeMetadataComponent(BaseMetadataComponent):
     def append_type(self, type):
+        if not type:
+            return
         type_element_attributes = {
             '{%s}href' % Namespace.XLINK: type,
         }
