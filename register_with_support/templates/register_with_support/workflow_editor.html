@@ -1,4 +1,8 @@
 {% extends 'register_with_support/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+<script src="{% static 'register_with_support/workflow_editor.js' %}" type="module" defer></script>
+{% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-and-organisation-section">
     <div class="row gy-3">
@@ -21,7 +25,7 @@
 {% include 'register_with_support/components/identifier.html' %}
 <hr class="my-5">
 <section id="description-section">
-    <div class="row gy-4">
+    <div class="row gy-3">
         <div class="col-lg-12">
             <h2 class="mb-0">
                 {{ form.description.label_tag }}
@@ -29,14 +33,12 @@
         </div>
         <div class="col-xl-9 col-lg-10">
             <p class="text-secondary">
-                <small>
-                    A free-text description of the workflow: list of individual data collections
-                    that are included in the graph. The workflow designer will also upload the
-                    diagram of the graph of undertaken execution steps using the workflow
-                    registration page at e-Science Centre. The description and the graph diagram
-                    will be reviewed for implementation by the system engineers. Only this
-                    description text will be searchable at eSC, not the graph diagram.
-                </small>
+                A free-text description of the workflow: list of individual data collections
+                that are included in the graph. The workflow designer will also upload the
+                diagram of the graph of undertaken execution steps using the workflow
+                registration page at e-Science Centre. The description and the graph diagram
+                will be reviewed for implementation by the system engineers. Only this
+                description text will be searchable at eSC, not the graph diagram.
             </p>
         </div>
         <div class="col-xl-9 col-lg-10">
