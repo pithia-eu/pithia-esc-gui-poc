@@ -519,6 +519,22 @@ class InstrumentRegisterWithoutFormView(
         return kwargs
 
 
+class AcquisitionCapabilitiesRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
+    form_class = AcquisitionCapabilitiesEditorForm
+    template_name = 'register_with_support/acquisition_capabilities_editor.html'
+
+    model = models.AcquisitionCapabilities
+    metadata_builder_class = AcquisitionCapabilitiesMetadata
+    file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
