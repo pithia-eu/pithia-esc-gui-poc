@@ -910,67 +910,38 @@ a.support-link {
 }
 
 /* Metadata editor */
-#table-project-keywords thead,
-#table-related-parties thead,
-#table-standard-identifiers thead,
-#table-operational-modes thead {
+.table-dynamic thead {
     display: none;
 }
 
-#table-project-keywords td,
-#table-related-parties td,
-#table-standard-identifiers td,
-#table-operational-modes td {
+.table-dynamic td {
     display: block;
     border-bottom-width: 0;
 }
 
-#table-project-keywords tr td:first-of-type,
-#table-related-parties tr td:first-of-type,
-#table-standard-identifiers tr td:first-of-type,
-#table-operational-modes tr td:first-of-type {
+.table-dynamic tr td:first-of-type {
     padding-top: 1.5rem;
 }
 
-#table-project-keywords tr td:last-of-type,
-#table-related-parties tr td:last-of-type,
-#table-standard-identifiers tr td:last-of-type,
-#table-operational-modes tr td:last-of-type {
+.table-dynamic tr td:last-of-type {
     padding-bottom: 1rem;
 }
 
-#table-project-keywords tr,
-#table-related-parties tr,
-#table-standard-identifiers tr,
-#table-operational-modes tr {
+.table-dynamic tr {
     border-bottom-width: 1px;
 }
 
-#table-project-keywords button:not(.input-group button),
-#table-related-parties button:not(.input-group button),
-#table-standard-identifiers button:not(.input-group button),
-#table-operational-modes button:not(.input-group button),
-#add-kwrow-button,
-#add-rprrow-button,
-#add-sirow-button,
-#add-omrow-button {
+.table-dynamic button:not(.input-group button),
+.table-dynamic .remove-dtrow-button {
     display: block;
     margin-inline: auto;
 }
 
-.add-rp-button,
-.add-kw-button,
-#add-kwrow-button,
-#add-rprrow-button,
-#add-sirow-button,
-#add-omrow-button {
+.add-dtrow-button {
     width: 100%;
 }
 
-#add-kwrow-button,
-#add-rprrow-button,
-#add-sirow-button,
-#add-omrow-button {
+.add-dtrow-button {
     padding-block: 1rem;
 }
 
@@ -1036,53 +1007,32 @@ a.support-link {
         text-align: end;
     }
 
-    #table-project-keywords thead,
-    #table-related-parties thead,
-    #table-standard-identifiers thead,
-    #table-operational-modes thead {
+    .table-dynamic thead {
         display: table-header-group;
     }
 
-    #table-project-keywords td,
-    #table-related-parties td,
-    #table-standard-identifiers td,
-    #table-operational-modes td {
+    .table-dynamic td {
         display: table-cell;
         border-bottom-width: var(--bs-border-width);
     }
 
-    #table-project-keywords tr td:first-of-type,
-    #table-related-parties tr td:first-of-type,
-    #table-standard-identifiers tr td:first-of-type,
-    #table-operational-modes tr td:first-of-type {
+    .table-dynamic tr td:first-of-type {
         padding-top: 0.5rem;
     }
 
-    #table-project-keywords tr td:last-of-type,
-    #table-related-parties tr td:last-of-type,
-    #table-standard-identifiers tr td:last-of-type,
-    #table-operational-modes tr td:last-of-type {
+    .table-dynamic tr td:last-of-type {
         padding-bottom: 0.5rem;
     }
 
-    #table-project-keywords tr,
-    #table-related-parties tr,
-    #table-standard-identifiers tr,
-    #table-operational-modes tr {
+    .table-dynamic tr {
         border-bottom-width: 0;
     }
 
-    #table-project-keywords button:not(.input-group button),
-    #table-related-parties button:not(.input-group button),
-    #table-standard-identifiers button:not(.input-group-button),
-    #table-operational-modes button:not(.input-group-button) {
+    .table-dynamic button:not(.input-group-button) {
         display: inline;
     }
 
-    #add-kwrow-button,
-    #add-rprrow-button,
-    #add-sirow-button,
-    #add-omrow-button {
+    .add-dtrow-button {
         display: block;
     }
 }
