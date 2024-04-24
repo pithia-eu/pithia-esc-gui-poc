@@ -157,6 +157,73 @@ class ResourceRegisterWithEditorFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+class CapabilitiesSelectFormViewMixin(View):
+    def get_observed_property_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("observedProperty")
+        observed_property_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            observed_property_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in observed_property_dict.items()],
+        )
+
+    def get_coordinate_system_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("crs")
+        crs_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            crs_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in crs_dict.items()],
+        )
+
+    def get_dimensionality_instance_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("dimensionalityInstance")
+        dimensionality_instance_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            dimensionality_instance_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dimensionality_instance_dict.items()],
+        )
+
+    def get_dimensionality_timeline_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("dimensionalityTimeline")
+        dimensionality_timeline_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            dimensionality_timeline_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dimensionality_timeline_dict.items()],
+        )
+
+    def get_qualifier_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("qualifier")
+        qualifier_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            qualifier_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in qualifier_dict.items()],
+        )
+
+    def get_unit_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("unit")
+        unit_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            unit_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in unit_dict.items()],
+        )
+
 class DataLevelSelectFormViewMixin(View):
     def get_data_level_choices_for_form(self):
         g = get_graph_of_pithia_ontology_component("dataLevel")
@@ -550,6 +617,7 @@ class InstrumentRegisterWithoutFormView(
 
 
 class AcquisitionCapabilitiesRegisterWithoutFormView(
+    CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
@@ -579,6 +647,14 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['quality_assessment_choices'] = self.get_quality_assessment_choices_for_form()
+        # Capabilities
+        kwargs['coordinate_system_choices'] = self.get_coordinate_system_choices_for_form()
+        kwargs['dimensionality_instance_choices'] = self.get_dimensionality_instance_choices_for_form()
+        kwargs['dimensionality_timeline_choices'] = self.get_dimensionality_timeline_choices_for_form()
+        kwargs['observed_property_choices'] = self.get_observed_property_choices_for_form()
+        kwargs['qualifier_choices'] = self.get_qualifier_choices_for_form()
+        kwargs['unit_choices'] = self.get_unit_choices_for_form()
+        # Related parties
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs

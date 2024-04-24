@@ -259,7 +259,6 @@ class LocationEditorFormComponent(forms.Form):
         })
     )
 
-
 class StatusEditorFormComponent(forms.Form):
     def __init__(self, *args, status_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
@@ -271,7 +270,6 @@ class StatusEditorFormComponent(forms.Form):
             'class': 'form-select',
         })
     )
-
 
 class QualityAssessmentFormComponent(forms.Form):
     def __init__(self, *args, quality_assessment_choices=(), **kwargs):
@@ -286,7 +284,6 @@ class QualityAssessmentFormComponent(forms.Form):
         })
     )
 
-
 class DataLevelFormComponent(forms.Form):
     def __init__(self, *args, data_level_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
@@ -296,6 +293,92 @@ class DataLevelFormComponent(forms.Form):
         label='Data Levels',
         required=False,
         widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+class CapabilitiesFormComponent(forms.Form):
+    def __init__(
+        self,
+        *args,
+        coordinate_system_choices=(),
+        dimensionality_instance_choices=(),
+        dimensionality_timeline_choices=(),
+        observed_property_choices=(),
+        qualifier_choices=(),
+        unit_choices=(),
+        **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.fields['capability_coordinate_system'].choices = coordinate_system_choices
+        self.fields['capability_dimensionality_instance'].choices = dimensionality_instance_choices
+        self.fields['capability_dimensionality_timeline'].choices = dimensionality_timeline_choices
+        self.fields['capability_observed_property'].choices = observed_property_choices
+        self.fields['capability_qualifier'].choices = qualifier_choices
+        self.fields['capability_units'].choices = unit_choices
+
+    capability_name = forms.CharField(
+        label='Name',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    capability_observed_property = forms.ChoiceField(
+        label='Observed Property',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_dimensionality_instance = forms.ChoiceField(
+        label='Dimensionality Instance',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_dimensionality_timeline = forms.ChoiceField(
+        label='Dimensionality Timeline',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_cadence = forms.CharField(
+        label='Cadence',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    capability_vector_representation = forms.CharField(
+        label='Vector Representation',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    capability_coordinate_system = forms.ChoiceField(
+        label='Co-ordinate System',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_units = forms.ChoiceField(
+        label='Units',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_qualifier = forms.ChoiceField(
+        label='Qualifier',
+        required=False,
+        widget=forms.Select(attrs={
             'class': 'form-select',
         })
     )
@@ -562,6 +645,7 @@ class InstrumentEditorForm(
 
 class AcquisitionCapabilitiesEditorForm(
     BaseEditorForm,
+    CapabilitiesFormComponent,
     CitationDocumentationEditorFormComponent,
     DataLevelFormComponent,
     OrganisationEditorFormComponent,
