@@ -536,7 +536,7 @@ class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection_1'].choices = data_collection_choices
-        self.fields['data_collection_2_and_more'].choices = data_collection_choices
+        self.fields['data_collection_2_and_others'].choices = data_collection_choices
 
     data_collection_1 = forms.ChoiceField(
         label='Data Collection 1',
@@ -546,8 +546,8 @@ class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
         })
     )
 
-    data_collection_2_and_more = forms.MultipleChoiceField(
-        label='Data Collection 2 and more',
+    data_collection_2_and_others = forms.MultipleChoiceField(
+        label='Data Collection 2 and others',
         required=True,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
