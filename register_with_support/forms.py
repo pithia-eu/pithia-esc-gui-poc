@@ -531,3 +531,33 @@ class InstrumentEditorForm(
         required=False,
         widget=forms.HiddenInput()
     )
+
+class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
+    def __init__(self, *args, data_collection_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_collection_1'].choices = data_collection_choices
+        self.fields['data_collection_2_and_more'].choices = data_collection_choices
+
+    data_collection_1 = forms.ChoiceField(
+        label='Data Collection 1',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    data_collection_2_and_more = forms.MultipleChoiceField(
+        label='Data Collection 2 and more',
+        required=True,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    workflow_details_url = forms.URLField(
+        label='Link to Workflow Details',
+        required=True,
+        widget=forms.URLInput(attrs={
+            'placeholder': 'https://',
+        })
+    )

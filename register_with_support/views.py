@@ -517,3 +517,31 @@ class InstrumentRegisterWithoutFormView(
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         return kwargs
+
+
+class WorkflowRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:workflow_with_editor')
+    form_class = WorkflowEditorForm
+    template_name = 'register_with_support/workflow_editor.html'
+
+    model = models.Workflow
+    metadata_builder_class = WorkflowMetadata
+    file_upload_registration_url = reverse_lazy('register:workflow')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Workflow.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
+
+    def get_data_collection_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(data_collection.metadata_server_url, data_collection.name) for data_collection in DataCollection.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()
+        return kwargs
