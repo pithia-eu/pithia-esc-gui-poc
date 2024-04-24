@@ -157,6 +157,18 @@ class ResourceRegisterWithEditorFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+class DataLevelSelectFormViewMixin(View):
+    def get_data_level_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component("dataLevel")
+        data_level_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            data_level_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in data_level_dict.items()],
+        )
+
 class SrsNameSelectFormViewMixin(View):
     def get_crs_choices_for_form(self):
         g = get_graph_of_pithia_ontology_component("crs")
@@ -181,6 +193,24 @@ class PlatformSelectFormViewMixin(View):
         return (
             ('', ''),
             *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+class QualityAssessmentSelectFormViewMixin(View):
+    def get_quality_assessment_choices_for_form(self):
+        g_dqf = get_graph_of_pithia_ontology_component("dataQualityFlag")
+        dqf_dict = {}
+        for s, p, o in g_dqf.triples((None, SKOS.member, None)):
+            o_pref_label = g_dqf.value(o, SKOS.prefLabel)
+            dqf_dict[str(o)] = str(o_pref_label)
+        g_mqf = get_graph_of_pithia_ontology_component("metadataQualityFlag")
+        mqf_dict = {}
+        for s, p, o in g_mqf.triples((None, SKOS.member, None)):
+            o_pref_label = g_mqf.value(o, SKOS.prefLabel)
+            mqf_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            ('Data Quality Flags', [(key, value) for key, value in dqf_dict.items()]),
+            ('Metadata Quality Flags', [(key, value) for key, value in mqf_dict.items()]),
         )
 
 class RelatedPartiesSelectFormViewMixin(View):
@@ -520,7 +550,9 @@ class InstrumentRegisterWithoutFormView(
 
 
 class AcquisitionCapabilitiesRegisterWithoutFormView(
+    DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
+    QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
@@ -545,6 +577,8 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
+        kwargs['quality_assessment_choices'] = self.get_quality_assessment_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs

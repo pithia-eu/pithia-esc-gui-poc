@@ -273,6 +273,34 @@ class StatusEditorFormComponent(forms.Form):
     )
 
 
+class QualityAssessmentFormComponent(forms.Form):
+    def __init__(self, *args, quality_assessment_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['quality_assessments'].choices = quality_assessment_choices
+
+    quality_assessments = forms.MultipleChoiceField(
+        label='Quality Assessment',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+
+class DataLevelFormComponent(forms.Form):
+    def __init__(self, *args, data_level_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_levels'].choices = data_level_choices
+
+    data_levels = forms.MultipleChoiceField(
+        label='Data Levels',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -535,10 +563,13 @@ class InstrumentEditorForm(
 class AcquisitionCapabilitiesEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
+    DataLevelFormComponent,
     OrganisationEditorFormComponent,
+    QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent
 ):
     pass
+
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
