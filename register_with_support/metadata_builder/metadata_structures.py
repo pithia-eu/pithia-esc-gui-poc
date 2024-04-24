@@ -523,6 +523,8 @@ class WorkflowMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent
             etree.SubElement(self.root, 'dataCollection', **data_collection_attributes)
 
     def append_workflow_details(self, workflow_details_url):
+        if not workflow_details_url:
+            return
         workflow_details_element_attributes = {
             '{%s}href' % Namespace.XLINK: workflow_details_url,
         }

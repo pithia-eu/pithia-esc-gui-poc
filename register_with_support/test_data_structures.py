@@ -632,5 +632,10 @@ WORKFLOW_PROPERTIES_FULL = {
         'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_1',
         'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_2',
     ],
-    'workflow_details': '',
+    'workflow_details': 'https://www.example.com/',
 }
+WORKFLOW_PROPERTIES_NO_DATA_COLLECTIONS = copy.deepcopy(WORKFLOW_PROPERTIES_FULL)
+WORKFLOW_PROPERTIES_NO_DATA_COLLECTIONS['data_collections'] = []
+
+WORKFLOW_PROPERTIES_NO_WORKFLOW_DETAILS = copy.deepcopy(WORKFLOW_PROPERTIES_FULL)
+WORKFLOW_PROPERTIES_NO_WORKFLOW_DETAILS['workflow_details'] = ''

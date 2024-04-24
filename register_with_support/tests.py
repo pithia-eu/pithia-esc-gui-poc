@@ -199,3 +199,11 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     @tag('workflow')
     def test_workflow(self):
         self.create_xml_and_validate_against_schema(WorkflowMetadata, WORKFLOW_PROPERTIES_FULL)
+
+    @tag('workflow')
+    def test_workflow_no_data_collections(self):
+        self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, WorkflowMetadata, WORKFLOW_PROPERTIES_NO_DATA_COLLECTIONS)
+
+    @tag('workflow')
+    def test_workflow_no_workflow_details(self):
+        self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, WorkflowMetadata, WORKFLOW_PROPERTIES_NO_WORKFLOW_DETAILS)
