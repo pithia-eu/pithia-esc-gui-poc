@@ -532,7 +532,12 @@ class InstrumentEditorForm(
         widget=forms.HiddenInput()
     )
 
-class AcquisitionCapabilitiesEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
+class AcquisitionCapabilitiesEditorForm(
+    BaseEditorForm,
+    CitationDocumentationEditorFormComponent,
+    OrganisationEditorFormComponent,
+    RelatedPartiesEditorFormComponent
+):
     pass
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):

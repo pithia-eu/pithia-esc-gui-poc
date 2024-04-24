@@ -521,6 +521,7 @@ class InstrumentRegisterWithoutFormView(
 
 class AcquisitionCapabilitiesRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
@@ -533,6 +534,20 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citation_section_description'] = 'Reference to documentation describing the component.'
+        context['related_parties_section_description'] = 'Individual or organisation related to acquisition.'
+        return context
+    
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        return kwargs
 
 
 class WorkflowRegisterWithoutFormView(
