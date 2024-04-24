@@ -516,14 +516,11 @@ class WorkflowMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent
         self.append_workflow_details(properties['workflow_details'])
 
     def append_data_collections(self, data_collections):
-        data_collection_1_element_attributes = {
-            '{%s}href' % Namespace.XLINK: data_collections[0],
-        }
-        etree.SubElement(self.root, 'dataCollection', **data_collection_1_element_attributes)
-        data_collection_2_element_attributes = {
-            '{%s}href' % Namespace.XLINK: data_collections[1],
-        }
-        etree.SubElement(self.root, 'dataCollection', **data_collection_2_element_attributes)
+        for data_collection in data_collections:
+            data_collection_attributes = {
+                '{%s}href' % Namespace.XLINK: data_collection,
+            }
+            etree.SubElement(self.root, 'dataCollection', **data_collection_attributes)
 
     def append_workflow_details(self, workflow_details_url):
         workflow_details_element_attributes = {

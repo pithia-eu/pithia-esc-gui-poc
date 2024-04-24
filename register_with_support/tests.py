@@ -194,3 +194,8 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
         Test fails as type is a required a field.
         """
         self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, InstrumentMetadata, INSTRUMENT_PROPERTIES_NO_TYPE)
+
+    # Workflow
+    @tag('workflow')
+    def test_workflow(self):
+        self.create_xml_and_validate_against_schema(WorkflowMetadata, WORKFLOW_PROPERTIES_FULL)

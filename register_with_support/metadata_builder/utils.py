@@ -126,3 +126,9 @@ def process_operation_time(form_cleaned_data):
             },
         },
     }
+
+def process_workflow_data_collections(form_cleaned_data):
+    return [
+        form_cleaned_data['data_collection_1'],
+        *form_cleaned_data['data_collection_2_and_others'],
+    ]

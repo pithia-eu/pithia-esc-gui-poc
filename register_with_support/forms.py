@@ -554,7 +554,7 @@ class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
         })
     )
 
-    workflow_details_url = forms.URLField(
+    workflow_details = forms.URLField(
         label='Link to Workflow Details',
         required=True,
         widget=forms.URLInput(attrs={

@@ -540,6 +540,13 @@ class WorkflowRegisterWithoutFormView(
             *[(data_collection.metadata_server_url, data_collection.name) for data_collection in DataCollection.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        processed_form['data_collections'] = process_workflow_data_collections(form_cleaned_data)
+
+        return processed_form
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
