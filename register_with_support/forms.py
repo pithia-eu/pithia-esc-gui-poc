@@ -392,6 +392,11 @@ class CapabilitiesFormComponent(forms.Form):
         help_text='Qualifier of the capability to observe the property (dictionary-controlled).'
     )
 
+    capabilities_json = forms.JSONField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
+
 
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):

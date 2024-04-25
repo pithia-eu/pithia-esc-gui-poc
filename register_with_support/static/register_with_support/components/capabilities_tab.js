@@ -10,6 +10,23 @@ const createTabButton = document.querySelector(".create-tab button");
 let nextTabNumber = 2;
 
 
+function setupTabPaneFieldEventListeners(tabPane) {
+    const inputs = tabPane.querySelectorAll("input");
+    const selects = tabPane.querySelectorAll("select");
+
+    inputs.forEach(input => {
+        input.addEventListener("input", () => {
+            saveCapabilitiesExportAsJSON();
+        });
+    });
+
+    selects.forEach(select => {
+        select.addEventListener("change", () => {
+            saveCapabilitiesExportAsJSON();
+        });
+    });
+}
+
 function createTabAndTabPane() {
     // New tab
     const newTab = document.createElement("LI");
@@ -34,7 +51,8 @@ function createTabAndTabPane() {
     capabilitiesTabList.insertBefore(newTab, createTabElement);
 
     // Create corresponding tab pane
-    createTabPane(nextTabNumber);
+    const newTabPane = createTabPane(nextTabNumber);
+    setupTabPaneFieldEventListeners(newTabPane);
 
     nextTabNumber += 1;
 }
@@ -61,10 +79,71 @@ function createTabPane(tabNumber) {
     window.dispatchEvent(new CustomEvent("newMultipleChoiceSelectsAdded", {
         detail: Array.from(newTabPane.querySelectorAll("select[multiple]")).map(select => select.id),
     }));
+
+    return newTabPane;
+}
+
+function exportCapabilities() {
+    const capabilities = [];
+    const capabilityTabPanes = capabilitiesTabContent.querySelectorAll(".tab-pane");
+    capabilityTabPanes.forEach(tabPane => {
+        capabilities.push({
+            name: tabPane.querySelector("input[name='capability_name']").value,
+            observedProperty: tabPane.querySelector("select[name='capability_observed_property']").value,
+            dimensionalityInstance: tabPane.querySelector("select[name='capability_dimensionality_instance']").value,
+            dimensionalityTimeline: tabPane.querySelector("select[name='capability_dimensionality_timeline']").value,
+            cadence: tabPane.querySelector("input[name='capability_cadence']").value,
+            vectorRepresentation: tabPane.querySelector("input[name='capability_vector_representation']").value,
+            coordinateSystem: tabPane.querySelector("select[name='capability_coordinate_system']").value,
+            units: tabPane.querySelector("select[name='capability_units']").value,
+            qualifier: tabPane.querySelector("select[name='capability_qualifier']").value,
+        });
+    });
+    return capabilities;
+}
+
+function saveCapabilitiesExportAsJSON() {
+    const capabilitiesExport = exportCapabilities();
+    const capabilitiesJsonElement = document.querySelector("input[name='capabilities_json']");
+    capabilitiesJsonElement.value = JSON.stringify(capabilitiesExport);
+}
+
+function loadPreviousCapabilities() {
+    const previousCapabilitiesUnparsed = document.querySelector("input[name='capabilities_json']").value;
+    if (!previousCapabilitiesUnparsed) {
+        return;
+    }
+    const previousCapabilities = JSON.parse(previousCapabilitiesUnparsed);
+    previousCapabilities.forEach((capability, i) => {
+        if (i !== 0) {
+            createTabAndTabPane();
+        }
+        const correspondingTabPane = capabilitiesTabContent.querySelector(`.tab-pane:nth-of-type(${i + 1})`);
+        const selects = correspondingTabPane.querySelectorAll("select");
+        correspondingTabPane.querySelector("input[name='capability_name']").value = capability.name;
+        correspondingTabPane.querySelector("select[name='capability_observed_property']").value = capability.observedProperty;
+        correspondingTabPane.querySelector("select[name='capability_dimensionality_instance']").value = capability.dimensionalityInstance;
+        correspondingTabPane.querySelector("select[name='capability_dimensionality_timeline']").value = capability.dimensionalityTimeline;
+        correspondingTabPane.querySelector("input[name='capability_cadence']").value = capability.cadence;
+        correspondingTabPane.querySelector("input[name='capability_vector_representation']").value = capability.vectorRepresentation;
+        correspondingTabPane.querySelector("select[name='capability_coordinate_system']").value = capability.coordinateSystem;
+        correspondingTabPane.querySelector("select[name='capability_units']").value = capability.units;
+        correspondingTabPane.querySelector("select[name='capability_qualifier']").value = capability.qualifier;
+        selects.forEach(select => {
+            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                detail: select.id,
+            }));
+        });
+    });
 }
 
 export function setupCapabilitiesTab() {
+    const firstTabPane = capabilitiesTabContent.querySelector(".tab-pane");
+    setupTabPaneFieldEventListeners(firstTabPane);
+    loadPreviousCapabilities();
+
     createTabButton.addEventListener("click", () => {
         createTabAndTabPane();
+        saveCapabilitiesExportAsJSON();
     });
 }
