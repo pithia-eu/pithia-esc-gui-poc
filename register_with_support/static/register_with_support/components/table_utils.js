@@ -1,12 +1,7 @@
-const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
+import {
+    updateDuplicatedElemsWithIdsInContainer,
+} from "/static/register_with_support/components/utils.js";
 
-export function generateUniqueElemIdFromCurrentElemId(currentElemId) {
-    const isTimestampAddedAlready = Number.isInteger(Number.parseInt(currentElemId.slice(-UNIX_TIMESTAMP_LENGTH)));
-    if (isTimestampAddedAlready) {
-        return `${currentElemId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
-    }
-    return `${currentElemId}${Date.now()}`;
-}
 
 export class DynamicEditorTable {
     constructor(tableSelector, tableBodySelector, addRowButtonSelector, removeRowButtonSelector, rowContentTemplateSelector, jsonOutputSelector) {
@@ -64,18 +59,7 @@ export class DynamicEditorTable {
         // Ensure the any element IDs in the
         // row content template are unique.
         const childElementsWithIdAttribute = newRow.querySelectorAll("[id]");
-        childElementsWithIdAttribute.forEach(elem => {
-            const newId = generateUniqueElemIdFromCurrentElemId(elem.id);
-            const correspondingLabels = newRow.querySelectorAll(`label[for="${elem.id}"]`);
-            const correspondingAriaDescBys = newRow.querySelectorAll(`[aria-describedby="${elem.id}"]`);
-            elem.id = newId;
-            correspondingLabels.forEach(label => {
-                label.htmlFor = newId;
-            });
-            correspondingAriaDescBys.forEach(elem => {
-                elem.setAttribute("aria-describedby", newId);
-            });
-        });
+        updateDuplicatedElemsWithIdsInContainer(childElementsWithIdAttribute, newRow);
     }
 
     setupNewRowEventListeners(newRow) {

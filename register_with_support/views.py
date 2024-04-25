@@ -639,6 +639,10 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         context = super().get_context_data(**kwargs)
         context['citation_section_description'] = 'Reference to documentation describing the component.'
         context['related_parties_section_description'] = 'Individual or organisation related to acquisition.'
+        context['capabilities_tab_content_template'] = render_to_string(
+            'register_with_support/components/capabilities_tab_content_template.html',
+            context=context
+        )
         return context
     
 

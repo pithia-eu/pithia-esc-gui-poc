@@ -320,7 +320,8 @@ class CapabilitiesFormComponent(forms.Form):
     capability_name = forms.CharField(
         label='Name',
         required=True,
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        help_text='Name of the capability (for internal use within PITHIA system)'
     )
 
     capability_observed_property = forms.ChoiceField(
@@ -328,7 +329,8 @@ class CapabilitiesFormComponent(forms.Form):
         required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='What the process can measure or predict'
     )
 
     capability_dimensionality_instance = forms.ChoiceField(
@@ -336,7 +338,8 @@ class CapabilitiesFormComponent(forms.Form):
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The data domain of the single instance'
     )
 
     capability_dimensionality_timeline = forms.ChoiceField(
@@ -344,19 +347,22 @@ class CapabilitiesFormComponent(forms.Form):
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='For animation...'
     )
 
     capability_cadence = forms.CharField(
         label='Cadence',
         required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        help_text='Temporal resolution of the observations, if regularly repetitive.'
     )
 
     capability_vector_representation = forms.CharField(
         label='Vector Representation',
         required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        help_text='For those capabilities that are limited in their representation of the vector (i.e., only projections or components).'
     )
 
     capability_coordinate_system = forms.ChoiceField(
@@ -364,7 +370,8 @@ class CapabilitiesFormComponent(forms.Form):
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='System of coordinates for the vector representations from PITHIA ontology vocabulary.'
     )
 
     capability_units = forms.ChoiceField(
@@ -372,15 +379,17 @@ class CapabilitiesFormComponent(forms.Form):
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Units of the observed property.'
     )
 
-    capability_qualifier = forms.ChoiceField(
+    capability_qualifier = forms.MultipleChoiceField(
         label='Qualifier',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Qualifier of the capability to observe the property (dictionary-controlled).'
     )
 
 
