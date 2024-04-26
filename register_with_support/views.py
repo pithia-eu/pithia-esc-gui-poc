@@ -635,6 +635,30 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
+    def get_instrument_choices_with_oms_for_form(self):
+        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(instrument.metadata_server_url, instrument.name) for instrument in instruments if instrument.operational_modes],
+        )
+
+    def get_instrument_operational_modes_for_form(self):
+        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        operational_modes_by_instrument = []
+        for instrument in instruments:
+            operational_modes = instrument.operational_modes
+            if not operational_modes:
+                continue
+            operational_modes_by_instrument.append((
+                instrument.name,
+                [(f'{instrument.metadata_server_url}#{om.get("id")}', om.get('name')) for om in operational_modes]
+            ))
+
+        return (
+            ('', ''),
+            *operational_modes_by_instrument,
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['citation_section_description'] = 'Reference to documentation describing the component.'
@@ -644,7 +668,6 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
             context=context
         )
         return context
-    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -658,6 +681,9 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         kwargs['observed_property_choices'] = self.get_observed_property_choices_for_form()
         kwargs['qualifier_choices'] = self.get_qualifier_choices_for_form()
         kwargs['unit_choices'] = self.get_unit_choices_for_form()
+        # Instrument mode pairs
+        kwargs['instrument_choices'] = self.get_instrument_choices_with_oms_for_form()
+        kwargs['operational_mode_choices'] = self.get_instrument_operational_modes_for_form()
         # Related parties
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()

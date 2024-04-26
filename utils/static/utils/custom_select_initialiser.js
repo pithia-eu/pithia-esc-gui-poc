@@ -61,3 +61,13 @@ window.addEventListener("selectOptionsSetProgrammatically", e => {
     const selectId = e.detail;
     customSelects[selectId].sync();
 });
+
+window.addEventListener("selectDisabled", e => {
+    const selectId = e.detail;
+    customSelects[selectId].disable();
+});
+
+window.addEventListener("selectEnabled", e => {
+    const selectId = e.detail;
+    customSelects[selectId].enable();
+});

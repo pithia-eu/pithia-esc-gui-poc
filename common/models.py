@@ -395,6 +395,10 @@ class Instrument(ScientificMetadata):
     root_element_name = 'Instrument'
 
     @property
+    def operational_modes(self):
+        return [om['InstrumentOperationalMode'] for om in self.json.get('operationalMode', [])]
+
+    @property
     def operational_mode_ids(self):
         return [om['InstrumentOperationalMode']['id'] for om in self.json.get('operationalMode', [])]
 

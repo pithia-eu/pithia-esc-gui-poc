@@ -666,7 +666,27 @@ class AcquisitionCapabilitiesEditorForm(
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent
 ):
-    pass
+    def __init__(self, *args, instrument_choices=(), operational_mode_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['instrument_mode_pair_instrument'].choices = instrument_choices
+        self.fields['instrument_mode_pair_mode'].choices = operational_mode_choices
+
+    instrument_mode_pair_instrument = forms.ChoiceField(
+        label='Instrument',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    instrument_mode_pair_mode = forms.ChoiceField(
+        label='Mode',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'disabled': 'true',
+        })
+    )
 
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):

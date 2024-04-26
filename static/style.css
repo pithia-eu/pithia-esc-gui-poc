@@ -985,6 +985,14 @@ a.support-link {
     cursor: pointer;
 }
 
+.ts-dropdown #id_instrument_mode_pair_mode-ts-dropdown .optgroup[data-disabled] {
+    display: none;
+}
+
+#id_instrument_mode_pair_mode-ts-dropdown .optgroup[data-disabled] + .optgroup:not([data-disabled])::before {
+    display: none;
+}
+
 /* Bootstrap tooltips */
 .custom-tooltip {
     --bs-tooltip-bg: var(--bs-light);

@@ -8,6 +8,9 @@ import {
 import {
     setupCapabilitiesTab,
 } from "/static/register_with_support/components/capabilities_tab.js";
+import {
+    setupInstrumentModePairSection,
+} from "/static/register_with_support/components/acquisition_capabilities/instrument_mode_pair_section.js";
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
@@ -18,4 +21,5 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCapabilitiesTab();
+    setupInstrumentModePairSection();
 });
