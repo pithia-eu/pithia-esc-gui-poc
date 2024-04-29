@@ -272,12 +272,21 @@ class StatusEditorFormComponent(forms.Form):
     )
 
 class QualityAssessmentFormComponent(forms.Form):
-    def __init__(self, *args, quality_assessment_choices=(), **kwargs):
+    def __init__(self, *args, data_quality_flag_choices=(), metadata_quality_flag_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['quality_assessment'].choices = quality_assessment_choices
+        self.fields['data_quality_flags'].choices = data_quality_flag_choices
+        self.fields['metadata_quality_flags'].choices = metadata_quality_flag_choices
 
-    quality_assessment = forms.MultipleChoiceField(
-        label='Quality Assessment',
+    data_quality_flags = forms.MultipleChoiceField(
+        label='Data Quality Flags',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    metadata_quality_flags = forms.MultipleChoiceField(
+        label='Metadata Quality Flags',
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',

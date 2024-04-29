@@ -263,12 +263,18 @@ class PlatformSelectFormViewMixin(View):
         )
 
 class QualityAssessmentSelectFormViewMixin(View):
-    def get_quality_assessment_choices_for_form(self):
+    def get_data_quality_flag_choices_for_form(self):
         g_dqf = get_graph_of_pithia_ontology_component("dataQualityFlag")
         dqf_dict = {}
         for s, p, o in g_dqf.triples((None, SKOS.member, None)):
             o_pref_label = g_dqf.value(o, SKOS.prefLabel)
             dqf_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dqf_dict.items()],
+        )
+
+    def get_metadata_quality_flag_choices_for_form(self):
         g_mqf = get_graph_of_pithia_ontology_component("metadataQualityFlag")
         mqf_dict = {}
         for s, p, o in g_mqf.triples((None, SKOS.member, None)):
@@ -276,8 +282,7 @@ class QualityAssessmentSelectFormViewMixin(View):
             mqf_dict[str(o)] = str(o_pref_label)
         return (
             ('', ''),
-            ('Data Quality Flags', [(key, value) for key, value in dqf_dict.items()]),
-            ('Metadata Quality Flags', [(key, value) for key, value in mqf_dict.items()]),
+            *[(key, value) for key, value in mqf_dict.items()],
         )
 
 class RelatedPartiesSelectFormViewMixin(View):
@@ -682,7 +687,8 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
-        kwargs['quality_assessment_choices'] = self.get_quality_assessment_choices_for_form()
+        kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
         # Capabilities
         kwargs['coordinate_system_choices'] = self.get_coordinate_system_choices_for_form()
         kwargs['dimensionality_instance_choices'] = self.get_dimensionality_instance_choices_for_form()
