@@ -1,6 +1,9 @@
 import {
     updateDuplicatedElemsWithIdsInContainer,
 } from "/static/register_with_support/components/utils.js";
+import {
+    checkAndSetRequiredAttributesForFields,
+} from "/static/register_with_support/components/conditional_required_fields.js";
 
 const capabilitiesTabList = document.querySelector("#capabilities-tab");
 const capabilitiesTabContent = document.querySelector("#capabilities-tab-content");
@@ -10,6 +13,22 @@ const createTabButton = document.querySelector(".create-tab button");
 let nextTabNumber = 2;
 
 
+function updateTabPaneConditionalRequiredFieldStates(tabPane) {
+    const requiredFields = tabPane.querySelectorAll("input[name='capability_name'], select[name='capability_observed_property']");
+    const optionalFields = tabPane.querySelectorAll(`
+                            select[name='capability_dimensionality_instance'],
+                            select[name='capability_dimensionality_timeline'],
+                            input[name='capability_cadence'],
+                            input[name='capability_vector_representation'],
+                            select[name='capability_coordinate_system'],
+                            select[name='capability_units'],
+                            select[name='capability_qualifier']`);
+    checkAndSetRequiredAttributesForFields(
+        requiredFields,
+        optionalFields
+    );
+}
+
 function setupTabPaneFieldEventListeners(tabPane) {
     const inputs = tabPane.querySelectorAll("input");
     const selects = tabPane.querySelectorAll("select");
@@ -17,12 +36,14 @@ function setupTabPaneFieldEventListeners(tabPane) {
     inputs.forEach(input => {
         input.addEventListener("input", () => {
             saveCapabilitiesExportAsJSON();
+            updateTabPaneConditionalRequiredFieldStates(tabPane);
         });
     });
 
     selects.forEach(select => {
         select.addEventListener("change", () => {
             saveCapabilitiesExportAsJSON();
+            updateTabPaneConditionalRequiredFieldStates(tabPane);
         });
     });
 }
@@ -138,8 +159,9 @@ function loadPreviousCapabilities() {
 
 export function setupCapabilitiesTab() {
     const firstTabPane = capabilitiesTabContent.querySelector(".tab-pane");
-    setupTabPaneFieldEventListeners(firstTabPane);
     loadPreviousCapabilities();
+    setupTabPaneFieldEventListeners(firstTabPane);
+    updateTabPaneConditionalRequiredFieldStates(firstTabPane);
 
     createTabButton.addEventListener("click", () => {
         createTabAndTabPane();

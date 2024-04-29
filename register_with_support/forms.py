@@ -328,14 +328,14 @@ class CapabilitiesFormComponent(forms.Form):
 
     capability_name = forms.CharField(
         label='Name',
-        required=True,
+        required=False,
         widget=forms.TextInput(),
         help_text='Name of the capability (for internal use within PITHIA system)'
     )
 
     capability_observed_property = forms.ChoiceField(
         label='Observed Property',
-        required=True,
+        required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
