@@ -132,3 +132,20 @@ def process_workflow_data_collections(form_cleaned_data):
         form_cleaned_data['data_collection_1'],
         *form_cleaned_data['data_collection_2_and_others'],
     ]
+
+def process_capabilities(form_cleaned_data):
+    capabilities_from_form = form_cleaned_data.get('capabilities_json')
+    capabilities_dict_list = []
+    for capability in capabilities_from_form:
+        capabilities_dict_list.append({
+            'name': capability.get('name'),
+            'observed_property': capability.get('observedProperty'),
+            'dimensionality_instance': capability.get('dimensionalityInstance'),
+            'dimensionality_timeline': capability.get('dimensionalityTimeline'),
+            'cadence': capability.get('cadence'),
+            'vector_representation': capability.get('vectorRepresentation'),
+            'coordinate_system': capability.get('coordinateSystem'),
+            'units': capability.get('units'),
+            'qualifier': capability.get('qualifier'),
+        })
+    return capabilities_dict_list

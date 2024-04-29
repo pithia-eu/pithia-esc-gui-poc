@@ -109,11 +109,10 @@ function saveCapabilitiesExportAsJSON() {
 }
 
 function loadPreviousCapabilities() {
-    const previousCapabilitiesUnparsed = document.querySelector("input[name='capabilities_json']").value;
-    if (!previousCapabilitiesUnparsed) {
+    const previousCapabilities = JSON.parse(document.querySelector("input[name='capabilities_json']").value);
+    if (!previousCapabilities) {
         return;
     }
-    const previousCapabilities = JSON.parse(previousCapabilitiesUnparsed);
     previousCapabilities.forEach((capability, i) => {
         if (i !== 0) {
             createTabAndTabPane();

@@ -688,6 +688,22 @@ class AcquisitionCapabilitiesEditorForm(
         })
     )
 
+    input_description = forms.CharField(
+        label='Input Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+        })
+    )
+
+    output_description = forms.CharField(
+        label='Output Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+        })
+    )
+
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), **kwargs):

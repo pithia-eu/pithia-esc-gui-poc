@@ -1,6 +1,7 @@
 {% extends 'register_with_support/components/base_editor.html' %}
 {% load static %}
 {% block extra_scripts %}
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ capabilities_tab_content_template|json_script:'capabilities-tab-content-template' }}
 <script src="{% static 'register_with_support/acquisition_capabilities_editor.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}
@@ -35,6 +36,8 @@
 <hr class="my-5">
 {% include 'register_with_support/components/acquisition_capabilities/instrument_mode_pair.html' %}
 <hr class="my-5">
+{% include 'register_with_support/components/acquisition_capabilities/input_output_description.html' %}
+<hr class="my-5">
 {% include 'register_with_support/components/related_parties.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/citation.html' %}
@@ -63,6 +66,21 @@
 <li class="list-group-item">
     <a href="#quality-assessments-section">
         Quality Asssessments
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#capabilities-section">
+        Capabilities
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#instrument-mode-pair-section">
+        Instrument Mode Pair
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#input-output-description-section">
+        Input and Output Description
     </a>
 </li>
 <li class="list-group-item">
