@@ -274,9 +274,9 @@ class StatusEditorFormComponent(forms.Form):
 class QualityAssessmentFormComponent(forms.Form):
     def __init__(self, *args, quality_assessment_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['quality_assessments'].choices = quality_assessment_choices
+        self.fields['quality_assessment'].choices = quality_assessment_choices
 
-    quality_assessments = forms.MultipleChoiceField(
+    quality_assessment = forms.MultipleChoiceField(
         label='Quality Assessment',
         required=False,
         widget=forms.SelectMultiple(attrs={
