@@ -163,3 +163,15 @@ def process_quality_assessment(form_cleaned_data):
         'data_quality_flags': form_cleaned_data.get('data_quality_flags'),
         'metadata_quality_flags': form_cleaned_data.get('metadata_quality_flags'),
     }
+
+def process_operational_modes(form_cleaned_data):
+    operational_modes_from_form = form_cleaned_data.get('operational_modes_json')
+    operational_mode_dict_list = []
+    for om in operational_modes_from_form:
+        id = om.get('id')
+        name = om.get('name')
+        description = om.get('description')
+        if any(not value for value in (id, name, description)):
+            continue
+        operational_mode_dict_list.append(om)
+    return operational_mode_dict_list
