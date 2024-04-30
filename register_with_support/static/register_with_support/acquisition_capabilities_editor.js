@@ -12,14 +12,26 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
+    setupQualityAssessmentSection,
+} from "/static/register_with_support/components/quality_assessment.js";
+import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
     setupInstrumentModePairSection,
 } from "/static/register_with_support/components/acquisition_capabilities/instrument_mode_pair_section.js";
 
+let relatedPartiesTable;
+
+
+function prepareFormForSubmission() {
+    relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+}
+
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
+
+    prepareFormForSubmission();
 
     validateAndRegister();
 });
@@ -27,7 +39,8 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
-    setupRelatedPartiesTable();
+    relatedPartiesTable = setupRelatedPartiesTable();
     setupCapabilitiesTab();
     setupInstrumentModePairSection();
+    setupQualityAssessmentSection();
 });
