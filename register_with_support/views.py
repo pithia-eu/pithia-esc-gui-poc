@@ -670,6 +670,8 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         processed_form['documentation'] = process_documentation(form_cleaned_data)
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
         processed_form['capabilities'] = process_capabilities(form_cleaned_data)
+        processed_form['instrument_mode_pair'] = process_instrument_mode_pair(form_cleaned_data)
+        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
 
         return processed_form
 

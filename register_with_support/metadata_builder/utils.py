@@ -50,7 +50,7 @@ def process_documentation(form_cleaned_data):
     }
 
 def process_project_keywords(form_cleaned_data):
-    keywords_from_form = form_cleaned_data.get('keywords_json')
+    keywords_from_form = form_cleaned_data.get('keywords_json', [])
     keyword_dict_list = []
     for keyword_dict in keywords_from_form:
         keywords = keyword_dict.get('keywords')
@@ -68,7 +68,7 @@ def process_project_keywords(form_cleaned_data):
     return keyword_dict_list
 
 def process_related_parties(form_cleaned_data):
-    related_parties_from_form = form_cleaned_data.get('related_parties_json')
+    related_parties_from_form = form_cleaned_data.get('related_parties_json', [])
     related_party_dict_list = []
     for related_party_dict in related_parties_from_form:
         role = related_party_dict.get('role')
@@ -134,7 +134,7 @@ def process_workflow_data_collections(form_cleaned_data):
     ]
 
 def process_capabilities(form_cleaned_data):
-    capabilities_from_form = form_cleaned_data.get('capabilities_json')
+    capabilities_from_form = form_cleaned_data.get('capabilities_json', [])
     capabilities_dict_list = []
     for capability in capabilities_from_form:
         capabilities_dict_list.append({
@@ -149,3 +149,17 @@ def process_capabilities(form_cleaned_data):
             'qualifier': capability.get('qualifier'),
         })
     return capabilities_dict_list
+
+def process_instrument_mode_pair(form_cleaned_data):
+    instrument = form_cleaned_data.get('instrument_mode_pair_instrument')
+    mode = form_cleaned_data.get('instrument_mode_pair_mode')
+    return {
+        'instrument': instrument,
+        'mode': mode,
+    }
+
+def process_quality_assessment(form_cleaned_data):
+    return {
+        'data_quality_flags': form_cleaned_data.get('data_quality_flags'),
+        'metadata_quality_flags': form_cleaned_data.get('metadata_quality_flags'),
+    }
