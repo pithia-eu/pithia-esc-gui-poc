@@ -255,16 +255,19 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         self.append_instrument_mode_pair(properties['instrument_mode_pair'])
         self.append_quality_assessment(properties['quality_assessment'])
 
-    def append_instrument_mode_pair(self, instrument_mode_pairs):
+    def append_instrument_mode_pair(self, instrument_mode_pair):
+        if (not instrument_mode_pair.get('instrument')
+            and not instrument_mode_pair.get('mode')):
+            return
         # Container elements
         instrument_mode_pair_element = etree.SubElement(self.root, 'instrumentModePair')
-        instrument_operational_mode_pair_element = etree.SubElement(instrument_mode_pair_element, 'instrumentOperationalModePair')
+        instrument_operational_mode_pair_element = etree.SubElement(instrument_mode_pair_element, 'InstrumentOperationalModePair')
         instrument_element_attributes = {
-            '{%s}href' % Namespace.XLINK: 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
+            '{%s}href' % Namespace.XLINK: instrument_mode_pair['instrument'],
         }
         instrument_element = etree.SubElement(instrument_operational_mode_pair_element, 'instrument', **instrument_element_attributes)
         mode_element_attributes = {
-            '{%s}href' % Namespace.XLINK: 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1',
+            '{%s}href' % Namespace.XLINK: instrument_mode_pair['mode'],
         }
         mode_element = etree.SubElement(instrument_operational_mode_pair_element, 'mode', **mode_element_attributes)
 

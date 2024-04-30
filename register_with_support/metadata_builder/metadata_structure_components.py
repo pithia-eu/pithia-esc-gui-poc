@@ -126,6 +126,8 @@ class DescriptionMetadataComponent(BaseMetadataComponent):
 
 class CapabilitiesMetadataComponent(BaseMetadataComponent):
     def append_capabilities(self, capabilities):
+        if not capabilities:
+            return
         # Container element
         capabilities_element = etree.SubElement(self.root, 'capabilities')
         for pc in capabilities:
@@ -367,6 +369,8 @@ class GMLTimePeriodMetadataComponent(BaseMetadataComponent):
 
 class QualityAssessmentMetadataComponent(BaseMetadataComponent):
     def append_quality_assessment(self, quality_assessment_dict):
+        if not quality_assessment_dict.get('data_quality_flags'):
+            return
         quality_assessment_element = etree.SubElement(self.root, 'qualityAssessment')
         for dqf in quality_assessment_dict['data_quality_flags']:
             data_quality_flag_element_attributes = {
