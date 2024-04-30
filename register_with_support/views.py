@@ -495,7 +495,7 @@ class InstrumentRegisterWithoutFormView(
 
         processed_form['documentation'] = process_documentation(form_cleaned_data)
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['operational_modes'] = form_cleaned_data.get('operational_modes_json')
+        processed_form['operational_modes'] = process_operational_modes(form_cleaned_data)
 
         return processed_form
 
