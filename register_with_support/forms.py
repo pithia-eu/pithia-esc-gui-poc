@@ -204,6 +204,7 @@ class RelatedPartiesEditorFormComponent(forms.Form):
 
     related_parties_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -403,6 +404,7 @@ class CapabilitiesFormComponent(forms.Form):
 
     capabilities_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -480,6 +482,7 @@ class ProjectEditorForm(
     # Only keyword-related field that gets processed
     keywords_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -538,6 +541,7 @@ class PlatformEditorForm(
 
     standard_identifiers_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -663,6 +667,7 @@ class InstrumentEditorForm(
 
     operational_modes_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
