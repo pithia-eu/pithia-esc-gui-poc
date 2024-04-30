@@ -702,16 +702,28 @@ class AcquisitionCapabilitiesEditorForm(
         })
     )
 
+    input_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
     input_description = forms.CharField(
-        label='Input Description',
+        label='Description',
         required=False,
         widget=forms.Textarea(attrs={
             'rows': '5',
         })
     )
 
+    output_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
     output_description = forms.CharField(
-        label='Output Description',
+        label='Description',
         required=False,
         widget=forms.Textarea(attrs={
             'rows': '5',

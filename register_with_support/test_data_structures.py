@@ -324,6 +324,16 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Acquisition Capabilities Test',
     'description': 'Description',
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
     'capabilities': [
         {
             'name': 'Signal Strength',
@@ -356,6 +366,23 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
         'instrument': 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
         'mode': 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1',
     },
+    'input_name': 'input name',
+    'input_description': 'input description',
+    'output_name': 'output name',
+    'output_description': 'output description',
+    'related_parties': [
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
+        },
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
+        },
+    ],
 }
 
 # Acquisition
