@@ -25,6 +25,11 @@
         {% endwith %}
     </div>
     <div class="col-xl-7 col-lg-8">
+        {% with field=form.capability_cadence_units %}
+        {% include 'register_with_support/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-7 col-lg-8">
         {% with field=form.capability_vector_representation %}
         {% include 'register_with_support/components/form_field_template.html' %}
         {% endwith %}

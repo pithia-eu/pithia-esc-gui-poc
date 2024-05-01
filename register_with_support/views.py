@@ -59,7 +59,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         # Make copy of cleaned data
         processed_form = form_cleaned_data
         processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
-        processed_form['namespace'] = processed_form["namespace"]
+        processed_form['namespace'] = processed_form['namespace']
         return processed_form
 
     def register_xml_file(self, request, xml_file, name):
@@ -159,7 +159,7 @@ class ResourceRegisterWithEditorFormView(FormView):
 
 class CapabilitiesSelectFormViewMixin(View):
     def get_observed_property_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("observedProperty")
+        g = get_graph_of_pithia_ontology_component('observedProperty')
         observed_property_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -170,7 +170,7 @@ class CapabilitiesSelectFormViewMixin(View):
         )
 
     def get_coordinate_system_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("crs")
+        g = get_graph_of_pithia_ontology_component('crs')
         crs_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -181,7 +181,7 @@ class CapabilitiesSelectFormViewMixin(View):
         )
 
     def get_dimensionality_instance_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("dimensionalityInstance")
+        g = get_graph_of_pithia_ontology_component('dimensionalityInstance')
         dimensionality_instance_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -192,7 +192,7 @@ class CapabilitiesSelectFormViewMixin(View):
         )
 
     def get_dimensionality_timeline_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("dimensionalityTimeline")
+        g = get_graph_of_pithia_ontology_component('dimensionalityTimeline')
         dimensionality_timeline_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -203,7 +203,7 @@ class CapabilitiesSelectFormViewMixin(View):
         )
 
     def get_qualifier_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("qualifier")
+        g = get_graph_of_pithia_ontology_component('qualifier')
         qualifier_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -214,7 +214,7 @@ class CapabilitiesSelectFormViewMixin(View):
         )
 
     def get_unit_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("unit")
+        g = get_graph_of_pithia_ontology_component('unit')
         unit_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -224,9 +224,20 @@ class CapabilitiesSelectFormViewMixin(View):
             *[(key, value) for key, value in unit_dict.items()],
         )
 
+    def get_vector_representation_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('component')
+        component_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            component_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in component_dict.items()],
+        )
+
 class DataLevelSelectFormViewMixin(View):
     def get_data_level_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("dataLevel")
+        g = get_graph_of_pithia_ontology_component('dataLevel')
         data_level_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -238,7 +249,7 @@ class DataLevelSelectFormViewMixin(View):
 
 class SrsNameSelectFormViewMixin(View):
     def get_crs_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("crs")
+        g = get_graph_of_pithia_ontology_component('crs')
         crs_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -264,7 +275,7 @@ class PlatformSelectFormViewMixin(View):
 
 class QualityAssessmentSelectFormViewMixin(View):
     def get_data_quality_flag_choices_for_form(self):
-        g_dqf = get_graph_of_pithia_ontology_component("dataQualityFlag")
+        g_dqf = get_graph_of_pithia_ontology_component('dataQualityFlag')
         dqf_dict = {}
         for s, p, o in g_dqf.triples((None, SKOS.member, None)):
             o_pref_label = g_dqf.value(o, SKOS.prefLabel)
@@ -275,7 +286,7 @@ class QualityAssessmentSelectFormViewMixin(View):
         )
 
     def get_metadata_quality_flag_choices_for_form(self):
-        g_mqf = get_graph_of_pithia_ontology_component("metadataQualityFlag")
+        g_mqf = get_graph_of_pithia_ontology_component('metadataQualityFlag')
         mqf_dict = {}
         for s, p, o in g_mqf.triples((None, SKOS.member, None)):
             o_pref_label = g_mqf.value(o, SKOS.prefLabel)
@@ -462,7 +473,7 @@ class PlatformRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
     def get_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("platformType")
+        g = get_graph_of_pithia_ontology_component('platformType')
         type_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -576,7 +587,7 @@ class InstrumentRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
     def get_instrument_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("instrumentType")
+        g = get_graph_of_pithia_ontology_component('instrumentType')
         type_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -698,6 +709,7 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         kwargs['observed_property_choices'] = self.get_observed_property_choices_for_form()
         kwargs['qualifier_choices'] = self.get_qualifier_choices_for_form()
         kwargs['unit_choices'] = self.get_unit_choices_for_form()
+        kwargs['vector_representation_choices'] = self.get_vector_representation_choices_for_form()
         # Instrument mode pairs
         kwargs['instrument_choices'] = self.get_instrument_choices_with_oms_for_form()
         kwargs['operational_mode_choices'] = self.get_instrument_operational_modes_for_form()

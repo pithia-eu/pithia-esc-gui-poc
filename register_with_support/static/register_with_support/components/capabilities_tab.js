@@ -19,7 +19,8 @@ function updateTabPaneConditionalRequiredFieldStates(tabPane) {
                             select[name='capability_dimensionality_instance'],
                             select[name='capability_dimensionality_timeline'],
                             input[name='capability_cadence'],
-                            input[name='capability_vector_representation'],
+                            select[name='capability_cadence_units'],
+                            select[name='capability_vector_representation'],
                             select[name='capability_coordinate_system'],
                             select[name='capability_units'],
                             select[name='capability_qualifier']`);
@@ -114,7 +115,8 @@ function exportCapabilities() {
             dimensionalityInstance: tabPane.querySelector("select[name='capability_dimensionality_instance']").value,
             dimensionalityTimeline: tabPane.querySelector("select[name='capability_dimensionality_timeline']").value,
             cadence: tabPane.querySelector("input[name='capability_cadence']").value,
-            vectorRepresentation: tabPane.querySelector("input[name='capability_vector_representation']").value,
+            cadenceUnits: tabPane.querySelector("select[name='capability_cadence_units']").value,
+            vectorRepresentation: tabPane.querySelector("select[name='capability_vector_representation']").value,
             coordinateSystem: tabPane.querySelector("select[name='capability_coordinate_system']").value,
             units: tabPane.querySelector("select[name='capability_units']").value,
             qualifier: tabPane.querySelector("select[name='capability_qualifier']").value,
@@ -145,7 +147,8 @@ function loadPreviousCapabilities() {
         correspondingTabPane.querySelector("select[name='capability_dimensionality_instance']").value = capability.dimensionalityInstance;
         correspondingTabPane.querySelector("select[name='capability_dimensionality_timeline']").value = capability.dimensionalityTimeline;
         correspondingTabPane.querySelector("input[name='capability_cadence']").value = capability.cadence;
-        correspondingTabPane.querySelector("input[name='capability_vector_representation']").value = capability.vectorRepresentation;
+        correspondingTabPane.querySelector("select[name='capability_cadence_units']").value = capability.cadenceUnits;
+        correspondingTabPane.querySelector("select[name='capability_vector_representation']").value = capability.vectorRepresentation;
         correspondingTabPane.querySelector("select[name='capability_coordinate_system']").value = capability.coordinateSystem;
         correspondingTabPane.querySelector("select[name='capability_units']").value = capability.units;
         correspondingTabPane.querySelector("select[name='capability_qualifier']").value = capability.qualifier;

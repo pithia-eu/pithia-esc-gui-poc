@@ -317,6 +317,7 @@ class CapabilitiesFormComponent(forms.Form):
         observed_property_choices=(),
         qualifier_choices=(),
         unit_choices=(),
+        vector_representation_choices=(),
         **kwargs
     ):
         super().__init__(*args, **kwargs)
@@ -326,6 +327,7 @@ class CapabilitiesFormComponent(forms.Form):
         self.fields['capability_observed_property'].choices = observed_property_choices
         self.fields['capability_qualifier'].choices = qualifier_choices
         self.fields['capability_units'].choices = unit_choices
+        self.fields['capability_vector_representation'].choices = vector_representation_choices
 
     capability_name = forms.CharField(
         label='Name',
@@ -361,17 +363,39 @@ class CapabilitiesFormComponent(forms.Form):
         help_text='For animation...'
     )
 
-    capability_cadence = forms.CharField(
+    capability_cadence = forms.FloatField(
         label='Cadence',
         required=False,
-        widget=forms.TextInput(),
+        widget=forms.NumberInput(attrs={
+            'step': '0.1'
+        }),
         help_text='Temporal resolution of the observations, if regularly repetitive.'
     )
 
-    capability_vector_representation = forms.CharField(
+    capability_cadence_units = forms.ChoiceField(
+        label='Cadence Units',
+        required=False,
+        choices=(
+            ('', ''),
+            ('year', 'Year'),
+            ('month', 'Month'),
+            ('day', 'Day'),
+            ('hour', 'Hour'),
+            ('minute', 'Minute'),
+            ('second', 'Second'),
+        ),
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='Temporal resolution of the observations, if regularly repetitive.'
+    )
+
+    capability_vector_representation = forms.ChoiceField(
         label='Vector Representation',
         required=False,
-        widget=forms.TextInput(),
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
         help_text='For those capabilities that are limited in their representation of the vector (i.e., only projections or components).'
     )
 
