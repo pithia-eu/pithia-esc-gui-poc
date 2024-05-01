@@ -145,6 +145,7 @@ def process_capabilities(form_cleaned_data):
             'dimensionality_instance': capability.get('dimensionalityInstance'),
             'dimensionality_timeline': capability.get('dimensionalityTimeline'),
             'cadence': capability.get('cadence'),
+            'cadence_units': capability.get('cadenceUnits'),
             'vector_representation': capability.get('vectorRepresentation'),
             'coordinate_system': capability.get('coordinateSystem'),
             'units': capability.get('units'),
