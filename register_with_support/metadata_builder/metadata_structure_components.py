@@ -147,39 +147,46 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
             }
             observed_property_element = etree.SubElement(process_capability_element, 'observedProperty', **observed_property_element_attributes)
             # Dimensionality instance
-            dimensionality_instance_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['dimensionality_instance']
-            }
-            dimensionality_instance_element = etree.SubElement(process_capability_element, 'dimensionalityInstance', **dimensionality_instance_element_attributes)
+            if pc['dimensionality_instance']:
+                dimensionality_instance_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['dimensionality_instance']
+                }
+                dimensionality_instance_element = etree.SubElement(process_capability_element, 'dimensionalityInstance', **dimensionality_instance_element_attributes)
             # Dimensionality timeline
-            dimensionality_timeline_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['dimensionality_timeline']
-            }
-            dimensionality_timeline_element = etree.SubElement(process_capability_element, 'dimensionalityTimeline', **dimensionality_timeline_element_attributes)
+            if pc['dimensionality_timeline']:
+                dimensionality_timeline_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['dimensionality_timeline']
+                }
+                dimensionality_timeline_element = etree.SubElement(process_capability_element, 'dimensionalityTimeline', **dimensionality_timeline_element_attributes)
             # Cadence
-            cadence_element_attributes = {'unit': pc['cadence_units']}
-            cadence_element = etree.SubElement(process_capability_element, 'cadence', **cadence_element_attributes)
-            cadence_element.text = pc['cadence']
+            if pc['cadence']:
+                cadence_element_attributes = {'unit': pc['cadence_units']}
+                cadence_element = etree.SubElement(process_capability_element, 'cadence', **cadence_element_attributes)
+                cadence_element.text = pc['cadence']
             # Vector representation
-            vector_representation_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['vector_representation']
-            }
-            vector_representation_element = etree.SubElement(process_capability_element, 'vectorRepresentation', **vector_representation_element_attributes)
+            if pc['vector_representation']:
+                vector_representation_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['vector_representation']
+                }
+                vector_representation_element = etree.SubElement(process_capability_element, 'vectorRepresentation', **vector_representation_element_attributes)
             # Coordinate system
-            coordinate_system_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['coordinate_system']
-            }
-            coordinate_system_element = etree.SubElement(process_capability_element, 'coordinateSystem', **coordinate_system_element_attributes)
+            if pc['coordinate_system']:
+                coordinate_system_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['coordinate_system']
+                }
+                coordinate_system_element = etree.SubElement(process_capability_element, 'coordinateSystem', **coordinate_system_element_attributes)
             # Units
-            units_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['units']
-            }
-            units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
+            if pc['units']:
+                units_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['units']
+                }
+                units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
             # Qualifier
-            qualifier_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['qualifier'] 
-            }
-            qualifier_element = etree.SubElement(process_capability_element, 'qualifier', **qualifier_element_attributes)
+            if pc['qualifier']:
+                qualifier_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['qualifier'] 
+                }
+                qualifier_element = etree.SubElement(process_capability_element, 'qualifier', **qualifier_element_attributes)
 
 
 class StandardIdentifierComponent(BaseMetadataComponent):
