@@ -18,6 +18,9 @@ import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
+    setupInputOutputSection,
+} from "/static/register_with_support/components/acquisition_capabilities/input_output_section.js";
+import {
     setupInstrumentModePairSection,
 } from "/static/register_with_support/components/acquisition_capabilities/instrument_mode_pair_section.js";
 
@@ -43,4 +46,5 @@ window.addEventListener("load", () => {
     setupCapabilitiesTab();
     setupInstrumentModePairSection();
     setupQualityAssessmentSection();
+    setupInputOutputSection();
 });
