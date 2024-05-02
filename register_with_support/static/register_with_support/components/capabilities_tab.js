@@ -13,21 +13,69 @@ const createTabButton = document.querySelector(".create-tab button");
 let nextTabNumber = 2;
 
 
+// Utils
+function disableFirstRemoveCapabilityButtonIfOnlyOneTab() {
+    const firstRemoveCapabilityButton = capabilitiesTabContent.querySelector(".remove-capability-button");
+    firstRemoveCapabilityButton.disabled = capabilitiesTabContent.querySelectorAll(".tab-pane").length === 1;
+}
+
+function getContainingTabPane(childNode) {
+    const tabPanes = capabilitiesTabContent.querySelectorAll(".tab-pane");
+    for (const tabPane of tabPanes) {
+        if (tabPane.contains(childNode)) {
+            return tabPane;
+        }
+    }
+}
+
+function focusLastTabPane() {
+    const tabs = capabilitiesTabList.querySelectorAll("button[aria-controls]");
+    const lastTab = tabs[tabs.length - 1];
+    lastTab.click();
+}
+
 function updateTabPaneConditionalRequiredFieldStates(tabPane) {
     const requiredFields = tabPane.querySelectorAll("input[name='capability_name'], select[name='capability_observed_property']");
     const optionalFields = tabPane.querySelectorAll(`
-                            select[name='capability_dimensionality_instance'],
-                            select[name='capability_dimensionality_timeline'],
-                            input[name='capability_cadence'],
-                            select[name='capability_cadence_units'],
-                            select[name='capability_vector_representation'],
-                            select[name='capability_coordinate_system'],
-                            select[name='capability_units'],
-                            select[name='capability_qualifier']`);
+        select[name='capability_dimensionality_instance'],
+        select[name='capability_dimensionality_timeline'],
+        input[name='capability_cadence'],
+        select[name='capability_cadence_units'],
+        select[name='capability_vector_representation'],
+        select[name='capability_coordinate_system'],
+        select[name='capability_units'],
+        select[name='capability_qualifier']
+    `);
     checkAndSetRequiredAttributesForFields(
         requiredFields,
         optionalFields
     );
+}
+
+function updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane) {
+    const requiredFields = tabPane.querySelectorAll("input[name='capability_cadence'], select[name='capability_cadence_units']");
+    checkAndSetRequiredAttributesForFields(
+        requiredFields
+    );
+}
+
+// Tab management
+function removeCapability(childNode) {
+    const containingTabPane = getContainingTabPane(childNode);
+    const tabPaneLabelledBy = containingTabPane.getAttribute("aria-labelledby");
+    const correspondingTabButton = document.getElementById(tabPaneLabelledBy);
+    const containingTabListItem = correspondingTabButton.parentElement;
+    capabilitiesTabContent.removeChild(containingTabPane);
+    capabilitiesTabList.removeChild(containingTabListItem);
+    disableFirstRemoveCapabilityButtonIfOnlyOneTab();
+}
+
+function setupRemoveCapabilityButton(removeCapabilityButton) {
+    removeCapabilityButton.addEventListener("click", e => {
+        removeCapability(e.currentTarget);
+        saveCapabilitiesExportAsJSON();
+        focusLastTabPane();
+    });
 }
 
 function setupTabPaneFieldEventListeners(tabPane) {
@@ -38,6 +86,9 @@ function setupTabPaneFieldEventListeners(tabPane) {
         input.addEventListener("input", () => {
             saveCapabilitiesExportAsJSON();
             updateTabPaneConditionalRequiredFieldStates(tabPane);
+            if (input.name === 'capability_cadence') {
+                updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
+            }
         });
     });
 
@@ -45,8 +96,14 @@ function setupTabPaneFieldEventListeners(tabPane) {
         select.addEventListener("change", () => {
             saveCapabilitiesExportAsJSON();
             updateTabPaneConditionalRequiredFieldStates(tabPane);
+            if (select.name === 'capability_cadence_units') {
+                updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
+            }
         });
     });
+
+    const removeCapabilityButton = tabPane.querySelector(".remove-capability-button");
+    setupRemoveCapabilityButton(removeCapabilityButton);
 }
 
 function createTabAndTabPane() {
@@ -93,7 +150,13 @@ function createTabPane(tabNumber) {
     const elemsWithIds = newTabPane.querySelectorAll("[id]");
     updateDuplicatedElemsWithIdsInContainer(elemsWithIds, newTabPane);
 
+    // Enable remove capability button
+    const removeCapabilityButton = newTabPane.querySelector(".remove-capability-button");
+    removeCapabilityButton.disabled = false;
+
     capabilitiesTabContent.appendChild(newTabPane);
+
+    disableFirstRemoveCapabilityButtonIfOnlyOneTab();
 
     window.dispatchEvent(new CustomEvent("newSelectsAdded", {
         detail: Array.from(newTabPane.querySelectorAll("select:not([multiple])")).map(select => select.id),
@@ -158,6 +221,7 @@ function loadPreviousCapabilities() {
             }));
         });
     });
+    disableFirstRemoveCapabilityButtonIfOnlyOneTab();
 }
 
 export function setupCapabilitiesTab() {
@@ -165,6 +229,7 @@ export function setupCapabilitiesTab() {
     loadPreviousCapabilities();
     setupTabPaneFieldEventListeners(firstTabPane);
     updateTabPaneConditionalRequiredFieldStates(firstTabPane);
+    updateTabPaneConditionalRequiredCadenceRelatedFieldStates(firstTabPane);
 
     createTabButton.addEventListener("click", () => {
         createTabAndTabPane();
