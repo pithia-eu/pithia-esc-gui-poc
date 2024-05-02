@@ -172,6 +172,8 @@ function exportCapabilities() {
     const capabilities = [];
     const capabilityTabPanes = capabilitiesTabContent.querySelectorAll(".tab-pane");
     capabilityTabPanes.forEach(tabPane => {
+        const qualifierSelect = tabPane.querySelector("select[name='capability_qualifier']");
+        const qualifierSelectedOptions = Array.from(qualifierSelect.selectedOptions);
         capabilities.push({
             name: tabPane.querySelector("input[name='capability_name']").value,
             observedProperty: tabPane.querySelector("select[name='capability_observed_property']").value,
@@ -182,7 +184,7 @@ function exportCapabilities() {
             vectorRepresentation: tabPane.querySelector("select[name='capability_vector_representation']").value,
             coordinateSystem: tabPane.querySelector("select[name='capability_coordinate_system']").value,
             units: tabPane.querySelector("select[name='capability_units']").value,
-            qualifier: tabPane.querySelector("select[name='capability_qualifier']").value,
+            qualifier: qualifierSelectedOptions.map(option => option.value),
         });
     });
     return capabilities;
@@ -214,7 +216,12 @@ function loadPreviousCapabilities() {
         correspondingTabPane.querySelector("select[name='capability_vector_representation']").value = capability.vectorRepresentation;
         correspondingTabPane.querySelector("select[name='capability_coordinate_system']").value = capability.coordinateSystem;
         correspondingTabPane.querySelector("select[name='capability_units']").value = capability.units;
-        correspondingTabPane.querySelector("select[name='capability_qualifier']").value = capability.qualifier;
+        const qualifierSelect = correspondingTabPane.querySelector("select[name='capability_qualifier']");
+        qualifierSelect.value = "";
+        capability.qualifier.forEach(qualifier => {
+            qualifierSelect.querySelector(`option[value="${qualifier}"]`).selected = true;
+        });
+
         selects.forEach(select => {
             window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
                 detail: select.id,
