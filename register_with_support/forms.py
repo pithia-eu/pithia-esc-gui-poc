@@ -373,7 +373,7 @@ class CapabilitiesFormComponent(forms.Form):
     )
 
     capability_cadence_units = forms.ChoiceField(
-        label='Cadence Units',
+        label='Cadence Unit',
         required=False,
         choices=(
             ('', ''),
@@ -386,8 +386,7 @@ class CapabilitiesFormComponent(forms.Form):
         ),
         widget=forms.Select(attrs={
             'class': 'form-select',
-        }),
-        help_text='Temporal resolution of the observations, if regularly repetitive.'
+        })
     )
 
     capability_vector_representation = forms.ChoiceField(
