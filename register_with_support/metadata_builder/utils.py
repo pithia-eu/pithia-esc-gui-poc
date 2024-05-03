@@ -137,7 +137,7 @@ def process_capabilities(form_cleaned_data):
     capabilities_from_form = form_cleaned_data.get('capabilities_json', [])
     capabilities_dict_list = []
     for capability in capabilities_from_form:
-        if all(c == '' for c in list(capability.values())):
+        if all(not c for c in list(capability.values())):
             continue
         capabilities_dict_list.append({
             'name': capability.get('name'),
