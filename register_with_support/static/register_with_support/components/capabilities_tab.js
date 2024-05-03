@@ -172,6 +172,8 @@ function exportCapabilities() {
     const capabilities = [];
     const capabilityTabPanes = capabilitiesTabContent.querySelectorAll(".tab-pane");
     capabilityTabPanes.forEach(tabPane => {
+        const vectorRepresentationSelect = tabPane.querySelector("select[name='capability_vector_representation']");
+        const vectorRepresentationSelectedOptions = Array.from(vectorRepresentationSelect.selectedOptions);
         const qualifierSelect = tabPane.querySelector("select[name='capability_qualifier']");
         const qualifierSelectedOptions = Array.from(qualifierSelect.selectedOptions);
         capabilities.push({
@@ -181,7 +183,7 @@ function exportCapabilities() {
             dimensionalityTimeline: tabPane.querySelector("select[name='capability_dimensionality_timeline']").value,
             cadence: tabPane.querySelector("input[name='capability_cadence']").value,
             cadenceUnits: tabPane.querySelector("select[name='capability_cadence_units']").value,
-            vectorRepresentation: tabPane.querySelector("select[name='capability_vector_representation']").value,
+            vectorRepresentation: vectorRepresentationSelectedOptions.map(option => option.value),
             coordinateSystem: tabPane.querySelector("select[name='capability_coordinate_system']").value,
             units: tabPane.querySelector("select[name='capability_units']").value,
             qualifier: qualifierSelectedOptions.map(option => option.value),
@@ -213,9 +215,13 @@ function loadPreviousCapabilities() {
         correspondingTabPane.querySelector("select[name='capability_dimensionality_timeline']").value = capability.dimensionalityTimeline;
         correspondingTabPane.querySelector("input[name='capability_cadence']").value = capability.cadence;
         correspondingTabPane.querySelector("select[name='capability_cadence_units']").value = capability.cadenceUnits;
-        correspondingTabPane.querySelector("select[name='capability_vector_representation']").value = capability.vectorRepresentation;
         correspondingTabPane.querySelector("select[name='capability_coordinate_system']").value = capability.coordinateSystem;
         correspondingTabPane.querySelector("select[name='capability_units']").value = capability.units;
+        const vectorRepresentationSelect = correspondingTabPane.querySelector("select[name='capability_vector_representation']");
+        vectorRepresentationSelect.value = "";
+        capability.vectorRepresentation.forEach(component => {
+            vectorRepresentationSelect.querySelector(`option[value="${component}"]`).selected = true;
+        });
         const qualifierSelect = correspondingTabPane.querySelector("select[name='capability_qualifier']");
         qualifierSelect.value = "";
         capability.qualifier.forEach(qualifier => {

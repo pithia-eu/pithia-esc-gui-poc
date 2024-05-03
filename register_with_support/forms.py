@@ -389,10 +389,10 @@ class CapabilitiesFormComponent(forms.Form):
         })
     )
 
-    capability_vector_representation = forms.ChoiceField(
+    capability_vector_representation = forms.MultipleChoiceField(
         label='Vector Representation',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         }),
         help_text='For those capabilities that are limited in their representation of the vector (i.e., only projections or components).'

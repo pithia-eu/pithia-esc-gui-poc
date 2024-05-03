@@ -165,10 +165,11 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
                 cadence_element.text = pc['cadence']
             # Vector representation
             if pc['vector_representation']:
-                vector_representation_element_attributes = {
-                    '{%s}href' % Namespace.XLINK: pc['vector_representation']
-                }
-                vector_representation_element = etree.SubElement(process_capability_element, 'vectorRepresentation', **vector_representation_element_attributes)
+                for component in pc['vector_representation']:
+                    vector_representation_element_attributes = {
+                        '{%s}href' % Namespace.XLINK: component,
+                    }
+                    vector_representation_element = etree.SubElement(process_capability_element, 'vectorRepresentation', **vector_representation_element_attributes)
             # Coordinate system
             if pc['coordinate_system']:
                 coordinate_system_element_attributes = {
@@ -183,10 +184,11 @@ class CapabilitiesMetadataComponent(BaseMetadataComponent):
                 units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
             # Qualifier
             if pc['qualifier']:
-                qualifier_element_attributes = {
-                    '{%s}href' % Namespace.XLINK: pc['qualifier'] 
-                }
-                qualifier_element = etree.SubElement(process_capability_element, 'qualifier', **qualifier_element_attributes)
+                for qualifier in pc['qualifier']:
+                    qualifier_element_attributes = {
+                        '{%s}href' % Namespace.XLINK: qualifier,
+                    }
+                    qualifier_element = etree.SubElement(process_capability_element, 'qualifier', **qualifier_element_attributes)
 
 
 class StandardIdentifierComponent(BaseMetadataComponent):
