@@ -252,6 +252,7 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
+        self.append_documentation(properties['documentation'])
         self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
         self.append_quality_assessment(properties['quality_assessment'])
