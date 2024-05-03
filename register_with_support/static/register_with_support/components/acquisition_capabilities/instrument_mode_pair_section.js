@@ -1,28 +1,38 @@
+import {
+    checkAndSetRequiredAttributesForFields,
+} from "/static/register_with_support/components/conditional_required_fields.js";
+
 const instrumentSelect = document.querySelector("select[name='instrument_mode_pair_instrument']");
-const instrumentModesSelect = document.querySelector("select[name='instrument_mode_pair_mode']");
-const instrumentModesSelectOptGroups = Array.from(instrumentModesSelect.querySelectorAll("optgroup"));
+const instrumentModeSelect = document.querySelector("select[name='instrument_mode_pair_mode']");
+const instrumentModeSelectOptGroups = Array.from(instrumentModeSelect.querySelectorAll("optgroup"));
+const conditionalRequiredFields = [
+    instrumentModeSelect,
+];
+const optionalFields = [
+    instrumentSelect,
+]
 
 
 function filterInstrumentModeOptions(optGroupFilter) {
     if (!optGroupFilter) {
-        for (const og of instrumentModesSelectOptGroups) {
+        for (const og of instrumentModeSelectOptGroups) {
             og.disabled = false;
         }
-        instrumentModesSelect.disabled = true;
+        instrumentModeSelect.disabled = true;
         window.dispatchEvent(new CustomEvent("selectDisabled", {
-            detail: instrumentModesSelect.id,
+            detail: instrumentModeSelect.id,
         }));
     } else {
-        for (const og of instrumentModesSelectOptGroups) {
+        for (const og of instrumentModeSelectOptGroups) {
             og.disabled = !(og.label === optGroupFilter);
         }
-        instrumentModesSelect.disabled = false;
+        instrumentModeSelect.disabled = false;
         window.dispatchEvent(new CustomEvent("selectEnabled", {
-            detail: instrumentModesSelect.id,
+            detail: instrumentModeSelect.id,
         }));
     }
     window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
-        detail: instrumentModesSelect.id,
+        detail: instrumentModeSelect.id,
     }));
 }
 
@@ -30,12 +40,15 @@ function loadPreviousData() {
     if (instrumentSelect.value) {
         filterInstrumentModeOptions(instrumentSelect.options[instrumentSelect.selectedIndex].text);
     }
+    checkAndSetRequiredAttributesForFields(conditionalRequiredFields, optionalFields);
 }
 
 export function setupInstrumentModePairSection() {
     loadPreviousData();
-}
 
-instrumentSelect.addEventListener("change", () => {
-    filterInstrumentModeOptions(instrumentSelect.options[instrumentSelect.selectedIndex].text);
-});
+    instrumentSelect.addEventListener("change", () => {
+        instrumentModeSelect.value = "";
+        filterInstrumentModeOptions(instrumentSelect.options[instrumentSelect.selectedIndex].text);
+        checkAndSetRequiredAttributesForFields(conditionalRequiredFields, optionalFields);
+    });
+}
