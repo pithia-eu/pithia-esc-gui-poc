@@ -137,6 +137,10 @@ def process_capabilities(form_cleaned_data):
     capabilities_from_form = form_cleaned_data.get('capabilities_json', [])
     capabilities_dict_list = []
     for capability in capabilities_from_form:
+        if '' in capability.get('vectorRepresentation'):
+            capability.get('vectorRepresentation').remove('')
+        if '' in capability.get('qualifier'):
+            capability.get('qualifier').remove('')
         if all(not c for c in list(capability.values())):
             continue
         capabilities_dict_list.append({
