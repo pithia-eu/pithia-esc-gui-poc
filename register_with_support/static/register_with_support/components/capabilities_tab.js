@@ -28,6 +28,12 @@ function getContainingTabPane(childNode) {
     }
 }
 
+function getCorrespondingTabButton(tabPane) {
+    const tabPaneLabelledBy = tabPane.getAttribute("aria-labelledby");
+    const correspondingTabButton = document.getElementById(tabPaneLabelledBy);
+    return correspondingTabButton;
+}
+
 function focusLastTabPane() {
     const tabs = capabilitiesTabList.querySelectorAll("button[aria-controls]");
     const lastTab = tabs[tabs.length - 1];
@@ -62,8 +68,7 @@ function updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane) {
 // Tab management
 function removeCapability(childNode) {
     const containingTabPane = getContainingTabPane(childNode);
-    const tabPaneLabelledBy = containingTabPane.getAttribute("aria-labelledby");
-    const correspondingTabButton = document.getElementById(tabPaneLabelledBy);
+    const correspondingTabButton = getCorrespondingTabButton(containingTabPane)
     const containingTabListItem = correspondingTabButton.parentElement;
     capabilitiesTabContent.removeChild(containingTabPane);
     capabilitiesTabList.removeChild(containingTabListItem);
@@ -90,6 +95,11 @@ function setupTabPaneFieldEventListeners(tabPane) {
                 updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
             }
         });
+        input.addEventListener("invalid", () => {
+            const containingTabPane = getContainingTabPane(input);
+            const correspondingTabButton = getCorrespondingTabButton(containingTabPane);
+            correspondingTabButton.click();
+        });
     });
 
     selects.forEach(select => {
@@ -99,6 +109,11 @@ function setupTabPaneFieldEventListeners(tabPane) {
             if (select.name === 'capability_cadence_units') {
                 updateTabPaneConditionalRequiredCadenceRelatedFieldStates(tabPane);
             }
+        });
+        select.addEventListener("invalid", () => {
+            const containingTabPane = getContainingTabPane(select);
+            const correspondingTabButton = getCorrespondingTabButton(containingTabPane);
+            correspondingTabButton.click();
         });
     });
 
@@ -132,6 +147,9 @@ function createTabAndTabPane() {
     // Create corresponding tab pane
     const newTabPane = createTabPane(nextTabNumber);
     setupTabPaneFieldEventListeners(newTabPane);
+    
+    // Show the newly created tab
+    focusLastTabPane();
 
     nextTabNumber += 1;
 }
