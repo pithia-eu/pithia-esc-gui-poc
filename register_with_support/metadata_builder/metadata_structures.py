@@ -245,7 +245,8 @@ class InstrumentMetadata(DescriptionMetadataComponent, DocumentationMetadataComp
 class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(AcquisitionCapabilities.root_element_name, nsmap_extensions={
-            NamespacePrefix.GCO19115: Namespace.GCO19115,
+            NamespacePrefix.GMD: Namespace.GMD,
+            NamespacePrefix.GCO: Namespace.GCO,
             NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
@@ -258,7 +259,7 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         self.append_quality_assessment(properties['quality_assessment'])
         self.append_instrument_mode_pair(properties['instrument_mode_pair'])
         self.append_input_description(properties['input_name'], properties['input_description'])
-        self.append_output_description(properties['output_name'],properties['output_description'])
+        self.append_output_description(properties['output_name'], properties['output_description'])
         self.append_related_parties(properties['related_parties'])
 
     def append_instrument_mode_pair(self, instrument_mode_pair):
@@ -289,8 +290,11 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
             input_name_element.text = input_name
         input_description_element = etree.SubElement(input_output_element, 'description')
         le_source_element = etree.SubElement(input_description_element, '{%s}LE_Source' % Namespace.MRL)
-        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL)
-        gco19115_character_string_element = etree.SubElement(le_source_description_element, '{%s}CharacterString' % Namespace.GCO19115)
+        le_source_description_element_attributes = {
+            'xmlns': Namespace.GCO19115
+        }
+        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
+        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
         gco19115_character_string_element.text = input_description
 
     def append_output_description(self, output_name, output_description):
@@ -305,8 +309,11 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
             output_name_element.text = output_name
         output_description_element = etree.SubElement(input_output_element, 'description')
         le_source_element = etree.SubElement(output_description_element, '{%s}LE_Source' % Namespace.MRL)
-        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL)
-        gco19115_character_string_element = etree.SubElement(le_source_description_element, '{%s}CharacterString' % Namespace.GCO19115)
+        le_source_description_element_attributes = {
+            'xmlns': Namespace.GCO19115
+        }
+        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
+        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
         gco19115_character_string_element.text = output_description
 
 
