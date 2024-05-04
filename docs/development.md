@@ -32,6 +32,8 @@ DATABASE_READ_USER=escuser-r
 DATABASE_WRITE_USER=escuser-rw
 DATABASE_READ_PASSWORD=password123
 DATABASE_WRITE_PASSWORD=password123
+
+DJANGO_RW_DATABASE_NAME=default
 ```
 **Note:** This guide does not provide instructions for setting up the Handle features for development, so the environment variables for those features have been excluded here.
 
