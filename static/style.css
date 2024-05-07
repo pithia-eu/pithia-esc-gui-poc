@@ -119,6 +119,10 @@ p {
     padding-right: 0.1rem;
 }
 
+.list-style-dash {
+    list-style: ' -  ';
+}
+
 .lead-sm {
     font-size: 1.1rem;
 }

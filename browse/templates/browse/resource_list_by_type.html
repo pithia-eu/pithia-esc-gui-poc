@@ -15,8 +15,9 @@
     </div>
     {% block aside %}{% endblock aside %}
     <div class="col-lg-12">
+        {% block resource_list_outer %}
         {% if not resources %}
-        <p>{{ empty_resource_list_text }}</p>
+        <p class="text-secondary">{{ empty_resource_list_text }}</p>
         {% else %}
         {% block resource_list_inner %}
         {% with resource_list=resources %}
@@ -30,6 +31,7 @@
         {% endwith %}
         {% endblock resource_list_inner %}
         {% endif %}
+        {% endblock resource_list_outer %}
     </div>
 </div>
 {% endblock content %}

@@ -8,9 +8,8 @@
 <div class="col-lg-8">
     <section class="mt-2">
         <h2 class="fs-3 mb-3">On This Page:</h2>
-        <ul class="list-unstyled">
+        <ul class="list-style-dash">
             {% for key, value in resources.items %}
-            {% if value %}
             <li class="my-1">
                 {% with section_name=key.split|join:'-'|lower %}
                 <a href="#{{ section_name }}-heading">
@@ -18,16 +17,15 @@
                     {{ key }}
                 </a>
             </li>
-            {% endif %}
             {% endfor %}
         </ul>
     </section>
 </div>
 {% endblock aside %}
-{% block resource_list_inner %}
+{% block resource_list_outer %}
 {% for key, value in resources.items %}
-{% if value %}
 <section class="my-4">
+    {% if value %}
     <details open>
         <summary class="data-collection-category" tabindex="-1">
             {% with section_name=key.split|join:'-'|lower %}
@@ -58,7 +56,20 @@
             {% endif %}
         </a>
     </div>
+    {% else %}
+    {% with section_name=key.split|join:'-'|lower %}
+    <h2 id="{{ section_name }}-heading">
+    {% endwith %}
+        {{ key }}
+    </h2>
+    <p class="text-secondary">
+        {% if key|lower == 'mixed' or key|lower == 'other' %}
+        No {{ key|lower }} data collections.
+        {% else %}
+        No {{ key|lower }} were found.
+        {% endif %}
+    </p>
+    {% endif %}
 </section>
-{% endif %}
 {% endfor %}
-{% endblock resource_list_inner %}
+{% endblock resource_list_outer %}
