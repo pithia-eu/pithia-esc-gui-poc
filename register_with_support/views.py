@@ -719,6 +719,27 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         return kwargs
 
 
+class AcquisitionRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:acquisition_with_editor')
+    form_class = AcquisitionEditorForm
+    template_name = 'register_with_support/acquisition_editor.html'
+
+    model = models.Acquisition
+    metadata_builder_class = AcquisitionMetadata
+    file_upload_registration_url = reverse_lazy('register:acquisition')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Acquisition.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        return kwargs
+
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView

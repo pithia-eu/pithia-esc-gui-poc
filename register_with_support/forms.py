@@ -432,6 +432,69 @@ class CapabilitiesFormComponent(forms.Form):
     )
 
 
+class StandardIdentifierEditorFormComponent(forms.Form):
+    standard_identifier_authority = forms.CharField(
+        label='Authority',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    standard_identifier = forms.CharField(
+        label='Value',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    standard_identifiers_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+        
+
+
+class TimePeriodEditorFormComponent(forms.Form):
+    time_period_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    time_instant_end_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_end_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+
+
+class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent, TimePeriodEditorFormComponent):
+    capability_link_platform = forms.ChoiceField(
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -752,6 +815,10 @@ class AcquisitionCapabilitiesEditorForm(
             'rows': '5',
         })
     )
+
+
+class AcquisitionEditorForm(BaseEditorForm, OrganisationEditorFormComponent, CapabilityLinkEditorFormComponent):
+    pass
 
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
