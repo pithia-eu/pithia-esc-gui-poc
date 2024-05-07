@@ -1,0 +1,96 @@
+{% extends 'register_with_support/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
+{{ capabilities_tab_content_template|json_script:'capabilities-tab-content-template' }}
+<script src="{% static 'register_with_support/acquisition_capabilities_editor.js' %}" type="module" defer></script>
+{% endblock extra_scripts %}
+{% block form_content %}
+<section id="name-and-organisation-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2>Name and Organisation</h2>
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.name %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.organisation %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'register_with_support/components/identifier.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/description.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/data_levels.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/quality_assessment.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/capabilities.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/acquisition_capabilities/instrument_mode_pair.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/acquisition_capabilities/input_output_description.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/related_parties.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/citation.html' %}
+{% endblock form_content %}
+{% block table_of_contents %}
+<li class="list-group-item">
+    <a href="#name-and-organisation-section">
+        Name and Organisation
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#identifier-section">
+        Identifier
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#description-section">
+        Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#data-levels-section">
+        Data Levels
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#quality-assessments-section">
+        Quality Asssessments
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#capabilities-section">
+        Capabilities
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#instrument-mode-pair-section">
+        Instrument Mode Pair
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#input-output-description-section">
+        Input and Output Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#related-parties-section">
+        Related Parties
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#citation-section">
+        Documentation
+    </a>
+</li>
+{% endblock table_of_contents %}

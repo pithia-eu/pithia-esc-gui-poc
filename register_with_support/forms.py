@@ -204,6 +204,7 @@ class RelatedPartiesEditorFormComponent(forms.Form):
 
     related_parties_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -259,7 +260,6 @@ class LocationEditorFormComponent(forms.Form):
         })
     )
 
-
 class StatusEditorFormComponent(forms.Form):
     def __init__(self, *args, status_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
@@ -270,6 +270,165 @@ class StatusEditorFormComponent(forms.Form):
         widget=forms.Select(attrs={
             'class': 'form-select',
         })
+    )
+
+class QualityAssessmentFormComponent(forms.Form):
+    def __init__(self, *args, data_quality_flag_choices=(), metadata_quality_flag_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_quality_flags'].choices = data_quality_flag_choices
+        self.fields['metadata_quality_flags'].choices = metadata_quality_flag_choices
+
+    data_quality_flags = forms.MultipleChoiceField(
+        label='Data Quality Flags',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    metadata_quality_flags = forms.MultipleChoiceField(
+        label='Metadata Quality Flags',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+class DataLevelFormComponent(forms.Form):
+    def __init__(self, *args, data_level_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_levels'].choices = data_level_choices
+
+    data_levels = forms.MultipleChoiceField(
+        label='Data Levels',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+class CapabilitiesFormComponent(forms.Form):
+    def __init__(
+        self,
+        *args,
+        coordinate_system_choices=(),
+        dimensionality_instance_choices=(),
+        dimensionality_timeline_choices=(),
+        observed_property_choices=(),
+        qualifier_choices=(),
+        unit_choices=(),
+        vector_representation_choices=(),
+        **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.fields['capability_coordinate_system'].choices = coordinate_system_choices
+        self.fields['capability_dimensionality_instance'].choices = dimensionality_instance_choices
+        self.fields['capability_dimensionality_timeline'].choices = dimensionality_timeline_choices
+        self.fields['capability_observed_property'].choices = observed_property_choices
+        self.fields['capability_qualifier'].choices = qualifier_choices
+        self.fields['capability_units'].choices = unit_choices
+        self.fields['capability_vector_representation'].choices = vector_representation_choices
+
+    capability_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput(),
+        help_text='Name of the capability (for internal use within PITHIA system)'
+    )
+
+    capability_observed_property = forms.ChoiceField(
+        label='Observed Property',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='What the process can measure or predict'
+    )
+
+    capability_dimensionality_instance = forms.ChoiceField(
+        label='Dimensionality Instance',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='The data domain of the single instance'
+    )
+
+    capability_dimensionality_timeline = forms.ChoiceField(
+        label='Dimensionality Timeline',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='For animation...'
+    )
+
+    capability_cadence = forms.FloatField(
+        label='Cadence',
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'step': '0.1'
+        }),
+        help_text='Temporal resolution of the observations, if regularly repetitive.'
+    )
+
+    capability_cadence_units = forms.ChoiceField(
+        label='Cadence Unit',
+        required=False,
+        choices=(
+            ('', ''),
+            ('year', 'Year'),
+            ('month', 'Month'),
+            ('day', 'Day'),
+            ('hour', 'Hour'),
+            ('minute', 'Minute'),
+            ('second', 'Second'),
+        ),
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    capability_vector_representation = forms.MultipleChoiceField(
+        label='Vector Representation',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        }),
+        help_text='For those capabilities that are limited in their representation of the vector (i.e., only projections or components).'
+    )
+
+    capability_coordinate_system = forms.ChoiceField(
+        label='Co-ordinate System',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='System of coordinates for the vector representations from PITHIA ontology vocabulary.'
+    )
+
+    capability_units = forms.ChoiceField(
+        label='Units',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='Units of the observed property.'
+    )
+
+    capability_qualifier = forms.MultipleChoiceField(
+        label='Qualifier',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        }),
+        help_text='Qualifier of the capability to observe the property (dictionary-controlled).'
+    )
+
+    capabilities_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
     )
 
 
@@ -346,6 +505,7 @@ class ProjectEditorForm(
     # Only keyword-related field that gets processed
     keywords_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -404,6 +564,7 @@ class PlatformEditorForm(
 
     standard_identifiers_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
 
@@ -529,8 +690,69 @@ class InstrumentEditorForm(
 
     operational_modes_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
+
+class AcquisitionCapabilitiesEditorForm(
+    BaseEditorForm,
+    CapabilitiesFormComponent,
+    CitationDocumentationEditorFormComponent,
+    DataLevelFormComponent,
+    OrganisationEditorFormComponent,
+    QualityAssessmentFormComponent,
+    RelatedPartiesEditorFormComponent
+):
+    def __init__(self, *args, instrument_choices=(), operational_mode_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['instrument_mode_pair_instrument'].choices = instrument_choices
+        self.fields['instrument_mode_pair_mode'].choices = operational_mode_choices
+
+    instrument_mode_pair_instrument = forms.ChoiceField(
+        label='Instrument',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    instrument_mode_pair_mode = forms.ChoiceField(
+        label='Mode',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'disabled': 'true',
+        })
+    )
+
+    input_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    input_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+        })
+    )
+
+    output_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    output_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': '5',
+        })
+    )
+
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), **kwargs):

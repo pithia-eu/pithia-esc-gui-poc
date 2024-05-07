@@ -186,6 +186,7 @@ class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:acquisition_capability_set'
     resource_update_page_url_name = 'update:acquisition_capability_set'
     resource_register_page_url_name = 'register:acquisition_capability_set'
+    resource_register_with_editor_name = 'register:acquisition_capability_set_with_editor'
     resource_xml_download_page_url_name = 'utils:view_acquisition_capability_set_as_xml'
 
 class AcquisitionManagementListView(ResourceManagementListView):

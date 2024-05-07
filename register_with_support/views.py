@@ -59,7 +59,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         # Make copy of cleaned data
         processed_form = form_cleaned_data
         processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
-        processed_form['namespace'] = processed_form["namespace"]
+        processed_form['namespace'] = processed_form['namespace']
         return processed_form
 
     def register_xml_file(self, request, xml_file, name):
@@ -157,9 +157,99 @@ class ResourceRegisterWithEditorFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+class CapabilitiesSelectFormViewMixin(View):
+    def get_observed_property_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('observedProperty')
+        observed_property_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            observed_property_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in observed_property_dict.items()],
+        )
+
+    def get_coordinate_system_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('crs')
+        crs_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            crs_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in crs_dict.items()],
+        )
+
+    def get_dimensionality_instance_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('dimensionalityInstance')
+        dimensionality_instance_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            dimensionality_instance_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dimensionality_instance_dict.items()],
+        )
+
+    def get_dimensionality_timeline_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('dimensionalityTimeline')
+        dimensionality_timeline_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            dimensionality_timeline_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dimensionality_timeline_dict.items()],
+        )
+
+    def get_qualifier_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('qualifier')
+        qualifier_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            qualifier_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in qualifier_dict.items()],
+        )
+
+    def get_unit_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('unit')
+        unit_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            unit_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in unit_dict.items()],
+        )
+
+    def get_vector_representation_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('component')
+        component_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            component_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in component_dict.items()],
+        )
+
+class DataLevelSelectFormViewMixin(View):
+    def get_data_level_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('dataLevel')
+        data_level_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            data_level_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in data_level_dict.items()],
+        )
+
 class SrsNameSelectFormViewMixin(View):
     def get_crs_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("crs")
+        g = get_graph_of_pithia_ontology_component('crs')
         crs_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -181,6 +271,29 @@ class PlatformSelectFormViewMixin(View):
         return (
             ('', ''),
             *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+class QualityAssessmentSelectFormViewMixin(View):
+    def get_data_quality_flag_choices_for_form(self):
+        g_dqf = get_graph_of_pithia_ontology_component('dataQualityFlag')
+        dqf_dict = {}
+        for s, p, o in g_dqf.triples((None, SKOS.member, None)):
+            o_pref_label = g_dqf.value(o, SKOS.prefLabel)
+            dqf_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in dqf_dict.items()],
+        )
+
+    def get_metadata_quality_flag_choices_for_form(self):
+        g_mqf = get_graph_of_pithia_ontology_component('metadataQualityFlag')
+        mqf_dict = {}
+        for s, p, o in g_mqf.triples((None, SKOS.member, None)):
+            o_pref_label = g_mqf.value(o, SKOS.prefLabel)
+            mqf_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in mqf_dict.items()],
         )
 
 class RelatedPartiesSelectFormViewMixin(View):
@@ -360,7 +473,7 @@ class PlatformRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
     def get_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("platformType")
+        g = get_graph_of_pithia_ontology_component('platformType')
         type_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -474,7 +587,7 @@ class InstrumentRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
     def get_instrument_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component("instrumentType")
+        g = get_graph_of_pithia_ontology_component('instrumentType')
         type_dict = {}
         for s, p, o in g.triples((None, SKOS.member, None)):
             o_pref_label = g.value(o, SKOS.prefLabel)
@@ -516,6 +629,93 @@ class InstrumentRegisterWithoutFormView(
         kwargs['member_choices'] = self.get_member_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        return kwargs
+
+
+class AcquisitionCapabilitiesRegisterWithoutFormView(
+    CapabilitiesSelectFormViewMixin,
+    DataLevelSelectFormViewMixin,
+    OrganisationSelectFormViewMixin,
+    QualityAssessmentSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
+    form_class = AcquisitionCapabilitiesEditorForm
+    template_name = 'register_with_support/acquisition_capabilities_editor.html'
+
+    model = models.AcquisitionCapabilities
+    metadata_builder_class = AcquisitionCapabilitiesMetadata
+    file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+
+    def get_instrument_choices_with_oms_for_form(self):
+        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(instrument.metadata_server_url, instrument.name) for instrument in instruments if instrument.operational_modes],
+        )
+
+    def get_instrument_operational_modes_for_form(self):
+        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        operational_modes_by_instrument = []
+        for instrument in instruments:
+            operational_modes = instrument.operational_modes
+            if not operational_modes:
+                continue
+            operational_modes_by_instrument.append((
+                instrument.name,
+                [(f'{instrument.metadata_server_url}#{om.get("id")}', om.get('name')) for om in operational_modes]
+            ))
+
+        return (
+            ('', ''),
+            *operational_modes_by_instrument,
+        )
+
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        processed_form['documentation'] = process_documentation(form_cleaned_data)
+        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
+        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
+        processed_form['instrument_mode_pair'] = process_instrument_mode_pair(form_cleaned_data)
+        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
+
+        return processed_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citation_section_description'] = 'Reference to documentation describing the component.'
+        context['related_parties_section_description'] = 'Individual or organisation related to acquisition.'
+        context['capabilities_tab_content_template'] = render_to_string(
+            'register_with_support/components/capabilities_tab_content_template.html',
+            context=context
+        )
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
+        kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
+        # Capabilities
+        kwargs['coordinate_system_choices'] = self.get_coordinate_system_choices_for_form()
+        kwargs['dimensionality_instance_choices'] = self.get_dimensionality_instance_choices_for_form()
+        kwargs['dimensionality_timeline_choices'] = self.get_dimensionality_timeline_choices_for_form()
+        kwargs['observed_property_choices'] = self.get_observed_property_choices_for_form()
+        kwargs['qualifier_choices'] = self.get_qualifier_choices_for_form()
+        kwargs['unit_choices'] = self.get_unit_choices_for_form()
+        kwargs['vector_representation_choices'] = self.get_vector_representation_choices_for_form()
+        # Instrument mode pairs
+        kwargs['instrument_choices'] = self.get_instrument_choices_with_oms_for_form()
+        kwargs['operational_mode_choices'] = self.get_instrument_operational_modes_for_form()
+        # Related parties
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs
 
 

@@ -7,8 +7,10 @@ from utils.dict_helpers import flatten
 
 class NamespacePrefix:
     GCO = 'gco'
+    GCO19115 = 'gco'
     GMD = 'gmd'
     GML = 'gml'
+    MRL = 'mrl'
     OM = 'om'
     PITHIA = None
     XLINK = 'xlink'
@@ -16,8 +18,10 @@ class NamespacePrefix:
 
 class Namespace:
     GCO = 'http://www.isotc211.org/2005/gco'
+    GCO19115 = 'http://standards.iso.org/iso/19115/-3/gco/1.0'
     GMD = 'http://www.isotc211.org/2005/gmd'
     GML = 'http://www.opengis.net/gml/3.2'
+    MRL = 'http://standards.iso.org/iso/19115/-3/mrl/1.0'
     OM = 'http://www.opengis.net/om/2.0'
     PITHIA = 'https://metadata.pithia.eu/schemas/2.2'
     XLINK = 'http://www.w3.org/1999/xlink'
@@ -126,29 +130,65 @@ class DescriptionMetadataComponent(BaseMetadataComponent):
 
 class CapabilitiesMetadataComponent(BaseMetadataComponent):
     def append_capabilities(self, capabilities):
+        if not capabilities:
+            return
         # Container element
         capabilities_element = etree.SubElement(self.root, 'capabilities')
         for pc in capabilities:
             # Container element
             process_capability_element = etree.SubElement(capabilities_element, 'processCapability')
+            
+            # Name
             name_element = etree.SubElement(process_capability_element, 'name')
             name_element.text = pc['name']
+            # Observed property
             observed_property_element_attributes = {
                 '{%s}href' % Namespace.XLINK: pc['observed_property']
             }
             observed_property_element = etree.SubElement(process_capability_element, 'observedProperty', **observed_property_element_attributes)
-            dimensionality_instance_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['dimensionality_instance']
-            }
-            dimensionality_instance_element = etree.SubElement(process_capability_element, 'dimensionalityInstance', **dimensionality_instance_element_attributes)
-            dimensionality_timeline_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['dimensionality_timeline']
-            }
-            dimensionality_timeline_element = etree.SubElement(process_capability_element, 'dimensionalityTimeline', **dimensionality_timeline_element_attributes)
-            units_element_attributes = {
-                '{%s}href' % Namespace.XLINK: pc['units']
-            }
-            units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
+            # Dimensionality instance
+            if pc['dimensionality_instance']:
+                dimensionality_instance_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['dimensionality_instance']
+                }
+                dimensionality_instance_element = etree.SubElement(process_capability_element, 'dimensionalityInstance', **dimensionality_instance_element_attributes)
+            # Dimensionality timeline
+            if pc['dimensionality_timeline']:
+                dimensionality_timeline_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['dimensionality_timeline']
+                }
+                dimensionality_timeline_element = etree.SubElement(process_capability_element, 'dimensionalityTimeline', **dimensionality_timeline_element_attributes)
+            # Cadence
+            if pc['cadence']:
+                cadence_element_attributes = {'unit': pc['cadence_units']}
+                cadence_element = etree.SubElement(process_capability_element, 'cadence', **cadence_element_attributes)
+                cadence_element.text = pc['cadence']
+            # Vector representation
+            if pc['vector_representation']:
+                for component in pc['vector_representation']:
+                    vector_representation_element_attributes = {
+                        '{%s}href' % Namespace.XLINK: component,
+                    }
+                    vector_representation_element = etree.SubElement(process_capability_element, 'vectorRepresentation', **vector_representation_element_attributes)
+            # Coordinate system
+            if pc['coordinate_system']:
+                coordinate_system_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['coordinate_system']
+                }
+                coordinate_system_element = etree.SubElement(process_capability_element, 'coordinateSystem', **coordinate_system_element_attributes)
+            # Units
+            if pc['units']:
+                units_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: pc['units']
+                }
+                units_element = etree.SubElement(process_capability_element, 'units', **units_element_attributes)
+            # Qualifier
+            if pc['qualifier']:
+                for qualifier in pc['qualifier']:
+                    qualifier_element_attributes = {
+                        '{%s}href' % Namespace.XLINK: qualifier,
+                    }
+                    qualifier_element = etree.SubElement(process_capability_element, 'qualifier', **qualifier_element_attributes)
 
 
 class StandardIdentifierComponent(BaseMetadataComponent):
@@ -367,6 +407,8 @@ class GMLTimePeriodMetadataComponent(BaseMetadataComponent):
 
 class QualityAssessmentMetadataComponent(BaseMetadataComponent):
     def append_quality_assessment(self, quality_assessment_dict):
+        if not quality_assessment_dict.get('data_quality_flags'):
+            return
         quality_assessment_element = etree.SubElement(self.root, 'qualityAssessment')
         for dqf in quality_assessment_dict['data_quality_flags']:
             data_quality_flag_element_attributes = {

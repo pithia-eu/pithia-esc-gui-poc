@@ -921,6 +921,144 @@ ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML = SimpleUploaded
     '''
 )
 
+ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_METADATA_XML = SimpleUploadedFile(
+    'AcquisitionCapabilities_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <AcquisitionCapabilities
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>AcquisitionCapabilities_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-10-04T16:00:00Z</creationDate>
+                <lastModificationDate>2022-10-04T16:00:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Acquisition capabilities of Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <capabilities>
+            <processCapability>
+                <name>Signal Strength</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <units xlink:href="https://metadata.pithia.eu/ontology/2.2/unit/dB"/> 
+            </processCapability>
+            <processCapability>
+                <name>Signal Polarization</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Polarization"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Doppler Frequency</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_DopplerFrequencyShift"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Angle of Arrival</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction"/> 
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <!-- <crs xlink:href="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith"/> -->
+            </processCapability>
+        </capabilities>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0"/>
+        </qualityAssessment>
+        <!-- Instrument that has these acquisition capabilities -->
+        <instrumentModePair>
+            <InstrumentOperationalModePair>
+                <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test"/>
+                <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1"/>
+            </InstrumentOperationalModePair>
+        </instrumentModePair>
+        <instrumentModePair>
+            <InstrumentOperationalModePair>
+                <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2"/>
+                <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2#instrumentoperationalmode2"/>
+            </InstrumentOperationalModePair>
+        </instrumentModePair>
+    </AcquisitionCapabilities>
+    '''
+)
+
+ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_2_METADATA_XML = SimpleUploadedFile(
+    'AcquisitionCapabilities_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <AcquisitionCapabilities
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>AcquisitionCapabilities_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-10-04T16:00:00Z</creationDate>
+                <lastModificationDate>2022-10-04T16:00:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Acquisition capabilities of Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <capabilities>
+            <processCapability>
+                <name>Signal Strength</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <units xlink:href="https://metadata.pithia.eu/ontology/2.2/unit/dB"/> 
+            </processCapability>
+            <processCapability>
+                <name>Signal Polarization</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Polarization"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Doppler Frequency</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_DopplerFrequencyShift"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Angle of Arrival</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction"/> 
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <!-- <crs xlink:href="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith"/> -->
+            </processCapability>
+        </capabilities>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0"/>
+        </qualityAssessment>
+        <!-- Instrument that has these acquisition capabilities -->
+        <instrumentModePair>
+            <InstrumentOperationalModePair>
+                <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test"/>
+                <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1"/>
+            </InstrumentOperationalModePair>
+            <InstrumentOperationalModePair>
+                <instrument xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2"/>
+                <mode xlink:href="https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2#instrumentoperationalmode2"/>
+            </InstrumentOperationalModePair>
+        </instrumentModePair>
+    </AcquisitionCapabilities>
+    '''
+)
+
 
 # ACQUISITIONS
 ACQUISITION_METADATA_XML = SimpleUploadedFile(

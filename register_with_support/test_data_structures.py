@@ -324,20 +324,40 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Acquisition Capabilities Test',
     'description': 'Description',
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
     'capabilities': [
         {
             'name': 'Signal Strength',
             'observed_property': 'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
             'dimensionality_instance': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram',
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
+            'cadence': '10.0',
+            'cadence_units': 'minute',
+            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/D',
+            'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/CGM',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
+            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation',
         },
         {
             'name': 'Signal Strength',
             'observed_property': 'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
             'dimensionality_instance': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram',
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
+            'cadence': '120.0',
+            'cadence_units': 'year',
+            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/E',
+            'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/GEOcartesian',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
+            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Derived',
         },
     ],
     'data_levels': [
@@ -356,7 +376,26 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
         'instrument': 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
         'mode': 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1',
     },
+    'input_name': 'input name',
+    'input_description': 'input description',
+    'output_name': 'output name',
+    'output_description': 'output description',
+    'related_parties': [
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
+        },
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
+        },
+    ],
 }
+ACQUISITION_CAPABILITIES_BLANK_CADENCE_UNIT = copy.deepcopy(ACQUISITION_CAPABILITIES_PROPERTIES_FULL)
+ACQUISITION_CAPABILITIES_BLANK_CADENCE_UNIT['capabilities'][0]['cadence_units'] = ''
 
 # Acquisition
 ACQUISITION_PROPERTIES_FULL = {

@@ -810,3 +810,21 @@ class LocalIDServiceTestCase(TestCase):
     def test_is_localid_taken_suggestion(self):
         results = is_localid_taken(self.organisation.localid)
         print('results', results)
+
+
+class AcquisitionCapabilitiesXSDValidationTestCase(SimpleTestCase):
+    def test_acquisition_capabilities_with_multiple_imps_fails(self):
+        xml_file = AcquisitionCapabilitiesXMLMetadataFile.from_file(test_xml_files.ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_METADATA_XML)
+        try:
+            MetadataFileXSDValidator.validate(xml_file)
+        except BaseException as err:
+            print(err)
+        self.assertRaises(BaseException, MetadataFileXSDValidator.validate, xml_file)
+
+    def test_acquisition_capabilities_with_multiple_imps_2_fails(self):
+        xml_file = AcquisitionCapabilitiesXMLMetadataFile.from_file(test_xml_files.ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_2_METADATA_XML)
+        try:
+            MetadataFileXSDValidator.validate(xml_file)
+        except BaseException as err:
+            print(err)
+        self.assertRaises(BaseException, MetadataFileXSDValidator.validate, xml_file)

@@ -242,31 +242,79 @@ class InstrumentMetadata(DescriptionMetadataComponent, DocumentationMetadataComp
             etree.SubElement(self.root, 'member', **member_attributes)
 
 
-class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent):
+class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(AcquisitionCapabilities.root_element_name, nsmap_extensions={
+            NamespacePrefix.GMD: Namespace.GMD,
+            NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
+        self.append_documentation(properties['documentation'])
         self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
-        self.append_instrument_mode_pair(properties['instrument_mode_pair'])
         self.append_quality_assessment(properties['quality_assessment'])
+        self.append_instrument_mode_pair(properties['instrument_mode_pair'])
+        self.append_input_description(properties['input_name'], properties['input_description'])
+        self.append_output_description(properties['output_name'], properties['output_description'])
+        self.append_related_parties(properties['related_parties'])
 
-    def append_instrument_mode_pair(self, instrument_mode_pairs):
+    def append_instrument_mode_pair(self, instrument_mode_pair):
+        if (not instrument_mode_pair.get('instrument')
+            and not instrument_mode_pair.get('mode')):
+            return
         # Container elements
         instrument_mode_pair_element = etree.SubElement(self.root, 'instrumentModePair')
-        instrument_operational_mode_pair_element = etree.SubElement(instrument_mode_pair_element, 'instrumentOperationalModePair')
+        instrument_operational_mode_pair_element = etree.SubElement(instrument_mode_pair_element, 'InstrumentOperationalModePair')
         instrument_element_attributes = {
-            '{%s}href' % Namespace.XLINK: 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
+            '{%s}href' % Namespace.XLINK: instrument_mode_pair['instrument'],
         }
         instrument_element = etree.SubElement(instrument_operational_mode_pair_element, 'instrument', **instrument_element_attributes)
         mode_element_attributes = {
-            '{%s}href' % Namespace.XLINK: 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1',
+            '{%s}href' % Namespace.XLINK: instrument_mode_pair['mode'],
         }
         mode_element = etree.SubElement(instrument_operational_mode_pair_element, 'mode', **mode_element_attributes)
+
+    def append_input_description(self, input_name, input_description):
+        if not input_description:
+            return
+        # Container element
+        input_description_container_element = etree.SubElement(self.root, 'inputDescription')
+        # Contents
+        input_output_element = etree.SubElement(input_description_container_element, 'InputOutput')
+        if input_name:
+            input_name_element = etree.SubElement(input_output_element, 'name')
+            input_name_element.text = input_name
+        input_description_element = etree.SubElement(input_output_element, 'description')
+        le_source_element = etree.SubElement(input_description_element, '{%s}LE_Source' % Namespace.MRL)
+        le_source_description_element_attributes = {
+            'xmlns': Namespace.GCO19115
+        }
+        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
+        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
+        gco19115_character_string_element.text = input_description
+
+    def append_output_description(self, output_name, output_description):
+        if not output_description:
+            return
+        # Container element
+        output_description_container_element = etree.SubElement(self.root, 'outputDescription')
+        # Contents
+        input_output_element = etree.SubElement(output_description_container_element, 'InputOutput')
+        if output_name:
+            output_name_element = etree.SubElement(input_output_element, 'name')
+            output_name_element.text = output_name
+        output_description_element = etree.SubElement(input_output_element, 'description')
+        le_source_element = etree.SubElement(output_description_element, '{%s}LE_Source' % Namespace.MRL)
+        le_source_description_element_attributes = {
+            'xmlns': Namespace.GCO19115
+        }
+        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
+        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
+        gco19115_character_string_element.text = output_description
 
 
 class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
