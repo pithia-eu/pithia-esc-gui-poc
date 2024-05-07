@@ -15,12 +15,12 @@ import {
     setupKeywordsTable,
 } from "/static/register_with_support/components/project/keywords_table.js";
 
-let keywordsTable;
+// let keywordsTable;
 let relatedPartiesTable;
 
 
 function prepareFormForSubmission() {
-    keywordsTable.exportTableDataToJsonAndStoreInOutputElement();
+    // keywordsTable.exportTableDataToJsonAndStoreInOutputElement();
     relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
 }
 
@@ -34,6 +34,6 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
-    keywordsTable = setupKeywordsTable();
+    // keywordsTable = setupKeywordsTable();
     relatedPartiesTable = setupRelatedPartiesTable();
 });
