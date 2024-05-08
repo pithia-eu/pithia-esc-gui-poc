@@ -259,7 +259,7 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         self.append_quality_assessment(properties['quality_assessment'])
         self.append_instrument_mode_pair(properties['instrument_mode_pair'])
         self.append_input_description(properties['input_name'], properties['input_description'])
-        self.append_output_description(properties['output_name'], properties['output_description'])
+        # self.append_output_description(properties['output_name'], properties['output_description'])
         self.append_related_parties(properties['related_parties'])
 
     def append_instrument_mode_pair(self, instrument_mode_pair):

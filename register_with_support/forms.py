@@ -739,19 +739,19 @@ class AcquisitionCapabilitiesEditorForm(
         })
     )
 
-    output_name = forms.CharField(
-        label='Name',
-        required=False,
-        widget=forms.TextInput()
-    )
+    # output_name = forms.CharField(
+    #     label='Name',
+    #     required=False,
+    #     widget=forms.TextInput()
+    # )
 
-    output_description = forms.CharField(
-        label='Description',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'rows': '5',
-        })
-    )
+    # output_description = forms.CharField(
+    #     label='Description',
+    #     required=False,
+    #     widget=forms.Textarea(attrs={
+    #         'rows': '5',
+    #     })
+    # )
 
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
