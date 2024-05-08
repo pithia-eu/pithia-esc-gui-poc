@@ -70,7 +70,7 @@ class ProjectMetadata(DescriptionMetadataComponent, DocumentationMetadataCompone
         self.append_description(properties['description'])
         self.append_url(properties['url'])
         self.append_documentation(properties['documentation'])
-        self.append_keywords(properties['keyword_dict_list'])
+        # self.append_keywords(properties['keyword_dict_list'])
         self.append_related_parties(properties['related_parties'])
         self.append_status(properties['status'])
 

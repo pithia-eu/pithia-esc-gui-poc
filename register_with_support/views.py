@@ -431,7 +431,7 @@ class ProjectRegisterWithEditorFormView(
         processed_form = super().process_form(form_cleaned_data)
 
         processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['keyword_dict_list'] = process_project_keywords(form_cleaned_data)
+        # processed_form['keyword_dict_list'] = process_project_keywords(form_cleaned_data)
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
 
         return processed_form
@@ -446,10 +446,10 @@ class ProjectRegisterWithEditorFormView(
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['keywords_row_content_template'] = render_to_string(
-            'register_with_support/components/project/keywords_row_content.html',
-            context=context
-        )
+        # context['keywords_row_content_template'] = render_to_string(
+        #     'register_with_support/components/project/keywords_row_content.html',
+        #     context=context
+        # )
         context['citation_section_description'] = 'Reference to documentation describing the project.'
         context['related_parties_section_description'] = 'Individual or organisation related to the project.'
         return context
