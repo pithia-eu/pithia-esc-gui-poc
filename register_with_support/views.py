@@ -721,6 +721,7 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
 
 class AcquisitionRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
+    PlatformSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:acquisition_with_editor')
@@ -734,9 +735,18 @@ class AcquisitionRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Acquisition.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
+    def get_acquisition_capability_sets_for_form(self):
+        acquisition_capability_sets = AcquisitionCapabilities.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(acs.metadata_server_url, acs.name) for acs in acquisition_capability_sets],
+        )
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['acquisition_capability_set_choices'] = self.get_acquisition_capability_sets_for_form()
+        kwargs['platform_choices'] = self.get_platform_choices_for_form()
         return kwargs
 
 
