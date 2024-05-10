@@ -752,8 +752,8 @@ class AcquisitionRegisterWithoutFormView(
             'register_with_support/components/capability_links_tab_pane_content_template.html',
             context=context
         )
-        context['capability_link_standard_identifiers_row_content_template'] = render_to_string(
-            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifiers_table.html',
+        context['capability_link_standard_identifier_row_content_template'] = render_to_string(
+            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
             context=context
         )
         return context

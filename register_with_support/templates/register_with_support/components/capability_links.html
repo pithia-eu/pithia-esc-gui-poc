@@ -1,0 +1,32 @@
+<section id="capability-links-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Capability Links
+            </h2>
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            <p class="mb-0">
+                Help text for capability links
+            </p>
+        </div>
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs" id="capability-links-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="cl1-tab" data-bs-toggle="tab" data-bs-target="#cl1-tab-pane" type="button" role="tab" aria-controls="cl1-tab-pane" aria-selected="true">Capability Link 1</button>
+                </li>
+                <li class="nav-item create-tab" role="presentation">
+                    <button class="nav-link" type="button">
+                        + Add Capability Link
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="capability-links-tab-content">
+                <div class="tab-pane fade show active" id="cl1-tab-pane" role="tabpanel" aria-labelledby="cl1-tab" tabindex="0">
+                    {% include 'register_with_support/components/capability_links_tab_pane_content_template.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form.capability_links_json }}
+</section>

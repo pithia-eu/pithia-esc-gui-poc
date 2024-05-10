@@ -493,23 +493,41 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         self.fields['capability_link_platform'].choices = platform_choices
         self.fields['capability_link_acquisition_capabilities'].choices = acquisition_capability_set_choices
 
-    capability_link_platform = forms.ChoiceField(
+    capability_link_platform = forms.MultipleChoiceField(
         label='Platform',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         })
     )
 
-    capability_link_acquisition_capabilities = forms.ChoiceField(
+    capability_link_acquisition_capabilities = forms.MultipleChoiceField(
         label='Acquisition Capabilities',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         })
     )
 
-    capability_link_time_span_begin_position = forms.ChoiceField(
+    capability_link_standard_identifier_authority = forms.CharField(
+        label='Authority',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    capability_link_standard_identifier = forms.CharField(
+        label='Value',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    capability_link_standard_identifiers_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    capability_link_time_span_begin_position = forms.CharField(
         label='Begin Position',
         required=False,
         widget=forms.DateInput()
@@ -528,4 +546,16 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         widget=forms.Select(attrs={
             'class': 'form-select',
         })
+    )
+
+    capability_link_time_spans_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    capability_links_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
     )
