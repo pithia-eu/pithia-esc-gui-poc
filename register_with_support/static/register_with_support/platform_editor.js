@@ -15,16 +15,16 @@ import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
 import {
-    setupStandardIdentifiersTable,
-} from "/static/register_with_support/components/platform/standard_identifiers_table.js";
+    setupPlatformStandardIdentifiersTable,
+} from "/static/register_with_support/components/platform/platform_standard_identifiers_table.js";
 
 let relatedPartiesTable;
-let standardIdentifiersTable;
+let platformStandardIdentifiersTable;
 
 
 function prepareFormForSubmission() {
     relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
-    standardIdentifiersTable.exportTableDataToJsonAndStoreInOutputElement();
+    platformStandardIdentifiersTable.exportTableDataToJsonAndStoreInOutputElement();
 }
 
 editorForm.addEventListener("submit", async e => {
@@ -40,5 +40,5 @@ window.addEventListener("load", () => {
     setupGeometryLocationSection();
     setupLocalIdAndNamespaceRelatedEventListeners();
     relatedPartiesTable = setupRelatedPartiesTable();
-    standardIdentifiersTable = setupStandardIdentifiersTable();
+    platformStandardIdentifiersTable = setupPlatformStandardIdentifiersTable();
 });

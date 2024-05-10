@@ -9,23 +9,35 @@ import {
 } from "/static/register_with_support/components/table_utils.js"
 
 
-class StandardIdentifiersTable extends DynamicEditorTable {
-    constructor() {
+export class StandardIdentifiersTable extends DynamicEditorTable {
+    constructor(
+        tableSelector,
+        tableBodySelector,
+        addRowButtonSelector,
+        removeRowButtonSelector,
+        rowContentTemplateSelector,
+        jsonOutputSelector,
+        standardIdentifierAuthorityInputSelector,
+        standardIdentifierInputSelector
+    ) {
         super(
-            "#table-standard-identifiers",
-            "#table-standard-identifiers tbody",
-            "#add-sirow-button",
-            ".remove-sirow-button",
-            "#standard-identifier-row-content-template",
-            "input[name='standard_identifiers_json']"
+            tableSelector,
+            tableBodySelector,
+            addRowButtonSelector,
+            removeRowButtonSelector,
+            rowContentTemplateSelector,
+            jsonOutputSelector
         );
+        this.standardIdentifierAuthorityInputSelector = standardIdentifierAuthorityInputSelector;
+        this.standardIdentifierInputSelector = standardIdentifierInputSelector;
+        this.standardIdentifiersJsonInputSelector = jsonOutputSelector;
     }
 
     exportTableData() {
         const standardIdentifierObjects = [];
         this.rows.forEach(row => {
-            const standardIdentifierAuthorityInput = row.querySelector("input[name='standard_identifier_authority']");
-            const standardIdentifierValueInput = row.querySelector("input[name='standard_identifier']");
+            const standardIdentifierAuthorityInput = row.querySelector(this.standardIdentifierAuthorityInputSelector);
+            const standardIdentifierValueInput = row.querySelector(this.standardIdentifierInputSelector);
             standardIdentifierObjects.push({
                 authority: standardIdentifierAuthorityInput.value,
                 value: standardIdentifierValueInput.value,
@@ -37,7 +49,9 @@ class StandardIdentifiersTable extends DynamicEditorTable {
     setupNewRowEventListeners(newRow) {
         super.setupNewRowEventListeners(newRow);
 
-        const inputs = Array.from(newRow.querySelectorAll("input[name='standard_identifier_authority'], input[name='standard_identifier']"));
+        const inputs = Array.from(
+            newRow.querySelectorAll(`${this.standardIdentifierAuthorityInputSelector}, ${this.standardIdentifierInputSelector}`)
+        );
         inputs.forEach(input => {
             input.addEventListener("input", () => {
                 checkAndSetRequiredAttributesForFields(inputs, inputs);
@@ -47,7 +61,7 @@ class StandardIdentifiersTable extends DynamicEditorTable {
     }
 
     loadPreviousData() {
-        const previousData = JSON.parse(editorForm.querySelector("input[name='standard_identifiers_json']").value);
+        const previousData = JSON.parse(editorForm.querySelector(this.standardIdentifiersJsonInputSelector).value);
         if (!previousData) {
             return;
         }
@@ -60,24 +74,18 @@ class StandardIdentifiersTable extends DynamicEditorTable {
             const correspondingRow = this.tableBody.querySelector(`tr:nth-of-type(${i + 1})`);
     
             // Standard identifier authority
-            const standardIdentifierAuthorityInput = correspondingRow.querySelector("input[name='standard_identifier_authority']");
+            const standardIdentifierAuthorityInput = correspondingRow.querySelector(this.standardIdentifierAuthorityInputSelector);
             standardIdentifierAuthorityInput.value = standardIdentifierAuthority;
     
             // Standard identifier
-            const standardIdentifierInput = correspondingRow.querySelector("input[name='standard_identifier']");
+            const standardIdentifierInput = correspondingRow.querySelector(this.standardIdentifierInputSelector);
             standardIdentifierInput.value = standardIdentifier;
     
-            const conditionalRequiredFields = Array.from(correspondingRow.querySelectorAll("input[name='standard_identifier_authority'], input[name='standard_identifier']"));
+            const conditionalRequiredFields = Array.from(correspondingRow.querySelectorAll(`${this.standardIdentifierAuthorityInputSelector}, ${this.standardIdentifierInputSelector}`));
             checkAndSetRequiredAttributesForFields(
                 conditionalRequiredFields,
                 conditionalRequiredFields,
             );
         });
     }
-}
-
-export function setupStandardIdentifiersTable() {
-    const newStandardIdentifiersTable = new StandardIdentifiersTable();
-    newStandardIdentifiersTable.setup();
-    return newStandardIdentifiersTable;
 }

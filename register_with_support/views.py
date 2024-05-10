@@ -512,6 +512,10 @@ class PlatformRegisterWithoutFormView(
         context['geo_location_description'] = f'The LAT, LON coordinates of the position of the platform. "{context.get("form").fields.get("geometry_location_point_srs_name").label}" describes the coordinate system.'
         context['citation_section_description'] = 'Reference to documentation describing the platform.'
         context['related_parties_section_description'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
+        context['standard_identifier_row_content_template'] = render_to_string(
+            'register_with_support/components/platform/platform_standard_identifier_row_content_template.html',
+            context=context
+        )
         return context
 
 
@@ -741,6 +745,18 @@ class AcquisitionRegisterWithoutFormView(
             ('', ''),
             *[(acs.metadata_server_url, acs.name) for acs in acquisition_capability_sets],
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['capability_links_tab_pane_content_template'] = render_to_string(
+            'register_with_support/components/capability_links_tab_pane_content_template.html',
+            context=context
+        )
+        context['capability_link_standard_identifiers_row_content_template'] = render_to_string(
+            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifiers_table.html',
+            context=context
+        )
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
