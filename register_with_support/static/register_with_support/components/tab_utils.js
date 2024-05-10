@@ -157,12 +157,19 @@ export class DynamicEditorTab {
     
         this.disableFirstRemoveTabAndTabPaneButtonIfOnlyOneTab();
     
-        window.dispatchEvent(new CustomEvent("newSelectsAdded", {
-            detail: Array.from(newTabPane.querySelectorAll("select:not([multiple])")).map(select => select.id),
-        }));
-        window.dispatchEvent(new CustomEvent("newMultipleChoiceSelectsAdded", {
-            detail: Array.from(newTabPane.querySelectorAll("select[multiple]")).map(select => select.id),
-        }));
+        const selects = Array.from(newTabPane.querySelectorAll("select:not([multiple])"));
+        const multipleChoiceSelects = Array.from(newTabPane.querySelectorAll("select[multiple]"));
+
+        if (selects.length > 0) {
+            window.dispatchEvent(new CustomEvent("newSelectsAdded", {
+                detail: selects.map(select => select.id),
+            }));
+        }
+        if (multipleChoiceSelects.length > 0) {
+            window.dispatchEvent(new CustomEvent("newMultipleChoiceSelectsAdded", {
+                detail: multipleChoiceSelects.map(select => select.id),
+            }));
+        }
     
         return newTabPane;
     }
