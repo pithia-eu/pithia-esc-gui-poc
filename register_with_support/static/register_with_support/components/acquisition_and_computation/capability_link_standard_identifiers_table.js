@@ -15,4 +15,12 @@ export class CapabilityLinkStandardIdentifiersTable extends StandardIdentifiersT
             `input[name='capability_link_standard_identifier']`,
         );
     }
+
+    exportTableDataToJsonAndStoreInOutputElement() {
+        super.exportTableDataToJsonAndStoreInOutputElement();
+        const inputEvent = new Event("input", {
+            bubbles: true,
+        });
+        this.jsonOutputElement.dispatchEvent(inputEvent);
+    }
 }

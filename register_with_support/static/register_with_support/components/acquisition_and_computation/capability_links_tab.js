@@ -46,13 +46,22 @@ class CapabilityLinksTab extends DynamicEditorTab {
         });
     }
 
+    createTabOnClickActions(newTabPane) {
+        const standardIdentifiersTable = new CapabilityLinkStandardIdentifiersTable(newTabPane.id);
+        standardIdentifiersTable.setup();
+    }
+
     getTabDataAsJson() {
         const capabilityLinks = [];
         const capabilityLinkTabPanes = this.tabContent.querySelectorAll(".tab-pane");
         capabilityLinkTabPanes.forEach(tabPane => {
+            const platformSelect = tabPane.querySelector("select[name='capability_link_platform']");
+            const platformSelectedOptions = Array.from(platformSelect.selectedOptions);
+            const acquisitioniCapabilitiesSelect = tabPane.querySelector("select[name='capability_link_platform']");
+            const acquisitionCapabilitiesSelectedOptions = Array.from(acquisitioniCapabilitiesSelect.selectedOptions);
             capabilityLinks.push({
-                platform: tabPane.querySelector("select[name='capability_link_platform']").value,
-                acquisitionCapabilities: tabPane.querySelector("select[name='capability_link_platform']").value,
+                platforms: platformSelectedOptions.map(option => option.value),
+                acquisitionCapabilities: acquisitionCapabilitiesSelectedOptions.map(option => option.value),
                 standardIdentifiers: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
                 timeSpans: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
             });
@@ -61,7 +70,41 @@ class CapabilityLinksTab extends DynamicEditorTab {
     }
 
     loadPreviousTabData() {
-        
+        const previousCapabilityLinks = JSON.parse(this.jsonExportElement.value);
+        if (!previousCapabilityLinks) {
+            return;
+        }
+        previousCapabilityLinks.forEach((capabilityLink, i) => {
+            if (i !== 0) {
+                this.createTabAndTabPane();
+            }
+            const correspondingTabPane = this.tabContent.querySelector(`.tab-pane:nth-of-type(${i + 1})`);
+            const platformSelect = correspondingTabPane.querySelector("select[name='capability_link_platform']");
+            platformSelect.value = "";
+            capabilityLink.platforms.forEach(platform => {
+                platformSelect.querySelector(`option[value="${platform}"]`).selected = true;
+            });
+            const acquisitionCapabilitiesSelect = correspondingTabPane.querySelector("select[name='capability_link_platform']");
+            acquisitionCapabilitiesSelect.value = "";
+            capabilityLink.acquisitionCapabilities.forEach(ac => {
+                acquisitionCapabilitiesSelect.querySelector(`option[value="${ac}"]`).selected = true;
+            });
+            correspondingTabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value = capabilityLink.standardIdentifiers;
+            correspondingTabPane.querySelector("input[name='capability_link_time_spans_json']").value = capabilityLink.timeSpans;
+            if (i !== 0) {
+                const standardIdentifiersTable = new CapabilityLinkStandardIdentifiersTable(correspondingTabPane.id);
+                standardIdentifiersTable.setup();
+            }
+            const selects = correspondingTabPane.querySelectorAll("select:not(table select)");
+            if (selects) {
+                selects.forEach(select => { 
+                    window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                        detail: select.id,
+                    }));
+                });
+            }
+
+        });
     }
 }
 

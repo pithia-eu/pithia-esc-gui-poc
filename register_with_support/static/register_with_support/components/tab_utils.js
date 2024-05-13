@@ -23,7 +23,8 @@ export class DynamicEditorTab {
         this.loadPreviousTabData();
         this.setupTabPaneEventListeners(firstTabPane);
         this.createTabButton.addEventListener("click", () => {
-            this.createTabAndTabPane();
+            const newTabPane = this.createTabAndTabPane();
+            this.createTabOnClickActions(newTabPane);
             this.exportTabData();
         });
     }
@@ -109,7 +110,7 @@ export class DynamicEditorTab {
         
         // New tab button
         const newTabButton = document.createElement("BUTTON");
-        const newTabIdPrefix = generateUniqueElemIdFromCurrentElemId(this.tabButtonPrefixText.toLowerCase());
+        const newTabIdPrefix = generateUniqueElemIdFromCurrentElemId(this.tabButtonPrefixText.toLowerCase().replace(/\s/g, ""));
         newTabButton.className = "nav-link";
         newTabButton.id = `${newTabIdPrefix}-tab`;
         newTabButton.dataset.bsToggle = "tab";
@@ -133,6 +134,8 @@ export class DynamicEditorTab {
         this.focusLastTabPane();
     
         this.nextTabNumber += 1;
+
+        return newTabPane;
     }
 
     createTabPane(newTabIdPrefix) {
@@ -172,6 +175,10 @@ export class DynamicEditorTab {
         }
     
         return newTabPane;
+    }
+
+    createTabOnClickActions() {
+        // Can be customised in child class
     }
 
     // Tab data saving/loading
