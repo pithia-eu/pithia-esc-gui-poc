@@ -5,6 +5,9 @@ import {
     CapabilityLinkStandardIdentifiersTable,
 } from "/static/register_with_support/components/acquisition_and_computation/capability_link_standard_identifiers_table.js";
 import {
+    CapabilityLinkTimeSpansTable,
+} from "/static/register_with_support/components/acquisition_and_computation/capability_link_time_spans_table.js";
+import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 
@@ -26,6 +29,8 @@ class CapabilityLinksTab extends DynamicEditorTab {
         const firstTabPane = this.tabContent.querySelector(".tab-pane");
         this.standardIdentifiersTable = new CapabilityLinkStandardIdentifiersTable(firstTabPane.id);
         this.standardIdentifiersTable.setup();
+        this.timeSpansTable = new CapabilityLinkTimeSpansTable(firstTabPane.id);
+        this.timeSpansTable.setup();
     }
 
     setupTabPaneEventListeners(tabPane) {
@@ -49,6 +54,8 @@ class CapabilityLinksTab extends DynamicEditorTab {
     createTabOnClickActions(newTabPane) {
         const standardIdentifiersTable = new CapabilityLinkStandardIdentifiersTable(newTabPane.id);
         standardIdentifiersTable.setup();
+        const timeSpansTable = new CapabilityLinkTimeSpansTable(newTabPane.id);
+        timeSpansTable.setup();
     }
 
     getTabDataAsJson() {
@@ -63,7 +70,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
                 platforms: platformSelectedOptions.map(option => option.value),
                 acquisitionCapabilities: acquisitionCapabilitiesSelectedOptions.map(option => option.value),
                 standardIdentifiers: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
-                timeSpans: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
+                timeSpans: tabPane.querySelector("input[name='capability_link_time_spans_json']").value,
             });
         });
         return capabilityLinks;
@@ -94,6 +101,8 @@ class CapabilityLinksTab extends DynamicEditorTab {
             if (i !== 0) {
                 const standardIdentifiersTable = new CapabilityLinkStandardIdentifiersTable(correspondingTabPane.id);
                 standardIdentifiersTable.setup();
+                const timeSpansTable = new CapabilityLinkTimeSpansTable(correspondingTabPane.id);
+                timeSpansTable.setup();
             }
             const selects = correspondingTabPane.querySelectorAll("select:not(table select)");
             if (selects) {

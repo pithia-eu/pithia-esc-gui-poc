@@ -756,6 +756,10 @@ class AcquisitionRegisterWithoutFormView(
             'register_with_support/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
             context=context
         )
+        context['capability_link_time_span_row_content_template'] = render_to_string(
+            'register_with_support/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
+            context=context
+        )
         return context
 
     def get_form_kwargs(self):

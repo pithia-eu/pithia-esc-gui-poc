@@ -4,6 +4,7 @@
 <script src="{% static 'register_with_support/acquisition_editor.js' %}" type="module" defer></script>
 {{ capability_links_tab_pane_content_template|json_script:'capability-links-tab-pane-content-template' }}
 {{ capability_link_standard_identifier_row_content_template|json_script:'capability-link-standard-identifier-row-content-template' }}
+{{ capability_link_time_span_row_content_template|json_script:'capability-link-time-span-row-content-template' }}
 {% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-and-organisation-section">
