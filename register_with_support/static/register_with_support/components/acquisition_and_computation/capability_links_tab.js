@@ -8,11 +8,27 @@ import {
     CapabilityLinkTimeSpansTable,
 } from "/static/register_with_support/components/acquisition_and_computation/capability_link_time_spans_table.js";
 import {
-    checkAndSetRequiredAttributesForFields,
+    checkAndSetRequiredAttributesForFieldsBySelectors,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 
-const requiredFieldSelector = "select[name='capability_link_acquisition_capabilities']";
 
+function updateTabPaneConditionalRequiredFieldStates(tabPane) {
+    // Required fields
+    const requiredFieldSelector = "select[name='capability_link_acquisition_capabilities']";
+    
+    // Optional related fields that affect
+    // whether the required field attributes
+    // for conditional required fields are
+    // set.
+    const platformSelectSelector = `#${tabPane.id} select[name='capability_link_platform']`;
+    const standardIdentifiersTableFieldsSelector = `#${tabPane.id} input[name='capability_link_standard_identifier_authority'], #${tabPane.id} input[name='capability_link_standard_identifier']`;
+    const timeSpansTableFieldsSelector = `#${tabPane.id} input[name='capability_link_time_span_begin_position'], #${tabPane.id} select[name='capability_link_time_span_end_position']`;
+    const optionalRelatedFieldsSelector = `${platformSelectSelector}, ${standardIdentifiersTableFieldsSelector}, ${timeSpansTableFieldsSelector}`;
+    checkAndSetRequiredAttributesForFieldsBySelectors(
+        `#${tabPane.id} ${requiredFieldSelector}`,
+        optionalRelatedFieldsSelector,
+    );
+}
 
 class CapabilityLinksTab extends DynamicEditorTab {
     constructor() {
@@ -46,20 +62,14 @@ class CapabilityLinksTab extends DynamicEditorTab {
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
-                checkAndSetRequiredAttributesForFields(
-                    tabPane.querySelectorAll(requiredFieldSelector),
-                    allTabPaneFields,
-                );
+                updateTabPaneConditionalRequiredFieldStates(tabPane);
                 this.exportTabData();
             });
         });
     
         selects.forEach(select => {
             select.addEventListener("change", () => {
-                checkAndSetRequiredAttributesForFields(
-                    tabPane.querySelectorAll(requiredFieldSelector),
-                    allTabPaneFields,
-                );
+                updateTabPaneConditionalRequiredFieldStates(tabPane);
                 this.exportTabData();
             });
         });
@@ -123,13 +133,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
                     }));
                 });
             }
-            checkAndSetRequiredAttributesForFields(
-                correspondingTabPane.querySelectorAll(requiredFieldSelector),
-                [
-                    ...Array.from(correspondingTabPane.querySelectorAll("input")),
-                    ...Array.from(correspondingTabPane.querySelectorAll("select")),
-                ],
-            );
+            updateTabPaneConditionalRequiredFieldStates(correspondingTabPane);
         });
     }
 }

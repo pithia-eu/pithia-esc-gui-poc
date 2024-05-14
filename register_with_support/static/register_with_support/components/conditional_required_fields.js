@@ -30,3 +30,16 @@ export function checkAndSetRequiredAttributesForFields(conditionalRequiredFields
     const isRequiredAttributeSet = (allFields.some(f => !(f.value === "")));
     setRequiredAttributesForFields(isRequiredAttributeSet, conditionalRequiredFields);
 }
+
+export function checkAndSetRequiredAttributesForFieldsBySelectors(conditionalRequiredFieldsSelector, optionalRelatedFieldsSelector) {
+    if (!conditionalRequiredFieldsSelector) {
+        return;
+    }
+    const conditionalRequiredFields = document.querySelectorAll(conditionalRequiredFieldsSelector);
+    const allFields = [
+        ...document.querySelectorAll(optionalRelatedFieldsSelector),
+        ...conditionalRequiredFields,
+    ];
+    const isRequiredAttributeSet = (allFields.some(f => !(f.value === "")));
+    setRequiredAttributesForFields(isRequiredAttributeSet, conditionalRequiredFields);
+}
