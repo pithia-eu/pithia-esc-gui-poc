@@ -64,8 +64,8 @@ class CapabilityLinksTab extends DynamicEditorTab {
         capabilityLinkTabPanes.forEach(tabPane => {
             const platformSelect = tabPane.querySelector("select[name='capability_link_platform']");
             const platformSelectedOptions = Array.from(platformSelect.selectedOptions);
-            const acquisitioniCapabilitiesSelect = tabPane.querySelector("select[name='capability_link_platform']");
-            const acquisitionCapabilitiesSelectedOptions = Array.from(acquisitioniCapabilitiesSelect.selectedOptions);
+            const acquisitionCapabilitiesSelect = tabPane.querySelector("select[name='capability_link_acquisition_capabilities']");
+            const acquisitionCapabilitiesSelectedOptions = Array.from(acquisitionCapabilitiesSelect.selectedOptions);
             capabilityLinks.push({
                 platforms: platformSelectedOptions.map(option => option.value),
                 acquisitionCapabilities: acquisitionCapabilitiesSelectedOptions.map(option => option.value),
@@ -89,12 +89,18 @@ class CapabilityLinksTab extends DynamicEditorTab {
             const platformSelect = correspondingTabPane.querySelector("select[name='capability_link_platform']");
             platformSelect.value = "";
             capabilityLink.platforms.forEach(platform => {
-                platformSelect.querySelector(`option[value="${platform}"]`).selected = true;
+                const correspondingOption = platformSelect.querySelector(`option[value="${platform}"]`);
+                if (correspondingOption) {
+                    correspondingOption.selected = true;
+                }
             });
-            const acquisitionCapabilitiesSelect = correspondingTabPane.querySelector("select[name='capability_link_platform']");
+            const acquisitionCapabilitiesSelect = correspondingTabPane.querySelector("select[name='capability_link_acquisition_capabilities']");
             acquisitionCapabilitiesSelect.value = "";
             capabilityLink.acquisitionCapabilities.forEach(ac => {
-                acquisitionCapabilitiesSelect.querySelector(`option[value="${ac}"]`).selected = true;
+                const correspondingOption = acquisitionCapabilitiesSelect.querySelector(`option[value="${ac}"]`);
+                if (correspondingOption) {
+                    correspondingOption.selected = true;
+                }
             });
             correspondingTabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value = capabilityLink.standardIdentifiers;
             correspondingTabPane.querySelector("input[name='capability_link_time_spans_json']").value = capabilityLink.timeSpans;
