@@ -501,10 +501,10 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         })
     )
 
-    capability_link_acquisition_capabilities = forms.MultipleChoiceField(
+    capability_link_acquisition_capabilities = forms.ChoiceField(
         label='Acquisition Capabilities',
         required=False,
-        widget=forms.SelectMultiple(attrs={
+        widget=forms.Select(attrs={
             'class': 'form-select',
         })
     )

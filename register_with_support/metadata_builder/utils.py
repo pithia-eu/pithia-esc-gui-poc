@@ -200,8 +200,6 @@ def process_acquisition_capability_links(form_cleaned_data):
         cl['timeSpans'] = json.loads(cl.get('timeSpans'))
         if '' in cl.get('platforms'):
             cl.get('platforms').remove('')
-        if '' in cl.get('acquisitionCapabilities'):
-            cl.get('acquisitionCapabilities').remove('')
         if all(not value for value in list(cl.values())):
             continue
         capability_link_dict_list.append({

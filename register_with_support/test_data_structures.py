@@ -405,24 +405,43 @@ ACQUISITION_PROPERTIES_FULL = {
     'description': 'Description',
     'capability_links': [
         {
-            'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+            'platforms': [
+                'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test'
+            ],
             'standard_identifiers': [
                 {
                     'authority': 'URSI',
                     'value': 'AT138',
                 }
             ],
-            'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+            'acquisition_capabilities': [
+                'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test'
+            ],
+            'time_spans': [],
         },
         {
-            'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+            'platforms': [
+                'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test'
+            ],
             'standard_identifiers': [
                 {
                     'authority': 'URSI',
                     'value': 'AT138',
                 }
             ],
-            'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+            'acquisition_capabilities': [
+                'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+            ],
+            'time_spans': [
+                {
+                    'begin_position': '10-06-2020',
+                    'end_position': 'before',
+                },
+                {
+                    'begin_position': '01-01-2020',
+                    'end_position': 'after',
+                },
+            ],
         },
     ],
 }

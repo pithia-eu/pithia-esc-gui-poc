@@ -39,6 +39,14 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
         });
     }
 
+    addRow() {
+        const newRow = super.addRow();
+
+        window.dispatchEvent(new CustomEvent("newSelectsAdded", {
+            detail: Array.from(newRow.querySelectorAll("select:not([multiple])")).map(select => select.id),
+        }));
+    }
+
     exportTableData() {
         const timeSpanObjects = [];
         this.rows.forEach(row => {
@@ -80,6 +88,9 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
             // Time span end position (indeterminate)
             const timeSpanEndPositionSelect = correspondingRow.querySelector(this.timeSpanEndPositionSelectSelector);
             timeSpanEndPositionSelect.value = timeSpanEndPosition;
+            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                detail: timeSpanEndPositionSelect.id,
+            }));
 
             const conditionalRequiredFields = Array.from(correspondingRow.querySelectorAll(`${this.timeSpanBeginPositionInputSelector}, ${this.timeSpanEndPositionSelectSelector}`));
             checkAndSetRequiredAttributesForFields(

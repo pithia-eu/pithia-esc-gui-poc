@@ -204,6 +204,11 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     def test_acquisition_capabilities_blank_cadence_unit(self):
         self.assertRaises(XMLSchemaDecodeError, self.create_xml_and_validate_against_schema, AcquisitionCapabilitiesMetadata, ACQUISITION_CAPABILITIES_BLANK_CADENCE_UNIT)
 
+    # Acquisition
+    @tag('acquisition')
+    def test_acquisition(self):
+        self.create_xml_and_validate_against_schema(AcquisitionMetadata, ACQUISITION_PROPERTIES_FULL)
+
     # Workflow
     @tag('workflow')
     def test_workflow(self):

@@ -212,6 +212,8 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
 
     def _append_time_spans_to_capability_link(self, time_spans, capability_link_element):
         for ts in time_spans:
+            if ts['end_position'] == '':
+                continue
             time_span_element = etree.SubElement(capability_link_element, 'timeSpan')
             begin_position_element = etree.SubElement(time_span_element, '{%s}beginPosition' % Namespace.GML)
             begin_position_element.text = ts['begin_position']
@@ -230,11 +232,10 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
                 }
                 platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
             self.append_standard_identifiers(capability_link_element, cld['standard_identifiers'])
-            for capabilities_url in cld[self.capabilities_key]:
-                capabilities_element_attributes = {
-                    '{%s}href' % Namespace.XLINK: capabilities_url,
-                }
-                capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
+            capabilities_element_attributes = {
+                '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
+            }
+            capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
             self._append_time_spans_to_capability_link(cld['time_spans'], capability_link_element)
 
 

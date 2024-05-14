@@ -11,6 +11,8 @@ import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 
+const requiredFieldSelector = "select[name='capability_link_acquisition_capabilities']";
+
 
 class CapabilityLinksTab extends DynamicEditorTab {
     constructor() {
@@ -35,17 +37,29 @@ class CapabilityLinksTab extends DynamicEditorTab {
 
     setupTabPaneEventListeners(tabPane) {
         super.setupTabPaneEventListeners(tabPane);
-        const inputs = tabPane.querySelectorAll("input");
-        const selects = tabPane.querySelectorAll("select");
+        const inputs = Array.from(tabPane.querySelectorAll("input"));
+        const selects = Array.from(tabPane.querySelectorAll("select"));
+        const allTabPaneFields = [
+            ...inputs,
+            ...selects,
+        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
+                checkAndSetRequiredAttributesForFields(
+                    tabPane.querySelectorAll(requiredFieldSelector),
+                    allTabPaneFields,
+                );
                 this.exportTabData();
             });
         });
     
         selects.forEach(select => {
             select.addEventListener("change", () => {
+                checkAndSetRequiredAttributesForFields(
+                    tabPane.querySelectorAll(requiredFieldSelector),
+                    allTabPaneFields,
+                );
                 this.exportTabData();
             });
         });
@@ -64,11 +78,9 @@ class CapabilityLinksTab extends DynamicEditorTab {
         capabilityLinkTabPanes.forEach(tabPane => {
             const platformSelect = tabPane.querySelector("select[name='capability_link_platform']");
             const platformSelectedOptions = Array.from(platformSelect.selectedOptions);
-            const acquisitionCapabilitiesSelect = tabPane.querySelector("select[name='capability_link_acquisition_capabilities']");
-            const acquisitionCapabilitiesSelectedOptions = Array.from(acquisitionCapabilitiesSelect.selectedOptions);
             capabilityLinks.push({
                 platforms: platformSelectedOptions.map(option => option.value),
-                acquisitionCapabilities: acquisitionCapabilitiesSelectedOptions.map(option => option.value),
+                acquisitionCapabilities: tabPane.querySelector("select[name='capability_link_acquisition_capabilities']").value,
                 standardIdentifiers: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
                 timeSpans: tabPane.querySelector("input[name='capability_link_time_spans_json']").value,
             });
@@ -94,14 +106,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
                     correspondingOption.selected = true;
                 }
             });
-            const acquisitionCapabilitiesSelect = correspondingTabPane.querySelector("select[name='capability_link_acquisition_capabilities']");
-            acquisitionCapabilitiesSelect.value = "";
-            capabilityLink.acquisitionCapabilities.forEach(ac => {
-                const correspondingOption = acquisitionCapabilitiesSelect.querySelector(`option[value="${ac}"]`);
-                if (correspondingOption) {
-                    correspondingOption.selected = true;
-                }
-            });
+            correspondingTabPane.querySelector("select[name='capability_link_acquisition_capabilities']").value = capabilityLink.acquisitionCapabilities;
             correspondingTabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value = capabilityLink.standardIdentifiers;
             correspondingTabPane.querySelector("input[name='capability_link_time_spans_json']").value = capabilityLink.timeSpans;
             if (i !== 0) {
@@ -118,7 +123,13 @@ class CapabilityLinksTab extends DynamicEditorTab {
                     }));
                 });
             }
-
+            checkAndSetRequiredAttributesForFields(
+                correspondingTabPane.querySelectorAll(requiredFieldSelector),
+                [
+                    ...Array.from(correspondingTabPane.querySelectorAll("input")),
+                    ...Array.from(correspondingTabPane.querySelectorAll("select")),
+                ],
+            );
         });
     }
 }
