@@ -746,6 +746,13 @@ class AcquisitionRegisterWithoutFormView(
             *[(acs.metadata_server_url, acs.name) for acs in acquisition_capability_sets],
         )
 
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
+
+        return processed_form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['capability_links_tab_pane_content_template'] = render_to_string(

@@ -1,5 +1,6 @@
 """Prepares cleaned form data for XML conversion.
 """
+import json
 from unidecode import unidecode
 
 # Contact info
@@ -182,3 +183,31 @@ def process_operational_modes(form_cleaned_data):
             continue
         operational_mode_dict_list.append(om)
     return operational_mode_dict_list
+
+def _process_time_spans(time_spans):
+    return [
+        {
+            'begin_position': ts.get('beginPosition'),
+            'end_position': ts.get('endPosition'),
+        } for ts in time_spans
+    ]
+
+def process_acquisition_capability_links(form_cleaned_data):
+    capability_links_from_form = form_cleaned_data.get('capability_links_json')
+    capability_link_dict_list = []
+    for cl in capability_links_from_form:
+        cl['standardIdentifiers'] = json.loads(cl.get('standardIdentifiers'))
+        cl['timeSpans'] = json.loads(cl.get('timeSpans'))
+        if '' in cl.get('platforms'):
+            cl.get('platforms').remove('')
+        if '' in cl.get('acquisitionCapabilities'):
+            cl.get('acquisitionCapabilities').remove('')
+        if all(not value for value in list(cl.values())):
+            continue
+        capability_link_dict_list.append({
+            'platforms': cl.get('platforms'),
+            'acquisition_capabilities': cl.get('acquisitionCapabilities'),
+            'standard_identifiers': cl.get('standardIdentifiers'),
+            'time_spans': _process_time_spans(cl.get('timeSpans')),
+        })
+    return capability_link_dict_list

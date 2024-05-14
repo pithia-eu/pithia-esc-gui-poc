@@ -210,19 +210,32 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
     capabilities_key = ''
     capabilities_element_name = ''
 
+    def _append_time_spans_to_capability_link(self, time_spans, capability_link_element):
+        for ts in time_spans:
+            time_span_element = etree.SubElement(capability_link_element, 'timeSpan')
+            begin_position_element = etree.SubElement(time_span_element, '{%s}beginPosition' % Namespace.GML)
+            begin_position_element.text = ts['begin_position']
+            end_position_element_attributes = {
+                'indeterminatePosition': ts['end_position'],
+            }
+            end_position_element = etree.SubElement(time_span_element, '{%s}endPosition' % Namespace.GML, **end_position_element_attributes)
+
     def append_capability_links(self, capability_link_dict_list):
         capability_links_element = etree.SubElement(self.root, 'capabilityLinks')
         for cld in capability_link_dict_list:
             capability_link_element = etree.SubElement(capability_links_element, 'capabilityLink')
-            platform_element_attributes = {
-                '{%s}href' % Namespace.XLINK: cld['platform']
-            }
-            platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
+            for p in cld['platforms']:
+                platform_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: p,
+                }
+                platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
             self.append_standard_identifiers(capability_link_element, cld['standard_identifiers'])
-            capabilities_element_attributes = {
-                '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
-            }
-            capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
+            for capabilities_url in cld[self.capabilities_key]:
+                capabilities_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: capabilities_url,
+                }
+                capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
+            self._append_time_spans_to_capability_link(cld['time_spans'], capability_link_element)
 
 
 class ContactInfoMetadataComponent(BaseMetadataComponent):
