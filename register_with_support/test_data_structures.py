@@ -500,7 +500,9 @@ COMPUTATION_PROPERTIES_FULL = {
     'description': 'Description',
     'capability_links': [
         {
-            'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+            'platforms': [
+                'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test'
+            ],
             'standard_identifiers': [
                 {
                     'authority': 'URSI',
@@ -508,9 +510,12 @@ COMPUTATION_PROPERTIES_FULL = {
                 }
             ],
             'computation_capabilities': 'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
+            'time_spans': [],
         },
         {
-            'platform': 'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+            'platforms': [
+                'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test'
+            ],
             'standard_identifiers': [
                 {
                     'authority': 'URSI',
@@ -518,6 +523,16 @@ COMPUTATION_PROPERTIES_FULL = {
                 }
             ],
             'computation_capabilities': 'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
+            'time_spans': [
+                {
+                    'begin_position': '10-06-2020',
+                    'end_position': 'before',
+                },
+                {
+                    'begin_position': '01-01-2020',
+                    'end_position': 'after',
+                },
+            ],
         },
     ],
 }
