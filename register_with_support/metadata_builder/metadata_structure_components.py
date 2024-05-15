@@ -223,6 +223,8 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
             end_position_element = etree.SubElement(time_span_element, '{%s}endPosition' % Namespace.GML, **end_position_element_attributes)
 
     def append_capability_links(self, capability_link_dict_list):
+        if not capability_link_dict_list:
+            return
         capability_links_element = etree.SubElement(self.root, 'capabilityLinks')
         for cld in capability_link_dict_list:
             capability_link_element = etree.SubElement(capability_links_element, 'capabilityLink')
