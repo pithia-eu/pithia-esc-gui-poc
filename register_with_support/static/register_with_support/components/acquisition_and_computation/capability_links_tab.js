@@ -55,10 +55,6 @@ class CapabilityLinksTab extends DynamicEditorTab {
         super.setupTabPaneEventListeners(tabPane);
         const inputs = Array.from(tabPane.querySelectorAll("input"));
         const selects = Array.from(tabPane.querySelectorAll("select"));
-        const allTabPaneFields = [
-            ...inputs,
-            ...selects,
-        ];
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
