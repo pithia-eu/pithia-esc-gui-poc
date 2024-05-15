@@ -192,14 +192,17 @@ def _process_time_spans(time_spans):
         } for ts in time_spans
     ]
 
+def remove_blank_dicts_from_dict_list(dict_list):
+    return [d for d in dict_list if any(value for value in list(d.values()))]
+
 def process_acquisition_capability_links(form_cleaned_data):
     capability_links_from_form = form_cleaned_data.get('capability_links_json')
     capability_link_dict_list = []
     for cl in capability_links_from_form:
-        cl['standardIdentifiers'] = json.loads(cl.get('standardIdentifiers'))
-        cl['timeSpans'] = json.loads(cl.get('timeSpans'))
         if '' in cl.get('platforms'):
             cl.get('platforms').remove('')
+        cl['standardIdentifiers'] = remove_blank_dicts_from_dict_list(json.loads(cl.get('standardIdentifiers')))
+        cl['timeSpans'] = remove_blank_dicts_from_dict_list(json.loads(cl.get('timeSpans')))
         if all(not value for value in list(cl.values())):
             continue
         capability_link_dict_list.append({
