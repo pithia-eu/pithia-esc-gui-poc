@@ -45,6 +45,12 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
         window.dispatchEvent(new CustomEvent("newSelectsAdded", {
             detail: Array.from(newRow.querySelectorAll("select:not([multiple])")).map(select => select.id),
         }));
+        this.table.dispatchEvent(new CustomEvent("newTableRowInputsAdded", {
+            detail: {
+                inputIds: Array.from(newRow.querySelectorAll("input")).map(el => el.id),
+                selectIds: Array.from(newRow.querySelectorAll("select")).map(el => el.id),
+            },
+        }));
     }
 
     exportTableData() {

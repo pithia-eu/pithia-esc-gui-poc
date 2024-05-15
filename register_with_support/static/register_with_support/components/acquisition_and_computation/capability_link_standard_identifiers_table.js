@@ -16,6 +16,17 @@ export class CapabilityLinkStandardIdentifiersTable extends StandardIdentifiersT
         );
     }
 
+    addRow() {
+        const newRow = super.addRow();
+
+        this.table.dispatchEvent(new CustomEvent("newTableRowInputsAdded", {
+            detail: {
+                inputIds: Array.from(newRow.querySelectorAll("input")).map(el => el.id),
+                selectIds: Array.from(newRow.querySelectorAll("select")).map(el => el.id),
+            },
+        }));
+    }
+
     exportTableDataToJsonAndStoreInOutputElement() {
         super.exportTableDataToJsonAndStoreInOutputElement();
         const inputEvent = new Event("input", {

@@ -82,10 +82,7 @@ export class DynamicEditorTab {
         });
     }
 
-    setupTabPaneEventListeners(tabPane) {
-        const inputs = tabPane.querySelectorAll("input");
-        const selects = tabPane.querySelectorAll("select");
-    
+    setupInvalidInputEventListeners(inputs, selects) {
         inputs.forEach(input => {
             input.addEventListener("invalid", e => {
                 this.switchToTabPaneContainingChildNode(e.currentTarget);
@@ -95,6 +92,26 @@ export class DynamicEditorTab {
         selects.forEach(select => {
             select.addEventListener("invalid", e => {
                 this.switchToTabPaneContainingChildNode(e.currentTarget);
+            });
+        });
+    }
+
+    setupTabPaneEventListeners(tabPane) {
+        this.setupInvalidInputEventListeners(
+            Array.from(tabPane.querySelectorAll("input")),
+            Array.from(tabPane.querySelectorAll("select"))
+        );
+
+        const tables = tabPane.querySelectorAll("table");
+
+        tables.forEach(table => {
+            table.addEventListener("newTableRowInputsAdded", e => {
+                const inputsSelector = (e.detail.inputIds).map(id => `#${id}`).join(", ")
+                const selectsSelector = (e.detail.selectIds).map(id => `#${id}`).join(", ")
+                this.setupInvalidInputEventListeners(
+                    (inputsSelector) ? Array.from(tabPane.querySelectorAll(inputsSelector)) : [],
+                    (selectsSelector) ? Array.from(tabPane.querySelectorAll(selectsSelector)) : []
+                );
             });
         });
     
