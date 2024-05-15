@@ -232,10 +232,11 @@ class CapabilityLinksMetadataComponent(StandardIdentifierComponent, BaseMetadata
                 }
                 platform_element = etree.SubElement(capability_link_element, 'platform', **platform_element_attributes)
             self.append_standard_identifiers(capability_link_element, cld['standard_identifiers'])
-            capabilities_element_attributes = {
-                '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
-            }
-            capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
+            if cld[self.capabilities_key]:
+                capabilities_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: cld[self.capabilities_key],
+                }
+                capabilities_element = etree.SubElement(capability_link_element, self.capabilities_element_name, **capabilities_element_attributes)
             self._append_time_spans_to_capability_link(cld['time_spans'], capability_link_element)
 
 

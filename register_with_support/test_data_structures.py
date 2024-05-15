@@ -414,9 +414,7 @@ ACQUISITION_PROPERTIES_FULL = {
                     'value': 'AT138',
                 }
             ],
-            'acquisition_capabilities': [
-                'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test'
-            ],
+            'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
             'time_spans': [],
         },
         {
@@ -429,9 +427,7 @@ ACQUISITION_PROPERTIES_FULL = {
                     'value': 'AT138',
                 }
             ],
-            'acquisition_capabilities': [
-                'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
-            ],
+            'acquisition_capabilities': 'https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
             'time_spans': [
                 {
                     'begin_position': '10-06-2020',
@@ -445,6 +441,8 @@ ACQUISITION_PROPERTIES_FULL = {
         },
     ],
 }
+ACQUISITION_PROPERTIES_WITH_BLANK_ACQ_CAPS = copy.deepcopy(ACQUISITION_PROPERTIES_FULL)
+ACQUISITION_PROPERTIES_WITH_BLANK_ACQ_CAPS['capability_links'][0]['acquisition_capabilities'] = ''
 
 # Computation Capabilities
 COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {

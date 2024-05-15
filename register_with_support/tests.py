@@ -75,6 +75,10 @@ class MetadataBuilderTestCase(SimpleTestCase):
         acquisition = AcquisitionMetadata(ACQUISITION_PROPERTIES_FULL)
         print('acquisition.xml', acquisition.xml)
 
+    def test_acquisition_with_blank_acq_caps(self):
+        acquisition = AcquisitionMetadata(ACQUISITION_PROPERTIES_WITH_BLANK_ACQ_CAPS)
+        print('acquisition.xml', acquisition.xml)
+
     def test_computation_capabilities(self):
         computation_capabilities = ComputationCapabilitiesMetadata(COMPUTATION_CAPABILITIES_PROPERTIES_FULL)
         print('computation_capabilities.xml', computation_capabilities.xml)
@@ -208,6 +212,10 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     @tag('acquisition')
     def test_acquisition(self):
         self.create_xml_and_validate_against_schema(AcquisitionMetadata, ACQUISITION_PROPERTIES_FULL)
+
+    @tag('acquisition')
+    def test_acquisition_with_blank_acq_caps(self):
+        self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, AcquisitionMetadata, ACQUISITION_PROPERTIES_WITH_BLANK_ACQ_CAPS)
 
     # Workflow
     @tag('workflow')
