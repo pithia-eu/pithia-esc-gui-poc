@@ -217,6 +217,11 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     def test_acquisition_with_blank_acq_caps(self):
         self.assertRaises(XMLSchemaChildrenValidationError, self.create_xml_and_validate_against_schema, AcquisitionMetadata, ACQUISITION_PROPERTIES_WITH_BLANK_ACQ_CAPS)
 
+    # Computation Capabilities
+    @tag('computation_capabilities')
+    def test_computation_capabilities(self):
+        self.create_xml_and_validate_against_schema(ComputationCapabilitiesMetadata, COMPUTATION_CAPABILITIES_PROPERTIES_FULL)
+
     # Workflow
     @tag('workflow')
     def test_workflow(self):
