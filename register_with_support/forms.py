@@ -332,8 +332,104 @@ class AcquisitionEditorForm(
     pass
 
 
-class ComputationCapabilitiesEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
-    pass
+class ComputationCapabilitiesEditorForm(
+    BaseEditorForm,
+    CapabilitiesFormComponent,
+    CitationDocumentationEditorFormComponent,
+    DataLevelFormComponent,
+    OrganisationEditorFormComponent,
+    QualityAssessmentFormComponent,
+    RelatedPartiesEditorFormComponent
+):
+    def __init__(self, *args, child_computation_choices=(), computation_type_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['child_computations'].choices = child_computation_choices
+        self.fields['type'].choices = computation_type_choices
+
+    type = forms.MultipleChoiceField(
+        label='Type',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    version = forms.CharField(
+        label='Version',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    processing_input_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    processing_input_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3
+        })
+    )
+
+    processing_output_name = forms.CharField(
+        label='Name',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    processing_output_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3
+        })
+    )
+
+    child_computations = forms.MultipleChoiceField(
+        label='Child Computations',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    software_reference_citation_title = forms.CharField(
+        label='Title of Documentation',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    software_reference_citation_publication_date = forms.CharField(
+        label='Publication Date',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    software_reference_citation_doi = forms.CharField(
+        label='DOI',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'pattern': 'doi:10.[0-9]{4,}(?:[.][0-9]+)*/.+'
+        }),
+        help_text='Format: doi:10.xxxxx'
+    )
+
+    software_reference_other_citation_details = forms.CharField(
+        label='Full Citation',
+        required=False,
+        widget=forms.Textarea()
+    )
+
+    software_reference_citation_linkage_url = forms.URLField(
+        label='Link to Online Resource',
+        required=False,
+        widget=forms.URLInput(attrs={
+            'placeholder': 'https://'
+        })
+    )
 
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
