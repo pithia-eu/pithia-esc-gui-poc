@@ -242,7 +242,17 @@ class InstrumentMetadata(DescriptionMetadataComponent, DocumentationMetadataComp
             etree.SubElement(self.root, 'member', **member_attributes)
 
 
-class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent):
+class AcquisitionCapabilitiesMetadata(
+    CapabilitiesMetadataComponent,
+    DataLevelMetadataComponent,
+    DescriptionMetadataComponent,
+    DocumentationMetadataComponent,
+    GCOCharacterStringMetadataComponent,
+    IdentifierMetadataComponent,
+    InputOutputMetadataComponent,
+    NameMetadataComponent,
+    QualityAssessmentMetadataComponent,
+    RelatedPartyMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(AcquisitionCapabilities.root_element_name, nsmap_extensions={
             NamespacePrefix.GMD: Namespace.GMD,
@@ -279,42 +289,18 @@ class AcquisitionCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         mode_element = etree.SubElement(instrument_operational_mode_pair_element, 'mode', **mode_element_attributes)
 
     def append_input_description(self, input_name, input_description):
-        if not input_description:
-            return
-        # Container element
-        input_description_container_element = etree.SubElement(self.root, 'inputDescription')
-        # Contents
-        input_output_element = etree.SubElement(input_description_container_element, 'InputOutput')
-        if input_name:
-            input_name_element = etree.SubElement(input_output_element, 'name')
-            input_name_element.text = input_name
-        input_description_element = etree.SubElement(input_output_element, 'description')
-        le_source_element = etree.SubElement(input_description_element, '{%s}LE_Source' % Namespace.MRL)
-        le_source_description_element_attributes = {
-            'xmlns': Namespace.GCO19115
+        input_parameter = {
+            'name': input_name,
+            'description': input_description,
         }
-        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
-        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
-        gco19115_character_string_element.text = input_description
+        self._append_parameter(self.root, input_parameter, 'inputDescription')
 
     def append_output_description(self, output_name, output_description):
-        if not output_description:
-            return
-        # Container element
-        output_description_container_element = etree.SubElement(self.root, 'outputDescription')
-        # Contents
-        input_output_element = etree.SubElement(output_description_container_element, 'InputOutput')
-        if output_name:
-            output_name_element = etree.SubElement(input_output_element, 'name')
-            output_name_element.text = output_name
-        output_description_element = etree.SubElement(input_output_element, 'description')
-        le_source_element = etree.SubElement(output_description_element, '{%s}LE_Source' % Namespace.MRL)
-        le_source_description_element_attributes = {
-            'xmlns': Namespace.GCO19115
+        output_parameter = {
+            'name': output_name,
+            'description': output_description,
         }
-        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
-        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
-        gco19115_character_string_element.text = output_description
+        self._append_parameter(self.root, output_parameter, 'outputDescription')
 
 
 class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
@@ -332,9 +318,17 @@ class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
         self.append_capability_links(properties['capability_links'])
 
 
-class ComputationCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMetadataComponent, DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent, TypeMetadataComponent):
+class ComputationCapabilitiesMetadata(
+    CapabilitiesMetadataComponent,
+    DataLevelMetadataComponent,
+    DescriptionMetadataComponent,
+    IdentifierMetadataComponent,
+    InputOutputMetadataComponent,
+    NameMetadataComponent,
+    TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(ComputationCapabilities.root_element_name, nsmap_extensions={
+            NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'])
@@ -343,12 +337,31 @@ class ComputationCapabilitiesMetadata(CapabilitiesMetadataComponent, DataLevelMe
         self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
         self.append_type(properties['type'])
-        self.append_unused_elements()
+        self.append_version(properties['version'])
+        self.append_unused_software_reference()
+        self.append_processing_inputs(properties['processing_inputs'])
+        self.append_processing_output(properties['processing_output'])
+        self.append_unused_algorithm()
 
-    def append_unused_elements(self):
-        etree.SubElement(self.root, 'version')
+    def append_version(self, version):
+        if not version:
+            return
+        version_element = etree.SubElement(self.root, 'version')
+        version_element.text = version
+
+    def append_processing_inputs(self, processing_inputs):
+        for pi in processing_inputs:
+            self._append_parameter(self.root, pi, 'processingInput')
+
+    def append_processing_output(self, processing_output):
+        if not processing_output:
+            return
+        self._append_parameter(self.root, processing_output, 'processingOutput')
+
+    def append_unused_software_reference(self):
         etree.SubElement(self.root, 'softwareReference')
-        etree.SubElement(self.root, 'processingInput')
+
+    def append_unused_algorithm(self):
         etree.SubElement(self.root, 'algorithm')
 
 

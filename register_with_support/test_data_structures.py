@@ -494,6 +494,18 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
     ],
     'data_levels': ['https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V'],
     'type': 'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+    'version': '1',
+    'processing_inputs': [
+        {
+            'name': 'Processing input 1',
+            'description': 'Description for processing input 1'
+        },
+        {
+            'name': 'Processing input 2',
+            'description': 'Description for processing input 2'
+        },
+    ],
+    'processing_output': '',
     'quality_assessment': {
         'data_quality_flags': [
             'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',

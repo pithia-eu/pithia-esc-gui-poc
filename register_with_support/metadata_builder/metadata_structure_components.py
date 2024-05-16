@@ -422,6 +422,29 @@ class GMLTimePeriodMetadataComponent(BaseMetadataComponent):
         self._append_time_instant_element(gml_end_element, time_period_dict['end']['time_instant']['id'], time_period_dict['end']['time_instant']['time_position'])
 
 
+class InputOutputMetadataComponent(BaseMetadataComponent):
+    def _append_parameter(self, parent_element, parameter, element_name):
+        if not parameter:
+            return
+        # Container element
+        input_description_container_element = etree.SubElement(parent_element, element_name)
+        # Contents
+        input_output_element = etree.SubElement(input_description_container_element, 'InputOutput')
+        parameter_name = parameter.get('name')
+        parameter_description = parameter.get('description')
+        if parameter_name:
+            input_name_element = etree.SubElement(input_output_element, 'name')
+            input_name_element.text = parameter_name
+        input_description_element = etree.SubElement(input_output_element, 'description')
+        le_source_element = etree.SubElement(input_description_element, '{%s}LE_Source' % Namespace.MRL)
+        le_source_description_element_attributes = {
+            'xmlns': Namespace.GCO19115
+        }
+        le_source_description_element = etree.SubElement(le_source_element, '{%s}description' % Namespace.MRL, **le_source_description_element_attributes)
+        gco19115_character_string_element = etree.SubElement(le_source_description_element, 'CharacterString')
+        gco19115_character_string_element.text = parameter_description
+
+
 class QualityAssessmentMetadataComponent(BaseMetadataComponent):
     def append_quality_assessment(self, quality_assessment_dict):
         if not quality_assessment_dict.get('data_quality_flags'):
