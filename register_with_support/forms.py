@@ -332,7 +332,7 @@ class AcquisitionEditorForm(
     pass
 
 
-class ComputationCapabilitiesEditorForm(BaseEditorForm):
+class ComputationCapabilitiesEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     pass
 
 

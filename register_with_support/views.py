@@ -801,6 +801,11 @@ class ComputationCapabilitiesRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.ComputationCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        return kwargs
+
 
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
