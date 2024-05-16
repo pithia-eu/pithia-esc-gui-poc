@@ -1,4 +1,10 @@
 {% extends 'register_with_support/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
+{{ capabilities_tab_content_template|json_script:'capabilities-tab-content-template' }}
+<script src="{% static 'register_with_support/computation_capabilities_editor.js' %}" type="module" defer></script>
+{% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-and-organisation-section">
     <div class="row gy-4">
