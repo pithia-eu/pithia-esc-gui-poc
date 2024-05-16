@@ -6,6 +6,7 @@ from datetime import (
     timezone,
 )
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.html import escape
 from typing import Union
 from xmlschema.exceptions import XMLSchemaException
 
@@ -480,7 +481,7 @@ def validate_xml_file_with_xsd_and_return_errors(xml_metadata_file: XMLMetadataF
         MetadataFileXSDValidator.validate(xml_metadata_file)
     except XMLSchemaException as err:
         logger.exception('Error occurred during metadata validation.')
-        error_msg = str(err)
+        error_msg = f'<span style="white-space: pre-wrap;">{escape(str(err).strip())}</span>'
         errors.append(error_msg)
     return errors
 

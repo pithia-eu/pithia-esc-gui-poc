@@ -145,15 +145,22 @@ export class MetadataFileValidator {
         return string.replace(/\.[^/.]+$/, "")
     }
 
+    escapeHTML(unsafe) {
+        return unsafe.replace(
+          /[\u0000-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u00FF]/g,
+          c => '&#' + ('000' + c.charCodeAt(0)).slice(-4) + ';'
+        )
+      }
+
     validateSyntax(xmlDoc) {
         const errors = [];
         const errorNode = xmlDoc.querySelector("parsererror");
         if (errorNode !== null) {
             try {
-                const errorDetails = errorNode.querySelector("h3 + div").textContent;
+                const errorDetails = `<span style="white-space: pre-wrap;">${this.escapeHTML(errorNode.querySelector("h3 + div").textContent)}</span>`;
                 errors.push(errorDetails);
             } catch (error) {
-                const errorDetails = errorNode.textContent;
+                const errorDetails = `<span style="white-space: pre-wrap;">${this.escapeHTML(errorNode.textContent)}</span>`;
                 errors.push(errorDetails);
             }
         }

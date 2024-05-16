@@ -7,6 +7,7 @@ from django.db.models.functions import Lower
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 from django.views.generic import (
     FormView,
     View,
@@ -112,6 +113,14 @@ class ResourceRegisterWithEditorFormView(FormView):
             may alternatively be used to register your metadata.
             <br><br>
             We apologise for any inconvenience caused.
+            <details>
+                <summary class="mt-4">
+                    <small>Validation feedback</small>
+                </summary>
+                <p class="mt-2 mb-0">
+                    <small style="white-space: pre-wrap;">{escape(err).strip()}</small>
+                </p>
+            </details>
             '''
             messages.error(self.request, form_error_msg)
             return self.render_to_response(self.get_context_data(form=form))
