@@ -59,7 +59,7 @@ class OperationalModesTable extends DynamicEditorTable {
         const fields = Array.from(newRow.querySelectorAll("input[name='operational_mode_id'], input[name='operational_mode_name'], textarea[name='operational_mode_description']"));
         fields.forEach(field => {
             field.addEventListener("input", () => {
-                checkAndSetRequiredAttributesForFields(fields, fields);
+                checkAndSetRequiredAttributesForFields(fields);
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });
@@ -99,7 +99,6 @@ class OperationalModesTable extends DynamicEditorTable {
                 operationalModeDescriptionTextarea,
             ];
             checkAndSetRequiredAttributesForFields(
-                conditionalRequiredFields,
                 conditionalRequiredFields
             );
         });

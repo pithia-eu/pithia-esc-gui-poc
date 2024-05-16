@@ -2,7 +2,7 @@ import {
     editorForm,
 } from "/static/register_with_support/components/base_editor.js";
 import {
-    checkAndConfigureRequiredAttributesOfSelects,
+    checkAndSetRequiredAttributesForFields,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 import {
     DynamicEditorTable,
@@ -66,7 +66,7 @@ class RelatedPartiesTable extends DynamicEditorTable {
         const selects = Array.from(newRow.querySelectorAll("select"));
         selects.forEach(s => {
             s.addEventListener("change", e => {
-                checkAndConfigureRequiredAttributesOfSelects(selects);
+                checkAndSetRequiredAttributesForFields(selects);
                 this.exportTableDataToJsonAndStoreInOutputElement();
             });
         });
@@ -102,7 +102,7 @@ class RelatedPartiesTable extends DynamicEditorTable {
                 detail: partySelect.id,
             }));
 
-            checkAndConfigureRequiredAttributesOfSelects(Array.from(correspondingRow.querySelectorAll("select")));
+            checkAndSetRequiredAttributesForFields(Array.from(correspondingRow.querySelectorAll("select")));
         });
     }
 }

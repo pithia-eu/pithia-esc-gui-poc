@@ -1047,6 +1047,22 @@ a.support-link {
     .add-dtrow-button {
         display: block;
     }
+
+    table td:has(input[required]),
+    table td:has(select[required]),
+    table td:has(textarea[required]) {
+        position: relative;
+    }
+    
+    table td:has(input[required])::after,
+    table td:has(select[required])::after,
+    table td:has(textarea[required])::after {
+        position: absolute;
+        content: ' *';
+        color: red;
+        top: 0.6rem;
+        right: 0.9rem;
+    }
 }
 
 @media (min-width: 768px) {

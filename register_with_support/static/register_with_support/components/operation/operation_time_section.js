@@ -9,8 +9,7 @@ export function setupOperationTimeSection() {
     // Do initial setup in case there are already
     // some initial values in the form
     checkAndSetRequiredAttributesForFields(
-        operationTimeSectionInputs,
-        operationTimeSectionInputs,
+        operationTimeSectionInputs
     );
 
     // Set event listeners for each field in the
@@ -18,8 +17,7 @@ export function setupOperationTimeSection() {
     operationTimeSectionInputs.forEach(input => {
         input.addEventListener("input", () => {
             checkAndSetRequiredAttributesForFields(
-                operationTimeSectionInputs,
-                operationTimeSectionInputs,
+                operationTimeSectionInputs
             );
         });
     });
