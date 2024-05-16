@@ -342,10 +342,14 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
             'cadence': '10.0',
             'cadence_units': 'minute',
-            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/D',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/D'
+            ],
             'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/CGM',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
-            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation'
+            ],
         },
         {
             'name': 'Signal Strength',
@@ -354,10 +358,14 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
             'cadence': '120.0',
             'cadence_units': 'year',
-            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/E',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/E'
+            ],
             'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/GEOcartesian',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
-            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Derived',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Derived'
+            ],
         },
     ],
     'data_levels': [
@@ -458,10 +466,14 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
             'cadence': '10.0',
             'cadence_units': 'minute',
-            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/D',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/D'
+            ],
             'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/CGM',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
-            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation'
+            ],
         },
         {
             'name': 'Signal Strength',
@@ -470,10 +482,14 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
             'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
             'cadence': '10.0',
             'cadence_units': 'minute',
-            'vector_representation': 'https://metadata.pithia.eu/ontology/2.2/component/D',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/D'
+            ],
             'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/CGM',
             'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
-            'qualifier': 'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation'
+            ],
         },
     ],
     'data_levels': ['https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V'],
