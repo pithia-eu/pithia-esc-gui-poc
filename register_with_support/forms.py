@@ -332,6 +332,10 @@ class AcquisitionEditorForm(
     pass
 
 
+class ComputationCapabilitiesEditorForm(BaseEditorForm):
+    pass
+
+
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

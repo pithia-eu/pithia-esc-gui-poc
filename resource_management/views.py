@@ -204,6 +204,7 @@ class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:computation_capability_set'
     resource_update_page_url_name = 'update:computation_capability_set'
     resource_register_page_url_name = 'register:computation_capability_set'
+    resource_register_with_editor_name = 'register:computation_capability_set_with_editor'
     resource_xml_download_page_url_name = 'utils:view_computation_capability_set_as_xml'
 
 class ComputationManagementListView(ResourceManagementListView):

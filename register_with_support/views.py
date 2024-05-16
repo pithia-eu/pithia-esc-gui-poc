@@ -786,6 +786,22 @@ class AcquisitionRegisterWithoutFormView(
         return kwargs
 
 
+class ComputationCapabilitiesRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:computation_capability_set_with_editor')
+    form_class = ComputationCapabilitiesEditorForm
+    template_name = 'register_with_support/computation_capabilities_editor.html'
+
+    model = models.ComputationCapabilities
+    metadata_builder_class = ComputationCapabilitiesMetadata
+    file_upload_registration_url = reverse_lazy('register:computation_capability_set')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.ComputationCapabilities.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
+
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView

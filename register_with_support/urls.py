@@ -11,5 +11,6 @@ urlpatterns = [
     path('instrument-wizard/', views.InstrumentRegisterWithoutFormView.as_view(), name='instrument_with_editor'),
     path('acquisition-capabilities-wizard/', views.AcquisitionCapabilitiesRegisterWithoutFormView.as_view(), name='acquisition_capability_set_with_editor'),
     path('acquisition-wizard/', views.AcquisitionRegisterWithoutFormView.as_view(), name='acquisition_with_editor'),
+    path('computation-capabilities-wizard/', views.ComputationCapabilitiesRegisterWithoutFormView.as_view(), name='computation_capability_set_with_editor'),
     path('workflow-wizard/', views.WorkflowRegisterWithoutFormView.as_view(), name='workflow_with_editor'),
 ]
