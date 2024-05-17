@@ -36,19 +36,28 @@ def process_hours_of_service_in_form(form_cleaned_data):
         print('An error occurred when trying to process hours of service.')
         return ''
 
-def process_documentation(form_cleaned_data):
+def _process_citation(
+    form_cleaned_data,
+    citation_title_key='citation_title',
+    citation_date_key='citation_publication_date',
+    ci_linkage_url_key='citation_linkage_url',
+    other_citation_details_key='other_citation_details',
+    doi_key='citation_doi'):
     return {
-        'citation_title': form_cleaned_data.get('citation_title'),
-        'citation_date': form_cleaned_data.get('citation_publication_date'),
+        'citation_title': form_cleaned_data.get(citation_title_key),
+        'citation_date': form_cleaned_data.get(citation_date_key),
         # CI_DateTypeCode values are normally the values
         # used below.
         'ci_date_type_code': 'Publication Date',
         'ci_date_type_code_code_list': '',
         'ci_date_type_code_code_list_value': '',
-        'ci_linkage_url': form_cleaned_data.get('citation_linkage_url'),
-        'other_citation_details': form_cleaned_data.get('other_citation_details'),
-        'doi': form_cleaned_data.get('citation_doi'),
+        'ci_linkage_url': form_cleaned_data.get(ci_linkage_url_key),
+        'other_citation_details': form_cleaned_data.get(other_citation_details_key),
+        'doi': form_cleaned_data.get(doi_key),
     }
+
+def process_documentation(form_cleaned_data):
+    return _process_citation(form_cleaned_data)
 
 def process_project_keywords(form_cleaned_data):
     keywords_from_form = form_cleaned_data.get('keywords_json', [])
@@ -222,3 +231,13 @@ def process_processing_output(form_cleaned_data):
         'name': form_cleaned_data.get('processing_output_name'),
         'description': form_cleaned_data.get('processing_output_description'),
     }
+
+def process_software_reference(form_cleaned_data):
+    return _process_citation(
+        form_cleaned_data,
+        citation_title_key='software_reference_citation_title',
+        citation_date_key='software_reference_citation_publication_date',
+        ci_linkage_url_key='software_reference_citation_linkage_url',
+        other_citation_details_key='software_reference_other_citation_details',
+        doi_key='software_reference_citation_doi'
+    )

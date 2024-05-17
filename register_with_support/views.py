@@ -832,6 +832,7 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
         processed_form['processing_inputs'] = process_processing_inputs(form_cleaned_data)
         processed_form['processing_output'] = process_processing_output(form_cleaned_data)
+        processed_form['software_reference'] = process_software_reference(form_cleaned_data)
         
         return processed_form
 

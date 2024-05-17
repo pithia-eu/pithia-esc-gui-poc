@@ -320,14 +320,18 @@ class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
 
 class ComputationCapabilitiesMetadata(
     CapabilitiesMetadataComponent,
+    CitationPropertyTypeMetadataComponent,
     DataLevelMetadataComponent,
     DescriptionMetadataComponent,
+    GCOCharacterStringMetadataComponent,
     IdentifierMetadataComponent,
     InputOutputMetadataComponent,
     NameMetadataComponent,
     TypeMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(ComputationCapabilities.root_element_name, nsmap_extensions={
+            NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
@@ -338,7 +342,7 @@ class ComputationCapabilitiesMetadata(
         self.append_data_levels(properties['data_levels'])
         self.append_type(properties['type'])
         self.append_version(properties['version'])
-        self.append_unused_software_reference()
+        self.append_software_reference(properties['software_reference'])
         self.append_processing_inputs(properties['processing_inputs'])
         self.append_processing_output(properties['processing_output'])
         self.append_unused_algorithm()
@@ -357,6 +361,9 @@ class ComputationCapabilitiesMetadata(
         if not processing_output:
             return
         self._append_parameter(self.root, processing_output, 'processingOutput')
+
+    def append_software_reference(self, software_reference):
+        self._append_citation(self.root, software_reference, 'softwareReference')
 
     def append_unused_software_reference(self):
         etree.SubElement(self.root, 'softwareReference')
