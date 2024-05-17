@@ -1,12 +1,12 @@
 import {
-    DynamicEditorTable,
-} from "/static/register_with_support/components/table_utils.js";
+    DynamicEditorTableWithTextArea,
+} from "/static/register_with_support/components/table_with_dynamic_textareas.js";
 import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 
 
-class OperationalModesTable extends DynamicEditorTable {
+class OperationalModesTable extends DynamicEditorTableWithTextArea {
     constructor() {
         super(
             "#table-operational-modes",
@@ -16,6 +16,19 @@ class OperationalModesTable extends DynamicEditorTable {
             "#operational-mode-row-content-template",
             "input[name='operational_modes_json']"
         );
+    }
+
+    setupNewRowEventListeners(newRow) {
+        super.setupNewRowEventListeners(newRow);
+ 
+        this.setupDynamicTextAreaForNewRow(newRow, "textarea[name='operational_mode_description']");
+        const fields = Array.from(newRow.querySelectorAll("input[name='operational_mode_id'], input[name='operational_mode_name'], textarea[name='operational_mode_description']"));
+        fields.forEach(field => {
+            field.addEventListener("input", () => {
+                checkAndSetRequiredAttributesForFields(fields);
+                this.exportTableDataToJsonAndStoreInOutputElement();
+            });
+        });
     }
 
     exportTableData() {
@@ -31,38 +44,6 @@ class OperationalModesTable extends DynamicEditorTable {
             });
         });
         return operationalModeObjects;
-    }
-
-    setupOperationalModeDescriptionTextareaForNewRow(newRow) {
-        const operationalModeDescriptionTextarea = newRow.querySelector("textarea[name='operational_mode_description']");
-        const operationalModeDescriptionDiv = newRow.querySelector("textarea[name='operational_mode_description'] ~ div");
-    
-        operationalModeDescriptionTextarea.addEventListener("focus", () => {
-            operationalModeDescriptionTextarea.style.height = operationalModeDescriptionTextarea.scrollHeight + "px";
-        });
-        
-        operationalModeDescriptionTextarea.addEventListener("input", () => {
-            operationalModeDescriptionTextarea.style.height = operationalModeDescriptionTextarea.scrollHeight + "px";
-            operationalModeDescriptionDiv.innerHTML = operationalModeDescriptionTextarea.value;
-            this.exportTableDataToJsonAndStoreInOutputElement();
-        });
-        
-        operationalModeDescriptionTextarea.addEventListener("blur", () => {
-            operationalModeDescriptionTextarea.removeAttribute("style");
-        });
-    }
-
-    setupNewRowEventListeners(newRow) {
-        super.setupNewRowEventListeners(newRow);
- 
-        this.setupOperationalModeDescriptionTextareaForNewRow(newRow);
-        const fields = Array.from(newRow.querySelectorAll("input[name='operational_mode_id'], input[name='operational_mode_name'], textarea[name='operational_mode_description']"));
-        fields.forEach(field => {
-            field.addEventListener("input", () => {
-                checkAndSetRequiredAttributesForFields(fields);
-                this.exportTableDataToJsonAndStoreInOutputElement();
-            });
-        });
     }
 
     loadPreviousData() {

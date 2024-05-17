@@ -374,6 +374,12 @@ class ComputationCapabilitiesEditorForm(
         })
     )
 
+    processing_inputs_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
     processing_output_name = forms.CharField(
         label='Name',
         required=False,

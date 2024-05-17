@@ -426,6 +426,8 @@ class InputOutputMetadataComponent(BaseMetadataComponent):
     def _append_parameter(self, parent_element, parameter, element_name):
         if not parameter:
             return
+        if not parameter.get('description'):
+            return
         # Container element
         input_description_container_element = etree.SubElement(parent_element, element_name)
         # Contents

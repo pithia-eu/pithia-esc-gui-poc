@@ -830,6 +830,8 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
         processed_form['capabilities'] = process_capabilities(form_cleaned_data)
         processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
+        processed_form['processing_inputs'] = process_processing_inputs(form_cleaned_data)
+        processed_form['processing_output'] = process_processing_output(form_cleaned_data)
         
         return processed_form
 
@@ -839,6 +841,10 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         context['citation_section_description'] = 'Reference to documentation describing the component.'
         context['capabilities_tab_content_template'] = render_to_string(
             'register_with_support/components/capabilities_tab_content_template.html',
+            context=context
+        )
+        context['processing_input_row_content_template'] = render_to_string(
+            'register_with_support/components/computation_capabilities/processing_input_row_content_template.html',
             context=context
         )
         return context

@@ -949,18 +949,18 @@ a.support-link {
     padding-block: 1rem;
 }
 
-#table-operational-modes textarea {
+.table-dynamic textarea {
     opacity: 0;
     height: 1rem;
     resize: none;
     max-height: 20rem;
 }
 
-#table-operational-modes textarea:focus {
+.table-dynamic textarea:focus {
     opacity: 100%;
 }
 
-.operational-mode-description-div {
+.textarea-facade {
     position: absolute;
     border-width: 1px;
     overflow: hidden;
@@ -973,7 +973,7 @@ a.support-link {
     border-radius: var(--bs-border-radius);
 }
 
-#table-operational-modes textarea:focus ~ .operational-mode-description-div {
+.table-dynamic textarea:focus ~ .textarea-facade {
     display: none;
 }
 

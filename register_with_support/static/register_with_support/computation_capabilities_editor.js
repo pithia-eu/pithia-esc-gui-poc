@@ -17,8 +17,12 @@ import {
 import {
     setupRelatedPartiesTable,
 } from "/static/register_with_support/components/related_parties_table.js";
+import {
+    setupProcessingInputsTable,
+} from "/static/register_with_support/components/computation_capabilities/processing_inputs_table.js";
 
 let relatedPartiesTable;
+let processingInputsTable;
 
 
 function prepareFormForSubmission() {
@@ -37,6 +41,7 @@ window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
+    processingInputsTable = setupProcessingInputsTable();
     setupCapabilitiesTab();
     setupQualityAssessmentSection();
 });

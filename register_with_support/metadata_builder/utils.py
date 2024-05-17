@@ -212,3 +212,13 @@ def process_acquisition_capability_links(form_cleaned_data):
             'time_spans': _process_time_spans(cl.get('timeSpans')),
         })
     return capability_link_dict_list
+
+def process_processing_inputs(form_cleaned_data):
+    processing_inputs_from_form = form_cleaned_data.get('processing_inputs_json')
+    return remove_blank_dicts_from_dict_list(processing_inputs_from_form)
+
+def process_processing_output(form_cleaned_data):
+    return {
+        'name': form_cleaned_data.get('processing_output_name'),
+        'description': form_cleaned_data.get('processing_output_description'),
+    }
