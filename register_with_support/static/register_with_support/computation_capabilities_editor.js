@@ -20,6 +20,9 @@ import {
 import {
     setupProcessingInputsTable,
 } from "/static/register_with_support/components/computation_capabilities/processing_inputs_table.js";
+import {
+    setupProcessingOutputSection,
+} from "/static/register_with_support/components/computation_capabilities/processing_output_section.js";
 
 let relatedPartiesTable;
 let processingInputsTable;
@@ -42,6 +45,7 @@ window.addEventListener("load", () => {
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
     processingInputsTable = setupProcessingInputsTable();
+    setupProcessingOutputSection();
     setupCapabilitiesTab();
     setupQualityAssessmentSection();
 });
