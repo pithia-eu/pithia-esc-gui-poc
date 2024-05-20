@@ -8,6 +8,14 @@
                 Processing Inputs
             </h3>
         </div>
+        <div class="col-xl-7 col-lg-8">
+            <p class="mb-0">
+                Description of a required input of Computation. The description does not
+                involve the values of the input data. The actual values, if required, shall
+                be stored in Data Collection, as they are specific to the event of the
+                observation and not to the applied process.
+            </p>
+        </div>
         <div class="col-lg-12">
             {% include 'register_with_support/components/computation_capabilities/processing_inputs_table.html' %}
         </div>
@@ -15,6 +23,12 @@
             <h3 class="text-secondary fs-5 mb-0 mt-4">
                 Processing Output
             </h3>
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            <p class="mb-0">
+                Description of Computation output. The description does not involve the
+                actual values of the output data.
+            </p>
         </div>
         <div class="col-xl-7 col-lg-8">
             {% with field=form.processing_output_name %}
