@@ -204,7 +204,7 @@ def _process_time_spans(time_spans):
 def remove_blank_dicts_from_dict_list(dict_list):
     return [d for d in dict_list if any(value for value in list(d.values()))]
 
-def process_acquisition_capability_links(form_cleaned_data):
+def _process_capability_links(form_cleaned_data, capabilities_output_key):
     capability_links_from_form = form_cleaned_data.get('capability_links_json')
     capability_link_dict_list = []
     for cl in capability_links_from_form:
@@ -216,11 +216,18 @@ def process_acquisition_capability_links(form_cleaned_data):
             continue
         capability_link_dict_list.append({
             'platforms': cl.get('platforms'),
-            'acquisition_capabilities': cl.get('acquisitionCapabilities'),
+            capabilities_output_key: cl.get('capabilities'),
             'standard_identifiers': cl.get('standardIdentifiers'),
             'time_spans': _process_time_spans(cl.get('timeSpans')),
         })
     return capability_link_dict_list
+
+def process_acquisition_capability_links(form_cleaned_data):
+    return _process_capability_links(form_cleaned_data, 'acquisition_capabilities')
+
+def process_computation_capability_links(form_cleaned_data):
+    return _process_capability_links(form_cleaned_data, 'computation_capabilities')
+    
 
 def process_processing_inputs(form_cleaned_data):
     processing_inputs_from_form = form_cleaned_data.get('processing_inputs_json')

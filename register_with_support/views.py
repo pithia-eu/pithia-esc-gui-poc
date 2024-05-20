@@ -781,7 +781,7 @@ class AcquisitionRegisterWithoutFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
-        kwargs['acquisition_capability_set_choices'] = self.get_acquisition_capability_sets_for_form()
+        kwargs['capability_set_choices'] = self.get_acquisition_capability_sets_for_form()
         kwargs['platform_choices'] = self.get_platform_choices_for_form()
         return kwargs
 
@@ -898,7 +898,7 @@ class ComputationRegisterWithoutFormView(
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
-        processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
+        processed_form['capability_links'] = process_computation_capability_links(form_cleaned_data)
 
         return processed_form
 
@@ -922,7 +922,7 @@ class ComputationRegisterWithoutFormView(
         kwargs = super().get_form_kwargs()
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['platform_choices'] = self.get_platform_choices_for_form()
-        kwargs['computation_capability_set_choices'] = self.get_computation_capability_set_choices_for_form()
+        kwargs['capability_set_choices'] = self.get_computation_capability_set_choices_for_form()
         return kwargs
 
 

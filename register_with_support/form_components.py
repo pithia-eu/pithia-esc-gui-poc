@@ -488,10 +488,10 @@ class TimePeriodEditorFormComponent(forms.Form):
 
 
 class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
-    def __init__(self, *args, platform_choices=(), acquisition_capability_set_choices=(), **kwargs):
+    def __init__(self, *args, platform_choices=(), capability_set_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['capability_link_platform'].choices = platform_choices
-        self.fields['capability_link_acquisition_capabilities'].choices = acquisition_capability_set_choices
+        self.fields['capability_link_capabilities'].choices = capability_set_choices
 
     capability_link_platform = forms.MultipleChoiceField(
         label='Platform',
@@ -501,8 +501,8 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         })
     )
 
-    capability_link_acquisition_capabilities = forms.ChoiceField(
-        label='Acquisition Capabilities',
+    capability_link_capabilities = forms.ChoiceField(
+        label='',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',

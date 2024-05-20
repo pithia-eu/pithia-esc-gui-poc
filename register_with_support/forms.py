@@ -329,7 +329,9 @@ class AcquisitionEditorForm(
     OrganisationEditorFormComponent,
     CapabilityLinkEditorFormComponent,
 ):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['capability_link_capabilities'].label = 'Acquisition Capabilities'
 
 
 class ComputationCapabilitiesEditorForm(
@@ -442,7 +444,9 @@ class ComputationEditorForm(
     BaseEditorForm,
     OrganisationEditorFormComponent,
     CapabilityLinkEditorFormComponent):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['capability_link_capabilities'].label = 'Computation Capabilities'
 
 
 class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):

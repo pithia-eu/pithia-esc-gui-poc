@@ -14,7 +14,7 @@ import {
 
 function updateTabPaneConditionalRequiredFieldStates(tabPane) {
     // Required fields
-    const requiredFieldSelector = "select[name='capability_link_acquisition_capabilities']";
+    const requiredFieldSelector = "select[name='capability_link_capabilities']";
     
     // Optional related fields that affect
     // whether the required field attributes
@@ -86,7 +86,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
             const platformSelectedOptions = Array.from(platformSelect.selectedOptions);
             capabilityLinks.push({
                 platforms: platformSelectedOptions.map(option => option.value),
-                acquisitionCapabilities: tabPane.querySelector("select[name='capability_link_acquisition_capabilities']").value,
+                capabilities: tabPane.querySelector("select[name='capability_link_capabilities']").value,
                 standardIdentifiers: tabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value,
                 timeSpans: tabPane.querySelector("input[name='capability_link_time_spans_json']").value,
             });
@@ -112,7 +112,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
                     correspondingOption.selected = true;
                 }
             });
-            correspondingTabPane.querySelector("select[name='capability_link_acquisition_capabilities']").value = capabilityLink.acquisitionCapabilities;
+            correspondingTabPane.querySelector("select[name='capability_link_capabilities']").value = capabilityLink.capabilities;
             correspondingTabPane.querySelector("input[name='capability_link_standard_identifiers_json']").value = capabilityLink.standardIdentifiers;
             correspondingTabPane.querySelector("input[name='capability_link_time_spans_json']").value = capabilityLink.timeSpans;
             if (i !== 0) {
