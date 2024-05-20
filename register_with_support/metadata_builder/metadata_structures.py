@@ -326,8 +326,7 @@ class ComputationCapabilitiesMetadata(
     GCOCharacterStringMetadataComponent,
     IdentifierMetadataComponent,
     InputOutputMetadataComponent,
-    NameMetadataComponent,
-    TypeMetadataComponent):
+    NameMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(ComputationCapabilities.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
@@ -340,12 +339,19 @@ class ComputationCapabilitiesMetadata(
         self.append_description(properties['description'])
         self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
-        self.append_type(properties['type'])
+        self.append_types(properties['type'])
         self.append_version(properties['version'])
         self.append_software_reference(properties['software_reference'])
         self.append_processing_inputs(properties['processing_inputs'])
         self.append_processing_output(properties['processing_output'])
         self.append_unused_algorithm()
+
+    def append_types(self, types):
+        for type in types:
+            type_element_attributes = {
+                '{%s}href' % Namespace.XLINK: type,
+            }
+            etree.SubElement(self.root, 'type', **type_element_attributes)
 
     def append_version(self, version):
         if not version:
