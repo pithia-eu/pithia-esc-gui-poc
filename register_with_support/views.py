@@ -872,6 +872,60 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         return kwargs
 
 
+class ComputationRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    PlatformSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:computation_with_editor')
+    form_class = ComputationEditorForm
+    template_name = 'register_with_support/computation_editor.html'
+
+    model = models.Computation
+    metadata_builder_class = ComputationMetadata
+    file_upload_registration_url = reverse_lazy('register:computation')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Computation.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
+
+    def get_computation_capability_set_choices_for_form(self):
+        computation_capability_sets = ComputationCapabilities.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(ccs.metadata_server_url, ccs.name) for ccs in computation_capability_sets],
+        )
+
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+
+        processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
+
+        return processed_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['capability_links_tab_pane_content_template'] = render_to_string(
+            'register_with_support/components/capability_links_tab_pane_content_template.html',
+            context=context
+        )
+        context['capability_link_standard_identifier_row_content_template'] = render_to_string(
+            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
+            context=context
+        )
+        context['capability_link_time_span_row_content_template'] = render_to_string(
+            'register_with_support/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
+            context=context
+        )
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['platform_choices'] = self.get_platform_choices_for_form()
+        kwargs['computation_capability_set_choices'] = self.get_computation_capability_set_choices_for_form()
+        return kwargs
+
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView

@@ -213,6 +213,7 @@ class ComputationManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:computation'
     resource_update_page_url_name = 'update:computation'
     resource_register_page_url_name = 'register:computation'
+    resource_register_with_editor_name = 'register:computation_with_editor'
     resource_xml_download_page_url_name = 'utils:view_computation_as_xml'
 
 class ProcessManagementListView(ResourceManagementListView):
