@@ -384,6 +384,7 @@ class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
 
     def __init__(self, properties) -> None:
         super().__init__(Computation.root_element_name, nsmap_extensions={
+            NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'])
