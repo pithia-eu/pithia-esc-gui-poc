@@ -926,6 +926,13 @@ class ComputationRegisterWithoutFormView(
         return kwargs
 
 
+class ProcessRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    pass
+
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
