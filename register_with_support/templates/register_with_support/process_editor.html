@@ -1,3 +1,53 @@
 {% extends 'register_with_support/components/base_editor.html' %}
-{% block form_content %}{% endblock form_content %}
-{% block table_of_contents %}{% endblock table_of_contents %}
+{% block form_content %}
+{% include 'register_with_support/components/name_and_organisation_section.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/identifier.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/description.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/data_levels.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/quality_assessment.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/capabilities.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/citation.html' %}
+{% endblock form_content %}
+{% block table_of_contents %}
+<li class="list-group-item">
+    <a href="#name-and-organisation-section">
+        Full Name and Organisation
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#identifier-section">
+        Identifier
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#description-section">
+        Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#data-levels-section">
+        Data Levels
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#quality-assessments-section">
+        Quality Asssessments
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#capabilities-section">
+        Capabilities
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#citation-section">
+        Documentation
+    </a>
+</li>
+{% endblock table_of_contents %}
