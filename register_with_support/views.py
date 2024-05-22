@@ -933,7 +933,11 @@ class ComputationRegisterWithoutFormView(
 
 
 class ProcessRegisterWithoutFormView(
+    CapabilitiesSelectFormViewMixin,
+    DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
+    QualityAssessmentSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:process_with_editor')
@@ -946,6 +950,16 @@ class ProcessRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
+        context['citation_section_description'] = 'Reference to documentation describing the component.'
+        context['capabilities_tab_content_template'] = render_to_string(
+            'register_with_support/components/capabilities_tab_content_template.html',
+            context=context
+        )
+        return context
 
 
 class WorkflowRegisterWithoutFormView(
