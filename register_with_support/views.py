@@ -78,6 +78,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         context['success_url'] = self.success_url
         context['localid_base'] = self.model.localid_base
         context['title'] = f'New {self.model.type_readable.title()}'
+        context['metadata_type_readable'] = self.model.type_readable.title()
         context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
@@ -165,6 +166,11 @@ class ResourceRegisterWithEditorFormView(FormView):
         self.institution_id = get_institution_id_for_login_session(request.session)
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['form_metadata_type'] = self.model.type_readable.title()
+        return form_kwargs
 
 class CapabilitiesSelectFormViewMixin(View):
     def get_observed_property_choices_for_form(self):
@@ -272,7 +278,7 @@ class OrganisationSelectFormViewMixin(View):
     def get_organisation_choices_for_form(self):
         return (
             ('', ''),
-            *[(o.metadata_server_url, o.name) for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+            *[(o.metadata_server_url, f'{o.name} ({o.short_name.lower()})') for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
 class PlatformSelectFormViewMixin(View):

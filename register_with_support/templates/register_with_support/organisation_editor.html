@@ -6,11 +6,7 @@
 {% endblock extra_scripts %}
 {% block form_content %}
 <section id="name-section" class="d-flex flex-column row-gap-4">
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>Name</h2>
-        </div>
-    </div>
+    <h2 class="visually-hidden">Full Name and Short Name</h2>
     <div class="row">
         <div class="col-xl-7 col-lg-8">
             {% with field=form.name %}
@@ -100,7 +96,7 @@
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
-    <a href="#name-section">Name</a>
+    <a href="#name-section">Full Name and Short Name</a>
 </li>
 <li class="list-group-item">
     <a href="#localid-section">Local ID</a>
