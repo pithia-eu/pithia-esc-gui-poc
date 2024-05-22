@@ -451,8 +451,26 @@ class ProcessEditorForm(
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, acquisition_choices=(), computation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['acquisitions'].choices = acquisition_choices
+        self.fields['computations'].choices = computation_choices
+
+    acquisitions = forms.MultipleChoiceField(
+        label='Acquisition Components',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    computations = forms.MultipleChoiceField(
+        label='Computation Components',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
 
 
 class WorkflowEditorForm(BaseEditorForm):

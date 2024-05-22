@@ -951,6 +951,20 @@ class ProcessRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
+    def get_acquisition_choices_for_form(self):
+        acquisitions = Acquisition.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(a.metadata_server_url, a.name) for a in acquisitions],
+        )
+
+    def get_computation_choices_for_form(self):
+        computations = Computation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        return (
+            ('', ''),
+            *[(c.metadata_server_url, c.name) for c in computations],
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
@@ -960,6 +974,12 @@ class ProcessRegisterWithoutFormView(
             context=context
         )
         return context
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['acquisition_choices'] = self.get_acquisition_choices_for_form()
+        form_kwargs['computation_choices'] = self.get_computation_choices_for_form()
+        return form_kwargs
 
 
 class WorkflowRegisterWithoutFormView(
