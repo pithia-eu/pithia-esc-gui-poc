@@ -444,6 +444,17 @@ class ComputationEditorForm(
         self.fields['capability_link_capabilities'].label = 'Computation Capabilities'
 
 
+class ProcessEditorForm(
+    BaseEditorForm,
+    CapabilitiesFormComponent,
+    CitationDocumentationEditorFormComponent,
+    DataLevelFormComponent,
+    QualityAssessmentFormComponent,
+    RelatedPartiesEditorFormComponent):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

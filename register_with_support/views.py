@@ -936,7 +936,16 @@ class ProcessRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
-    pass
+    success_url = reverse_lazy('register:process_with_editor')
+    form_class = ProcessEditorForm
+    template_name = 'register_with_support/process_editor.html'
+
+    model = models.Process
+    metadata_builder_class = ProcessMetadata
+    file_upload_registration_url = reverse_lazy('register:process')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
 
 class WorkflowRegisterWithoutFormView(
