@@ -3,11 +3,25 @@ from django_countries import countries
 
 
 # Base components
+
+class OrganisationSelect(forms.Select):
+    def create_option(self, *args, **kwargs):
+        option = super().create_option(*args, **kwargs)
+        if not option.get('value'):
+            option['attrs']['disabled'] = 'disabled'
+
+        return option
+
+
 class BaseEditorForm(forms.Form):
     required_css_class = 'required'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, form_metadata_type='', organisation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
+        self.form_metadata_type = form_metadata_type
+        self.fields['name'].label = f'{self.form_metadata_type} {self.fields["name"].label}'
+        self.fields['organisation'].label = f'Organisation Associated With the {self.form_metadata_type}'
+        self.fields['organisation'].choices = organisation_choices
         self.label_suffix = ''
         for field in self.fields.values():
             if not 'class' in field.widget.attrs:
@@ -47,19 +61,12 @@ class BaseEditorForm(forms.Form):
         })
     )
 
-
-class OrganisationSelect(forms.Select):
-    def create_option(self, *args, **kwargs):
-        option = super().create_option(*args, **kwargs)
-        if not option.get('value'):
-            option['attrs']['disabled'] = 'disabled'
-
-        return option
-
-class OrganisationEditorFormComponent(forms.Form):
-    def __init__(self, *args, organisation_choices=(), **kwargs):
-        super(OrganisationEditorFormComponent, self).__init__(*args, **kwargs)
-        self.fields['organisation'].choices = organisation_choices
+    identifier_version = forms.CharField(
+        label='Version',
+        required=True,
+        widget=forms.TextInput(),
+        help_text='The version number of the object being identified.'
+    )
 
     organisation = forms.ChoiceField(
         choices=(),
@@ -70,7 +77,7 @@ class OrganisationEditorFormComponent(forms.Form):
                 'class': 'form-select',
             }
         ),
-        help_text='The chosen organisation\'s short name will be used as this registration\'s namespace.'
+        help_text='The chosen organisation\'s short name will be used as this registration\'s namespace. Note: This is not necessarily the same as the institution that you are logged in with.'
     )
 
 
