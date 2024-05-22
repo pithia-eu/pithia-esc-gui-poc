@@ -47,6 +47,13 @@ class BaseEditorForm(forms.Form):
         })
     )
 
+    identifier_version = forms.CharField(
+        label='Version',
+        required=True,
+        widget=forms.TextInput(),
+        help_text='The version number of the object being identified.'
+    )
+
 
 class OrganisationSelect(forms.Select):
     def create_option(self, *args, **kwargs):
