@@ -455,6 +455,23 @@ summary.data-collection-category::marker {
     font-size: 0.875rem;
 }
 
+.resource-key-details {
+    padding-block: 0.5rem;
+}
+
+.resource-key-details tr:first-of-type td {
+    padding-top: 1.25rem;
+}
+
+.resource-key-details tr:last-of-type td {
+    padding-bottom: 1.25rem;
+}
+
+.resource-key-details td {
+    padding-block: 0.75rem;
+    padding-inline: 1rem;
+}
+
 .resource-description {
     /* font-family: 'Times New Roman', Times, serif; */
     font-size: 1.1rem;

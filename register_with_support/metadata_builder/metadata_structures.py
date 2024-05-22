@@ -27,7 +27,7 @@ class OrganisationMetadata(ContactInfoMetadataComponent, DescriptionMetadataComp
         super().__init__(Organisation.root_element_name, nsmap_extensions={
             NamespacePrefix.GCO: Namespace.GCO,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_contact_info(properties['contact_info'])
         self.append_short_name(properties['short_name'])
@@ -40,7 +40,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, DescriptionMetadataCompon
             NamespacePrefix.GCO: Namespace.GCO,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_contact_info(properties['contact_info'])
         self.append_organisation(properties['organisation'])
@@ -63,7 +63,7 @@ class ProjectMetadata(DescriptionMetadataComponent, DocumentationMetadataCompone
             NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_short_name(properties['short_name'])
         self.append_abstract(properties['abstract'])
@@ -104,7 +104,7 @@ class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataCompon
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_short_name(properties['short_name'])
         self.append_standard_identifiers(self.root, properties['standard_identifiers'])
@@ -139,7 +139,7 @@ class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, Doc
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_location(properties['location'])
@@ -190,7 +190,7 @@ class InstrumentMetadata(DescriptionMetadataComponent, DocumentationMetadataComp
             NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_version(properties['version'])
@@ -260,7 +260,7 @@ class AcquisitionCapabilitiesMetadata(
             NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_documentation(properties['documentation'])
@@ -312,7 +312,7 @@ class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_capability_links(properties['capability_links'])
@@ -334,7 +334,7 @@ class ComputationCapabilitiesMetadata(
             NamespacePrefix.MRL: Namespace.MRL,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_capabilities(properties['capabilities'])
@@ -387,7 +387,7 @@ class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_capability_links(properties['capability_links'])
@@ -398,7 +398,7 @@ class ProcessMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, 
         super().__init__(Process.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_data_levels(properties['data_levels'])
@@ -431,7 +431,7 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
         self.append_process(properties['process'])
         self.append_unused_observed_property()
         self.append_features_of_interest(properties['features_of_interest'])
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_type(properties['type'])
@@ -495,7 +495,7 @@ class CatalogueMetadata(DescriptionMetadataComponent, IdentifierMetadataComponen
         super().__init__(Catalogue.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_catalogue_category(properties['catalogue_category'])
@@ -513,7 +513,7 @@ class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataC
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_entry_name(properties['entry_name'])
         self.append_entry_description(properties['entry_description'])
         self.append_phenomenon_time(properties['phenomenon_time'])
@@ -544,7 +544,7 @@ class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetad
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_data_subset_name(properties['data_subset_name'])
         self.append_data_subset_description(properties['data_subset_description'])
         self.append_data_collection(properties['data_collection'])
@@ -585,7 +585,7 @@ class WorkflowMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent
         super().__init__(Workflow.root_element_name, nsmap_extensions={
             'xlink': Namespace.XLINK,
         })
-        self.append_identifier(properties['localid'], properties['namespace'])
+        self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
         self.append_data_collections(properties['data_collections'])
