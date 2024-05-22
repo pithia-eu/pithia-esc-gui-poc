@@ -33,6 +33,10 @@
     <script src="{% static 'utils/custom_select_initialiser.js' %}" type="module" defer></script>
     {% block styles %}{% endblock styles %}
     {% block scripts %}{% endblock scripts %}
+    <script>
+        /* To prevent Firefox FOUC, this must be here */
+        let FF_FOUC_FIX;
+    </script>
 </head>
 <body>
     <div class="header-wrapper">

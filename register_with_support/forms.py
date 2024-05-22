@@ -5,18 +5,19 @@ from .form_components import *
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['short_name'].label = f'{self.form_metadata_type} {self.fields["short_name"].label}'
         self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. If there is another organisation sharing the same short name, a more complex local ID will be generated.'
         self.fields['namespace'].widget = forms.HiddenInput()
 
     short_name = forms.CharField(
-        label="Short Name",
+        label='Short Name',
         required=True,
         widget=forms.TextInput(),
         help_text='This will be used to automatically generate this registration\'s local ID suffix and will also be used as the namespace for future registrations associated with this organisation.'
     )
 
 
-class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent, OrganisationEditorFormComponent):
+class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super(IndividualEditorForm, self).__init__(*args, **kwargs)
         self.fields['online_resource'].label = 'Link to Organisation Website/Staff Page'
@@ -24,12 +25,12 @@ class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent, Organ
 
 class ProjectEditorForm(
     BaseEditorForm,
-    OrganisationEditorFormComponent,
     CitationDocumentationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
     StatusEditorFormComponent):
     def __init__(self, *args, **kwargs):
         super(ProjectEditorForm, self).__init__(*args, **kwargs)
+        self.fields['short_name'].label = f'{self.form_metadata_type} {self.fields["short_name"].label}'
         self.fields['description'].label = 'Additional Description'
 
     short_name = forms.CharField(
@@ -82,12 +83,12 @@ class ProjectEditorForm(
 class PlatformEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
-    OrganisationEditorFormComponent,
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent):
 
     def __init__(self, *args, type_choices=(), child_platform_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['short_name'].label = f'{self.form_metadata_type} {self.fields["short_name"].label}'
         self.fields['type'].choices = type_choices
         self.fields['child_platforms'].choices = child_platform_choices
 
@@ -140,7 +141,6 @@ class PlatformEditorForm(
 
 class OperationEditorForm(
     BaseEditorForm,
-    OrganisationEditorFormComponent,
     CitationDocumentationEditorFormComponent,
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
@@ -200,7 +200,6 @@ class OperationEditorForm(
 
 class InstrumentEditorForm(
     BaseEditorForm,
-    OrganisationEditorFormComponent,
     CitationDocumentationEditorFormComponent,
     RelatedPartiesEditorFormComponent
 ):
@@ -269,7 +268,6 @@ class AcquisitionCapabilitiesEditorForm(
     CapabilitiesFormComponent,
     CitationDocumentationEditorFormComponent,
     DataLevelFormComponent,
-    OrganisationEditorFormComponent,
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent
 ):
@@ -326,7 +324,6 @@ class AcquisitionCapabilitiesEditorForm(
 
 class AcquisitionEditorForm(
     BaseEditorForm,
-    OrganisationEditorFormComponent,
     CapabilityLinkEditorFormComponent,
 ):
     pass
@@ -337,7 +334,6 @@ class ComputationCapabilitiesEditorForm(
     CapabilitiesFormComponent,
     CitationDocumentationEditorFormComponent,
     DataLevelFormComponent,
-    OrganisationEditorFormComponent,
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent
 ):
@@ -438,7 +434,7 @@ class ComputationCapabilitiesEditorForm(
     )
 
 
-class WorkflowEditorForm(BaseEditorForm, OrganisationEditorFormComponent):
+class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection_1'].choices = data_collection_choices

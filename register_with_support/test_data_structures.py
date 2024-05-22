@@ -5,6 +5,7 @@ ORGANISATION_PROPERTIES_FULL = {
     'localid': 'Organisation_Test',
     'namespace': 'test',
     'name': 'Organisation Test',
+    'identifier_version': '1',
     'short_name': 'OTD',
     'description': 'Organisation Test description',
     'contact_info': {
@@ -48,6 +49,7 @@ INDIVIDUAL_PROPERTIES_FULL = {
     'localid': 'Individual_Test',
     'namespace': 'test',
     'name': 'Individual Test',
+    'identifier_version': '1',
     'contact_info': {
         'phone': '12345',
         'address': {
@@ -75,6 +77,7 @@ PROJECT_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Project Test',
     'short_name': 'Project Test short name',
+    'identifier_version': '1',
     'description': 'Description',
     'abstract': 'Abstract',
     'url': 'https://www.example.com/',
@@ -144,6 +147,7 @@ PLATFORM_PROPERTIES_FULL = {
     'namespace': 'test',
     'name': 'Platform Test',
     'short_name': 'PT',
+    'identifier_version': '1',
     'standard_identifiers': [
         {
             'authority': 'authority1',
@@ -207,6 +211,7 @@ OPERATION_PROPERTIES_FULL = {
     'localid': 'Operation_Test',
     'namespace': 'test',
     'name': 'Operation Test',
+    'identifier_version': '1',
     'description': 'Operation description',
     'location': {
         'geometry_location': {
@@ -270,6 +275,7 @@ INSTRUMENT_PROPERTIES_FULL = {
     'localid': 'Instrument_Test',
     'namespace': 'test',
     'name': 'Instrument Test',
+    'identifier_version': '1',
     'description': 'Description',
     'version': '1',
     'type': 'https://metadata.pithia.eu/ontology/2.2/instrumentType/AssimilativeModel/',
@@ -323,6 +329,7 @@ ACQUISITION_CAPABILITIES_PROPERTIES_FULL = {
     'localid': 'AcquisitionCapabilities_Test',
     'namespace': 'test',
     'name': 'Acquisition Capabilities Test',
+    'identifier_version': '1',
     'description': 'Description',
     'documentation': {
         'citation_title': 'citation',
@@ -410,6 +417,7 @@ ACQUISITION_PROPERTIES_FULL = {
     'localid': 'Acquisition_Test',
     'namespace': 'test',
     'name': 'Acquisition Test',
+    'identifier_version': '1',
     'description': 'Description',
     'capability_links': [
         {
@@ -457,6 +465,7 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
     'localid': 'ComputationCapabilities_Test',
     'namespace': 'test',
     'name': 'Computation Capabilities Test',
+    'identifier_version': '1',
     'description': 'Description',
     'capabilities': [
         {
@@ -535,6 +544,7 @@ COMPUTATION_PROPERTIES_FULL = {
     'localid': 'Computation_Test',
     'namespace': 'test',
     'name': 'Computation Test',
+    'identifier_version': '1',
     'description': 'Description',
     'capability_links': [
         {
@@ -580,6 +590,7 @@ PROCESS_PROPERTIES_FULL = {
     'localid': 'Process_Test',
     'namespace': 'test',
     'name': 'Process Test',
+    'identifier_version': '1',
     'description': 'Description',
     'data_levels': [
         'https://metadata.pithia.eu/ontology/2.2/dataLevel/L1',
@@ -602,6 +613,7 @@ DATA_COLLECTION_PROPERTIES_FULL = {
     'localid': 'DataCollection_Test',
     'namespace': 'test',
     'name': 'Data Collection Test',
+    'identifier_version': '1',
     'description': 'Description',
     'process': 'https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test',
     'features_of_interest': [
@@ -661,6 +673,7 @@ CATALOGUE_PROPERTIES_FULL = {
     'localid': 'Catalogue_Test',
     'namespace': 'test',
     'name': 'Catalogue Test',
+    'identifier_version': '1',
     'description': 'Description',
     'catalogue_category': 'https://metadata.pithia.eu/ontology/2.2/computationType/Model',
 }
@@ -670,6 +683,7 @@ CATALOGUE_ENTRY_PROPERTIES_FULL = {
     'localid': 'Catalogue_Entry_Test',
     'namespace': 'test',
     'entry_name': 'Catalogue Entry Test',
+    'identifier_version': '1',
     'entry_description': 'Entry description',
     'phenomenon_time': {
         'time_period': {
@@ -695,6 +709,7 @@ CATALOGUE_DATA_SUBSET_PROPERTIES_FULL = {
     'localid': 'Catalogue_Data_Subset_Test',
     'namespace': 'test',
     'data_subset_name': 'Catalogue Data Subset Test',
+    'identifier_version': '1',
     'data_subset_description': 'Catalogue data subset description',
     'data_collection': 'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test',
     'result_time': {
@@ -746,6 +761,7 @@ WORKFLOW_PROPERTIES_FULL = {
     'localid': 'Workflow_Test',
     'namespace': 'test',
     'name': 'Workflow Test',
+    'identifier_version': '3',
     'description': 'Workflow description',
     'data_collections': [
         'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_1',

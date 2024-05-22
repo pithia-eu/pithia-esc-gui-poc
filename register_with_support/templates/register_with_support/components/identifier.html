@@ -26,4 +26,15 @@
             {{ form.namespace }}
         </div>
     </div>
+    <div class="row flex-column gy-2">
+        <div class="col-lg-5">
+            {{ form.identifier_version.label_tag }}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            <small class="d-block text-secondary mb-2">{{ form.identifier_version.help_text }}</small>
+        </div>
+        <div class="col-xl-3 col-lg-4">
+            {{ form.identifier_version }}
+        </div>
+    </div>
 </section>
