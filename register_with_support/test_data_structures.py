@@ -467,6 +467,16 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
     'name': 'Computation Capabilities Test',
     'identifier_version': '1',
     'description': 'Description',
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
     'capabilities': [
         {
             'name': 'Signal Strength',
@@ -502,7 +512,9 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
         },
     ],
     'data_levels': ['https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V'],
-    'type': 'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+    'type': [
+        'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual'
+    ],
     'version': '1',
     'processing_inputs': [
         {
