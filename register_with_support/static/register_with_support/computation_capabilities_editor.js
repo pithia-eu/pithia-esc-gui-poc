@@ -12,6 +12,9 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
+    checkAndSetRequiredAttributesForFields,
+} from "/static/register_with_support/components/conditional_required_fields.js";
+import {
     setupQualityAssessmentSection,
 } from "/static/register_with_support/components/quality_assessment.js";
 import {
@@ -27,9 +30,41 @@ import {
 let relatedPartiesTable;
 let processingInputsTable;
 
+const softwareReferenceSection = document.querySelector("#software-reference-section");
+const softwareReferenceSectionRequiredFields = [
+    softwareReferenceSection.querySelector("input[name='software_reference_citation_title']"),
+    softwareReferenceSection.querySelector("input[name='software_reference_citation_publication_date']"),
+];
+const softwareReferenceSectionOptionalFields = [
+    softwareReferenceSection.querySelector("input[name='software_reference_citation_doi']"),
+    softwareReferenceSection.querySelector("textarea[name='software_reference_other_citation_details']"),
+    softwareReferenceSection.querySelector("input[name='software_reference_citation_linkage_url']"),
+];
+
 
 function prepareFormForSubmission() {
     relatedPartiesTable.exportTableDataToJsonAndStoreInOutputElement();
+}
+
+function checkAndSetSoftwareReferenceConditionalRequiredFields() {
+    checkAndSetRequiredAttributesForFields(
+        softwareReferenceSectionRequiredFields,
+        softwareReferenceSectionOptionalFields,
+    );
+}
+
+function setupSoftwareReferenceSection() {
+    checkAndSetSoftwareReferenceConditionalRequiredFields();
+
+    const allSoftwareReferenceFields = [
+        ...softwareReferenceSectionRequiredFields,
+        ...softwareReferenceSectionOptionalFields,
+    ];
+    allSoftwareReferenceFields.forEach(field => {
+        field.addEventListener("input", () => {
+            checkAndSetSoftwareReferenceConditionalRequiredFields();
+        });
+    });
 }
 
 editorForm.addEventListener("submit", async e => {
@@ -42,6 +77,7 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
+    setupSoftwareReferenceSection();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
     processingInputsTable = setupProcessingInputsTable();
