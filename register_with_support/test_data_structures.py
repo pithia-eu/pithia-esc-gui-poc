@@ -592,6 +592,50 @@ PROCESS_PROPERTIES_FULL = {
     'name': 'Process Test',
     'identifier_version': '1',
     'description': 'Description',
+    'documentation': {
+        'citation_title': 'citation',
+        'citation_date': '1997-01-01',
+        'ci_date_type_code': 'Publication date',
+        'ci_date_type_code_code_list': 'something',
+        'ci_date_type_code_code_list_value': 'something else',
+        'ci_linkage_url': 'https://www.example.com/',
+        'other_citation_details': 'other citation details',
+        'doi': 'abc',
+    },
+    'capabilities': [
+        {
+            'name': 'Signal Strength',
+            'observed_property': 'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+            'dimensionality_instance': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram',
+            'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
+            'cadence': '10.0',
+            'cadence_units': 'minute',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/D'
+            ],
+            'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/CGM',
+            'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Approximation'
+            ],
+        },
+        {
+            'name': 'Signal Strength',
+            'observed_property': 'https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+            'dimensionality_instance': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram',
+            'dimensionality_timeline': 'https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation',
+            'cadence': '120.0',
+            'cadence_units': 'year',
+            'vector_representation': [
+                'https://metadata.pithia.eu/ontology/2.2/component/E'
+            ],
+            'coordinate_system': 'https://metadata.pithia.eu/ontology/2.2/crs/GEOcartesian',
+            'units': 'https://metadata.pithia.eu/ontology/2.2/unit/dB',
+            'qualifier': [
+                'https://metadata.pithia.eu/ontology/2.2/qualifier/Derived'
+            ],
+        },
+    ],
     'data_levels': [
         'https://metadata.pithia.eu/ontology/2.2/dataLevel/L1',
         'https://metadata.pithia.eu/ontology/2.2/dataLevel/L2',
@@ -604,8 +648,27 @@ PROCESS_PROPERTIES_FULL = {
             'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
         ],
     },
-    'acquisition': 'https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test',
-    'computation': 'https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test',
+    'acquisitions': [
+        'https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test',
+        'https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test_2',
+    ],
+    'computations': [
+        'https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test',
+        'https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test_B',
+    ],
+    'related_parties': [
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+            'parties': [
+                'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+            ],
+        },
+        {
+            'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+            'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test'],
+        },
+    ],
 }
 
 # Data Collection

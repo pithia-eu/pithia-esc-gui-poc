@@ -965,6 +965,16 @@ class ProcessRegisterWithoutFormView(
             *[(c.metadata_server_url, c.name) for c in computations],
         )
 
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+        
+        processed_form['documentation'] = process_documentation(form_cleaned_data)
+        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
+        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
+        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
+
+        return processed_form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'

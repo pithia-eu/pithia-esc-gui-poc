@@ -393,30 +393,46 @@ class ComputationMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
         self.append_capability_links(properties['capability_links'])
 
 
-class ProcessMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent):
+class ProcessMetadata(
+    CapabilitiesMetadataComponent,
+    DataLevelMetadataComponent,
+    DescriptionMetadataComponent,
+    DocumentationMetadataComponent,
+    GCOCharacterStringMetadataComponent,
+    IdentifierMetadataComponent,
+    NameMetadataComponent,
+    QualityAssessmentMetadataComponent,
+    RelatedPartyMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Process.root_element_name, nsmap_extensions={
+            NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
+        self.append_documentation(properties['documentation'])
+        self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
         self.append_quality_assessment(properties['quality_assessment'])
-        self.append_acquisition_component(properties['acquisition'])
-        self.append_computation_component(properties['computation'])
+        self.append_related_parties(properties['related_parties'])
+        self.append_acquisition_components(properties['acquisitions'])
+        self.append_computation_components(properties['computations'])
 
-    def append_acquisition_component(self, acquisition):
-        acquisition_element_attributes = {
-            '{%s}href' % Namespace.XLINK: acquisition,
-        }
-        etree.SubElement(self.root, 'acquisitionComponent', **acquisition_element_attributes)
+    def append_acquisition_components(self, acquisitions):
+        for acquisition in acquisitions:
+            acquisition_element_attributes = {
+                '{%s}href' % Namespace.XLINK: acquisition,
+            }
+            etree.SubElement(self.root, 'acquisitionComponent', **acquisition_element_attributes)
 
-    def append_computation_component(self, computation):
-        computation_element_attributes = {
-            '{%s}href' % Namespace.XLINK: computation,
-        }
-        etree.SubElement(self.root, 'computationComponent', **computation_element_attributes)
+    def append_computation_components(self, computations):
+        for computation in computations:
+            computation_element_attributes = {
+                '{%s}href' % Namespace.XLINK: computation,
+            }
+            etree.SubElement(self.root, 'computationComponent', **computation_element_attributes)
 
 
 class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent, SourceMetadataComponent, TypeMetadataComponent):
