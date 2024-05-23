@@ -21,7 +21,7 @@ export function validateOpenApiSpecificationUrl() {
         return;
     }
 
-    submitButton.disabled = true;
+    if (submitButton) submitButton.disabled = true;
     
     displayValidatingSpinner(true);
     if (userInputTimeout !== undefined) {

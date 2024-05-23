@@ -1,5 +1,4 @@
 import {
-
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
     isApiSpecificationLinkValid,
