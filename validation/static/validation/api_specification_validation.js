@@ -77,7 +77,8 @@ function displayValidLinkResult(validationResult) {
             document.querySelector(".status-invalid-link .status-text").innerHTML = error;
         }
         if (details) {
-            document.querySelector(".status-invalid-link .status-details span").innerHTML = details;
+            document.querySelector(".status-invalid-link .status-details span").innerHTML = '';
+            document.querySelector(".status-invalid-link .status-details span").appendChild(document.createTextNode(details));
             document.querySelector(".status-invalid-link .status-details").classList.remove("d-none");
         }
     }
