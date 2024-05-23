@@ -65,6 +65,7 @@ class BaseEditorForm(forms.Form):
         label='Version',
         required=True,
         widget=forms.TextInput(),
+        initial='1',
         help_text='The version number of the object being identified.'
     )
 
