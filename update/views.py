@@ -353,22 +353,32 @@ def workflow_openapi_specification_url(request, resource_id):
             messages.error(request, 'The form submitted was not valid.')
             return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
         try:
-            models.WorkflowAPIInteractionMethod.objects.update_config(
-                workflow_interaction_method.id,
-                request.POST.get('api_specification_url'),
-                request.POST.get('api_description')
-            )
+            if workflow_interaction_method:
+                models.WorkflowAPIInteractionMethod.objects.update_config(
+                    workflow_interaction_method.id,
+                    request.POST.get('api_specification_url'),
+                    request.POST.get('api_description')
+                )
+            else:
+                models.WorkflowAPIInteractionMethod.objects.create_api_interaction_method(
+                    request.POST.get('api_specification_url'),
+                    request.POST.get('api_description'),
+                    workflow
+                )
             messages.success(request, f'Successfully updated OpenAPI specification for {workflow.name}.')
         except BaseException as err:
             logger.exception('An unexpected error occurred whilst trying to update an OpenAPI specification for a workflow.')
             messages.error(request, 'An unexpected error occurred.')
         return redirect('update:workflow_openapi_specification_url', resource_id=workflow.id)
-    form = UpdateWorkflowOpenAPISpecificationURLForm(
-        initial={
-            'api_specification_url': workflow_interaction_method.config.get('specification_url'),
-            'api_description': workflow_interaction_method.config.get('description'),
-        }
-    )
+    if workflow_interaction_method:
+        form = UpdateWorkflowOpenAPISpecificationURLForm(
+            initial={
+                'api_specification_url': workflow_interaction_method.config.get('specification_url'),
+                'api_description': workflow_interaction_method.config.get('description'),
+            }
+        )
+    else:
+        form = UpdateWorkflowOpenAPISpecificationURLForm()
     return render(request, 'update/workflow_openapi_specification_url.html', {
         'title': 'Update Workflow OpenAPI Specification',
         'workflow': workflow,

@@ -1,7 +1,11 @@
 import logging
+import os
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import IntegrityError
+from django.db import (
+    IntegrityError,
+    transaction,
+)
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
 from django.template.loader import render_to_string
@@ -64,12 +68,16 @@ class ResourceRegisterWithEditorFormView(FormView):
         return processed_form
 
     def register_xml_file(self, request, xml_file, name):
-        self.model.objects.create_from_xml_string(
+        new_registration = self.model.objects.create_from_xml_string(
             xml_file.read(),
             self.institution_id,
             self.owner_id,
         )
         messages.success(request, f'Successfully registered {name}.')
+        return new_registration
+
+    def run_registration_actions(self, request, xml_file, name):
+        return self.register_xml_file(request, xml_file, name)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -142,7 +150,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         
         try:
             xml_file.seek(0)
-            self.register_xml_file(self.request, xml_file, name)
+            self.run_registration_actions(self.request, xml_file, name)
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
             messages.error(self.request, f'There was a problem during XML generation. Please report this error to our support team.')
@@ -1013,12 +1021,32 @@ class WorkflowRegisterWithoutFormView(
             *[(data_collection.metadata_server_url, data_collection.name) for data_collection in DataCollection.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def register_workflow_api_interaction_method(self, request, new_registration):
+        api_specification_url = request.POST.get('api_specification_url', None)
+        api_description = request.POST.get('api_description', None)
+        return models.InteractionMethod.workflow_api_interaction_methods.create_api_interaction_method(
+            api_specification_url,
+            api_description,
+            new_registration
+        )
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def run_registration_actions(self, request, xml_file, name):
+        new_registration = self.register_xml_file(request, xml_file, name)
+        self.register_workflow_api_interaction_method(request, new_registration)
+        return new_registration
+
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
 
         processed_form['data_collections'] = process_workflow_data_collections(form_cleaned_data)
 
         return processed_form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

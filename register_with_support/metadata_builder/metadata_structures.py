@@ -320,9 +320,9 @@ class AcquisitionMetadata(CapabilityLinksMetadataComponent, DescriptionMetadataC
 
 class ComputationCapabilitiesMetadata(
     CapabilitiesMetadataComponent,
-    CitationPropertyTypeMetadataComponent,
     DataLevelMetadataComponent,
     DescriptionMetadataComponent,
+    DocumentationMetadataComponent,
     GCOCharacterStringMetadataComponent,
     IdentifierMetadataComponent,
     InputOutputMetadataComponent,
@@ -337,6 +337,7 @@ class ComputationCapabilitiesMetadata(
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
+        self.append_documentation(properties['documentation'])
         self.append_capabilities(properties['capabilities'])
         self.append_data_levels(properties['data_levels'])
         self.append_types(properties['type'])

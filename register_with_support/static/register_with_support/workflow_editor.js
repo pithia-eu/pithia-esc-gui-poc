@@ -5,6 +5,19 @@ import {
     editorForm,
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
+import {
+    apiSpecificationUrlInput,
+    badApiInteractionMethodModifiedEvent,
+    validateOpenApiSpecificationUrl,
+} from "/static/validation/api_specification_validation.js";
+
+apiSpecificationUrlInput.addEventListener("input", async event => {
+    const url = apiSpecificationUrlInput.value;
+    if (url.trim().length === 0) {
+        return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
+    }
+    validateOpenApiSpecificationUrl();
+});
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
@@ -14,4 +27,5 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupLocalIdAndNamespaceRelatedEventListeners();
+    validateOpenApiSpecificationUrl();
 });

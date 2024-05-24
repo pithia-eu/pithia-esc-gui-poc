@@ -84,7 +84,7 @@ class WorkflowAPIInteractionMethodView(APIInteractionMethodView):
             self.api_interaction_method = WorkflowAPIInteractionMethod.objects.get(scientific_metadata=self.scientific_metadata)
         except WorkflowAPIInteractionMethod.DoesNotExist:
             messages.error(request, 'No API interaction method was found for this workflow.')
-            return HttpResponseRedirect(reverse('browse:workflow_details', kwargs={'workflow_id': workflow_id}))
+            return HttpResponseRedirect(reverse('browse:workflow_detail', kwargs={'workflow_id': workflow_id}))
         
         return super().get(request, *args, **kwargs)
 
