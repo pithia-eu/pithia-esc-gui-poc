@@ -85,6 +85,7 @@ a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer
 h1 {
     color: var(--pithia-blue);
     font-weight: 600;
+    word-wrap: break-word;
 }
 
 hgroup p {
@@ -470,6 +471,14 @@ summary.data-collection-category::marker {
 .resource-key-details td {
     padding-block: 0.75rem;
     padding-inline: 1rem;
+}
+
+.resource-key-details tbody tr td:first-of-type {
+    padding-right: 0.5rem;
+}
+
+.resource-key-details tbody tr td:last-of-type {
+    padding-left: 0.5rem;
 }
 
 .resource-description {

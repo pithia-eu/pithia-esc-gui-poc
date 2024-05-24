@@ -2,9 +2,18 @@ const customSelects = {};
 const selectControlWithNoSearchSelector = "select.no-search";
 const keywordsInputSelector = "select[name='keyword']";
 
+function addEventListenersToCustomSelect(customSelect) {
+    customSelect.control.addEventListener("mousedown", e => {
+        if (document.activeElement.tagName !== "BODY") {
+            document.activeElement.blur();
+        }
+    });
+}
+
 function initialiseSelectControls(selectControls) {
     selectControls.forEach(sc => {
         const cs = new TomSelect(sc, {});
+        addEventListenersToCustomSelect(cs);
         customSelects[sc.id] = cs;
     });
 }
@@ -14,6 +23,7 @@ function initialiseSelectControlsWithNoSearch(selectControls) {
         const cs = new TomSelect(sc, {
             controlInput: null,
         });
+        addEventListenersToCustomSelect(cs);
         customSelects[sc.id] = cs;
     });
 }
@@ -27,6 +37,7 @@ function initialiseKeywordMultipleChoiceSelectControls(selectControls) {
                 no_results: null,
             }
         });
+        addEventListenersToCustomSelect(cs);
         customSelects[sc.id] = cs;
     });
 }
