@@ -458,6 +458,9 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
         self.append_data_levels(properties['data_levels'])
         self.append_quality_assessment(properties['quality_assessment'])
         self.append_permissions(properties['permissions'])
+        # <query> field is unused, but still mentioned in XSD -
+        # no existing registrations even include it like other
+        # "unused" fields like <resultTime>.
 
     def append_features_of_interest(self, named_regions):
         # Container elements

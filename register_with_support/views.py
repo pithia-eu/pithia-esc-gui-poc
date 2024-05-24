@@ -296,6 +296,13 @@ class PlatformSelectFormViewMixin(View):
             *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+class DataCollectionSelectFormViewMixin(View):
+    def get_data_collection_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(data_collection.metadata_server_url, data_collection.name) for data_collection in DataCollection.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
 class InstrumentTypeSelectFormViewMixin(View):
     def get_instrument_type_choices_for_form(self):
         g = get_graph_of_pithia_ontology_component('instrumentType')
@@ -998,16 +1005,20 @@ class ProcessRegisterWithoutFormView(
         return context
 
     def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['acquisition_choices'] = self.get_acquisition_choices_for_form()
-        form_kwargs['computation_choices'] = self.get_computation_choices_for_form()
-        return form_kwargs
+        kwargs = super().get_form_kwargs()
+        kwargs['acquisition_choices'] = self.get_acquisition_choices_for_form()
+        kwargs['computation_choices'] = self.get_computation_choices_for_form()
+        return kwargs
 
 
 class DataCollectionRegisterWithoutFormView(
     ComputationTypeSelectFormViewMixin,
+    DataCollectionSelectFormViewMixin,
+    DataLevelSelectFormViewMixin,
     InstrumentTypeSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
+    QualityAssessmentSelectFormViewMixin,
+    RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
     success_url = reverse_lazy('register:data_collection_with_editor')
@@ -1021,6 +1032,28 @@ class DataCollectionRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
+    def get_feature_of_interest_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('featureOfInterest')
+        feature_of_interest_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            feature_of_interest_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in feature_of_interest_dict.items()],
+        )
+
+    def get_permission_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('licence')
+        permission_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            permission_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in permission_dict.items()],
+        )
+
     def get_type_choices_for_form(self):
         instrument_type_choices = list(self.get_instrument_type_choices_for_form())
         instrument_type_choices.pop(0)
@@ -1032,12 +1065,44 @@ class DataCollectionRegisterWithoutFormView(
             ('Computation Types', computation_type_choices),
         )
 
+    def get_project_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(project.metadata_server_url, project.name) for project in Project.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+    def get_procedure_choices_for_form(self):
+        return (
+            ('', ''),
+            *[(process.metadata_server_url, process.name) for process in Process.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
+        return context
+    
     def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['type_choices'] = self.get_type_choices_for_form()
-        return form_kwargs
+        kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
+        kwargs['type_choices'] = self.get_type_choices_for_form()
+        kwargs['project_choices'] = self.get_project_choices_for_form()
+        kwargs['feature_of_interest_choices'] = self.get_feature_of_interest_choices_for_form()
+        kwargs['permission_choices'] = self.get_permission_choices_for_form()
+        kwargs['procedure_choices'] = self.get_procedure_choices_for_form()
+        # Quality assessment
+        kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
+        # Related parties
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
+        # Sub collection
+        kwargs['sub_collection_choices'] = self.get_data_collection_choices_for_form()
+        return kwargs
 
 class WorkflowRegisterWithoutFormView(
+    DataCollectionSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
@@ -1051,12 +1116,6 @@ class WorkflowRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Workflow.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
-
-    def get_data_collection_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(data_collection.metadata_server_url, data_collection.name) for data_collection in DataCollection.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
 
     def register_workflow_api_interaction_method(self, request, new_registration):
         api_specification_url = request.POST.get('api_specification_url', None)

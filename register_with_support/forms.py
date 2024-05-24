@@ -475,15 +475,74 @@ class ProcessEditorForm(
     )
 
 
-class DataCollectionEditorForm(BaseEditorForm):
-    def __init__(self, *args, type_choices=(), **kwargs):
+class DataCollectionEditorForm(
+    BaseEditorForm,
+    DataLevelFormComponent,
+    QualityAssessmentFormComponent,
+    RelatedPartiesEditorFormComponent):
+    def __init__(
+        self,
+        *args,
+        type_choices=(),
+        project_choices=(),
+        sub_collection_choices=(),
+        feature_of_interest_choices=(),
+        permission_choices=(),
+        procedure_choices=(),
+        **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['type'].choices = type_choices
+        self.fields['types'].choices = type_choices
+        self.fields['projects'].choices = project_choices
+        self.fields['sub_collections'].choices = sub_collection_choices
+        self.fields['features_of_interest'].choices = feature_of_interest_choices
+        self.fields['permissions'].choices = permission_choices
+        self.fields['procedure'].choices = procedure_choices
 
-    type = forms.ChoiceField(
-        label='Type',
+    types = forms.MultipleChoiceField(
+        label='Types',
         required=False,
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    projects = forms.MultipleChoiceField(
+        label='Projects',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    sub_collections = forms.MultipleChoiceField(
+        label='Sub Collections',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    features_of_interest = forms.MultipleChoiceField(
+        label='Features of Interest',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        }),
+        help_text='Space region which is the feature of the interest of the observation or a sampled feature. This attribute takes values from a controlled vocabulary. '
+    )
+
+    permissions = forms.MultipleChoiceField(
+        label='Permissions',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    procedure = forms.MultipleChoiceField(
+        label='Procedure',
+        required=False,
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         })
     )

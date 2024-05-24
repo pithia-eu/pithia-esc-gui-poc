@@ -7,7 +7,7 @@
     <div class="row gy-4">
         <div class="col-lg-12">
             <h2 class="mb-0">
-                Description, Type
+                Description
             </h2>
         </div>
         <div class="col-xl-7 col-lg-8">
@@ -16,12 +16,40 @@
             {% endwith %}
         </div>
         <div class="col-xl-7 col-lg-8">
-            {% with field=form.type %}
+            {% with field=form.types %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.projects %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.sub_collections %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.features_of_interest %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.permissions %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with field=form.procedure %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
     </div>
 </section>
+<hr class="my-5">
+{% include 'register_with_support/components/quality_assessment.html' %}
+{% include 'register_with_support/components/related_parties.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
@@ -31,7 +59,7 @@
 </li>
 <li class="list-group-item">
     <a href="#description-section">
-        Description, Type
+        Description
     </a>
 </li>
 {% endblock table_of_contents %}
