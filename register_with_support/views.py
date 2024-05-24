@@ -296,6 +296,30 @@ class PlatformSelectFormViewMixin(View):
             *[(p.metadata_server_url, p.name) for p in models.Platform.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+class InstrumentTypeSelectFormViewMixin(View):
+    def get_instrument_type_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('instrumentType')
+        type_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            type_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in type_dict.items())
+        )
+
+class ComputationTypeSelectFormViewMixin(View):
+    def get_computation_type_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('computationType')
+        type_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            type_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *((key, value) for key, value in type_dict.items())
+        )
+
 class QualityAssessmentSelectFormViewMixin(View):
     def get_data_quality_flag_choices_for_form(self):
         g_dqf = get_graph_of_pithia_ontology_component('dataQualityFlag')
@@ -598,6 +622,7 @@ class OperationRegisterWithoutFormView(
 
 
 class InstrumentRegisterWithoutFormView(
+    InstrumentTypeSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceRegisterWithEditorFormView,
@@ -612,17 +637,6 @@ class InstrumentRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Instrument.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
-
-    def get_instrument_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('instrumentType')
-        type_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            type_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *((key, value) for key, value in type_dict.items())
-        )
 
     def get_member_choices_for_form(self):
         return (
@@ -802,6 +816,7 @@ class AcquisitionRegisterWithoutFormView(
 
 class ComputationCapabilitiesRegisterWithoutFormView(
     CapabilitiesSelectFormViewMixin,
+    ComputationTypeSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
@@ -824,17 +839,6 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         return (
             ('', ''),
             *[(ccs.metadata_server_url, ccs.name) for ccs in computation_capability_sets],
-        )
-
-    def get_computation_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('computationType')
-        type_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            type_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *((key, value) for key, value in type_dict.items())
         )
 
     def process_form(self, form_cleaned_data):
@@ -1001,6 +1005,8 @@ class ProcessRegisterWithoutFormView(
 
 
 class DataCollectionRegisterWithoutFormView(
+    ComputationTypeSelectFormViewMixin,
+    InstrumentTypeSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
 ):
@@ -1014,6 +1020,22 @@ class DataCollectionRegisterWithoutFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+
+    def get_type_choices_for_form(self):
+        instrument_type_choices = list(self.get_instrument_type_choices_for_form())
+        instrument_type_choices.pop(0)
+        computation_type_choices = list(self.get_computation_type_choices_for_form())
+        computation_type_choices.pop(0)
+        return (
+            ('', ''),
+            ('Instrument Types', instrument_type_choices),
+            ('Computation Types', computation_type_choices),
+        )
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['type_choices'] = self.get_type_choices_for_form()
+        return form_kwargs
 
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,

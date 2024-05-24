@@ -476,7 +476,17 @@ class ProcessEditorForm(
 
 
 class DataCollectionEditorForm(BaseEditorForm):
-    pass
+    def __init__(self, *args, type_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].choices = type_choices
+
+    type = forms.ChoiceField(
+        label='Type',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
 
 
 class WorkflowEditorForm(BaseEditorForm, WorkflowOpenAPISpecificationForm):
