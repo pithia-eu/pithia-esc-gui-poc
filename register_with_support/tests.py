@@ -222,6 +222,11 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     def test_computation_capabilities(self):
         self.create_xml_and_validate_against_schema(ComputationCapabilitiesMetadata, COMPUTATION_CAPABILITIES_PROPERTIES_FULL)
 
+    # Computation
+    @tag('computation')
+    def test_computation(self):
+        self.create_xml_and_validate_against_schema(ComputationMetadata, COMPUTATION_PROPERTIES_FULL)
+
     # Workflow
     @tag('workflow')
     def test_workflow(self):
