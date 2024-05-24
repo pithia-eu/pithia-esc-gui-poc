@@ -211,7 +211,7 @@ class InstrumentEditorForm(
         self.fields['members'].choices = member_choices
     
     version = forms.CharField(
-        label='Version',
+        label='Instrument Version',
         required=False,
         widget=forms.TextInput()
     )
@@ -353,7 +353,7 @@ class ComputationCapabilitiesEditorForm(
     )
 
     version = forms.CharField(
-        label='Version',
+        label='Computation Component Version',
         required=False,
         widget=forms.TextInput()
     )

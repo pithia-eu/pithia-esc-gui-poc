@@ -34,7 +34,9 @@ class BaseEditorForm(forms.Form):
             'class': 'form-control text-secondary-emphasis bg-body-secondary',
             'readonly': True,
         }),
-        help_text=f'A basic local ID is automatically generated using this registration\'s full name. If this is local ID is already in use, a more complex local ID will be generated.'
+        help_text=f'''The local ID is automatically generated from the full name you give this registration.
+        It must be unique, so if the local ID generated has already been taken a timestamp will be added to
+        help ensure uniqueness. The local ID also cannot be changed once this form is submitted.'''
     )
 
     namespace = forms.CharField(
@@ -62,7 +64,7 @@ class BaseEditorForm(forms.Form):
     )
 
     identifier_version = forms.CharField(
-        label='Version',
+        label='Metadata Version',
         required=True,
         widget=forms.TextInput(),
         initial='1',
