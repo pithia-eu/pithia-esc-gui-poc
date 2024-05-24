@@ -14,5 +14,6 @@ urlpatterns = [
     path('computation-capabilities-wizard/', views.ComputationCapabilitiesRegisterWithoutFormView.as_view(), name='computation_capability_set_with_editor'),
     path('computation-wizard/', views.ComputationRegisterWithoutFormView.as_view(), name='computation_with_editor'),
     path('process-wizard/', views.ProcessRegisterWithoutFormView.as_view(), name='process_with_editor'),
+    path('data-collection-wizard/', views.DataCollectionRegisterWithoutFormView.as_view(), name='data_collection_with_editor'),
     path('workflow-wizard/', views.WorkflowRegisterWithoutFormView.as_view(), name='workflow_with_editor'),
 ]

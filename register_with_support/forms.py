@@ -475,6 +475,10 @@ class ProcessEditorForm(
     )
 
 
+class DataCollectionEditorForm(BaseEditorForm):
+    pass
+
+
 class WorkflowEditorForm(BaseEditorForm, WorkflowOpenAPISpecificationForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

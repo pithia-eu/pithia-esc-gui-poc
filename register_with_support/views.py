@@ -1000,6 +1000,21 @@ class ProcessRegisterWithoutFormView(
         return form_kwargs
 
 
+class DataCollectionRegisterWithoutFormView(
+    OrganisationSelectFormViewMixin,
+    ResourceRegisterWithEditorFormView
+):
+    success_url = reverse_lazy('register:data_collection_with_editor')
+    form_class = DataCollectionEditorForm
+    template_name = 'register_with_support/data_collection_editor.html'
+
+    model = models.DataCollection
+    metadata_builder_class = DataCollectionMetadata
+    file_upload_registration_url = reverse_lazy('register:data_collection')
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+
 class WorkflowRegisterWithoutFormView(
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
