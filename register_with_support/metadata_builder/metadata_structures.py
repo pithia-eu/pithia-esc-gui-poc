@@ -448,6 +448,7 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
         self.append_process(properties['process'])
         self.append_unused_observed_property()
         self.append_features_of_interest(properties['features_of_interest'])
+        self.append_unused_result()
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
@@ -508,6 +509,9 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
 
     def append_unused_observed_property(self):
         etree.SubElement(self.root, '{%s}observedProperty' % Namespace.OM)
+    
+    def append_unused_result(self):
+        etree.SubElement(self.root, '{%s}result' % Namespace.OM)
 
 
 class CatalogueMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
