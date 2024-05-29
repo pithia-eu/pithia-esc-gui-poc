@@ -7,7 +7,7 @@
     <div class="row gy-4">
         <div class="col-lg-12">
             <h2 class="mb-0">
-                Description
+                Description and Other Details
             </h2>
         </div>
         <div class="col-xl-7 col-lg-8">
@@ -48,7 +48,10 @@
     </div>
 </section>
 <hr class="my-5">
+{% include 'register_with_support/components/data_levels.html' %}
+<hr class="my-5">
 {% include 'register_with_support/components/quality_assessment.html' %}
+<hr class="my-5">
 {% include 'register_with_support/components/related_parties.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
@@ -59,7 +62,22 @@
 </li>
 <li class="list-group-item">
     <a href="#description-section">
-        Description
+        Description and Other Details
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#data-levels-section">
+        Data Levels
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#quality-assessments-section">
+        Quality Assessment
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#related-parties-section">
+        Related Parties
     </a>
 </li>
 {% endblock table_of_contents %}
