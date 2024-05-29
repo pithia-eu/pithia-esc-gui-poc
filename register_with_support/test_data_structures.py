@@ -695,8 +695,14 @@ DATA_COLLECTION_PROPERTIES_FULL = {
         'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside',
         'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region',
     ],
-    'type': 'https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder',
-    'project': 'https://metadata.pithia.eu/resources/2.2/project/test/Project_Test',
+    'types': [
+        'https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder',
+        'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+    ],
+    'projects': [
+        'https://metadata.pithia.eu/resources/2.2/project/test/Project_Test',
+        'https://metadata.pithia.eu/resources/2.2/project/test/Project_Test_2',
+    ],
     'related_parties': [
         {
             'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
@@ -727,6 +733,10 @@ DATA_COLLECTION_PROPERTIES_FULL = {
             'description': 'Lorem ipsum dolor sit amet',
             'data_format': 'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
         },
+    ],
+    'sub_collections': [
+        'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test',
+        'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_2',
     ],
     'data_levels': [
         'https://metadata.pithia.eu/ontology/2.2/dataLevel/L0',

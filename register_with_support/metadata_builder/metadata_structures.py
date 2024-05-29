@@ -436,7 +436,14 @@ class ProcessMetadata(
             etree.SubElement(self.root, 'computationComponent', **computation_element_attributes)
 
 
-class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComponent, NameMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, RelatedPartyMetadataComponent, SourceMetadataComponent, TypeMetadataComponent):
+class DataCollectionMetadata(
+    DataLevelMetadataComponent,
+    DescriptionMetadataComponent,
+    NameMetadataComponent,
+    IdentifierMetadataComponent,
+    QualityAssessmentMetadataComponent,
+    RelatedPartyMetadataComponent,
+    SourceMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(DataCollection.root_element_name, nsmap_extensions={
             NamespacePrefix.GMD: Namespace.GMD,
@@ -452,10 +459,11 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
-        self.append_type(properties['type'])
-        self.append_project(properties['project'])
+        self.append_types(properties['types'])
+        self.append_projects(properties['projects'])
         self.append_related_parties(properties['related_parties'])
         self.append_collection_results(properties['collection_results'])
+        self.append_sub_collections(properties['sub_collections'])
         self.append_data_levels(properties['data_levels'])
         self.append_quality_assessment(properties['quality_assessment'])
         self.append_permissions(properties['permissions'])
@@ -475,11 +483,12 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
             }
             nr_element = etree.SubElement(feature_of_interest_element, 'namedRegion', **nr_element_attributes)
 
-    def append_project(self, project):
-        project_element_attributes = {
-            '{%s}href' % Namespace.XLINK: project,
-        }
-        etree.SubElement(self.root, 'project', **project_element_attributes)
+    def append_projects(self, projects):
+        for project in projects:
+            project_element_attributes = {
+                '{%s}href' % Namespace.XLINK: project,
+            }
+            etree.SubElement(self.root, 'project', **project_element_attributes)
 
     def append_process(self, process):
         om_procedure_element_attributes = {
@@ -493,6 +502,19 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
 
         self.append_sources(collection_results_element, sources)
 
+    def append_sub_collections(self, sub_collections):
+        for sub_collection in sub_collections:
+            sub_collection_element_attributes = {
+                '{%s}href' % Namespace.XLINK: sub_collection,
+            }
+            sub_collection_element = etree.SubElement(self.root, 'subCollection', **sub_collection_element_attributes)
+
+    def append_types(self, types):
+        for type in types:
+            type_element_attributes = {
+                '{%s}href' % Namespace.XLINK: type,
+            }
+            type_element = etree.SubElement(self.root, 'type', **type_element_attributes)
 
     def append_permissions(self, permissions):
         for p in permissions:
