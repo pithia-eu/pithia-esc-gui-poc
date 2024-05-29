@@ -482,7 +482,7 @@ class DataCollectionMetadata(DataLevelMetadataComponent, DescriptionMetadataComp
 
     def append_process(self, process):
         om_procedure_element_attributes = {
-            '{%s}procedure' % Namespace.OM: process,
+            '{%s}href' % Namespace.XLINK: process,
         }
         etree.SubElement(self.root, '{%s}procedure' % Namespace.OM, **om_procedure_element_attributes)
 
