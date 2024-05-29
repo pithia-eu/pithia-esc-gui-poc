@@ -248,3 +248,18 @@ def process_software_reference(form_cleaned_data):
         other_citation_details_key='software_reference_other_citation_details',
         doi_key='software_reference_citation_doi'
     )
+
+def process_sources(form_cleaned_data):
+    sources_from_form = form_cleaned_data.get('sources_json')
+    source_dict_list = []
+    for source in sources_from_form:
+        source_dict_list.append({
+            'service_function': source.get('service_function'),
+            'linkage': source.get('linkage'),
+            'name': source.get('name'),
+            'protocol': source.get('protocol'),
+            'description': source.get('description'),
+            'data_format': source.get('data_format'),
+        })
+    return source_dict_list
+    
