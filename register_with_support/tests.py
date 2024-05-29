@@ -232,6 +232,11 @@ class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
     def test_process(self):
         self.create_xml_and_validate_against_schema(ProcessMetadata, PROCESS_PROPERTIES_FULL)
 
+    # Data Collection
+    @tag('data_collection')
+    def test_data_collection(self):
+        self.create_xml_and_validate_against_schema(DataCollectionMetadata, DATA_COLLECTION_PROPERTIES_FULL)
+
     # Workflow
     @tag('workflow')
     def test_workflow(self):
