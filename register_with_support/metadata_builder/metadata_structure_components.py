@@ -512,10 +512,11 @@ class SourceMetadataComponent(BaseMetadataComponent):
             protocol_element.text = s['protocol']
             description_element = etree.SubElement(online_resource_element, 'description')
             description_element.text = s['description']
-            data_format_element_attributes = {
-                '{%s}href' % Namespace.XLINK: s['data_format']
-            }
-            data_format_element = etree.SubElement(online_resource_element, 'dataFormat', **data_format_element_attributes)
+            for data_format in s['data_formats']:
+                data_format_element_attributes = {
+                    '{%s}href' % Namespace.XLINK: data_format,
+                }
+                data_format_element = etree.SubElement(online_resource_element, 'dataFormat', **data_format_element_attributes)
 
 
 class StatusMetadataComponent(BaseMetadataComponent):

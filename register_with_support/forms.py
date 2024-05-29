@@ -479,7 +479,8 @@ class DataCollectionEditorForm(
     BaseEditorForm,
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
-    RelatedPartiesEditorFormComponent):
+    RelatedPartiesEditorFormComponent,
+    SourceMetadataComponent):
     def __init__(
         self,
         *args,

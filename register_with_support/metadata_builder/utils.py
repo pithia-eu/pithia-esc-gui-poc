@@ -254,12 +254,12 @@ def process_sources(form_cleaned_data):
     source_dict_list = []
     for source in sources_from_form:
         source_dict_list.append({
-            'service_function': source.get('service_function'),
+            'service_function': source.get('serviceFunction'),
             'linkage': source.get('linkage'),
             'name': source.get('name'),
             'protocol': source.get('protocol'),
             'description': source.get('description'),
-            'data_format': source.get('data_format'),
+            'data_formats': source.get('dataFormats'),
         })
     return source_dict_list
     

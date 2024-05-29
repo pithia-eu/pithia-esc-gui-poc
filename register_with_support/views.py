@@ -1077,17 +1077,44 @@ class DataCollectionRegisterWithoutFormView(
             *[(process.metadata_server_url, process.name) for process in Process.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def get_service_function_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('serviceFunction')
+        service_function_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            service_function_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in service_function_dict.items()],
+        )
+
+    def get_data_format_choices_for_form(self):
+        g = get_graph_of_pithia_ontology_component('resultDataFormat')
+        data_format_dict = {}
+        for s, p, o in g.triples((None, SKOS.member, None)):
+            o_pref_label = g.value(o, SKOS.prefLabel)
+            data_format_dict[str(o)] = str(o_pref_label)
+        return (
+            ('', ''),
+            *[(key, value) for key, value in data_format_dict.items()],
+        )
+
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
         
         processed_form['related_parties'] = process_related_parties(form_cleaned_data)
         processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
+        processed_form['collection_results'] = process_sources(form_cleaned_data)
 
         return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
+        context['sources_tab_pane_content_template'] = render_to_string(
+            'register_with_support/components/data_collection/sources_tab_pane_content_template.html',
+            context=context
+        )
         return context
     
     def get_form_kwargs(self):
@@ -1107,6 +1134,9 @@ class DataCollectionRegisterWithoutFormView(
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         # Sub collection
         kwargs['sub_collection_choices'] = self.get_data_collection_choices_for_form()
+        # Collection results
+        kwargs['service_function_choices'] = self.get_service_function_choices_for_form()
+        kwargs['data_format_choices'] = self.get_data_format_choices_for_form()
         return kwargs
 
 class WorkflowRegisterWithoutFormView(

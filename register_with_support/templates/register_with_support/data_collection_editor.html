@@ -1,5 +1,9 @@
 {% extends 'register_with_support/components/base_editor.html' %}
 {% load static %}
+{% block extra_scripts %}
+<script src="{% static 'register_with_support/data_collection_editor.js' %}" type="module"></script>
+{{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+{% endblock extra_scripts %}
 {% block form_content %}
 {% include 'register_with_support/components/name_and_organisation_section.html' %}
 <hr class="my-5">
@@ -47,6 +51,8 @@
         </div>
     </div>
 </section>
+<hr class="my-5">
+{% include 'register_with_support/components/data_collection/collection_results.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/data_levels.html' %}
 <hr class="my-5">

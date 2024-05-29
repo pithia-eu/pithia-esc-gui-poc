@@ -569,3 +569,57 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         initial=list,
         widget=forms.HiddenInput()
     )
+
+class SourceMetadataComponent(forms.Form):
+    def __init__(self, *args, data_format_choices=(), service_function_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['source_data_formats'].choices = data_format_choices
+        self.fields['source_service_function'].choices = service_function_choices
+
+    source_service_function = forms.ChoiceField(
+        required=False,
+        label='Service Function',
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    source_linkage = forms.URLField(
+        required=False,
+        label='Linkage',
+        widget=forms.URLInput(attrs={
+            'placeholder': 'https://',
+        })
+    )
+
+    source_name = forms.CharField(
+        required=False,
+        label='Name',
+        widget=forms.TextInput()
+    )
+
+    source_protocol = forms.CharField(
+        required=False,
+        label='Protocol',
+        widget=forms.TextInput(),
+        help_text='E.g. HTTP, HTTPS, FTP'
+    )
+
+    source_description = forms.CharField(
+        required=False,
+        label='Description',
+        widget=forms.Textarea()
+    )
+
+    source_data_formats = forms.MultipleChoiceField(
+        required=False,
+        label='Data Formats',
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    sources_json = forms.JSONField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
