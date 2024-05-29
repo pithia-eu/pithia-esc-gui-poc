@@ -1077,6 +1077,14 @@ class DataCollectionRegisterWithoutFormView(
             *[(process.metadata_server_url, process.name) for process in Process.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
+    def process_form(self, form_cleaned_data):
+        processed_form = super().process_form(form_cleaned_data)
+        
+        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
+        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
+
+        return processed_form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
