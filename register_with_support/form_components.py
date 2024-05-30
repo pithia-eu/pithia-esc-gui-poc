@@ -626,5 +626,6 @@ class SourceMetadataComponent(forms.Form):
 
     sources_json = forms.JSONField(
         required=False,
+        initial=list,
         widget=forms.HiddenInput()
     )
