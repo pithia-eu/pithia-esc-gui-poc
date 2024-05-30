@@ -463,7 +463,8 @@ class ProcessEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='A component of acquisition type.'
     )
 
     computations = forms.MultipleChoiceField(
@@ -471,7 +472,8 @@ class ProcessEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='A component of computation type.'
     )
 
 
