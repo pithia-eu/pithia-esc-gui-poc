@@ -22,7 +22,17 @@
                     {% for p in resource_predicates_no_prefix|dictsort:0 %}
                     {% if p != 'type' and p != 'versionInfo' and p != 'date' %}
                     <tr>
-                        <td>{{ resource_predicates_readable|get_key_value:p }}</td>
+                        <td>
+                            {% with property_key=resource_predicates_readable|get_key_value:p %}
+                            {% if property_key|lower == 'pref label' %}
+                            Preferred Label
+                            {% elif property_key|lower == 'alt label' %}
+                            Alternate Label
+                            {% else %}
+                            {{ property_key }}
+                            {% endif %}
+                            {% endwith %}
+                        </td>
                         <td>
                             {% if resource_dictionary|get_key_value:p|get_type == 'list' %}
                             <ul class="list-unstyled">
