@@ -491,7 +491,7 @@ class DataCollectionEditorForm(
         sub_collection_choices=(),
         feature_of_interest_choices=(),
         permission_choices=(),
-        procedure_choices=(),
+        process_choices=(),
         **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['types'].choices = type_choices
@@ -499,14 +499,15 @@ class DataCollectionEditorForm(
         self.fields['sub_collections'].choices = sub_collection_choices
         self.fields['features_of_interest'].choices = feature_of_interest_choices
         self.fields['permissions'].choices = permission_choices
-        self.fields['procedure'].choices = procedure_choices
+        self.fields['process'].choices = process_choices
 
     types = forms.MultipleChoiceField(
         label='Types',
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Type of the data collection (instrument or model) from a controlled vocabulary.'
     )
 
     projects = forms.MultipleChoiceField(
@@ -514,19 +515,21 @@ class DataCollectionEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Project(s) that the data collection belongs to.'
     )
 
     sub_collections = forms.MultipleChoiceField(
-        label='Sub Collections',
+        label='Sub-collections',
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='Sub-collection of the collection.'
     )
 
     features_of_interest = forms.MultipleChoiceField(
-        label='Features of Interest',
+        label='Features of Interest (Named Regions)',
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
@@ -539,13 +542,15 @@ class DataCollectionEditorForm(
         required=False,
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='''Restrictions on the access and use of the observation\'s result.
+                    These are known without navigating from the observation to the result.'''
     )
 
-    procedure = forms.MultipleChoiceField(
+    process = forms.ChoiceField(
         label='Procedure',
         required=False,
-        widget=forms.SelectMultiple(attrs={
+        widget=forms.Select(attrs={
             'class': 'form-select',
         })
     )

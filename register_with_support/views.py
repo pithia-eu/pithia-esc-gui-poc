@@ -1089,7 +1089,7 @@ class DataCollectionRegisterWithoutFormView(
             *[(project.metadata_server_url, project.name) for project in Project.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
-    def get_procedure_choices_for_form(self):
+    def get_process_choices_for_form(self):
         return (
             ('', ''),
             *[(process.metadata_server_url, process.name) for process in Process.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
@@ -1143,7 +1143,7 @@ class DataCollectionRegisterWithoutFormView(
         kwargs['project_choices'] = self.get_project_choices_for_form()
         kwargs['feature_of_interest_choices'] = self.get_feature_of_interest_choices_for_form()
         kwargs['permission_choices'] = self.get_permission_choices_for_form()
-        kwargs['procedure_choices'] = self.get_procedure_choices_for_form()
+        kwargs['process_choices'] = self.get_process_choices_for_form()
         # Quality assessment
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
