@@ -93,6 +93,16 @@ hgroup p {
     font-size: 1.75rem !important;
 }
 
+@counter-style paren-lower-alpha {
+    system: extends lower-alpha;
+    prefix: "(";
+    suffix: ") ";
+}
+
+[type="a"] {
+    list-style: paren-lower-alpha;
+}
+
 /* .card-menu, .list-group combinators */
 h1 + .card-menu,
 h2 + .card-menu {

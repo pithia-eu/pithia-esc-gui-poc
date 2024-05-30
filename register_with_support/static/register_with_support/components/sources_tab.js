@@ -14,7 +14,7 @@ class SourcesTab extends DynamicEditorTab {
             "#sources-tab-pane-content-template",
             ".remove-source-button",
             "input[name='sources_json']",
-            "Source"
+            "Online Resource"
         );
         this.sourceServiceFunctionSelectSelector = "select[name='source_service_function']";
         this.sourceLinkageInputSelector = "input[name='source_linkage']";
