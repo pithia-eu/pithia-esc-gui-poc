@@ -1006,8 +1006,26 @@ class ProcessRegisterWithoutFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        # Process
         kwargs['acquisition_choices'] = self.get_acquisition_choices_for_form()
         kwargs['computation_choices'] = self.get_computation_choices_for_form()
+        # Capabilities
+        kwargs['coordinate_system_choices'] = self.get_coordinate_system_choices_for_form()
+        kwargs['dimensionality_instance_choices'] = self.get_dimensionality_instance_choices_for_form()
+        kwargs['dimensionality_timeline_choices'] = self.get_dimensionality_timeline_choices_for_form()
+        kwargs['observed_property_choices'] = self.get_observed_property_choices_for_form()
+        kwargs['qualifier_choices'] = self.get_qualifier_choices_for_form()
+        kwargs['unit_choices'] = self.get_unit_choices_for_form()
+        kwargs['vector_representation_choices'] = self.get_vector_representation_choices_for_form()
+        # Data levels
+        kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
+        kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        # Quality assessment
+        kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
+        # Related parties
+        kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
+        kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         return kwargs
 
 
