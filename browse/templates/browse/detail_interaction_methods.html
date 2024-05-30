@@ -35,7 +35,11 @@
                                 {% endif %}
                             </td>
                             <td>
+                                {% if 'description' in online_resource and online_resource.description %}
                                 {{ online_resource.description|urlize }}
+                                {% else %}
+                                <i class="text-secondary">None</i>
+                                {% endif %}
                             </td>
                             <td>
                                 {% if 'dataFormat' in online_resource %}
@@ -53,6 +57,8 @@
                                     </li>
                                     {% endfor %}
                                 </ul>
+                                {% else %}
+                                <i class="text-secondary">None</i>
                                 {% endif %}
                             </td>
                             <td>
