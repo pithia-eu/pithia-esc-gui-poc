@@ -474,6 +474,8 @@ class DataCollectionMetadata(
     def append_features_of_interest(self, named_regions):
         # Container elements
         om_feature_of_interest_element = etree.SubElement(self.root, '{%s}featureOfInterest' % Namespace.OM)
+        if not named_regions:
+            return
         feature_of_interest_element = etree.SubElement(om_feature_of_interest_element, 'FeatureOfInterest')
 
         # Named regions
@@ -494,12 +496,15 @@ class DataCollectionMetadata(
         om_procedure_element_attributes = {
             '{%s}href' % Namespace.XLINK: process,
         }
+        if not process:
+            return etree.SubElement(self.root, '{%s}procedure' % Namespace.OM)
         etree.SubElement(self.root, '{%s}procedure' % Namespace.OM, **om_procedure_element_attributes)
 
     def append_collection_results(self, sources):
+        if not sources:
+            return
         # Container element
         collection_results_element = etree.SubElement(self.root, 'collectionResults')
-
         self.append_sources(collection_results_element, sources)
 
     def append_sub_collections(self, sub_collections):

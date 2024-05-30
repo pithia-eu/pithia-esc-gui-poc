@@ -253,6 +253,10 @@ def process_sources(form_cleaned_data):
     sources_from_form = form_cleaned_data.get('sources_json')
     source_dict_list = []
     for source in sources_from_form:
+        if '' in source.get('dataFormats'):
+            source.get('dataFormats').remove('')
+        if all(not c for c in list(source.values())):
+            continue
         source_dict_list.append({
             'service_function': source.get('serviceFunction'),
             'linkage': source.get('linkage'),

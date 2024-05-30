@@ -103,7 +103,11 @@ def correct_data_collection_xml_converted_to_dict(self, dictionary):
     if 'om:parameter' in dictionary and not isinstance(dictionary['om:parameter'], list):
         dictionary['om:parameter'] = [dictionary['om:parameter']]
     # Check if the nested 'namedRegion' property is an array-type property
-    if 'om:featureOfInterest' in dictionary and 'FeatureOfInterest' in dictionary['om:featureOfInterest'] and 'namedRegion' in dictionary['om:featureOfInterest']['FeatureOfInterest'] and not isinstance(dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion'], list):
+    if ('om:featureOfInterest' in dictionary
+        and isinstance(dictionary['om:featureOfInterest'], dict)
+        and 'FeatureOfInterest' in dictionary['om:featureOfInterest']
+        and 'namedRegion' in dictionary['om:featureOfInterest']['FeatureOfInterest']
+        and not isinstance(dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion'], list)):
         dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion'] = [dictionary['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
     # Check if nested 'source' property is an
     # array-type property
