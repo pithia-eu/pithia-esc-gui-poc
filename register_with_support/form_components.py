@@ -581,7 +581,8 @@ class SourceMetadataComponent(forms.Form):
         label='Service Function',
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The function performed by the online resource. E.g. download, are obtained from a controlled vocabulary.'
     )
 
     source_linkage = forms.URLField(
@@ -589,26 +590,29 @@ class SourceMetadataComponent(forms.Form):
         label='Linkage',
         widget=forms.URLInput(attrs={
             'placeholder': 'https://',
-        })
+        }),
+        help_text='A location (address) for online access using a Uniform Resource Locator/Uniform Resource Identifier address.'
     )
 
     source_name = forms.CharField(
         required=False,
         label='Name',
-        widget=forms.TextInput()
+        widget=forms.TextInput(),
+        help_text='Name of the online resource.'
     )
 
     source_protocol = forms.CharField(
         required=False,
         label='Protocol',
         widget=forms.TextInput(),
-        help_text='E.g. HTTP, HTTPS, FTP'
+        help_text='The connection protocol e.g. http, ftp, file.'
     )
 
     source_description = forms.CharField(
         required=False,
         label='Description',
-        widget=forms.Textarea()
+        widget=forms.Textarea(),
+        help_text='A text description of what the online resource is/does.'
     )
 
     source_data_formats = forms.MultipleChoiceField(
@@ -616,7 +620,8 @@ class SourceMetadataComponent(forms.Form):
         label='Data Formats',
         widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The format of the stored result accessible from the online resource. This property references a term, e.g. NetCDF, from a controlled vocabulary.'
     )
 
     sources_json = forms.JSONField(
