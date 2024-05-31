@@ -14,10 +14,10 @@
 {% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block register_api_specification %}
 <div class="form-group">
-    <h2>Add Your Workflow OpenAPI Specification</h2>
+    <h2 class="border-bottom fs-4">Add Your Workflow OpenAPI Specification</h2>
     <div class="row gy-3">
         <div class="col-lg-6">
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column mt-2">
                 {% if form.api_specification_url.errors %}
                     <ul>
                     {% for error in form.api_specification_url.errors %}

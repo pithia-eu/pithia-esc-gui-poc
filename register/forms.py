@@ -22,6 +22,8 @@ class MultipleFileField(forms.FileField):
         return result
 
 class UploadFileForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
@@ -32,6 +34,8 @@ class UploadFileForm(forms.Form):
 
 
 class UploadDataCollectionFileForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
@@ -73,6 +77,8 @@ class UploadDataCollectionFileForm(forms.Form):
 
 
 class UploadCatalogueDataSubsetFileForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
@@ -86,7 +92,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
     )
 
     register_doi = forms.BooleanField(
-        label='Generate DOI for this Data Subset',
+        label='Generate a DOI for this Data Subset',
         required=False,
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input'
@@ -94,6 +100,8 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
     )
 
 class WorkflowOpenAPISpecificationForm(forms.Form):
+    required_css_class = 'required'
+
     api_specification_url = forms.CharField(
         label='OpenAPI Specification URL',
         required=True,
