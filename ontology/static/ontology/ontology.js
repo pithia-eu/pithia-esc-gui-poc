@@ -1,4 +1,5 @@
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
+const noSearchMatchesFound = document.getElementById("no-search-results-msg");
 
 
 // Utility functions
@@ -100,6 +101,11 @@ function filterTreeContainerIdBySearchBoxInput(treeContainerId) {
                 detailsNode.open = true;
             });
         });
+        noSearchMatchesFound.classList.add("d-none");
+        if (liNodesToShow.length === 0) {
+            noSearchMatchesFound.classList.remove("d-none");
+            noSearchMatchesFound.querySelector("span").textContent = searchBoxInput;
+        }
     }
 }
 

@@ -3,20 +3,29 @@
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
     <div class="d-flex align-items-start flex-wrap mb-xl-0 mb-2">
-        <span class="fw-bold keyword-searchable me-2">
+        <!-- Link to term detail page -->
+        {% if node.prefLabel %}
+        <a
+          href="{% url 'ontology:ontology_term_detail' category node.value %}"
+          class="d-flex align-items-center fw-bold me-2 keyword-searchable">
             {{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
+        </a>
+        {% else %}
+        <span class="fw-bold keyword-searchable me-2">
+            {{ node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </span>
+        {% endif %}
+
+        <!-- "Registered" indicator -->
         {% if node.value in registered_ontology_terms and node.value in parents_of_registered_ontology_terms %}
         <small class="border rounded-3 bg-body-secondary px-1 me-3">
             registered
         </small>
         {% endif %}
-        {% if node.prefLabel %}
-        <a href="{% url 'ontology:ontology_term_detail' category node.value %}" class="d-flex align-items-center">
-            View
-        </a>
-        {% else %}
-        <small class="text-muted fst-italic">(This ontology term may be invalid.)</small>
+
+        <!-- "Invalid" indicator -->
+        {% if not node.prefLabel %}
+        <small class="text-muted fst-italic">(This ontology term may no longer be invalid.)</small>
         {% endif %}
     </div>
     {% if node.definition %}
