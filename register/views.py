@@ -15,19 +15,8 @@ from .forms import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from handle_management.handle_api import (
-    add_doi_metadata_kernel_to_handle,
-    create_and_register_handle_for_resource_url,
-    delete_handle,
-)
-from handle_management.utils import (
-    add_handle_to_url_mapping,
-)
+from handle_management.utils import register_doi_for_catalogue_data_subset
 from handle_management.xml_utils import (
-    add_data_subset_data_to_doi_metadata_kernel_dict,
-    add_doi_metadata_kernel_to_data_subset,
-    add_handle_data_to_doi_metadata_kernel_dict,
-    initialise_default_doi_kernel_metadata_dict,
     is_doi_element_present_in_xml_file,
 )
 from resource_management.views import (
@@ -40,7 +29,6 @@ from user_management.services import (
     get_user_id_for_login_session,
     get_institution_id_for_login_session,
 )
-from utils.url_helpers import create_data_subset_detail_page_url
 
 
 logger = logging.getLogger(__name__)
@@ -323,61 +311,24 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
     def register_doi(self, request, xml_file):
-        try:
-            # POST RESOURCE REGISTRATION
-            # Get the DOI
-            # Update the actual "xml_file" variable by adding the DOI to the XML
-            # Perform an update on the resource
-            # Continue with registration as normal
-            if 'register_doi' not in request.POST:
-                return
-            with transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME']):
-                is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
-                if is_doi_in_file_already == True:
-                    logger.exception('A DOI has already been issued for this metadata file.')
-                    messages.error(request, f'A DOI has already been issued for this metadata file.')
-                    return
-                
-                # Create and register a handle
-                data_subset_url = create_data_subset_detail_page_url(self.new_registration.pk)
-                handle, handle_api_client, credentials = create_and_register_handle_for_resource_url(data_subset_url)
-                self.handle_api_client = handle_api_client
-                self.handle = handle
-
-                # Create a dict storing DOI metadata kernel information.
-                # This information in this dict will be added to the
-                # Handle to store data that a DOI would normally handle.
-                doi_dict = initialise_default_doi_kernel_metadata_dict()
-                # Add the handle metadata to the DOI dict
-                doi_dict = add_handle_data_to_doi_metadata_kernel_dict(handle, doi_dict)
-                add_data_subset_data_to_doi_metadata_kernel_dict(self.new_registration, doi_dict)
-
-                # Add DOI metadata kernel to Handle and Data Subset
-                add_doi_metadata_kernel_to_handle(self.handle, doi_dict, self.handle_api_client)
-                add_doi_metadata_kernel_to_data_subset(
-                    self.new_registration.pk,
-                    doi_dict,
-                    self.xml_file_string,
-                    self.owner_id
-                )
-                # Handle to Data Subset URL mapping, to be able to
-                # retrieve information from the Handle in case the
-                # Data Subset ever gets deleted.
-                add_handle_to_url_mapping(handle, data_subset_url)
-
-            messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
-        except ExpatError as err:
-            logger.exception('Expat error occurred during DOI registration process.')
-            messages.error(request, f'An error occurred whilst parsing {xml_file.name} during the DOI registration process.')
-        except BaseException as err:
-            logger.exception('An unexpected error occurred during DOI registration.')
-            messages.error(request, 'An unexpected error occurred during DOI registration.')
-            if self.handle != None:
-                try:
-                    delete_handle(self.handle, self.handle_api_client)
-                    logger.info(f'Deleted handle {self.handle} due to an error that occurred during DOI registration.')
-                except BaseException as err:
-                    logger.exception(f'Could not delete handle {self.handle} due to an error.')
+        # POST RESOURCE REGISTRATION
+        # Get the DOI
+        # Update the actual "xml_file" variable by adding the DOI to the XML
+        # Perform an update on the resource
+        # Continue with registration as normal
+        if 'register_doi' not in request.POST:
+            return
+        is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
+        if is_doi_in_file_already == True:
+            logger.exception('A DOI has already been issued for this metadata file.')
+            messages.error(request, f'A DOI has already been issued for this metadata file.')
+            return
+        doi_registration_result = register_doi_for_catalogue_data_subset(self.new_registration, self.owner_id)
+        if 'error' in doi_registration_result:
+            messages.error(request, doi_registration_result.get('error'))
+            return
+        self.handle = doi_registration_result.get('handle')
+        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
 
     def post(self, request, *args, **kwargs):
         # Form validation

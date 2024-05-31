@@ -25,6 +25,7 @@ from .handle_api import (
     register_handle,
     update_handle_url,
 )
+from .utils import register_doi_for_catalogue_data_subset
 from .xml_utils import (
     add_data_subset_data_to_doi_metadata_kernel_dict,
     add_doi_metadata_kernel_to_data_subset,
@@ -45,6 +46,7 @@ from common.models import (
     DataCollection,
     CatalogueDataSubset,
 )
+from common.test_xml_files import CATALOGUE_DATA_SUBSET_METADATA_XML
 from pithiaesc.settings import BASE_DIR
 from utils.dict_helpers import flatten
 
@@ -63,6 +65,10 @@ class PyHandleSetupTestCase(TestCase):
     VALUE_ORIGINAL = 'https://www.example.com/1'
     VALUE_AFTER = 'https://www.example.com/2'
 
+    def print_active_handles(self):
+        prefix = env('HANDLE_PREFIX')
+        return print('Current active handles: ', get_handles_with_prefix(prefix))
+
     def setUp(self) -> None:
         # Also acts as integration test
         # for instantiate_client_and_load_credentials() function
@@ -71,13 +77,14 @@ class PyHandleSetupTestCase(TestCase):
     
     def tearDown(self) -> None:
         try:
-            if hasattr(self, 'handle'):
+            if hasattr(self, 'handle') and self.handle is not None:
                 print('Tearing down test...')
-                print('Deleting handle...')
+                print('Attemping to delete handle registered during test...')
                 delete_handle(self.handle, self.client)
                 print('Test tear down complete')
-        except:
-            print('Could not delete handle.')
+        except BaseException as err:
+            print('Could not delete handle. Encountered error: ', err)
+        self.print_active_handles()
         return super().tearDown()
     
     def _create_and_register_handle_for_test(self):
@@ -202,6 +209,8 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         self.assertEqual(self.handle, delete_result)
 
         print('Passed delete_handle() test.')
+
+        self.handle = None
 
     @tag('fast', 'handles', 'update_handle_url')
     def test_update_handle_url(self):
@@ -456,3 +465,38 @@ class PrincipalAgentTestCase(TestCase):
             data_collection = DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         principal_agent_name = get_first_related_party_name_from_data_collection(data_collection)
         print('principal_agent_name', principal_agent_name)
+
+@tag('manual')
+class DOIUtilsTestCase(TestCase):
+    def print_active_handles(self):
+        prefix = env('HANDLE_PREFIX')
+        return print('Current active handles: ', get_handles_with_prefix(prefix))
+
+    def setUp(self) -> None:
+        self.client, self.credentials = instantiate_client_and_load_credentials()
+        self.catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        try:
+            if (hasattr(self, 'handle')
+                and self.handle is not None):
+                print('Tearing down test...')
+                print('Attemping to delete handle registered during test...')
+                delete_handle(self.handle, self.client)
+                print('Deleted handle')
+                print('Test tear down complete')
+        except:
+            print('Could not delete handle.')
+        self.print_active_handles()
+        return super().tearDown()
+
+    @tag('fast', 'register_doi_for_catalogue_data_subset')
+    def test_register_doi_for_catalogue_data_subset(self):
+        """
+        Registers a new DOI. DOI info is shared between the DOI,
+        a specified data subset and handle URL mapping.
+        """
+        doi_registration_result = register_doi_for_catalogue_data_subset(self.catalogue_data_subset, SAMPLE_USER_ID)
+        self.handle = doi_registration_result.get('handle')
+        self.assertTrue('error' not in doi_registration_result)

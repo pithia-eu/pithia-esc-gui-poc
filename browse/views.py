@@ -687,6 +687,13 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
 
+    def add_handle_data_to_context(self, context):
+        context['handle'] = self.handle
+        context['handle_data'] = None
+        if self.handle_data is not None:
+            context['handle_data'] = create_readable_scientific_metadata_flattened(self.handle_data)
+        return context
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.handle = None
@@ -699,19 +706,24 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
             return super().get(request, *args, **kwargs)
         
         try:
-            handle_url_mapping = models.HandleURLMapping.objects.for_url(request.get_full_path())
+            handle_url_mapping = models.HandleURLMapping.objects.for_url('https://esc.pithia.eu' + request.get_full_path())
             self.handle = handle_url_mapping.handle_name
             self.handle_data = get_handle_record(self.handle, self.client)
         except models.HandleURLMapping.DoesNotExist:
             pass
+
+        try:
+            self.resource = self.model.objects.get(pk=self.resource_id)
+        except models.CatalogueDataSubset.DoesNotExist:
+            context = {}
+            context = self.add_handle_data_to_context(context)
+            return render(request, 'browse/detail_404.html', context)
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['handle'] = self.handle
-        context['handle_data'] = None
-        if self.handle_data is not None:
-            context['handle_data'] = create_readable_scientific_metadata_flattened(self.handle_data)
+        context = self.add_handle_data_to_context(context)
         return context
 
 class WorkflowDetailView(ResourceDetailView):
