@@ -318,10 +318,9 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
         # Continue with registration as normal
         if 'register_doi' not in request.POST:
             return
-        is_doi_in_file_already = is_doi_element_present_in_xml_file(xml_file)
-        if is_doi_in_file_already == True:
-            logger.exception('A DOI has already been issued for this metadata file.')
-            messages.error(request, f'A DOI has already been issued for this metadata file.')
+        if is_doi_element_present_in_xml_file(xml_file):
+            logger.exception('A new DOI was not issued for this registration as record of a pre-existing DOI was found in the submitted metadata file.')
+            messages.error(request, f'A new DOI was not issued for this registration as record of a pre-existing DOI was found in the submitted metadata file.')
             return
         doi_registration_result = register_doi_for_catalogue_data_subset(self.new_registration, self.owner_id)
         if 'error' in doi_registration_result:

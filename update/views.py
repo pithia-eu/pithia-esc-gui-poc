@@ -13,12 +13,15 @@ from pyexpat import ExpatError
 
 from common import models
 from common.decorators import login_session_institution_required, institution_ownership_required
+from handle_management.utils import register_doi_for_catalogue_data_subset
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_from_metadata_xml_string,
+    is_doi_element_present_in_xml_file,
     remove_doi_element_from_metadata_xml_string,
 )
 from resource_management.forms import (
+    UploadUpdatedCatalogueDataSubsetFileForm,
     UploadUpdatedDataCollectionFileForm,
     UploadUpdatedFileForm,
     UpdateDataCollectionInteractionMethodsForm,
@@ -60,6 +63,7 @@ class ResourceUpdateFormView(FormView):
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['resource_id']
         self.resource = self.model.objects.get(pk=self.resource_id)
+        self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -88,12 +92,13 @@ class ResourceUpdateFormView(FormView):
         if form.is_valid():
             try:
                 if self.xml_file_string is None:
+                    xml_file.seek(0)
                     self.xml_file_string = xml_file.read()
                 resource_id_temp = self.resource_id
                 self.model.objects.update_from_xml_string(
                     resource_id_temp,
                     self.xml_file_string,
-                    get_user_id_for_login_session(request.session)
+                    self.owner_id
                 )
 
                 messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
@@ -306,11 +311,28 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
 
 class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueDataSubset
+    template_name = 'update/file_upload_catalogue_data_subset.html'
+    form_class = UploadUpdatedCatalogueDataSubsetFileForm
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_update_page_url_name = 'update:catalogue_data_subset'
     validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
+
+    existing_doi_xml_string = None
+    doi_already_issued_msg = 'A new DOI was not issued for this resource as one has already been registered for it.'
+    doi_found_in_submitted_file_msg = 'A new DOI was not issued for this resource as record of a pre-existing DOI was found in the submitted metadata file.'
+
+    def register_doi(self, request, xml_file):
+        doi_registration_result = register_doi_for_catalogue_data_subset(self.resource, self.owner_id)
+        if 'error' in doi_registration_result:
+            messages.error(request, doi_registration_result.get('error'))
+            return
+        self.handle = doi_registration_result.get('handle')
+        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
+        # Refresh self.resource after adding the DOI
+        self.resource = self.model.objects.get(pk=self.resource_id)
+        self.existing_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(self.resource.xml)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -321,16 +343,42 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         xml_file = request.FILES['files']
-        if form.is_valid():
-            resource_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(self.resource.xml)
-            if resource_doi_xml_string is None:
-                return super().post(request, *args, **kwargs)
-            # The DOI stored in the e-Science Centre will always be considered the
-            # "right" version, so we need to replace any DOI that may have been
-            # passed in the updated XML file.
-            self.xml_file_string = xml_file.read()
-            self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
-            self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, resource_doi_xml_string)
+        if not form.is_valid():
+            return super().post(request, *args, **kwargs)
+        
+        # Check if DOI has been registered for existing
+        # registration in DB
+        self.existing_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(self.resource.xml)
+        # If no DOI has been registered and a new DOI is
+        # not wanted, skip any further DOI-related actions. 
+        if (self.existing_doi_xml_string is None
+            and 'register_doi' not in request.POST):
+            return super().post(request, *args, **kwargs)
+        # If a DOI has already been issed from the eSC and
+        # a new DOI is wanted, reject the new DOI.
+        if ('register_doi' in request.POST
+            and self.existing_doi_xml_string is not None):
+            logger.exception(self.doi_already_issued_msg)
+            messages.error(request, self.doi_already_issued_msg)
+        # If record of a DOI is found in the submitted
+        # metadata file, and a new DOI is wanted, reject
+        # the new DOI.
+        elif ('register_doi' in request.POST
+            and is_doi_element_present_in_xml_file(xml_file)):
+            logger.exception(self.doi_found_in_submitted_file_msg)
+            messages.error(request, self.doi_found_in_submitted_file_msg)
+            return super().post(request, *args, **kwargs)
+        # If a DOI has not already been registered, and a
+        # new DOI is wanted, register a new DOI.
+        elif 'register_doi' in request.POST:
+            self.register_doi(request, xml_file)
+        # The DOI stored in the e-Science Centre will always be considered the
+        # "official" version, so we need to replace any DOI that may have been
+        # passed in the updated XML file.
+        xml_file.seek(0)
+        self.xml_file_string = xml_file.read()
+        self.xml_file_string = remove_doi_element_from_metadata_xml_string(self.xml_file_string)
+        self.xml_file_string = add_doi_xml_string_to_metadata_xml_string(self.xml_file_string, self.existing_doi_xml_string)
         return super().post(request, *args, **kwargs)
 
 class WorkflowUpdateFormView(ResourceUpdateFormView):
