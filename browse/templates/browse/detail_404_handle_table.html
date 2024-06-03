@@ -1,0 +1,18 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in handle_data.items %}
+            <tr>
+                <td>{{ key|safe }}</td>
+                <td>{{ value|urlize }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
