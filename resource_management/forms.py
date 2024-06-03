@@ -1,7 +1,11 @@
 from django import forms
 
+from register.forms import UploadCatalogueDataSubsetFileForm
+
 
 class UploadUpdatedFileForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
@@ -15,6 +19,8 @@ class UploadUpdatedFileForm(forms.Form):
     )
 
 class UploadUpdatedDataCollectionFileForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
@@ -26,6 +32,9 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
             'class': 'form-control',
         })
     )
+
+class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm):
+    pass
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     def __init__(self, *args, **kwargs):

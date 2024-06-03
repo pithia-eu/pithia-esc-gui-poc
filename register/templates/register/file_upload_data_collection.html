@@ -12,7 +12,9 @@
 {% endblock file_list %}
 {% block register_api_specification %}
 <div class="form-group mt-0">
-    <h2 class="mb-4">Add Interaction Methods for Your Data Collection</h2>
-    <div class="interaction-methods-form-container">{% include 'register/interaction_methods_form.html' %}</div>
+    <h2 class="border-bottom fs-4 pb-3 mb-4">Add Interaction Methods for the Data Collection</h2>
+    <div class="interaction-methods-form-container">
+        {% include 'register/interaction_methods_form.html' %}
+    </div>
 </div>
 {% endblock register_api_specification %}

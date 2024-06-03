@@ -512,4 +512,4 @@ class WorkflowQuerySet(ScientificMetadataQuerySet, AbstractWorkflowDatabaseQueri
     
 class HandleURLMappingQuerySet(AbstractHandleURLMappingDatabaseQueries, models.QuerySet):
     def for_url(self, url):
-        return self.get(url=url)
+        return self.filter(url=url)

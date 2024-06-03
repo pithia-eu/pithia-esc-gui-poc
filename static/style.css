@@ -572,7 +572,8 @@ summary.data-collection-category::marker {
 }
 
 #file-upload-form h2 {
-    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
 }
 
 #file-upload-form label {

@@ -587,6 +587,7 @@ class AbstractHandleURLMappingDatabaseQueries(ABC):
     @abstractmethod
     def for_url(self, url):
         """
-        A Handle to URL mapping for a given URL.
+        Handle to URL mappings for a given URL. One
+        URL may be registered with many handles.
         """
         pass

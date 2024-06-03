@@ -1,47 +1,38 @@
-{% extends 'base.html' %}
+{% extends '404.html' %}
 {% load project_tags %}
 {% load static %}
-{% block scripts %}
-<script src="{% static 'browse/detail.js' %}" defer></script>
-{{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
-{% endblock scripts %}
 {% block breadcrumbs %}
-{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
-{% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
-{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active 'Not found' %}
 {% endblock breadcrumbs %}
-{% block content %}
-<h1>{{ title }}</h1>
-<div class="row gy-4 gx-md-5">
+{% block extra_content %}
+{% if data_for_handles %}
+{% if data_for_handles|length == 1 %}
+<div class="row">
     <div class="col-lg-9">
         <p class="mb-5">
-            {% if handle_data %}
-                This resource no longer exists. A handle associated with the deleted resource was found and is described in the table below.
-            {% else %}
-                This resource does not exist.
-            {% endif %}
+            A handle associated with the deleted resource was found and is described in the table below.
         </p>
-        {% if handle_data %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, value in handle_data.items %}
-                    <tr>
-                        <td>{{ key|safe }}</td>
-                        <td>{{ value|urlize }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
+        {% with handle_data=data_for_handles.0 %}
+        {% include 'browse/detail_404_handle_table.html' %}
+        {% endwith %}
     </div>
 </div>
-{% endblock content %}
+{% elif data_for_handles|length > 1 %}
+<div class="row">
+    <div class="col-lg-9">
+        <p class="mb-5">
+            Multiple handles associated with the deleted resource were found and are described in the tables below.
+        </p>
+        {% for handle_data in data_for_handles %}
+        <details {% if forloop.counter == 1 %}open{% endif %}>
+            <summary>
+                <h2 class="d-inline-block fs-5 {% if forloop.counter == 1 %}mb-3{% else %}my-3{% endif %}">Handle #{{ forloop.counter }}</h2>
+            </summary>
+            {% include 'browse/detail_404_handle_table.html' %}
+        </details>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock extra_content %}

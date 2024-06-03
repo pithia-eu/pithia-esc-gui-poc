@@ -687,31 +687,42 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
 
+    def add_handle_data_to_context(self, context):
+        context['handles'] = self.handles
+        context['data_for_handles'] = []
+        if self.data_for_handles:
+            context['data_for_handles'] = [create_readable_scientific_metadata_flattened(data) for data in self.data_for_handles if data is not None]
+        return context
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
         self.handle = None
         self.handle_data = None
+        self.handles = []
+        self.data_for_handles = []
 
         try:
             self.client, self.credentials = instantiate_client_and_load_credentials()
         except BaseException as e:
             logger.exception('An unexpected error occurred whilst instantiating the PyHandle client.')
             return super().get(request, *args, **kwargs)
-        
+
+        handle_url_mappings = models.HandleURLMapping.objects.for_url(request.get_full_path())
+        self.handles = [hum.handle_name for hum in handle_url_mappings]
+        self.data_for_handles = [get_handle_record(handle, self.client) for handle in self.handles]
+
         try:
-            handle_url_mapping = models.HandleURLMapping.objects.for_url(request.get_full_path())
-            self.handle = handle_url_mapping.handle_name
-            self.handle_data = get_handle_record(self.handle, self.client)
-        except models.HandleURLMapping.DoesNotExist:
-            pass
+            self.resource = self.model.objects.get(pk=self.resource_id)
+        except models.CatalogueDataSubset.DoesNotExist:
+            context = {}
+            context = self.add_handle_data_to_context(context)
+            return render(request, 'browse/detail_404.html', context)
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['handle'] = self.handle
-        context['handle_data'] = None
-        if self.handle_data is not None:
-            context['handle_data'] = create_readable_scientific_metadata_flattened(self.handle_data)
+        context = self.add_handle_data_to_context(context)
         return context
 
 class WorkflowDetailView(ResourceDetailView):
