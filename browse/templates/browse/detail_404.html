@@ -1,21 +1,16 @@
-{% extends 'base.html' %}
+{% extends '404.html' %}
 {% load project_tags %}
 {% load static %}
 {% block breadcrumbs %}
 {% breadcrumb_item_active 'Not found' %}
 {% endblock breadcrumbs %}
-{% block content %}
-<h1>{{ title }}</h1>
-<div class="row gy-4 gx-md-5">
+{% block extra_content %}
+{% if handle_data %}
+<div class="row">
     <div class="col-lg-9">
         <p class="mb-5">
-            {% if handle_data %}
-                This resource no longer exists. A handle associated with the deleted resource was found and is described in the table below.
-            {% else %}
-                This resource does not exist.
-            {% endif %}
+            A handle associated with the deleted resource was found and is described in the table below.
         </p>
-        {% if handle_data %}
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -34,7 +29,7 @@
                 </tbody>
             </table>
         </div>
-        {% endif %}
     </div>
 </div>
-{% endblock content %}
+{% endif %}
+{% endblock extra_content %}
