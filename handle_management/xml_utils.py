@@ -156,7 +156,7 @@ def create_doi_xml_string_from_dict(doi_dict: dict) -> str:
             <doi:type>{type}</doi:type>
             <doi:principalAgent>
                 <doi:name>
-                    <doi:value>{principalAgentNameValue}</doi:value> <!-- Proper name of organisation?? -->
+                    <doi:value>{principalAgentNameValue}</doi:value>
                     <doi:type>{principalAgentNameType}</doi:type>
                 </doi:name>
             </doi:principalAgent>

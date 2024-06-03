@@ -1761,7 +1761,7 @@ CATALOGUE_DATA_SUBSET_METADATA_XML = SimpleUploadedFile(
                 <doi:type>Dataset</doi:type>
                 <doi:principalAgent>
                     <doi:name> -->
-                        <!-- <doi:value>Lowell GIRO Data Center</doi:value> --> <!-- Proper name of organisation ?? -->
+                        <!-- <doi:value>Lowell GIRO Data Center</doi:value> -->
                         <!-- <doi:type>Name</doi:type>
                     </doi:name>
                 </doi:principalAgent>
@@ -1875,8 +1875,7 @@ CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML = SimpleUploadedFile(
                 <doi:type>Dataset</doi:type>
                 <doi:principalAgent>
                     <doi:name>
-                        <doi:value>Lowell GIRO Data Center</doi:value> <!-- Proper name of organisation
-                        ?? -->
+                        <doi:value>Lowell GIRO Data Center</doi:value>
                         <doi:type>Name</doi:type>
                     </doi:name>
                 </doi:principalAgent>
