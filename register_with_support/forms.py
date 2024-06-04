@@ -555,6 +555,23 @@ class DataCollectionEditorForm(
         })
     )
 
+    api_specification_url = forms.CharField(
+        label='OpenAPI Specification URL',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    api_description = forms.CharField(
+        label='Description',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+        })
+    )
+
 
 class WorkflowEditorForm(BaseEditorForm, WorkflowOpenAPISpecificationForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):

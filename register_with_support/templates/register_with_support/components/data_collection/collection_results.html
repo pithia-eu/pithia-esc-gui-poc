@@ -1,34 +1,32 @@
-<section id="collection-results-section">
-    <div class="row gy-4">
-        <div class="col-lg-12">
-            <h2 class="mb-0">
-                Collection Results
-            </h2>
-        </div>
-        <div class="col-xl-7 col-lg-8">
-            <p class="mb-0">
-                Description of this collection results - URLs and other online resources.
-                An online resource is where the observation result (as a whole or partly)
-                can be accessed. 
-            </p>
-        </div>
-        <div class="col-lg-12">
-            <ul class="nav nav-tabs" id="sources-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="s1-tab" data-bs-toggle="tab" data-bs-target="#s1-tab-pane" type="button" role="tab" aria-controls="s1-tab-pane" aria-selected="true">Online Resource 1</button>
-                </li>
-                <li class="nav-item create-tab" role="presentation">
-                    <button class="nav-link" type="button">
-                        + Add Online Resource
-                    </button>
-                </li>
-            </ul>
-            <div class="tab-content" id="sources-tab-content">
-                <div class="tab-pane fade show active" id="s1-tab-pane" role="tabpanel" aria-labelledby="s1-tab" tabindex="0">
-                    {% include 'register_with_support/components/data_collection/sources_tab_pane_content_template.html' %}
-                </div>
+<div class="row gy-4">
+    <div class="col-lg-12">
+        <h3 class="mb-0">
+            Collection Results
+        </h3>
+    </div>
+    <div class="col-xl-7 col-lg-8">
+        <p class="mb-0">
+            Description of this collection results - URLs and other online resources.
+            An online resource is where the observation result (as a whole or partly)
+            can be accessed. 
+        </p>
+    </div>
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs" id="sources-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="s1-tab" data-bs-toggle="tab" data-bs-target="#s1-tab-pane" type="button" role="tab" aria-controls="s1-tab-pane" aria-selected="true">Online Resource 1</button>
+            </li>
+            <li class="nav-item create-tab" role="presentation">
+                <button class="nav-link" type="button">
+                    + Add Online Resource
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="sources-tab-content">
+            <div class="tab-pane fade show active" id="s1-tab-pane" role="tabpanel" aria-labelledby="s1-tab" tabindex="0">
+                {% include 'register_with_support/components/data_collection/sources_tab_pane_content_template.html' %}
             </div>
         </div>
+        {{ form.sources_json }}
     </div>
-    {{ form.sources_json }}
-</section>
+</div>

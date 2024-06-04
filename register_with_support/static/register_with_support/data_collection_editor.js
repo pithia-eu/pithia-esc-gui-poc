@@ -3,6 +3,9 @@ import {
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
 import {
+    checkAndSetRequiredAttributesForFields,
+} from "/static/register_with_support/components/conditional_required_fields.js";
+import {
     setupLocalIdAndNamespaceRelatedEventListeners,
 } from "/static/register_with_support/components/localid_validation.js";
 import {
@@ -15,6 +18,26 @@ import {
     setupSourcesTab,
 } from "/static/register_with_support/components/sources_tab.js";
 
+const openApiSpecUrlInput = document.querySelector("input[name='api_specification_url']");
+const apiDescriptionTextarea = document.querySelector("textarea[name='api_description']");
+
+
+function checkAndSetApiInteractionMethodConditionalRequiredFields() {
+    checkAndSetRequiredAttributesForFields([openApiSpecUrlInput], [apiDescriptionTextarea]);
+}
+
+function setupApiInteractionMethodsSection() {
+    const fields = [
+        openApiSpecUrlInput,
+        apiDescriptionTextarea,
+    ];
+    fields.forEach(field => {
+        field.addEventListener("input", () => {
+            checkAndSetApiInteractionMethodConditionalRequiredFields();
+        });
+    });
+}
+
 editorForm.addEventListener("submit", e => {
     e.preventDefault();
 
@@ -26,4 +49,5 @@ window.addEventListener("load", () => {
     const sourcesTab = setupSourcesTab();
     const relatedPartiesTable = setupRelatedPartiesTable();
     setupQualityAssessmentSection();
+    setupApiInteractionMethodsSection();
 });
