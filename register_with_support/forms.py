@@ -555,7 +555,7 @@ class DataCollectionEditorForm(
         })
     )
 
-    api_specification_url = forms.CharField(
+    api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=False,
         widget=forms.TextInput(attrs={
