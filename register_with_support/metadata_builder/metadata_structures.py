@@ -344,7 +344,6 @@ class ComputationCapabilitiesMetadata(
         self.append_version(properties['version'])
         self.append_software_reference(properties['software_reference'])
         self.append_processing_inputs(properties['processing_inputs'])
-        self.append_processing_output(properties['processing_output'])
         self.append_unused_algorithm()
 
     def append_types(self, types):
@@ -363,11 +362,6 @@ class ComputationCapabilitiesMetadata(
     def append_processing_inputs(self, processing_inputs):
         for pi in processing_inputs:
             self._append_parameter(self.root, pi, 'processingInput')
-
-    def append_processing_output(self, processing_output):
-        if not processing_output:
-            return
-        self._append_parameter(self.root, processing_output, 'processingOutput')
 
     def append_software_reference(self, software_reference):
         self._append_citation(self.root, software_reference, 'softwareReference')

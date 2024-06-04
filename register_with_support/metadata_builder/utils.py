@@ -233,12 +233,6 @@ def process_processing_inputs(form_cleaned_data):
     processing_inputs_from_form = form_cleaned_data.get('processing_inputs_json')
     return remove_blank_dicts_from_dict_list(processing_inputs_from_form)
 
-def process_processing_output(form_cleaned_data):
-    return {
-        'name': form_cleaned_data.get('processing_output_name'),
-        'description': form_cleaned_data.get('processing_output_description'),
-    }
-
 def process_software_reference(form_cleaned_data):
     return _process_citation(
         form_cleaned_data,

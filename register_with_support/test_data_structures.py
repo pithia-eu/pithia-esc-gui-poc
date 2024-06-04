@@ -526,7 +526,6 @@ COMPUTATION_CAPABILITIES_PROPERTIES_FULL = {
             'description': 'Description for processing input 2'
         },
     ],
-    'processing_output': '',
     'quality_assessment': {
         'data_quality_flags': [
             'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',

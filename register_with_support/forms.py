@@ -380,20 +380,6 @@ class ComputationCapabilitiesEditorForm(
         widget=forms.HiddenInput()
     )
 
-    processing_output_name = forms.CharField(
-        label='Name',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    processing_output_description = forms.CharField(
-        label='Description',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'rows': 3
-        })
-    )
-
     child_computations = forms.MultipleChoiceField(
         label='Child Computations',
         required=False,
