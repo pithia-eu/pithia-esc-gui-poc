@@ -1050,6 +1050,26 @@ class DataCollectionRegisterWithoutFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
+    def register_api_interaction_method(self, request, new_registration):
+        try:
+            api_specification_url = request.POST.get('api_specification_url', None)
+            api_description = request.POST.get('api_description', '')
+            if not api_specification_url:
+                return
+            models.InteractionMethod.api_interaction_methods.create_api_interaction_method(
+                api_specification_url,
+                api_description,
+                new_registration
+            )
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during API interaction method registration.')
+            messages.error(request, 'An unexpected error occurred during API interaction method registration.')
+    
+    def run_registration_actions(self, request, xml_file, name):
+        new_registration = self.register_xml_file(request, xml_file, name)
+        self.register_api_interaction_method(request, new_registration)
+        return new_registration
+
     def get_feature_of_interest_choices_for_form(self):
         g = get_graph_of_pithia_ontology_component('featureOfInterest')
         feature_of_interest_dict = {}
@@ -1133,6 +1153,7 @@ class DataCollectionRegisterWithoutFormView(
             'register_with_support/components/data_collection/sources_tab_pane_content_template.html',
             context=context
         )
+        context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
     
     def get_form_kwargs(self):

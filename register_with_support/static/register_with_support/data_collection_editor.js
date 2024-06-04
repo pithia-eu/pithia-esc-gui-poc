@@ -17,6 +17,11 @@ import {
 import {
     setupSourcesTab,
 } from "/static/register_with_support/components/sources_tab.js";
+import {
+    apiSpecificationUrlInput,
+    badApiInteractionMethodModifiedEvent,
+    validateOpenApiSpecificationUrl,
+} from "/static/validation/api_specification_validation.js";
 
 const openApiSpecUrlInput = document.querySelector("input[name='api_specification_url']");
 const apiDescriptionTextarea = document.querySelector("textarea[name='api_description']");
@@ -38,6 +43,14 @@ function setupApiInteractionMethodsSection() {
     });
 }
 
+apiSpecificationUrlInput.addEventListener("input", async event => {
+    const url = apiSpecificationUrlInput.value;
+    if (url.trim().length === 0) {
+        return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
+    }
+    validateOpenApiSpecificationUrl();
+});
+
 editorForm.addEventListener("submit", e => {
     e.preventDefault();
 
@@ -50,4 +63,5 @@ window.addEventListener("load", () => {
     const relatedPartiesTable = setupRelatedPartiesTable();
     setupQualityAssessmentSection();
     setupApiInteractionMethodsSection();
+    validateOpenApiSpecificationUrl();
 });

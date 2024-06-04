@@ -3,6 +3,7 @@
 {% block extra_scripts %}
 {{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register_with_support/data_collection_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block form_content %}
