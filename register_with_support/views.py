@@ -1060,6 +1060,7 @@ class DataCollectionRegisterWithoutFormView(
                 api_description,
                 new_registration
             )
+            messages.success(request, f'<p>Added an API interaction method for {new_registration.name}.</p><p class="mb-0">It can be viewed and/or updated from the <a href="{reverse_lazy("update:data_collection_interaction_methods", kwargs={"resource_id": new_registration.pk})}">interaction methods page</a> for this data collection.</p>')
         except BaseException as err:
             logger.exception('An unexpected error occurred during API interaction method registration.')
             messages.error(request, 'An unexpected error occurred during API interaction method registration.')

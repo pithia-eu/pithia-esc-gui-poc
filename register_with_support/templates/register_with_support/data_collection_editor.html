@@ -66,13 +66,16 @@
     </div>
 </section>
 <hr class="my-5">
-{% include 'register_with_support/components/data_collection/interaction_methods_section.html' %}
+{% include 'register_with_support/components/data_collection/collection_results_section.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/data_levels.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/quality_assessment.html' %}
 <hr class="my-5">
 {% include 'register_with_support/components/related_parties.html' %}
+<hr class="my-5">
+{% include 'register_with_support/components/data_collection/api_interaction_method.html' %}
+<hr class="my-5">
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
@@ -96,8 +99,8 @@
     </a>
 </li>
 <li class="list-group-item">
-    <a href="#interaction-methods-section">
-        Interaction Methods
+    <a href="#collection-results-section">
+        Collection Results
     </a>
 </li>
 <li class="list-group-item">
@@ -114,5 +117,8 @@
     <a href="#related-parties-section">
         Related Parties
     </a>
+</li>
+<li class="list-group-item">
+    <a href="#related-parties-section">API</a> <span class="text-secondary">(Optional)</span>
 </li>
 {% endblock table_of_contents %}
