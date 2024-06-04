@@ -552,7 +552,8 @@ class DataCollectionEditorForm(
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The process used to generate the result.'
     )
 
     api_specification_url = forms.URLField(
