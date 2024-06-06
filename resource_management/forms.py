@@ -49,10 +49,10 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         })
     )
 
-    api_specification_url = forms.CharField(
+    api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=False,
-        widget=forms.TextInput(attrs={
+        widget=forms.URLInput(attrs={
             'class': 'form-control'
         })
     )
@@ -68,14 +68,16 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     )
 
 class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
+    required_css_class = 'required'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
 
-    api_specification_url = forms.CharField(
+    api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.URLInput(attrs={
             'class': 'form-control'
         })
     )

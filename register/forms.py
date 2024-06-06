@@ -56,11 +56,11 @@ class UploadDataCollectionFileForm(forms.Form):
         })
     )
 
-    api_specification_url = forms.CharField(
+    api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=False,
         disabled=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.URLInput(attrs={
             'class': 'form-control'
         })
     )
@@ -102,10 +102,10 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
 class WorkflowOpenAPISpecificationForm(forms.Form):
     required_css_class = 'required'
 
-    api_specification_url = forms.CharField(
+    api_specification_url = forms.URLField(
         label='OpenAPI Specification URL',
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.URLInput(attrs={
             'class': 'form-control'
         })
     )
