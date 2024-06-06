@@ -91,6 +91,7 @@ h1 {
 hgroup p {
     max-width: 45ch;
     font-size: 1.75rem !important;
+    color: var(--bs-secondary);
 }
 
 @counter-style paren-lower-alpha {
