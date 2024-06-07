@@ -1,7 +1,10 @@
 <div class="input-group local-id-input-group has-validation">
     <span class="input-group-text" id="input-group-prepend">{{ localid_base }}_</span>
-    <input type="text" class="{{ form.localid.field.widget.attrs.class }}" name="{{ form.localid.name }}" id="{{ form.localid.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.localid.value|default:'' }}" readonly>
+    <input type="text" class="{{ form.localid.field.widget.attrs.class }}" name="{{ form.localid.name }}" id="{{ form.localid.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.localid.value|default:'' }}" required readonly>
     <div class="invalid-feedback">
         Local ID with suffix "<span class="taken-localid"></span>" is already in use so "<span class="localid-suggestion"></span>" will be used instead.
     </div>
 </div>
+{% for error in form.localid.errors %}
+<div class="form-text text-danger">{{ error }}</div>
+{% endfor %}

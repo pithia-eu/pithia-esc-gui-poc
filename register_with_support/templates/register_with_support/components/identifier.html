@@ -25,6 +25,9 @@
         <div class="col-xl-3 col-lg-4">
             {{ form.namespace }}
         </div>
+        {% for error in form.namespace.errors %}
+        <div class="form-text text-danger">{{ error }}</div>
+        {% endfor %}
     </div>
     <div class="row flex-column gy-2">
         <div class="col-lg-5">
@@ -36,5 +39,8 @@
         <div class="col-xl-3 col-lg-4">
             {{ form.identifier_version }}
         </div>
+        {% for error in form.identifier_version.errors %}
+        <div class="form-text text-danger">{{ error }}</div>
+        {% endfor %}
     </div>
 </section>
