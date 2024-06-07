@@ -1,4 +1,3 @@
-import base64
 import hashlib
 import json
 import logging
@@ -19,6 +18,7 @@ from django.urls import (
     Resolver404,
     reverse,
 )
+from django.utils.html import escape
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import (
     require_http_methods,
@@ -244,7 +244,7 @@ def choose_institution_for_login_session(request):
             is_institution_for_login_session_set = get_institution_id_for_login_session(request.session)
             changed_or_set = 'changed' if is_institution_for_login_session_set else 'set'
             set_institution_for_login_session(request.session, institution, subgroup)
-            success_msg = f'Institution {changed_or_set} to {institution}.'
+            success_msg = escape(f'Institution {changed_or_set} to {institution}.')
             messages.success(request, success_msg)
             if not is_institution_for_login_session_set:
                 user_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>'

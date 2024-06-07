@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 from django.views.generic import TemplateView
 
 from common import models
@@ -87,7 +88,7 @@ class ResourceDeleteView(TemplateView):
             self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
             ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
 
-            messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
+            messages.success(request, f'Successfully deleted {escape(self.resource_to_delete.name)}.')
         except BaseException as e:
             logger.exception('An error occurred during resource deletion.')
             messages.error(request, 'An error occurred during resource deletion.')
@@ -119,7 +120,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
             self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
             self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
             ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
-            messages.success(request, f'Successfully deleted {self.resource_to_delete.name}.')
+            messages.success(request, f'Successfully deleted {escape(self.resource_to_delete.name)}.')
         except BaseException as e:
             print(e)
             messages.error(request, 'An error occurred during resource deletion.')

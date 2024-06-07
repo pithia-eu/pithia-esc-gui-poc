@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import escape
 from functools import wraps
 
 from .models import ScientificMetadata
@@ -27,7 +28,7 @@ def institution_ownership_required(function):
         institution_id_for_login_session = get_institution_id_for_login_session(request.session)
         resource = ScientificMetadata.objects.get(pk=resource_id)
         if resource.institution_id != institution_id_for_login_session:
-            messages.error(request, f'You must be a member of the institution that owns registration "{resource_id}" to perform this action.')
+            messages.error(request, f'You must be a member of the institution that owns registration "{escape(resource_id)}" to perform this action.')
             return redirect(reverse('resource_management:index'))
         return function(request, resource_id, *args, **kwargs)
 

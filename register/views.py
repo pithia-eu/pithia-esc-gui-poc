@@ -8,6 +8,7 @@ from django.db import (
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 from django.views.generic import FormView
 from pyexpat import ExpatError
 
@@ -76,13 +77,13 @@ class ResourceRegisterFormView(FormView):
         try:
             self.new_registration = self.run_registration_actions(request, xml_file)
 
-            messages.success(request, f'Successfully registered {xml_file.name}.')
+            messages.success(request, f'Successfully registered {escape(xml_file.name)}.')
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
-            messages.error(request, f'An error occurred whilst parsing {xml_file.name}.')
+            messages.error(request, f'An error occurred whilst parsing {escape(xml_file.name)}.')
         except IntegrityError as err:
             logger.exception('The XML file submitted for registration has been registered before.')
-            messages.error(request, f'{xml_file.name} has been registered before.')
+            messages.error(request, f'{escape(xml_file.name)} has been registered before.')
         except BaseException as err:
             logger.exception('An unexpected error occurred during metadata registration.')
             messages.error(request, 'An unexpected error occurred during metadata registration.')
@@ -244,7 +245,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
                 api_description,
                 self.new_registration
             )
-            messages.success(request, f'<p>Added an API interaction method for {self.new_registration.name}.</p><p class="mb-0">It can be viewed and/or updated from the <a href="{reverse_lazy("update:data_collection_interaction_methods", kwargs={"resource_id": self.new_registration.pk})}">interaction methods page</a> for this data collection.</p>')
+            messages.success(request, f'<p>Added an API interaction method for {escape(self.new_registration.name)}.</p><p class="mb-0">It can be viewed and/or updated from the <a href="{reverse_lazy("update:data_collection_interaction_methods", kwargs={"resource_id": self.new_registration.pk})}">interaction methods page</a> for this data collection.</p>')
         except BaseException as err:
             logger.exception('An unexpected error occurred during API interaction method registration.')
             messages.error(request, 'An unexpected error occurred during API interaction method registration.')
@@ -325,10 +326,10 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
             return
         doi_registration_result = register_doi_for_catalogue_data_subset(self.new_registration, self.owner_id)
         if 'error' in doi_registration_result:
-            messages.error(request, doi_registration_result.get('error'))
+            messages.error(request, escape(doi_registration_result.get('error')))
             return
         self.handle = doi_registration_result.get('handle')
-        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
+        messages.success(request, escape(f'A DOI with name "{self.handle}" has been registered for this data subset.'))
 
     def post(self, request, *args, **kwargs):
         # Form validation

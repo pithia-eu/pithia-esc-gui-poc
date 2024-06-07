@@ -8,6 +8,7 @@ from django.shortcuts import (
 )
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
@@ -101,12 +102,12 @@ class ResourceUpdateFormView(FormView):
                     self.owner_id
                 )
 
-                messages.success(request, f'Successfully updated {xml_file.name}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+                messages.success(request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             except ExpatError as err:
                 logger.exception('Could not update a resource as there was an error parsing the update XML.')
                 messages.error(request, 'An error occurred whilst parsing the XML.')
             except BaseException as err:
-                logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{self.resource_id}".')
+                logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
                 messages.error(request, 'An unexpected error occurred.')
         else:
             messages.error(request, 'The form submitted was not valid.')
@@ -233,7 +234,7 @@ def data_collection_interaction_methods(request, resource_id):
                         models.APIInteractionMethod.objects.get(scientific_metadata=data_collection).delete(using=os.environ['DJANGO_RW_DATABASE_NAME'])
                     except models.APIInteractionMethod.DoesNotExist:
                         pass
-                    messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
+                    messages.success(request, f'Successfully updated interaction methods for {escape(data_collection.name)}.')
                     return redirect('update:data_collection_interaction_methods', resource_id=resource_id)
 
                 try:
@@ -249,7 +250,7 @@ def data_collection_interaction_methods(request, resource_id):
                         api_description,
                         data_collection
                     )
-                messages.success(request, f'Successfully updated interaction methods for {data_collection.name}.')
+                messages.success(request, f'Successfully updated interaction methods for {escape(data_collection.name)}.')
             except BaseException as err:
                 logger.exception('An unexpected error occurred whilst trying to update a Data Collection interaction method.')
                 messages.error(request, 'An unexpected error occurred.')
@@ -326,10 +327,10 @@ class CatalogueDataSubsetUpdateFormView(ResourceUpdateFormView):
     def register_doi(self, request, xml_file):
         doi_registration_result = register_doi_for_catalogue_data_subset(self.resource, self.owner_id)
         if 'error' in doi_registration_result:
-            messages.error(request, doi_registration_result.get('error'))
+            messages.error(request, escape(doi_registration_result.get('error')))
             return
         self.handle = doi_registration_result.get('handle')
-        messages.success(request, f'A DOI with name "{self.handle}" has been registered for this data subset.')
+        messages.success(request, f'A DOI with name "{escape(self.handle)}" has been registered for this data subset.')
         # Refresh self.resource after adding the DOI
         self.resource = self.model.objects.get(pk=self.resource_id)
         self.existing_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(self.resource.xml)
@@ -413,7 +414,7 @@ def workflow_openapi_specification_url(request, resource_id):
                     request.POST.get('api_description'),
                     workflow
                 )
-            messages.success(request, f'Successfully updated OpenAPI specification for {workflow.name}.')
+            messages.success(request, f'Successfully updated OpenAPI specification for {escape(workflow.name)}.')
         except BaseException as err:
             logger.exception('An unexpected error occurred whilst trying to update an OpenAPI specification for a workflow.')
             messages.error(request, 'An unexpected error occurred.')

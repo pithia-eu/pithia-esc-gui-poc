@@ -73,7 +73,7 @@ class ResourceRegisterWithEditorFormView(FormView):
             self.institution_id,
             self.owner_id,
         )
-        messages.success(request, f'Successfully registered {name}.')
+        messages.success(request, f'Successfully registered {escape(name)}.')
         return new_registration
 
     def run_registration_actions(self, request, xml_file, name):
@@ -167,7 +167,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'The form submitted was not valid.')
+        messages.error(self.request, f'The form submitted was not valid. See the form below for details.')
         return super().form_invalid(form)
     
     def dispatch(self, request, *args, **kwargs):
@@ -1060,7 +1060,7 @@ class DataCollectionRegisterWithoutFormView(
                 api_description,
                 new_registration
             )
-            messages.success(request, f'<p>Added an API interaction method for {new_registration.name}.</p><p class="mb-0">It can be viewed and/or updated from the <a href="{reverse_lazy("update:data_collection_interaction_methods", kwargs={"resource_id": new_registration.pk})}">interaction methods page</a> for this data collection.</p>')
+            messages.success(request, f'<p>Added an API interaction method for {escape(new_registration.name)}.</p><p class="mb-0">It can be viewed and/or updated from the <a href="{reverse_lazy("update:data_collection_interaction_methods", kwargs={"resource_id": new_registration.pk})}">interaction methods page</a> for this data collection.</p>')
         except BaseException as err:
             logger.exception('An unexpected error occurred during API interaction method registration.')
             messages.error(request, 'An unexpected error occurred during API interaction method registration.')
