@@ -5,12 +5,31 @@ import xmltodict
 from django.apps import apps
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
+from lxml import etree
 from typing import Union
+
+from .helpers import clean_localid
 
 
 class ScientificMetadataManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().order_by('json__name')
+
+    def _parse_xml_file_or_string(self, xml_file_or_string):
+        xml_string = xml_file_or_string
+        
+        # For SimpleUploadedFile objects
+        if hasattr(xml_string, 'read'):
+            xml_string.seek(0)
+            xml_string = xml_string.read()
+        
+        # For bytes-like objects
+        try:
+            xml_string = xml_string.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
+
+        return etree.fromstring(xml_string.encode('utf-8'))
 
     def _convert_xml_metadata_file_to_dictionary(self, xml_file_or_string: Union[InMemoryUploadedFile, str]) -> dict:
         xml = xml_file_or_string
@@ -32,6 +51,12 @@ class ScientificMetadataManager(models.Manager):
         # Remove the top-level tag - this will be just <Organisation>, for example
         metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
         return metadata_file_dict
+
+    def clean_localid_from_xml_string(self, xml_string):
+        parsed_xml = self._parse_xml_file_or_string(xml_string)
+        local_id_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}localID')
+        local_id_element.text = clean_localid(local_id_element.text)
+        return etree.tostring(parsed_xml)
     
     def _create_from_xml_string(
         self,
@@ -40,17 +65,19 @@ class ScientificMetadataManager(models.Manager):
         institution_id: str,
         owner_id: str
     ):
-        xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
-        
+        cleaned_xml_string = self.clean_localid_from_xml_string(xml_string)
+
         try:
-            xml_string = xml_string.decode()
+            cleaned_xml_string = cleaned_xml_string.decode()
         except (UnicodeDecodeError, AttributeError):
             pass
+
+        xml_as_dict = self._format_metadata_file_xml_for_db(cleaned_xml_string)
 
         scientific_metadata = self.using(os.environ['DJANGO_RW_DATABASE_NAME']).create(
             id=xml_as_dict['identifier']['PITHIA_Identifier']['localID'],
             type=type,
-            xml=xml_string,
+            xml=cleaned_xml_string,
             json=xml_as_dict,
             institution_id=institution_id,
             owner_id=owner_id
@@ -64,15 +91,17 @@ class ScientificMetadataManager(models.Manager):
 
 
     def update_from_xml_string(self, pk, xml_string: str, owner_id: str):
-        xml_as_dict = self._format_metadata_file_xml_for_db(xml_string)
+        cleaned_xml_string = self.clean_localid_from_xml_string(xml_string)
 
         try:
-            xml_string = xml_string.decode()
+            cleaned_xml_string = cleaned_xml_string.decode()
         except (UnicodeDecodeError, AttributeError):
             pass
 
+        xml_as_dict = self._format_metadata_file_xml_for_db(cleaned_xml_string)
+
         registration = self.get(pk=pk)
-        registration.xml = xml_string
+        registration.xml = cleaned_xml_string
         registration.json = xml_as_dict
         registration.owner_id = owner_id
         registration.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])

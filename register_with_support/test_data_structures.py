@@ -757,6 +757,10 @@ DATA_COLLECTION_PROPERTIES_FULL = {
         'https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies',
     ]
 }
+DATA_COLLECTION_WITH_LOCALID_HTML = copy.deepcopy(DATA_COLLECTION_PROPERTIES_FULL)
+DATA_COLLECTION_WITH_LOCALID_HTML['localid'] = 'DataCollection_<p>Test</p>'
+DATA_COLLECTION_WITH_HTML = copy.deepcopy(DATA_COLLECTION_WITH_LOCALID_HTML)
+DATA_COLLECTION_WITH_HTML['description'] = f'<div>{DATA_COLLECTION_WITH_HTML["description"]}</div>'
 
 # Catalogue
 CATALOGUE_PROPERTIES_FULL = {

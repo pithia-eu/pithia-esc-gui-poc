@@ -1,11 +1,13 @@
 import environ
 from django.test import TestCase
 
+from common.managers import ScientificMetadataManager
 from common.models import InteractionMethod
 from common.test_setup import (
     register_data_collection_for_test,
     register_organisation_for_test,
 )
+from common.test_xml_files import ORGANISATION_METADATA_XML
 
 # For tests where ownership data is required
 SAMPLE_USER_ID        = 'johndoe@example.com'
@@ -27,6 +29,27 @@ class ManagerTestCase(TestCase):
         except AttributeError as err:
             print(err)
             self.fail("'id' property was not found in ScientificMetadata type object.")
+
+    def test_parse_xml_file(self):
+        """A ScientificMetadataManager instance parses an
+        XML file.
+        """
+        manager = ScientificMetadataManager()
+        xml_file = ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        parsed_xml = manager._parse_xml_file_or_string(xml_file)
+        self.assertNotEqual(parsed_xml, None)
+
+    def test_parse_xml_string(self):
+        """A ScientificMetadataManager instance parses an
+        XML string.
+        """
+        manager = ScientificMetadataManager()
+        xml_file = ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        parsed_xml = manager._parse_xml_file_or_string(xml_string)
+        self.assertNotEqual(parsed_xml, None)
 
 class InteractionMethodTestCase(TestCase):
     def test_create_api_interaction_method(self):

@@ -6,6 +6,11 @@ function titleCaseString(inputString) {
     return inputStringSplit.join(" ");
 }
 
+export function strip(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || '';
+}
+
 export function generateLocalId(name) {
-    return titleCaseString(name).replace(/\s/g, "_");
+    return encodeURIComponent(strip(titleCaseString(name).replace(/\s/g, "_")).replace(/[^a-zA-Z0-9 \-\_]/g, ""));
 }
