@@ -52,7 +52,7 @@ class ScientificMetadataManager(models.Manager):
         metadata_file_dict = metadata_file_dict[(list(metadata_file_dict)[0])]
         return metadata_file_dict
 
-    def clean_localid_from_xml_string(self, xml_string):
+    def _clean_localid_in_xml_string(self, xml_string):
         parsed_xml = self._parse_xml_file_or_string(xml_string)
         local_id_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}localID')
         local_id_element.text = clean_localid(local_id_element.text)
@@ -65,7 +65,7 @@ class ScientificMetadataManager(models.Manager):
         institution_id: str,
         owner_id: str
     ):
-        cleaned_xml_string = self.clean_localid_from_xml_string(xml_string)
+        cleaned_xml_string = self._clean_localid_in_xml_string(xml_string)
 
         try:
             cleaned_xml_string = cleaned_xml_string.decode()
@@ -91,7 +91,7 @@ class ScientificMetadataManager(models.Manager):
 
 
     def update_from_xml_string(self, pk, xml_string: str, owner_id: str):
-        cleaned_xml_string = self.clean_localid_from_xml_string(xml_string)
+        cleaned_xml_string = self._clean_localid_in_xml_string(xml_string)
 
         try:
             cleaned_xml_string = cleaned_xml_string.decode()
