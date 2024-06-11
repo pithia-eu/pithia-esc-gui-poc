@@ -6,11 +6,15 @@ function titleCaseString(inputString) {
     return inputStringSplit.join(" ");
 }
 
-export function strip(html) {
+function strip(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || '';
 }
 
+export function cleanLocalId(localId) {
+    return encodeURIComponent(strip(localId).replace(/[^a-zA-Z0-9 \-\_]/g, ""));
+}
+
 export function generateLocalId(name) {
-    return encodeURIComponent(strip(titleCaseString(name).replace(/\s/g, "_")).replace(/[^a-zA-Z0-9 \-\_]/g, ""));
+    return cleanLocalId(titleCaseString(name).replace(/\s/g, "_"));
 }

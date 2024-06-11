@@ -1,4 +1,7 @@
 import {
+    cleanLocalId,
+} from "/static/register_with_support/components/localid_generation.js";
+import {
     validateLocalIdAndProcessResults,
 } from "/static/register_with_support/components/localid_validation.js";
 import {
@@ -14,7 +17,7 @@ const localIdSuffixInput = document.querySelector("input[name='localid']");
 // Organisation local ID is generated using a different method
 // to all other metadata types.
 function generateLocalId(shortName) {
-    return shortName.toUpperCase().replace(/\s/g, "");
+    return cleanLocalId(shortName.toUpperCase().replace(/\s/g, ""));
 }
 
 shortNameInput.addEventListener("input", async () => {

@@ -50,13 +50,6 @@
         <div class="col-xl-7 col-lg-8">
             {% include 'register_with_support/components/localid-input-group.html' %}
         </div>
-        {% if form.localid.errors %}
-        <div class="col-xl-7 col-lg-8">
-            {% for error in form.localid.errors %}
-            <div class="form-text text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
     </div>
     <div class="row flex-column gy-3">
         {{ form.namespace }}
