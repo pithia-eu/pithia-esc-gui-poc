@@ -10,6 +10,7 @@ class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
         self.fields['short_name'].label = f'{self.form_metadata_type} {self.fields["short_name"].label}'
         self.fields['localid'].help_text = f'A basic local ID is automatically generated using this organisation\'s short name. If there is another organisation sharing the same short name, a more complex local ID will be generated.'
         self.fields['namespace'].widget = forms.HiddenInput()
+        self.fields['organisation'].required = False
 
     short_name = forms.CharField(
         label='Short Name',
