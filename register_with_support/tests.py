@@ -35,18 +35,22 @@ from validation.services import MetadataFileXSDValidator
 class MetadataBuilderTestCase(SimpleTestCase):
     def test_organisation(self):
         organisation = OrganisationMetadata(ORGANISATION_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in organisation.xml)
         print('organisation.xml', organisation.xml)
 
     def test_individual(self):
         individual = IndividualMetadata(INDIVIDUAL_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in individual.xml)
         print('individual.xml', individual.xml)
 
     def test_project(self):
         project = ProjectMetadata(PROJECT_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in project.xml)
         print('project.xml', project.xml)
 
     def test_platform(self):
         platform = PlatformMetadata(PLATFORM_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in platform.xml)
         print('platform.xml', platform.xml)
 
     def test_platform_no_url(self):
@@ -61,18 +65,22 @@ class MetadataBuilderTestCase(SimpleTestCase):
 
     def test_operation(self):
         operation = OperationMetadata(OPERATION_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in operation.xml)
         print('operation.xml', operation.xml)
 
     def test_instrument(self):
         instrument = InstrumentMetadata(INSTRUMENT_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in instrument.xml)
         print('instrument.xml', instrument.xml)
 
     def test_acquisition_capabilities(self):
         acquisition_capabilities = AcquisitionCapabilitiesMetadata(ACQUISITION_CAPABILITIES_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in acquisition_capabilities.xml)
         print('acquisition_capabilities.xml', acquisition_capabilities.xml)
 
     def test_acquisition(self):
         acquisition = AcquisitionMetadata(ACQUISITION_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in acquisition.xml)
         print('acquisition.xml', acquisition.xml)
 
     def test_acquisition_with_blank_acq_caps(self):
@@ -81,19 +89,23 @@ class MetadataBuilderTestCase(SimpleTestCase):
 
     def test_computation_capabilities(self):
         computation_capabilities = ComputationCapabilitiesMetadata(COMPUTATION_CAPABILITIES_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in computation_capabilities.xml)
         print('computation_capabilities.xml', computation_capabilities.xml)
 
     def test_computation(self):
         computation = ComputationMetadata(COMPUTATION_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in computation.xml)
         print('computation.xml', computation.xml)
 
     def test_process(self):
         process = ProcessMetadata(PROCESS_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in process.xml)
         print('process.xml', process.xml)
 
     @tag('data_collection')
     def test_data_collection(self):
         data_collection = DataCollectionMetadata(DATA_COLLECTION_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in data_collection.xml)
         print('data_collection.xml', data_collection.xml)
 
     @tag('data_collection')
@@ -108,18 +120,22 @@ class MetadataBuilderTestCase(SimpleTestCase):
 
     def test_catalogue(self):
         catalogue = CatalogueMetadata(CATALOGUE_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in catalogue.xml)
         print('catalogue.xml', catalogue.xml)
 
     def test_catalogue_entry(self):
         catalogue_entry = CatalogueEntryMetadata(CATALOGUE_ENTRY_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in catalogue_entry.xml)
         print('catalogue_entry.xml', catalogue_entry.xml)
 
     def test_catalogue_data_subset(self):
         catalogue_data_subset = CatalogueDataSubsetMetadata(CATALOGUE_DATA_SUBSET_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in catalogue_data_subset.xml)
         print('catalogue_data_subset.xml', catalogue_data_subset.xml)
 
     def test_workflow(self):
         workflow = WorkflowMetadata(WORKFLOW_PROPERTIES_FULL)
+        self.assertFalse('<ns1' in workflow.xml)
         print('workflow.xml', workflow.xml)
 
 class MetadataBuilderXSDComplianceTestCase(SimpleTestCase):
