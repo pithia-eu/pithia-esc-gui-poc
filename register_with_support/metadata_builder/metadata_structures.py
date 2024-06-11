@@ -136,6 +136,8 @@ class PlatformMetadata(DescriptionMetadataComponent, DocumentationMetadataCompon
 class OperationMetadata(DescriptionMetadataComponent, NameMetadataComponent, DocumentationMetadataComponent, GCOCharacterStringMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, LocationMetadataComponent, RelatedPartyMetadataComponent, StatusMetadataComponent):
     def __init__(self, properties) -> None:
         super().__init__(Operation.root_element_name, nsmap_extensions={
+            NamespacePrefix.GCO: Namespace.GCO,
+            NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
