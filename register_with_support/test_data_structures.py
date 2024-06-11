@@ -830,7 +830,7 @@ CATALOGUE_DATA_SUBSET_PROPERTIES_FULL = {
             'name': 'Online Resource 1',
             'protocol': 'HTTPS',
             'description': 'Lorem ipsum dolor sit amet',
-            'data_formats': 'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+            'data_formats': ['https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png'],
         },
         {
             'service_function': 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download',
@@ -838,7 +838,7 @@ CATALOGUE_DATA_SUBSET_PROPERTIES_FULL = {
             'name': 'Online Resource 2',
             'protocol': 'HTTPS',
             'description': 'Lorem ipsum dolor sit amet',
-            'data_formats': 'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+            'data_formats': ['https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png'],
         },
     ],
     'data_levels': [
