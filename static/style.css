@@ -26,6 +26,7 @@ a:not(.btn, .header-logo-link, footer a),
 a:hover:not(.btn, .header-logo-link, footer a),
 a:focus:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue);
+    text-decoration-color: var(--pithia-blue):
 }
 
 a:not(
@@ -39,6 +40,7 @@ a:not(
     a.support-link,
     .toc-container a):visited {
     color: #551A8B !important;
+    text-decoration-color: #551A8B;
 }
 
 a {
@@ -490,10 +492,6 @@ summary.data-collection-category::marker {
 
 .resource-key-details tbody tr td:last-of-type {
     padding-left: 0.5rem;
-}
-
-.resource-description {
-    font-size: 1.1rem;
 }
 
 .file-download-link svg {
@@ -1117,6 +1115,10 @@ a.support-link {
 }
 
 @media (min-width: 576px) {
+    .resource-description {
+        font-size: 1.1rem;
+    }
+
     .action-buttons {
         grid-template-columns: 1fr 1fr;
     }
@@ -1175,7 +1177,7 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     }
 
     .list-group-scroll-container.default-view {
-        max-height: 15rem;
+        max-height: 20rem;
     }
     
     .list-group-scroll-container {

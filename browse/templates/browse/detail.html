@@ -97,11 +97,11 @@
                                 </tr>
                                 <tr>
                                     <td><b>Created</b></td>
-                                    <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i:s' }}</td>
+                                    <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
                                 </tr>
                                 <tr>
                                     <td><b>Last Modified</b></td>
-                                    <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i:s' }}</td>
+                                    <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -111,8 +111,8 @@
             <div class="col-lg-12">
                 <section class="text-secondary">
                     <h2 class="fw-normal text-secondary fs-5">Download</h2>
-                    <a href="{% url resource_download_url_name resource.id %}" class="btn btn-light w-100" target="_blank">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill flex-shrink-0 me-2" viewBox="0 0 16 16">
+                    <a href="{% url resource_download_url_name resource.id %}" class="d-inline-block btn btn-light icon-link icon-link-hover px-auto w-100" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-2" viewBox="0 0 16 16">
                             <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
                         </svg>View Original XML File
                     </a>
