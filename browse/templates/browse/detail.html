@@ -22,7 +22,9 @@
         <section>
             <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
             {% if resource.description and resource.description|cut:' ' != '' %}
-            <p class="resource-description">{{ resource.description|urlize }}</p>
+            {% for dp in resource_description_split %}
+            <p class="resource-description">{{ dp|urlize }}</p>
+            {% endfor %}
             {% else %}
             <p class="resource-description text-muted fst-italic">{% block no_description_text %}No description{% endblock no_description_text %}</p>
             {% endif %}

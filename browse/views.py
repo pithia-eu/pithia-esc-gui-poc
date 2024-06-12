@@ -12,6 +12,7 @@ from django.views.generic import (
     ListView,
     TemplateView,
 )
+from lxml import etree
 
 from .services import (
     create_readable_scientific_metadata_flattened,
@@ -388,6 +389,7 @@ class ResourceDetailView(TemplateView):
     resource_id = ''
     resource_flattened = None
     resource_human_readable = {}
+    resource_description_split = []
     ontology_server_urls = []
     resource_server_urls = []
     resource_list_by_type_url_name = ''
@@ -397,6 +399,16 @@ class ResourceDetailView(TemplateView):
     def process_scientific_metadata(self):
         return prepare_resource_for_template(self.resource.json)
 
+    def get_description_from_xml(self, resource):
+        return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
+    
+    def format_and_split_resource_description(self, description):
+        description_formatted = description.replace('\t', '')
+        description_formatted_split = description_formatted.split('\n\n')
+        for counter, s in enumerate(description_formatted_split):
+            description_formatted_split[counter] = s.replace('\n', ' ')
+        return description_formatted_split
+
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
         self.scientific_metadata = self.process_scientific_metadata()
@@ -404,11 +416,16 @@ class ResourceDetailView(TemplateView):
         self.scientific_metadata_readable = create_readable_scientific_metadata_flattened(self.scientific_metadata_flattened)
         self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
         self.title = self.resource.name
+        if self.resource.description and self.resource.description.strip() != '':
+            description_from_xml = self.get_description_from_xml(self.resource)
+            self.resource_description_split = self.format_and_split_resource_description(description_from_xml)
+        
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.title
+        context['resource_description_split'] = self.resource_description_split
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_text'] = _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE
         context['resource_type_list_page_breadcrumb_url_name'] = 'browse:data_collection_related_resource_types'
@@ -672,6 +689,9 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
     resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
 
+    def get_description_from_xml(self, resource):
+        return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().get(request, *args, **kwargs)
@@ -686,6 +706,9 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     model = models.CatalogueDataSubset
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
+
+    def get_description_from_xml(self, resource):
+        return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}dataSubsetDescription').text
 
     def add_handle_data_to_context(self, context):
         context['handles'] = self.handles
