@@ -3,7 +3,11 @@
 {% if resource.abstract.strip|length > 0 %}
 <section class="mt-4">
     <h2 class="mb-3">Abstract</h2>
-    <p class="resource-description">{{ resource.abstract }}</p>
+    {% if project_abstract_split %}
+    {% for ap in project_abstract_split %}
+    <p class="resource-description">{{ ap|urlize }}</p>
+    {% endfor %}
+    {% endif %}
 </section>
 {% endif %}
 {% endblock abstract %}

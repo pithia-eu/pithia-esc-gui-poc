@@ -402,8 +402,9 @@ class ResourceDetailView(TemplateView):
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
     
-    def format_and_split_resource_description(self, description):
+    def format_and_split_string_by_multi_newlines(self, description):
         description_formatted = description.replace('\t', '')
+        description_formatted = re.sub('\n\s+\n', '\n\n', description_formatted)
         description_formatted_split = description_formatted.split('\n\n')
         for counter, s in enumerate(description_formatted_split):
             description_formatted_split[counter] = s.replace('\n', ' ')
@@ -418,7 +419,7 @@ class ResourceDetailView(TemplateView):
         self.title = self.resource.name
         if self.resource.description and self.resource.description.strip() != '':
             description_from_xml = self.get_description_from_xml(self.resource)
-            self.resource_description_split = self.format_and_split_resource_description(description_from_xml)
+            self.resource_description_split = self.format_and_split_string_by_multi_newlines(description_from_xml)
         
         return super().get(request, *args, **kwargs)
 
@@ -479,13 +480,21 @@ class ProjectDetailView(ResourceDetailView):
     A detail page displaying the properties of
     a Project registration.
     """
+    project_abstract_split = []
+
     model = models.Project
     template_name = 'browse/detail_project.html'
     resource_list_by_type_url_name = 'browse:list_projects'
     resource_download_url_name = 'utils:view_project_as_xml'
 
+    def get_abstract_from_xml(self, resource):
+        return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}abstract').text
+
     def process_scientific_metadata(self):
         scientific_metadata = copy.deepcopy(prepare_resource_for_template(self.resource.json))
+        # Only pop the 'abstract' key from the scientific_metadata
+        # dict if there is a value, so it doesn't appear in the
+        # property table.
         if (self.resource.abstract
             and len(self.resource.abstract.strip()) > 0):
             scientific_metadata.pop('abstract', None)
@@ -494,6 +503,11 @@ class ProjectDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['project_abstract_split'] = self.format_and_split_string_by_multi_newlines(self.get_abstract_from_xml(self.resource))
+        return context
 
 class PlatformDetailView(ResourceDetailView):
     """
