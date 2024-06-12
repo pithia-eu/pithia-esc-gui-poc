@@ -321,6 +321,10 @@ class Individual(ScientificMetadata):
     a_or_an = 'an'
     _browse_detail_page_url_name = 'browse:individual_detail'
     root_element_name = 'Individual'
+
+    @property
+    def description(self):
+        return ''
     
     @property
     def organisation_url(self):
