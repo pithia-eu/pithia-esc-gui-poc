@@ -31,7 +31,11 @@
         </div>
         <div class="col-xl-9 col-lg-8">
             <section>
-                <h1 class="mb-4">{{ title }}</h1>
+                <h1>{{ title }}</h1>
+                <div class="my-4">
+                    <span class="required-marker">*</span>
+                    <small>indicates a required field</small>
+                </div>
                 {% block form_content %}{% endblock form_content %}
                 <div class="d-flex flex-column mt-5">
                     <div class="col-xl-7 col-lg-8">

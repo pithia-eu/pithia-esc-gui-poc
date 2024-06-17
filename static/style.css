@@ -658,6 +658,10 @@ label.required::after {
     color: red;
 }
 
+.required-marker {
+    color: red;
+}
+
 .alert-localid-taken {
     display: none;
 }
