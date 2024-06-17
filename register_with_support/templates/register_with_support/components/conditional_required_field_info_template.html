@@ -1,0 +1,33 @@
+<div class="alert alert-light d-flex align-items-center column-gap-4">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill flex-shrink-0" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+    </svg>
+    <small>
+        <details>
+            <summary class="fw-bold">
+                {% if custom_summary_text %}
+                {{ custom_summary_text }}
+                {% else %}
+                {{ optional_section_verb|default:'Providing' }} {{ optional_section_article|default:'' }}
+                {{ optional_section_name }} is optional. If being provided, certain fields must be
+                filled out.
+                {% endif %}
+            </summary>
+            {% if not custom_summary_text %}
+            <p class="mt-3">
+                {% if optional_section_article %}
+                {{ optional_section_article|title }} {{ optional_section_name }}
+                {% else %}
+                {{ optional_section_name|title }}
+                {% endif %} requires that {{ optional_section_requirements }}
+                is provided.
+            </p>
+            {% endif %}
+            <p class="mt-3 mb-0">
+                When filling out any {{ optional_section_name }} fields,
+                required field markers (<span class="required-marker">*</span>)
+                will appear by the required fields.
+            </p>
+        </details>
+    </small>
+</div>

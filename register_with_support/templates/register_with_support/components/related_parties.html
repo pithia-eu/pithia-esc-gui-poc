@@ -3,10 +3,15 @@
         <div class="col-lg-12">
             <h2>Related Parties</h2>
         </div>
-        <div class="col-xl-9 col-lg-10">
+        <div class="col-xl-7 col-lg-8">
             <p class="mb-0">
                 {{ related_parties_section_description }}
             </p>
+        </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with custom_summary_text='Specifying related parties is optional. If adding one, both the role and the party/parties involved must be filled out.' %}
+            {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
         </div>
         <div class="col-lg-12">
             <table id="table-related-parties" class="table table-dynamic">

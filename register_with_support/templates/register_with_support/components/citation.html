@@ -3,12 +3,17 @@
         <div class="col-lg-12">
             <h2>Documentation</h2>
         </div>
-        <div class="col-lg-7">
+        <div class="col-xl-7 col-lg-8">
             <p>
                 {{ citation_section_description }}
             </p>
         </div>
-        <div class="col-xl-9 col-lg-10">
+        <div class="col-xl-7 col-lg-8">
+            {% with optional_section_name='documentation' optional_section_requirements='the title of the documentation and the date it was published' %}
+            {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
             {% with field=form.citation_title %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
@@ -25,12 +30,12 @@
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-9 col-lg-10">
+        <div class="col-xl-7 col-lg-8">
             {% with field=form.citation_linkage_url %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-9 col-lg-10">
+        <div class="col-xl-7 col-lg-8">
             {% with field=form.other_citation_details %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}

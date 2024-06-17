@@ -8,6 +8,11 @@
                 When the operation occurred.
             </p>
         </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with custom_summary_text='Providing the operation time is optional. If you choose to provide it, you must fill out all the operation time fields below.' %}
+            {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
     </div>
     <div class="row gy-2">
         <div class="col-lg-12">

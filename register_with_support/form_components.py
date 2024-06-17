@@ -181,7 +181,9 @@ class CitationDocumentationEditorFormComponent(forms.Form):
     other_citation_details = forms.CharField(
         label='Full Citation',
         required=False,
-        widget=forms.Textarea()
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+        })
     )
 
     citation_linkage_url = forms.URLField(
