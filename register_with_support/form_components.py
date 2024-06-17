@@ -613,7 +613,9 @@ class SourceMetadataComponent(forms.Form):
     source_description = forms.CharField(
         required=False,
         label='Description',
-        widget=forms.Textarea(),
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+        }),
         help_text='A text description of what the online resource is/does.'
     )
 
