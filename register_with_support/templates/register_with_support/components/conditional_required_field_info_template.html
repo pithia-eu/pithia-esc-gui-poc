@@ -5,28 +5,14 @@
     <small>
         <details>
             <summary class="fw-bold">
-                {% if custom_summary_text %}
                 {{ custom_summary_text }}
-                {% else %}
-                {{ optional_section_verb|default:'Providing' }} {{ optional_section_article|default:'' }}
-                {{ optional_section_name }} is optional. If being provided, certain fields must be
-                filled out.
-                {% endif %}
             </summary>
-            {% if not custom_summary_text %}
-            <p class="mt-3">
-                {% if optional_section_article %}
-                {{ optional_section_article|title }} {{ optional_section_name }}
-                {% else %}
-                {{ optional_section_name|title }}
-                {% endif %} requires that {{ optional_section_requirements }}
-                is provided.
-            </p>
-            {% endif %}
             <p class="mt-3 mb-0">
-                When filling out any {{ optional_section_name }} fields,
-                required field markers (<span class="required-marker">*</span>)
-                will appear by the required fields.
+                The fields specified will become required when you
+                provide input for them or other related fields,
+                which will be reflected by the appearance of required
+                field markers (<span class="required-marker">*</span>)
+                beside them.
             </p>
         </details>
     </small>

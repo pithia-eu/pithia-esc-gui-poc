@@ -1,5 +1,10 @@
 <div class="row gy-3 pt-4">
     <div class="col-xl-7 col-lg-8">
+        {% with custom_summary_text='Adding a capability is optional. If you would like to add one, the name of the capability and at least one observed property must be specified. If you are specifying cadence, you will also need to specify its units.' %}
+        {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-7 col-lg-8">
         {% with field=form.capability_name %}
         {% include 'register_with_support/components/form_field_template.html' %}
         {% endwith %}
