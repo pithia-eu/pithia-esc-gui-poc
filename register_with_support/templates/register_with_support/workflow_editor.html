@@ -1,9 +1,15 @@
 {% extends 'register_with_support/components/base_editor.html' %}
 {% load static %}
+{% load project_tags %}
 {% block extra_scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register_with_support/workflow_editor.js' %}" type="module" defer></script>
 {% endblock extra_scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
 {% block form_content %}
 {% include 'register_with_support/components/name_and_organisation_section.html' %}
 <hr class="my-5">
