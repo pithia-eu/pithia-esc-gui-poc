@@ -11,6 +11,11 @@
             </p>
         </div>
         <div class="col-xl-7 col-lg-8">
+            {% with custom_summary_text='Adding information on the instrument mode pair is optional. If you are adding this information, an instrument and its operational mode must be specified.' %}
+            {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-7 col-lg-8">
             {% with field=form.instrument_mode_pair_instrument %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}

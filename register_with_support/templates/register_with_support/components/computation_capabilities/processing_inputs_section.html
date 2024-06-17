@@ -11,6 +11,11 @@
                 to the event of the observation and not to the applied process.
             </p>
         </div>
+        <div class="col-xl-7 col-lg-8">
+            {% with custom_summary_text='Adding information on processing input parameters is optional. If you would like to add this, each processing input parameter specified must have a description.' %}
+            {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
         <div class="col-lg-12">
             {% include 'register_with_support/components/computation_capabilities/processing_inputs_table.html' %}
         </div>
