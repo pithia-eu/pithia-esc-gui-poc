@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'search.apps.SearchConfig',
     'simple_search.apps.SimpleSearchConfig',
     'update.apps.UpdateConfig',
+    'update_with_support.apps.UpdateWithSupportConfig',
     'user_management.apps.UserManagementConfig',
     'utils.apps.UtilsConfig',
     'validation.apps.ValidationConfig',
