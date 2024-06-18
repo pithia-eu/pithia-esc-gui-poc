@@ -508,7 +508,7 @@ class ProjectRegisterWithEditorFormView(
         context['related_parties_section_description'] = 'Individual or organisation related to the project.'
         return context
 
-class PlatformRegisterWithoutFormView(
+class PlatformRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
@@ -573,7 +573,7 @@ class PlatformRegisterWithoutFormView(
         return context
 
 
-class OperationRegisterWithoutFormView(
+class OperationRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
@@ -628,7 +628,7 @@ class OperationRegisterWithoutFormView(
         return kwargs
 
 
-class InstrumentRegisterWithoutFormView(
+class InstrumentRegisterWithEditorFormView(
     InstrumentTypeSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
@@ -680,7 +680,7 @@ class InstrumentRegisterWithoutFormView(
         return kwargs
 
 
-class AcquisitionCapabilitiesRegisterWithoutFormView(
+class AcquisitionCapabilitiesRegisterWithEditorFormView(
     CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
@@ -767,7 +767,7 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
         return kwargs
 
 
-class AcquisitionRegisterWithoutFormView(
+class AcquisitionRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
@@ -821,7 +821,7 @@ class AcquisitionRegisterWithoutFormView(
         return kwargs
 
 
-class ComputationCapabilitiesRegisterWithoutFormView(
+class ComputationCapabilitiesRegisterWithEditorFormView(
     CapabilitiesSelectFormViewMixin,
     ComputationTypeSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
@@ -896,7 +896,7 @@ class ComputationCapabilitiesRegisterWithoutFormView(
         return kwargs
 
 
-class ComputationRegisterWithoutFormView(
+class ComputationRegisterWithEditorFormView(
     OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
@@ -950,7 +950,7 @@ class ComputationRegisterWithoutFormView(
         return kwargs
 
 
-class ProcessRegisterWithoutFormView(
+class ProcessRegisterWithEditorFormView(
     CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
@@ -1028,7 +1028,7 @@ class ProcessRegisterWithoutFormView(
         return kwargs
 
 
-class DataCollectionRegisterWithoutFormView(
+class DataCollectionRegisterWithEditorFormView(
     ComputationTypeSelectFormViewMixin,
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
@@ -1178,7 +1178,7 @@ class DataCollectionRegisterWithoutFormView(
         kwargs['data_format_choices'] = self.get_data_format_choices_for_form()
         return kwargs
 
-class WorkflowRegisterWithoutFormView(
+class WorkflowRegisterWithEditorFormView(
     DataCollectionSelectFormViewMixin,
     OrganisationSelectFormViewMixin,
     ResourceRegisterWithEditorFormView
