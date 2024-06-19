@@ -1,13 +1,10 @@
 import logging
 from django.contrib import messages
-from django.db.models.fields.json import KeyTextTransform
-from django.db.models.functions import Lower
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.views.generic import FormView
-from rdflib.namespace._SKOS import SKOS
 
 from .forms import *
 from .services import *
@@ -16,7 +13,6 @@ from .view_mixins import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from ontology.utils import get_graph_of_pithia_ontology_component
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -181,15 +177,7 @@ class PlatformEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
     def get_type_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('platformType')
-        type_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            type_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *((key, value) for key, value in type_dict.items())
-        )
+        return self.get_choices_from_ontology_category('platformType')
 
     def get_child_platform_choices_for_form(self):
         return self.get_platform_choices_for_form()
@@ -233,7 +221,8 @@ class OperationEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
     ResourceEditorFormView,
-    StatusSelectFormViewMixin):
+    StatusSelectFormViewMixin,
+    ResourceChoicesViewMixin):
     form_class = OperationEditorForm
     template_name = 'register_with_support/operation_editor.html'
 
@@ -244,10 +233,7 @@ class OperationEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
     def get_child_operation_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(operation.metadata_server_url, operation.name) for operation in Operation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+        return self.get_resource_choices_with_model(models.Operation)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -294,10 +280,7 @@ class InstrumentEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
     def get_member_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(instrument.metadata_server_url, instrument.name) for instrument in Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+        return self.get_resource_choices_with_model(models.Instrument)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -345,14 +328,14 @@ class AcquisitionCapabilitiesEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
 
     def get_instrument_choices_with_oms_for_form(self):
-        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        instruments = self.get_resources_with_model_ordered_by_name(models.Instrument)
         return (
             ('', ''),
             *[(instrument.metadata_server_url, instrument.name) for instrument in instruments if instrument.operational_modes],
         )
 
     def get_instrument_operational_modes_for_form(self):
-        instruments = Instrument.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
+        instruments = self.get_resources_with_model_ordered_by_name(models.Instrument)
         operational_modes_by_instrument = []
         for instrument in instruments:
             operational_modes = instrument.operational_modes
@@ -426,11 +409,7 @@ class AcquisitionEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
     def get_acquisition_capability_sets_for_form(self):
-        acquisition_capability_sets = AcquisitionCapabilities.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
-        return (
-            ('', ''),
-            *[(acs.metadata_server_url, acs.name) for acs in acquisition_capability_sets],
-        )
+        return self.get_resource_choices_with_model(models.AcquisitionCapabilities)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -481,11 +460,7 @@ class ComputationCapabilitiesEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
     def get_child_computation_choices_for_form(self):
-        computation_capability_sets = ComputationCapabilities.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
-        return (
-            ('', ''),
-            *[(ccs.metadata_server_url, ccs.name) for ccs in computation_capability_sets],
-        )
+        return self.get_resource_choices_with_model(models.ComputationCapabilities)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -549,11 +524,7 @@ class ComputationEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
     def get_computation_capability_set_choices_for_form(self):
-        computation_capability_sets = ComputationCapabilities.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
-        return (
-            ('', ''),
-            *[(ccs.metadata_server_url, ccs.name) for ccs in computation_capability_sets],
-        )
+        return self.get_resource_choices_with_model(models.ComputationCapabilities)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -603,18 +574,10 @@ class ProcessEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
 
     def get_acquisition_choices_for_form(self):
-        acquisitions = Acquisition.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
-        return (
-            ('', ''),
-            *[(a.metadata_server_url, a.name) for a in acquisitions],
-        )
+        return self.get_resource_choices_with_model(models.Acquisition)
 
     def get_computation_choices_for_form(self):
-        computations = Computation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))
-        return (
-            ('', ''),
-            *[(c.metadata_server_url, c.name) for c in computations],
-        )
+        return self.get_resource_choices_with_model(models.Computation)
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
@@ -701,26 +664,10 @@ class DataCollectionEditorFormView(
         return new_registration
 
     def get_feature_of_interest_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('featureOfInterest')
-        feature_of_interest_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            feature_of_interest_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *[(key, value) for key, value in feature_of_interest_dict.items()],
-        )
+        return self.get_choices_from_ontology_category('featureOfInterest')
 
     def get_permission_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('licence')
-        permission_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            permission_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *[(key, value) for key, value in permission_dict.items()],
-        )
+        return self.get_choices_from_ontology_category('licence')
 
     def get_type_choices_for_form(self):
         instrument_type_choices = list(self.get_instrument_type_choices_for_form())
@@ -734,38 +681,16 @@ class DataCollectionEditorFormView(
         )
 
     def get_project_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(project.metadata_server_url, project.name) for project in Project.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+        return self.get_resource_choices_with_model(models.Project)
 
     def get_process_choices_for_form(self):
-        return (
-            ('', ''),
-            *[(process.metadata_server_url, process.name) for process in Process.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
-        )
+        return self.get_resource_choices_with_model(models.Process)
 
     def get_service_function_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('serviceFunction')
-        service_function_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            service_function_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *[(key, value) for key, value in service_function_dict.items()],
-        )
+        return self.get_choices_from_ontology_category('serviceFunction')
 
     def get_data_format_choices_for_form(self):
-        g = get_graph_of_pithia_ontology_component('resultDataFormat')
-        data_format_dict = {}
-        for s, p, o in g.triples((None, SKOS.member, None)):
-            o_pref_label = g.value(o, SKOS.prefLabel)
-            data_format_dict[str(o)] = str(o_pref_label)
-        return (
-            ('', ''),
-            *[(key, value) for key, value in data_format_dict.items()],
-        )
+        return self.get_choices_from_ontology_category('resultDataFormat')
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
