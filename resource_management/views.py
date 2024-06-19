@@ -80,6 +80,7 @@ class ResourceManagementListView(ListView):
     
     resource_delete_page_url_name = ''
     resource_update_page_url_name = ''
+    resource_update_with_wizard_page_url_name = ''
     resource_register_page_url_name = ''
     resource_register_with_editor_name = ''
     resource_xml_download_page_url_name = ''
@@ -103,6 +104,7 @@ class ResourceManagementListView(ListView):
         context['institution_members_by_id'] = {im['edu_person_unique_id']: im['name'] for im in get_members_by_institution_id(self.institution_id)}
         context['resource_delete_page_url_name'] = self.resource_delete_page_url_name
         context['resource_update_page_url_name'] = self.resource_update_page_url_name
+        context['resource_update_with_wizard_page_url_name'] = self.resource_update_with_wizard_page_url_name
         context['resource_register_page_url_name'] = self.resource_register_page_url_name
         context['resource_register_with_editor_name'] = self.resource_register_with_editor_name
         context['resource_xml_download_page_url_name'] = self.resource_xml_download_page_url_name
@@ -116,6 +118,7 @@ class OrganisationManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:organisation'
     resource_update_page_url_name = 'update:organisation'
+    resource_update_with_wizard_page_url_name = 'update:organisation_with_editor'
     resource_register_page_url_name = 'register:organisation'
     resource_register_with_editor_name = 'register:organisation_with_editor'
     resource_xml_download_page_url_name = 'utils:view_organisation_as_xml'
