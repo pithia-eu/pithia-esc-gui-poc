@@ -50,7 +50,6 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'New {self.model.type_readable.title()}'
-        context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
         return context
 

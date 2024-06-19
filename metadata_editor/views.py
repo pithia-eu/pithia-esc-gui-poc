@@ -30,7 +30,10 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 @method_decorator(login_session_institution_required, name='dispatch')
-class ResourceEditorFormView(FormView):
+class ResourceEditorFormView(
+    FormView,
+    OrganisationSelectFormViewMixin,
+    ResourceChoicesViewMixin):
     success_url = ''
     form_class = None
     template_name = ''
@@ -56,6 +59,7 @@ class ResourceEditorFormView(FormView):
         context['success_url'] = self.success_url
         context['localid_base'] = self.model.localid_base
         context['metadata_type_readable'] = self.model.type_readable.title()
+        context['organisation_short_names'] = {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in self.get_resources_with_model_ordered_by_name(models.Organisation)}
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
@@ -73,9 +77,10 @@ class ResourceEditorFormView(FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['form_metadata_type'] = self.model.type_readable.title()
-        return form_kwargs
+        kwargs = super().get_form_kwargs()
+        kwargs['form_metadata_type'] = self.model.type_readable.title()
+        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
+        return kwargs
 
 class OrganisationEditorFormView(ResourceEditorFormView):
     form_class = OrganisationEditorForm
@@ -99,9 +104,7 @@ class OrganisationEditorFormView(ResourceEditorFormView):
 
         return processed_form
 
-class IndividualEditorFormView(
-    OrganisationSelectFormViewMixin,
-    ResourceEditorFormView):
+class IndividualEditorFormView(ResourceEditorFormView):
     form_class = IndividualEditorForm
     template_name = 'register_with_support/individual_editor.html'
 
@@ -124,7 +127,6 @@ class IndividualEditorFormView(
         return processed_form
 
 class ProjectEditorFormView(
-    OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView,
     StatusSelectFormViewMixin):
@@ -148,7 +150,6 @@ class ProjectEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['status_choices'] = self.get_status_choices_for_form()
@@ -161,7 +162,6 @@ class ProjectEditorFormView(
         return context
 
 class PlatformEditorFormView(
-    OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
@@ -194,7 +194,6 @@ class PlatformEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
         kwargs['type_choices'] = self.get_type_choices_for_form()
@@ -216,7 +215,6 @@ class PlatformEditorFormView(
 
 
 class OperationEditorFormView(
-    OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
@@ -255,7 +253,6 @@ class OperationEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['platform_choices'] = self.get_platform_choices_for_form()
         kwargs['child_operation_choices'] = self.get_child_operation_choices_for_form()
         kwargs['related_party_role_choices'] = self.get_related_party_role_choices_for_form()
@@ -267,7 +264,6 @@ class OperationEditorFormView(
 
 class InstrumentEditorFormView(
     InstrumentTypeSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = InstrumentEditorForm
@@ -303,7 +299,6 @@ class InstrumentEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['instrument_type_choices'] = self.get_instrument_type_choices_for_form()
         kwargs['member_choices'] = self.get_member_choices_for_form()
         kwargs['related_party_choices'] = self.get_related_party_choices_for_form()
@@ -314,7 +309,6 @@ class InstrumentEditorFormView(
 class AcquisitionCapabilitiesEditorFormView(
     CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
@@ -374,7 +368,6 @@ class AcquisitionCapabilitiesEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
@@ -396,7 +389,6 @@ class AcquisitionCapabilitiesEditorFormView(
 
 
 class AcquisitionEditorFormView(
-    OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = AcquisitionEditorForm
@@ -436,7 +428,6 @@ class AcquisitionEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['capability_set_choices'] = self.get_acquisition_capability_sets_for_form()
         kwargs['platform_choices'] = self.get_platform_choices_for_form()
         return kwargs
@@ -446,7 +437,6 @@ class ComputationCapabilitiesEditorFormView(
     CapabilitiesSelectFormViewMixin,
     ComputationTypeSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
@@ -490,7 +480,6 @@ class ComputationCapabilitiesEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
@@ -511,7 +500,6 @@ class ComputationCapabilitiesEditorFormView(
 
 
 class ComputationEditorFormView(
-    OrganisationSelectFormViewMixin,
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ComputationEditorForm
@@ -551,7 +539,6 @@ class ComputationEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         kwargs['platform_choices'] = self.get_platform_choices_for_form()
         kwargs['capability_set_choices'] = self.get_computation_capability_set_choices_for_form()
         return kwargs
@@ -560,7 +547,6 @@ class ComputationEditorFormView(
 class ProcessEditorFormView(
     CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
@@ -601,7 +587,6 @@ class ProcessEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         # Process
         kwargs['acquisition_choices'] = self.get_acquisition_choices_for_form()
         kwargs['computation_choices'] = self.get_computation_choices_for_form()
@@ -629,7 +614,6 @@ class DataCollectionEditorFormView(
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     InstrumentTypeSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
@@ -733,7 +717,6 @@ class DataCollectionEditorFormView(
 
 class WorkflowEditorFormView(
     DataCollectionSelectFormViewMixin,
-    OrganisationSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = WorkflowEditorForm
     template_name = 'register_with_support/workflow_editor.html'
