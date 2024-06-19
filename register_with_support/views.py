@@ -26,6 +26,7 @@ from .metadata_builder.utils import *
 
 from common import models
 from common.decorators import login_session_institution_required
+from common.helpers import clean_localid_or_namespace
 from ontology.utils import get_graph_of_pithia_ontology_component
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
@@ -286,7 +287,7 @@ class OrganisationSelectFormViewMixin(View):
     def get_organisation_choices_for_form(self):
         return (
             ('', ''),
-            *[(o.metadata_server_url, f'{o.name} ({o.short_name.lower()})') for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
+            *[(o.metadata_server_url, f'{o.name} ({clean_localid_or_namespace(o.short_name.lower())})') for o in models.Organisation.objects.annotate(json_name=KeyTextTransform('name', 'json')).all().order_by(Lower('json_name'))],
         )
 
 class PlatformSelectFormViewMixin(View):
