@@ -39,7 +39,7 @@ from .services import (
 
 from common import models
 from common.decorators import login_session_institution_required
-from common.helpers import clean_localid
+from common.helpers import clean_localid_or_namespace
 
 
 logger = logging.getLogger(__name__)
@@ -239,7 +239,7 @@ def localid(request):
         return HttpResponseBadRequest('The submitted form was invalid.')
     
     localid = form.cleaned_data.get('localid')
-    localid = clean_localid(localid)
+    localid = clean_localid_or_namespace(localid)
     return JsonResponse(is_localid_taken(localid))
 
 @require_POST
