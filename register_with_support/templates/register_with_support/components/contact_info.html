@@ -45,17 +45,9 @@
             {% endwith %}
         </div>
         <div class="col-xl-7 col-lg-8">
-            {{ form.country.label_tag }}
-            {% get_countries as countries %}
-            <select name="{{ form.country.name }}" id="{{ form.country.auto_id }}" class="form-select">
-                <option value="" selected disabled></option>
-                {% for country in countries %}
-                <option value="{{ country.name }}" {% if form.country.value == country.name %}selected{% endif %}>{{ country.name }}</option>
-                {% endfor %}
-            </select>
-            {% for error in form.country.errors %}
-            <div class="form-text text-danger">{{ error }}</div>
-            {% endfor %}
+            {% with field=form.country %}
+            {% include 'register_with_support/components/form_field_template.html' %}
+            {% endwith %}
         </div>
     </div>
     <div class="row flex-column gy-3">

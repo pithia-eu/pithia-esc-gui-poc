@@ -120,7 +120,10 @@ class ContactInfoEditorFormComponent(forms.Form):
     country = forms.ChoiceField(
         label='Country',
         required=False,
-        choices=((c.name, c.name) for c in countries),
+        choices=(
+            ('', ''),
+            *((c.name, c.name) for c in countries)
+        ),
         widget=forms.Select(attrs={
             'class': 'form-select'
         })
