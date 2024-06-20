@@ -6,7 +6,7 @@
 {% endblock styles %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
-<script src="{% static 'register_with_support/components/editor_ls.js' %}" type="module"></script>
+<script src="{% static 'register_with_support/components/editor_manual_and_autosave.js' %}" type="module"></script>
 {{ localid_validation_url|json_script:'local-id-validation-url' }}
 {{ localid_base|json_script:'local-id-base' }}
 {{ organisation_short_names|json_script:'organisation-short-names' }}

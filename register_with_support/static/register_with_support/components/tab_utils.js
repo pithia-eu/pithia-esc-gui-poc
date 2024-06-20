@@ -206,6 +206,7 @@ export class DynamicEditorTab {
 
     exportTabData() {
         this.jsonExportElement.value = JSON.stringify(this.getTabDataAsJson());
+        window.dispatchEvent(new CustomEvent("dynamicTabDataExported"));
     }
 
     loadPreviousTabData() { 

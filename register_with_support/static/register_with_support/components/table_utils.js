@@ -49,6 +49,7 @@ export class DynamicEditorTable {
     exportTableDataToJsonAndStoreInOutputElement() {
         const tableExportData = JSON.stringify(this.exportTableData());
         this.jsonOutputElement.value = tableExportData;
+        window.dispatchEvent(new CustomEvent("dynamicTableDataExported"));
     }
 
     // New row setup
