@@ -28,23 +28,42 @@ function getWizardChoiceFields() {
     return editorForm.querySelectorAll(`select[id]:not(.table select, .tab-pane select)`);
 }
 
+function updateLastSavedStatus(lastSaved) {
+    const lastSavedDate = new Date(lastSaved);
+    const locales = [];
+    const options = {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    };
+    let lastSavedFormatted = lastSavedDate.toLocaleTimeString(locales, options);
+    if (new Date(Date.now()).toDateString() !== lastSavedDate.toDateString()) {
+        delete options.second;
+        lastSavedFormatted = lastSavedDate.toLocaleDateString(locales, options);
+    }
+    document.querySelector("#last-saved-at").textContent = `Last saved ${lastSavedFormatted}`;
+}
+
 
 function saveWizardDataToLocalStorage() {
     const wizardDataCopy = structuredClone(wizardData);
+    wizardDataCopy.fieldData = {};
     try {
         const textFields = getWizardTextFields();
         textFields.forEach(textField => {
-            wizardDataCopy[textField.id] = textField.value;
+            wizardDataCopy.fieldData[textField.id] = textField.value;
         });
 
         const choiceFields = getWizardChoiceFields();
         choiceFields.forEach(choiceField => {
-            wizardDataCopy[choiceField.id] = Array.from(choiceField.selectedOptions).map(option => option.value);
+            wizardDataCopy.fieldData[choiceField.id] = Array.from(choiceField.selectedOptions).map(option => option.value);
         });
+        wizardDataCopy.lastSaved = Date.now();
 
         wizardData = wizardDataCopy;
         window.localStorage.setItem(localStorageItemKey, JSON.stringify(wizardData));
         console.log("Wizard data saved:", wizardData);
+        updateLastSavedStatus(wizardData.lastSaved);
     } catch (error) {
         console.log("Couldn't save wizard data due to an error.");
         console.error(error);
@@ -54,23 +73,24 @@ function saveWizardDataToLocalStorage() {
 function loadPastWizardData() {
     const pastWizardDataLS = window.localStorage.getItem(localStorageItemKey);
     if (!pastWizardDataLS) return;
+
     console.log("Past wizard data found.");
     const pastWizardData = JSON.parse(pastWizardDataLS);
-
     try {
         wizardData = pastWizardData;
+        updateLastSavedStatus(wizardData.lastSaved);
     } catch (error) {
         console.log("There was an error loading past wizard data.")
         console.error(error);
     }
 }
 
-function addWizardDataToForm(pastWizardData) {
-    for (const fieldId in pastWizardData) {
+function addFieldDataToForm(fieldData) {
+    for (const fieldId in fieldData) {
         const field = editorForm.querySelector(`#${fieldId}`);
         if (!field) continue;
         if (field.tagName.toLowerCase() === "select") {
-            for (const value of pastWizardData[fieldId]) {
+            for (const value of fieldData[fieldId]) {
                 const correspondingOption = field.querySelector(`option[value="${value}"]`);
                 if (!correspondingOption) continue;
                 correspondingOption.selected = true;
@@ -80,7 +100,7 @@ function addWizardDataToForm(pastWizardData) {
             }));
             continue;
         }
-        field.value = pastWizardData[fieldId];
+        field.value = fieldData[fieldId];
     }
 }
 
@@ -109,5 +129,5 @@ function setupEventListeners() {
 export function setupWizardManualAndAutoSave() {
     setupEventListeners();
     loadPastWizardData();
-    addWizardDataToForm(wizardData);
+    addFieldDataToForm(wizardData.fieldData);
 }

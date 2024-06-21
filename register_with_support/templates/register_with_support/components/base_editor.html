@@ -20,24 +20,29 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<form action="{{ success_url }}" method="POST" id="metadata-editor-form">
-    {% csrf_token %}
-    <div class="row gx-xl-5 gx-lg-5 gx-sm-0">
-        <div class="col-xl-3 col-lg-4 d-lg-block d-none">
-            <section class="toc-container sticky-top">
-                <h2 class="fw-normal fs-4">Metadata Sections</h2>
-                <ul class="list-group">
-                    {% block table_of_contents %}{% endblock table_of_contents %}
-                </ul>
-            </section>
+<div class="row gx-xl-5 gx-lg-5 gx-sm-0">
+    <div class="col-xl-3 col-lg-4 d-lg-block d-none">
+        <div class="row gy-4 sticky-top">
+            <div class="col-lg-12">
+                <section class="sticky-top">
+                    <h2 class="fw-normal fs-4">Metadata Sections</h2>
+                    <ul class="list-group toc-container">
+                        {% block table_of_contents %}{% endblock table_of_contents %}
+                    </ul>
+                </section>
+            </div>
         </div>
-        <div class="col-xl-9 col-lg-8">
-            <section>
-                <h1>{{ title }}</h1>
-                <div class="my-4">
-                    <span class="required-marker">*</span>
-                    <small>indicates a required field</small>
-                </div>
+    </div>
+    <div class="col-xl-7 col-lg-6">
+        <section>
+            <h1>{{ title }}</h1>
+            <small id="last-saved-at" class="text-secondary">Changes are automatically saved in your browser.</small>
+            <div class="my-4">
+                <span class="required-marker">*</span>
+                <small>indicates a required field</small>
+            </div>
+            <form action="{{ success_url }}" method="POST" id="metadata-editor-form">
+                {% csrf_token %}
                 {% block form_content %}{% endblock form_content %}
                 <div class="d-flex flex-column mt-5">
                     <div class="col-xl-7 col-lg-8">
@@ -55,8 +60,21 @@
                         </button>
                     </div>
                 </div>
-            </section>
+            </form>
+        </section>
+    </div>
+    <div class="col-xl-2 col-lg-2">
+        <div class="row gy-3 sticky-top">
+            <div class="col-lg-12">
+                <section>
+                    <h2 class="fw-normal fs-5 text-secondary mb-3">Form Actions</h2>
+                    <div class="d-flex flex-column gap-3">
+                        <button class="btn btn-light w-100">Save</button>
+                        <button class="btn btn-outline-danger">Reset</button>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
-</form>
+</div>
 {% endblock content %}
