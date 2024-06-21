@@ -10,7 +10,7 @@ const nameInput = document.querySelector("input[name='name']");
 const organisationInput = document.querySelector("select[name='organisation']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
-const organisationShortNames = JSON.parse(document.getElementById("organisation-short-names").textContent);
+const namespacesByOrganisation = JSON.parse(document.getElementById("namespaces-by-organisation").textContent);
 const namespaceInput = document.querySelector("input[name='namespace']");
 const localIdSuffixInput = document.querySelector("input[name='localid']");
 
@@ -36,7 +36,7 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
         if (organisation === "") {
             return namespaceInput.value = "";
         }
-        namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
+        namespaceInput.value = namespacesByOrganisation[organisation].toLowerCase().replace(/\s/g, "");
         window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     });
     
