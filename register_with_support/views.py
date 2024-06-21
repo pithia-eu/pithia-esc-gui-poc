@@ -88,7 +88,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         context['localid_base'] = self.model.localid_base
         context['title'] = f'New {self.model.type_readable.title()}'
         context['metadata_type_readable'] = self.model.type_readable.title()
-        context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
+        context['namespaces_by_organisation'] = {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
