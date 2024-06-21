@@ -26,6 +26,7 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
     nameInput.addEventListener("input", async () => {
         const localIdSuffix = generateLocalId(nameInput.value);
         localIdSuffixInput.value = localIdSuffix;
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     
         await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
     });
@@ -36,6 +37,7 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
             return namespaceInput.value = "";
         }
         namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     });
     
     window.addEventListener("load", async () => {
@@ -58,10 +60,11 @@ export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffi
         if ("suggestion" in localIdResponse) {
             const suggestionSuffix = localIdResponse.suggestion.split("_").slice(1).join("_");
             localIdSuffixInput.value = suggestionSuffix;
-            localIdTakenElement.innerHTML = localIdSuffix;
-            localIdSuggestionElement.innerHTML = suggestionSuffix;
+            localIdTakenElement.textContent = localIdSuffix;
+            localIdSuggestionElement.textContent = suggestionSuffix;
         }
     } else {
         localIdSuffixInput.classList.remove("is-invalid");
     }
+    window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
 }

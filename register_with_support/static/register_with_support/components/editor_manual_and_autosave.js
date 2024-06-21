@@ -100,6 +100,10 @@ function setupEventListeners() {
     window.addEventListener("dynamicTabDataExported", () => {
         saveWizardDataToLocalStorage();
     });
+    
+    window.addEventListener("wizardFieldProgrammaticallySet", () => {
+        saveWizardDataToLocalStorage();
+    });
 }
 
 export function setupWizardManualAndAutoSave() {

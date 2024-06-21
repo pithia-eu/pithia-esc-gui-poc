@@ -26,6 +26,7 @@ function generateLocalId(shortName) {
 shortNameInput.addEventListener("input", async () => {
     const localIdSuffix = generateLocalId(shortNameInput.value);
     localIdSuffixInput.value = localIdSuffix;
+    window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
 
     await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
 });
