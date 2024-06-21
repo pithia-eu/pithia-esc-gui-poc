@@ -31,7 +31,7 @@ shortNameInput.addEventListener("input", async () => {
 });
 
 window.addEventListener("load", async () => {
-    setupWizardManualAndAutoSave("organisationWizardData");
+    setupWizardManualAndAutoSave();
     if (shortNameInput.value !== "") {
         const localIdSuffix = generateLocalId(shortNameInput.value);
         localIdSuffixInput.value = localIdSuffix;

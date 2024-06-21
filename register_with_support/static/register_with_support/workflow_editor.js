@@ -6,6 +6,9 @@ import {
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
 import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
+import {
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
     validateOpenApiSpecificationUrl,
@@ -26,6 +29,7 @@ editorForm.addEventListener("submit", async e => {
 });
 
 window.addEventListener("load", () => {
+    setupWizardManualAndAutoSave();
     setupLocalIdAndNamespaceRelatedEventListeners();
     validateOpenApiSpecificationUrl();
 });

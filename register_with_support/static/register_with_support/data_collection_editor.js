@@ -61,7 +61,7 @@ editorForm.addEventListener("submit", e => {
 });
 
 window.addEventListener("load", () => {
-    setupWizardManualAndAutoSave("dataCollectionWizardData");
+    setupWizardManualAndAutoSave();
     setupLocalIdAndNamespaceRelatedEventListeners();
     const sourcesTab = setupSourcesTab();
     const relatedPartiesTable = setupRelatedPartiesTable();

@@ -54,6 +54,7 @@ class ResourceRegisterWithEditorFormView(FormView):
 
     model = None
     metadata_builder_class = None
+    save_data_local_storage_key = ''
     file_upload_registration_url = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_management_list_page_breadcrumb_text = ''
@@ -90,6 +91,7 @@ class ResourceRegisterWithEditorFormView(FormView):
         context['metadata_type_readable'] = self.model.type_readable.title()
         context['organisation_short_names'] = {o.metadata_server_url: o.short_name for o in models.Organisation.objects.all()}
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
+        context['save_data_local_storage_key'] = self.save_data_local_storage_key
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
@@ -414,6 +416,7 @@ class OrganisationRegisterWithEditorFormView(ResourceRegisterWithEditorFormView)
     model = models.Organisation
     metadata_builder_class = OrganisationMetadata
     file_upload_registration_url = reverse_lazy('register:organisation')
+    save_data_local_storage_key = 'organisation_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
@@ -445,6 +448,7 @@ class IndividualRegisterWithEditorFormView(OrganisationSelectFormViewMixin, Reso
     model = models.Individual
     metadata_builder_class = IndividualMetadata
     file_upload_registration_url = reverse_lazy('register:individual')
+    save_data_local_storage_key = 'individual_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
@@ -478,6 +482,7 @@ class ProjectRegisterWithEditorFormView(
     model = models.Project
     metadata_builder_class = ProjectMetadata
     file_upload_registration_url = reverse_lazy('register:project')
+    save_data_local_storage_key = 'project_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
@@ -523,6 +528,7 @@ class PlatformRegisterWithoutFormView(
     model = models.Platform
     metadata_builder_class = PlatformMetadata
     file_upload_registration_url = reverse_lazy('register:platform')
+    save_data_local_storage_key = 'platform_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Platform.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
@@ -589,6 +595,7 @@ class OperationRegisterWithoutFormView(
     model = models.Operation
     metadata_builder_class = OperationMetadata
     file_upload_registration_url = reverse_lazy('register:operation')
+    save_data_local_storage_key = 'operation_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Operation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
@@ -638,6 +645,7 @@ class InstrumentRegisterWithoutFormView(
     success_url = reverse_lazy('register:instrument_with_editor')
     form_class = InstrumentEditorForm
     template_name = 'register_with_support/instrument_editor.html'
+    save_data_local_storage_key = 'instrument_r_wizard_save_data'
 
     model = models.Instrument
     metadata_builder_class = InstrumentMetadata
@@ -696,6 +704,7 @@ class AcquisitionCapabilitiesRegisterWithoutFormView(
     model = models.AcquisitionCapabilities
     metadata_builder_class = AcquisitionCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
+    save_data_local_storage_key = 'acquisition_capabilities_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
@@ -780,6 +789,7 @@ class AcquisitionRegisterWithoutFormView(
     model = models.Acquisition
     metadata_builder_class = AcquisitionMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition')
+    save_data_local_storage_key = 'acquisition_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Acquisition.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
@@ -838,6 +848,7 @@ class ComputationCapabilitiesRegisterWithoutFormView(
     model = models.ComputationCapabilities
     metadata_builder_class = ComputationCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:computation_capability_set')
+    save_data_local_storage_key = 'computation_capabilities_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.ComputationCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
@@ -909,6 +920,7 @@ class ComputationRegisterWithoutFormView(
     model = models.Computation
     metadata_builder_class = ComputationMetadata
     file_upload_registration_url = reverse_lazy('register:computation')
+    save_data_local_storage_key = 'computation_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Computation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
@@ -966,6 +978,7 @@ class ProcessRegisterWithoutFormView(
     model = models.Process
     metadata_builder_class = ProcessMetadata
     file_upload_registration_url = reverse_lazy('register:process')
+    save_data_local_storage_key = 'process_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
@@ -1046,6 +1059,7 @@ class DataCollectionRegisterWithoutFormView(
     model = models.DataCollection
     metadata_builder_class = DataCollectionMetadata
     file_upload_registration_url = reverse_lazy('register:data_collection')
+    save_data_local_storage_key = 'data_collection_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
@@ -1191,6 +1205,7 @@ class WorkflowRegisterWithoutFormView(
     model = models.Workflow
     metadata_builder_class = WorkflowMetadata
     file_upload_registration_url = reverse_lazy('register:workflow')
+    save_data_local_storage_key = 'workflow_r_wizard_save_data'
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Workflow.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
