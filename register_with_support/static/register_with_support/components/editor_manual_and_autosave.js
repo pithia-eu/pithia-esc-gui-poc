@@ -70,11 +70,6 @@ function resetWizard() {
             continue;
         }
         field.value = "";
-        if (field.tagName.toLowerCase() === "select") {
-            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
-                detail: field.id,
-            }));
-        }
     }
 }
 
@@ -191,14 +186,15 @@ function setupEventListeners() {
     resetButtons.forEach(resetButton => {
         resetButton.addEventListener("click", () => {
             confirmResetWizard();
+            window.location.reload();
         });
     });
 }
 
 export function setupWizardManualAndAutoSave() {
     const urlParams = new URLSearchParams(window.location.search);
-    const isWizardReset = urlParams.get("reset");
-    if (isWizardReset) resetWizardAndRemovePastWizardData();
+    const isPastWizardDataReset = urlParams.get("reset");
+    if (isPastWizardDataReset) removePastWizardData();
     setupEventListeners();
     loadPastWizardData();
     addFieldDataToForm(wizardData.fieldData);
