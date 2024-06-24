@@ -2,8 +2,8 @@ import {
     editorForm,
 } from "/static/register_with_support/components/base_editor.js";
 
-const saveButton = document.querySelector("#btn-save-data");
-const resetButton = document.querySelector("#btn-reset-wizard");
+const saveButtons = document.querySelectorAll(".btn-save-data");
+const resetButtons = document.querySelectorAll(".btn-reset-wizard");
 const localStorageItemKey = JSON.parse(document.getElementById("save-data-local-storage-key").textContent);
 let wizardData = {};
 
@@ -43,7 +43,10 @@ function updateLastSavedStatus(lastSaved) {
         delete options.second;
         lastSavedFormatted = lastSavedDate.toLocaleDateString(locales, options);
     }
-    document.querySelector("#last-saved-at").textContent = `Last saved ${lastSavedFormatted}`;
+    const savedStatusElements = document.querySelectorAll(".last-saved-at");
+    savedStatusElements.forEach(elem => {
+        elem.textContent = `Last saved ${lastSavedFormatted}`;
+    });
 }
 
 // Credit: https://stackoverflow.com/a/20672625
@@ -78,7 +81,7 @@ function resetWizardAndRemovePastWizardData() {
 
 function confirmResetWizard() {
     resetDialog(
-        "All form fields and any save data will be erased.",
+        "All form fields and save data will be erased.",
         (result) => {
             if (!result) return;
             resetWizardAndRemovePastWizardData();
@@ -175,12 +178,16 @@ function setupEventListeners() {
         saveWizardDataToLocalStorage();
     });
 
-    saveButton.addEventListener("click", () => {
-        saveWizardDataToLocalStorage();
+    saveButtons.forEach(saveButton => {
+        saveButton.addEventListener("click", () => {
+            saveWizardDataToLocalStorage();
+        });
     });
 
-    resetButton.addEventListener("click", () => {
-        confirmResetWizard();
+    resetButtons.forEach(resetButton => {
+        resetButton.addEventListener("click", () => {
+            confirmResetWizard();
+        });
     });
 }
 
