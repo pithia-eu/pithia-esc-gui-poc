@@ -70,6 +70,11 @@ function resetWizard() {
             continue;
         }
         field.value = "";
+        if (field.tagName.toLowerCase() === "select") {
+            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                detail: field.id,
+            }));
+        }
     }
 }
 
