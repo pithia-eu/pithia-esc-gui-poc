@@ -15,6 +15,9 @@ import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/register_with_support/components/conditional_required_fields.js";
 import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
+import {
     setupQualityAssessmentSection,
 } from "/static/register_with_support/components/quality_assessment.js";
 import {
@@ -72,8 +75,9 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
-    setupLocalIdAndNamespaceRelatedEventListeners();
+window.addEventListener("load", async () => {
+    setupWizardManualAndAutoSave();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupSoftwareReferenceSection();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();

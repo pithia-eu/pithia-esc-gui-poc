@@ -40,6 +40,7 @@ class ResourceEditorFormView(
 
     model = None
     metadata_editor_class = None
+    save_data_local_storage_key = ''
     file_upload_registration_url = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_management_list_page_breadcrumb_text = ''
@@ -59,7 +60,8 @@ class ResourceEditorFormView(
         context['success_url'] = self.success_url
         context['localid_base'] = self.model.localid_base
         context['metadata_type_readable'] = self.model.type_readable.title()
-        context['organisation_short_names'] = {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in self.get_resources_with_model_ordered_by_name(models.Organisation)}
+        context['namespaces_by_organisation'] = {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
+        context['save_data_local_storage_key'] = self.save_data_local_storage_key
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'

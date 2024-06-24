@@ -1,12 +1,12 @@
-<td class="col-lg-5">
-    <div class="d-lg-none d-block">{{ form.keyword_type.label_tag }}</div>
+<td class="col-xl-5">
+    <div class="d-xl-none d-block">{{ form.keyword_type.label_tag }}</div>
     {{ form.keyword_type }}
     <div class="invalid-feedback">
         Enter a keyword type
     </div>
 </td>
-<td class="col-lg-2">
-    <div class="d-lg-none d-block">{{ form.keyword_type_code.label_tag }}</div>
+<td class="col-xl-2">
+    <div class="d-xl-none d-block">{{ form.keyword_type_code.label_tag }}</div>
     <div class="input-group">
         <span class="input-group-text" id="input-group-prepend">#</span>
         <input type="text" class="{{ form.keyword_type_code.field.widget.attrs.class }}" name="{{ form.keyword_type_code.name }}" id="{{ form.keyword_type_code.auto_id }}" aria-describedby="input-group-prepend" value="{{ form.keyword_type_code.value|default:'' }}">
@@ -15,8 +15,8 @@
         </div>
     </div>
 </td>
-<td class="td-keywords col-lg-5">
-    <div class="d-lg-none d-block">{{ form.keyword.label_tag }}</div>
+<td class="td-keywords col-xl-5">
+    <div class="d-xl-none d-block">{{ form.keyword.label_tag }}</div>
     {{ form.keyword }}
     <div class="invalid-feedback">
         Enter a keyword

@@ -8,6 +8,9 @@ import {
     editorForm,
     validateAndRegister,
 } from "/static/register_with_support/components/base_editor.js";
+import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
 
 const shortNameInput = document.querySelector("input[name='short_name']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
@@ -23,11 +26,13 @@ function generateLocalId(shortName) {
 shortNameInput.addEventListener("input", async () => {
     const localIdSuffix = generateLocalId(shortNameInput.value);
     localIdSuffixInput.value = localIdSuffix;
+    window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
 
     await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
 });
 
 window.addEventListener("load", async () => {
+    setupWizardManualAndAutoSave();
     if (shortNameInput.value !== "") {
         const localIdSuffix = generateLocalId(shortNameInput.value);
         localIdSuffixInput.value = localIdSuffix;

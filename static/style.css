@@ -1052,20 +1052,7 @@ a.support-link {
 }
 
 
-@media (min-width: 992px) {
-    #interaction-methods-form .list-group-item,
-    .interaction-methods-form-container .list-group-item {
-        padding: 1.5rem;
-    }
-
-    .interaction-methods-form-container input {
-        max-width: 45ch;
-    }
-    
-    .user-dropdown {
-        text-align: end;
-    }
-
+@media (min-width: 1200px) {
     .table-dynamic thead {
         display: table-header-group;
     }
@@ -1109,6 +1096,21 @@ a.support-link {
         color: red;
         top: 0.6rem;
         right: 0.9rem;
+    }
+}
+
+@media (min-width: 992px) {
+    #interaction-methods-form .list-group-item,
+    .interaction-methods-form-container .list-group-item {
+        padding: 1.5rem;
+    }
+
+    .interaction-methods-form-container input {
+        max-width: 45ch;
+    }
+    
+    .user-dropdown {
+        text-align: end;
     }
 }
 

@@ -30,6 +30,11 @@ def get_type(value):
 def url_target_blank(a_tag_text):
     return a_tag_text.replace('<a ', '<a target="_blank" ')
 
+@register.filter
+def choice_values(choices):
+    """Returns the values of a ChoiceField's choices"""
+    return [c[1] for c in choices]
+
 @register.simple_tag
 def random_int(a, b=None):
     if b is None:

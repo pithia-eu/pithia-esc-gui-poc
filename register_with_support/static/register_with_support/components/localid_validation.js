@@ -10,7 +10,7 @@ const nameInput = document.querySelector("input[name='name']");
 const organisationInput = document.querySelector("select[name='organisation']");
 const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
-const organisationShortNames = JSON.parse(document.getElementById("organisation-short-names").textContent);
+const namespacesByOrganisation = JSON.parse(document.getElementById("namespaces-by-organisation").textContent);
 const namespaceInput = document.querySelector("input[name='namespace']");
 const localIdSuffixInput = document.querySelector("input[name='localid']");
 
@@ -22,10 +22,18 @@ async function checkLocalIdIsUnique(localId) {
     return responseBody;
 }
 
-export function setupLocalIdAndNamespaceRelatedEventListeners() {
+export async function setupLocalIdAndNamespaceRelatedEventListeners() {
+    if (nameInput.value !== "") {
+        const localIdSuffix = generateLocalId(nameInput.value);
+        localIdSuffixInput.value = localIdSuffix;
+
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+    }
+
     nameInput.addEventListener("input", async () => {
         const localIdSuffix = generateLocalId(nameInput.value);
         localIdSuffixInput.value = localIdSuffix;
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     
         await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
     });
@@ -35,16 +43,8 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
         if (organisation === "") {
             return namespaceInput.value = "";
         }
-        namespaceInput.value = organisationShortNames[organisation].toLowerCase().replace(/\s/g, "");
-    });
-    
-    window.addEventListener("load", async () => {
-        if (nameInput.value !== "") {
-            const localIdSuffix = generateLocalId(nameInput.value);
-            localIdSuffixInput.value = localIdSuffix;
-    
-            await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
-        }
+        namespaceInput.value = namespacesByOrganisation[organisation].toLowerCase().replace(/\s/g, "");
+        window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     });
 }
 
@@ -58,10 +58,11 @@ export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffi
         if ("suggestion" in localIdResponse) {
             const suggestionSuffix = localIdResponse.suggestion.split("_").slice(1).join("_");
             localIdSuffixInput.value = suggestionSuffix;
-            localIdTakenElement.innerHTML = localIdSuffix;
-            localIdSuggestionElement.innerHTML = suggestionSuffix;
+            localIdTakenElement.textContent = localIdSuffix;
+            localIdSuggestionElement.textContent = suggestionSuffix;
         }
     } else {
         localIdSuffixInput.classList.remove("is-invalid");
     }
+    window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
 }

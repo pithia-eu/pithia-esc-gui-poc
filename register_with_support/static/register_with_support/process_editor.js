@@ -12,6 +12,9 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
+import {
     setupQualityAssessmentSection,
 } from "/static/register_with_support/components/quality_assessment.js";
 import {
@@ -33,8 +36,9 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
-    setupLocalIdAndNamespaceRelatedEventListeners();
+window.addEventListener("load", async () => {
+    setupWizardManualAndAutoSave();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
     setupCapabilitiesTab();

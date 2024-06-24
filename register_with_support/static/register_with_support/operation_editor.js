@@ -9,6 +9,9 @@ import {
     setupCitationSection,
 } from "/static/register_with_support/components/citation_section.js";
 import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
+import {
     setupGeometryLocationSection,
 } from "/static/register_with_support/components/geometry_location_section.js";
 import {
@@ -33,10 +36,11 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
+    setupWizardManualAndAutoSave();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     setupGeometryLocationSection();
-    setupLocalIdAndNamespaceRelatedEventListeners();
     setupOperationTimeSection();
     relatedPartiesTable = setupRelatedPartiesTable();
 });

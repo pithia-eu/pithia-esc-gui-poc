@@ -12,7 +12,9 @@ function addEventListenersToCustomSelect(customSelect) {
 
 function initialiseSelectControls(selectControls) {
     selectControls.forEach(sc => {
-        const cs = new TomSelect(sc, {});
+        const cs = new TomSelect(sc, {
+            maxOptions: null,
+        });
         addEventListenersToCustomSelect(cs);
         customSelects[sc.id] = cs;
     });

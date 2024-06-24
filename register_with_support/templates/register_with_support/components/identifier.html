@@ -8,10 +8,10 @@
         <div class="col-lg-4">
             {{ form.localid.label_tag }}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             <small class="d-block text-secondary mb-2">{{ form.localid.help_text }}</small>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% include 'register_with_support/components/localid-input-group.html' %}
         </div>
     </div>
@@ -19,10 +19,10 @@
         <div class="col-lg-5">
             {{ form.namespace.label_tag }}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             <small class="d-block text-secondary mb-2">{{ form.namespace.help_text }}</small>
         </div>
-        <div class="col-xl-3 col-lg-4">
+        <div class="col-xl-3 col-lg-5">
             {{ form.namespace }}
         </div>
         {% for error in form.namespace.errors %}
@@ -33,10 +33,10 @@
         <div class="col-lg-5">
             {{ form.identifier_version.label_tag }}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             <small class="d-block text-secondary mb-2">{{ form.identifier_version.help_text }}</small>
         </div>
-        <div class="col-xl-3 col-lg-4">
+        <div class="col-xl-3 col-lg-5">
             {{ form.identifier_version }}
         </div>
         {% for error in form.identifier_version.errors %}

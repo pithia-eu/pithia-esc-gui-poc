@@ -42,6 +42,7 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             self.owner_id,
         )
         messages.success(request, f'Successfully registered {escape(name)}.')
+        self.success_url += '?reset=true'
         return new_registration
 
     def run_registration_actions(self, request, xml_file, name):
@@ -134,6 +135,7 @@ class OrganisationRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:organisation_with_editor')
     file_upload_registration_url = reverse_lazy('register:organisation')
+    save_data_local_storage_key = 'organisation_r_wizard_save_data'
 
     def get_organisation_choices_for_form(self):
         return []
@@ -153,18 +155,21 @@ class IndividualRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:individual_with_editor')
     file_upload_registration_url = reverse_lazy('register:individual')
+    save_data_local_storage_key = 'individual_r_wizard_save_data'
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:project_with_editor')
     file_upload_registration_url = reverse_lazy('register:project')
+    save_data_local_storage_key = 'project_r_wizard_save_data'
 
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:platform_with_editor')
     file_upload_registration_url = reverse_lazy('register:platform')
+    save_data_local_storage_key = 'platform_r_wizard_save_data'
 
 
 class OperationRegisterWithEditorFormView(
@@ -172,6 +177,7 @@ class OperationRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:operation_with_editor')
     file_upload_registration_url = reverse_lazy('register:operation')
+    save_data_local_storage_key = 'operation_r_wizard_save_data'
 
 
 class InstrumentRegisterWithEditorFormView(
@@ -179,6 +185,7 @@ class InstrumentRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:instrument_with_editor')
     file_upload_registration_url = reverse_lazy('register:instrument')
+    save_data_local_storage_key = 'instrument_r_wizard_save_data'
 
 
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
@@ -186,6 +193,7 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
     file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
+    save_data_local_storage_key = 'acquisition_capabilities_r_wizard_save_data'
 
 
 class AcquisitionRegisterWithEditorFormView(
@@ -193,6 +201,7 @@ class AcquisitionRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:acquisition_with_editor')
     file_upload_registration_url = reverse_lazy('register:acquisition')
+    save_data_local_storage_key = 'acquisition_r_wizard_save_data'
 
 
 class ComputationCapabilitiesRegisterWithEditorFormView(
@@ -200,6 +209,7 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:computation_capability_set_with_editor')
     file_upload_registration_url = reverse_lazy('register:computation_capability_set')
+    save_data_local_storage_key = 'computation_capabilities_r_wizard_save_data'
 
 
 class ComputationRegisterWithEditorFormView(
@@ -207,6 +217,7 @@ class ComputationRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:computation_with_editor')
     file_upload_registration_url = reverse_lazy('register:computation')
+    save_data_local_storage_key = 'computation_r_wizard_save_data'
 
 
 class ProcessRegisterWithEditorFormView(
@@ -214,6 +225,7 @@ class ProcessRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:process_with_editor')
     file_upload_registration_url = reverse_lazy('register:process')
+    save_data_local_storage_key = 'process_r_wizard_save_data'
 
 
 class DataCollectionRegisterWithEditorFormView(
@@ -221,6 +233,7 @@ class DataCollectionRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:data_collection_with_editor')
     file_upload_registration_url = reverse_lazy('register:data_collection')
+    save_data_local_storage_key = 'data_collection_r_wizard_save_data'
 
     def register_api_interaction_method(self, request, new_registration):
         try:
@@ -254,6 +267,7 @@ class WorkflowRegisterWithEditorFormView(
     ResourceRegisterWithEditorFormView):
     success_url = reverse_lazy('register:workflow_with_editor')
     file_upload_registration_url = reverse_lazy('register:workflow')
+    save_data_local_storage_key = 'workflow_r_wizard_save_data'
 
     def register_workflow_api_interaction_method(self, request, new_registration):
         api_specification_url = request.POST.get('api_specification_url', None)

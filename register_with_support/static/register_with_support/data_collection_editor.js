@@ -18,6 +18,9 @@ import {
     setupSourcesTab,
 } from "/static/register_with_support/components/sources_tab.js";
 import {
+    setupWizardManualAndAutoSave,
+} from "/static/register_with_support/components/editor_manual_and_autosave.js";
+import {
     apiSpecificationUrlInput,
     badApiInteractionMethodModifiedEvent,
     validateOpenApiSpecificationUrl,
@@ -57,8 +60,9 @@ editorForm.addEventListener("submit", e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
-    setupLocalIdAndNamespaceRelatedEventListeners();
+window.addEventListener("load", async () => {
+    setupWizardManualAndAutoSave();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     const sourcesTab = setupSourcesTab();
     const relatedPartiesTable = setupRelatedPartiesTable();
     setupQualityAssessmentSection();
