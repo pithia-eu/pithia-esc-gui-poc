@@ -4,12 +4,12 @@
         <div class="col-lg-12">
             <h2>Contact Info</h2>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.email_address %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-5 col-lg-7">
+        <div class="col-xl-5 col-lg-8">
             <div class="d-flex flex-column">
                 {{ form.phone.label_tag }}
                 <input type="tel" name="{{ form.phone.name }}" id="{{ form.phone.auto_id }}" class="form-control pe-2" value="{{ form.phone.value|default:'' }}">
@@ -24,27 +24,27 @@
         <div class="col-lg-12">
             <h3>Address</h3>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.delivery_point %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-5 col-lg-6">
+        <div class="col-xl-5 col-lg-8">
             {% with field=form.city %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-5 col-lg-6">
+        <div class="col-xl-5 col-lg-8">
             {% with field=form.administrative_area %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-3 col-lg-4">
+        <div class="col-xl-3 col-lg-5">
             {% with field=form.postal_code %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.country %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
@@ -52,12 +52,12 @@
     </div>
     <div class="row flex-column gy-3">
         <h3>Other Information</h3>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.online_resource %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             <label for="{{ form.hours_of_service_start.id_for_label }}">Hours of Service</label>
             <div class="d-flex align-items-center column-gap-2">
                 <input type="time" name="{{ form.hours_of_service_start.name }}" id="{{ form.hours_of_service_start.auto_id }}" class="form-control w-auto" value="{{ form.hours_of_service_start.value|default:'' }}">
@@ -71,7 +71,7 @@
             <div class="form-text text-danger">{{ error }}</div>
             {% endfor %}
         </div>
-        <div class="col-xl-5 col-lg-6">
+        <div class="col-xl-5 col-lg-8">
             {% with field=form.contact_instructions %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}

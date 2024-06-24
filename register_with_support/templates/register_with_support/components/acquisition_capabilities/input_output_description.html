@@ -3,17 +3,17 @@
         <div class="col-lg-12">
             <h2 class="mb-0">Input Parameters</h2>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with custom_summary_text='Adding information on input parameters is optional. If you would like to add this, a description must be specified.' %}
             {% include 'register_with_support/components/conditional_required_field_info_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.input_name %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {{ form.input_description.label_tag }}
             <p class="text-secondary mb-0 mt-2">
                 <small>
@@ -26,7 +26,7 @@
                 </small>
             </p>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {{ form.input_description }}
         </div>
     </div>
@@ -36,12 +36,12 @@
                 Output
             </h3>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {% with field=form.output_name %}
             {% include 'register_with_support/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {{ form.output_description.label_tag }}
             <p class="text-secondary mb-0 mt-2">
                 <small>
@@ -50,7 +50,7 @@
                 </small>
             </p>
         </div>
-        <div class="col-xl-7 col-lg-8">
+        <div class="col-xl-9 col-lg-12">
             {{ form.output_description }}
         </div>
     </div> {% endcomment %}

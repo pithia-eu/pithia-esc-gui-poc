@@ -135,7 +135,7 @@ export class DynamicEditorTab {
         newTabButton.type = "button";
         newTabButton.role = "tab";
         newTabButton.setAttribute("aria-controls", `${newTabIdPrefix}-tab-pane`);
-        newTabButton.innerHTML = `${this.tabButtonPrefixText} ${this.nextTabNumber}`;
+        newTabButton.textContent = `${this.tabButtonPrefixText} ${this.nextTabNumber}`;
     
         // Add new tab button to tab
         newTab.appendChild(newTabButton);
@@ -171,7 +171,7 @@ export class DynamicEditorTab {
     
         // Enable remove tab and tab pane button
         const removeTabAndTabPaneButton = newTabPane.querySelector(this.removeTabAndTabPaneButtonSelector);
-        removeTabAndTabPaneButton.querySelector(".remove-tab-pane-button-text").innerHTML = `Remove ${this.tabButtonPrefixText} ${this.nextTabNumber}`;
+        // removeTabAndTabPaneButton.querySelector(".remove-tab-pane-button-text").textContent = `Remove ${this.tabButtonPrefixText} ${this.nextTabNumber}`;
         removeTabAndTabPaneButton.disabled = false;
     
         this.tabContent.appendChild(newTabPane);
