@@ -2,6 +2,8 @@ import {
     editorForm,
 } from "/static/register_with_support/components/base_editor.js";
 
+const saveButton = document.querySelector("#btn-save-data");
+const resetButton = document.querySelector("#btn-reset-wizard");
 const localStorageItemKey = JSON.parse(document.getElementById("save-data-local-storage-key").textContent);
 let wizardData = {};
 
@@ -42,6 +44,19 @@ function updateLastSavedStatus(lastSaved) {
         lastSavedFormatted = lastSavedDate.toLocaleDateString(locales, options);
     }
     document.querySelector("#last-saved-at").textContent = `Last saved ${lastSavedFormatted}`;
+}
+
+function resetWizard() {
+    const allWizardFields = getAllWizardFields();
+    for (const field of allWizardFields) {
+        if (field.type === "hidden" && field.name.endsWith("_json")) {
+            field.value = "[]";
+            continue;
+        }
+        field.value = "";
+    }
+    removePastWizardData();
+    window.location.reload();
 }
 
 
@@ -85,6 +100,15 @@ function loadPastWizardData() {
     }
 }
 
+function removePastWizardData() {
+    const pastWizardDataLS = window.localStorage.getItem(localStorageItemKey);
+    if (!pastWizardDataLS) {
+        console.log("No past wizard data found.");
+        return;
+    }
+    window.localStorage.removeItem(localStorageItemKey);
+}
+
 function addFieldDataToForm(fieldData) {
     for (const fieldId in fieldData) {
         const field = editorForm.querySelector(`#${fieldId}`);
@@ -123,6 +147,14 @@ function setupEventListeners() {
     
     window.addEventListener("wizardFieldProgrammaticallySet", () => {
         saveWizardDataToLocalStorage();
+    });
+
+    saveButton.addEventListener("click", () => {
+        saveWizardDataToLocalStorage();
+    });
+
+    resetButton.addEventListener("click", () => {
+        resetWizard();
     });
 }
 
