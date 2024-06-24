@@ -46,6 +46,19 @@ function updateLastSavedStatus(lastSaved) {
     document.querySelector("#last-saved-at").textContent = `Last saved ${lastSavedFormatted}`;
 }
 
+// Credit: https://stackoverflow.com/a/20672625
+function resetDialog(message, success, failure) {
+    const openTime = new Date();
+    const result = confirm(message);
+    const closeTime = new Date();
+
+    if (closeTime - openTime < 10) {
+        return failure();
+    } else {
+        return success(result);
+    }
+}
+
 function resetWizard() {
     const allWizardFields = getAllWizardFields();
     for (const field of allWizardFields) {
@@ -55,8 +68,21 @@ function resetWizard() {
         }
         field.value = "";
     }
+}
+
+function resetWizardAndRemovePastWizardData() {
+    resetWizard();
     removePastWizardData();
     window.location.reload();
+}
+
+function confirmResetWizard() {
+    resetDialog(
+        "All form fields and any save data will be erased.",
+        (result) => {
+            if (!result) return;
+            resetWizardAndRemovePastWizardData();
+        }, resetWizardAndRemovePastWizardData);
 }
 
 
@@ -154,7 +180,7 @@ function setupEventListeners() {
     });
 
     resetButton.addEventListener("click", () => {
-        resetWizard();
+        confirmResetWizard();
     });
 }
 
