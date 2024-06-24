@@ -35,9 +35,9 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
-    setupLocalIdAndNamespaceRelatedEventListeners();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
     operationalModesTable = setupOperationalModesTable();

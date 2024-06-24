@@ -76,6 +76,7 @@ class ResourceRegisterWithEditorFormView(FormView):
             self.owner_id,
         )
         messages.success(request, f'Successfully registered {escape(name)}.')
+        self.success_url += '?reset=true'
         return new_registration
 
     def run_registration_actions(self, request, xml_file, name):

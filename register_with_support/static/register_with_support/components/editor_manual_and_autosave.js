@@ -76,7 +76,6 @@ function resetWizard() {
 function resetWizardAndRemovePastWizardData() {
     resetWizard();
     removePastWizardData();
-    window.location.reload();
 }
 
 function confirmResetWizard() {
@@ -192,6 +191,9 @@ function setupEventListeners() {
 }
 
 export function setupWizardManualAndAutoSave() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isWizardReset = urlParams.get("reset");
+    if (isWizardReset) resetWizardAndRemovePastWizardData();
     setupEventListeners();
     loadPastWizardData();
     addFieldDataToForm(wizardData.fieldData);

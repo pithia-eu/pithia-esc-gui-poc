@@ -38,11 +38,11 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     setupGeometryLocationSection();
-    setupLocalIdAndNamespaceRelatedEventListeners();
     relatedPartiesTable = setupRelatedPartiesTable();
     platformStandardIdentifiersTable = setupPlatformStandardIdentifiersTable();
 });

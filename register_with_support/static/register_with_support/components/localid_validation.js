@@ -22,7 +22,14 @@ async function checkLocalIdIsUnique(localId) {
     return responseBody;
 }
 
-export function setupLocalIdAndNamespaceRelatedEventListeners() {
+export async function setupLocalIdAndNamespaceRelatedEventListeners() {
+    if (nameInput.value !== "") {
+        const localIdSuffix = generateLocalId(nameInput.value);
+        localIdSuffixInput.value = localIdSuffix;
+
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+    }
+
     nameInput.addEventListener("input", async () => {
         const localIdSuffix = generateLocalId(nameInput.value);
         localIdSuffixInput.value = localIdSuffix;
@@ -38,15 +45,6 @@ export function setupLocalIdAndNamespaceRelatedEventListeners() {
         }
         namespaceInput.value = namespacesByOrganisation[organisation].toLowerCase().replace(/\s/g, "");
         window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
-    });
-    
-    window.addEventListener("load", async () => {
-        if (nameInput.value !== "") {
-            const localIdSuffix = generateLocalId(nameInput.value);
-            localIdSuffixInput.value = localIdSuffix;
-    
-            await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
-        }
     });
 }
 

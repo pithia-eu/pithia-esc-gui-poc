@@ -60,9 +60,9 @@ editorForm.addEventListener("submit", e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
-    setupLocalIdAndNamespaceRelatedEventListeners();
+    await setupLocalIdAndNamespaceRelatedEventListeners();
     const sourcesTab = setupSourcesTab();
     const relatedPartiesTable = setupRelatedPartiesTable();
     setupQualityAssessmentSection();
