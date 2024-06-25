@@ -62,6 +62,8 @@ class ResourceEditorFormView(
         context['metadata_type_readable'] = self.model.type_readable.title()
         context['namespaces_by_organisation'] = {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
         context['save_data_local_storage_key'] = self.save_data_local_storage_key
+        if 'title' not in context:
+            context['title'] = f'{self.model.type_readable.title()} Wizard'
         context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
