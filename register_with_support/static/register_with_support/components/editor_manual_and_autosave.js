@@ -197,7 +197,7 @@ function setupEventListeners() {
 
 export function setupWizardManualAndAutoSave() {
     if (!localStorageItemKey || localStorageItemKey.length === 0) {
-        const msg = "Saving is currently unavailable.";
+        const msg = "Saving is currently unavailable. Changes will not be saved.";
         saveButtons.forEach(saveButton => {
             saveButton.disabled = true;
             saveButton.classList.add("disabled");
