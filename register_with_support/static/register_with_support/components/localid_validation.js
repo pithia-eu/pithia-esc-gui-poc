@@ -3,8 +3,7 @@ import {
 } from "/static/register_with_support/components/localid_generation.js";
 
 const localIdValidationUrl = JSON.parse(document.getElementById("local-id-validation-url").textContent);
-const localIdTakenElement = document.querySelector(".local-id-input-group .taken-localid");
-const localIdSuggestionElement = document.querySelector(".local-id-input-group .localid-suggestion");
+const invalidFeedbackElement = document.querySelector(".local-id-input-group .invalid-feedback");
 
 const nameInput = document.querySelector("input[name='name']");
 const organisationInput = document.querySelector("select[name='organisation']");
@@ -15,11 +14,34 @@ const namespaceInput = document.querySelector("input[name='namespace']");
 const localIdSuffixInput = document.querySelector("input[name='localid']");
 
 async function checkLocalIdIsUnique(localId) {
-    const response = await fetch(`${localIdValidationUrl}?` + new URLSearchParams({
-        localid: localId
-    }));
-    const responseBody = await response.json();
-    return responseBody;
+    let localIdCheck = {};
+    if (!localIdValidationUrl || localIdValidationUrl.length === 0) {
+        const msg = "Cannot check local ID as no validation URL supplied.";
+        console.log(msg);
+        localIdCheck.error = msg;
+        localIdCheck.displayError = true;
+        return localIdCheck;
+    }
+
+    let response;
+    try {
+        response = await fetch(`${localIdValidationUrl}?` + new URLSearchParams({
+            localid: localId
+        }));
+        const responseBody = await response.json();
+        localIdCheck = {
+            ...localIdCheck,
+            ...responseBody,
+        };
+    } catch (error) {
+        const msg = "Encountered an error checking local ID for uniqueness.";
+        console.error(error);
+        console.log(msg);
+        if (response) console.error(`Response:`, response);
+        localIdCheck.error = `${msg} Please try again later.`;
+        localIdCheck.displayError = true;
+    }
+    return localIdCheck;
 }
 
 export async function setupLocalIdAndNamespaceRelatedEventListeners() {
@@ -27,7 +49,7 @@ export async function setupLocalIdAndNamespaceRelatedEventListeners() {
         const localIdSuffix = generateLocalId(nameInput.value);
         localIdSuffixInput.value = localIdSuffix;
 
-        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix);
     }
 
     nameInput.addEventListener("input", async () => {
@@ -35,7 +57,7 @@ export async function setupLocalIdAndNamespaceRelatedEventListeners() {
         localIdSuffixInput.value = localIdSuffix;
         window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
     
-        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix);
     });
     
     organisationInput.addEventListener("input", () => {
@@ -48,19 +70,31 @@ export async function setupLocalIdAndNamespaceRelatedEventListeners() {
     });
 }
 
-export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup) {
-    const localIdResponse = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
-    const isLocalIdInUse = localIdResponse.result;
+function displayLocalIdError(error) {
+    localIdInputGroup.classList.add("was-validated");
+    localIdSuffixInput.classList.add("is-invalid");
+    invalidFeedbackElement.textContent = error;
+}
+
+function displayLocalIdSuggestion(localIdCheck, localIdSuffix) {
+    if (!("suggestion" in localIdCheck)) {
+        return displayLocalIdError(`Local ID with suffix "${localIdSuffix}" has been taken. An alternative cannot be suggested at this time. Please try generating another local ID.`);
+    }
+    const suggestionSuffix = localIdCheck.suggestion.split("_").slice(1).join("_");
+    localIdSuffixInput.value = suggestionSuffix;
+    return displayLocalIdError(`Local ID with suffix "${localIdSuffix}" is already in use so "${suggestionSuffix}" will be used instead.`);
+}
+
+export async function validateLocalIdAndProcessResults(localIdBase, localIdSuffix) {
+    const localIdCheck = await checkLocalIdIsUnique(localIdBase + "_" + localIdSuffix);
+    if ("error" in localIdCheck) {
+        if ("displayError" in localIdCheck) displayLocalIdError(localIdCheck.error);
+        return;
+    }
+    const isLocalIdInUse = localIdCheck.result;
 
     if (isLocalIdInUse) {
-        localIdInputGroup.classList.add("was-validated");
-        localIdSuffixInput.classList.add("is-invalid");   
-        if ("suggestion" in localIdResponse) {
-            const suggestionSuffix = localIdResponse.suggestion.split("_").slice(1).join("_");
-            localIdSuffixInput.value = suggestionSuffix;
-            localIdTakenElement.textContent = localIdSuffix;
-            localIdSuggestionElement.textContent = suggestionSuffix;
-        }
+        displayLocalIdSuggestion(localIdCheck, localIdSuffix);
     } else {
         localIdSuffixInput.classList.remove("is-invalid");
     }

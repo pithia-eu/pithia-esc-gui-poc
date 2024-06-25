@@ -30,6 +30,13 @@ function getWizardChoiceFields() {
     return editorForm.querySelectorAll(`select[id]:not(.table select, .tab-pane select)`);
 }
 
+function updateSaveStatus(status) {
+    const savedStatusElements = document.querySelectorAll(".last-saved-at");
+    savedStatusElements.forEach(elem => {
+        elem.textContent = status;
+    });
+}
+
 function updateLastSavedStatus(lastSaved) {
     const lastSavedDate = new Date(lastSaved);
     const locales = [];
@@ -43,10 +50,7 @@ function updateLastSavedStatus(lastSaved) {
         delete options.second;
         lastSavedFormatted = lastSavedDate.toLocaleDateString(locales, options);
     }
-    const savedStatusElements = document.querySelectorAll(".last-saved-at");
-    savedStatusElements.forEach(elem => {
-        elem.textContent = `Last saved ${lastSavedFormatted}`;
-    });
+    updateSaveStatus(`Last saved ${lastSavedFormatted}`);
 }
 
 // Credit: https://stackoverflow.com/a/20672625
@@ -192,6 +196,14 @@ function setupEventListeners() {
 }
 
 export function setupWizardManualAndAutoSave() {
+    if (!localStorageItemKey || localStorageItemKey.length === 0) {
+        const msg = "Saving is currently unavailable.";
+        saveButtons.forEach(saveButton => {
+            saveButton.disabled = true;
+            saveButton.classList.add("disabled");
+        });
+        return updateSaveStatus(msg);
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const isPastWizardDataReset = urlParams.get("reset");
     if (isPastWizardDataReset) removePastWizardData();

@@ -13,7 +13,6 @@ import {
 } from "/static/register_with_support/components/editor_manual_and_autosave.js";
 
 const shortNameInput = document.querySelector("input[name='short_name']");
-const localIdInputGroup = document.querySelector(".local-id-input-group");
 const localIdBase = JSON.parse(document.getElementById("local-id-base").textContent);
 const localIdSuffixInput = document.querySelector("input[name='localid']");
 
@@ -28,7 +27,7 @@ shortNameInput.addEventListener("input", async () => {
     localIdSuffixInput.value = localIdSuffix;
     window.dispatchEvent(new CustomEvent("wizardFieldProgrammaticallySet"));
 
-    await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+    await validateLocalIdAndProcessResults(localIdBase, localIdSuffix);
 });
 
 window.addEventListener("load", async () => {
@@ -37,7 +36,7 @@ window.addEventListener("load", async () => {
         const localIdSuffix = generateLocalId(shortNameInput.value);
         localIdSuffixInput.value = localIdSuffix;
 
-        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix, localIdSuffixInput, localIdInputGroup);
+        await validateLocalIdAndProcessResults(localIdBase, localIdSuffix);
     }
 });
 
