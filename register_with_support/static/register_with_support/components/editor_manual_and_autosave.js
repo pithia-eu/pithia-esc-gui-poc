@@ -67,14 +67,7 @@ function resetDialog(message, success, failure) {
 }
 
 function resetWizard() {
-    const allWizardFields = getAllWizardFields();
-    for (const field of allWizardFields) {
-        if (field.type === "hidden" && field.name.endsWith("_json")) {
-            field.value = "[]";
-            continue;
-        }
-        field.value = "";
-    }
+    editorForm.reset();
 }
 
 function resetWizardAndRemovePastWizardData() {
@@ -84,7 +77,7 @@ function resetWizardAndRemovePastWizardData() {
 
 function confirmResetWizard() {
     resetDialog(
-        "All form fields and save data will be erased.",
+        "All fields will be set to their initial values. Any existing save data will also be erased.",
         (result) => {
             if (!result) return;
             resetWizardAndRemovePastWizardData();
@@ -133,6 +126,7 @@ function loadPastWizardData() {
 }
 
 function removePastWizardData() {
+    if (!localStorageItemKey) return;
     const pastWizardDataLS = window.localStorage.getItem(localStorageItemKey);
     if (!pastWizardDataLS) {
         console.log("No past wizard data found.");
@@ -158,6 +152,15 @@ function addFieldDataToForm(fieldData) {
         }
         field.value = fieldData[fieldId];
     }
+}
+
+function setupResetButtonEventListeners() {
+    resetButtons.forEach(resetButton => {
+        resetButton.addEventListener("click", () => {
+            confirmResetWizard();
+            window.location.reload();
+        });
+    });
 }
 
 function setupEventListeners() {
@@ -187,12 +190,7 @@ function setupEventListeners() {
         });
     });
 
-    resetButtons.forEach(resetButton => {
-        resetButton.addEventListener("click", () => {
-            confirmResetWizard();
-            window.location.reload();
-        });
-    });
+    setupResetButtonEventListeners();
 }
 
 export function setupWizardManualAndAutoSave() {
@@ -202,6 +200,7 @@ export function setupWizardManualAndAutoSave() {
             saveButton.disabled = true;
             saveButton.classList.add("disabled");
         });
+        setupResetButtonEventListeners();
         return updateSaveStatus(msg);
     }
     const urlParams = new URLSearchParams(window.location.search);
