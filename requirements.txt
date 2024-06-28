@@ -7,6 +7,7 @@ decorator==5.1.1
 Django==5.0.1
 django-countries==7.5.1
 django-environ==0.11.2
+django-phonenumber-field==8.0.0
 elementpath==4.1.5
 future==0.18.3
 idna==3.6
@@ -21,6 +22,7 @@ openapi-schema-validator==0.6.2
 openapi-spec-validator==0.7.1
 packaging==23.2
 pathable==0.4.3
+phonenumberslite==8.13.39
 pip-review==1.3.0
 psycopg2==2.9.9
 pyhandle==1.2.1

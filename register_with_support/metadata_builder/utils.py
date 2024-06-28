@@ -6,7 +6,7 @@ from unidecode import unidecode
 # Contact info
 def process_contact_info_in_form(form_cleaned_data):
     return {
-        'phone': form_cleaned_data.get('phone'),
+        'phone': form_cleaned_data.get('phone').as_international,
         'address': {
             'delivery_point': form_cleaned_data.get('delivery_point'),
             'city': form_cleaned_data.get('city'),

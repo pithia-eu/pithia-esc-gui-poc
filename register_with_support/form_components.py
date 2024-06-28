@@ -1,6 +1,6 @@
 from django import forms
 from django_countries import countries
-
+from phonenumber_field.formfields import PhoneNumberField
 
 # Base components
 
@@ -86,7 +86,7 @@ class BaseEditorForm(forms.Form):
 
 # Other components
 class ContactInfoEditorFormComponent(forms.Form):
-    phone = forms.CharField(
+    phone = PhoneNumberField(
         label="Phone",
         required=False,
         widget=forms.TextInput(),
