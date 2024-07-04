@@ -14,6 +14,7 @@ from .utils import (
 )
 
 from common.test_xml_files import (
+    INDIVIDUAL_METADATA_XML,
     ORGANISATION_METADATA_XML,
     ORGANISATION_CONTACT_INFO_1_XML,
     ORGANISATION_CONTACT_INFO_2_XML,
@@ -151,6 +152,13 @@ class IndividualEditorTestCase(SimpleTestCase):
         )
         individual_editor.update_contact_info(contact_info)
         individual_editor.update_organisation('https://www.example.com/')
+        xml = individual_editor.to_xml()
+        print('xml', xml)
+
+    def test_individual_editor_with_file(self):
+        individual_editor = IndividualEditor(xml_string=INDIVIDUAL_METADATA_XML.read().decode())
+        individual_editor.update_position_name('XYZ')
+        individual_editor.update_contact_info(ContactInfoMetadataUpdate())
         xml = individual_editor.to_xml()
         print('xml', xml)
 
