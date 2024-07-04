@@ -173,7 +173,6 @@ def create_readable_scientific_metadata_flattened(scientific_metadata_flattened:
     ]
     hidden_key_regex = [
         re.compile(r'^name'),
-        re.compile(r'^contactinfo'),
         re.compile(r'^identifier'),
         re.compile(r'.*onlineresource <b>(1/1)</b>\.description'),
         re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),

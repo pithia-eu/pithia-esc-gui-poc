@@ -545,7 +545,7 @@ class DataCollection(ScientificMetadata):
     def feature_of_interest_urls(self):
         try:
             return [nr['@xlink:href'] for nr in self.json['om:featureOfInterest']['FeatureOfInterest']['namedRegion']]
-        except KeyError:
+        except BaseException:
             pass
         return []
 
