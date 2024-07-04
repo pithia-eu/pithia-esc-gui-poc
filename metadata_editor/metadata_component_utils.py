@@ -75,7 +75,7 @@ class BaseMetadataEditor:
         metadata_etree_formatted = xmlschema.to_etree(
             metadata_dict_unformatted,
             schema=self.schema,
-            path='Organisation',
+            path=self.root_element_name,
             namespaces=self.namespaces
         )
         metadata_json_formatted = xmlschema.to_json(
@@ -338,7 +338,7 @@ class ContactInfoMetadataEditor:
         # Clean up
         self.remove_child_element_if_empty(contact_info_first, ci_contact_key)
         self.pop_child_element_if_empty(
-            self.metadata_dict,
+            self.metadata_dict[contact_info_key],
             contact_info_first,
             0
         )
