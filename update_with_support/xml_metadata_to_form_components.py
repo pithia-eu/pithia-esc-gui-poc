@@ -1,5 +1,4 @@
 import dateutil.parser
-from datetime import datetime
 from lxml import etree
 
 from metadata_editor.editor_components import Namespace
@@ -35,11 +34,11 @@ class ResourceXmlToFormDataConverter:
         print('form_data', form_data)
         return form_data
 
-class OrganisationXmlToFormDataConverter(ResourceXmlToFormDataConverter):
+
+class ContactInfoXmlMetadataToFormMixin:
     def __init__(self, xml_string) -> None:
         super().__init__(xml_string)
         self.basic_form_field_to_xml_mappings.update({
-            'short_name': './/{%s}shortName' % Namespace.PITHIA,
             'phone': './/{%s}voice/{%s}CharacterString' % (Namespace.GMD, Namespace.GCO),
             'delivery_point': './/{%s}deliveryPoint/{%s}CharacterString' % (Namespace.GMD, Namespace.GCO),
             'city': './/{%s}city/{%s}CharacterString' % (Namespace.GMD, Namespace.GCO),
@@ -63,4 +62,3 @@ class OrganisationXmlToFormDataConverter(ResourceXmlToFormDataConverter):
             form_data['hours_of_service_end'] = dateutil.parser.parse(hours_of_service_end).time().strftime('%H:%M')
 
         return form_data
-        
