@@ -10,29 +10,40 @@
 <script src="{% static 'resource_management/resource_management.js' %}" defer></script>
 {% endblock scripts %}
 {% block content %}
-<div class="d-flex flex-lg-row flex-column align-items-lg-center align-items-stretch justify-content-between flex-wrap gap-3 mb-3">
-    <h1>{{ title }}</h1>
-    <a href="{% url resource_register_page_url_name %}" class="btn btn-outline-dark ms-lg-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up me-2" viewBox="0 0 16 16">
-            <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z"/>
-            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-        </svg>Register via File Upload
-    </a>
-    {% if resource_register_with_editor_name %}
-    <a href="{% url resource_register_with_editor_name %}" class="btn btn-primary fw-bold">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-        </svg>Register with Wizard
-    </a>
-    {% else %}
-    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" title="This feature is not yet available for this metadata type">
-        <a href="" class="btn btn-primary fw-bold w-100 disabled" tabindex="-1" aria-disabled="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-            </svg>Register with Wizard
-        </a>
-    </span>
+<h1 class="text-md-start text-center">{{ title }}</h1>
+<div class="row flex-column mt-4">
+    {% if description %}
+    <div class="col-xl-7 col-lg-8 mb-2">
+        <p class="d-md-inline-block d-block text-secondary-emphasis bg-light rounded py-3 px-4" style="font-size: 1.1rem;">
+            {{ description }}
+        </p>
+    </div>
     {% endif %}
+    <div class="col-lg-12 mt-4 mb-4">
+        <div class="d-flex flex-md-row flex-column column-gap-3 row-gap-3">
+            <a href="{% url resource_register_page_url_name %}" class="btn btn-outline-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up me-2" viewBox="0 0 16 16">
+                    <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z"/>
+                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                </svg>Register via File Upload
+            </a>
+            {% if resource_register_with_editor_name %}
+            <a href="{% url resource_register_with_editor_name %}" class="btn btn-primary fw-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                </svg>Register with Wizard
+            </a>
+            {% else %}
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" title="This feature is not yet available for this metadata type">
+                <a href="" class="btn btn-primary fw-bold w-100 disabled" tabindex="-1" aria-disabled="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                    </svg>Register with Wizard
+                </a>
+            </span>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% if not resources %}
 <p>{{ empty_resource_list_text }}</p>

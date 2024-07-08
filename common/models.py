@@ -299,7 +299,7 @@ class Organisation(ScientificMetadata):
     weight = 1
     type_readable = 'organisation'
     type_plural_readable = 'organisations'
-    a_or_an = 'an'
+    type_description_readable = 'Data Provider/Owner organisation.'
     _browse_detail_page_url_name = 'browse:organisation_detail'
     root_element_name = 'Organisation'
 
@@ -318,7 +318,7 @@ class Individual(ScientificMetadata):
     weight = 2
     type_readable = 'individual'
     type_plural_readable = 'individuals'
-    a_or_an = 'an'
+    type_description_readable = 'An individual, acting in a particular role and associated with an Organisation.'
     _browse_detail_page_url_name = 'browse:individual_detail'
     root_element_name = 'Individual'
 
@@ -341,7 +341,7 @@ class Project(ScientificMetadata):
     weight = 3
     type_readable = 'project'
     type_plural_readable = 'projects'
-    a_or_an = 'a'
+    type_description_readable = 'An identifiable activity designed to accomplish a set of objectives.'
     converted_xml_correction_function = correct_project_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:project_detail'
     root_element_name = 'Project'
@@ -361,7 +361,7 @@ class Platform(ScientificMetadata):
     weight = 4
     type_readable = 'platform'
     type_plural_readable = 'platforms'
-    a_or_an = 'a'
+    type_description_readable = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory).'
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:platform_detail'
     root_element_name = 'Platform'
@@ -377,7 +377,7 @@ class Operation(ScientificMetadata):
     weight = 5
     type_readable = 'operation'
     type_plural_readable = 'operations'
-    a_or_an = 'an'
+    type_description_readable = 'Description of how a platform operates in order to support data acquisition by the instrument.'
     converted_xml_correction_function = correct_operation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:operation_detail'
     root_element_name = 'Operation'
@@ -393,7 +393,7 @@ class Instrument(ScientificMetadata):
     weight = 6
     type_readable = 'instrument'
     type_plural_readable = 'instruments'
-    a_or_an = 'an'
+    type_description_readable = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values.'
     converted_xml_correction_function = correct_instrument_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:instrument_detail'
     root_element_name = 'Instrument'
@@ -431,7 +431,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     weight = 7
     type_readable = 'acquisition capabilities'
     type_plural_readable = 'acquisition capabilities'
-    a_or_an = 'an'
+    type_description_readable = ''
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     root_element_name = 'AcquisitionCapabilities'
@@ -454,7 +454,7 @@ class Acquisition(ScientificMetadata):
     weight = 8
     type_readable = 'acquisition'
     type_plural_readable = 'acquisitions'
-    a_or_an = 'an'
+    type_description_readable = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties.'
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_detail'
     root_element_name = 'Acquisition'
@@ -470,7 +470,7 @@ class ComputationCapabilities(ScientificMetadata):
     weight = 9
     type_readable = 'computation capabilities'
     type_plural_readable = 'computation capabilities'
-    a_or_an = 'a'
+    type_description_readable = ''
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
     root_element_name = 'ComputationCapabilities'
@@ -500,7 +500,7 @@ class Computation(ScientificMetadata):
     weight = 10
     type_readable = 'computation'
     type_plural_readable = 'computations'
-    a_or_an = 'a'
+    type_description_readable = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output.'
     converted_xml_correction_function = correct_computation_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_detail'
     root_element_name = 'Computation'
@@ -516,7 +516,7 @@ class Process(ScientificMetadata):
     weight = 11
     type_readable = 'process'
     type_plural_readable = 'processes'
-    a_or_an = 'a'
+    type_description_readable = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations.'
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
     root_element_name = 'CompositeProcess'
@@ -532,7 +532,7 @@ class DataCollection(ScientificMetadata):
     weight = 12
     type_readable = 'data collection'
     type_plural_readable = 'data collections'
-    a_or_an = 'a'
+    type_description_readable = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue.'
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:data_collection_detail'
     root_element_name = 'DataCollection'
@@ -576,7 +576,7 @@ class Catalogue(ScientificMetadata):
     weight = 13
     type_readable = 'catalogue'
     type_plural_readable = 'catalogues'
-    a_or_an = 'a'
+    type_description_readable = ''
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
 
@@ -595,7 +595,7 @@ class CatalogueEntry(ScientificMetadata):
     weight = 14
     type_readable = 'catalogue entry'
     type_plural_readable = 'catalogue entries'
-    a_or_an = 'a'
+    type_description_readable = ''
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
 
@@ -630,7 +630,7 @@ class CatalogueDataSubset(ScientificMetadata):
     weight = 15
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
-    a_or_an = 'a'
+    type_description_readable = ''
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
 
@@ -673,7 +673,9 @@ class Workflow(ScientificMetadata):
     weight = 16
     type_readable = 'workflow'
     type_plural_readable = 'workflows'
-    a_or_an = 'a'
+    type_description_readable = '''A workflow is a combination of different interconnected data collections executed repeatedly in an 
+orchestrated pattern to produce its output result. The pattern in its general form is a directed acyclic 
+graph (DAG) and in its simplest form, a linear sequence of steps.'''
     _browse_detail_page_url_name = 'browse:workflow_detail'
     root_element_name = 'Workflow'
 
