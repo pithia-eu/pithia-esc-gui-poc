@@ -1,6 +1,6 @@
 from django import forms
 from django_countries import countries
-
+from phonenumber_field.formfields import PhoneNumberField
 
 # Base components
 
@@ -46,7 +46,7 @@ class BaseEditorForm(forms.Form):
             'class': 'form-control text-secondary-emphasis bg-body-secondary',
             'readonly': True,
         }),
-        help_text=f'This is automatically generated with the short name of the selected organisation.'
+        help_text=f'This is automatically generated with the short name of the organisation associated with this registration.'
     )
 
     name = forms.CharField(
@@ -79,14 +79,13 @@ class BaseEditorForm(forms.Form):
             attrs={
                 'class': 'form-select',
             }
-        ),
-        help_text='The chosen organisation\'s short name will be used as this registration\'s namespace. Note: This is not necessarily the same as the institution that you are logged in with.'
+        )
     )
 
 
 # Other components
 class ContactInfoEditorFormComponent(forms.Form):
-    phone = forms.CharField(
+    phone = PhoneNumberField(
         label="Phone",
         required=False,
         widget=forms.TextInput(),
