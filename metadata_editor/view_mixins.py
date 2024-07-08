@@ -168,7 +168,7 @@ class RelatedPartiesSelectFormViewMixin(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_row_content_template'] = render_to_string(
-            'register_with_support/components/related_parties_row_content_template.html',
+            'metadata_editor/components/related_parties_row_content_template.html',
             context=context
         )
         return context
@@ -178,7 +178,7 @@ class StandardIdentifiersFormViewMixin(View):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['standard_identifier_row_content_template'] = render_to_string(
-            'register_with_support/components/standard_identifier_row_content_template.html',
+            'metadata_editor/components/standard_identifier_row_content_template.html',
             context=context
         )
         return context

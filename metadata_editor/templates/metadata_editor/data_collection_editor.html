@@ -1,0 +1,124 @@
+{% extends 'metadata_editor/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+{{ related_parties_row_content_template|json_script:'related-parties-row-content-template' }}
+{{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+<script src="{% static 'metadata_editor/data_collection_editor.js' %}" type="module"></script>
+{% endblock extra_scripts %}
+{% block form_content %}
+{% include 'metadata_editor/components/name_and_organisation_section.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/identifier.html' %}
+<hr class="my-5">
+<section id="description-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Description, Types, Features of Interest and Permissions
+            </h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.description %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.types %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.features_of_interest %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.permissions %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+<section id="related-registrations-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Projects, Procedures and Sub-collections
+            </h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.projects %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.process %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.sub_collections %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'metadata_editor/components/data_collection/collection_results_section.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/data_levels.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/quality_assessment.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/related_parties.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/data_collection/api_interaction_method.html' %}
+<div class="py-3"></div>
+{% endblock form_content %}
+{% block table_of_contents %}
+<li class="list-group-item">
+    <a href="#name-and-organisation-section">
+        Full Name and Organisation
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#identifier-section">
+        Identifier
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#description-section">
+        Description, Types, Features of Interest and Permissions 
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#related-registrations-section">
+        Projects, Procedures and Sub-collections
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#collection-results-section">
+        Collection Results
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#data-levels-section">
+        Data Levels
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#quality-assessments-section">
+        Quality Assessment
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#related-parties-section">
+        Related Parties
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#api-interaction-method-section">API</a> <span class="text-secondary">(Optional)</span>
+</li>
+{% endblock table_of_contents %}

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'delete.apps.DeleteConfig',
     'handle_management.apps.HandleManagementConfig',
     'help.apps.HelpConfig',
+    'metadata_editor.apps.MetadataEditorConfig',
     'ontology.apps.OntologyConfig',
     'present.apps.PresentConfig',
     'register.apps.RegisterConfig',

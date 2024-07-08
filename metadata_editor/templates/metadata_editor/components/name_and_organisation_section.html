@@ -1,0 +1,23 @@
+<section id="name-and-organisation-section">
+    <h2 class="visually-hidden">Full Name{% if form.short_name %}, Short Name{% endif %} and Organisation</h2>
+    <div class="row flex-column gy-4">
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.name %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        {% if form.short_name %}
+        <div class="col-xl-4 col-lg-7">
+            {% with field=form.short_name %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        {% endif %}
+        {% block short_name_field %}{% endblock short_name_field %}
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.organisation %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>

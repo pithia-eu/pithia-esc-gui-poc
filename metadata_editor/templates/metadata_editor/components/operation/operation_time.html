@@ -1,0 +1,55 @@
+<section id="operation-time-section" class="d-flex flex-column row-gap-4">
+    <div class="row gy-2">
+        <div class="col-lg-12">
+            <h2 class="mb-0">Operation Time</h2>
+        </div>
+        <div class="col-lg-6">
+            <p class="mb-0">
+                When the operation occurred.
+            </p>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with custom_summary_text='Adding information on the operation time is optional. If you would like to add this, you must fill out all of the operation-time-related fields below.' %}
+            {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row gy-2">
+        <div class="col-lg-12">
+            <h3 class="fs-4 mb-0">Time Period</h3>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.time_period_id %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row gy-2">
+        <div class="col-lg-12">
+            <h4 class="fs-5">Begin (Time Instant)</h4>
+        </div>
+        <div class="col-xl-4 col-lg-6">
+            {% with field=form.time_instant_begin_id %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-5 col-lg-6">
+            {{ form.time_instant_begin_position.label_tag }}
+            <input type="date" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control" value="{{ form.time_instant_begin_position.value|default:'' }}">
+        </div>
+    </div>
+    <div class="row gy-2">
+        <div class="col-lg-12">
+            <h4 class="fs-5">End (Time Instant)</h4>
+        </div>
+        <div class="col-xl-4 col-lg-6">
+            {% with field=form.time_instant_end_id %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-5 col-lg-6">
+            {{ form.time_instant_end_position.label_tag }}
+            <input type="date" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control" value="{{ form.time_instant_end_position.value|default:'' }}">
+        </div>
+    </div>
+</section>

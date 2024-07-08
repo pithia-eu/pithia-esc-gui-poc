@@ -101,7 +101,7 @@ class OrganisationEditorFormView(
     ResourceEditorFormView,
     ContactInfoViewMixin):
     form_class = OrganisationEditorForm
-    template_name = 'register_with_support/organisation_editor.html'
+    template_name = 'metadata_editor/organisation_editor.html'
 
     model = models.Organisation
     metadata_editor_class = OrganisationEditor
@@ -120,7 +120,7 @@ class IndividualEditorFormView(
     ResourceEditorFormView,
     ContactInfoViewMixin):
     form_class = IndividualEditorForm
-    template_name = 'register_with_support/individual_editor.html'
+    template_name = 'metadata_editor/individual_editor.html'
 
     model = models.Individual
     metadata_editor_class = IndividualEditor
@@ -140,7 +140,7 @@ class ProjectEditorFormView(
     ResourceEditorFormView,
     StatusSelectFormViewMixin):
     form_class = ProjectEditorForm
-    template_name = 'register_with_support/project_editor.html'
+    template_name = 'metadata_editor/project_editor.html'
 
     model = models.Project
     metadata_editor_class = ProjectMetadataEditor
@@ -177,7 +177,7 @@ class PlatformEditorFormView(
     StandardIdentifiersFormViewMixin,
     ResourceEditorFormView):
     form_class = PlatformEditorForm
-    template_name = 'register_with_support/platform_editor.html'
+    template_name = 'metadata_editor/platform_editor.html'
 
     model = models.Platform
     metadata_editor_class = PlatformMetadataEditor
@@ -217,7 +217,7 @@ class PlatformEditorFormView(
         context['citation_section_description'] = 'Reference to documentation describing the platform.'
         context['related_parties_section_description'] = 'Responsibility, identification of, and means of communication with associated person(s) and organisations. A facility owning a platform can be described here.'
         context['standard_identifier_row_content_template'] = render_to_string(
-            'register_with_support/components/platform/platform_standard_identifier_row_content_template.html',
+            'metadata_editor/components/platform/platform_standard_identifier_row_content_template.html',
             context=context
         )
         return context
@@ -231,7 +231,7 @@ class OperationEditorFormView(
     StatusSelectFormViewMixin,
     ResourceChoicesViewMixin):
     form_class = OperationEditorForm
-    template_name = 'register_with_support/operation_editor.html'
+    template_name = 'metadata_editor/operation_editor.html'
 
     model = models.Operation
     metadata_editor_class = OperationMetadataEditor
@@ -276,7 +276,7 @@ class InstrumentEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = InstrumentEditorForm
-    template_name = 'register_with_support/instrument_editor.html'
+    template_name = 'metadata_editor/instrument_editor.html'
 
     model = models.Instrument
     metadata_editor_class = InstrumentMetadataEditor
@@ -301,7 +301,7 @@ class InstrumentEditorFormView(
         context['related_parties_section_description'] = 'Information regarding organisations and/or individuals related to instrument.'
         context['citation_section_description'] = 'Reference to documentation describing the instrument.'
         context['operational_mode_row_content_template'] = render_to_string(
-            'register_with_support/components/instrument/operational_mode_row_content_template.html',
+            'metadata_editor/components/instrument/operational_mode_row_content_template.html',
             context=context
         )
         return context
@@ -322,7 +322,7 @@ class AcquisitionCapabilitiesEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = AcquisitionCapabilitiesEditorForm
-    template_name = 'register_with_support/acquisition_capabilities_editor.html'
+    template_name = 'metadata_editor/acquisition_capabilities_editor.html'
 
     model = models.AcquisitionCapabilities
     metadata_editor_class = AcquisitionCapabilitiesMetadataEditor
@@ -370,7 +370,7 @@ class AcquisitionCapabilitiesEditorFormView(
         context['citation_section_description'] = 'Reference to documentation describing the component.'
         context['related_parties_section_description'] = 'Individual or organisation related to acquisition.'
         context['capabilities_tab_content_template'] = render_to_string(
-            'register_with_support/components/capabilities_tab_content_template.html',
+            'metadata_editor/components/capabilities_tab_content_template.html',
             context=context
         )
         return context
@@ -401,7 +401,7 @@ class AcquisitionEditorFormView(
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = AcquisitionEditorForm
-    template_name = 'register_with_support/acquisition_editor.html'
+    template_name = 'metadata_editor/acquisition_editor.html'
 
     model = models.Acquisition
     metadata_editor_class = AcquisitionMetadataEditor
@@ -422,15 +422,15 @@ class AcquisitionEditorFormView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['capability_links_tab_pane_content_template'] = render_to_string(
-            'register_with_support/components/capability_links_tab_pane_content_template.html',
+            'metadata_editor/components/capability_links_tab_pane_content_template.html',
             context=context
         )
         context['capability_link_standard_identifier_row_content_template'] = render_to_string(
-            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
+            'metadata_editor/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
             context=context
         )
         context['capability_link_time_span_row_content_template'] = render_to_string(
-            'register_with_support/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
+            'metadata_editor/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
             context=context
         )
         return context
@@ -450,7 +450,7 @@ class ComputationCapabilitiesEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ComputationCapabilitiesEditorForm
-    template_name = 'register_with_support/computation_capabilities_editor.html'
+    template_name = 'metadata_editor/computation_capabilities_editor.html'
 
     model = models.ComputationCapabilities
     metadata_editor_class = ComputationCapabilitiesMetadataEditor
@@ -478,11 +478,11 @@ class ComputationCapabilitiesEditorFormView(
         context['related_parties_section_description'] = 'Individual or organisation related to Computation.'
         context['citation_section_description'] = 'Reference to documentation describing the component.'
         context['capabilities_tab_content_template'] = render_to_string(
-            'register_with_support/components/capabilities_tab_content_template.html',
+            'metadata_editor/components/capabilities_tab_content_template.html',
             context=context
         )
         context['processing_input_row_content_template'] = render_to_string(
-            'register_with_support/components/computation_capabilities/processing_input_row_content_template.html',
+            'metadata_editor/components/computation_capabilities/processing_input_row_content_template.html',
             context=context
         )
         return context
@@ -512,7 +512,7 @@ class ComputationEditorFormView(
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ComputationEditorForm
-    template_name = 'register_with_support/computation_editor.html'
+    template_name = 'metadata_editor/computation_editor.html'
 
     model = models.Computation
     metadata_editor_class = ComputationMetadataEditor
@@ -533,15 +533,15 @@ class ComputationEditorFormView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['capability_links_tab_pane_content_template'] = render_to_string(
-            'register_with_support/components/capability_links_tab_pane_content_template.html',
+            'metadata_editor/components/capability_links_tab_pane_content_template.html',
             context=context
         )
         context['capability_link_standard_identifier_row_content_template'] = render_to_string(
-            'register_with_support/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
+            'metadata_editor/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html',
             context=context
         )
         context['capability_link_time_span_row_content_template'] = render_to_string(
-            'register_with_support/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
+            'metadata_editor/components/acquisition_and_computation/capability_link_time_span_row_content_template.html',
             context=context
         )
         return context
@@ -560,7 +560,7 @@ class ProcessEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ProcessEditorForm
-    template_name = 'register_with_support/process_editor.html'
+    template_name = 'metadata_editor/process_editor.html'
 
     model = models.Process
     metadata_editor_class = ProcessMetadataEditor
@@ -589,7 +589,7 @@ class ProcessEditorFormView(
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
         context['citation_section_description'] = 'Reference to documentation describing the component.'
         context['capabilities_tab_content_template'] = render_to_string(
-            'register_with_support/components/capabilities_tab_content_template.html',
+            'metadata_editor/components/capabilities_tab_content_template.html',
             context=context
         )
         return context
@@ -627,7 +627,7 @@ class DataCollectionEditorFormView(
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = DataCollectionEditorForm
-    template_name = 'register_with_support/data_collection_editor.html'
+    template_name = 'metadata_editor/data_collection_editor.html'
 
     model = models.DataCollection
     metadata_editor_class = DataCollectionMetadataEditor
@@ -698,7 +698,7 @@ class DataCollectionEditorFormView(
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
         context['sources_tab_pane_content_template'] = render_to_string(
-            'register_with_support/components/data_collection/sources_tab_pane_content_template.html',
+            'metadata_editor/components/data_collection/sources_tab_pane_content_template.html',
             context=context
         )
         return context
@@ -728,7 +728,7 @@ class WorkflowEditorFormView(
     DataCollectionSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = WorkflowEditorForm
-    template_name = 'register_with_support/workflow_editor.html'
+    template_name = 'metadata_editor/workflow_editor.html'
 
     model = models.Workflow
     metadata_editor_class = WorkflowMetadataEditor

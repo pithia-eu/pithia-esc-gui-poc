@@ -1,0 +1,32 @@
+<section id="capabilities-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Capabilities
+            </h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            <p class="mb-0">
+                Capabilities of the process, i.e., list of observed properties.
+            </p>
+        </div>
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs" id="capabilities-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="c1-tab" data-bs-toggle="tab" data-bs-target="#c1-tab-pane" type="button" role="tab" aria-controls="c1-tab-pane" aria-selected="true">Capability 1</button>
+                </li>
+                <li class="nav-item create-tab" role="presentation">
+                    <button class="nav-link" type="button">
+                        + Add Capability
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="capabilities-tab-content">
+                <div class="tab-pane fade show active" id="c1-tab-pane" role="tabpanel" aria-labelledby="c1-tab" tabindex="0">
+                    {% include 'metadata_editor/components/capabilities_tab_content_template.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form.capabilities_json }}
+</section>
