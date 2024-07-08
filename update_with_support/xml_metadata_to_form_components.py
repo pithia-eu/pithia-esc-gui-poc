@@ -31,7 +31,6 @@ class ResourceXmlToFormDataConverter:
         form_data = {}
         form_data = self.map_basic_xml_fields_to_form(form_data)
         form_data = self.map_complex_xml_fields_to_form(form_data)
-        print('form_data', form_data)
         return form_data
 
 
