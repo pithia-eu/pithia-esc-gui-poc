@@ -9,6 +9,11 @@ from django.views.generic import FormView
 from .forms import *
 from .services import *
 from .form_processing import *
+from .metadata_component_utils import BaseMetadataEditor
+from .utils import (
+    IndividualEditor,
+    OrganisationEditor,
+)
 from .view_mixins import *
 
 from common import models
@@ -53,6 +58,9 @@ class ResourceEditorFormView(
         processed_form = form_cleaned_data
         return processed_form
 
+    def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+        metadata_editor.update_name(form_cleaned_data.get('name'))
+
     def get_namespaces_by_organisation(self):
         return {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
 
@@ -89,49 +97,43 @@ class ResourceEditorFormView(
         kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         return kwargs
 
-class OrganisationEditorFormView(ResourceEditorFormView):
+class OrganisationEditorFormView(
+    ResourceEditorFormView,
+    ContactInfoViewMixin):
     form_class = OrganisationEditorForm
     template_name = 'register_with_support/organisation_editor.html'
 
     model = models.Organisation
-    metadata_editor_class = OrganisationMetadataEditor
+    metadata_editor_class = OrganisationEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
+    def add_form_data_to_metadata_editor(self, metadata_editor: OrganisationEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_short_name(form_cleaned_data.get('short_name'))
+        self.update_contact_info_with_metadata_editor(metadata_editor, form_cleaned_data)
 
-        # Hours of service
-        hours_of_service = process_hours_of_service_in_form(form_cleaned_data)
-        processed_form['hours_of_service'] = hours_of_service
-        
-        # Contact info
-        processed_form['contact_info'] = process_contact_info_in_form(form_cleaned_data)
 
-        return processed_form
-
-class IndividualEditorFormView(ResourceEditorFormView):
+class IndividualEditorFormView(
+    ResourceEditorFormView,
+    ContactInfoViewMixin):
     form_class = IndividualEditorForm
     template_name = 'register_with_support/individual_editor.html'
 
     model = models.Individual
-    metadata_editor_class = IndividualMetadataEditor
+    metadata_editor_class = IndividualEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
+    def add_form_data_to_metadata_editor(self, metadata_editor: IndividualEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_position_name(form_cleaned_data.get('position_name'))
+        metadata_editor.update_organisation(form_cleaned_data.get('organisation'))
+        self.update_contact_info_with_metadata_editor(metadata_editor, form_cleaned_data)
 
-        # Hours of service
-        hours_of_service = process_hours_of_service_in_form(form_cleaned_data)
-        processed_form['hours_of_service'] = hours_of_service
-        
-        # Contact info
-        processed_form['contact_info'] = process_contact_info_in_form(form_cleaned_data)
-
-        return processed_form
 
 class ProjectEditorFormView(
     RelatedPartiesSelectFormViewMixin,

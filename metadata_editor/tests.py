@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 
-from .metadata_components import (
+from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
     PithiaIdentifierMetadataUpdate,

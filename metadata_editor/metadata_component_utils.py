@@ -1,11 +1,10 @@
 import json
-from lxml import etree
 from operator import attrgetter
 import xmlschema
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
 
-from .metadata_components import (
+from .editor_dataclasses import (
     ContactInfoMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
@@ -201,6 +200,7 @@ class ContactInfoMetadataEditor:
             0,
             self.get_as_gco_character_string(delivery_point)
         )
+        self.remove_child_element_if_empty(ci_address, delivery_point_key)
 
         self.update_child_element_and_remove_if_empty(
             ci_address,
@@ -235,6 +235,7 @@ class ContactInfoMetadataEditor:
             0,
             self.get_as_gco_character_string(electronic_mail_address)
         )
+        self.remove_child_element_if_empty(ci_address, electronic_mail_address_key)
 
         # Clean up
         self.remove_child_element_if_empty(ci_contact, address_key)
