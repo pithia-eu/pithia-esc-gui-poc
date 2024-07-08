@@ -98,6 +98,7 @@ class ResourceManagementListView(ListView):
         context = super().get_context_data(**kwargs)
 
         context['title'] = _create_manage_resource_page_title(self.model.type_plural_readable)
+        context['description'] = self.model.type_description_readable
         context['resource_type_plural'] = self.model.type_plural_readable
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} have been registered by your institution.'
         context['institution_members_by_id'] = {im['edu_person_unique_id']: im['name'] for im in get_members_by_institution_id(self.institution_id)}

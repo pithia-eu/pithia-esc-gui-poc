@@ -121,7 +121,6 @@ class ResourceListView(ListView):
     template_name = 'browse/resource_list_by_type.html'
     context_object_name = 'resources'
 
-    description = ''
     resource_detail_page_url_name = ''
     
     def get_queryset(self):
@@ -130,7 +129,7 @@ class ResourceListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.model.type_plural_readable.title()
-        context['description'] = self.description
+        context['description'] = self.model.type_description_readable
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} were found.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
@@ -151,7 +150,6 @@ class OrganisationListView(ResourceListView):
     """
     model = models.Organisation
     resource_detail_page_url_name = 'browse:organisation_detail'
-    description = 'Data Provider/Owner organisation.'
 
 class IndividualListView(ResourceListView):
     """
@@ -162,7 +160,6 @@ class IndividualListView(ResourceListView):
     """
     model = models.Individual
     resource_detail_page_url_name = 'browse:individual_detail'
-    description = 'An individual, acting in a particular role and associated with an Organisation.'
 
 class ProjectListView(ResourceListView):
     """
@@ -173,7 +170,6 @@ class ProjectListView(ResourceListView):
     """
     model = models.Project
     resource_detail_page_url_name = 'browse:project_detail'
-    description = 'An identifiable activity designed to accomplish a set of objectives.'
 
 class PlatformListView(ResourceListView):
     """
@@ -184,7 +180,6 @@ class PlatformListView(ResourceListView):
     """
     model = models.Platform
     resource_detail_page_url_name = 'browse:platform_detail'
-    description = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory).'
 
 class InstrumentListView(ResourceListView):
     """
@@ -195,7 +190,6 @@ class InstrumentListView(ResourceListView):
     """
     model = models.Instrument
     resource_detail_page_url_name = 'browse:instrument_detail'
-    description = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values.'
 
 class OperationListView(ResourceListView):
     """
@@ -206,7 +200,6 @@ class OperationListView(ResourceListView):
     """
     model = models.Operation
     resource_detail_page_url_name = 'browse:operation_detail'
-    description = 'Description of how a platform operates in order to support data acquisition by the instrument.'
 
 class AcquisitionCapabilitiesListView(ResourceListView):
     """
@@ -217,7 +210,6 @@ class AcquisitionCapabilitiesListView(ResourceListView):
     """
     model = models.AcquisitionCapabilities
     resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
-    description = ''
 
 class AcquisitionListView(ResourceListView):
     """
@@ -228,7 +220,6 @@ class AcquisitionListView(ResourceListView):
     """
     model = models.Acquisition
     resource_detail_page_url_name = 'browse:acquisition_detail'
-    description = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties.'
 
 class ComputationCapabilitiesListView(ResourceListView):
     """
@@ -239,7 +230,6 @@ class ComputationCapabilitiesListView(ResourceListView):
     """
     model = models.ComputationCapabilities
     resource_detail_page_url_name = 'browse:computation_capability_set_detail'
-    description = ''
 
 class ComputationListView(ResourceListView):
     """
@@ -250,7 +240,6 @@ class ComputationListView(ResourceListView):
     """
     model = models.Computation
     resource_detail_page_url_name = 'browse:computation_detail'
-    description = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output.'
 
 class ProcessListView(ResourceListView):
     """
@@ -261,7 +250,6 @@ class ProcessListView(ResourceListView):
     """
     model = models.Process
     resource_detail_page_url_name = 'browse:process_detail'
-    description = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations.'
 
 class DataCollectionListView(ResourceListView):
     """
@@ -273,7 +261,6 @@ class DataCollectionListView(ResourceListView):
     template_name = 'browse/data_collection_list.html'
     model = models.DataCollection
     resource_detail_page_url_name = 'browse:data_collection_detail'
-    description = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue.'
 
     def get_queryset(self):
         data_collections = super().get_queryset()
@@ -339,7 +326,6 @@ class CatalogueListView(CatalogueRelatedResourceListView):
     """
     model = models.Catalogue
     resource_detail_page_url_name = 'browse:catalogue_detail'
-    description = ''
 
 class CatalogueEntryListView(CatalogueRelatedResourceListView):
     """
@@ -350,7 +336,6 @@ class CatalogueEntryListView(CatalogueRelatedResourceListView):
     """
     model = models.CatalogueEntry
     resource_detail_page_url_name = 'browse:catalogue_entry_detail'
-    description = ''
 
 class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     """
@@ -361,7 +346,6 @@ class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
     """
     model = models.CatalogueDataSubset
     resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
-    description = ''
 
 class WorkflowListView(ResourceListView):
     """
@@ -373,7 +357,6 @@ class WorkflowListView(ResourceListView):
     template_name = 'browse/workflow_list.html'
     model = models.Workflow
     resource_detail_page_url_name = 'browse:workflow_detail'
-    description = ''
 
 class ResourceDetailView(TemplateView):
     """
