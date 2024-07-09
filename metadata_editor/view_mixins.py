@@ -8,6 +8,7 @@ from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
 )
+from .form_utils import get_hours_of_service_from_form
 from .metadata_component_utils import BaseMetadataEditor
 
 from common import models
@@ -29,7 +30,7 @@ class ContactInfoViewMixin:
             phone=form_cleaned_data.get('phone'),
             address=address_update,
             online_resource=form_cleaned_data.get('online_resource'),
-            hours_of_service=form_cleaned_data.get('hours_of_service'),
+            hours_of_service=get_hours_of_service_from_form(form_cleaned_data),
             contact_instructions=form_cleaned_data.get('contact_instructions')
         )
         metadata_editor.update_contact_info(contact_info_update)
