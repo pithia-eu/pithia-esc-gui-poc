@@ -1,6 +1,6 @@
 from .xml_metadata_to_form_components import ContactInfoXmlMetadataToFormMixin, ResourceXmlToFormDataConverter
 
-from metadata_editor.editor_components import Namespace
+from metadata_editor.xml_ns_enums import Namespace
 
 
 class OrganisationXmlMetadataToFormConverter(

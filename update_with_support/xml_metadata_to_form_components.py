@@ -1,7 +1,7 @@
 import dateutil.parser
 from lxml import etree
 
-from metadata_editor.editor_components import Namespace
+from metadata_editor.xml_ns_enums import Namespace
 
 
 class ResourceXmlToFormDataConverter:

@@ -7,8 +7,6 @@ from django.utils.html import escape
 from django.views.generic import FormView
 
 from .forms import *
-from .services import *
-from .form_processing import *
 from .metadata_component_utils import BaseMetadataEditor
 from .utils import (
     IndividualEditor,
@@ -49,14 +47,10 @@ class ResourceEditorFormView(
     file_upload_registration_url = ''
     resource_management_list_page_breadcrumb_url_name = ''
     resource_management_list_page_breadcrumb_text = ''
+    submit_button_text = 'Validate and Submit'
 
     institution_id = None
     owner_id = None
-
-    def process_form(self, form_cleaned_data):
-        # Make copy of cleaned data
-        processed_form = form_cleaned_data
-        return processed_form
 
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         metadata_editor.update_name(form_cleaned_data.get('name'))
@@ -80,6 +74,7 @@ class ResourceEditorFormView(
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        context['submit_button_text'] = self.submit_button_text
         return context
 
     def form_invalid(self, form):
@@ -143,19 +138,9 @@ class ProjectEditorFormView(
     template_name = 'metadata_editor/project_editor.html'
 
     model = models.Project
-    metadata_editor_class = ProjectMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        # processed_form['keyword_dict_list'] = process_project_keywords(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-
-        return processed_form
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -180,7 +165,6 @@ class PlatformEditorFormView(
     template_name = 'metadata_editor/platform_editor.html'
 
     model = models.Platform
-    metadata_editor_class = PlatformMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Platform.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
@@ -190,16 +174,6 @@ class PlatformEditorFormView(
 
     def get_child_platform_choices_for_form(self):
         return self.get_platform_choices_for_form()
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['location'] = process_location(form_cleaned_data)
-        processed_form['standard_identifiers'] = form_cleaned_data['standard_identifiers_json']
-
-        return processed_form
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -234,23 +208,12 @@ class OperationEditorFormView(
     template_name = 'metadata_editor/operation_editor.html'
 
     model = models.Operation
-    metadata_editor_class = OperationMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Operation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
     def get_child_operation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Operation)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['location'] = process_location(form_cleaned_data)
-        processed_form['operation_time'] = process_operation_time(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -279,22 +242,12 @@ class InstrumentEditorFormView(
     template_name = 'metadata_editor/instrument_editor.html'
 
     model = models.Instrument
-    metadata_editor_class = InstrumentMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Instrument.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
     def get_member_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Instrument)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['operational_modes'] = process_operational_modes(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -325,7 +278,6 @@ class AcquisitionCapabilitiesEditorFormView(
     template_name = 'metadata_editor/acquisition_capabilities_editor.html'
 
     model = models.AcquisitionCapabilities
-    metadata_editor_class = AcquisitionCapabilitiesMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
@@ -353,17 +305,6 @@ class AcquisitionCapabilitiesEditorFormView(
             ('', ''),
             *operational_modes_by_instrument,
         )
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['instrument_mode_pair'] = process_instrument_mode_pair(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -404,20 +345,12 @@ class AcquisitionEditorFormView(
     template_name = 'metadata_editor/acquisition_editor.html'
 
     model = models.Acquisition
-    metadata_editor_class = AcquisitionMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Acquisition.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
     def get_acquisition_capability_sets_for_form(self):
         return self.get_resource_choices_with_model(models.AcquisitionCapabilities)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -453,25 +386,12 @@ class ComputationCapabilitiesEditorFormView(
     template_name = 'metadata_editor/computation_capabilities_editor.html'
 
     model = models.ComputationCapabilities
-    metadata_editor_class = ComputationCapabilitiesMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.ComputationCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
 
     def get_child_computation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.ComputationCapabilities)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-        processed_form['processing_inputs'] = process_processing_inputs(form_cleaned_data)
-        processed_form['software_reference'] = process_software_reference(form_cleaned_data)
-        
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -515,20 +435,12 @@ class ComputationEditorFormView(
     template_name = 'metadata_editor/computation_editor.html'
 
     model = models.Computation
-    metadata_editor_class = ComputationMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Computation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
     def get_computation_capability_set_choices_for_form(self):
         return self.get_resource_choices_with_model(models.ComputationCapabilities)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['capability_links'] = process_computation_capability_links(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -563,7 +475,6 @@ class ProcessEditorFormView(
     template_name = 'metadata_editor/process_editor.html'
 
     model = models.Process
-    metadata_editor_class = ProcessMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
@@ -573,16 +484,6 @@ class ProcessEditorFormView(
 
     def get_computation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Computation)
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['capabilities'] = process_capabilities(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-
-        return processed_form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -630,7 +531,6 @@ class DataCollectionEditorFormView(
     template_name = 'metadata_editor/data_collection_editor.html'
 
     model = models.DataCollection
-    metadata_editor_class = DataCollectionMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
@@ -685,15 +585,6 @@ class DataCollectionEditorFormView(
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['quality_assessment'] = process_quality_assessment(form_cleaned_data)
-        processed_form['collection_results'] = process_sources(form_cleaned_data)
-
-        return processed_form
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
@@ -731,15 +622,9 @@ class WorkflowEditorFormView(
     template_name = 'metadata_editor/workflow_editor.html'
 
     model = models.Workflow
-    metadata_editor_class = WorkflowMetadataEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Workflow.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-        processed_form['data_collections'] = process_workflow_data_collections(form_cleaned_data)
-        return processed_form
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

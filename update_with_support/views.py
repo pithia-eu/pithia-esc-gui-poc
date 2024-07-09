@@ -20,6 +20,8 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     success_url = ''
     success_url_name = ''
 
+    submit_button_text = 'Validate and Update'
+
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
 
