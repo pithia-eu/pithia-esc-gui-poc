@@ -1,3 +1,4 @@
+# Contact info fields
 def _format_time_to_12_hour_format(time_unformatted):
     return time_unformatted.strftime('%I:%M%p').lstrip('0').lower()
 
@@ -12,3 +13,9 @@ def get_hours_of_service_from_form(form_cleaned_data):
     except BaseException:
         print('An error occurred when trying to process hours of service.')
         return ''
+
+def get_phone_field_string_value(form_cleaned_data):
+    phone = form_cleaned_data.get('phone', '')
+    if phone:
+        phone = phone.as_international
+    return phone
