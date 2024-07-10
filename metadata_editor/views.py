@@ -55,17 +55,12 @@ class ResourceEditorFormView(
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         metadata_editor.update_name(form_cleaned_data.get('name'))
 
-    def get_namespaces_by_organisation(self):
-        return {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if 'form' not in kwargs:
             context['form'] = self.get_form()
         context['success_url'] = self.success_url
-        context['localid_base'] = self.model.localid_base
         context['metadata_type_readable'] = self.model.type_readable.title()
-        context['namespaces_by_organisation'] = self.get_namespaces_by_organisation()
         context['save_data_local_storage_key'] = self.save_data_local_storage_key
         if 'title' not in context:
             context['title'] = f'{self.model.type_readable.title()} Wizard'
@@ -89,7 +84,6 @@ class ResourceEditorFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['form_metadata_type'] = self.model.type_readable.title()
-        kwargs['organisation_choices'] = self.get_organisation_choices_for_form()
         return kwargs
 
 class OrganisationEditorFormView(

@@ -40,6 +40,7 @@
             <h2 class="mb-0">Identifier</h2>
         </div>
     </div>
+    {% if editor_registration_setup_script_path %}
     <div class="row flex-column gy-3">
         <div class="col-lg-4">
             {{ form.localid.label_tag }}
@@ -59,7 +60,7 @@
                 <h2 class="d-flex column-gap-3 fs-6">
                     <svg class="bi flex-shrink-0" role="img" aria-label="Danger:">
                         <use xlink:href="#exclamation-triangle-fill"/>
-                    </svg>Namespace
+                    </svg>{{ form.namespace.label }}
                 </h2>
                 <ul class="mb-0">
                     {% for error in form.namespace.errors %}
@@ -70,6 +71,7 @@
         </div>
         {% endif %}
     </div>
+    {% endif %}
     <div class="row flex-column gy-3">
         <div class="col-lg-5">
             {{ form.identifier_version.label_tag }}

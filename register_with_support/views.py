@@ -10,6 +10,7 @@ from django.utils.html import escape
 from pyexpat import ExpatError
 from xmlschema import XMLSchemaException
 
+from .forms import *
 from .metadata_builder.metadata_structures import *
 from .metadata_builder.utils import *
 
@@ -28,6 +29,9 @@ logger = logging.getLogger(__name__)
 class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     submit_button_text = 'Validate and Register'
     editor_registration_setup_script_path = 'register_with_support/editor_registration_setup.js'
+
+    def get_namespaces_by_organisation(self):
+        return {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
 
     def process_form(self, form_cleaned_data):
         # Make copy of cleaned data
@@ -109,7 +113,9 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'New {self.model.type_readable.title()}'
+        context['localid_base'] = self.model.localid_base
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
+        context['namespaces_by_organisation'] = self.get_namespaces_by_organisation()
         context['editor_registration_setup_script_path'] = self.editor_registration_setup_script_path
         return context
 
@@ -149,7 +155,7 @@ class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         namespace = self.namespace if hasattr(self, 'namespace') else form_cleaned_data.get('namespace')
         pithia_identifier_update = PithiaIdentifierMetadataUpdate(
-            localid=form_cleaned_data.get('localid'),
+            localid=f'{self.model.localid_base}_{form_cleaned_data.get("localid")}',
             namespace=namespace,
             version=form_cleaned_data.get('identifier_version'),
         )
@@ -179,7 +185,9 @@ class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
 class OrganisationRegisterWithEditorFormView(
     OrganisationEditorFormView,
     NewResourceRegisterWithEditorFormView):
+    form_class = OrganisationEditorRegistrationForm
     success_url = reverse_lazy('register:organisation_with_editor')
+
     file_upload_registration_url = reverse_lazy('register:organisation')
     save_data_local_storage_key = 'organisation_r_wizard_save_data'
     namespace = 'pithia'
@@ -196,15 +204,19 @@ class OrganisationRegisterWithEditorFormView(
 class IndividualRegisterWithEditorFormView(
     IndividualEditorFormView,
     NewResourceRegisterWithEditorFormView):
+    form_class = IndividualEditorRegistrationForm
     success_url = reverse_lazy('register:individual_with_editor')
+
     file_upload_registration_url = reverse_lazy('register:individual')
     save_data_local_storage_key = 'individual_r_wizard_save_data'
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = ProjectMetadata
+    form_class = ProjectEditorRegistrationForm
     success_url = reverse_lazy('register:project_with_editor')
+
+    metadata_editor_class = ProjectMetadata
     file_upload_registration_url = reverse_lazy('register:project')
     save_data_local_storage_key = 'project_r_wizard_save_data'
 
@@ -220,8 +232,10 @@ class ProjectRegisterWithEditorFormView(
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = PlatformMetadata
+    form_class = PlatformEditorRegistrationForm
     success_url = reverse_lazy('register:platform_with_editor')
+
+    metadata_editor_class = PlatformMetadata
     file_upload_registration_url = reverse_lazy('register:platform')
     save_data_local_storage_key = 'platform_r_wizard_save_data'
 
@@ -239,8 +253,10 @@ class PlatformRegisterWithEditorFormView(
 class OperationRegisterWithEditorFormView(
     OperationEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = OperationMetadata
+    form_class = OperationEditorRegistrationForm
     success_url = reverse_lazy('register:operation_with_editor')
+
+    metadata_editor_class = OperationMetadata
     file_upload_registration_url = reverse_lazy('register:operation')
     save_data_local_storage_key = 'operation_r_wizard_save_data'
 
@@ -258,8 +274,10 @@ class OperationRegisterWithEditorFormView(
 class InstrumentRegisterWithEditorFormView(
     InstrumentEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = InstrumentMetadata
+    form_class = InstrumentEditorRegistrationForm
     success_url = reverse_lazy('register:instrument_with_editor')
+
+    metadata_editor_class = InstrumentMetadata
     file_upload_registration_url = reverse_lazy('register:instrument')
     save_data_local_storage_key = 'instrument_r_wizard_save_data'
 
@@ -276,8 +294,10 @@ class InstrumentRegisterWithEditorFormView(
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
     AcquisitionCapabilitiesEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = AcquisitionCapabilitiesMetadata
+    form_class = AcquisitionCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
+
+    metadata_editor_class = AcquisitionCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
     save_data_local_storage_key = 'acquisition_capabilities_r_wizard_save_data'
 
@@ -296,8 +316,10 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
 class AcquisitionRegisterWithEditorFormView(
     AcquisitionEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = AcquisitionMetadata
+    form_class = AcquisitionEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_with_editor')
+
+    metadata_editor_class = AcquisitionMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition')
     save_data_local_storage_key = 'acquisition_r_wizard_save_data'
 
@@ -312,8 +334,10 @@ class AcquisitionRegisterWithEditorFormView(
 class ComputationCapabilitiesRegisterWithEditorFormView(
     ComputationCapabilitiesEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = ComputationCapabilitiesMetadata
+    form_class = ComputationCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:computation_capability_set_with_editor')
+
+    metadata_editor_class = ComputationCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:computation_capability_set')
     save_data_local_storage_key = 'computation_capabilities_r_wizard_save_data'
 
@@ -333,8 +357,10 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
 class ComputationRegisterWithEditorFormView(
     ComputationEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = ComputationMetadata
+    form_class = ComputationEditorRegistrationForm
     success_url = reverse_lazy('register:computation_with_editor')
+
+    metadata_editor_class = ComputationMetadata
     file_upload_registration_url = reverse_lazy('register:computation')
     save_data_local_storage_key = 'computation_r_wizard_save_data'
 
@@ -349,8 +375,10 @@ class ComputationRegisterWithEditorFormView(
 class ProcessRegisterWithEditorFormView(
     ProcessEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = ProcessMetadata
+    form_class = ProcessEditorRegistrationForm
     success_url = reverse_lazy('register:process_with_editor')
+
+    metadata_editor_class = ProcessMetadata
     file_upload_registration_url = reverse_lazy('register:process')
     save_data_local_storage_key = 'process_r_wizard_save_data'
 
@@ -368,8 +396,10 @@ class ProcessRegisterWithEditorFormView(
 class DataCollectionRegisterWithEditorFormView(
     DataCollectionEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = DataCollectionMetadata
+    form_class = DataCollectionEditorRegistrationForm
     success_url = reverse_lazy('register:data_collection_with_editor')
+
+    metadata_editor_class = DataCollectionMetadata
     file_upload_registration_url = reverse_lazy('register:data_collection')
     save_data_local_storage_key = 'data_collection_r_wizard_save_data'
 
@@ -412,8 +442,10 @@ class DataCollectionRegisterWithEditorFormView(
 class WorkflowRegisterWithEditorFormView(
     WorkflowEditorFormView,
     ResourceRegisterWithEditorFormView):
-    metadata_editor_class = WorkflowMetadata
+    form_class = WorkflowEditorRegistrationForm
     success_url = reverse_lazy('register:workflow_with_editor')
+
+    metadata_editor_class = WorkflowMetadata
     file_upload_registration_url = reverse_lazy('register:workflow')
     save_data_local_storage_key = 'workflow_r_wizard_save_data'
 

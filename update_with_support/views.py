@@ -28,7 +28,9 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         # Update the last modification date - instantiating
         # PithiaIdentifierMetadataUpdate sets the last
         # modification date to the time now by default.
-        pithia_identifier_update = PithiaIdentifierMetadataUpdate()
+        pithia_identifier_update = PithiaIdentifierMetadataUpdate(
+            version=form_cleaned_data.get('identifier_version')
+        )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 
     def form_valid(self, form):
@@ -66,13 +68,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
 
     def get_initial(self):
         initial = super().get_initial()
-
         initial.update(self.xml_metadata_to_form_field_converter(self.resource.xml).convert())
-        if 'namespace' in initial:
-            organisations_by_namespace = {value.lower(): key for key, value in self.get_namespaces_by_organisation().items()}
-            organisation = organisations_by_namespace.get(initial['namespace'].lower(), '')
-            initial.update({'organisation': organisation})
-
         return initial
 
 class OrganisationUpdateWithEditorFormView(

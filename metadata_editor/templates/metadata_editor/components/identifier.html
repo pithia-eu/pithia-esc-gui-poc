@@ -4,6 +4,7 @@
             <h2 class="mb-0">Identifier</h2>
         </div>
     </div>
+    {% if editor_registration_setup_script_path %}
     <div class="row flex-column gy-2">
         <div class="col-lg-4">
             {{ form.localid.label_tag }}
@@ -29,6 +30,7 @@
         <div class="form-text text-danger">{{ error }}</div>
         {% endfor %}
     </div>
+    {% endif %}
     <div class="row flex-column gy-2">
         <div class="col-lg-5">
             {{ form.identifier_version.label_tag }}

@@ -16,38 +16,14 @@ class OrganisationSelect(forms.Select):
 class BaseEditorForm(forms.Form):
     required_css_class = 'required'
 
-    def __init__(self, *args, form_metadata_type='', organisation_choices=(), **kwargs):
+    def __init__(self, *args, form_metadata_type='', **kwargs):
         super().__init__(*args, **kwargs)
         self.form_metadata_type = form_metadata_type
         self.fields['name'].label = f'{self.form_metadata_type} {self.fields["name"].label}'
-        self.fields['organisation'].label = f'Organisation Associated With the {self.form_metadata_type}'
-        self.fields['organisation'].choices = organisation_choices
         self.label_suffix = ''
         for field in self.fields.values():
             if not 'class' in field.widget.attrs:
                 field.widget.attrs.update({'class': 'form-control'})
-
-    localid = forms.CharField(
-        label='Local ID',
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control text-secondary-emphasis bg-body-secondary',
-            'readonly': True,
-        }),
-        help_text=f'''The local ID is automatically generated from the full name you give this registration.
-        It must be unique, so if the local ID generated has already been taken a timestamp will be added to
-        help ensure uniqueness. The local ID also cannot be changed once this form is submitted.'''
-    )
-
-    namespace = forms.CharField(
-        label='Namespace',
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control text-secondary-emphasis bg-body-secondary',
-            'readonly': True,
-        }),
-        help_text=f'This is automatically generated with the short name of the organisation associated with this registration.'
-    )
 
     name = forms.CharField(
         label='Full Name',
@@ -71,47 +47,36 @@ class BaseEditorForm(forms.Form):
         help_text='The version number of the object being identified.'
     )
 
-    organisation = forms.ChoiceField(
-        choices=(),
-        label='Organisation',
-        required=True,
-        widget=OrganisationSelect(
-            attrs={
-                'class': 'form-select',
-            }
-        )
-    )
-
 
 # Other components
 class ContactInfoEditorFormComponent(forms.Form):
     phone = PhoneNumberField(
-        label="Phone",
+        label='Phone',
         required=False,
         widget=forms.TextInput(),
         help_text='Start the number with the country code - e.g. "+33" for phone numbers in France.'
     )
 
     delivery_point = forms.CharField(
-        label="Street Name",
+        label='Street Name',
         required=False,
         widget=forms.TextInput()
     )
 
     city = forms.CharField(
-        label="City",
+        label='City',
         required=False,
         widget=forms.TextInput()
     )
 
     administrative_area = forms.CharField(
-        label="County/State",
+        label='County/State',
         required=False,
         widget=forms.TextInput()
     )
 
     postal_code = forms.CharField(
-        label="Postal Code",
+        label='Postal Code',
         required=False,
         widget=forms.TextInput()
     )
@@ -129,7 +94,7 @@ class ContactInfoEditorFormComponent(forms.Form):
     )
 
     online_resource = forms.URLField(
-        label="Link to Organisation Website",
+        label='Link to Organisation Website',
         required=False,
         widget=forms.URLInput()
     )
@@ -145,14 +110,14 @@ class ContactInfoEditorFormComponent(forms.Form):
     )
 
     contact_instructions = forms.CharField(
-        label="Contact Instructions",
+        label='Contact Instructions',
         required=False,
         widget=forms.TextInput(),
         help_text='E.g. Contact by email or phone'
     )
 
     email_address = forms.EmailField(
-        label="Email Address",
+        label='Email Address',
         required=False,
         widget=forms.EmailInput()
     )
@@ -236,20 +201,20 @@ class LocationEditorFormComponent(forms.Form):
         self.fields['geometry_location_point_srs_name'].choices = crs_choices
 
     location_name = forms.CharField(
-        label="Name",
+        label='Name',
         required=False,
         widget=forms.TextInput(),
         help_text='Geographic description of the location using text or an identifier.'
     )
 
     geometry_location_point_id = forms.CharField(
-        label="Point ID",
+        label='Point ID',
         required=False,
         widget=forms.TextInput()
     )
 
     geometry_location_point_srs_name = forms.ChoiceField(
-        label="SRS Name",
+        label='SRS Name',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
@@ -257,7 +222,7 @@ class LocationEditorFormComponent(forms.Form):
     )
 
     geometry_location_point_pos_1 = forms.FloatField(
-        label="Pos",
+        label='Pos',
         required=False,
         min_value=MIN_POS_1,
         max_value=MAX_POS_1,

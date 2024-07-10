@@ -8,11 +8,11 @@
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.4/build/js/intlTelInput.min.js"></script>
 <script src="{% static 'metadata_editor/components/editor_manual_and_autosave.js' %}" type="module"></script>
 {{ save_data_local_storage_key|json_script:'save-data-local-storage-key' }}
+{% block extra_scripts %}{% endblock extra_scripts %}
+{% if editor_registration_setup_script_path %}
 {{ localid_validation_url|json_script:'local-id-validation-url' }}
 {{ localid_base|json_script:'local-id-base' }}
 {{ namespaces_by_organisation|json_script:'namespaces-by-organisation' }}
-{% block extra_scripts %}{% endblock extra_scripts %}
-{% if editor_registration_setup_script_path %}
 <script src="{% static editor_registration_setup_script_path %}" type="module"></script>
 {% endif %}
 {% endblock scripts %}

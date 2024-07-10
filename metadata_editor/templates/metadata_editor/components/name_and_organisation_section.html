@@ -14,10 +14,12 @@
         </div>
         {% endif %}
         {% block short_name_field %}{% endblock short_name_field %}
+        {% if editor_registration_setup_script_path %}
         <div class="col-xl-9 col-lg-12">
             {% with field=form.organisation %}
             {% include 'metadata_editor/components/form_field_template.html' %}
             {% endwith %}
         </div>
+        {% endif %}
     </div>
 </section>
