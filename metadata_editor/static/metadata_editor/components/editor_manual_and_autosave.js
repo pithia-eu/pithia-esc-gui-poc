@@ -73,6 +73,7 @@ function resetWizard() {
 function resetWizardAndRemovePastWizardData() {
     resetWizard();
     removePastWizardData();
+    window.location.reload();
 }
 
 function confirmResetWizard() {
@@ -158,7 +159,6 @@ function setupResetButtonEventListeners() {
     resetButtons.forEach(resetButton => {
         resetButton.addEventListener("click", () => {
             confirmResetWizard();
-            window.location.reload();
         });
     });
 }
