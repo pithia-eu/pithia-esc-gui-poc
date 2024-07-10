@@ -61,6 +61,7 @@ UI description in a rounded light background box. */
 .swagger-ui .information-container.wrapper {
     padding-inline: 1.5rem !important;
     padding-block: 1.5rem !important;
+    padding-bottom: 1rem !important;
     margin-bottom: 2rem;
     border-radius: var(--bs-border-radius);
     background-color: var(--bs-light);
