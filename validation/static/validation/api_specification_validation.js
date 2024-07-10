@@ -12,7 +12,7 @@ export function setSubmitButton(btn) {
     return submitButton = btn;
 }
 
-export function validateOpenApiSpecificationUrl() {
+export async function validateOpenApiSpecificationUrl() {
     const url = apiSpecificationUrlInput.value;
     if (url.length === 0) {
         isApiSpecificationLinkValid = false;

@@ -28,7 +28,7 @@ export function toggleApiDescriptionTextarea(apiExecutionMethodCheckbox) {
     }
 }
 
-window.addEventListener("load", event => {
+window.addEventListener("load", async () => {
     submitButton = document.querySelector("#file-upload-form button[type='submit']");
     if (submitButton === null) {
         submitButton = document.querySelector("#interaction-methods-form button[type='submit']")
@@ -37,24 +37,24 @@ window.addEventListener("load", event => {
     toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
     toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
     if (apiExecutionMethodCheckbox.checked) {
-        validateOpenApiSpecificationUrl();
+        await validateOpenApiSpecificationUrl();
     }
 });
 
-apiExecutionMethodCheckbox.addEventListener("change", event => {
+apiExecutionMethodCheckbox.addEventListener("change", async () => {
     toggleApiSpecificationUrlTextInput(apiExecutionMethodCheckbox);
     toggleApiDescriptionTextarea(apiExecutionMethodCheckbox);
     if (!apiExecutionMethodCheckbox.checked) {
         return document.dispatchEvent(apiInteractionMethodModifiedEvent);
     }
     document.dispatchEvent(badApiInteractionMethodModifiedEvent);
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
-apiSpecificationUrlInput.addEventListener("input", async event => {
+apiSpecificationUrlInput.addEventListener("input", async () => {
     const url = apiSpecificationUrlInput.value;
     if (apiExecutionMethodCheckbox.checked && url.trim().length === 0) {
         return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
     }
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
