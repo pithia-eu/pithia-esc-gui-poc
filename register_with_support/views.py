@@ -46,6 +46,7 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     def convert_form_to_validated_xml(self, form):
         result = {}
         xml_string = None
+        xml_file = None
         localid = None
 
         try:
@@ -59,6 +60,7 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             logger.exception('An unexpected error occurred during XML generation.')
             messages.error(self.request, 'An unexpected error occurred during XML generation.')
             result['error'] = err
+            return result
 
         try:
             MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
@@ -84,6 +86,7 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             '''
             messages.error(self.request, form_error_msg)
             result['error'] = err
+            return result
         except BaseException as err:
             logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
             form_error_msg = f'''
@@ -179,6 +182,7 @@ class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
             logger.exception('Expat error occurred during registration process.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
             result['error'] = err
+            return result
         except BaseException as err:
             logger.exception('An unexpected error occurred during XML generation.')
             messages.error(self.request, 'An unexpected error occurred during XML generation.')
