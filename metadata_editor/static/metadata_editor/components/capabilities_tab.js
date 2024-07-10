@@ -135,6 +135,8 @@ class CapabilitiesTab extends DynamicEditorTab {
                     detail: select.id,
                 }));
             });
+            this.updateTabPaneConditionalRequiredFieldStates(correspondingTabPane);
+            this.updateTabPaneConditionalRequiredCadenceRelatedFieldStates(correspondingTabPane); 
         });
         this.disableFirstRemoveTabAndTabPaneButtonIfOnlyOneTab();
     }
