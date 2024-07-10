@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     submit_button_text = 'Validate and Register'
+    editor_registration_setup_script_path = 'register_with_support/editor_registration_setup.js'
 
     def process_form(self, form_cleaned_data):
         # Make copy of cleaned data
@@ -109,6 +110,7 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'New {self.model.type_readable.title()}'
         context['localid_validation_url'] = reverse_lazy('validation:new_localid')
+        context['editor_registration_setup_script_path'] = self.editor_registration_setup_script_path
         return context
 
     def form_valid(self, form):
@@ -181,6 +183,7 @@ class OrganisationRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:organisation')
     save_data_local_storage_key = 'organisation_r_wizard_save_data'
     namespace = 'pithia'
+    editor_registration_setup_script_path = 'register_with_support/organisation_editor_registration_setup.js'
 
     def get_organisation_choices_for_form(self):
         return []

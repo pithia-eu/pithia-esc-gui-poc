@@ -3,9 +3,6 @@ import {
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
-    setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/metadata_editor/components/localid_validation.js";
-import {
     setupCitationSection,
 } from "/static/metadata_editor/components/citation_section.js";
 import {
@@ -29,15 +26,12 @@ function prepareFormForSubmission() {
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
-
     prepareFormForSubmission();
-
-    validateAndRegister();
+    await validateAndRegister();
 });
 
-window.addEventListener("load", async () => {
+window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
     operationalModesTable = setupOperationalModesTable();

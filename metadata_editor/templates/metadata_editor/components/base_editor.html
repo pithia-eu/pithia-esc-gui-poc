@@ -12,6 +12,9 @@
 {{ localid_base|json_script:'local-id-base' }}
 {{ namespaces_by_organisation|json_script:'namespaces-by-organisation' }}
 {% block extra_scripts %}{% endblock extra_scripts %}
+{% if editor_registration_setup_script_path %}
+<script src="{% static editor_registration_setup_script_path %}" type="module"></script>
+{% endif %}
 {% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
@@ -75,11 +78,14 @@
                 <div class="d-flex flex-column mt-5">
                     <div class="col-xl-9 col-lg-12">
                         <div class="alert alert-light">
-                            <small>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
+                            <div class="d-flex align-items-center column-gap-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill flex-shrink-0" viewBox="0 0 16 16">
                                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                                </svg>Validation usually takes up to a minute to complete on a good internet connection.
-                            </small>
+                                </svg>
+                                <small>
+                                    <span>Validation usually takes up to a minute to complete on a good internet connection.</span>
+                                </small>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-12 d-lg-block d-flex">

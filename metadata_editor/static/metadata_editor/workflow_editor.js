@@ -1,7 +1,4 @@
 import {
-    setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/metadata_editor/components/localid_validation.js";
-import {
     editorForm,
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
@@ -14,22 +11,21 @@ import {
     validateOpenApiSpecificationUrl,
 } from "/static/validation/api_specification_validation.js";
 
-apiSpecificationUrlInput.addEventListener("input", async event => {
+
+apiSpecificationUrlInput.addEventListener("input", async () => {
     const url = apiSpecificationUrlInput.value;
     if (url.trim().length === 0) {
         return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
     }
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
-
-    validateAndRegister();
+    await validateAndRegister();
 });
 
 window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
-    await setupLocalIdAndNamespaceRelatedEventListeners();
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });

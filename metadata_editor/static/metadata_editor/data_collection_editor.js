@@ -6,9 +6,6 @@ import {
     checkAndSetRequiredAttributesForFields,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
 import {
-    setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/metadata_editor/components/localid_validation.js";
-import {
     setupQualityAssessmentSection,
 } from "/static/metadata_editor/components/quality_assessment.js";
 import {
@@ -46,26 +43,24 @@ function setupApiInteractionMethodsSection() {
     });
 }
 
-apiSpecificationUrlInput.addEventListener("input", async event => {
+apiSpecificationUrlInput.addEventListener("input", async () => {
     const url = apiSpecificationUrlInput.value;
     if (url.trim().length === 0) {
         return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
     }
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
-editorForm.addEventListener("submit", e => {
+editorForm.addEventListener("submit", async e => {
     e.preventDefault();
-
-    validateAndRegister();
+    await validateAndRegister();
 });
 
 window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
-    await setupLocalIdAndNamespaceRelatedEventListeners();
-    const sourcesTab = setupSourcesTab();
-    const relatedPartiesTable = setupRelatedPartiesTable();
+    setupSourcesTab();
+    setupRelatedPartiesTable();
     setupQualityAssessmentSection();
     setupApiInteractionMethodsSection();
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
