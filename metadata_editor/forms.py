@@ -22,6 +22,13 @@ class IndividualEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
         super(IndividualEditorForm, self).__init__(*args, **kwargs)
         self.fields['online_resource'].label = 'Link to Organisation Website/Staff Page'
 
+    position_name = forms.CharField(
+        label='Position Name',
+        required=False,
+        widget=forms.TextInput(),
+        help_text='Role of the individual within the organisation.'
+    )
+
 
 class ProjectEditorForm(
     BaseEditorForm,

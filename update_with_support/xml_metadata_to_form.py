@@ -20,4 +20,5 @@ class IndividualXmlMetadataToFormConverter(
         super().__init__(xml_string)
         self.basic_form_field_to_xml_mappings.update({
             'namespace': './/{%s}namespace' % Namespace.PITHIA,
+            'position_name': './/{%s}positionName' % Namespace.PITHIA,
         })
