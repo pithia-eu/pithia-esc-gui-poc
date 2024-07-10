@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
-from datetime import timezone
 from typing import Optional
 
 
@@ -10,7 +8,7 @@ class PithiaIdentifierMetadataUpdate:
     namespace: Optional[str] = None
     version: Optional[str] = '1'
     creation_date: Optional[str] = None
-    last_modification_date: Optional[str] = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+    last_modification_date: Optional[str] = None
 
 
 @dataclass(kw_only=True)

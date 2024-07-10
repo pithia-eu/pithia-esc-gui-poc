@@ -1,3 +1,5 @@
+from datetime import datetime
+from datetime import timezone
 from django.shortcuts import render
 from pyexpat import ExpatError
 
@@ -24,12 +26,10 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
 
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
-
-        # Update the last modification date - instantiating
-        # PithiaIdentifierMetadataUpdate sets the last
-        # modification date to the time now by default.
+        last_modification_date = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
         pithia_identifier_update = PithiaIdentifierMetadataUpdate(
-            version=form_cleaned_data.get('identifier_version')
+            version=form_cleaned_data.get('identifier_version'),
+            last_modification_date=last_modification_date
         )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 

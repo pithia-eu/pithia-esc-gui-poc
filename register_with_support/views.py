@@ -1,5 +1,7 @@
 import logging
 import os
+from datetime import datetime
+from datetime import timezone
 from django.contrib import messages
 from django.db import (
     IntegrityError,
@@ -154,12 +156,14 @@ class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         namespace = self.namespace if hasattr(self, 'namespace') else form_cleaned_data.get('namespace')
+        last_modification_date = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
         pithia_identifier_update = PithiaIdentifierMetadataUpdate(
             localid=f'{self.model.localid_base}_{form_cleaned_data.get("localid")}',
             namespace=namespace,
             version=form_cleaned_data.get('identifier_version'),
+            creation_date=last_modification_date,
+            last_modification_date=last_modification_date
         )
-        pithia_identifier_update.creation_date = pithia_identifier_update.last_modification_date
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 
     def convert_form_to_validated_xml(self, form):

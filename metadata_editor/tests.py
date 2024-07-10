@@ -30,7 +30,8 @@ class OrganisationEditorTestCase(SimpleTestCase):
             localid='Organisation_Test',
             namespace='test',
             version='100',
-            creation_date='2022-02-03T12:50:00Z'
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
         )
         organisation_editor.update_pithia_identifier(pithia_identifier)
         contact_info_address = ContactInfoAddressMetadataUpdate(
@@ -139,7 +140,8 @@ class IndividualEditorTestCase(SimpleTestCase):
             localid='Individual_Test',
             namespace='test',
             version='95',
-            creation_date='2022-02-03T12:50:00Z'
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
         )
         individual_editor.update_pithia_identifier(pithia_identifier)
         contact_info_address = ContactInfoAddressMetadataUpdate(
