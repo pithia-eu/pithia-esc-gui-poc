@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from datetime import timezone
 from django.contrib import messages
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import (
     IntegrityError,
     transaction,
@@ -49,18 +50,18 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
 
         try:
             processed_form = self.process_form(form.cleaned_data)
-            metadata_editor = self.metadata_editor_class()
-            metadata_editor.add_properties_to_xml_document(processed_form)
+            metadata_editor = self.metadata_editor_class(processed_form)
             xml_string = metadata_editor.xml
             localid = processed_form['localid']
             result['xml_string'] = xml_string
+            xml_file = SimpleUploadedFile(f'{localid}.xml', xml_string.encode('utf-8'))
         except BaseException as err:
             logger.exception('An unexpected error occurred during XML generation.')
             messages.error(self.request, 'An unexpected error occurred during XML generation.')
             result['error'] = err
 
         try:
-            MetadataFileXSDValidator.validate(XMLMetadataFile(xml_string, f'{localid}.xml'))
+            MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
         except XMLSchemaException as err:
             logger.exception('Generated XML failed schema validation.')
             form_error_msg = f'''
