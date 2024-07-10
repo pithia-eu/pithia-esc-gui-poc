@@ -78,9 +78,19 @@ class OrganisationUpdateWithEditorFormView(
     success_url_name = 'update:organisation_with_editor'
     xml_metadata_to_form_field_converter = OrganisationXmlMetadataToFormConverter
 
+    def get_initial(self):
+        initial = super().get_initial()
+        self.set_initial_country_if_in_country_choices(initial)
+        return initial
+
 class IndividualUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     IndividualEditorFormView):
     model = models.Individual
     success_url_name = 'update:individual_with_editor'
     xml_metadata_to_form_field_converter = IndividualXmlMetadataToFormConverter
+
+    def get_initial(self):
+        initial = super().get_initial()
+        self.set_initial_country_if_in_country_choices(initial)
+        return initial

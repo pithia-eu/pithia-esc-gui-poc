@@ -2,7 +2,9 @@ from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
 from django.template.loader import render_to_string
 from django.views.generic import View
+from django_countries import countries
 from rdflib.namespace._SKOS import SKOS
+from unidecode import unidecode
 
 from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
@@ -26,7 +28,7 @@ class ContactInfoViewMixin:
             city=form_cleaned_data.get('city'),
             administrative_area=form_cleaned_data.get('administrative_area'),
             postal_code=form_cleaned_data.get('postal_code'),
-            country=form_cleaned_data.get('country'),
+            country=unidecode(form_cleaned_data.get('country')),
             electronic_mail_address=form_cleaned_data.get('email_address')
         )
         contact_info_update = ContactInfoMetadataUpdate(
@@ -37,6 +39,15 @@ class ContactInfoViewMixin:
             contact_instructions=form_cleaned_data.get('contact_instructions')
         )
         metadata_editor.update_contact_info(contact_info_update)
+
+    def set_initial_country_if_in_country_choices(self, initial):
+        initial_country_decoded = initial.get('country')
+        countries_decoded = [unidecode(c.name) for c in countries]
+        try:
+            selected_country_decoded_index = countries_decoded.index(initial_country_decoded)
+        except ValueError:
+            return
+        return initial.update({'country': list(countries)[selected_country_decoded_index]})
 
 
 class OntologyCategoryChoicesViewMixin:
