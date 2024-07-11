@@ -43,6 +43,7 @@ class IndividualMetadata(ContactInfoMetadataComponent, DescriptionMetadataCompon
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_contact_info(properties['contact_info'])
+        self.append_position_name(properties['position_name'])
         self.append_organisation(properties['organisation'])
 
     def append_position_name(self, position_name):

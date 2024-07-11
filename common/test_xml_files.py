@@ -55,6 +55,197 @@ ORGANISATION_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+ORGANISATION_ALTERNATE_METADATA_XML = SimpleUploadedFile(
+    'Organisation_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Organisation 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Organisation_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-03T12:50:00Z</creationDate>
+                <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Organisation Test</name>
+        <contactInfo>
+            <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
+                <phone>
+                    <CI_Telephone><voice><gco:CharacterString>+1 000-000-0000</gco:CharacterString></voice> <!-- telephone -->
+                    </CI_Telephone>
+                </phone>           
+                <address>
+                    <CI_Address>
+                        <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
+                        <city><gco:CharacterString>City</gco:CharacterString></city>
+                        <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
+                        <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
+                        <country><gco:CharacterString>Country</gco:CharacterString></country>
+                        <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
+                    </CI_Address>
+                </address>
+                <onlineResource><CI_OnlineResource><linkage><URL>http://test.test.edu</URL></linkage></CI_OnlineResource></onlineResource> 
+                <hoursOfService><gco:CharacterString>0:00am-0:00am</gco:CharacterString></hoursOfService>
+                <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
+            </CI_Contact>
+        </contactInfo>
+        <shortName>TEST</shortName>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+    </Organisation>
+    '''
+)
+
+ORGANISATION_CONTACT_INFO_1_XML = SimpleUploadedFile(
+    'Organisation_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Organisation 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Organisation_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-03T12:50:00Z</creationDate>
+                <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Organisation Test</name>
+        <contactInfo>
+            <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
+                <phone>
+                    <CI_Telephone>
+                        <voice>
+                            <gco:CharacterString>+1 000-000-0000</gco:CharacterString>
+                        </voice>
+                        <voice>
+                            <gco:CharacterString>+2 000-000-0000</gco:CharacterString>
+                        </voice>
+                        <facsimile>
+                            <gco:CharacterString>+2 000-000-0001</gco:CharacterString>
+                        </facsimile>
+                        <!-- telephone -->
+                    </CI_Telephone>
+                </phone>
+            </CI_Contact>
+        </contactInfo>
+        <shortName>TEST</shortName>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+    </Organisation>
+    '''
+)
+
+ORGANISATION_CONTACT_INFO_2_XML = SimpleUploadedFile(
+    'Organisation_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Organisation 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Organisation_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-03T12:50:00Z</creationDate>
+                <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Organisation Test</name>
+        <shortName>TEST</shortName>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+    </Organisation>
+    '''
+)
+
+ORGANISATION_MULTIPLE_ADDRESSES_XML = SimpleUploadedFile(
+    'Organisation_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Organisation 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Organisation_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-03T12:50:00Z</creationDate>
+                <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Organisation Test</name>
+        <contactInfo>
+            <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
+                <address>
+                    <CI_Address>
+                        <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
+                        <city><gco:CharacterString>City</gco:CharacterString></city>
+                        <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
+                        <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
+                        <country><gco:CharacterString>Country</gco:CharacterString></country>
+                        <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
+                    </CI_Address>
+                </address>
+                <address>
+                    <CI_Address>
+                        <deliveryPoint><gco:CharacterString>123 Abc Street, Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
+                        <city><gco:CharacterString>City</gco:CharacterString></city>
+                        <administrativeArea><gco:CharacterString>XY</gco:CharacterString></administrativeArea>
+                        <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
+                        <country><gco:CharacterString>Country</gco:CharacterString></country>
+                        <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
+                    </CI_Address>
+                </address>
+            </CI_Contact>
+        </contactInfo>
+        <shortName>TEST</shortName>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+    </Organisation>
+    '''
+)
+
 ORGANISATION_UPDATED_METADATA_XML = SimpleUploadedFile(
     'Organisation_Test.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>

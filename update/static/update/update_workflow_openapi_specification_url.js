@@ -6,20 +6,20 @@ import {
     validateOpenApiSpecificationUrl,
 } from "/static/validation/api_specification_validation.js"
 
-window.addEventListener("load", event => {
+window.addEventListener("load", async () => {
     setSubmitButton(document.querySelector("#workflow-openapi-spec-url-update-form button[type='submit']"));
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
-apiSpecificationUrlInput.addEventListener("input", async event => {
+apiSpecificationUrlInput.addEventListener("input", async () => {
     const url = apiSpecificationUrlInput.value;
     if (url.trim().length === 0) {
         return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
     }
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
-document.addEventListener("apiInteractionMethodModified", event => {
+document.addEventListener("apiInteractionMethodModified", () => {
     enableSubmitButtonIfReady();
 });
 

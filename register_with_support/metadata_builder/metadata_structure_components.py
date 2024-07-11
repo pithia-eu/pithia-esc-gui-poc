@@ -50,7 +50,7 @@ class BaseMetadataComponent:
 
 
 class IdentifierMetadataComponent(BaseMetadataComponent):
-    def append_identifier(self, localid, namespace, version, creation_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z'), last_modification_date=datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')):
+    def append_identifier(self, localid, namespace, version):
         # Container elements
         identifier = etree.SubElement(self.root, 'identifier')
         pithia_identifier = etree.SubElement(identifier, 'PITHIA_Identifier')
@@ -68,8 +68,9 @@ class IdentifierMetadataComponent(BaseMetadataComponent):
         version_element.text = version
 
         # Creation and last modification date
+        last_modification_date = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
         creation_date_element = etree.SubElement(pithia_identifier, 'creationDate')
-        creation_date_element.text = creation_date
+        creation_date_element.text = last_modification_date
         last_modification_date_element = etree.SubElement(pithia_identifier, 'lastModificationDate')
         last_modification_date_element.text = last_modification_date
 

@@ -1,0 +1,39 @@
+<section id="related-parties-section">
+    <div class="row gy-3">
+        <div class="col-lg-12">
+            <h2>Related Parties</h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            <p class="mb-0">
+                {{ related_parties_section_description }}
+            </p>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with custom_summary_text='Adding information on related parties is optional. If you would like to add this, each role specified below must have at least one party assigned to it.' %}
+            {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-lg-12">
+            <table id="table-related-parties" class="table table-dynamic">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Parties</th>
+                        <th>Row Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% include 'metadata_editor/components/related_parties_row_content_template.html' %}
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add-rprrow-button" class="btn btn-light add-dtrow-button" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                </svg> Add related party role
+            </button>
+        </div>
+    </div>
+    {{ form.related_parties_json }}
+</section>

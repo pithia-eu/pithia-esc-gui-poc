@@ -31,15 +31,15 @@ addMultipleEventListener(
     }
 );
 
-window.addEventListener("load", event => {
+window.addEventListener("load", async () => {
     setSubmitButton(document.querySelector("#file-upload-form button[type='submit']"));
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });
 
-apiSpecificationUrlInput.addEventListener("input", async event => {
+apiSpecificationUrlInput.addEventListener("input", async () => {
     const url = apiSpecificationUrlInput.value;
     if (url.trim().length === 0) {
         return document.dispatchEvent(badApiInteractionMethodModifiedEvent);
     }
-    validateOpenApiSpecificationUrl();
+    await validateOpenApiSpecificationUrl();
 });

@@ -1,0 +1,44 @@
+<section id="software-reference-section">
+    <div class="row flex-column gy-3">
+        <div class="col-lg-12">
+            <h2>Software Reference</h2>
+        </div>
+        <div class="col-lg-7">
+            <p>
+                Reference to document describing processing software.
+            </p>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with custom_summary_text='Adding information on a software reference is optional. If you would like to add this, the title of the documentation and the documentation publication date must be provided.' %}
+            {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.software_reference_citation_title %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-4 col-lg-7">
+            {{ form.software_reference_citation_publication_date.label_tag }}
+            <input type="date" name="{{ form.software_reference_citation_publication_date.name }}" id="{{ form.software_reference_citation_publication_date.auto_id }}" class="form-control" value="{{ form.software_reference_citation_publication_date.value|default:'' }}">
+            <div class="invalid-feedback">
+                A date must be provided if other citation details have been entered.
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-9">
+            {% with field=form.software_reference_citation_doi %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.software_reference_citation_linkage_url %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.software_reference_other_citation_details %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>

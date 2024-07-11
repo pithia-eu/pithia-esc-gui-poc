@@ -1,0 +1,13 @@
+{% extends 'metadata_editor/components/standard_identifiers_table_template.html' %}
+
+{% block si_table_id %}table-cl-standard-identifiers{% endblock si_table_id %}
+
+{% block si_row_template %}
+{% include 'metadata_editor/components/acquisition_and_computation/capability_link_standard_identifier_row_content_template.html' %}
+{% endblock si_row_template %}
+
+{% block si_add_button_id %}add-clsirow-button{% endblock si_add_button_id %}
+
+{% block si_json_field %}
+{{ form.capability_link_standard_identifiers_json }}
+{% endblock si_json_field %}

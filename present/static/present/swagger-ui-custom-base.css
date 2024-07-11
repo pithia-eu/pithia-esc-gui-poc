@@ -54,10 +54,17 @@ Swagger UI description at the top of the page. */
     font-size: 1rem;
 }
 
-/* Removes the left padding of the whole
-Swagger UI section. */
-.information-container.wrapper {
-    padding-left: 0;
+/* Increases the padding around the main Swagger UI
+description section and increases the spacing from
+the sections search bar. Also puts the main Swagger
+UI description in a rounded light background box. */
+.swagger-ui .information-container.wrapper {
+    padding-inline: 1.5rem !important;
+    padding-block: 1.5rem !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 2rem;
+    border-radius: var(--bs-border-radius);
+    background-color: var(--bs-light);
 }
 
 /* Removes the left padding of the endpoint
@@ -66,9 +73,12 @@ sections. */
     padding-inline: 0;
 }
 
-/* Removes the margin between Swagger UI and the <h1> */
+/* Removes the margin between Swagger UI and the <h1>
+and between the main Swagger UI description and the
+sections search bar. */
 .information-container.wrapper .info {
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 /* Removes any HTTP method theming (e.g., GET has a blue

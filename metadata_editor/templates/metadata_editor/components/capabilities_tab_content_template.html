@@ -1,0 +1,69 @@
+<div class="row gy-3 pt-4">
+    <div class="col-xl-9 col-lg-12">
+        {% with custom_summary_text='Adding information on a capability is optional. If you would like to add this, the name of the capability and at least one observed property must be specified. If you are also specifying cadence, you will also need to specify its units.' %}
+        {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-3 col-lg-12 ms-xl-auto py-xl-0 pb-4">
+        <div class="d-flex flex-column align-items-xl-end align-items-stretch">
+            <button class="btn btn-outline-danger remove-capability-button py-2" type="button" disabled>
+                <span class="d-flex flex-row justify-content-center align-items-center column-gap-xl-3 column-gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg flex-shrink-0" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                    <small class="remove-tab-pane-button-text">Remove Tab</small>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_name %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_observed_property %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_dimensionality_instance %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_dimensionality_timeline %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_cadence %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_cadence_units %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_vector_representation %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_coordinate_system %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_units %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+    <div class="col-xl-9 col-lg-12">
+        {% with field=form.capability_qualifier %}
+        {% include 'metadata_editor/components/form_field_template.html' %}
+        {% endwith %}
+    </div>
+</div>
