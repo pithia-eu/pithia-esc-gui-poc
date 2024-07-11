@@ -1,7 +1,4 @@
 import {
-    setupLocalIdAndNamespaceRelatedEventListeners,
-} from "/static/metadata_editor/components/localid_validation.js";
-import {
     editorForm,
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
@@ -36,9 +33,8 @@ editorForm.addEventListener("submit", async e => {
     validateAndRegister();
 });
 
-window.addEventListener("load", async () => {
+window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    await setupLocalIdAndNamespaceRelatedEventListeners();
     setupCitationSection();
     setupGeometryLocationSection();
     setupOperationTimeSection();
