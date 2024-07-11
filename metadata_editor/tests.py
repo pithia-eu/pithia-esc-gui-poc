@@ -22,6 +22,10 @@ from common.test_xml_files import (
 )
 
 
+# Test helper function
+def reset_test_file(file):
+    file.seek(0)
+
 # Create your tests here.
 class OrganisationEditorTestCase(SimpleTestCase):
     def test_organisation_editor(self):
@@ -47,6 +51,7 @@ class OrganisationEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_organisation_editor_with_file(self):
+        reset_test_file(ORGANISATION_METADATA_XML)
         organisation_editor = OrganisationEditor(xml_string=ORGANISATION_METADATA_XML.read().decode())
         contact_info_address = ContactInfoAddressMetadataUpdate()
         contact_info = ContactInfoMetadataUpdate(
@@ -61,6 +66,7 @@ class OrganisationEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_organisation_editor_with_custom_contact_info_1(self):
+        reset_test_file(ORGANISATION_CONTACT_INFO_1_XML)
         organisation_editor = OrganisationEditor(xml_string=ORGANISATION_CONTACT_INFO_1_XML.read().decode())
         contact_info_address = ContactInfoAddressMetadataUpdate()
         new_phone_number = '+12345678910'
@@ -73,6 +79,7 @@ class OrganisationEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_organisation_editor_with_custom_contact_info_2(self):
+        reset_test_file(ORGANISATION_CONTACT_INFO_2_XML)
         organisation_editor = OrganisationEditor(xml_string=ORGANISATION_CONTACT_INFO_2_XML.read().decode())
         contact_info_address = ContactInfoAddressMetadataUpdate()
         new_phone_number = '+12345678910'
@@ -85,6 +92,7 @@ class OrganisationEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_organisation_editor_with_blank_phone_number_1(self):
+        reset_test_file(ORGANISATION_CONTACT_INFO_2_XML)
         organisation_editor = OrganisationEditor(xml_string=ORGANISATION_CONTACT_INFO_2_XML.read().decode())
         contact_info_address = ContactInfoAddressMetadataUpdate()
         new_phone_number = ''
@@ -97,9 +105,11 @@ class OrganisationEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_organisation_with_multiple_addresses_fails(self):
+        reset_test_file(ORGANISATION_MULTIPLE_ADDRESSES_XML)
         self.assertRaises(Exception, OrganisationEditor, xml_string=ORGANISATION_MULTIPLE_ADDRESSES_XML)
 
     def test_organisation_editor_with_blank_phone_number_2(self):
+        reset_test_file(ORGANISATION_CONTACT_INFO_1_XML)
         organisation_editor = OrganisationEditor(xml_string=ORGANISATION_CONTACT_INFO_1_XML.read().decode())
         contact_info_address = ContactInfoAddressMetadataUpdate()
         new_phone_number = ''
@@ -110,9 +120,6 @@ class OrganisationEditorTestCase(SimpleTestCase):
         organisation_editor.update_contact_info(contact_info)
         xml = organisation_editor.to_xml()
         print('xml', xml)
-
-    def test_organisation_with_multiple_addresses_fails(self):
-        self.assertRaises(Exception, OrganisationEditor, xml_string=ORGANISATION_MULTIPLE_ADDRESSES_XML)
 
     def test_organisation_editor_create_minimum_xml(self):
         organisation_editor = OrganisationEditor()
@@ -158,6 +165,7 @@ class IndividualEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
     def test_individual_editor_with_file(self):
+        reset_test_file(INDIVIDUAL_METADATA_XML)
         individual_editor = IndividualEditor(xml_string=INDIVIDUAL_METADATA_XML.read().decode())
         individual_editor.update_position_name('XYZ')
         individual_editor.update_contact_info(ContactInfoMetadataUpdate())

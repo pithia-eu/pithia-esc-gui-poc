@@ -10,7 +10,7 @@ from xmlschema.validators.exceptions import (
 
 from .test_data_structures import *
 
-from metadata_builder.metadata_structures import (
+from .metadata_builder.metadata_structures import (
     AcquisitionCapabilitiesMetadata,
     AcquisitionMetadata,
     CatalogueDataSubsetMetadata,
@@ -34,8 +34,7 @@ from validation.services import MetadataFileXSDValidator
 
 class MetadataEditorTestCase(SimpleTestCase):
     def initialise_and_add_properties_to_metadata_editor(self, metadata_editor_class, properties):
-        metadata_editor = metadata_editor_class()
-        metadata_editor.add_properties_to_xml_document(properties)
+        metadata_editor = metadata_editor_class(properties)
         return metadata_editor
 
     def test_organisation(self):
@@ -149,8 +148,7 @@ class MetadataEditorXSDComplianceTestCase(SimpleTestCase):
         return super().setUp()
 
     def create_xml_and_validate_against_schema(self, metadata_editor_class, properties):
-        metadata_editor = metadata_editor_class()
-        metadata_editor.add_properties_to_xml_document(properties)
+        metadata_editor = metadata_editor_class(properties)
         xml = metadata_editor.xml
         print('xml', xml)
         MetadataFileXSDValidator._validate_xml_file_string_against_schema(xml, self.schema)
