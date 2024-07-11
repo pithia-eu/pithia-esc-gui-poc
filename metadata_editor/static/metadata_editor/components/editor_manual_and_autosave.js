@@ -50,7 +50,7 @@ function updateLastSavedStatus(lastSaved) {
         delete options.second;
         lastSavedFormatted = lastSavedDate.toLocaleDateString(locales, options);
     }
-    updateSaveStatus(`Last saved ${lastSavedFormatted}`);
+    updateSaveStatus(`Last saved in browser ${lastSavedFormatted}`);
 }
 
 // Credit: https://stackoverflow.com/a/20672625

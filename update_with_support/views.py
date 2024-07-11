@@ -58,6 +58,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['success_url'] = self.success_url
+        context['save_data_local_storage_key'] = f'{self.model.type_readable}_u_{escape(self.resource_id).lower()}_wizard_save_data'
         return context
 
     def dispatch(self, request, *args, **kwargs):
