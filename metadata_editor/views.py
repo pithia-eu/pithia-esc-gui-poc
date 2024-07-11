@@ -7,8 +7,8 @@ from django.utils.html import escape
 from django.views.generic import FormView
 
 from .forms import *
-from .metadata_component_utils import BaseMetadataEditor
-from .utils import (
+from .service_utils import BaseMetadataEditor
+from .services import (
     IndividualEditor,
     OrganisationEditor,
 )

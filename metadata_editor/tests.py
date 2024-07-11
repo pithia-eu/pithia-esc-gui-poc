@@ -5,10 +5,10 @@ from .editor_dataclasses import (
     ContactInfoMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
-from .metadata_component_utils import (
+from .service_utils import (
     _is_metadata_component_empty,
 )
-from .utils import (
+from .services import (
     IndividualEditor,
     OrganisationEditor,
 )

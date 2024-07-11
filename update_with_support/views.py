@@ -10,7 +10,7 @@ from .xml_metadata_to_form import (
 
 from common import models
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
-from metadata_editor.utils import BaseMetadataEditor
+from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.views import *
 
 

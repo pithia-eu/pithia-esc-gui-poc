@@ -14,7 +14,7 @@ from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
 )
-from .metadata_component_utils import BaseMetadataEditor
+from .service_utils import BaseMetadataEditor
 
 from common import models
 from common.helpers import clean_localid_or_namespace

@@ -1,4 +1,4 @@
-from .metadata_component_utils import (
+from .service_utils import (
     BaseMetadataEditor,
     ContactInfoMetadataEditor,
     NamespacePrefix,
