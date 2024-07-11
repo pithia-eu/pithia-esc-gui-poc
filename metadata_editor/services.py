@@ -1,13 +1,18 @@
 from .service_utils import (
     BaseMetadataEditor,
     ContactInfoMetadataEditor,
+    DocumentationMetadataEditor,
     NamespacePrefix,
+    ShortNameMetadataEditor,
+    StatusMetadataEditor,
+    URLMetadataEditor,
 )
 
 
 class OrganisationEditor(
     BaseMetadataEditor,
-    ContactInfoMetadataEditor):
+    ContactInfoMetadataEditor,
+    ShortNameMetadataEditor):
     def __init__(self, xml_string: str ='') -> None:
         super().__init__('Organisation', xml_string=xml_string)
 
@@ -35,4 +40,22 @@ class IndividualEditor(
             self.metadata_dict,
             position_name_key,
             position_name
+        )
+
+
+class ProjectEditor(
+    BaseMetadataEditor,
+    DocumentationMetadataEditor,
+    ShortNameMetadataEditor,
+    StatusMetadataEditor,
+    URLMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Project', xml_string=xml_string)
+
+    def update_abstract(self, abstract):
+        abstract_key = 'abstract'
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            abstract_key,
+            abstract
         )

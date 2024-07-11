@@ -3,6 +3,7 @@ from django.test import SimpleTestCase
 from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
+    DocumentationMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
 from .service_utils import (
@@ -11,6 +12,7 @@ from .service_utils import (
 from .services import (
     IndividualEditor,
     OrganisationEditor,
+    ProjectEditor,
 )
 
 from common.test_xml_files import (
@@ -19,6 +21,7 @@ from common.test_xml_files import (
     ORGANISATION_CONTACT_INFO_1_XML,
     ORGANISATION_CONTACT_INFO_2_XML,
     ORGANISATION_MULTIPLE_ADDRESSES_XML,
+    PROJECT_METADATA_XML,
 )
 
 
@@ -171,6 +174,34 @@ class IndividualEditorTestCase(SimpleTestCase):
         individual_editor.update_contact_info(ContactInfoMetadataUpdate())
         xml = individual_editor.to_xml()
         print('xml', xml)
+
+
+class ProjectEditorTestCase(SimpleTestCase):
+    def test_project_editor(self):
+        project_editor = ProjectEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Project_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        project_editor.update_pithia_identifier(pithia_identifier)
+        project_editor.update_short_name('PT')
+        project_editor.update_name('Project test')
+        project_editor.update_abstract('test abstract')
+        project_editor.update_url('https://www.example.com/')
+        documentation_update = DocumentationMetadataUpdate(
+            citation_title='Test citation title',
+            # citation_publication_date='07/07/24'
+        )
+        project_editor.update_documentation(documentation_update)
+        xml = project_editor.to_xml()
+        print('xml', xml)
+
+    def test_project_editor_with_file(self):
+        reset_test_file(PROJECT_METADATA_XML)
+        project_editor = ProjectEditor(xml_string=PROJECT_METADATA_XML.read().decode())
 
 
 class UtilsTestCase(SimpleTestCase):

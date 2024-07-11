@@ -28,3 +28,12 @@ class ContactInfoMetadataUpdate:
     online_resource: Optional[str] = None
     hours_of_service: Optional[str] = None
     contact_instructions: Optional[str] = None
+
+
+@dataclass(kw_only=True)
+class DocumentationMetadataUpdate:
+    citation_title: Optional[str] = None
+    citation_publication_date: Optional[str] = None
+    citation_doi: Optional[str] = None
+    citation_url: Optional[str] = None
+    other_citation_details: Optional[str] = None

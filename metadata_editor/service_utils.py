@@ -37,21 +37,91 @@ class Namespace:
     XSI = 'http://www.w3.org/2001/XMLSchema-instance'
 
 
-def _is_metadata_component_empty(metadata_component, is_falsy: bool = True):
+def _is_a_required_metadata_component_value_empty(
+    metadata_component,
+    is_empty_req_value_found: bool = True,
+    ignored_values: list = []):
     if isinstance(metadata_component, dict):
         for dict_value in metadata_component.values():
-            is_falsy = _is_metadata_component_empty(dict_value, is_falsy=is_falsy) and is_falsy
+            is_empty_req_value_found = _is_a_required_metadata_component_value_empty(
+                dict_value,
+                is_empty_req_value_found=is_empty_req_value_found,
+                ignored_values=ignored_values
+            ) and is_empty_req_value_found
     elif isinstance(metadata_component, list):
         for item in metadata_component:
-            is_falsy = _is_metadata_component_empty(item, is_falsy=is_falsy) and is_falsy
-    elif metadata_component:
-        is_falsy = False
-    return is_falsy
+            is_empty_req_value_found = _is_a_required_metadata_component_value_empty(
+                item,
+                is_empty_req_value_found=is_empty_req_value_found,
+                ignored_values=ignored_values
+            ) and is_empty_req_value_found
+    elif (metadata_component
+        and not metadata_component in ignored_values):
+        is_empty_req_value_found = False
+    return is_empty_req_value_found
+
+def _is_metadata_component_empty(metadata_component):
+    return _is_a_required_metadata_component_value_empty(metadata_component)
 
 
-class BaseMetadataEditor:
-    def __init__(self, root_element_name, xml_string: str = '') -> None:
+# Key shared XML component editors
+class BaseMetadataComponentEditor:
+    def __init__(self) -> None:
         self.metadata_dict = {}
+
+    # Clean up utils
+    def remove_child_element_if_empty(self, parent_element: dict, child_element_key: str):
+        if not _is_metadata_component_empty(parent_element[child_element_key]):
+            return
+        parent_element.pop(child_element_key, None)
+
+    def pop_child_element_if_empty(self, parent_element: list, child_element, child_element_index: int):
+        if not _is_metadata_component_empty(child_element):
+            return
+        parent_element.pop(child_element_index)
+
+    def pop_child_element_if_a_required_value_is_not_set(
+        self,
+        parent_element: list,
+        child_element,
+        child_element_index: int,
+        ignored_values: list = []):
+        if not _is_a_required_metadata_component_value_empty(child_element, ignored_values=ignored_values):
+            return
+        parent_element.pop(child_element_index)
+
+    def update_child_element_and_remove_if_empty(self, parent_element: dict, child_element_key: str, child_element_value):
+        parent_element[child_element_key] = child_element_value
+        self.remove_child_element_if_empty(parent_element, child_element_key)
+
+    def update_list_element_and_pop_if_empty(self, element_list: list, element_index: int, new_element_value):
+        try:
+            element_list[element_index] = new_element_value
+        except IndexError:
+            element_list.append(new_element_value)
+        self.pop_child_element_if_empty(element_list, element_list[element_index], element_index)
+
+    def update_list_element_and_pop_if_a_required_value_is_not_set(
+        self,
+        element_list: list,
+        element_index: int,
+        new_element_value,
+        ignored_values: list = []):
+        try:
+            element_list[element_index] = new_element_value
+        except IndexError:
+            element_list.append(new_element_value)
+        self.pop_child_element_if_a_required_value_is_not_set(
+            element_list,
+            element_list[element_index],
+            element_index,
+            ignored_values=ignored_values
+        )
+
+
+class BaseMetadataEditor(BaseMetadataComponentEditor):
+    def __init__(self, root_element_name, xml_string: str = '') -> None:
+        super().__init__()
         self.root_element_name = root_element_name
         namespace_class_attrs = [a for a in vars(NamespacePrefix).keys() if not a.startswith('__')]
         self.namespaces = {getattr(NamespacePrefix, a): getattr(Namespace, a) for a in namespace_class_attrs}
@@ -84,7 +154,7 @@ class BaseMetadataEditor:
         self.metadata_dict = json.loads(metadata_json_formatted)
         self.remove_xmlschema_attributes_from_metadata_component(self.metadata_dict)
 
-    def _metadata_component_to_xml(self, component_dict: dict, path: str):
+    def _metadata_dict_to_xml(self, component_dict: dict, path: str):
         xml = xmlschema.to_etree(
             component_dict,
             schema=self.schema,
@@ -101,7 +171,7 @@ class BaseMetadataEditor:
         return xml_string
 
     def to_xml(self):
-        return self._metadata_component_to_xml(self.metadata_dict, self.root_element_name)
+        return self._metadata_dict_to_xml(self.metadata_dict, self.root_element_name)
 
     def remove_xmlschema_attributes_from_metadata_component(self, metadata_component: dict):
         xmlschema_attribute_keys = [
@@ -118,28 +188,6 @@ class BaseMetadataEditor:
         elif isinstance(metadata_component, list):
             for item in metadata_component:
                 self.remove_xmlschema_attributes_from_metadata_component(item)
-
-    # Clean up utils
-    def remove_child_element_if_empty(self, parent_element: dict, child_element_key: str):
-        if not _is_metadata_component_empty(parent_element[child_element_key]):
-            return
-        parent_element.pop(child_element_key, None)
-
-    def pop_child_element_if_empty(self, parent_element: list, child_element, child_element_index: int):
-        if not _is_metadata_component_empty(child_element):
-            return
-        parent_element.pop(child_element_index)
-
-    def update_child_element_and_remove_if_empty(self, parent_element: dict, child_element_key: str, child_element_value):
-        parent_element[child_element_key] = child_element_value
-        self.remove_child_element_if_empty(parent_element, child_element_key)
-
-    def update_list_element_and_remove_if_empty(self, element_list: list, element_index: int, new_element_value):
-        try:
-            element_list[element_index] = new_element_value
-        except IndexError:
-            element_list.append(new_element_value)
-        self.pop_child_element_if_empty(element_list, element_list[element_index], element_index)
 
     def update_pithia_identifier(self, update_data: PithiaIdentifierMetadataUpdate):
         if not any(asdict(update_data).values()):
@@ -175,10 +223,15 @@ class BaseMetadataEditor:
         self.metadata_dict['description'] = description
 
 
-class ContactInfoMetadataEditor:
+class GCOCharacterStringMetadataEditor:
     def get_as_gco_character_string(self, value):
         return {'%s:CharacterString' % NamespacePrefix.GCO: value}
 
+
+# Shared XML component editors
+class ContactInfoMetadataEditor(
+    BaseMetadataComponentEditor,
+    GCOCharacterStringMetadataEditor):
     def update_address_in_contact_info(self, ci_contact: dict, update_data: ContactInfoAddressMetadataUpdate):
         address_key = '%s:address' % NamespacePrefix.GMD
         ci_address_key = '%s:CI_Address' % NamespacePrefix.GMD
@@ -195,7 +248,7 @@ class ContactInfoMetadataEditor:
         # deliveryPoint can occur more than once.
         delivery_point_key = '%s:deliveryPoint' % NamespacePrefix.GMD
         ci_address.setdefault(delivery_point_key, [])
-        self.update_list_element_and_remove_if_empty(
+        self.update_list_element_and_pop_if_empty(
             ci_address[delivery_point_key],
             0,
             self.get_as_gco_character_string(delivery_point)
@@ -230,7 +283,7 @@ class ContactInfoMetadataEditor:
         # electronicMailAddress can occur more than once.
         electronic_mail_address_key = '%s:electronicMailAddress' % NamespacePrefix.GMD
         ci_address.setdefault(electronic_mail_address_key, [])
-        self.update_list_element_and_remove_if_empty(
+        self.update_list_element_and_pop_if_empty(
             ci_address[electronic_mail_address_key],
             0,
             self.get_as_gco_character_string(electronic_mail_address)
@@ -252,7 +305,7 @@ class ContactInfoMetadataEditor:
         # CI_Contact - voice
         voice_key = '%s:voice' % NamespacePrefix.GMD
         ci_telephone.setdefault(voice_key, [])
-        self.update_list_element_and_remove_if_empty(
+        self.update_list_element_and_pop_if_empty(
             ci_telephone[voice_key],
             0,
             self.get_as_gco_character_string(value)
@@ -344,3 +397,111 @@ class ContactInfoMetadataEditor:
             0
         )
         self.remove_child_element_if_empty(self.metadata_dict, contact_info_key)
+
+
+class DocumentationMetadataEditor(
+    BaseMetadataComponentEditor,
+    GCOCharacterStringMetadataEditor):
+    def _update_publication_date_in_first_citation(self, citation, citation_publication_date):
+        citation_date_key = '%s:date' % NamespacePrefix.GMD
+        citation.setdefault(citation_date_key, [])
+        citation_dates = citation[citation_date_key]
+        if len(citation_dates) == 0:
+            citation_dates.append({})
+        ci_date_key = '%s:CI_Date' % NamespacePrefix.GMD
+        # The in-between tag text for elements with attributes
+        # is set using '$' as a key.
+        self.update_list_element_and_pop_if_a_required_value_is_not_set(
+            citation_dates,
+            0,
+            {
+                ci_date_key: {
+                    '%s:date' % NamespacePrefix.GMD: {
+                        '%s:Date' % NamespacePrefix.GCO: citation_publication_date
+                    },
+                    '%s:dateType' % NamespacePrefix.GMD: {
+                        '%s:CI_DateTypeCode' % NamespacePrefix.GMD: {
+                            '@codeList': '',
+                            '@codeListValue': '',
+                            '$': 'Publication Date',
+                        }
+                    }
+                }
+            },
+            ignored_values=['Publication Date']
+        )
+
+    def update_documentation(self, update_data):
+        # Set up
+        # documentation container element
+        documentation_key = 'documentation'
+        self.metadata_dict.setdefault(documentation_key, [])
+        documentation = self.metadata_dict[documentation_key]
+        # Create (if needed) and select the first
+        # documentation element.
+        if len(documentation) == 0:
+            documentation.append({})
+        documentation_first = documentation[0]
+        # Citation container element
+        citation_key = 'Citation'
+        documentation_first.setdefault(citation_key, {})
+        citation = documentation_first[citation_key]
+        # Citation properties
+        citation_title, citation_publication_date, \
+        citation_doi, citation_url, other_citation_details = attrgetter(
+            'citation_title',
+            'citation_publication_date',
+            'citation_doi',
+            'citation_url',
+            'other_citation_details'
+        )(update_data)
+        # Citation title
+        citation_title_key = '%s:title' % NamespacePrefix.GMD
+        self.update_child_element_and_remove_if_empty(
+            citation,
+            citation_title_key,
+            self.get_as_gco_character_string(citation_title)
+        )
+        # Citation date
+        self._update_publication_date_in_first_citation(citation, citation_publication_date)
+        # Citation identifier
+        # citation_identifier_key = '%s:identifier' % NamespacePrefix.GMD
+        # # Citation online resource
+        # citation_online_resource_key = '%s:onlineResource' % NamespacePrefix.GMD
+        # # Citation other details
+        # citation_other_details_key = '%s:otherCitationDetails' % NamespacePrefix.GMD
+        # Clean up
+
+
+class ShortNameMetadataEditor(BaseMetadataComponentEditor):
+    def update_short_name(self, short_name):
+        self.metadata_dict['shortName'] = short_name
+
+
+class StatusMetadataEditor(BaseMetadataComponentEditor):
+    def update_status(self, status_ontology_url):
+        status_key = 'status'
+        self.metadata_dict[status_key] = {'@%s:href' % NamespacePrefix.XLINK: status_ontology_url}
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            status_key
+        )
+
+
+class URLMetadataEditor(BaseMetadataComponentEditor):
+    def update_url(self, url):
+        url_key = 'URL'
+        self.metadata_dict.setdefault(url_key, [])
+        urls = self.metadata_dict[url_key]
+        if len(urls) == 0:
+            urls.append({})
+        gmd_url_key = '%s:URL' % NamespacePrefix.GMD
+        self.update_list_element_and_pop_if_empty(
+            urls,
+            0,
+            {gmd_url_key: url}
+        )
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            url_key
+        )
