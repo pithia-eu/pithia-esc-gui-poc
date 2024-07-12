@@ -192,8 +192,11 @@ class ProjectEditorTestCase(SimpleTestCase):
         project_editor.update_abstract('test abstract')
         project_editor.update_url('https://www.example.com/')
         documentation_update = DocumentationMetadataUpdate(
-            citation_title='Test citation title',
-            # citation_publication_date='07/07/24'
+            citation_title='hello',
+            citation_publication_date='11/07/24',
+            citation_doi='doi',
+            citation_url='https://www.example.com/',
+            other_citation_details=''
         )
         project_editor.update_documentation(documentation_update)
         xml = project_editor.to_xml()
@@ -202,6 +205,13 @@ class ProjectEditorTestCase(SimpleTestCase):
     def test_project_editor_with_file(self):
         reset_test_file(PROJECT_METADATA_XML)
         project_editor = ProjectEditor(xml_string=PROJECT_METADATA_XML.read().decode())
+        documentation_update = DocumentationMetadataUpdate(
+            citation_title='hello',
+            citation_publication_date='11/07/24'
+        )
+        project_editor.update_documentation(documentation_update)
+        xml = project_editor.to_xml()
+        print('xml', xml)
 
 
 class UtilsTestCase(SimpleTestCase):
