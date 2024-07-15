@@ -87,6 +87,12 @@ class ProjectEditorForm(
         widget=forms.HiddenInput()
     )
 
+    keywords_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
 class PlatformEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
@@ -143,6 +149,12 @@ class PlatformEditorForm(
     standard_identifiers_json = forms.JSONField(
         required=False,
         initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    standard_identifiers_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
         widget=forms.HiddenInput()
     )
 
@@ -270,6 +282,12 @@ class InstrumentEditorForm(
         widget=forms.HiddenInput()
     )
 
+    operational_modes_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
 class AcquisitionCapabilitiesEditorForm(
     BaseEditorForm,
     CapabilitiesFormComponent,
@@ -382,6 +400,12 @@ class ComputationCapabilitiesEditorForm(
     processing_inputs_json = forms.JSONField(
         required=False,
         initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    processing_inputs_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
         widget=forms.HiddenInput()
     )
 

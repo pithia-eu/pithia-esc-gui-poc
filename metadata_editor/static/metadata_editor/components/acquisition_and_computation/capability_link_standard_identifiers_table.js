@@ -11,6 +11,7 @@ export class CapabilityLinkStandardIdentifiersTable extends StandardIdentifiersT
             `.remove-clsirow-button`,
             `#capability-link-standard-identifier-row-content-template`,
             `#${tabId} input[name='capability_link_standard_identifiers_json']`,
+            `#${tabId} input[name='capability_link_standard_identifiers_extra_json']`,
             `input[name='capability_link_standard_identifier_authority']`,
             `input[name='capability_link_standard_identifier']`,
         );

@@ -190,6 +190,12 @@ class RelatedPartiesEditorFormComponent(forms.Form):
         widget=forms.HiddenInput()
     )
 
+    related_parties_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
 class LocationEditorFormComponent(forms.Form):
     MIN_POS_1 = -90
     MAX_POS_1 = 90
@@ -413,6 +419,12 @@ class CapabilitiesFormComponent(forms.Form):
         widget=forms.HiddenInput()
     )
 
+    capabilities_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
 
 class StandardIdentifierEditorFormComponent(forms.Form):
     standard_identifier_authority = forms.CharField(
@@ -430,6 +442,12 @@ class StandardIdentifierEditorFormComponent(forms.Form):
     standard_identifiers_json = forms.JSONField(
         required=False,
         initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    standard_identifiers_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
         widget=forms.HiddenInput()
     )
 
@@ -506,6 +524,12 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         widget=forms.HiddenInput()
     )
 
+    capability_link_standard_identifiers_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
     capability_link_time_span_begin_position = forms.CharField(
         label='Begin Position',
         required=False,
@@ -533,9 +557,21 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         widget=forms.HiddenInput()
     )
 
+    capability_link_time_spans_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
+
     capability_links_json = forms.JSONField(
         required=False,
         initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    capability_links_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
         widget=forms.HiddenInput()
     )
 
@@ -598,5 +634,11 @@ class SourceMetadataComponent(forms.Form):
     sources_json = forms.JSONField(
         required=False,
         initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    sources_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
         widget=forms.HiddenInput()
     )

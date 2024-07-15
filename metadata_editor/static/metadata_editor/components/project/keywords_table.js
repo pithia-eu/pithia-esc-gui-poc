@@ -17,7 +17,8 @@ class KeywordsTable extends DynamicEditorTable {
             "#add-kwrow-button",
             ".remove-kwrow-button",
             "#keywords-row-content-template",
-            "input[name='keywords_json']"
+            "input[name='keywords_json']",
+            "input[name='keywords_extra_json']"
         );
     }
 

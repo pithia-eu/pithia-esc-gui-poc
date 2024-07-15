@@ -12,6 +12,7 @@ class PlatformStandardIdentifiersTable extends StandardIdentifiersTable {
             ".remove-sirow-button",
             "#standard-identifier-row-content-template",
             "input[name='standard_identifiers_json']",
+            "input[name='standard_identifiers_extra_json']",
             "input[name='standard_identifier_authority']",
             "input[name='standard_identifier']",
         );

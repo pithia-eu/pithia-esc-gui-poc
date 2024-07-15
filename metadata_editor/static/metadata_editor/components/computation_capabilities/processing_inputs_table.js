@@ -14,7 +14,8 @@ class ProcessingInputsTable extends DynamicEditorTableWithTextArea {
             "#add-pirow-button",
             ".remove-pirow-button",
             "#processing-input-row-content-template",
-            "input[name='processing_inputs_json']"
+            "input[name='processing_inputs_json']",
+            "input[name='processing_inputs_extra_json']"
         );
     }
 

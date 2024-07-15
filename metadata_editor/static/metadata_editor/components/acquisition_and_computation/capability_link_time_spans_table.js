@@ -13,7 +13,8 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
             `#${tabId} .add-cltsrow-button`,
             `.remove-cltsrow-button`,
             `#capability-link-time-span-row-content-template`,
-            `#${tabId} input[name='capability_link_time_spans_json']`
+            `#${tabId} input[name='capability_link_time_spans_json']`,
+            `#${tabId} input[name='capability_link_time_spans_extra_json']`
         );
         this.timeSpanBeginPositionInputSelector = "input[name='capability_link_time_span_begin_position']";
         this.timeSpanEndPositionSelectSelector = "select[name='capability_link_time_span_end_position']";

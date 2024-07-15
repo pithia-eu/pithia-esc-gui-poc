@@ -38,6 +38,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
             "#capability-links-tab-pane-content-template",
             ".remove-capability-link-button",
             "input[name='capability_links_json']",
+            "input[name='capability_links_extra_json']",
             "Capability Link"
         );
     }
