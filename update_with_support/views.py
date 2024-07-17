@@ -6,6 +6,7 @@ from pyexpat import ExpatError
 from .xml_metadata_to_form import (
     IndividualXmlMetadataToFormConverter,
     OrganisationXmlMetadataToFormConverter,
+    ProjectXmlMetadataToFormConverter,
 )
 
 from common import models
@@ -72,6 +73,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         initial.update(self.xml_metadata_to_form_field_converter(self.resource.xml).convert())
         return initial
 
+
 class OrganisationUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     OrganisationEditorFormView):
@@ -84,6 +86,7 @@ class OrganisationUpdateWithEditorFormView(
         self.set_initial_country_if_in_country_choices(initial)
         return initial
 
+
 class IndividualUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     IndividualEditorFormView):
@@ -95,3 +98,11 @@ class IndividualUpdateWithEditorFormView(
         initial = super().get_initial()
         self.set_initial_country_if_in_country_choices(initial)
         return initial
+
+
+class ProjectUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    ProjectEditorFormView):
+    model = models.Project
+    success_url_name = 'update:project_with_editor'
+    xml_metadata_to_form_field_converter = ProjectXmlMetadataToFormConverter
