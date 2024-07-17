@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
@@ -22,6 +23,8 @@ from .services import ProjectEditor
 from common import models
 from common.helpers import clean_localid_or_namespace
 from ontology.utils import get_graph_of_pithia_ontology_component
+
+logger = logging.getLogger(__name__)
 
 
 class ContactInfoViewMixin:
@@ -82,7 +85,8 @@ class RelatedPartiesViewMixin:
                 deleted_index_sequence=deleted_index_sequence,
                 new=self.new
             )
-        except BaseException:
+        except BaseException as err:
+            logger.exception(err)
             messages.error(request, 'Could not add related parties metadata due to an error. Please try again later.')
 
 

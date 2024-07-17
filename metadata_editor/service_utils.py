@@ -1,9 +1,9 @@
 import copy
 import json
-from operator import attrgetter
 import xmlschema
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
+from operator import attrgetter
 
 from .editor_dataclasses import (
     ContactInfoMetadataUpdate,

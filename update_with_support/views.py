@@ -47,6 +47,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
             )
 
             messages.success(self.request, f'Successfully updated {escape(resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            self.success_url += '?reset=true'
         except ExpatError as err:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
