@@ -221,13 +221,13 @@ class IndividualRegisterWithEditorFormView(
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ProjectEditorRegistrationForm
     success_url = reverse_lazy('register:project_with_editor')
 
-    metadata_editor_class = ProjectMetadata
     file_upload_registration_url = reverse_lazy('register:project')
     save_data_local_storage_key = 'project_r_wizard_save_data'
+    new = True
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)

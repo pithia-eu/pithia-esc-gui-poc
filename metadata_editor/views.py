@@ -11,6 +11,7 @@ from .service_utils import BaseMetadataEditor
 from .services import (
     IndividualEditor,
     OrganisationEditor,
+    ProjectEditor,
 )
 from .view_mixins import *
 
@@ -102,7 +103,7 @@ class OrganisationEditorFormView(
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_short_name(form_cleaned_data.get('short_name'))
-        self.update_contact_info_with_metadata_editor(metadata_editor, form_cleaned_data)
+        self.update_contact_info_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
 
 class IndividualEditorFormView(
@@ -121,20 +122,32 @@ class IndividualEditorFormView(
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_position_name(form_cleaned_data.get('position_name'))
         metadata_editor.update_organisation(form_cleaned_data.get('organisation'))
-        self.update_contact_info_with_metadata_editor(metadata_editor, form_cleaned_data)
+        self.update_contact_info_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
 
 class ProjectEditorFormView(
+    DocumentationViewMixin,
     RelatedPartiesSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     ResourceEditorFormView,
     StatusSelectFormViewMixin):
     form_class = ProjectEditorForm
     template_name = 'metadata_editor/project_editor.html'
 
     model = models.Project
+    metadata_editor_class = ProjectEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Project.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: ProjectEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_short_name(form_cleaned_data.get('short_name'))
+        metadata_editor.update_abstract(form_cleaned_data.get('abstract'))
+        metadata_editor.update_url(form_cleaned_data.get('url'))
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
