@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Lower
 from django.template.loader import render_to_string
@@ -9,12 +10,14 @@ from unidecode import unidecode
 from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
+    DocumentationMetadataUpdate,
 )
 from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
 )
 from .service_utils import BaseMetadataEditor
+from .services import ProjectEditor
 
 from common import models
 from common.helpers import clean_localid_or_namespace
@@ -22,7 +25,7 @@ from ontology.utils import get_graph_of_pithia_ontology_component
 
 
 class ContactInfoViewMixin:
-    def update_contact_info_with_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+    def update_contact_info_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         address_update = ContactInfoAddressMetadataUpdate(
             delivery_point=form_cleaned_data.get('delivery_point'),
             city=form_cleaned_data.get('city'),
@@ -48,6 +51,39 @@ class ContactInfoViewMixin:
         except ValueError:
             return
         return initial.update({'country': list(countries)[selected_country_decoded_index]})
+
+
+class DocumentationViewMixin:
+    def update_documentation_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+        try:
+            documentation_update = DocumentationMetadataUpdate(
+                citation_title=form_cleaned_data.get('citation_title'),
+                citation_publication_date=form_cleaned_data.get('citation_publication_date'),
+                citation_doi=form_cleaned_data.get('citation_doi'),
+                citation_url=form_cleaned_data.get('citation_linkage_url'),
+                other_citation_details=form_cleaned_data.get('other_citation_details')
+            )
+            metadata_editor.update_documentation(documentation_update)
+        except BaseException:
+            messages.error(request, 'Could not add documentation metadata due to an error. Please try again later.')
+
+
+class RelatedPartiesViewMixin:
+    new = False
+
+    def update_related_parties_with_metadata_editor(self, request, metadata_editor: ProjectEditor, form_cleaned_data):
+        try:
+            related_parties_extra_json = form_cleaned_data.get('related_parties_extra_json', {})
+            num_additions = related_parties_extra_json.get('numAdditions', 0)
+            deleted_index_sequence = related_parties_extra_json.get('deletedIndexSequence', [])
+            metadata_editor.update_related_parties(
+                form_cleaned_data.get('related_parties_json'),
+                num_additions=num_additions,
+                deleted_index_sequence=deleted_index_sequence,
+                new=self.new
+            )
+        except BaseException:
+            messages.error(request, 'Could not add related parties metadata due to an error. Please try again later.')
 
 
 class OntologyCategoryChoicesViewMixin:
