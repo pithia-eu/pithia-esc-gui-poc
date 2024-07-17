@@ -102,6 +102,7 @@ class CapabilitiesTab extends DynamicEditorTab {
     }
 
     loadPreviousTabData() {
+        super.loadPreviousTabData();
         const previousCapabilities = JSON.parse(this.jsonExportElement.value);
         if (!previousCapabilities) {
             return;

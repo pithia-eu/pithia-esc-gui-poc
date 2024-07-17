@@ -75,7 +75,16 @@ export class CapabilityLinkTimeSpansTable extends DynamicEditorTable {
         this.jsonOutputElement.dispatchEvent(inputEvent);
     }
 
+    exportExtraTableDataToJsonAndStoreInOutputElement() {
+        super.exportExtraTableDataToJsonAndStoreInOutputElement();
+        const inputEvent = new Event("input", {
+            bubbles: true,
+        });
+        this.jsonExtraOutputElement.dispatchEvent(inputEvent);
+    }
+
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(this.jsonOutputElement.value);
         if (!previousData) {
             return;

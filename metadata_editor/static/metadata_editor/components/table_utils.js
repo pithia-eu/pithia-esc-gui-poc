@@ -12,7 +12,8 @@ export class DynamicEditorTable {
         this.removeRowButtonSelector = removeRowButtonSelector;
         this.jsonOutputElement = document.querySelector(jsonOutputSelector);
         this.jsonExtraOutputElement = document.querySelector(jsonExtraOutputSelector);
-        this.rowAdditionsAndDeletions = [];
+        this.numNewRows = 0;
+        this.deletedRowIndexSequence = [];
     }
 
     // Getters
@@ -43,24 +44,30 @@ export class DynamicEditorTable {
         firstRemoveRowButton.disabled = this.rows.length === 1;
     }
 
-    getRowNumber(row) {
+    getRowIndex(row) {
         return Array.from(this.tableBody.children).indexOf(row);
     }
 
     // JSON export
-    exportTableData() {
-        // Implemented in child class
+    incrementNumberOfNewRows() {
+        this.numNewRows += 1;
     }
 
-    updateAndExportTableRowAddAndDeleteData(addOrDeleteAction, deletedRowNumber = -1) {
-        if (addOrDeleteAction === "delete") {
-            addOrDeleteAction = `${addOrDeleteAction}${deletedRowNumber}`;
-        }
-        this.rowAdditionsAndDeletions.push(addOrDeleteAction);
-        const jsonExtraOutputData = JSON.parse(this.jsonExtraOutputElement.value);
-        jsonExtraOutputData.rowAdditionsAndDeletions = this.rowAdditionsAndDeletions;
-        this.jsonExtraOutputElement.value = JSON.stringify(jsonExtraOutputData);
+    addRowToDeletedRowSequence(rowIndex) {
+        this.deletedRowIndexSequence.push(rowIndex);
+    }
+
+    exportExtraTableDataToJsonAndStoreInOutputElement() {
+        const extraTableData = {
+            numAdditions: this.numNewRows,
+            deletedIndexSequence: this.deletedRowIndexSequence,
+        };
+        this.jsonExtraOutputElement.value = JSON.stringify(extraTableData);
         window.dispatchEvent(new CustomEvent("dynamicTableDataExported"));
+    }
+
+    exportTableData() {
+        // Implemented in child class
     }
 
     exportTableDataToJsonAndStoreInOutputElement() {
@@ -100,8 +107,9 @@ export class DynamicEditorTable {
 
     addRowButtonOnClick = () => {
         this.addRow();
+        this.incrementNumberOfNewRows();
         this.exportTableDataToJsonAndStoreInOutputElement();
-        this.updateAndExportTableRowAddAndDeleteData("add");
+        this.exportExtraTableDataToJsonAndStoreInOutputElement();
     }
 
     setupAddRowButton() {
@@ -111,16 +119,17 @@ export class DynamicEditorTable {
     // Row removal
     removeRow(rowChildNode) {
         const containingRow = this.getParentRowOfChildNode(rowChildNode);
-        const containingRowNumber = this.getRowNumber(containingRow);
+        const containingRowIndex = this.getRowIndex(containingRow);
         this.tableBody.removeChild(containingRow);
         this.disableFirstRemoveRowButtonIfOnlyOneRow();
-        return containingRowNumber;
+        return containingRowIndex;
     }
 
     removeRowButtonOnClick = (e) => {
-        const deletedRowNumber = this.removeRow(e.currentTarget);
+        const deletedRowIndex = this.removeRow(e.currentTarget);
+        this.addRowToDeletedRowSequence(deletedRowIndex);
         this.exportTableDataToJsonAndStoreInOutputElement();
-        this.updateAndExportTableRowAddAndDeleteData("delete", deletedRowNumber);
+        this.exportExtraTableDataToJsonAndStoreInOutputElement();
     }
 
     setupNewRemoveRowButton(removeRowButton) {
@@ -129,6 +138,12 @@ export class DynamicEditorTable {
 
     // Load input data before page refresh/after failed form submission
     loadPreviousData() {
-        // Implemented in child classes
+        const extraTableData = JSON.parse(this.jsonExtraOutputElement.value);
+        if ("numAdditions" in extraTableData) {
+            this.numNewRows = parseInt(extraTableData.numAdditions);
+        }
+        if ("deletedIndexSequence" in extraTableData) {
+            this.deletedRowIndexSequence = extraTableData.deletedIndexSequence;
+        }
     }
 }

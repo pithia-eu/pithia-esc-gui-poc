@@ -54,6 +54,7 @@ class ProcessingInputsTable extends DynamicEditorTableWithTextArea {
     }
 
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(this.jsonOutputElement.value);
         if (!previousData) {
             return;

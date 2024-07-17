@@ -16,7 +16,8 @@ export class DynamicEditorTab {
         this.createTabElement = this.tabList.querySelector(".create-tab");
         this.createTabButton = this.tabList.querySelector(".create-tab button");
         this.nextTabNumber = 2;
-        this.tabAdditionsAndDeletions = [];
+        this.numNewTabs = 0;
+        this.deletedTabIndexSequence = [];
     }
 
     // Initial setup
@@ -65,7 +66,7 @@ export class DynamicEditorTab {
         correspondingTabButton.click();
     }
 
-    getTabPaneNumber(tabPane) {
+    getTabPaneIndex(tabPane) {
         return Array.from(this.tabContent.children).indexOf(tabPane);
     }
 
@@ -74,19 +75,20 @@ export class DynamicEditorTab {
         const containingTabPane = this.getParentTabPaneOfChildNode(childNode);
         const correspondingTabButton = this.getTabButtonOfTabPane(containingTabPane)
         const containingTabListItem = correspondingTabButton.parentElement;
-        const containingTabPaneNumber = this.getTabPaneNumber(containingTabPane);
+        const containingTabPaneIndex = this.getTabPaneIndex(containingTabPane);
         this.tabContent.removeChild(containingTabPane);
         this.tabList.removeChild(containingTabListItem);
         this.disableFirstRemoveTabAndTabPaneButtonIfOnlyOneTab();
-        return containingTabPaneNumber;
+        return containingTabPaneIndex;
     }
 
     // Tab setup
     setupRemoveTabAndTabPaneButton(removeTabAndTabPaneButton) {
         removeTabAndTabPaneButton.addEventListener("click", e => {
-            const deletedTabPaneNumber = this.removeTabAndTabPane(e.currentTarget);
+            const deletedTabPaneIndex = this.removeTabAndTabPane(e.currentTarget);
+            this.addTabToDeletedTabSequence(deletedTabPaneIndex);
             this.exportTabData();
-            this.updateAndExportTabAddAndDeleteData("delete", deletedTabPaneNumber);
+            this.exportExtraTabData();
             this.focusLastTabPane();
         });
     }
@@ -205,7 +207,8 @@ export class DynamicEditorTab {
     }
 
     createTabOnClickActions() {
-        this.updateAndExportTabAddAndDeleteData("add");
+        this.incrementNumberOfNewTabs();
+        this.exportExtraTabData();
     }
 
     // Tab data saving/loading
@@ -213,14 +216,20 @@ export class DynamicEditorTab {
         // Implemented in child class
     }
 
-    updateAndExportTabAddAndDeleteData(addOrDeleteAction, deletedTabPaneNumber = -1) {
-        if (addOrDeleteAction === "delete") {
-            addOrDeleteAction = `${addOrDeleteAction}${deletedTabPaneNumber}`;
-        }
-        this.tabAdditionsAndDeletions.push(addOrDeleteAction);
-        const jsonExtraExportData = JSON.parse(this.jsonExtraExportElement.value);
-        jsonExtraExportData.tabAdditionsAndDeletions = this.tabAdditionsAndDeletions;
-        this.jsonExtraExportElement.value = JSON.stringify(jsonExtraExportData);
+    incrementNumberOfNewTabs() {
+        this.numNewTabs += 1;
+    }
+
+    addTabToDeletedTabSequence(tabIndex) {
+        this.deletedTabIndexSequence.push(tabIndex);
+    }
+
+    exportExtraTabData() {
+        const extraTabData = {
+            numAdditions: this.numNewTabs,
+            deletedIndexSequence: this.deletedTabIndexSequence,
+        };
+        this.jsonExtraExportElement.value = JSON.stringify(extraTabData);
         window.dispatchEvent(new CustomEvent("dynamicTabDataExported"));
     }
 
@@ -229,7 +238,13 @@ export class DynamicEditorTab {
         window.dispatchEvent(new CustomEvent("dynamicTabDataExported"));
     }
 
-    loadPreviousTabData() { 
-        // Implemented in child class
+    loadPreviousTabData() {
+        const extraTabData = JSON.parse(this.jsonExtraExportElement.value);
+        if ("numAdditions" in extraTabData) {
+            this.numNewTabs = parseInt(extraTabData.numAdditions);
+        }
+        if ("deletedIndexSequence" in extraTabData) {
+            this.deletedTabIndexSequence = extraTabData.deletedIndexSequence;
+        }
     }
 }

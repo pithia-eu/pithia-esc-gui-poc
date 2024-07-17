@@ -48,6 +48,7 @@ class OperationalModesTable extends DynamicEditorTableWithTextArea {
     }
 
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(document.querySelector("input[name='operational_modes_json']").value);
         if (!previousData) {
             return;

@@ -96,6 +96,7 @@ class CapabilityLinksTab extends DynamicEditorTab {
     }
 
     loadPreviousTabData() {
+        super.loadPreviousTabData();
         const previousCapabilityLinks = JSON.parse(this.jsonExportElement.value);
         if (!previousCapabilityLinks) {
             return;

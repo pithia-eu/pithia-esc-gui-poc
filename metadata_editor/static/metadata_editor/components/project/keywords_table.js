@@ -72,6 +72,7 @@ class KeywordsTable extends DynamicEditorTable {
     }
 
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(editorForm.querySelector("input[name='keywords_json']").value);
         if (!previousData) {
             return;

@@ -63,6 +63,7 @@ export class StandardIdentifiersTable extends DynamicEditorTable {
     }
 
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(editorForm.querySelector(this.standardIdentifiersJsonInputSelector).value);
         if (!previousData) {
             return;

@@ -100,6 +100,7 @@ class SourcesTab extends DynamicEditorTab {
     }
 
     loadPreviousTabData() {
+        super.loadPreviousTabData();
         const previousSources = JSON.parse(this.jsonExportElement.value);
         if (!previousSources) {
             return;

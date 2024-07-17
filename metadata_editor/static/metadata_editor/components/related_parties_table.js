@@ -74,6 +74,7 @@ class RelatedPartiesTable extends DynamicEditorTable {
     }
 
     loadPreviousData() {
+        super.loadPreviousData();
         const previousData = JSON.parse(editorForm.querySelector("input[name='related_parties_json']").value);
         if (!previousData) {
             return;
