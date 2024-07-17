@@ -199,6 +199,23 @@ class ProjectEditorTestCase(SimpleTestCase):
             other_citation_details=''
         )
         project_editor.update_documentation(documentation_update)
+        related_parties = [
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                'parties': [
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
+                ],
+            },
+            {'role': '', 'parties': []},
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                'parties': [
+                    'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+                ],
+            },
+        ]
+        project_editor.update_related_parties(related_parties, new=True)
         xml = project_editor.to_xml()
         print('xml', xml)
 

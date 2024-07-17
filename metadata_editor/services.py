@@ -3,6 +3,7 @@ from .service_utils import (
     ContactInfoMetadataEditor,
     DocumentationMetadataEditor,
     NamespacePrefix,
+    RelatedPartiesMetadataEditor,
     ShortNameMetadataEditor,
     StatusMetadataEditor,
     URLMetadataEditor,
@@ -46,6 +47,7 @@ class IndividualEditor(
 class ProjectEditor(
     BaseMetadataEditor,
     DocumentationMetadataEditor,
+    RelatedPartiesMetadataEditor,
     ShortNameMetadataEditor,
     StatusMetadataEditor,
     URLMetadataEditor):
