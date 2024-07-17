@@ -142,9 +142,10 @@ class ProjectEditorFormView(
 
     def add_form_data_to_metadata_editor(self, metadata_editor: ProjectEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
-        metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_short_name(form_cleaned_data.get('short_name'))
+        metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_abstract(form_cleaned_data.get('abstract'))
+        metadata_editor.update_status(form_cleaned_data.get('status'))
         metadata_editor.update_url(form_cleaned_data.get('url'))
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
