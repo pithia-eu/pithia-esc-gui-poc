@@ -199,7 +199,7 @@ class StandardIdentifierComponent(BaseMetadataComponent):
                 standard_identifier['authority'],
                 standard_identifier['value'],
             ])):
-                return
+                continue
             standard_identifier_element_attributes = {
                 'authority': standard_identifier['authority']
             }
