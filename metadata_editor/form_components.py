@@ -142,7 +142,7 @@ class CitationDocumentationEditorFormComponent(forms.Form):
         widget=forms.TextInput(attrs={
             'pattern': 'doi:10.[0-9]{4,}(?:[.][0-9]+)*/.+'
         }),
-        help_text='Format: doi:10.xxxxx'
+        help_text='Format: doi:10.nnnnnn/example'
     )
 
     other_citation_details = forms.CharField(
