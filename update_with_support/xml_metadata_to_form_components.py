@@ -81,6 +81,19 @@ class ContactInfoXmlMetadataToFormMixin:
 
         return form_data
 
+
+class DocumentationXmlMetadataToFormMixin:
+    def __init__(self, xml_string) -> None:
+        super().__init__(xml_string)
+        self.basic_form_field_to_xml_mappings.update({
+            'citation_title': './/%s:documentation/%s:Citation/%s:title/%s:CharacterString' % (self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'citation_publication_date': './/%s:documentation/%s:Citation/%s:date/%s:CI_Date/%s:date/%s:Date' % (self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'citation_doi': './/%s:documentation/%s:Citation/%s:identifier/%s:MD_Identifier/%s:code/%s:CharacterString' % (self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'citation_linkage_url': './/%s:documentation/%s:Citation/%s:onlineResource/%s:CI_OnlineResource/%s:linkage/%s:URL' % (self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD),
+            'other_citation_details': './/%s:documentation/%s:Citation/%s:otherCitationDetails/%s:CharacterString' % (self.PITHIA_NS_PREFIX_FOR_XPATH, self.PITHIA_NS_PREFIX_FOR_XPATH, NamespacePrefix.GMD, NamespacePrefix.GCO),
+        })
+
+
 class RelatedPartyXmlMetadataToFormMixin:
     def map_complex_xml_fields_to_form(self, form_data):
         form_data = super().map_complex_xml_fields_to_form(form_data)

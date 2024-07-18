@@ -1,5 +1,6 @@
 from .xml_metadata_to_form_components import (
     ContactInfoXmlMetadataToFormMixin,
+    DocumentationXmlMetadataToFormMixin,
     RelatedPartyXmlMetadataToFormMixin,
     ResourceXmlToFormDataConverter,
 )
@@ -30,6 +31,7 @@ class IndividualXmlMetadataToFormConverter(
 
 class ProjectXmlMetadataToFormConverter(
     ContactInfoXmlMetadataToFormMixin,
+    DocumentationXmlMetadataToFormMixin,
     RelatedPartyXmlMetadataToFormMixin,
     ResourceXmlToFormDataConverter):
     def __init__(self, xml_string) -> None:
