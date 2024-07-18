@@ -67,7 +67,8 @@ class DocumentationViewMixin:
                 other_citation_details=form_cleaned_data.get('other_citation_details')
             )
             metadata_editor.update_documentation(documentation_update)
-        except BaseException:
+        except BaseException as err:
+            logger.exception(err)
             messages.error(request, 'Could not add documentation metadata due to an error. Please try again later.')
 
 
