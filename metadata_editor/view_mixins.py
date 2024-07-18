@@ -12,13 +12,14 @@ from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
     DocumentationMetadataUpdate,
+    LocationMetadataUpdate,
 )
 from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
 )
 from .service_utils import BaseMetadataEditor
-from .services import ProjectEditor
+from .services import PlatformEditor, ProjectEditor
 
 from common import models
 from common.helpers import clean_localid_or_namespace
@@ -70,6 +71,22 @@ class DocumentationViewMixin:
         except BaseException as err:
             logger.exception(err)
             messages.error(request, 'Could not add documentation metadata due to an error. Please try again later.')
+
+
+class LocationViewMixin:
+    def update_location_with_metadata_editor(self, request, metadata_editor: PlatformEditor, form_cleaned_data):
+        try:
+            location_update = LocationMetadataUpdate(
+                location_name=form_cleaned_data.get('location_name'),
+                geometry_location_point_id=form_cleaned_data.get('geometry_location_point_id'),
+                geometry_location_point_srs_name=form_cleaned_data.get('geometry_location_point_srs_name'),
+                geometry_location_point_pos_1=form_cleaned_data.get('geometry_location_point_pos_1'),
+                geometry_location_point_pos_2=form_cleaned_data.get('geometry_location_point_pos_2'),
+            )
+            metadata_editor.update_location(location_update)
+        except BaseException as err:
+            logger.exception(err)
+            messages.error(request, 'Could not add location metadata due to an error. Please try again later.')
 
 
 class RelatedPartiesViewMixin:

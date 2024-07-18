@@ -12,6 +12,7 @@ from .services import (
     IndividualEditor,
     OrganisationEditor,
     ProjectEditor,
+    PlatformEditor,
 )
 from .view_mixins import *
 
@@ -164,7 +165,10 @@ class ProjectEditorFormView(
         return context
 
 class PlatformEditorFormView(
+    DocumentationViewMixin,
+    LocationViewMixin,
     PlatformSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
     StandardIdentifiersFormViewMixin,
@@ -173,9 +177,22 @@ class PlatformEditorFormView(
     template_name = 'metadata_editor/platform_editor.html'
 
     model = models.Platform
+    metadata_editor_class = PlatformEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Platform.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: PlatformEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_short_name(form_cleaned_data.get('short_name'))
+        metadata_editor.update_child_platforms(form_cleaned_data.get('child_platforms'))
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_url(form_cleaned_data.get('url'))
+        metadata_editor.update_type(form_cleaned_data.get('type'))
+        metadata_editor.update_standard_identifiers(form_cleaned_data.get('standard_identifiers_json'))
+        self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_type_choices_for_form(self):
         return self.get_choices_from_ontology_category('platformType')

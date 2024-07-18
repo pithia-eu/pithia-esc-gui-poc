@@ -240,11 +240,10 @@ class ProjectRegisterWithEditorFormView(
 
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = PlatformEditorRegistrationForm
     success_url = reverse_lazy('register:platform_with_editor')
 
-    metadata_editor_class = PlatformMetadata
     file_upload_registration_url = reverse_lazy('register:platform')
     save_data_local_storage_key = 'platform_r_wizard_save_data'
 
