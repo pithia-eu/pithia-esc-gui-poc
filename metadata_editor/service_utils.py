@@ -506,6 +506,18 @@ class DocumentationMetadataEditor(
 class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):
     responsible_party_info_key = 'ResponsiblePartyInfo'
 
+    def _process_related_party_update_data(self, update_data):
+        return [{
+            self.responsible_party_info_key: {
+                'role': {
+                    '@%s:href' % NamespacePrefix.XLINK: ud.get('role'),
+                },
+                'party': [{
+                    '@%s:href' % NamespacePrefix.XLINK: p,
+                } for p in ud.get('parties')],
+            }
+        } for ud in update_data if not _is_metadata_component_empty(ud)]
+
     def _apply_related_party_update_data(self, related_parties: list, update_data: list):
         for counter, rp in enumerate(related_parties):
             rp_responsible_party_info = rp[self.responsible_party_info_key]
@@ -531,14 +543,15 @@ class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):
         # Temp - Update to set as default in next
         # iteration.
         self.metadata_dict.setdefault(related_party_key, [])
-        related_parties_copy = copy.deepcopy(self.metadata_dict[related_party_key])
-        if new:
-            num_additions = len(update_data)
-        self._add_empty_related_parties(related_parties_copy, num_additions)
-        if not new:
-            self._remove_related_parties(related_parties_copy, deleted_index_sequence)
-        self._apply_related_party_update_data(related_parties_copy, update_data)
-        self.metadata_dict[related_party_key] = [rp for rp in related_parties_copy if not _is_metadata_component_empty(rp)]
+        # related_parties_copy = copy.deepcopy(self.metadata_dict[related_party_key])
+        # if new:
+        #     num_additions = len(update_data)
+        # self._add_empty_related_parties(related_parties_copy, num_additions)
+        # if not new:
+        #     self._remove_related_parties(related_parties_copy, deleted_index_sequence)
+        # self._apply_related_party_update_data(related_parties_copy, update_data)
+        # self.metadata_dict[related_party_key] = [rp for rp in related_parties_copy if not _is_metadata_component_empty(rp)]
+        self.metadata_dict[related_party_key] = self._process_related_party_update_data(update_data)
         self.remove_child_element_if_empty(
             self.metadata_dict,
             related_party_key
