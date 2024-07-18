@@ -830,6 +830,77 @@ PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+PLATFORM_WITH_POS_METADATA_XML = SimpleUploadedFile(
+    'Platform_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Platform
+        xmlns="https://metadata.pithia.eu/schemas/2.2"
+        xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        gml:id="p_n11">
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Platform_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-03-14T16:00:00Z</creationDate>
+                <lastModificationDate>2022-03-14T16:00:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Platform Test</name>
+        <shortName>PT</shortName>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/platformType/GroundBasedStation" />
+        <location>
+            <Location>
+                <geometryLocation>
+                    <gml:Point gml:id="n11"
+                        srsName="https://metadata.pithia.eu/ontology/2.2/crs/WGS84spherical">
+                        <gml:pos>50.09 4.59</gml:pos>
+                    </gml:Point>
+                </geometryLocation>
+                <nameLocation>
+                    <EX_GeographicDescription xmlns="http://www.isotc211.org/2005/gmd">
+                        <geographicIdentifier>
+                            <MD_Identifier>
+                                <code>
+                                    <gco:CharacterString>Polar orbit in the magnetosphere and solar wind</gco:CharacterString>
+                                </code>
+                            </MD_Identifier>
+                        </geographicIdentifier>
+                    </EX_GeographicDescription>
+                </nameLocation>
+            </Location>
+        </location>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role
+                    xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact" />
+                <party
+                    xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test" />
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Operator" />
+                <party
+                    xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test" />
+            </ResponsiblePartyInfo>
+        </relatedParty>
+    </Platform>
+    '''
+)
+
 
 # OPERATIONS
 OPERATION_METADATA_XML = SimpleUploadedFile(

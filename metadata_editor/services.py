@@ -1,11 +1,15 @@
 from .service_utils import (
+    _is_metadata_component_empty,
     BaseMetadataEditor,
     ContactInfoMetadataEditor,
     DocumentationMetadataEditor,
+    LocationMetadataEditor,
     NamespacePrefix,
     RelatedPartiesMetadataEditor,
     ShortNameMetadataEditor,
+    StandardIdentifierMetadataEditor,
     StatusMetadataEditor,
+    TypeMetadataEditor,
     URLMetadataEditor,
 )
 
@@ -60,4 +64,27 @@ class ProjectEditor(
             self.metadata_dict,
             abstract_key,
             abstract
+        )
+
+
+class PlatformEditor(
+    BaseMetadataEditor,
+    DocumentationMetadataEditor,
+    LocationMetadataEditor,
+    RelatedPartiesMetadataEditor,
+    ShortNameMetadataEditor,
+    StandardIdentifierMetadataEditor,
+    TypeMetadataEditor,
+    URLMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Platform', xml_string)
+
+    def update_child_platforms(self, update_data):
+        child_platform_key = 'childPlatform'
+        self.metadata_dict[child_platform_key] = [{
+            '@%s:href' % NamespacePrefix.XLINK: ud,
+        } for ud in update_data if not _is_metadata_component_empty(ud)]
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            child_platform_key
         )

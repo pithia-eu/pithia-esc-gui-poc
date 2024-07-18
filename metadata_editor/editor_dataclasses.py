@@ -37,3 +37,12 @@ class DocumentationMetadataUpdate:
     citation_doi: Optional[str] = None
     citation_url: Optional[str] = None
     other_citation_details: Optional[str] = None
+
+
+@dataclass(kw_only=True)
+class LocationMetadataUpdate:
+    location_name: Optional[str] = None
+    geometry_location_point_id: Optional[str] = None
+    geometry_location_point_srs_name: Optional[str] = None
+    geometry_location_point_pos_1: Optional[float] = None
+    geometry_location_point_pos_2: Optional[float] = None

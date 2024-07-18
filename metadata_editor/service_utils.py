@@ -8,6 +8,7 @@ from operator import attrgetter
 from .editor_dataclasses import (
     ContactInfoMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
+    LocationMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
 
@@ -503,6 +504,65 @@ class DocumentationMetadataEditor(
         )
 
 
+class LocationMetadataEditor(BaseMetadataComponentEditor, GCOCharacterStringMetadataEditor):
+    def _update_geometry_location(
+        self,
+        nested_location: dict,
+        point_id: str,
+        point_srs_name_url: str,
+        point_pos_1: float,
+        point_pos_2: float):
+        geometry_location_key = 'geometryLocation'
+        pos = [point_pos_1, point_pos_2]
+        if point_pos_1 is None or point_pos_2 is None:
+            pos = []
+        self.update_child_element_and_remove_if_empty(
+            nested_location,
+            geometry_location_key,
+            {
+                '%s:Point' % NamespacePrefix.GML: {
+                    '@%s:id' % NamespacePrefix.GML: point_id,
+                    '@srsName': point_srs_name_url,
+                    '%s:pos' % NamespacePrefix.GML: pos
+                }
+            }
+        )
+
+    def _update_name_location(self, nested_location: dict, value: str):
+        self.update_child_element_and_remove_if_empty(
+            nested_location,
+            'nameLocation',
+            {
+                '%s:EX_GeographicDescription' % NamespacePrefix.GMD: {
+                    '%s:geographicIdentifier' % NamespacePrefix.GMD: {
+                        '%s:MD_Identifier' % NamespacePrefix.GMD: {
+                            '%s:code' % NamespacePrefix.GMD: self.get_as_gco_character_string(value)
+                        }
+                    }
+                }
+            }
+        )
+
+    def update_location(self, update_data: LocationMetadataUpdate):
+        location_key = 'location'
+        nested_location_key = 'Location'
+        self.metadata_dict.setdefault(location_key, {nested_location_key: {}})
+        nested_location = self.metadata_dict[location_key][nested_location_key]
+        self._update_geometry_location(
+            nested_location,
+            update_data.geometry_location_point_id,
+            update_data.geometry_location_point_srs_name,
+            update_data.geometry_location_point_pos_1,
+            update_data.geometry_location_point_pos_2,
+        )
+        self._update_name_location(nested_location, update_data.location_name)
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            location_key
+        )
+
+
+
 class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):
     responsible_party_info_key = 'ResponsiblePartyInfo'
 
@@ -563,6 +623,19 @@ class ShortNameMetadataEditor(BaseMetadataComponentEditor):
         self.metadata_dict['shortName'] = short_name
 
 
+class StandardIdentifierMetadataEditor(BaseMetadataComponentEditor):
+    def update_standard_identifiers(self, update_data):
+        standard_identifiers_key = 'standardIdentifier'
+        self.metadata_dict[standard_identifiers_key] = [{
+            '@authority': ud.get('authority'),
+            '$': ud.get('value'),
+        } for ud in update_data if not _is_metadata_component_empty(ud)]
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            standard_identifiers_key
+        )
+
+
 class StatusMetadataEditor(BaseMetadataComponentEditor):
     def update_status(self, status_ontology_url):
         status_key = 'status'
@@ -570,6 +643,16 @@ class StatusMetadataEditor(BaseMetadataComponentEditor):
         self.remove_child_element_if_empty(
             self.metadata_dict,
             status_key
+        )
+
+
+class TypeMetadataEditor(BaseMetadataComponentEditor):
+    def update_type(self, type_ontology_url):
+        type_key = 'type'
+        self.metadata_dict[type_key] = {'@%s:href' % NamespacePrefix.XLINK: type_ontology_url}
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            type_key
         )
 
 

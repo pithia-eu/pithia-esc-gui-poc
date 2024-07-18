@@ -12,6 +12,7 @@ from .service_utils import (
 from .services import (
     IndividualEditor,
     OrganisationEditor,
+    PlatformEditor,
     ProjectEditor,
 )
 
@@ -21,6 +22,7 @@ from common.test_xml_files import (
     ORGANISATION_CONTACT_INFO_1_XML,
     ORGANISATION_CONTACT_INFO_2_XML,
     ORGANISATION_MULTIPLE_ADDRESSES_XML,
+    PLATFORM_WITH_POS_METADATA_XML,
     PROJECT_METADATA_XML,
 )
 
@@ -228,6 +230,14 @@ class ProjectEditorTestCase(SimpleTestCase):
         )
         project_editor.update_documentation(documentation_update)
         xml = project_editor.to_xml()
+        print('xml', xml)
+
+
+class PlatformEditorTestCase(SimpleTestCase):
+    def test_platform_editor_with_file(self):
+        reset_test_file(PLATFORM_WITH_POS_METADATA_XML)
+        platform_editor = PlatformEditor(xml_string=PLATFORM_WITH_POS_METADATA_XML.read().decode())
+        xml = platform_editor.to_xml()
         print('xml', xml)
 
 
