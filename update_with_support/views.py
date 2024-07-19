@@ -6,6 +6,7 @@ from pyexpat import ExpatError
 from .xml_metadata_to_form import (
     IndividualXmlMetadataToFormConverter,
     OrganisationXmlMetadataToFormConverter,
+    PlatformXmlMetadataToFormConverter,
     ProjectXmlMetadataToFormConverter,
 )
 
@@ -107,3 +108,11 @@ class ProjectUpdateWithEditorFormView(
     model = models.Project
     success_url_name = 'update:project_with_editor'
     xml_metadata_to_form_field_converter = ProjectXmlMetadataToFormConverter
+
+
+class PlatformUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    PlatformEditorFormView):
+    model = models.Platform
+    success_url_name = 'update:platform_with_editor'
+    xml_metadata_to_form_field_converter = PlatformXmlMetadataToFormConverter
