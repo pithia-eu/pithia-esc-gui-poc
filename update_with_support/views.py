@@ -3,12 +3,13 @@ from datetime import timezone
 from django.shortcuts import render
 from pyexpat import ExpatError
 
-from .xml_metadata_to_form import (
-    IndividualXmlMetadataToFormConverter,
-    OrganisationXmlMetadataToFormConverter,
-    PlatformXmlMetadataToFormConverter,
-    ProjectXmlMetadataToFormConverter,
+from .form_to_metadata_mappers import (
+    IndividualFormFieldsToMetadataMapper,
+    OrganisationFormFieldsToMetadataMapper,
+    PlatformFormFieldsToMetadataMapper,
+    ProjectFormFieldsToMetadataMapper,
 )
+from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
 
 from common import models
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
@@ -20,7 +21,7 @@ from metadata_editor.views import *
 
 class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     model = None
-    xml_metadata_to_form_field_converter: BaseMetadataEditor = None
+    form_field_to_metadata_mapper_class: EditorFormFieldsToMetadataUtilsMixin = None
     success_url = ''
     success_url_name = ''
 
@@ -72,7 +73,9 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial.update(self.xml_metadata_to_form_field_converter(self.resource.xml).convert())
+        form_field_to_metadata_mapper = self.form_field_to_metadata_mapper_class(self.resource.xml)
+        initial_from_metadata = form_field_to_metadata_mapper.get_initial_form_values()
+        initial.update(initial_from_metadata)
         return initial
 
 
@@ -81,7 +84,7 @@ class OrganisationUpdateWithEditorFormView(
     OrganisationEditorFormView):
     model = models.Organisation
     success_url_name = 'update:organisation_with_editor'
-    xml_metadata_to_form_field_converter = OrganisationXmlMetadataToFormConverter
+    form_field_to_metadata_mapper_class = OrganisationFormFieldsToMetadataMapper
 
     def get_initial(self):
         initial = super().get_initial()
@@ -94,7 +97,7 @@ class IndividualUpdateWithEditorFormView(
     IndividualEditorFormView):
     model = models.Individual
     success_url_name = 'update:individual_with_editor'
-    xml_metadata_to_form_field_converter = IndividualXmlMetadataToFormConverter
+    form_field_to_metadata_mapper_class = IndividualFormFieldsToMetadataMapper
 
     def get_initial(self):
         initial = super().get_initial()
@@ -107,7 +110,7 @@ class ProjectUpdateWithEditorFormView(
     ProjectEditorFormView):
     model = models.Project
     success_url_name = 'update:project_with_editor'
-    xml_metadata_to_form_field_converter = ProjectXmlMetadataToFormConverter
+    form_field_to_metadata_mapper_class = ProjectFormFieldsToMetadataMapper
 
 
 class PlatformUpdateWithEditorFormView(
@@ -115,4 +118,4 @@ class PlatformUpdateWithEditorFormView(
     PlatformEditorFormView):
     model = models.Platform
     success_url_name = 'update:platform_with_editor'
-    xml_metadata_to_form_field_converter = PlatformXmlMetadataToFormConverter
+    form_field_to_metadata_mapper_class = PlatformFormFieldsToMetadataMapper
