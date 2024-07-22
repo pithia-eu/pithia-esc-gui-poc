@@ -60,6 +60,7 @@ class PlatformFormFieldsToMetadataMapper(
         mappings.update({
             'short_name': './/%s:shortName' % self.DEFAULT_XPATH_NSPREFIX,
             'url': './/%s:URL' % NamespacePrefix.GMD,
+            'child_platforms': './/%s:childPlatform/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK)
         })
         return mappings
 
@@ -75,6 +76,5 @@ class PlatformFormFieldsToMetadataMapper(
 
     def get_initial_values_with_custom_mappings(self):
         initial_values = super().get_initial_values_with_custom_mappings()
-        initial_values['child_platforms'] = self.xml_string_parsed.xpath('.//%s:childPlatform/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
         initial_values['standard_identifiers_json'] = self._map_standard_identifiers_to_form()
         return initial_values
