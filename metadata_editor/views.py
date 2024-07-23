@@ -247,6 +247,7 @@ class OperationEditorFormView(
 
     def add_form_data_to_metadata_editor(self, metadata_editor: OperationEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_status(form_cleaned_data.get('status'))
         metadata_editor.update_platforms(form_cleaned_data.get('platforms'))
         metadata_editor.update_child_operations(form_cleaned_data.get('child_operations'))
