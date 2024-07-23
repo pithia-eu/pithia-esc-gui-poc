@@ -133,21 +133,26 @@ class BaseMetadataEditor(BaseMetadataComponentEditor):
     def to_xml(self):
         return self._metadata_dict_to_xml(self.metadata_dict, self.root_element_name)
 
-    def remove_xmlschema_attributes_from_metadata_component(self, metadata_component: dict):
-        xmlschema_attribute_keys = [
-            '@owns',
-            '@%s:type' % NamespacePrefix.XLINK,
-        ]
+    def remove_xml_attributes_from_metadata_component(self, metadata_component: dict, disallowed_attrs: list = []):
         if isinstance(metadata_component, dict):
-            for key in xmlschema_attribute_keys:
+            for key in disallowed_attrs:
                 if key not in metadata_component:
                     continue
                 del metadata_component[key]
             for dict_value in metadata_component.values():
-                self.remove_xmlschema_attributes_from_metadata_component(dict_value)
+                self.remove_xml_attributes_from_metadata_component(dict_value, disallowed_attrs=disallowed_attrs)
         elif isinstance(metadata_component, list):
             for item in metadata_component:
-                self.remove_xmlschema_attributes_from_metadata_component(item)
+                self.remove_xml_attributes_from_metadata_component(item, disallowed_attrs=disallowed_attrs)
+
+    def remove_xmlschema_attributes_from_metadata_component(self, metadata_component: dict):
+        self.remove_xml_attributes_from_metadata_component(
+            metadata_component,
+            disallowed_attrs=[
+                '@owns',
+                '@%s:type' % NamespacePrefix.XLINK,
+            ]
+        )
 
     def update_pithia_identifier(self, update_data: PithiaIdentifierMetadataUpdate):
         if not any(asdict(update_data).values()):

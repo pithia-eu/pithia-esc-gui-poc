@@ -957,6 +957,61 @@ OPERATION_METADATA_XML = SimpleUploadedFile(
 )
 
 
+OPERATION_METADATA_WITH_TIME_INTERVAL_XML = SimpleUploadedFile(
+    'Operation_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Operation
+        xmlns="https://metadata.pithia.eu/schemas/2.2"
+        xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        gml:id="o_esr_dsnd">
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Operation_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-08-04T11:00:00Z</creationDate>
+                <lastModificationDate>2022-08-04T12:22:06Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Operation Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <operationTime>
+            <gml:TimePeriod gml:id="t_esr_dsnd">
+                <gml:begin><gml:TimeInstant gml:id="ti1"><gml:timePosition>2000-03-07</gml:timePosition></gml:TimeInstant></gml:begin>
+                <gml:end><gml:TimeInstant gml:id="ti2"><gml:timePosition>2050-12-31</gml:timePosition></gml:TimeInstant></gml:end>
+                <gml:timeInterval unit="second">25</gml:timeInterval>
+            </gml:TimePeriod>
+        </operationTime>
+        <status xlink:href="https://metadata.pithia.eu/ontology/2.2/status/OnGoing"/>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <platform xlink:href="https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test"></platform>
+    </Operation>
+    '''
+)
+
+
 # INSTRUMENTS
 INSTRUMENT_METADATA_XML = SimpleUploadedFile(
     'Instrument_Test.xml',

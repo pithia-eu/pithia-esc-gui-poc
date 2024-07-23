@@ -1,9 +1,11 @@
 from django.test import SimpleTestCase
+from lxml import etree
 
 from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
     DocumentationMetadataUpdate,
+    LocationMetadataUpdate,
     OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
@@ -20,6 +22,8 @@ from .services import (
 
 from common.test_xml_files import (
     INDIVIDUAL_METADATA_XML,
+    OPERATION_METADATA_XML,
+    OPERATION_METADATA_WITH_TIME_INTERVAL_XML,
     ORGANISATION_METADATA_XML,
     ORGANISATION_CONTACT_INFO_1_XML,
     ORGANISATION_CONTACT_INFO_2_XML,
@@ -245,6 +249,9 @@ class PlatformEditorTestCase(SimpleTestCase):
 
 class OperationEditorTestCase(SimpleTestCase):
     def test_operation_editor(self):
+        """Test that properties supported by the operation
+        editor can be updated.
+        """
         operation_editor = OperationEditor()
         pithia_identifier = PithiaIdentifierMetadataUpdate(
             localid='Operation_Test',
@@ -254,6 +261,17 @@ class OperationEditorTestCase(SimpleTestCase):
             last_modification_date='2022-02-03T12:50:00Z'
         )
         operation_editor.update_pithia_identifier(pithia_identifier)
+        operation_editor.update_name('Operation test')
+        operation_editor.update_description('Operation test description')
+        operation_editor.update_status('https://metadata.pithia.eu/ontology/2.2/status/OnGoing')
+        operation_editor.update_platforms([
+            'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+            'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test_2',
+        ])
+        operation_editor.update_child_operations([
+            'https://metadata.pithia.eu/resources/2.2/operation/test/Operation_Test',
+            'https://metadata.pithia.eu/resources/2.2/operation/test/Operation_Test_2',
+        ])
         operation_time = OperationTimeMetadataUpdate(
             time_period_id='tpi_id',
             time_instant_begin_id='tib_id',
@@ -261,12 +279,42 @@ class OperationEditorTestCase(SimpleTestCase):
             time_instant_end_id='tie_id',
             time_instant_end_position='tie_p'
         )
-        operation_editor.update_name('Operation test')
         operation_editor.update_operation_time(operation_time)
+        location = LocationMetadataUpdate(
+            location_name='location name',
+            geometry_location_point_id='glp_id',
+            geometry_location_point_pos_1=float('1.23456'),
+            geometry_location_point_pos_2=float('2.34567'),
+            geometry_location_point_srs_name='glp_srsname',
+        )
+        operation_editor.update_location(location)
+        operation_editor.update_related_parties([
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                'parties': ['https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test']
+            },
+            {'role': '', 'parties': []},
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test']
+            },
+        ])
+        documentation = DocumentationMetadataUpdate(
+            citation_title='Citation title',
+            citation_publication_date='23/07/24',
+            citation_doi='doi:10.1234/4321',
+            citation_url='https://www.example.com/',
+            other_citation_details='Other citation details'
+        )
+        operation_editor.update_documentation(documentation)
         xml = operation_editor.to_xml()
         print('xml', xml)
 
     def test_operation_editor_empty_op_time(self):
+        """Test that passing an empty operation time object
+        does not add an <operationTime> element to the
+        resulting XML.
+        """
         operation_editor = OperationEditor()
         pithia_identifier = PithiaIdentifierMetadataUpdate(
             localid='Operation_Test',
@@ -276,6 +324,7 @@ class OperationEditorTestCase(SimpleTestCase):
             last_modification_date='2022-02-03T12:50:00Z'
         )
         operation_editor.update_pithia_identifier(pithia_identifier)
+        operation_editor.update_name('Operation test')
         operation_time = OperationTimeMetadataUpdate(
             time_period_id='',
             time_instant_begin_id='',
@@ -283,10 +332,62 @@ class OperationEditorTestCase(SimpleTestCase):
             time_instant_end_id='',
             time_instant_end_position=''
         )
-        operation_editor.update_name('Operation test')
         operation_editor.update_operation_time(operation_time)
         xml = operation_editor.to_xml()
         print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        op_time_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}operationTime')
+        self.assertIsNone(op_time_element)
+
+    def test_operation_editor_with_file(self):
+        """Test that the operation editor parses in a valid XML
+        string and is able to reconstruct it without any changes.
+        """
+        reset_test_file(OPERATION_METADATA_XML)
+        operation_editor = OperationEditor(xml_string=OPERATION_METADATA_XML.read().decode())
+        xml = operation_editor.to_xml()
+        print('xml', xml)
+
+    def test_optional_operation_time_data_is_not_overwritten(self):
+        """Optional <operationTime> elements (in this case,
+        <gml:timeInterval>) are kept even when updating
+        <gml:begin> and <gml:end> elements."""
+        reset_test_file(OPERATION_METADATA_WITH_TIME_INTERVAL_XML)
+        operation_editor = OperationEditor(xml_string=OPERATION_METADATA_WITH_TIME_INTERVAL_XML.read().decode())
+        operation_time = OperationTimeMetadataUpdate(
+            time_period_id='tpi_id',
+            time_instant_begin_id='tib_id',
+            time_instant_begin_position='tib_p',
+            time_instant_end_id='tie_id',
+            time_instant_end_position='tie_p'
+        )
+        operation_editor.update_operation_time(operation_time)
+        xml = operation_editor.to_xml()
+        print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        time_interval_element = parsed_xml.find('.//{http://www.opengis.net/gml/3.2}timeInterval')
+        self.assertIsNotNone(time_interval_element)
+
+    def test_operation_editor_removes_operation_time_from_xml(self):
+        """The <operationTime> element is removed from the xml
+        when wiped, even with the optional <timeInterval> element
+        present.
+        """
+        reset_test_file(OPERATION_METADATA_WITH_TIME_INTERVAL_XML)
+        operation_editor = OperationEditor(xml_string=OPERATION_METADATA_XML.read().decode())
+        operation_time = OperationTimeMetadataUpdate(
+            time_period_id='',
+            time_instant_begin_id='',
+            time_instant_begin_position='',
+            time_instant_end_id='',
+            time_instant_end_position=''
+        )
+        operation_editor.update_operation_time(operation_time)
+        xml = operation_editor.to_xml()
+        print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        op_time_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}operationTime')
+        self.assertIsNone(op_time_element)
 
 class UtilsTestCase(SimpleTestCase):
     def test_is_metadata_component_empty(self):

@@ -186,9 +186,16 @@ class OperationEditor(
         time_period_copy = copy.deepcopy(time_period)
         time_period_copy_no_optionals = {
             key: value for key, value in time_period_copy.items()
-            if key != time_period_begin_key and key != time_period_end_key
+            if key == time_period_begin_key or key == time_period_end_key
         }
-        print('time_period_copy_no_optionals', time_period_copy_no_optionals)
+        # Remove "frame" attribute before checking timePeriod
+        # element as it affects whether the it is considered
+        # "empty" or not. If not added by the user xmlschema
+        # adds it in when parsing an existing XML document.
+        self.remove_xml_attributes_from_metadata_component(
+            time_period_copy_no_optionals,
+            disallowed_attrs=['@frame']
+        )
         if _is_metadata_component_empty(time_period_copy_no_optionals):
             operation_time.pop(time_period_key)
         self.remove_child_element_if_empty(
