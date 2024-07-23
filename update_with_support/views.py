@@ -5,6 +5,7 @@ from pyexpat import ExpatError
 
 from .form_to_metadata_mappers import (
     IndividualFormFieldsToMetadataMapper,
+    OperationFormFieldsToMetadataMapper,
     OrganisationFormFieldsToMetadataMapper,
     PlatformFormFieldsToMetadataMapper,
     ProjectFormFieldsToMetadataMapper,
@@ -119,3 +120,11 @@ class PlatformUpdateWithEditorFormView(
     model = models.Platform
     success_url_name = 'update:platform_with_editor'
     form_field_to_metadata_mapper_class = PlatformFormFieldsToMetadataMapper
+
+
+class OperationUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    OperationEditorFormView):
+    model = models.Operation
+    success_url_name = 'update:operation_with_editor'
+    form_field_to_metadata_mapper_class = OperationFormFieldsToMetadataMapper
