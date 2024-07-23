@@ -4,6 +4,7 @@ from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
     DocumentationMetadataUpdate,
+    OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
 from .service_utils import (
@@ -11,6 +12,7 @@ from .service_utils import (
 )
 from .services import (
     IndividualEditor,
+    OperationEditor,
     OrganisationEditor,
     PlatformEditor,
     ProjectEditor,
@@ -240,6 +242,51 @@ class PlatformEditorTestCase(SimpleTestCase):
         xml = platform_editor.to_xml()
         print('xml', xml)
 
+
+class OperationEditorTestCase(SimpleTestCase):
+    def test_operation_editor(self):
+        operation_editor = OperationEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Operation_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        operation_editor.update_pithia_identifier(pithia_identifier)
+        operation_time = OperationTimeMetadataUpdate(
+            time_period_id='tpi_id',
+            time_instant_begin_id='tib_id',
+            time_instant_begin_position='tib_p',
+            time_instant_end_id='tie_id',
+            time_instant_end_position='tie_p'
+        )
+        operation_editor.update_name('Operation test')
+        operation_editor.update_operation_time(operation_time)
+        xml = operation_editor.to_xml()
+        print('xml', xml)
+
+    def test_operation_editor_empty_op_time(self):
+        operation_editor = OperationEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Operation_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        operation_editor.update_pithia_identifier(pithia_identifier)
+        operation_time = OperationTimeMetadataUpdate(
+            time_period_id='',
+            time_instant_begin_id='',
+            time_instant_begin_position='',
+            time_instant_end_id='',
+            time_instant_end_position=''
+        )
+        operation_editor.update_name('Operation test')
+        operation_editor.update_operation_time(operation_time)
+        xml = operation_editor.to_xml()
+        print('xml', xml)
 
 class UtilsTestCase(SimpleTestCase):
     def test_is_metadata_component_empty(self):

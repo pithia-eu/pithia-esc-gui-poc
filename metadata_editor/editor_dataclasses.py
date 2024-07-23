@@ -46,3 +46,12 @@ class LocationMetadataUpdate:
     geometry_location_point_srs_name: Optional[str] = None
     geometry_location_point_pos_1: Optional[float] = None
     geometry_location_point_pos_2: Optional[float] = None
+
+
+@dataclass(kw_only=True)
+class OperationTimeMetadataUpdate:
+    time_period_id: Optional[str] = None
+    time_instant_begin_id: Optional[str] = None
+    time_instant_begin_position: Optional[str] = None
+    time_instant_end_id: Optional[str] = None
+    time_instant_end_position: Optional[str] = None
