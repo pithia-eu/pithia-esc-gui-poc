@@ -320,10 +320,6 @@ class ContactInfoMetadataEditor(
         )
 
     def update_contact_info(self, update_data: ContactInfoMetadataUpdate):
-        # If contact info does not exist, create an empty
-        # list.
-        if not any (asdict(update_data).values()):
-            return
         # contactInfo container element
         contact_info_key = 'contactInfo'
         self.metadata_dict.setdefault(contact_info_key, [])
