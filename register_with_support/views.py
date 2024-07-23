@@ -210,6 +210,7 @@ class OrganisationRegisterWithEditorFormView(
         kwargs['initial'] = {'namespace': 'pithia'}
         return kwargs
 
+
 class IndividualRegisterWithEditorFormView(
     IndividualEditorFormView,
     NewResourceRegisterWithEditorFormView):
@@ -218,6 +219,7 @@ class IndividualRegisterWithEditorFormView(
 
     file_upload_registration_url = reverse_lazy('register:individual')
     save_data_local_storage_key = 'individual_r_wizard_save_data'
+
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
@@ -229,14 +231,6 @@ class ProjectRegisterWithEditorFormView(
     save_data_local_storage_key = 'project_r_wizard_save_data'
     new = True
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        # processed_form['keyword_dict_list'] = process_project_keywords(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-
-        return processed_form
 
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
@@ -247,36 +241,15 @@ class PlatformRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:platform')
     save_data_local_storage_key = 'platform_r_wizard_save_data'
 
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['location'] = process_location(form_cleaned_data)
-        processed_form['standard_identifiers'] = form_cleaned_data['standard_identifiers_json']
-
-        return processed_form
-
 
 class OperationRegisterWithEditorFormView(
     OperationEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = OperationEditorRegistrationForm
     success_url = reverse_lazy('register:operation_with_editor')
 
-    metadata_editor_class = OperationMetadata
     file_upload_registration_url = reverse_lazy('register:operation')
     save_data_local_storage_key = 'operation_r_wizard_save_data'
-
-    def process_form(self, form_cleaned_data):
-        processed_form = super().process_form(form_cleaned_data)
-
-        processed_form['documentation'] = process_documentation(form_cleaned_data)
-        processed_form['related_parties'] = process_related_parties(form_cleaned_data)
-        processed_form['location'] = process_location(form_cleaned_data)
-        processed_form['operation_time'] = process_operation_time(form_cleaned_data)
-
-        return processed_form
 
 
 class InstrumentRegisterWithEditorFormView(

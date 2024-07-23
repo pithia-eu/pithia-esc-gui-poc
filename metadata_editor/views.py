@@ -6,10 +6,14 @@ from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.views.generic import FormView
 
+from .editor_dataclasses import (
+    OperationTimeMetadataUpdate,
+)
 from .forms import *
 from .service_utils import BaseMetadataEditor
 from .services import (
     IndividualEditor,
+    OperationEditor,
     OrganisationEditor,
     ProjectEditor,
     PlatformEditor,
@@ -223,7 +227,10 @@ class PlatformEditorFormView(
 
 
 class OperationEditorFormView(
+    DocumentationViewMixin,
+    LocationViewMixin,
     PlatformSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     RelatedPartiesSelectFormViewMixin,
     SrsNameSelectFormViewMixin,
     ResourceEditorFormView,
@@ -233,10 +240,28 @@ class OperationEditorFormView(
     template_name = 'metadata_editor/operation_editor.html'
 
     model = models.Operation
+    metadata_editor_class = OperationEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Operation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
 
+    def add_form_data_to_metadata_editor(self, metadata_editor: OperationEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_status(form_cleaned_data.get('status'))
+        metadata_editor.update_platforms(form_cleaned_data.get('platforms'))
+        metadata_editor.update_child_operations(form_cleaned_data.get('child_operations'))
+        operation_time_update = OperationTimeMetadataUpdate(
+            time_period_id=form_cleaned_data.get('time_period_id'),
+            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
+            time_instant_begin_position=str(form_cleaned_data.get('time_instant_begin_position')),
+            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
+            time_instant_end_position=str(form_cleaned_data.get('time_instant_end_position'))
+        )
+        metadata_editor.update_operation_time(operation_time_update)
+        self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+    
     def get_child_operation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Operation)
 
