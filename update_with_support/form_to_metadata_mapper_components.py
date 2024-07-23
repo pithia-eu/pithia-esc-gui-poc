@@ -33,6 +33,9 @@ class EditorFormFieldsToMetadataUtilsMixin:
     def get_basic_form_field_to_xml_field_mappings(self):
         return {}
 
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        return {}
+
     def get_initial_values_with_basic_mappings(self):
         basic_mappings = self.get_basic_form_field_to_xml_field_mappings()
         initial_values_from_basic_mappings = {}
@@ -50,14 +53,33 @@ class EditorFormFieldsToMetadataUtilsMixin:
                 continue
         return initial_values_from_basic_mappings
 
+    def get_initial_values_from_basic_multiple_choice_mappings(self):
+        basic_mc_mappings = self.get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        initial_values_from_basic_mc_mappings = {}
+        for field_name, query in basic_mc_mappings.items():
+            elements_matching_query = self.xml_string_parsed.xpath(query, namespaces=self.namespaces)
+            if not elements_matching_query:
+                continue
+            try:
+                initial_values_from_basic_mc_mappings[field_name] = [e.text for e in elements_matching_query]
+            except AttributeError as err:
+                logger.exception(err)
+                initial_values_from_basic_mc_mappings[field_name] = elements_matching_query
+            except BaseException as err:
+                logger.exception(err)
+                continue
+        return initial_values_from_basic_mc_mappings
+
     def get_initial_values_with_custom_mappings(self):
         return {}
 
     def get_initial_form_values(self):
         initial_values = {}
         initial_values_from_basic_mappings = self.get_initial_values_with_basic_mappings()
+        initial_values_from_multiple_choice_mappings = self.get_initial_values_from_basic_multiple_choice_mappings()
         initial_values_from_custom_mappings = self.get_initial_values_with_custom_mappings()
         initial_values.update(initial_values_from_basic_mappings)
+        initial_values.update(initial_values_from_multiple_choice_mappings)
         initial_values.update(initial_values_from_custom_mappings)
         return initial_values
 
