@@ -1,4 +1,3 @@
-import copy
 import json
 import xmlschema
 import xml.etree.ElementTree as ET
