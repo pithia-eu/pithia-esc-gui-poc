@@ -374,7 +374,7 @@ class OperationEditorTestCase(SimpleTestCase):
         present.
         """
         reset_test_file(OPERATION_METADATA_WITH_TIME_INTERVAL_XML)
-        operation_editor = OperationEditor(xml_string=OPERATION_METADATA_XML.read().decode())
+        operation_editor = OperationEditor(xml_string=OPERATION_METADATA_WITH_TIME_INTERVAL_XML.read().decode())
         operation_time = OperationTimeMetadataUpdate(
             time_period_id='',
             time_instant_begin_id='',
