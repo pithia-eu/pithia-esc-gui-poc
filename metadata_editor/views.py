@@ -254,9 +254,9 @@ class OperationEditorFormView(
         operation_time_update = OperationTimeMetadataUpdate(
             time_period_id=form_cleaned_data.get('time_period_id'),
             time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
-            time_instant_begin_position=str(form_cleaned_data.get('time_instant_begin_position')),
+            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
             time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
-            time_instant_end_position=str(form_cleaned_data.get('time_instant_end_position'))
+            time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
         )
         metadata_editor.update_operation_time(operation_time_update)
         self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)

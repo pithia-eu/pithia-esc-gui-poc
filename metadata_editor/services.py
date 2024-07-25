@@ -136,6 +136,8 @@ class OperationEditor(
         time_instant.setdefault(time_position_key, {})
         time_position = time_instant[time_position_key]
         # gml:timePosition text
+        if time_position_value:
+            time_position_value = str(time_position_value)
         time_position['$'] = time_position_value
 
     def update_operation_time(self, update_data: OperationTimeMetadataUpdate):
