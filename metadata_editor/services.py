@@ -1,4 +1,5 @@
 import copy
+
 from .service_utils import (
     _is_metadata_component_empty,
     BaseMetadataEditor,
@@ -203,4 +204,47 @@ class OperationEditor(
         self.remove_child_element_if_empty(
             self.metadata_dict,
             operation_time_key
+        )
+
+
+class InstrumentEditor(
+    BaseMetadataEditor,
+    DocumentationMetadataEditor,
+    RelatedPartiesMetadataEditor,
+    TypeMetadataEditor,
+    URLMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Instrument', xml_string)
+
+    def update_instrument_version(self, version):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'version',
+            version
+        )
+
+    def update_members(self, update_data):
+        members_key = 'member'
+        self.metadata_dict[members_key] = [{
+            '@%s:href' % NamespacePrefix.XLINK: ud
+        } for ud in update_data if ud]
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            members_key
+        )
+
+    def update_operational_modes(self, update_data):
+        operational_modes_key = 'operationalMode'
+        self.metadata_dict[operational_modes_key] = [
+            {
+                'InstrumentOperationalMode': {
+                    'id': om.get('id'),
+                    'name': om.get('name'),
+                    'description': om.get('description'),
+                }
+            } for om in update_data if not _is_metadata_component_empty(om)
+        ]
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            operational_modes_key
         )

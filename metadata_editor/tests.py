@@ -14,6 +14,7 @@ from .service_utils import (
 )
 from .services import (
     IndividualEditor,
+    InstrumentEditor,
     OperationEditor,
     OrganisationEditor,
     PlatformEditor,
@@ -388,6 +389,43 @@ class OperationEditorTestCase(SimpleTestCase):
         parsed_xml = etree.fromstring(xml.encode('utf-8'))
         op_time_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}operationTime')
         self.assertIsNone(op_time_element)
+
+
+class InstrumentEditorTestCase(SimpleTestCase):
+    def test_instrument_editor(self):
+        instrument_editor = InstrumentEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Instrument_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        instrument_editor.update_pithia_identifier(pithia_identifier)
+        instrument_editor.update_name('Instrument test')
+        instrument_editor.update_description('Instrument test description')
+        instrument_editor.update_type('https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder')
+        instrument_editor.update_instrument_version('52')
+        instrument_editor.update_members([
+            'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_1',
+            'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_2',
+            'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test_3',
+        ])
+        instrument_editor.update_operational_modes([
+            {
+                'id': 'opm1',
+                'name': 'opm1 name',
+                'description': 'opm1 description',
+            },
+            {
+                'id': 'opm2',
+                'name': 'opm2 name',
+                'description': 'opm2 description',
+            },
+        ])
+        xml = instrument_editor.to_xml()
+        print('xml', xml)
+
 
 class UtilsTestCase(SimpleTestCase):
     def test_is_metadata_component_empty(self):
