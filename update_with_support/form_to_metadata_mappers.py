@@ -1,3 +1,4 @@
+import logging
 from .form_to_metadata_mapper_components import (
     ContactInfoFormFieldsToMetadataMixin,
     DocumentationFormFieldsToMetadataMixin,
@@ -8,6 +9,9 @@ from .form_to_metadata_mapper_components import (
 )
 
 from metadata_editor.xml_ns_enums import NamespacePrefix
+
+
+logger = logging.getLogger(__name__)
 
 
 class OrganisationFormFieldsToMetadataMapper(
@@ -112,3 +116,51 @@ class OperationFormFieldsToMetadataMapper(
             'child_operations': './/%s:childOperation/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings
+
+
+class InstrumentFormFieldsToMetadataWrapper(
+    DocumentationFormFieldsToMetadataMixin,
+    RelatedPartyFormFieldsToMetadataMixin,
+    TypeFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'url': './/%s:URL' % NamespacePrefix.GMD,
+            'version': './/%s:version[not(ancestor::%s:PITHIA_Identifier)]' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX),
+        })
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'members': './/%s:member/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+    def _map_operational_modes_to_form(self):
+        instrument_operational_modes = []
+        instrument_operational_mode_elements = self.xml_string_parsed.xpath('.//%s:InstrumentOperationalMode' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+        for e in instrument_operational_mode_elements:
+            try:
+                ids = e.xpath('.//%s:id' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+                id = self._get_first_element_from_list(ids)
+                names = e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+                name = self._get_first_element_from_list(names)
+                descriptions = e.xpath('.//%s:description' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+                description = self._get_first_element_from_list(descriptions)
+                instrument_operational_modes.append({
+                    'id': id.text,
+                    'name': name.text,
+                    'description': description.text,
+                })
+            except AttributeError as err:
+                logger.exception(err)
+                continue
+        return instrument_operational_modes
+
+    def get_initial_values_from_basic_multiple_choice_mappings(self):
+        initial_values = super().get_initial_values_from_basic_multiple_choice_mappings()
+        operational_modes = self._map_operational_modes_to_form()
+        initial_values['operational_modes_json'] = operational_modes
+        return initial_values

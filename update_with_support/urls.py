@@ -8,4 +8,5 @@ urlpatterns = [
     path('projects/<resource_id>/update-with-wizard/', views.ProjectUpdateWithEditorFormView.as_view(), name='project_with_editor'),
     path('platforms/<resource_id>/update-with-wizard/', views.PlatformUpdateWithEditorFormView.as_view(), name='platform_with_editor'),
     path('operations/<resource_id>/update-with-wizard/', views.OperationUpdateWithEditorFormView.as_view(), name='operation_with_editor'),
+    path('instruments/<resource_id>/update-with-wizard/', views.InstrumentUpdateWithEditorFormView.as_view(), name='instrument_with_editor'),
 ]

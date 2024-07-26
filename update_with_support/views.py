@@ -4,6 +4,7 @@ from django.shortcuts import render
 from pyexpat import ExpatError
 
 from .form_to_metadata_mappers import (
+    InstrumentFormFieldsToMetadataWrapper,
     IndividualFormFieldsToMetadataMapper,
     OperationFormFieldsToMetadataMapper,
     OrganisationFormFieldsToMetadataMapper,
@@ -128,3 +129,11 @@ class OperationUpdateWithEditorFormView(
     model = models.Operation
     success_url_name = 'update:operation_with_editor'
     form_field_to_metadata_mapper_class = OperationFormFieldsToMetadataMapper
+
+
+class InstrumentUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    InstrumentEditorFormView):
+    model = models.Instrument
+    success_url_name = 'update:instrument_with_editor'
+    form_field_to_metadata_mapper_class = InstrumentFormFieldsToMetadataWrapper
