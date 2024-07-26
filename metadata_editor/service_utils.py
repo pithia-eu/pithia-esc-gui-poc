@@ -1,3 +1,4 @@
+import copy
 import json
 import xmlschema
 import xml.etree.ElementTree as ET
@@ -561,6 +562,52 @@ class LocationMetadataEditor(BaseMetadataComponentEditor, GCOCharacterStringMeta
             location_key
         )
 
+
+class QualityAssessmentMetadataEditor(BaseMetadataComponentEditor):
+    data_quality_flag_key = 'dataQualityFlag'
+
+    def update_quality_assessment(
+            self,
+            data_quality_flag_urls: list,
+            metadata_quality_flag_urls: list =[]):
+        quality_assessment_key = 'qualityAssessment'
+        self.metadata_dict.setdefault(quality_assessment_key, {})
+        quality_assessment = self.metadata_dict[quality_assessment_key]
+        # Data/Metadata quality flags
+        self._update_data_quality_flags(quality_assessment, data_quality_flag_urls)
+        self._update_metadata_quality_flags(quality_assessment, metadata_quality_flag_urls)
+        # Remove <qualityAssessment> if there are no data quality
+        # flags.
+        quality_assessment_copy = copy.deepcopy(quality_assessment)
+        quality_assessment_copy_no_optionals = {
+            key: value for key, value in quality_assessment_copy.items()
+            if key == self.data_quality_flag_key
+        }
+        if _is_metadata_component_empty(quality_assessment_copy_no_optionals):
+            self.metadata_dict.pop(quality_assessment_key)
+        
+
+    def _update_data_quality_flags(self, parent_element, update_data):
+        self.update_child_element_and_remove_if_empty(
+            parent_element,
+            self.data_quality_flag_key,
+            [
+                {
+                    '@%s:href' % NamespacePrefix.XLINK: url,
+                } for url in update_data if url.strip()
+            ]
+        )
+
+    def _update_metadata_quality_flags(self, parent_element, update_data):
+        self.update_child_element_and_remove_if_empty(
+            parent_element,
+            'metadataQualityFlag',
+            [
+                {
+                    '@%s:href' % NamespacePrefix.XLINK: url,
+                } for url in update_data if url.strip()
+            ]
+        )
 
 
 class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):

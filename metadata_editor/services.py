@@ -7,6 +7,7 @@ from .service_utils import (
     DocumentationMetadataEditor,
     LocationMetadataEditor,
     NamespacePrefix,
+    QualityAssessmentMetadataEditor,
     RelatedPartiesMetadataEditor,
     ShortNameMetadataEditor,
     StandardIdentifierMetadataEditor,
@@ -248,3 +249,12 @@ class InstrumentEditor(
             self.metadata_dict,
             operational_modes_key
         )
+
+
+class AcquisitionCapabilitiesEditor(
+    BaseMetadataEditor,
+    DocumentationMetadataEditor,
+    QualityAssessmentMetadataEditor,
+    RelatedPartiesMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('AcquisitionCapabilities', xml_string)

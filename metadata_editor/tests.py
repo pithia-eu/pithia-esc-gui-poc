@@ -13,6 +13,7 @@ from .service_utils import (
     _is_metadata_component_empty,
 )
 from .services import (
+    AcquisitionCapabilitiesEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -425,6 +426,55 @@ class InstrumentEditorTestCase(SimpleTestCase):
         ])
         xml = instrument_editor.to_xml()
         print('xml', xml)
+
+
+class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
+    def _add_basic_data_with_editor(self, acquisition_capabilities_editor):
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='AcquisitionCapabilities_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        acquisition_capabilities_editor.update_pithia_identifier(pithia_identifier)
+        acquisition_capabilities_editor.update_name('Acquisition Capabilities test')
+        acquisition_capabilities_editor.update_description('Acquisition Capabilities test description')
+
+    def test_acquisition_capabilities_editor(self):
+        acquisition_capabilities_editor = AcquisitionCapabilitiesEditor()
+        self._add_basic_data_with_editor(acquisition_capabilities_editor)
+        data_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ4',
+        ]
+        metadata_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9',
+        ]
+        acquisition_capabilities_editor.update_quality_assessment(data_quality_flags, metadata_quality_flag_urls=metadata_quality_flags)
+        xml = acquisition_capabilities_editor.to_xml()
+        print('xml', xml)
+
+    def test_acquisition_capabilities_editor_with_incomplete_quality_assessment_data(self):
+        acquisition_capabilities_editor = AcquisitionCapabilitiesEditor()
+        self._add_basic_data_with_editor(acquisition_capabilities_editor)
+        data_quality_flags = []
+        metadata_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9',
+        ]
+        acquisition_capabilities_editor.update_quality_assessment(data_quality_flags, metadata_quality_flag_urls=metadata_quality_flags)
+        xml = acquisition_capabilities_editor.to_xml()
+        print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        quality_assessment_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}qualityAssessment')
+        self.assertIsNone(quality_assessment_element)
 
 
 class UtilsTestCase(SimpleTestCase):
