@@ -13,6 +13,7 @@ from .forms import *
 from .service_utils import BaseMetadataEditor
 from .services import (
     IndividualEditor,
+    InstrumentEditor,
     OperationEditor,
     OrganisationEditor,
     ProjectEditor,
@@ -286,16 +287,30 @@ class OperationEditorFormView(
 
 
 class InstrumentEditorFormView(
+    DocumentationViewMixin,
     InstrumentTypeSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = InstrumentEditorForm
     template_name = 'metadata_editor/instrument_editor.html'
 
     model = models.Instrument
+    metadata_editor_class = InstrumentEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Instrument.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: InstrumentEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_type(form_cleaned_data.get('type'))
+        metadata_editor.update_instrument_version(form_cleaned_data.get('version'))
+        metadata_editor.update_url(form_cleaned_data.get('url'))
+        metadata_editor.update_members(form_cleaned_data.get('members'))
+        metadata_editor.update_operational_modes(form_cleaned_data.get('operational_modes_json'))
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_member_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Instrument)

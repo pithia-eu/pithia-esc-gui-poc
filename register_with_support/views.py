@@ -254,11 +254,10 @@ class OperationRegisterWithEditorFormView(
 
 class InstrumentRegisterWithEditorFormView(
     InstrumentEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = InstrumentEditorRegistrationForm
     success_url = reverse_lazy('register:instrument_with_editor')
 
-    metadata_editor_class = InstrumentMetadata
     file_upload_registration_url = reverse_lazy('register:instrument')
     save_data_local_storage_key = 'instrument_r_wizard_save_data'
 
