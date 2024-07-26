@@ -83,14 +83,17 @@ class BaseMetadataEditor(BaseMetadataComponentEditor):
     def __init__(self, root_element_name, xml_string: str = '') -> None:
         super().__init__()
         self.root_element_name = root_element_name
-        namespace_class_attrs = [a for a in vars(NamespacePrefix).keys() if not a.startswith('__')]
-        self.namespaces = {getattr(NamespacePrefix, a): getattr(Namespace, a) for a in namespace_class_attrs}
+        self.setup_namespaces()
         for prefix, uri in self.namespaces.items():
             ET.register_namespace(prefix, uri)
         self.schema = MetadataFileXSDValidator._instantiate_pithia_schema()
         if not xml_string:
             return
         self._load_from_xml_string(xml_string)
+
+    def setup_namespaces(self):
+        namespace_class_attrs = [a for a in vars(NamespacePrefix).keys() if not a.startswith('__')]
+        self.namespaces = {getattr(NamespacePrefix, a): getattr(Namespace, a) for a in namespace_class_attrs}
 
     def _load_from_xml_string(self, xml_string: str):
         metadata_json_unformatted = xmlschema.to_json(
@@ -358,6 +361,17 @@ class ContactInfoMetadataEditor(
             0
         )
         self.remove_child_element_if_empty(self.metadata_dict, contact_info_key)
+
+
+class DataLevelMetadataEditor(BaseMetadataComponentEditor):
+    def update_data_levels(self, data_level_urls: list):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'dataLevel',
+            [{
+                '@%s:href' % NamespacePrefix.XLINK: url
+            } for url in data_level_urls if url.strip()]
+        )
 
 
 class DocumentationMetadataEditor(

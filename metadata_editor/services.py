@@ -4,8 +4,10 @@ from .service_utils import (
     _is_metadata_component_empty,
     BaseMetadataEditor,
     ContactInfoMetadataEditor,
+    DataLevelMetadataEditor,
     DocumentationMetadataEditor,
     LocationMetadataEditor,
+    Namespace,
     NamespacePrefix,
     QualityAssessmentMetadataEditor,
     RelatedPartiesMetadataEditor,
@@ -253,8 +255,40 @@ class InstrumentEditor(
 
 class AcquisitionCapabilitiesEditor(
     BaseMetadataEditor,
+    DataLevelMetadataEditor,
     DocumentationMetadataEditor,
     QualityAssessmentMetadataEditor,
     RelatedPartiesMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('AcquisitionCapabilities', xml_string)
+
+    def setup_namespaces(self):
+        super().setup_namespaces()
+        self.namespaces.update({
+            NamespacePrefix.GCO19115: Namespace.GCO19115
+        })
+
+    def update_first_input_description(self, name: str, description: str):
+        input_description_key = 'inputDescription'
+        self.metadata_dict.setdefault(input_description_key, [])
+        input_descriptions = self.metadata_dict[input_description_key]
+        if not input_descriptions:
+            input_descriptions.append({})
+        input_descriptions[0] = {
+            'InputOutput': {
+                'name': name,
+                'description': {
+                    '%s:LE_Source' % NamespacePrefix.MRL: {
+                        '%s:description' % NamespacePrefix.MRL: {
+                            '%s:CharacterString' % NamespacePrefix.GCO19115: description
+                        }
+                    }
+                },
+            }
+        }
+        if not description:
+            input_descriptions.pop(0)
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            input_description_key
+        )
