@@ -8,6 +8,7 @@ from .editor_dataclasses import (
     LocationMetadataUpdate,
     OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
+    ProcessCapabilityMetadataUpdate,
 )
 from .service_utils import (
     _is_metadata_component_empty,
@@ -462,6 +463,27 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
         ]
         acquisition_capabilities_editor.update_data_levels(data_levels)
         acquisition_capabilities_editor.update_first_input_description('Input description name', 'Input description')
+        capabilities = [
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 1',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 2',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 3',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5,
+                cadence_unit='month'
+            )
+        ]
+        acquisition_capabilities_editor.update_capabilities(capabilities)
         xml = acquisition_capabilities_editor.to_xml()
         print('xml', xml)
 

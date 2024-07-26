@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 import xmlschema
 import xml.etree.ElementTree as ET
 from dataclasses import asdict
@@ -10,9 +11,13 @@ from .editor_dataclasses import (
     ContactInfoAddressMetadataUpdate,
     LocationMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
+    ProcessCapabilityMetadataUpdate,
 )
 
 from validation.services import MetadataFileXSDValidator
+
+
+logger = logging.getLogger(__name__)
 
 
 class NamespacePrefix:
@@ -194,6 +199,83 @@ class BaseMetadataEditor(BaseMetadataComponentEditor):
 class GCOCharacterStringMetadataEditor:
     def get_as_gco_character_string(self, value):
         return {'%s:CharacterString' % NamespacePrefix.GCO: value}
+
+
+class XlinkHrefMetadataEditor:
+    def get_as_xlink_href(self, url):
+        return {'@%s:href' % NamespacePrefix.XLINK: url}
+
+
+class CapabilitiesMetadataEditor(
+    BaseMetadataComponentEditor,
+    XlinkHrefMetadataEditor):
+    def update_capabilities(self, update_data: list[ProcessCapabilityMetadataUpdate]):
+        capabilities_key = 'capabilities'
+        self.metadata_dict[capabilities_key] = {}
+        process_capabilities_key = 'processCapability'
+        process_capabilities = []
+        try:
+            for ud in update_data:
+                name = ud.name
+                observed_property = ud.observed_property
+                if not name or not observed_property:
+                    continue
+                process_capability = {}
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'name',
+                    name
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'observedProperty',
+                    self.get_as_xlink_href(observed_property)
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'dimensionalityInstance',
+                    self.get_as_xlink_href(ud.dimensionality_instance)
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'dimensionalityTimeline',
+                    self.get_as_xlink_href(ud.dimensionality_timeline)
+                )
+                cadence = ud.cadence
+                cadence_unit = ud.cadence_unit
+                if cadence and cadence_unit:
+                    self.update_child_element_and_remove_if_empty(
+                        process_capability,
+                        'cadence',
+                        {
+                            '$': cadence,
+                            '@unit': cadence_unit,
+                        }
+                    )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'vectorRepresentation',
+                    self.get_as_xlink_href(ud.vector_representation)
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'coordinateSystem',
+                    self.get_as_xlink_href(ud.coordinate_system)
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'units',
+                    self.get_as_xlink_href(ud.units)
+                )
+                self.update_child_element_and_remove_if_empty(
+                    process_capability,
+                    'qualifier',
+                    self.get_as_xlink_href(ud.qualifier)
+                )
+                process_capabilities.append(process_capability)
+            self.metadata_dict[capabilities_key][process_capabilities_key] = process_capabilities
+        except BaseException as err:
+            logger.exception(err)
 
 
 # Shared XML component editors

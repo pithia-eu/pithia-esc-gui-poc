@@ -12,6 +12,20 @@ class PithiaIdentifierMetadataUpdate:
 
 
 @dataclass(kw_only=True)
+class ProcessCapabilityMetadataUpdate:
+    name: Optional[str] = None
+    observed_property: Optional[str] = None
+    dimensionality_instance: Optional[str] = None
+    dimensionality_timeline: Optional[str] = None
+    cadence: Optional[str] = None
+    cadence_unit: Optional[str] = None
+    vector_representation: Optional[str] = None
+    coordinate_system: Optional[str] = None
+    units: Optional[str] = None
+    qualifier: Optional[str] = None
+
+
+@dataclass(kw_only=True)
 class ContactInfoAddressMetadataUpdate:
     delivery_point: Optional[str] = None
     city: Optional[str] = None

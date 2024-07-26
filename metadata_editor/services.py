@@ -3,6 +3,7 @@ import copy
 from .service_utils import (
     _is_metadata_component_empty,
     BaseMetadataEditor,
+    CapabilitiesMetadataEditor,
     ContactInfoMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
@@ -255,6 +256,7 @@ class InstrumentEditor(
 
 class AcquisitionCapabilitiesEditor(
     BaseMetadataEditor,
+    CapabilitiesMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
     QualityAssessmentMetadataEditor,

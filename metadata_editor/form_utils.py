@@ -1,3 +1,6 @@
+from .editor_dataclasses import ProcessCapabilityMetadataUpdate
+
+
 # Contact info fields
 def _format_time_to_12_hour_format(time_unformatted):
     return time_unformatted.strftime('%I:%M%p').lstrip('0').lower()
@@ -19,3 +22,20 @@ def get_phone_field_string_value(form_cleaned_data):
     if phone:
         phone = phone.as_international
     return phone
+
+# Capabilities field
+def map_process_capabilities_to_dataclasses(form_cleaned_data):
+    return [
+        ProcessCapabilityMetadataUpdate(
+            name=pc.get('name'),
+            observed_property=pc.get('observedProperty'),
+            dimensionality_instance=pc.get('dimensionalityInstance'),
+            dimensionality_timeline=pc.get('dimensionalityTimeline'),
+            cadence=pc.get('cadence'),
+            cadence_unit=pc.get('cadenceUnits'),
+            vector_representation=pc.get('vectorRepresentation'),
+            coordinate_system=pc.get('coordinateSystem'),
+            units=pc.get('units'),
+            qualifier=pc.get('qualifier'),
+        )
+    for pc in form_cleaned_data.get('capabilities_json')]
