@@ -672,8 +672,11 @@ class QualityAssessmentMetadataEditor(BaseMetadataComponentEditor):
             data_quality_flag_urls: list,
             metadata_quality_flag_urls: list =[]):
         quality_assessment_key = 'qualityAssessment'
-        self.metadata_dict.setdefault(quality_assessment_key, {})
-        quality_assessment = self.metadata_dict[quality_assessment_key]
+        self.metadata_dict.setdefault(quality_assessment_key, [])
+        quality_assessments = self.metadata_dict[quality_assessment_key]
+        if not quality_assessments:
+            quality_assessments.push({})
+        quality_assessment = quality_assessments[0]
         # Data/Metadata quality flags
         self._update_data_quality_flags(quality_assessment, data_quality_flag_urls)
         self._update_metadata_quality_flags(quality_assessment, metadata_quality_flag_urls)

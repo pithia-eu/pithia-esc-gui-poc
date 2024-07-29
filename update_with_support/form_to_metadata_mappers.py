@@ -8,7 +8,7 @@ from .form_to_metadata_mapper_components import (
     TypeFormFieldsToMetadataMixin,
 )
 
-from metadata_editor.xml_ns_enums import NamespacePrefix
+from metadata_editor.xml_ns_enums import Namespace, NamespacePrefix
 
 
 logger = logging.getLogger(__name__)
@@ -164,3 +164,80 @@ class InstrumentFormFieldsToMetadataWrapper(
         operational_modes = self._map_operational_modes_to_form()
         initial_values['operational_modes_json'] = operational_modes
         return initial_values
+
+
+class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
+    DocumentationFormFieldsToMetadataMixin,
+    RelatedPartyFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    GCO19115_NSPREFIX = 'gco19115'
+    
+    def __init__(self, xml_string) -> None:
+        super().__init__(xml_string)
+        self.namespaces.update({
+            self.GCO19115_NSPREFIX: Namespace.GCO19115,
+        })
+
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'instrument_mode_pair_instrument': './/%s:instrumentModePair/%s:InstrumentOperationalModePair/%s:instrument/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'instrument_mode_pair_mode': './/%s:instrumentModePair/%s:InstrumentOperationalModePair/%s:mode/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'input_name': './/%s:inputDescription/%s:InputOutput/%s:name' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX),
+            'input_description': './/%s:inputDescription/%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX),
+        })
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'data_levels': './/%s:dataLevel/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'data_quality_flags': './/%s:qualityAssessment/%s:dataQualityFlag/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'metadata_quality_flags': './/%s:qualityAssessment/%s:metadataQualityFlag/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+    def _map_process_capabilities_to_form(self):
+        process_capability_elements = self.xml_string_parsed.xpath('.//%s:capabilities/%s:processCapability' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        process_capabilities = []
+        for e in process_capability_elements:
+            name_elements = e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+            name = self._get_first_element_from_list(name_elements).text
+            observed_property_elements = e.xpath('.//%s:observedProperty/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            observed_property = self._get_first_element_from_list(observed_property_elements)
+            dimensionality_instance_elements = e.xpath('.//%s:dimensionalityInstance/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            dimensionality_instance = self._get_first_element_from_list(dimensionality_instance_elements)
+            dimensionality_timeline_elements = e.xpath('.//%s:dimensionalityTimeline/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            dimensionality_timeline = self._get_first_element_from_list(dimensionality_timeline_elements)
+            cadence_elements = e.xpath('.//%s:cadence' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+            cadence = self._get_first_element_from_list(cadence_elements).text
+            cadence_unit_attributes = e.xpath('.//%s:cadence/@unit' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+            cadence_unit = self._get_first_element_from_list(cadence_unit_attributes)
+            vector_representations = e.xpath('.//%s:vectorRepresentation/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            coordinate_system_elements = e.xpath('.//%s:coordinateSystem/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            coordinate_system = self._get_first_element_from_list(coordinate_system_elements)
+            units_elements = e.xpath('.//%s:units/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            units = self._get_first_element_from_list(units_elements)
+            qualifiers = e.xpath('.//%s:qualifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            process_capabilities.append({
+                'name': name,
+                'observedProperty': observed_property,
+                'dimensionalityInstance': dimensionality_instance,
+                'dimensionalityTimeline': dimensionality_timeline,
+                'cadence': cadence,
+                'cadenceUnits': cadence_unit,
+                'vectorRepresentation': vector_representations,
+                'coordinateSystem': coordinate_system,
+                'units': units,
+                'qualifier': qualifiers,
+            })
+        return process_capabilities
+
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        capabilities = self._map_process_capabilities_to_form()
+        initial_values.update({
+            'capabilities_json': capabilities
+        })
+        return initial_values
+        
