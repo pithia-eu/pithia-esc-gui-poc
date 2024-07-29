@@ -17,6 +17,7 @@ from .service_utils import (
     StatusMetadataEditor,
     TypeMetadataEditor,
     URLMetadataEditor,
+    XlinkHrefMetadataEditor,
 )
 from .editor_dataclasses import OperationTimeMetadataUpdate
 
@@ -260,14 +261,16 @@ class AcquisitionCapabilitiesEditor(
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
     QualityAssessmentMetadataEditor,
-    RelatedPartiesMetadataEditor):
+    RelatedPartiesMetadataEditor,
+    XlinkHrefMetadataEditor):
+    GCO19115_NSPREFIX = 'gco19115'
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('AcquisitionCapabilities', xml_string)
 
     def setup_namespaces(self):
         super().setup_namespaces()
         self.namespaces.update({
-            NamespacePrefix.GCO19115: Namespace.GCO19115
+            self.GCO19115_NSPREFIX: Namespace.GCO19115
         })
 
     def update_first_input_description(self, name: str, description: str):
@@ -282,7 +285,7 @@ class AcquisitionCapabilitiesEditor(
                 'description': {
                     '%s:LE_Source' % NamespacePrefix.MRL: {
                         '%s:description' % NamespacePrefix.MRL: {
-                            '%s:CharacterString' % NamespacePrefix.GCO19115: description
+                            '%s:CharacterString' % self.GCO19115_NSPREFIX: description
                         }
                     }
                 },
@@ -293,4 +296,16 @@ class AcquisitionCapabilitiesEditor(
         self.remove_child_element_if_empty(
             self.metadata_dict,
             input_description_key
+        )
+
+    def update_instrument_mode_pair(self, instrument: str, mode: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'instrumentModePair',
+            {
+                'InstrumentOperationalModePair': {
+                    'instrument': self.get_as_xlink_href(instrument),
+                    'mode': self.get_as_xlink_href(mode),
+                }
+            }
         )

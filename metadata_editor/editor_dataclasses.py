@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -19,10 +19,10 @@ class ProcessCapabilityMetadataUpdate:
     dimensionality_timeline: Optional[str] = None
     cadence: Optional[str] = None
     cadence_unit: Optional[str] = None
-    vector_representation: Optional[str] = None
+    vector_representation: Optional[list[str]] = field(default_factory=list)
     coordinate_system: Optional[str] = None
     units: Optional[str] = None
-    qualifier: Optional[str] = None
+    qualifier: Optional[list[str]] = field(default_factory=list)
 
 
 @dataclass(kw_only=True)

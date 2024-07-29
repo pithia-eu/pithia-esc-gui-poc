@@ -12,6 +12,7 @@ from .editor_dataclasses import (
 from .forms import *
 from .service_utils import BaseMetadataEditor
 from .services import (
+    AcquisitionCapabilitiesEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -335,18 +336,54 @@ class InstrumentEditorFormView(
 
 
 class AcquisitionCapabilitiesEditorFormView(
+    CapabilitiesViewMixin,
     CapabilitiesSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
+    DocumentationViewMixin,
     QualityAssessmentSelectFormViewMixin,
     RelatedPartiesSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     ResourceEditorFormView):
     form_class = AcquisitionCapabilitiesEditorForm
     template_name = 'metadata_editor/acquisition_capabilities_editor.html'
 
     model = models.AcquisitionCapabilities
+    metadata_editor_class = AcquisitionCapabilitiesEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.AcquisitionCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: AcquisitionCapabilitiesEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_quality_assessment(
+            form_cleaned_data.get('data_quality_flags'),
+            form_cleaned_data.get('metadata_quality_flags')
+        )
+        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        metadata_editor.update_first_input_description(
+            form_cleaned_data.get('input_name'),
+            form_cleaned_data.get('input_description')
+        )
+        metadata_editor.update_instrument_mode_pair(
+            form_cleaned_data.get('instrument_mode_pair_instrument'),
+            form_cleaned_data.get('instrument_mode_pair_mode')
+        )
+        self.update_capabilities_with_metadata_editor(
+            self.request,
+            metadata_editor,
+            form_cleaned_data
+        )
+        self.update_documentation_with_metadata_editor(
+            self.request,
+            metadata_editor,
+            form_cleaned_data
+        )
+        self.update_related_parties_with_metadata_editor(
+            self.request,
+            metadata_editor,
+            form_cleaned_data
+        )
 
     def get_instrument_choices_with_oms_for_form(self):
         instruments = self.get_resources_with_model_ordered_by_name(models.Instrument)

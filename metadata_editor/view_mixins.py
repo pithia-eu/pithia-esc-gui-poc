@@ -17,6 +17,7 @@ from .editor_dataclasses import (
 from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
+    map_process_capabilities_to_dataclasses,
 )
 from .service_utils import BaseMetadataEditor
 from .services import PlatformEditor, ProjectEditor
@@ -26,6 +27,12 @@ from common.helpers import clean_localid_or_namespace
 from ontology.utils import get_graph_of_pithia_ontology_component
 
 logger = logging.getLogger(__name__)
+
+
+class CapabilitiesViewMixin:
+    def update_capabilities_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+        capabilities_update = map_process_capabilities_to_dataclasses(form_cleaned_data)
+        metadata_editor.update_capabilities(capabilities_update)
 
 
 class ContactInfoViewMixin:

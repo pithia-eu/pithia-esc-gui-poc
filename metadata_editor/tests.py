@@ -40,6 +40,7 @@ from common.test_xml_files import (
 def reset_test_file(file):
     file.seek(0)
 
+
 # Create your tests here.
 class OrganisationEditorTestCase(SimpleTestCase):
     def test_organisation_editor(self):
@@ -430,7 +431,7 @@ class InstrumentEditorTestCase(SimpleTestCase):
 
 
 class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
-    def _add_basic_data_with_editor(self, acquisition_capabilities_editor):
+    def _add_basic_data_with_editor(self, acquisition_capabilities_editor: AcquisitionCapabilitiesEditor):
         pithia_identifier = PithiaIdentifierMetadataUpdate(
             localid='AcquisitionCapabilities_Test',
             namespace='test',
@@ -481,9 +482,19 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
                 observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
                 cadence=0.5,
                 cadence_unit='month'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 4',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                vector_representation=['https://metadata.pithia.eu/ontology/2.2/component/r'],
+                qualifier=['https://metadata.pithia.eu/ontology/2.2/qualifier/Median']
             )
         ]
         acquisition_capabilities_editor.update_capabilities(capabilities)
+        acquisition_capabilities_editor.update_instrument_mode_pair(
+            'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test',
+            'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1'
+        )
         xml = acquisition_capabilities_editor.to_xml()
         print('xml', xml)
 
@@ -513,6 +524,16 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
         parsed_xml = etree.fromstring(xml.encode('utf-8'))
         input_description_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}inputDescription')
         self.assertIsNone(input_description_element)
+
+    def test_acquisition_capabilities_editor_with_blank_instrument_mode_pair(self):
+        acquisition_capabilities_editor = AcquisitionCapabilitiesEditor()
+        self._add_basic_data_with_editor(acquisition_capabilities_editor)
+        acquisition_capabilities_editor.update_instrument_mode_pair('', '')
+        xml = acquisition_capabilities_editor.to_xml()
+        print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        instrument_mode_pair_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}instrumentModePair')
+        self.assertIsNone(instrument_mode_pair_element)
 
 
 class UtilsTestCase(SimpleTestCase):

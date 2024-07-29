@@ -273,11 +273,10 @@ class InstrumentRegisterWithEditorFormView(
 
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
     AcquisitionCapabilitiesEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = AcquisitionCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
 
-    metadata_editor_class = AcquisitionCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition_capability_set')
     save_data_local_storage_key = 'acquisition_capabilities_r_wizard_save_data'
 

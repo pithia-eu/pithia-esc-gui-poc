@@ -212,6 +212,7 @@ class CapabilitiesMetadataEditor(
     def update_capabilities(self, update_data: list[ProcessCapabilityMetadataUpdate]):
         capabilities_key = 'capabilities'
         self.metadata_dict[capabilities_key] = {}
+        capabilities = self.metadata_dict[capabilities_key]
         process_capabilities_key = 'processCapability'
         process_capabilities = []
         try:
@@ -255,7 +256,7 @@ class CapabilitiesMetadataEditor(
                 self.update_child_element_and_remove_if_empty(
                     process_capability,
                     'vectorRepresentation',
-                    self.get_as_xlink_href(ud.vector_representation)
+                    [self.get_as_xlink_href(url) for url in ud.vector_representation if url]
                 )
                 self.update_child_element_and_remove_if_empty(
                     process_capability,
@@ -270,12 +271,16 @@ class CapabilitiesMetadataEditor(
                 self.update_child_element_and_remove_if_empty(
                     process_capability,
                     'qualifier',
-                    self.get_as_xlink_href(ud.qualifier)
+                    [self.get_as_xlink_href(url) for url in ud.qualifier if url]
                 )
                 process_capabilities.append(process_capability)
-            self.metadata_dict[capabilities_key][process_capabilities_key] = process_capabilities
+            capabilities[process_capabilities_key] = process_capabilities
         except BaseException as err:
             logger.exception(err)
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            capabilities_key
+        )
 
 
 # Shared XML component editors
