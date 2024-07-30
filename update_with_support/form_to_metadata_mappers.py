@@ -72,9 +72,10 @@ class PlatformFormFieldsToMetadataMapper(
         standard_identifier_elements = self.xml_string_parsed.xpath('.//%s:standardIdentifier' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
         standard_identifiers = []
         for e in standard_identifier_elements:
+            value = self._get_element_text_or_blank_string(e)
             standard_identifiers.append({
                 'authority': e.attrib['authority'],
-                'value': e.text,
+                'value': value,
             })
         return standard_identifiers
 
@@ -150,9 +151,9 @@ class InstrumentFormFieldsToMetadataWrapper(
                 descriptions = e.xpath('.//%s:description' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
                 description = self._get_first_element_from_list(descriptions)
                 instrument_operational_modes.append({
-                    'id': id.text,
-                    'name': name.text,
-                    'description': description.text,
+                    'id': self._get_element_text_or_blank_string(id),
+                    'name': self._get_element_text_or_blank_string(name),
+                    'description': self._get_element_text_or_blank_string(description),
                 })
             except AttributeError as err:
                 logger.exception(err)
@@ -204,7 +205,7 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
             name_elements = e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
             name = ''
             try:
-                name = self._get_first_element_from_list(name_elements).text
+                name = self._get_element_text_or_blank_string(self._get_first_element_from_list(name_elements))
             except AttributeError:
                 pass
             observed_property_elements = e.xpath('.//%s:observedProperty/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
@@ -216,7 +217,7 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
             cadence_elements = e.xpath('.//%s:cadence' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
             cadence = ''
             try:
-                cadence = self._get_first_element_from_list(cadence_elements).text
+                cadence = self._get_element_text_or_blank_string(self._get_first_element_from_list(cadence_elements))
             except AttributeError:
                 pass
             cadence_unit_attributes = e.xpath('.//%s:cadence/@unit' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)

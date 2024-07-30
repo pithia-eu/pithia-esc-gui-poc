@@ -30,6 +30,13 @@ class EditorFormFieldsToMetadataUtilsMixin:
     def _get_first_element_from_list(self, element_list: list):
         return next(iter(element_list), '')
 
+    def _get_element_text_or_blank_string(self, element):
+        try:
+            return element.text
+        except AttributeError:
+            pass
+        return ''
+
     def get_basic_form_field_to_xml_field_mappings(self):
         return {}
 
@@ -62,7 +69,6 @@ class EditorFormFieldsToMetadataUtilsMixin:
             try:
                 initial_values_from_basic_mc_mappings[field_name] = [e.text for e in elements_matching_query]
             except AttributeError as err:
-                logger.exception(err)
                 initial_values_from_basic_mc_mappings[field_name] = elements_matching_query
             except BaseException as err:
                 logger.exception(err)
