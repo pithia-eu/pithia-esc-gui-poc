@@ -28,6 +28,7 @@ from .services import (
 )
 
 from common.test_xml_files import (
+    ACQUISITION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     OPERATION_METADATA_XML,
     OPERATION_METADATA_WITH_TIME_INTERVAL_XML,
@@ -584,6 +585,12 @@ class AcquisitionEditorTestCase(SimpleTestCase):
             )
         ]
         acquisition_editor.update_capability_links(capability_links)
+        xml = acquisition_editor.to_xml()
+        print('xml', xml)
+
+    def test_acquisition_editor_with_file(self):
+        reset_test_file(ACQUISITION_METADATA_XML)
+        acquisition_editor = AcquisitionEditor(xml_string=ACQUISITION_METADATA_XML.read().decode())
         xml = acquisition_editor.to_xml()
         print('xml', xml)
 
