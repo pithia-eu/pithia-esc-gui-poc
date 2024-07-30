@@ -202,7 +202,11 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
         process_capabilities = []
         for e in process_capability_elements:
             name_elements = e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-            name = self._get_first_element_from_list(name_elements).text
+            name = ''
+            try:
+                name = self._get_first_element_from_list(name_elements).text
+            except AttributeError:
+                pass
             observed_property_elements = e.xpath('.//%s:observedProperty/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
             observed_property = self._get_first_element_from_list(observed_property_elements)
             dimensionality_instance_elements = e.xpath('.//%s:dimensionalityInstance/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
@@ -210,7 +214,11 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
             dimensionality_timeline_elements = e.xpath('.//%s:dimensionalityTimeline/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
             dimensionality_timeline = self._get_first_element_from_list(dimensionality_timeline_elements)
             cadence_elements = e.xpath('.//%s:cadence' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-            cadence = self._get_first_element_from_list(cadence_elements).text
+            cadence = ''
+            try:
+                cadence = self._get_first_element_from_list(cadence_elements).text
+            except AttributeError:
+                pass
             cadence_unit_attributes = e.xpath('.//%s:cadence/@unit' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
             cadence_unit = self._get_first_element_from_list(cadence_unit_attributes)
             vector_representations = e.xpath('.//%s:vectorRepresentation/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)

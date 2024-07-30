@@ -46,7 +46,6 @@ class EditorFormFieldsToMetadataUtilsMixin:
             try:
                 initial_values_from_basic_mappings[field_name] = self._get_first_element_from_list(elements_matching_query).text
             except AttributeError as err:
-                logger.exception(err)
                 initial_values_from_basic_mappings[field_name] = self._get_first_element_from_list(elements_matching_query)
             except BaseException as err:
                 logger.exception(err)
