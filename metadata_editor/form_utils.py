@@ -1,4 +1,10 @@
-from .editor_dataclasses import ProcessCapabilityMetadataUpdate
+import json
+from .editor_dataclasses import (
+    CapabilityLinkMetadataUpdate,
+    ProcessCapabilityMetadataUpdate,
+    StandardIdentifierMetadataUpdate,
+    TimeSpanMetadataUpdate,
+)
 
 
 # Contact info fields
@@ -39,3 +45,17 @@ def map_process_capabilities_to_dataclasses(form_cleaned_data):
             qualifier=pc.get('qualifier'),
         )
     for pc in form_cleaned_data.get('capabilities_json')]
+
+# Capability Links
+def map_capability_links_to_dataclasses(form_cleaned_data):
+    return [
+        CapabilityLinkMetadataUpdate(
+            platforms=cap_link.get('platforms', []),
+            capabilities=cap_link.get('capabilities'),
+            standard_identifiers=[StandardIdentifierMetadataUpdate(**si) for si in json.loads(cap_link.get('standardIdentifiers', []))],
+            time_spans=[TimeSpanMetadataUpdate(
+                begin_position=ts.get('beginPosition'),
+                end_position=ts.get('endPosition')
+            ) for ts in json.loads(cap_link.get('timeSpans', []))]
+        )
+    for cap_link in form_cleaned_data.get('capability_links_json')]

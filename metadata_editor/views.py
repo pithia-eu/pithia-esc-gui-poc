@@ -14,6 +14,7 @@ from .forms import *
 from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
+    AcquisitionEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -443,16 +444,23 @@ class AcquisitionCapabilitiesEditorFormView(
 
 
 class AcquisitionEditorFormView(
+    CapabilityLinksViewMixin,
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = AcquisitionEditorForm
     template_name = 'metadata_editor/acquisition_editor.html'
 
     model = models.Acquisition
+    metadata_editor_class = AcquisitionEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Acquisition.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
+    def add_form_data_to_metadata_editor(self, metadata_editor: AcquisitionEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        self.update_capability_links_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+    
     def get_acquisition_capability_sets_for_form(self):
         return self.get_resource_choices_with_model(models.AcquisitionCapabilities)
 

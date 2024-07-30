@@ -294,19 +294,16 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
 
 class AcquisitionRegisterWithEditorFormView(
     AcquisitionEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = AcquisitionEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_with_editor')
 
-    metadata_editor_class = AcquisitionMetadata
     file_upload_registration_url = reverse_lazy('register:acquisition')
     save_data_local_storage_key = 'acquisition_r_wizard_save_data'
 
     def process_form(self, form_cleaned_data):
         processed_form = super().process_form(form_cleaned_data)
-
         processed_form['capability_links'] = process_acquisition_capability_links(form_cleaned_data)
-
         return processed_form
 
 

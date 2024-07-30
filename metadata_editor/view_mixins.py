@@ -17,16 +17,27 @@ from .editor_dataclasses import (
 from .form_utils import (
     get_hours_of_service_from_form,
     get_phone_field_string_value,
+    map_capability_links_to_dataclasses,
     map_process_capabilities_to_dataclasses,
 )
 from .service_utils import BaseMetadataEditor
-from .services import PlatformEditor, ProjectEditor
+from .services import (
+    AcquisitionEditor,
+    PlatformEditor,
+    ProjectEditor,
+)
 
 from common import models
 from common.helpers import clean_localid_or_namespace
 from ontology.utils import get_graph_of_pithia_ontology_component
 
 logger = logging.getLogger(__name__)
+
+
+class CapabilityLinksViewMixin:
+    def update_capability_links_with_metadata_editor(self, request, metadata_editor: AcquisitionEditor, form_cleaned_data):
+        capability_links = map_capability_links_to_dataclasses(form_cleaned_data)
+        metadata_editor.update_capability_links(capability_links)
 
 
 class CapabilitiesViewMixin:
