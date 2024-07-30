@@ -2,6 +2,7 @@ from django.test import SimpleTestCase
 from lxml import etree
 
 from .editor_dataclasses import (
+    CapabilityLinkMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
     DocumentationMetadataUpdate,
@@ -9,12 +10,15 @@ from .editor_dataclasses import (
     OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
+    StandardIdentifierMetadataUpdate,
+    TimeSpanMetadataUpdate,
 )
 from .service_utils import (
     _is_metadata_component_empty,
 )
 from .services import (
     AcquisitionCapabilitiesEditor,
+    AcquisitionEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -534,6 +538,54 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
         parsed_xml = etree.fromstring(xml.encode('utf-8'))
         instrument_mode_pair_element = parsed_xml.find('.//{https://metadata.pithia.eu/schemas/2.2}instrumentModePair')
         self.assertIsNone(instrument_mode_pair_element)
+
+
+class AcquisitionEditorTestCase(SimpleTestCase):
+    def test_acquisition_editor(self):
+        acquisition_editor = AcquisitionEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Acquisition_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        acquisition_editor.update_pithia_identifier(pithia_identifier)
+        acquisition_editor.update_name('Acquisition test')
+        acquisition_editor.update_description('Acquisition test description')
+        capability_links = [
+            CapabilityLinkMetadataUpdate(
+                platforms=[
+                    'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+                    'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test_2',
+                ],
+                capabilities='https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+                standard_identifiers=[
+                    StandardIdentifierMetadataUpdate(
+                        authority='sia1',
+                        value='siv1'
+                    ),
+                    StandardIdentifierMetadataUpdate(
+                        authority='sia2',
+                        value='siv2'
+                    ),
+                    StandardIdentifierMetadataUpdate(
+                        authority='',
+                        value=''
+                    )
+                ],
+                time_spans=[
+                    TimeSpanMetadataUpdate(
+                        begin_position='2024-07-30',
+                        end_position='unknown'
+                    ),
+                    TimeSpanMetadataUpdate()
+                ]
+            )
+        ]
+        acquisition_editor.update_capability_links(capability_links)
+        xml = acquisition_editor.to_xml()
+        print('xml', xml)
 
 
 class UtilsTestCase(SimpleTestCase):

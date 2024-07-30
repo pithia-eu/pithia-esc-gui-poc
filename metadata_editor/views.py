@@ -8,6 +8,7 @@ from django.views.generic import FormView
 
 from .editor_dataclasses import (
     OperationTimeMetadataUpdate,
+    StandardIdentifierMetadataUpdate,
 )
 from .forms import *
 from .service_utils import BaseMetadataEditor
@@ -195,7 +196,7 @@ class PlatformEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_url(form_cleaned_data.get('url'))
         metadata_editor.update_type(form_cleaned_data.get('type'))
-        metadata_editor.update_standard_identifiers(form_cleaned_data.get('standard_identifiers_json'))
+        metadata_editor.update_standard_identifiers(metadata_editor.metadata_dict, [StandardIdentifierMetadataUpdate(**si) for si in form_cleaned_data.get('standard_identifiers_json')])
         self.update_location_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
         self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)

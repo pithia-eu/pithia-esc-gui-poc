@@ -4,6 +4,7 @@ from .service_utils import (
     _is_metadata_component_empty,
     BaseMetadataEditor,
     CapabilitiesMetadataEditor,
+    CapabilityLinksMetadataEditor,
     ContactInfoMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
@@ -309,3 +310,12 @@ class AcquisitionCapabilitiesEditor(
                 }
             }
         )
+
+
+class AcquisitionEditor(
+    BaseMetadataEditor,
+    CapabilityLinksMetadataEditor):
+    capabilities_key = 'acquisitionCapabilities'
+
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Acquisition', xml_string)

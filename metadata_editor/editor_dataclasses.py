@@ -3,6 +3,14 @@ from typing import Optional
 
 
 @dataclass(kw_only=True)
+class CapabilityLinkMetadataUpdate:
+    platforms: Optional[list[str]] = field(default_factory=list)
+    capabilities: Optional[str] = None
+    standard_identifiers: Optional[list[str]] = field(default_factory=list)
+    time_spans: Optional[list[str]] = field(default_factory=list)
+
+
+@dataclass(kw_only=True)
 class PithiaIdentifierMetadataUpdate:
     localid: Optional[str] = None
     namespace: Optional[str] = None
@@ -69,3 +77,15 @@ class OperationTimeMetadataUpdate:
     time_instant_begin_position: Optional[str] = None
     time_instant_end_id: Optional[str] = None
     time_instant_end_position: Optional[str] = None
+
+
+@dataclass(kw_only=True)
+class StandardIdentifierMetadataUpdate:
+    authority: Optional[str] = None
+    value: Optional[str] = None
+
+
+@dataclass(kw_only=True)
+class TimeSpanMetadataUpdate:
+    begin_position: Optional[str] = None
+    end_position: Optional[str] = None

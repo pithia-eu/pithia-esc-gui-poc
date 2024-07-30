@@ -7,11 +7,14 @@ from dataclasses import asdict
 from operator import attrgetter
 
 from .editor_dataclasses import (
+    CapabilityLinkMetadataUpdate,
     ContactInfoMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
     LocationMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
+    StandardIdentifierMetadataUpdate,
+    TimeSpanMetadataUpdate,
 )
 
 from validation.services import MetadataFileXSDValidator
@@ -280,6 +283,73 @@ class CapabilitiesMetadataEditor(
         self.remove_child_element_if_empty(
             self.metadata_dict,
             capabilities_key
+        )
+
+
+class StandardIdentifierMetadataEditor(BaseMetadataComponentEditor):
+    def update_standard_identifiers(self, parent_element, update_data: list[StandardIdentifierMetadataUpdate]):
+        standard_identifiers_key = 'standardIdentifier'
+        parent_element[standard_identifiers_key] = [{
+            '@authority': ud.authority,
+            '$': ud.value,
+        } for ud in update_data if not _is_metadata_component_empty(asdict(ud))]
+        self.remove_child_element_if_empty(
+            parent_element,
+            standard_identifiers_key
+        )
+
+
+class CapabilityLinksMetadataEditor(
+        StandardIdentifierMetadataEditor,
+        BaseMetadataComponentEditor,
+        XlinkHrefMetadataEditor):
+    def _update_time_spans(self, parent_element, time_spans: list[TimeSpanMetadataUpdate]):
+        time_spans_key = 'timeSpan'
+        parent_element[time_spans_key] = [{
+            '%s:beginPosition' % NamespacePrefix.GML: ts.begin_position,
+            '%s:endPosition' % NamespacePrefix.GML: {
+                '@indeterminatePosition': ts.end_position,
+            },
+        } for ts in time_spans if not _is_metadata_component_empty(asdict(ts))]
+        self.remove_child_element_if_empty(
+            parent_element,
+            time_spans_key
+        )
+
+    def update_capability_links(self, update_data: list[CapabilityLinkMetadataUpdate]):
+        capability_links_container_key = 'capabilityLinks'
+        self.metadata_dict.setdefault(capability_links_container_key, {})
+        capability_links_container_element = self.metadata_dict[capability_links_container_key]
+        capability_links_key = 'capabilityLink'
+        capability_links = []
+        for ud in update_data:
+            capabilities = ud.capabilities
+            if not capabilities:
+                continue
+            capability_link = {}
+            # acquisitionCapabilities or computationCapabilities
+            capability_link[self.capabilities_key] = self.get_as_xlink_href(capabilities)
+            # Platforms
+            platforms = ud.platforms
+            platforms_key = 'platform'
+            capability_link[platforms_key] = [
+                self.get_as_xlink_href(url)
+            for url in platforms if url.strip()]
+            self.remove_child_element_if_empty(
+                capability_link,
+                platforms_key
+            )
+            # Standard identifiers
+            standard_identifiers = ud.standard_identifiers
+            self.update_standard_identifiers(capability_link, standard_identifiers)
+            # Time spans
+            time_spans = ud.time_spans
+            self._update_time_spans(capability_link, time_spans)
+            capability_links.append(capability_link)
+        capability_links_container_element[capability_links_key] = capability_links
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            capability_links_container_key
         )
 
 
@@ -772,19 +842,6 @@ class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):
 class ShortNameMetadataEditor(BaseMetadataComponentEditor):
     def update_short_name(self, short_name):
         self.metadata_dict['shortName'] = short_name
-
-
-class StandardIdentifierMetadataEditor(BaseMetadataComponentEditor):
-    def update_standard_identifiers(self, update_data):
-        standard_identifiers_key = 'standardIdentifier'
-        self.metadata_dict[standard_identifiers_key] = [{
-            '@authority': ud.get('authority'),
-            '$': ud.get('value'),
-        } for ud in update_data if not _is_metadata_component_empty(ud)]
-        self.remove_child_element_if_empty(
-            self.metadata_dict,
-            standard_identifiers_key
-        )
 
 
 class StatusMetadataEditor(BaseMetadataComponentEditor):
