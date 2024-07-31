@@ -1,4 +1,5 @@
 import dateutil.parser
+import json
 import logging
 from lxml import etree
 
@@ -143,8 +144,8 @@ class CapabilityLinkFormFieldsToMetadataMixin(
             capability_links.append({
                 'platforms': platforms,
                 'capabilities': capabilities,
-                'standardIdentifiers': standard_identifiers,
-                'timeSpans': time_spans,
+                'standardIdentifiers': json.dumps(standard_identifiers),
+                'timeSpans': json.dumps(time_spans),
             })
         return capability_links
     
