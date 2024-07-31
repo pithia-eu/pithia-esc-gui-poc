@@ -1,10 +1,12 @@
 import logging
 from .form_to_metadata_mapper_components import (
+    BaseMetadataFormFieldsToMetadataMixin,
+    CapabilityLinkFormFieldsToMetadataMixin,
     ContactInfoFormFieldsToMetadataMixin,
     DocumentationFormFieldsToMetadataMixin,
     LocationFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin,
+    StandardIdentifierFormFieldsToMetadataMixin,
     TypeFormFieldsToMetadataMixin,
 )
 
@@ -58,6 +60,7 @@ class PlatformFormFieldsToMetadataMapper(
     LocationFormFieldsToMetadataMixin,
     TypeFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
+    StandardIdentifierFormFieldsToMetadataMixin,
     BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
@@ -68,20 +71,9 @@ class PlatformFormFieldsToMetadataMapper(
         })
         return mappings
 
-    def _map_standard_identifiers_to_form(self):
-        standard_identifier_elements = self.xml_string_parsed.xpath('.//%s:standardIdentifier' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-        standard_identifiers = []
-        for e in standard_identifier_elements:
-            value = self._get_element_text_or_blank_string(e)
-            standard_identifiers.append({
-                'authority': e.attrib['authority'],
-                'value': value,
-            })
-        return standard_identifiers
-
     def get_initial_values_with_custom_mappings(self):
         initial_values = super().get_initial_values_with_custom_mappings()
-        initial_values['standard_identifiers_json'] = self._map_standard_identifiers_to_form()
+        initial_values['standard_identifiers_json'] = self._map_standard_identifiers_to_form(self.xml_string_parsed)
         return initial_values
 
 
@@ -250,3 +242,8 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
         })
         return initial_values
         
+
+class AcquisitionFormFieldsToMetadataMapper(
+    CapabilityLinkFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    capabilities_element_key = 'acquisitionCapabilities'
