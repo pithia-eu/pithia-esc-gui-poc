@@ -10,4 +10,5 @@ urlpatterns = [
     path('operations/<resource_id>/update-with-wizard/', views.OperationUpdateWithEditorFormView.as_view(), name='operation_with_editor'),
     path('instruments/<resource_id>/update-with-wizard/', views.InstrumentUpdateWithEditorFormView.as_view(), name='instrument_with_editor'),
     path('acquisition-capabilities/<resource_id>/update-with-wizard/', views.AcquisitionCapabilitiesUpdateWithEditorFormView.as_view(), name='acquisition_capabilities_with_editor'),
+    path('acquisitions/<resource_id>/update-with-wizard/', views.AcquisitionUpdateWithEditorFormView.as_view(), name='acquisition_with_editor'),
 ]

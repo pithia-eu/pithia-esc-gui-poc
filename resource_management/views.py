@@ -204,6 +204,7 @@ class AcquisitionManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:acquisition'
     resource_update_page_url_name = 'update:acquisition'
+    resource_update_with_wizard_page_url_name = 'update:acquisition_with_editor'
     resource_register_page_url_name = 'register:acquisition'
     resource_register_with_editor_name = 'register:acquisition_with_editor'
     resource_xml_download_page_url_name = 'utils:view_acquisition_as_xml'
