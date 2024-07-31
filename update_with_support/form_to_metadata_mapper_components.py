@@ -102,6 +102,59 @@ class BaseMetadataFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin
         return mappings
 
 
+class StandardIdentifierFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
+    def _map_standard_identifiers_to_form(self, parent_element):
+        standard_identifier_elements = parent_element.xpath('.//%s:standardIdentifier' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+        standard_identifiers = []
+        for e in standard_identifier_elements:
+            value = self._get_element_text_or_blank_string(e)
+            standard_identifiers.append({
+                'authority': e.get('authority', ''),
+                'value': value,
+            })
+        return standard_identifiers
+
+
+class CapabilityLinkFormFieldsToMetadataMixin(
+    StandardIdentifierFormFieldsToMetadataMixin,
+    EditorFormFieldsToMetadataUtilsMixin):
+    def _map_time_spans_to_form(self, parent_element):
+        time_span_elements = parent_element.xpath('.//%s:timeSpan' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+        time_spans = []
+        for time_span_elem in time_span_elements:
+            begin_positions = time_span_elem.xpath('.//%s:beginPosition' % NamespacePrefix.GML, namespaces=self.namespaces)
+            begin_position = self._get_element_text_or_blank_string(self._get_first_element_from_list(begin_positions))
+            end_positions = time_span_elem.xpath('.//%s:endPosition/@indeterminatePosition' % NamespacePrefix.GML, namespaces=self.namespaces)
+            end_position = self._get_first_element_from_list(end_positions)
+            time_spans.append({
+                'beginPosition': begin_position,
+                'endPosition': end_position,
+            })
+        return time_spans
+
+    def _map_capability_links_to_form(self):
+        capability_link_elements = self.xml_string_parsed.xpath('.//%s:capabilityLink' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+        capability_links = []
+        for cap_link_elem in capability_link_elements:
+            platforms = cap_link_elem.xpath('.//%s:platform/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            capabilities = cap_link_elem.xpath('.//%s:%s/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.capabilities_element_key, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            standard_identifiers = self._map_standard_identifiers_to_form(cap_link_elem)
+            time_spans = self._map_time_spans_to_form(cap_link_elem)
+            capability_links.append({
+                'platforms': platforms,
+                'capabilities': capabilities,
+                'standardIdentifiers': standard_identifiers,
+                'timeSpans': time_spans,
+            })
+        return capability_links
+    
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        capability_links = self._map_capability_links_to_form()
+        initial_values.update({'capability_links_json': capability_links})
+        return initial_values
+
+
 class ContactInfoFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
