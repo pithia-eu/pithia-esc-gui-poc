@@ -328,6 +328,8 @@ class CapabilityLinksMetadataEditor(
                 continue
             capability_link = {}
             # acquisitionCapabilities or computationCapabilities
+            if isinstance(capabilities, list):
+                capabilities = capabilities[0]
             capability_link[self.capabilities_key] = self.get_as_xlink_href(capabilities)
             # Platforms
             platforms = ud.platforms
