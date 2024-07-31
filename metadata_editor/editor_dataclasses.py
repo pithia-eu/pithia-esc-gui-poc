@@ -44,6 +44,15 @@ class ContactInfoAddressMetadataUpdate:
 
 
 @dataclass(kw_only=True)
+class CitationPropertyTypeMetadataUpdate:
+    citation_title: Optional[str] = None
+    citation_publication_date: Optional[str] = None
+    citation_doi: Optional[str] = None
+    citation_url: Optional[str] = None
+    other_citation_details: Optional[str] = None
+
+
+@dataclass(kw_only=True)
 class ContactInfoMetadataUpdate:
     phone: Optional[str] = None
     address: Optional[ContactInfoAddressMetadataUpdate] = ContactInfoAddressMetadataUpdate()
@@ -53,12 +62,9 @@ class ContactInfoMetadataUpdate:
 
 
 @dataclass(kw_only=True)
-class DocumentationMetadataUpdate:
-    citation_title: Optional[str] = None
-    citation_publication_date: Optional[str] = None
-    citation_doi: Optional[str] = None
-    citation_url: Optional[str] = None
-    other_citation_details: Optional[str] = None
+class InputOutputMetadataUpdate:
+    name: Optional[str] = None
+    description: Optional[str] = None
 
 
 @dataclass(kw_only=True)

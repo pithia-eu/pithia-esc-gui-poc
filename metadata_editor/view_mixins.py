@@ -9,9 +9,9 @@ from rdflib.namespace._SKOS import SKOS
 from unidecode import unidecode
 
 from .editor_dataclasses import (
+    CitationPropertyTypeMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
-    DocumentationMetadataUpdate,
     LocationMetadataUpdate,
 )
 from .form_utils import (
@@ -78,7 +78,7 @@ class ContactInfoViewMixin:
 class DocumentationViewMixin:
     def update_documentation_with_metadata_editor(self, request, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         try:
-            documentation_update = DocumentationMetadataUpdate(
+            documentation_update = CitationPropertyTypeMetadataUpdate(
                 citation_title=form_cleaned_data.get('citation_title'),
                 citation_publication_date=form_cleaned_data.get('citation_publication_date'),
                 citation_doi=form_cleaned_data.get('citation_doi'),

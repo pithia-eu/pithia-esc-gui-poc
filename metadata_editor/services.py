@@ -8,6 +8,7 @@ from .service_utils import (
     ContactInfoMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
+    InputOutputTypeMetadataEditor,
     LocationMetadataEditor,
     Namespace,
     NamespacePrefix,
@@ -20,7 +21,11 @@ from .service_utils import (
     URLMetadataEditor,
     XlinkHrefMetadataEditor,
 )
-from .editor_dataclasses import OperationTimeMetadataUpdate
+from .editor_dataclasses import (
+    CitationPropertyTypeMetadataUpdate,
+    InputOutputMetadataUpdate,
+    OperationTimeMetadataUpdate,
+)
 
 
 class OrganisationEditor(
@@ -319,3 +324,37 @@ class AcquisitionEditor(
 
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('Acquisition', xml_string)
+
+
+class ComputationCapabilitiesEditor(
+        BaseMetadataEditor,
+        CapabilitiesMetadataEditor,
+        DataLevelMetadataEditor,
+        DocumentationMetadataEditor,
+        InputOutputTypeMetadataEditor,
+        QualityAssessmentMetadataEditor,
+        RelatedPartiesMetadataEditor,
+        TypeMetadataEditor,
+        XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('ComputationCapabilities', xml_string)
+
+    def update_computation_component_version(self, version: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'version',
+            version
+        )
+
+    def update_child_computations(self, urls: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'childComputation',
+            [self.get_as_xlink_href(url) for url in urls if url.strip()]
+        )
+
+    def update_processing_inputs(self, update_data: list[InputOutputMetadataUpdate]):
+        self._update_input_outputs('processingInput', update_data)
+
+    def update_software_reference(self, update_data: CitationPropertyTypeMetadataUpdate):
+        self._update_citation_property_type_element('softwareReference', update_data)

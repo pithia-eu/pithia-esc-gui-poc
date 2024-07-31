@@ -8,8 +8,10 @@ from operator import attrgetter
 
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    CitationPropertyTypeMetadataUpdate,
     ContactInfoMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
+    InputOutputMetadataUpdate,
     LocationMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
@@ -63,6 +65,13 @@ def _is_metadata_component_empty(metadata_component, is_falsy: bool = True):
 class BaseMetadataComponentEditor:
     def __init__(self) -> None:
         self.metadata_dict = {}
+        self.setup_namespaces()
+        for prefix, uri in self.namespaces.items():
+            ET.register_namespace(prefix, uri)
+
+    def setup_namespaces(self):
+        namespace_class_attrs = [a for a in vars(NamespacePrefix).keys() if not a.startswith('__')]
+        self.namespaces = {getattr(NamespacePrefix, a): getattr(Namespace, a) for a in namespace_class_attrs}
 
     # Clean up utils
     def remove_child_element_if_empty(self, parent_element: dict, child_element_key: str):
@@ -91,17 +100,10 @@ class BaseMetadataEditor(BaseMetadataComponentEditor):
     def __init__(self, root_element_name, xml_string: str = '') -> None:
         super().__init__()
         self.root_element_name = root_element_name
-        self.setup_namespaces()
-        for prefix, uri in self.namespaces.items():
-            ET.register_namespace(prefix, uri)
         self.schema = MetadataFileXSDValidator._instantiate_pithia_schema()
         if not xml_string:
             return
         self._load_from_xml_string(xml_string)
-
-    def setup_namespaces(self):
-        namespace_class_attrs = [a for a in vars(NamespacePrefix).keys() if not a.startswith('__')]
-        self.namespaces = {getattr(NamespacePrefix, a): getattr(Namespace, a) for a in namespace_class_attrs}
 
     def _load_from_xml_string(self, xml_string: str):
         metadata_json_unformatted = xmlschema.to_json(
@@ -355,6 +357,149 @@ class CapabilityLinksMetadataEditor(
         )
 
 
+class CitationPropertyTypeMetadataEditor(
+        BaseMetadataComponentEditor,
+        GCOCharacterStringMetadataEditor):
+    def _update_publication_date_in_first_citation(self, citation, citation_publication_date):
+        # A citation can have multiple dates
+        citation_date_key = '%s:date' % NamespacePrefix.GMD
+        citation.setdefault(citation_date_key, [])
+        citation_dates = citation[citation_date_key]
+        if len(citation_dates) == 0:
+            citation_dates.append({})
+        # CI_Date container element
+        ci_date_key = '%s:CI_Date' % NamespacePrefix.GMD
+        # The in-between tag text for elements with attributes
+        # is set using '$' as a key.
+        ci_date_type_code = {
+            '@codeList': '',
+            '@codeListValue': '',
+            '$': '',
+        }
+        self.update_list_element_and_pop_if_empty(
+            citation_dates,
+            0,
+            {
+                ci_date_key: {
+                    '%s:date' % NamespacePrefix.GMD: {
+                        '%s:Date' % NamespacePrefix.GCO: citation_publication_date
+                    },
+                    '%s:dateType' % NamespacePrefix.GMD: {
+                        '%s:CI_DateTypeCode' % NamespacePrefix.GMD: ci_date_type_code
+                    }
+                }
+            }
+        )
+        ci_date_type_code['$'] = 'Publication Date'
+        # Clean up
+        self.remove_child_element_if_empty(
+            citation,
+            citation_date_key
+        )
+
+    def _update_identifier_in_first_citation(self, citation, value):
+        citation_identifier_key = '%s:identifier' % NamespacePrefix.GMD
+        citation.setdefault(citation_identifier_key, [])
+        citation_identifiers = citation[citation_identifier_key]
+        self.update_list_element_and_pop_if_empty(
+            citation_identifiers,
+            0,
+            {
+                '%s:MD_Identifier' % NamespacePrefix.GMD: {
+                    '%s:code' % NamespacePrefix.GMD: self.get_as_gco_character_string(value)
+                }
+            }
+        )
+        # Clean up
+        self.remove_child_element_if_empty(citation, citation_identifier_key)
+
+    def _update_online_resource_in_first_citation(self, citation, value):
+        citation_online_resource_key = 'onlineResource'
+        citation.setdefault(citation_online_resource_key, [])
+        citation_online_resources = citation[citation_online_resource_key]
+        if len(citation_online_resources) == 0:
+            citation_online_resources.append({})
+        citation_online_resource_first = citation_online_resources[0]
+        ci_online_resource_key = '%s:CI_OnlineResource' % NamespacePrefix.GMD
+        citation_online_resource_first.setdefault(ci_online_resource_key, {})
+        ci_online_resource = citation_online_resource_first[ci_online_resource_key]
+        linkage_key = '%s:linkage' % NamespacePrefix.GMD
+        self.update_child_element_and_remove_if_empty(
+            ci_online_resource,
+            linkage_key,
+            {
+                '%s:URL' % NamespacePrefix.GMD: value
+            }
+        )
+        self.pop_child_element_if_empty(
+            citation_online_resources,
+            citation_online_resource_first,
+            0
+        )
+        # Clean up
+        self.remove_child_element_if_empty(citation, citation_online_resource_key)
+
+    def _update_other_details_in_first_citation(self, citation, value):
+        citation_other_details_key = '%s:otherCitationDetails' % NamespacePrefix.GMD
+        self.update_child_element_and_remove_if_empty(
+            citation,
+            citation_other_details_key,
+            self.get_as_gco_character_string(value)
+        )
+
+    def _update_citation_property_type_element(self, element_key, update_data: CitationPropertyTypeMetadataUpdate):
+        # Set up container element
+        self.metadata_dict.setdefault(element_key, [])
+        citation_prop_type_elements = self.metadata_dict[element_key]
+        # Create (if needed) and select the first
+        # documentation element.
+        if not citation_prop_type_elements:
+            citation_prop_type_elements.append({})
+        cpt_elem_first = citation_prop_type_elements[0]
+        # Citation container element
+        citation_key = 'Citation'
+        cpt_elem_first.setdefault(citation_key, {})
+        citation = cpt_elem_first[citation_key]
+        # Citation properties
+        citation_title, citation_publication_date, \
+        citation_doi, citation_url, other_citation_details = attrgetter(
+            'citation_title',
+            'citation_publication_date',
+            'citation_doi',
+            'citation_url',
+            'other_citation_details'
+        )(update_data)
+        # Citation title
+        citation_title_key = '%s:title' % NamespacePrefix.GMD
+        self.update_child_element_and_remove_if_empty(
+            citation,
+            citation_title_key,
+            self.get_as_gco_character_string(citation_title)
+        )
+        # Citation date
+        self._update_publication_date_in_first_citation(citation, citation_publication_date)
+        # Citation identifier
+        self._update_identifier_in_first_citation(citation, citation_doi)
+        # Citation online resource
+        self._update_online_resource_in_first_citation(citation, citation_url)
+        # Citation other details
+        self._update_other_details_in_first_citation(citation, other_citation_details)
+        # Clean up
+        self.remove_child_element_if_empty(
+            cpt_elem_first,
+            citation_key
+        )
+        self.pop_child_element_if_empty(
+            citation_prop_type_elements,
+            cpt_elem_first,
+            0
+        )
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            element_key
+        )
+
+
 # Shared XML component editors
 class ContactInfoMetadataEditor(
     BaseMetadataComponentEditor,
@@ -533,148 +678,43 @@ class DataLevelMetadataEditor(BaseMetadataComponentEditor):
         )
 
 
-class DocumentationMetadataEditor(
-    BaseMetadataComponentEditor,
-    GCOCharacterStringMetadataEditor):
-    def _update_publication_date_in_first_citation(self, citation, citation_publication_date):
-        # A citation can have multiple dates
-        citation_date_key = '%s:date' % NamespacePrefix.GMD
-        citation.setdefault(citation_date_key, [])
-        citation_dates = citation[citation_date_key]
-        if len(citation_dates) == 0:
-            citation_dates.append({})
-        # CI_Date container element
-        ci_date_key = '%s:CI_Date' % NamespacePrefix.GMD
-        # The in-between tag text for elements with attributes
-        # is set using '$' as a key.
-        ci_date_type_code = {
-            '@codeList': '',
-            '@codeListValue': '',
-            '$': '',
-        }
-        self.update_list_element_and_pop_if_empty(
-            citation_dates,
-            0,
+class DocumentationMetadataEditor(CitationPropertyTypeMetadataEditor):
+    def update_documentation(self, update_data: CitationPropertyTypeMetadataUpdate):
+        self._update_citation_property_type_element('documentation', update_data)
+
+
+class InputOutputTypeMetadataEditor(BaseMetadataComponentEditor):
+    GCO19115_NSPREFIX = 'gco19115'
+
+    def setup_namespaces(self):
+        super().setup_namespaces()
+        self.namespaces.update({
+            self.GCO19115_NSPREFIX: Namespace.GCO19115
+        })
+
+    def _update_input_outputs(self, container_element_key, update_data: list[InputOutputMetadataUpdate]):
+        self.metadata_dict.setdefault(container_element_key, [])
+        input_output_container_elements = self.metadata_dict[container_element_key]
+        if not input_output_container_elements:
+            input_output_container_elements.append({})
+        input_outputs = [
             {
-                ci_date_key: {
-                    '%s:date' % NamespacePrefix.GMD: {
-                        '%s:Date' % NamespacePrefix.GCO: citation_publication_date
+                'InputOutput': {
+                    'name': ud.name,
+                    'description': {
+                        '%s:LE_Source' % NamespacePrefix.MRL: {
+                            '%s:description' % NamespacePrefix.MRL: {
+                                '%s:CharacterString' % self.GCO19115_NSPREFIX: ud.description
+                            }
+                        }
                     },
-                    '%s:dateType' % NamespacePrefix.GMD: {
-                        '%s:CI_DateTypeCode' % NamespacePrefix.GMD: ci_date_type_code
-                    }
                 }
-            }
-        )
-        ci_date_type_code['$'] = 'Publication Date'
-        # Clean up
-        self.remove_child_element_if_empty(
-            citation,
-            citation_date_key
-        )
-
-    def _update_identifier_in_first_citation(self, citation, value):
-        citation_identifier_key = '%s:identifier' % NamespacePrefix.GMD
-        citation.setdefault(citation_identifier_key, [])
-        citation_identifiers = citation[citation_identifier_key]
-        self.update_list_element_and_pop_if_empty(
-            citation_identifiers,
-            0,
-            {
-                '%s:MD_Identifier' % NamespacePrefix.GMD: {
-                    '%s:code' % NamespacePrefix.GMD: self.get_as_gco_character_string(value)
-                }
-            }
-        )
-        # Clean up
-        self.remove_child_element_if_empty(citation, citation_identifier_key)
-
-    def _update_online_resource_in_first_citation(self, citation, value):
-        citation_online_resource_key = 'onlineResource'
-        citation.setdefault(citation_online_resource_key, [])
-        citation_online_resources = citation[citation_online_resource_key]
-        if len(citation_online_resources) == 0:
-            citation_online_resources.append({})
-        citation_online_resource_first = citation_online_resources[0]
-        ci_online_resource_key = '%s:CI_OnlineResource' % NamespacePrefix.GMD
-        citation_online_resource_first.setdefault(ci_online_resource_key, {})
-        ci_online_resource = citation_online_resource_first[ci_online_resource_key]
-        linkage_key = '%s:linkage' % NamespacePrefix.GMD
+            } for ud in update_data if not _is_metadata_component_empty(asdict(ud) and ud.description)
+        ]
         self.update_child_element_and_remove_if_empty(
-            ci_online_resource,
-            linkage_key,
-            {
-                '%s:URL' % NamespacePrefix.GMD: value
-            }
-        )
-        self.pop_child_element_if_empty(
-            citation_online_resources,
-            citation_online_resource_first,
-            0
-        )
-        # Clean up
-        self.remove_child_element_if_empty(citation, citation_online_resource_key)
-
-    def _update_other_details_in_first_citation(self, citation, value):
-        citation_other_details_key = '%s:otherCitationDetails' % NamespacePrefix.GMD
-        self.update_child_element_and_remove_if_empty(
-            citation,
-            citation_other_details_key,
-            self.get_as_gco_character_string(value)
-        )
-
-    def update_documentation(self, update_data):
-        # Set up
-        # documentation container element
-        documentation_key = 'documentation'
-        self.metadata_dict.setdefault(documentation_key, [])
-        documentation = self.metadata_dict[documentation_key]
-        # Create (if needed) and select the first
-        # documentation element.
-        if len(documentation) == 0:
-            documentation.append({})
-        documentation_first = documentation[0]
-        # Citation container element
-        citation_key = 'Citation'
-        documentation_first.setdefault(citation_key, {})
-        citation = documentation_first[citation_key]
-        # Citation properties
-        citation_title, citation_publication_date, \
-        citation_doi, citation_url, other_citation_details = attrgetter(
-            'citation_title',
-            'citation_publication_date',
-            'citation_doi',
-            'citation_url',
-            'other_citation_details'
-        )(update_data)
-        # Citation title
-        citation_title_key = '%s:title' % NamespacePrefix.GMD
-        self.update_child_element_and_remove_if_empty(
-            citation,
-            citation_title_key,
-            self.get_as_gco_character_string(citation_title)
-        )
-        # Citation date
-        self._update_publication_date_in_first_citation(citation, citation_publication_date)
-        # Citation identifier
-        self._update_identifier_in_first_citation(citation, citation_doi)
-        # Citation online resource
-        self._update_online_resource_in_first_citation(citation, citation_url)
-        # Citation other details
-        self._update_other_details_in_first_citation(citation, other_citation_details)
-        # Clean up
-        self.remove_child_element_if_empty(
-            documentation_first,
-            citation_key
-        )
-        self.pop_child_element_if_empty(
-            documentation,
-            documentation_first,
-            0
-        )
-        self.remove_child_element_if_empty(
             self.metadata_dict,
-            documentation_key
+            container_element_key,
+            input_outputs
         )
 
 

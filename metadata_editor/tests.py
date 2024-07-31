@@ -3,9 +3,10 @@ from lxml import etree
 
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    CitationPropertyTypeMetadataUpdate,
     ContactInfoAddressMetadataUpdate,
     ContactInfoMetadataUpdate,
-    DocumentationMetadataUpdate,
+    InputOutputMetadataUpdate,
     LocationMetadataUpdate,
     OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
@@ -19,6 +20,7 @@ from .service_utils import (
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
+    ComputationCapabilitiesEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -208,7 +210,7 @@ class ProjectEditorTestCase(SimpleTestCase):
         project_editor.update_name('Project test')
         project_editor.update_abstract('test abstract')
         project_editor.update_url('https://www.example.com/')
-        documentation_update = DocumentationMetadataUpdate(
+        documentation_update = CitationPropertyTypeMetadataUpdate(
             citation_title='hello',
             citation_publication_date='11/07/24',
             citation_doi='doi',
@@ -239,7 +241,7 @@ class ProjectEditorTestCase(SimpleTestCase):
     def test_project_editor_with_file(self):
         reset_test_file(PROJECT_METADATA_XML)
         project_editor = ProjectEditor(xml_string=PROJECT_METADATA_XML.read().decode())
-        documentation_update = DocumentationMetadataUpdate(
+        documentation_update = CitationPropertyTypeMetadataUpdate(
             citation_title='hello',
             citation_publication_date='11/07/24'
         )
@@ -308,7 +310,7 @@ class OperationEditorTestCase(SimpleTestCase):
                 'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test']
             },
         ])
-        documentation = DocumentationMetadataUpdate(
+        documentation = CitationPropertyTypeMetadataUpdate(
             citation_title='Citation title',
             citation_publication_date='23/07/24',
             citation_doi='doi:10.1234/4321',
@@ -592,6 +594,104 @@ class AcquisitionEditorTestCase(SimpleTestCase):
         reset_test_file(ACQUISITION_METADATA_XML)
         acquisition_editor = AcquisitionEditor(xml_string=ACQUISITION_METADATA_XML.read().decode())
         xml = acquisition_editor.to_xml()
+        print('xml', xml)
+
+
+class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
+    def test_computation_capabilities_editor(self):
+        computation_capabilities_editor = ComputationCapabilitiesEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='ComputationCapabilities_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        computation_capabilities_editor.update_pithia_identifier(pithia_identifier)
+        computation_capabilities_editor.update_name('Computation Capabilities Test')
+        computation_capabilities_editor.update_description('Computation capabilities test description')
+        computation_capabilities_editor.update_child_computations([
+            'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
+            'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test_2',
+        ])
+        computation_capabilities_editor.update_computation_component_version('2')
+        computation_capabilities_editor.update_type('https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual')
+        data_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ4',
+        ]
+        metadata_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9',
+        ]
+        computation_capabilities_editor.update_quality_assessment(data_quality_flags, metadata_quality_flag_urls=metadata_quality_flags)
+        data_levels = [
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L2',
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L4',
+        ]
+        computation_capabilities_editor.update_data_levels(data_levels)
+        capabilities = [
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 1',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 2',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 3',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5,
+                cadence_unit='month'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 4',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                vector_representation=['https://metadata.pithia.eu/ontology/2.2/component/r'],
+                qualifier=['https://metadata.pithia.eu/ontology/2.2/qualifier/Median']
+            )
+        ]
+        computation_capabilities_editor.update_capabilities(capabilities)
+        software_reference_update = CitationPropertyTypeMetadataUpdate(
+            citation_title='Citation title',
+            citation_publication_date='23/07/24',
+            citation_doi='doi:10.1234/4321',
+            citation_url='https://www.example.com/',
+            other_citation_details='Other citation details'
+        )
+        computation_capabilities_editor.update_software_reference(software_reference_update)
+        processing_inputs = [
+            InputOutputMetadataUpdate(
+                name='Processing input 1',
+                description='Processing input 1 description'
+            ),
+            InputOutputMetadataUpdate(
+                name='Processing input 2'
+            ),
+            InputOutputMetadataUpdate(
+                name='Processing input 3',
+                description='Processing input 3 description'
+            )
+        ]
+        computation_capabilities_editor.update_processing_inputs(processing_inputs)
+
+        documentation = CitationPropertyTypeMetadataUpdate(
+            citation_title='Citation title',
+            citation_publication_date='23/07/24',
+            citation_doi='doi:10.1234/4321',
+            citation_url='https://www.example.com/',
+            other_citation_details='Other citation details'
+        )
+        computation_capabilities_editor.update_documentation(documentation)
+        xml = computation_capabilities_editor.to_xml()
         print('xml', xml)
 
 
