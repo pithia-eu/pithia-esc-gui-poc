@@ -64,15 +64,14 @@ class LoginMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        # Verify if the user is logged in or not.
-        # Check if an OIDC_access_token exists in
-        # request.META, and perform the appropriate
-        # action.
-        self._update_session_access_token_if_possible(request)
-
-
-        user_info_error_client_msg = 'You have been logged out due to an error that occurred whilst validating your login session. Please try logging in again.'
         try:
+            # Verify if the user is logged in or not.
+            # Check if an OIDC_access_token exists in
+            # request.META, and perform the appropriate
+            # action.
+            self._update_session_access_token_if_possible(request)
+
+
             # The access token should always be retrieved from the
             # session. This is because the access token may not
             # always be present in the headers.
@@ -85,15 +84,8 @@ class LoginMiddleware(object):
                     return HttpResponseRedirect(reverse('home'))
             else:
                 self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
-        except Exception:
-            logger.exception('An unexpected error occurred whilst getting user info.')
-            messages.error(user_info_error_client_msg)
-            remove_login_session_variables(request.session)
-            if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('home'))
 
-
-        try:
+            
             # Check if the user is still a member of the
             # institution they have logged in with. If not,
             # perform the appropriate action.
