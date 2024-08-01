@@ -123,7 +123,7 @@ def delete_institution_for_login_session(session):
         del session['subgroup_for_login_session']
 
 def remove_login_session_variables_and_redirect_user_to_logout_page(request):
-    remove_login_session_variables()
+    remove_login_session_variables(request.session)
     absolute_home_page_uri = re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
