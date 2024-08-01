@@ -1747,6 +1747,186 @@ COMPUTATION_CAPABILITIES_4a_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+COMPUTATION_CAPABILITIES_FULL_METADATA_XML = SimpleUploadedFile(
+    'ComputationCapabilities_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <ComputationCapabilities
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gco19115="http://standards.iso.org/iso/19115/-3/gco/1.0"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <!--
+    The computation process that produces observed properties from its input data.
+    Input data may be an acquisition or some other computatation, not listed here yet. TODO: add input specification
+    Each newly computed observed property that this computation can produce is defined as its *capability*.
+    The list of capabilities is all-inclusive, even though not every computation can engage all capabilities.
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>ComputationCapabilities_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-08-16T07:55:00Z</creationDate>
+                <lastModificationDate>2022-08-16T07:55:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Computation Capabilities Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <documentation>
+            <Citation>
+                <gmd:title>
+                    <gco:CharacterString>Documentation title</gco:CharacterString>
+                </gmd:title>
+                <date xmlns="http://www.isotc211.org/2005/gmd">
+                    <CI_Date>
+                        <date>
+                            <gco:Date>2024-08-01</gco:Date>
+                        </date>
+                        <dateType>
+                            <CI_DateTypeCode codeList="" codeListValue="">Publication Date</CI_DateTypeCode>
+                        </dateType>
+                    </CI_Date>
+                </date>
+                <identifier xmlns="http://www.isotc211.org/2005/gmd">
+                    <MD_Identifier>
+                        <code>
+                            <gco:CharacterString>doi:10.1234.5678/1234</gco:CharacterString>
+                        </code>
+                    </MD_Identifier>
+                </identifier>
+                <gmd:otherCitationDetails>
+                    <gco:CharacterString>Other citation details</gco:CharacterString>
+                </gmd:otherCitationDetails>
+                <onlineResource>
+                    <CI_OnlineResource xmlns="http://www.isotc211.org/2005/gmd">
+                        <linkage>
+                            <URL>https://www.example.com/</URL>
+                        </linkage>
+                    </CI_OnlineResource>
+                </onlineResource>
+            </Citation>
+        </documentation>
+        <capabilities>
+            <processCapability>
+                <name>Signal Strength</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <units xlink:href="https://metadata.pithia.eu/ontology/2.2/unit/dB"/> 
+            </processCapability>
+            <processCapability>
+                <name>Signal Polarization</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Polarization"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Doppler Frequency</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_DopplerFrequencyShift"/>
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+            </processCapability>
+            <processCapability>
+                <name>Signal Angle of Arrival</name>
+                <observedProperty xlink:href="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction"/> 
+                <dimensionalityInstance xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityInstance/2DImageIonogram"/>
+                <dimensionalityTimeline xlink:href="https://metadata.pithia.eu/ontology/2.2/dimensionalityTimeline/2DAnimation"/>
+                <!-- <crs xlink:href="https://metadata.pithia.eu/ontology/2.2/crs/Az-Zenith"/> -->
+            </processCapability>
+        </capabilities>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <qualityAssessment>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
+            <metadataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
+        </qualityAssessment>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual" />
+        <version>934</version>
+        <softwareReference>
+            <Citation>
+                <gmd:title>
+                    <gco:CharacterString>Software Reference Title</gco:CharacterString>
+                </gmd:title>
+                <gmd:date>
+                    <gmd:CI_Date>
+                        <gmd:date>
+                            <gco:Date>2024-08-01</gco:Date>
+                        </gmd:date>
+                        <gmd:dateType>
+                            <gmd:CI_DateTypeCode codeList="" codeListValue="">Publication Date</gmd:CI_DateTypeCode>
+                        </gmd:dateType>
+                    </gmd:CI_Date>
+                </gmd:date>
+                <gmd:identifier>
+                    <gmd:MD_Identifier>
+                        <gmd:code>
+                            <gco:CharacterString>doi:10.123456/4321</gco:CharacterString>
+                        </gmd:code>
+                    </gmd:MD_Identifier>
+                </gmd:identifier>
+                <gmd:otherCitationDetails>
+                    <gco:CharacterString>Software reference full citation</gco:CharacterString>
+                </gmd:otherCitationDetails>
+                <onlineResource>
+                    <gmd:CI_OnlineResource>
+                        <gmd:linkage>
+                            <gmd:URL>https://github.com/pithia-eu/pithia-esc-gui-poc/blob/main/docs/development.md</gmd:URL>
+                        </gmd:linkage>
+                    </gmd:CI_OnlineResource>
+                </onlineResource>
+            </Citation>
+        </softwareReference>
+        <processingInput>
+            <InputOutput>
+                <name>Processing input 1</name>
+                <description>
+                    <mrl:LE_Source>
+                        <mrl:description>
+                            <gco19115:CharacterString>Description of processing input 1</gco19115:CharacterString>
+                        </mrl:description>
+                    </mrl:LE_Source>
+                </description>
+            </InputOutput>
+        </processingInput>
+        <processingInput>
+            <InputOutput>
+                <name>Processing input 4</name>
+                <description>
+                    <mrl:LE_Source>
+                        <mrl:description>
+                            <gco19115:CharacterString>Description of processing input 4</gco19115:CharacterString>
+                        </mrl:description>
+                    </mrl:LE_Source>
+                </description>
+            </InputOutput>
+        </processingInput>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PrincipalInvestigator"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/ingv/Individual_INGV_Pica"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/Director"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/noa/Individual_NOA_Belehaki"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <childComputation xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/kul/ComputationCapabilities_KUL_EUHFORIA_Heliosphere"/>
+        <childComputation xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/kul/ComputationCapabilities_KUL_EUHFORIA_Corona"/>
+        <childComputation xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_Radiolink_MidpointCalculation"/>
+        <childComputation xlink:href="https://metadata.pithia.eu/resources/2.2/computationCapabilities/oe/ComputationCapabilities_hmF2_qModel"/>
+        <softwareReference />
+        <processingInput />
+        <algorithm />
+    </ComputationCapabilities>
+    '''
+)
+
 
 # COMPUTATIONS
 COMPUTATION_METADATA_XML = SimpleUploadedFile(

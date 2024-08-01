@@ -1,10 +1,13 @@
 import logging
 from .form_to_metadata_mapper_components import (
     BaseMetadataFormFieldsToMetadataMixin,
+    CapabilitiesFormFieldsToMetadataMixin,
     CapabilityLinkFormFieldsToMetadataMixin,
     ContactInfoFormFieldsToMetadataMixin,
+    DataLevelFormFieldsToMetadataMixin,
     DocumentationFormFieldsToMetadataMixin,
     LocationFormFieldsToMetadataMixin,
+    QualityAssessmentFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
     StandardIdentifierFormFieldsToMetadataMixin,
     TypeFormFieldsToMetadataMixin,
@@ -160,7 +163,10 @@ class InstrumentFormFieldsToMetadataWrapper(
 
 
 class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
+    CapabilitiesFormFieldsToMetadataMixin,
+    DataLevelFormFieldsToMetadataMixin,
     DocumentationFormFieldsToMetadataMixin,
+    QualityAssessmentFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
     BaseMetadataFormFieldsToMetadataMixin):
     GCO19115_NSPREFIX = 'gco19115'
@@ -180,70 +186,73 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
             'input_description': './/%s:inputDescription/%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX),
         })
         return mappings
-
-    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
-        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
-        mappings.update({
-            'data_levels': './/%s:dataLevel/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
-            'data_quality_flags': './/%s:qualityAssessment/%s:dataQualityFlag/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
-            'metadata_quality_flags': './/%s:qualityAssessment/%s:metadataQualityFlag/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
-        })
-        return mappings
-
-    def _map_process_capabilities_to_form(self):
-        process_capability_elements = self.xml_string_parsed.xpath('.//%s:capabilities/%s:processCapability' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
-        process_capabilities = []
-        for e in process_capability_elements:
-            name_elements = e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-            name = ''
-            try:
-                name = self._get_element_text_or_blank_string(self._get_first_element_from_list(name_elements))
-            except AttributeError:
-                pass
-            observed_property_elements = e.xpath('.//%s:observedProperty/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            observed_property = self._get_first_element_from_list(observed_property_elements)
-            dimensionality_instance_elements = e.xpath('.//%s:dimensionalityInstance/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            dimensionality_instance = self._get_first_element_from_list(dimensionality_instance_elements)
-            dimensionality_timeline_elements = e.xpath('.//%s:dimensionalityTimeline/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            dimensionality_timeline = self._get_first_element_from_list(dimensionality_timeline_elements)
-            cadence_elements = e.xpath('.//%s:cadence' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-            cadence = ''
-            try:
-                cadence = self._get_element_text_or_blank_string(self._get_first_element_from_list(cadence_elements))
-            except AttributeError:
-                pass
-            cadence_unit_attributes = e.xpath('.//%s:cadence/@unit' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-            cadence_unit = self._get_first_element_from_list(cadence_unit_attributes)
-            vector_representations = e.xpath('.//%s:vectorRepresentation/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            coordinate_system_elements = e.xpath('.//%s:coordinateSystem/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            coordinate_system = self._get_first_element_from_list(coordinate_system_elements)
-            units_elements = e.xpath('.//%s:units/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            units = self._get_first_element_from_list(units_elements)
-            qualifiers = e.xpath('.//%s:qualifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            process_capabilities.append({
-                'name': name,
-                'observedProperty': observed_property,
-                'dimensionalityInstance': dimensionality_instance,
-                'dimensionalityTimeline': dimensionality_timeline,
-                'cadence': cadence,
-                'cadenceUnits': cadence_unit,
-                'vectorRepresentation': vector_representations,
-                'coordinateSystem': coordinate_system,
-                'units': units,
-                'qualifier': qualifiers,
-            })
-        return process_capabilities
-
-    def get_initial_values_with_custom_mappings(self):
-        initial_values = super().get_initial_values_with_custom_mappings()
-        capabilities = self._map_process_capabilities_to_form()
-        initial_values.update({
-            'capabilities_json': capabilities
-        })
-        return initial_values
         
 
 class AcquisitionFormFieldsToMetadataMapper(
     CapabilityLinkFormFieldsToMetadataMixin,
     BaseMetadataFormFieldsToMetadataMixin):
     capabilities_element_key = 'acquisitionCapabilities'
+
+
+class ComputationCapabilitiesFormFieldsToMetadataMapper(
+    CapabilitiesFormFieldsToMetadataMixin,
+    DataLevelFormFieldsToMetadataMixin,
+    DocumentationFormFieldsToMetadataMixin,
+    QualityAssessmentFormFieldsToMetadataMixin,
+    RelatedPartyFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    GCO19115_NSPREFIX = 'gco19115'
+    
+    def __init__(self, xml_string) -> None:
+        super().__init__(xml_string)
+        self.namespaces.update({
+            self.GCO19115_NSPREFIX: Namespace.GCO19115,
+        })
+
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'software_reference_citation_title': './/%s:documentation/%s:Citation/%s:title/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'software_reference_citation_publication_date': './/%s:documentation/%s:Citation/%s:date/%s:CI_Date/%s:date/%s:Date' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'software_reference_citation_doi': './/%s:documentation/%s:Citation/%s:identifier/%s:MD_Identifier/%s:code/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'software_reference_citation_linkage_url': './/%s:documentation/%s:Citation/%s:onlineResource/%s:CI_OnlineResource/%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD),
+            'software_reference_other_citation_details': './/%s:documentation/%s:Citation/%s:otherCitationDetails/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD, NamespacePrefix.GCO),
+            'version': './/%s:version' % self.DEFAULT_XPATH_NSPREFIX,
+        })
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'type': './/%s:type/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'child_computations': './/%s:childComputation/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+    def _map_processing_inputs_to_form(self):
+        processing_inputs = []
+        processing_input_elements = self.xml_string_parsed.xpath('.//%s:processingInput/%s:InputOutput' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        for e in processing_input_elements:
+            name = self._get_element_text_or_blank_string(
+                self._get_first_element_from_list(
+                    e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+                )
+            )
+            description = self._get_element_text_or_blank_string(
+                self._get_first_element_from_list(
+                    e.xpath('.//%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), namespaces=self.namespaces)
+                )
+            )
+            processing_inputs.append({
+                'name': name,
+                'description': description,
+            })
+        return processing_inputs
+
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        processing_inputs = self._map_processing_inputs_to_form()
+        initial_values.update({
+            'processing_inputs_json': processing_inputs,
+        })
+        return initial_values
