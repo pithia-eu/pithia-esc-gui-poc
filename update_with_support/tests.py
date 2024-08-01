@@ -40,6 +40,7 @@ class ComputationCapabilitiesFormToMetadataMapperTestCase(SimpleTestCase):
 
 class ComputationFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
+        COMPUTATION_METADATA_XML.seek(0)
         mapper = ComputationFormFieldsToMetadataMapper(COMPUTATION_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
