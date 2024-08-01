@@ -7,6 +7,7 @@ from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
+    ComputationFormFieldsToMetadataMapper,
     InstrumentFormFieldsToMetadataWrapper,
     IndividualFormFieldsToMetadataMapper,
     OperationFormFieldsToMetadataMapper,
@@ -164,3 +165,11 @@ class ComputationCapabilitiesUpdateWithEditorFormView(
     model = models.ComputationCapabilities
     success_url_name = 'update:computation_capability_set_with_editor'
     form_field_to_metadata_mapper_class = ComputationCapabilitiesFormFieldsToMetadataMapper
+
+
+class ComputationUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    ComputationEditorFormView):
+    model = models.Computation
+    success_url_name = 'update:computation_with_editor'
+    form_field_to_metadata_mapper_class = ComputationFormFieldsToMetadataMapper

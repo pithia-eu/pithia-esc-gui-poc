@@ -12,4 +12,5 @@ urlpatterns = [
     path('acquisition-capabilities/<resource_id>/update-with-wizard/', views.AcquisitionCapabilitiesUpdateWithEditorFormView.as_view(), name='acquisition_capability_set_with_editor'),
     path('acquisitions/<resource_id>/update-with-wizard/', views.AcquisitionUpdateWithEditorFormView.as_view(), name='acquisition_with_editor'),
     path('computation-capabilities/<resource_id>/update-with-wizard/', views.ComputationCapabilitiesUpdateWithEditorFormView.as_view(), name='computation_capability_set_with_editor'),
+    path('computation/<resource_id>/update-with-wizard/', views.ComputationUpdateWithEditorFormView.as_view(), name='computation_with_editor'),
 ]
