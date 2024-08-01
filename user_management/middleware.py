@@ -147,6 +147,8 @@ class InstitutionSelectionMiddleware:
                 )
         except AttributeError:
             pass
+        except Exception:
+            pass
 
         response = self.get_response(request)
 
@@ -175,6 +177,8 @@ class InstitutionSelectionFormMiddleware:
         except AttributeError:
             # session.get('user_memberships') will raise an AttributeError if
             # user memberships have not been stored in the session yet.
+            pass
+        except Exception:
             pass
 
         response = self.get_response(request)
