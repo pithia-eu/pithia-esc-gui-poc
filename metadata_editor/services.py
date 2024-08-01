@@ -359,3 +359,12 @@ class ComputationCapabilitiesEditor(
 
     def update_software_reference(self, update_data: CitationPropertyTypeMetadataUpdate):
         self._update_citation_property_type_element('softwareReference', update_data)
+
+
+class ComputationEditor(
+        BaseMetadataEditor,
+        CapabilityLinksMetadataEditor):
+    capabilities_key = 'computationCapabilities'
+
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Computation', xml_string)

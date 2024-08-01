@@ -22,6 +22,7 @@ from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     ComputationCapabilitiesEditor,
+    ComputationEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -718,6 +719,54 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
         )
         computation_capabilities_editor.update_documentation(documentation)
         xml = computation_capabilities_editor.to_xml()
+        print('xml', xml)
+
+
+class ComputationEditorTestCase(SimpleTestCase):
+    def test_computation_editor(self):
+        computation_editor = ComputationEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Computation_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        computation_editor.update_pithia_identifier(pithia_identifier)
+        computation_editor.update_name('Computation Test')
+        computation_editor.update_description('Computation test description')
+        capability_links = [
+            CapabilityLinkMetadataUpdate(
+                platforms=[
+                    'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
+                    'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test_2',
+                ],
+                capabilities='https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+                standard_identifiers=[
+                    StandardIdentifierMetadataUpdate(
+                        authority='sia1',
+                        value='siv1'
+                    ),
+                    StandardIdentifierMetadataUpdate(
+                        authority='sia2',
+                        value='siv2'
+                    ),
+                    StandardIdentifierMetadataUpdate(
+                        authority='',
+                        value=''
+                    )
+                ],
+                time_spans=[
+                    TimeSpanMetadataUpdate(
+                        begin_position='2024-07-30',
+                        end_position='unknown'
+                    ),
+                    TimeSpanMetadataUpdate()
+                ]
+            )
+        ]
+        computation_editor.update_capability_links(capability_links)
+        xml = computation_editor.to_xml()
         print('xml', xml)
 
 
