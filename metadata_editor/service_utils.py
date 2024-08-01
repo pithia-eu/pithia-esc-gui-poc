@@ -906,6 +906,21 @@ class TypeMetadataEditor(BaseMetadataComponentEditor):
         )
 
 
+class TypeMultipleMetadataEditor(
+    BaseMetadataComponentEditor,
+    XlinkHrefMetadataEditor):
+    def update_types(self, type_ontology_urls):
+        types_key = 'type'
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            types_key,
+            [
+                self.get_as_xlink_href(url)
+                for url in type_ontology_urls if url.strip()
+            ]
+        )
+
+
 class URLMetadataEditor(BaseMetadataComponentEditor):
     def update_url(self, url):
         url_key = 'URL'

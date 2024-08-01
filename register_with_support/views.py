@@ -309,11 +309,10 @@ class AcquisitionRegisterWithEditorFormView(
 
 class ComputationCapabilitiesRegisterWithEditorFormView(
     ComputationCapabilitiesEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ComputationCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:computation_capability_set_with_editor')
 
-    metadata_editor_class = ComputationCapabilitiesMetadata
     file_upload_registration_url = reverse_lazy('register:computation_capability_set')
     save_data_local_storage_key = 'computation_capabilities_r_wizard_save_data'
 

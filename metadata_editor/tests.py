@@ -615,7 +615,9 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test_2',
         ])
         computation_capabilities_editor.update_computation_component_version('2')
-        computation_capabilities_editor.update_type('https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual')
+        computation_capabilities_editor.update_types([
+            'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual'
+        ])
         data_quality_flags = [
             'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',
             'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1',
@@ -660,6 +662,23 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
             )
         ]
         computation_capabilities_editor.update_capabilities(capabilities)
+        related_parties = [
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                'parties': [
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
+                ],
+            },
+            {'role': '', 'parties': []},
+            {
+                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                'parties': [
+                    'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+                ],
+            },
+        ]
+        computation_capabilities_editor.update_related_parties(related_parties)
         software_reference_update = CitationPropertyTypeMetadataUpdate(
             citation_title='Citation title',
             citation_publication_date='23/07/24',
@@ -682,7 +701,6 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
             )
         ]
         computation_capabilities_editor.update_processing_inputs(processing_inputs)
-
         documentation = CitationPropertyTypeMetadataUpdate(
             citation_title='Citation title',
             citation_publication_date='23/07/24',

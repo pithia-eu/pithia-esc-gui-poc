@@ -1,6 +1,7 @@
 import json
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
@@ -59,3 +60,12 @@ def map_capability_links_to_dataclasses(form_cleaned_data):
             ) for ts in json.loads(cap_link.get('timeSpans', []))]
         )
     for cap_link in form_cleaned_data.get('capability_links_json')]
+
+# Processing inputs
+def map_processing_inputs_to_dataclasses(form_cleaned_data):
+    return [
+        InputOutputMetadataUpdate(
+            name=proc_input.get('name'),
+            description=proc_input.get('description')
+        )
+    for proc_input in form_cleaned_data.get('processing_inputs_json')]

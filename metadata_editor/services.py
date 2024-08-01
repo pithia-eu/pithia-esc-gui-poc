@@ -18,6 +18,7 @@ from .service_utils import (
     StandardIdentifierMetadataEditor,
     StatusMetadataEditor,
     TypeMetadataEditor,
+    TypeMultipleMetadataEditor,
     URLMetadataEditor,
     XlinkHrefMetadataEditor,
 )
@@ -334,7 +335,7 @@ class ComputationCapabilitiesEditor(
         InputOutputTypeMetadataEditor,
         QualityAssessmentMetadataEditor,
         RelatedPartiesMetadataEditor,
-        TypeMetadataEditor,
+        TypeMultipleMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('ComputationCapabilities', xml_string)

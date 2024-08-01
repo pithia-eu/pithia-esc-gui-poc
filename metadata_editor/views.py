@@ -7,14 +7,17 @@ from django.utils.html import escape
 from django.views.generic import FormView
 
 from .editor_dataclasses import (
+    CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
     StandardIdentifierMetadataUpdate,
 )
 from .forms import *
+from .form_utils import map_processing_inputs_to_dataclasses
 from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
+    ComputationCapabilitiesEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -488,19 +491,48 @@ class AcquisitionEditorFormView(
 
 
 class ComputationCapabilitiesEditorFormView(
+    CapabilitiesViewMixin,
     CapabilitiesSelectFormViewMixin,
     ComputationTypeSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
+    DocumentationViewMixin,
     QualityAssessmentSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ComputationCapabilitiesEditorForm
     template_name = 'metadata_editor/computation_capabilities_editor.html'
 
     model = models.ComputationCapabilities
+    metadata_editor_class = ComputationCapabilitiesEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.ComputationCapabilities.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: ComputationCapabilitiesEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_computation_component_version(form_cleaned_data.get('version'))
+        metadata_editor.update_child_computations(form_cleaned_data.get('child_computations'))
+        metadata_editor.update_types(form_cleaned_data.get('type'))
+        metadata_editor.update_quality_assessment(
+            form_cleaned_data.get('data_quality_flags'),
+            form_cleaned_data.get('metadata_quality_flags')
+        )
+        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        metadata_editor.update_processing_inputs(map_processing_inputs_to_dataclasses(form_cleaned_data))
+        software_reference_update = CitationPropertyTypeMetadataUpdate(
+            citation_title=form_cleaned_data.get('software_reference_citation_title'),
+            citation_publication_date=form_cleaned_data.get('software_reference_citation_publication_date'),
+            citation_doi=form_cleaned_data.get('software_reference_citation_doi'),
+            citation_url=form_cleaned_data.get('software_reference_citation_linkage_url'),
+            other_citation_details=form_cleaned_data.get('software_reference_other_citation_details')
+        )
+        metadata_editor.update_software_reference(software_reference_update)
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_capabilities_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+
 
     def get_child_computation_choices_for_form(self):
         return self.get_resource_choices_with_model(models.ComputationCapabilities)
