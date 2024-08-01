@@ -22,19 +22,13 @@ def get_user_info(access_token):
     the logged in user's details - e.g., which
     institution they are a part of, ID, etc.
     """
-    response_text = None
-    try:
-        url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
-        headers = {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer' + ' ' + access_token
-        }
-        response = requests.get(url, headers=headers)
-        response_text = response.text
-        return json.loads(response_text)
-    except json.decoder.JSONDecodeError as err:
-        logger.exception(f'Could not decode user info: "{response_text}"')
-        raise err
+    url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+    headers = {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer' + ' ' + access_token
+    }
+    response = requests.get(url, headers=headers)
+    return json.loads(response.text)
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of

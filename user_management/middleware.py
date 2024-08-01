@@ -114,7 +114,7 @@ class LoginMiddleware(object):
                     logged_in_institution_id,
                     user_memberships.get(logged_in_institution_id)
                 )
-        except BaseException as err:
+        except Exception:
             logger.exception('An unexpected error occurred during authentication.')
             remove_login_session_variables(request.session)
             messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
