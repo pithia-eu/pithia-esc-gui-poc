@@ -148,7 +148,7 @@ class InstitutionSelectionMiddleware:
         except AttributeError:
             pass
         except Exception:
-            pass
+            logger.exception('An unexpected error occurred whilst trying to apply the user\'s login session institution.' )
 
         response = self.get_response(request)
 
@@ -179,7 +179,7 @@ class InstitutionSelectionFormMiddleware:
             # user memberships have not been stored in the session yet.
             pass
         except Exception:
-            pass
+            logger.exception('An unexpected error occurred whilst trying to setup the login institution selection form.' )
 
         response = self.get_response(request)
 
