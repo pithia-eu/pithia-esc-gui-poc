@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import requests
 from urllib.parse import unquote
@@ -11,9 +10,6 @@ CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&gro
 # Used in institutions list page. Used as the base link for joining organisations.
 # E.g., JOIN_URL_BASE + "<institution_name>"
 JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
-
-
-logger = logging.getLogger(__name__)
 
 
 def get_user_info(access_token):
@@ -32,12 +28,8 @@ def get_user_info(access_token):
         response = requests.get(url, headers=headers)
         response_text = response.text
         return json.loads(response_text)
-    except json.decoder.JSONDecodeError:
-        logger.exception(f'Could not decode user info: {response_text}')
-    except Exception as err:
-        logger.exception(err)
-
-    return {'error': 'An unexpected error occurred.'}
+    except json.decoder.JSONDecodeError as err:
+        raise json.decoder.JSONDecodeError(f'Could not decode user info: {response_text}') from err 
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of
