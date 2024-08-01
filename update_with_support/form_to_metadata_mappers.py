@@ -256,3 +256,9 @@ class ComputationCapabilitiesFormFieldsToMetadataMapper(
             'processing_inputs_json': processing_inputs,
         })
         return initial_values
+
+
+class ComputationFormFieldsToMetadataMapper(
+    CapabilityLinkFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    capabilities_element_key = 'computationCapabilities'

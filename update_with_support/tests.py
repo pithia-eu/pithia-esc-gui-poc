@@ -4,12 +4,14 @@ from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
+    ComputationFormFieldsToMetadataMapper,
 )
 
 from common.test_xml_files import (
     ACQUISITION_CAPABILITIES_METADATA_XML,
     ACQUISITION_WITH_TIME_SPANS_METADATA_XML,
     COMPUTATION_CAPABILITIES_FULL_METADATA_XML,
+    COMPUTATION_METADATA_XML,
 )
 
 
@@ -32,5 +34,12 @@ class AcquisitionFormToMetadataMapperTestCase(SimpleTestCase):
 class ComputationCapabilitiesFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
         mapper = ComputationCapabilitiesFormFieldsToMetadataMapper(COMPUTATION_CAPABILITIES_FULL_METADATA_XML.read().decode())
+        initial_values = mapper.get_initial_form_values()
+        print('initial_values', initial_values)
+
+
+class ComputationFormToMetadataMapperTestCase(SimpleTestCase):
+    def test_mapper(self):
+        mapper = ComputationFormFieldsToMetadataMapper(COMPUTATION_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
