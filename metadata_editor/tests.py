@@ -741,7 +741,7 @@ class ComputationEditorTestCase(SimpleTestCase):
                     'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test',
                     'https://metadata.pithia.eu/resources/2.2/platform/test/Platform_Test_2',
                 ],
-                capabilities='https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/test/AcquisitionCapabilities_Test',
+                capabilities='https://metadata.pithia.eu/resources/2.2/computationCapabilities/test/ComputationCapabilities_Test',
                 standard_identifiers=[
                     StandardIdentifierMetadataUpdate(
                         authority='sia1',
