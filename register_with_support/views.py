@@ -331,11 +331,10 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
 
 class ComputationRegisterWithEditorFormView(
     ComputationEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ComputationEditorRegistrationForm
     success_url = reverse_lazy('register:computation_with_editor')
 
-    metadata_editor_class = ComputationMetadata
     file_upload_registration_url = reverse_lazy('register:computation')
     save_data_local_storage_key = 'computation_r_wizard_save_data'
 

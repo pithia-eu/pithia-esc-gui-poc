@@ -18,6 +18,7 @@ from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     ComputationCapabilitiesEditor,
+    ComputationEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -573,15 +574,22 @@ class ComputationCapabilitiesEditorFormView(
 
 
 class ComputationEditorFormView(
+    CapabilityLinksViewMixin,
     PlatformSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ComputationEditorForm
     template_name = 'metadata_editor/computation_editor.html'
 
     model = models.Computation
+    metadata_editor_class = ComputationEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Computation.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: ComputationEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        self.update_capability_links_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_computation_capability_set_choices_for_form(self):
         return self.get_resource_choices_with_model(models.ComputationCapabilities)
