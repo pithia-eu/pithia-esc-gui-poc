@@ -30,9 +30,7 @@ class LoginMiddleware(object):
         if 'error' in user_info:
             # The User Info API will return an error if
             # the access token has been invalidated.
-            remove_login_session_variables(request.session)
-            if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('home'))
+            raise Exception(f'An error was found in the user info response: {user_info}')
 
             
         # Configuring login session variables
@@ -121,7 +119,7 @@ class LoginMiddleware(object):
             remove_login_session_variables(request.session)
             messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
             if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('home'))
+                return HttpResponseRedirect(reverse('logout'))
 
         response = self.get_response(request)
 
