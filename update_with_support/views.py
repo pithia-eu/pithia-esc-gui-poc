@@ -13,6 +13,7 @@ from .form_to_metadata_mappers import (
     OperationFormFieldsToMetadataMapper,
     OrganisationFormFieldsToMetadataMapper,
     PlatformFormFieldsToMetadataMapper,
+    ProcessFormFieldsToMetadataMapper,
     ProjectFormFieldsToMetadataMapper,
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
@@ -173,3 +174,11 @@ class ComputationUpdateWithEditorFormView(
     model = models.Computation
     success_url_name = 'update:computation_with_editor'
     form_field_to_metadata_mapper_class = ComputationFormFieldsToMetadataMapper
+
+
+class ProcessUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    ProcessEditorFormView):
+    model = models.Process
+    success_url_name = 'update:process_with_editor'
+    form_field_to_metadata_mapper_class = ProcessFormFieldsToMetadataMapper

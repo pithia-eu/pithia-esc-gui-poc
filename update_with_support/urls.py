@@ -13,4 +13,5 @@ urlpatterns = [
     path('acquisitions/<resource_id>/update-with-wizard/', views.AcquisitionUpdateWithEditorFormView.as_view(), name='acquisition_with_editor'),
     path('computation-capabilities/<resource_id>/update-with-wizard/', views.ComputationCapabilitiesUpdateWithEditorFormView.as_view(), name='computation_capability_set_with_editor'),
     path('computation/<resource_id>/update-with-wizard/', views.ComputationUpdateWithEditorFormView.as_view(), name='computation_with_editor'),
+    path('process/<resource_id>/update-with-wizard/', views.ProcessUpdateWithEditorFormView.as_view(), name='process_with_editor'),
 ]
