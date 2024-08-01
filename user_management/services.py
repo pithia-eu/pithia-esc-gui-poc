@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import requests
 from urllib.parse import unquote
@@ -12,19 +13,31 @@ CREATION_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&gro
 JOIN_URL_BASE = 'https://perun.egi.eu/egi/registrar/?vo=vo.esc.pithia.eu&group=organizations:'
 
 
+logger = logging.getLogger(__name__)
+
+
 def get_user_info(access_token):
     """
     Contacts the EGI Check-in UserInfo API to retrieve
     the logged in user's details - e.g., which
     institution they are a part of, ID, etc.
     """
-    url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
-    headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer' + ' ' + access_token
-    }
-    response = requests.get(url, headers=headers)
-    return json.loads(response.text)
+    response_text = None
+    try:
+        url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+        headers = {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer' + ' ' + access_token
+        }
+        response = requests.get(url, headers=headers)
+        response_text = response.text
+        return json.loads(response_text)
+    except json.decoder.JSONDecodeError:
+        logger.exception(f'Could not decode user info: {response_text}')
+    except Exception as err:
+        logger.exception(err)
+
+    return {'error': 'An unexpected error occurred.'}
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of
