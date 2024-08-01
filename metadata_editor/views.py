@@ -23,8 +23,9 @@ from .services import (
     InstrumentEditor,
     OperationEditor,
     OrganisationEditor,
-    ProjectEditor,
     PlatformEditor,
+    ProcessEditor,
+    ProjectEditor,
 )
 from .view_mixins import *
 
@@ -619,17 +620,35 @@ class ComputationEditorFormView(
 
 class ProcessEditorFormView(
     CapabilitiesSelectFormViewMixin,
+    CapabilitiesViewMixin,
     DataLevelSelectFormViewMixin,
+    DocumentationViewMixin,
     QualityAssessmentSelectFormViewMixin,
+    RelatedPartiesViewMixin,
     RelatedPartiesSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = ProcessEditorForm
     template_name = 'metadata_editor/process_editor.html'
 
     model = models.Process
+    metadata_editor_class = ProcessEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Process.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: ProcessEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_acquisition_components(form_cleaned_data.get('acquisitions'))
+        metadata_editor.update_computation_components(form_cleaned_data.get('computations'))
+        metadata_editor.update_quality_assessment(
+            form_cleaned_data.get('data_quality_flags'),
+            form_cleaned_data.get('metadata_quality_flags')
+        )
+        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        self.update_documentation_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
+        self.update_capabilities_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def get_acquisition_choices_for_form(self):
         return self.get_resource_choices_with_model(models.Acquisition)

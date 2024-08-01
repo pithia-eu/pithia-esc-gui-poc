@@ -348,11 +348,10 @@ class ComputationRegisterWithEditorFormView(
 
 class ProcessRegisterWithEditorFormView(
     ProcessEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ProcessEditorRegistrationForm
     success_url = reverse_lazy('register:process_with_editor')
 
-    metadata_editor_class = ProcessMetadata
     file_upload_registration_url = reverse_lazy('register:process')
     save_data_local_storage_key = 'process_r_wizard_save_data'
 
