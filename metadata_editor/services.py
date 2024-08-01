@@ -368,3 +368,35 @@ class ComputationEditor(
 
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('Computation', xml_string)
+
+
+class ProcessEditor(
+        BaseMetadataEditor,
+        CapabilitiesMetadataEditor,
+        DataLevelMetadataEditor,
+        DocumentationMetadataEditor,
+        QualityAssessmentMetadataEditor,
+        RelatedPartiesMetadataEditor,
+        XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('CompositeProcess', xml_string)
+
+    def update_acquisition_components(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'acquisitionComponent',
+            [
+                self.get_as_xlink_href(url)
+                for url in update_data if url.strip()
+            ]
+        )
+
+    def update_computation_components(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'computationComponent',
+            [
+                self.get_as_xlink_href(url)
+                for url in update_data if url.strip()
+            ]
+        )

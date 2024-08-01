@@ -28,6 +28,7 @@ from .services import (
     OperationEditor,
     OrganisationEditor,
     PlatformEditor,
+    ProcessEditor,
     ProjectEditor,
 )
 
@@ -767,6 +768,104 @@ class ComputationEditorTestCase(SimpleTestCase):
         ]
         computation_editor.update_capability_links(capability_links)
         xml = computation_editor.to_xml()
+        print('xml', xml)
+
+
+class ProcessEditorTestCase(SimpleTestCase):
+    def test_process_editor(self):
+        process_editor = ProcessEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Process_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        process_editor.update_pithia_identifier(pithia_identifier)
+        process_editor.update_name('Process Test')
+        process_editor.update_description('Process test description')
+        process_editor.update_acquisition_components([
+            'https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test',
+            'https://metadata.pithia.eu/resources/2.2/acquisition/test/Acquisition_Test_2',
+        ])
+        process_editor.update_computation_components([
+            'https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test',
+            'https://metadata.pithia.eu/resources/2.2/computation/test/Computation_Test_2',
+        ])
+        data_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ4',
+        ]
+        metadata_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9',
+        ]
+        process_editor.update_quality_assessment(data_quality_flags, metadata_quality_flag_urls=metadata_quality_flags)
+        data_levels = [
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L2',
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L4',
+        ]
+        process_editor.update_data_levels(data_levels)
+        capabilities = [
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 1',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 2',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 3',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                cadence=0.5,
+                cadence_unit='month'
+            ),
+            ProcessCapabilityMetadataUpdate(
+                name='Process Capability 4',
+                observed_property='https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_ElectricFieldStrength',
+                vector_representation=['https://metadata.pithia.eu/ontology/2.2/component/r'],
+                qualifier=['https://metadata.pithia.eu/ontology/2.2/qualifier/Median']
+            )
+        ]
+        process_editor.update_capabilities(capabilities)
+        related_parties = [
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                parties=[
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
+                ]
+            ),
+            RelatedPartyMetadataUpdate(),
+            RelatedPartyMetadataUpdate(
+                role='',
+                parties=[]
+            ),
+            RelatedPartyMetadataUpdate(
+                role= 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                parties=[
+                    'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+                ]
+            ),
+        ]
+        process_editor.update_related_parties(related_parties)
+        documentation = CitationPropertyTypeMetadataUpdate(
+            citation_title='Citation title',
+            citation_publication_date='23/07/24',
+            citation_doi='doi:10.1234/4321',
+            citation_url='https://www.example.com/',
+            other_citation_details='Other citation details'
+        )
+        process_editor.update_documentation(documentation)
+        xml = process_editor.to_xml()
         print('xml', xml)
 
 
