@@ -117,7 +117,6 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         mapped_resource_server_urls.append(url_mapping)
 
     for url in non_operational_mode_urls:
-        print('url', url)
         url_mapping = {
             'original_server_url': url,
             'converted_url': url,
@@ -136,7 +135,6 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
                 model = subclass
         
         try:
-            print('model', model)
             referenced_resource = model.objects.get_by_metadata_server_url(url)
         except (AttributeError, ObjectDoesNotExist):
             mapped_resource_server_urls.append(url_mapping)

@@ -1,7 +1,12 @@
 """Prepares cleaned form data for XML conversion.
 """
 import json
+import logging
 from unidecode import unidecode
+
+
+logger = logging.getLogger(__name__)
+
 
 # Contact info
 def process_contact_info_in_form(form_cleaned_data):
@@ -36,7 +41,7 @@ def process_hours_of_service_in_form(form_cleaned_data):
         time_end_formatted = _format_time_to_12_hour_format(time_end_parsed)
         return f'{time_start_formatted}-{time_end_formatted}'
     except BaseException:
-        print('An error occurred when trying to process hours of service.')
+        logger.exception('An error occurred when trying to process hours of service.')
         return ''
 
 def _process_citation(

@@ -1,4 +1,5 @@
 import json
+import logging
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
     InputOutputMetadataUpdate,
@@ -7,6 +8,9 @@ from .editor_dataclasses import (
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 # Contact info fields
@@ -22,7 +26,7 @@ def get_hours_of_service_from_form(form_cleaned_data):
         time_end_formatted = _format_time_to_12_hour_format(time_end_parsed)
         return f'{time_start_formatted}-{time_end_formatted}'
     except BaseException:
-        print('An error occurred when trying to process hours of service.')
+        logger.exception('An error occurred when trying to process hours of service.')
         return ''
 
 def get_phone_field_string_value(form_cleaned_data):

@@ -20,7 +20,9 @@ from resource_management.views import (
     _INDEX_PAGE_TITLE,
 )
 
+
 logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 
@@ -122,7 +124,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
             ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
             messages.success(request, f'Successfully deleted {escape(self.resource_to_delete.name)}.')
         except BaseException as e:
-            print(e)
+            logger.exception(e)
             messages.error(request, 'An error occurred during resource deletion.')
         return HttpResponseRedirect(self.redirect_url)
 

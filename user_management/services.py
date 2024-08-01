@@ -120,7 +120,6 @@ def get_members_by_institution_id(institution_id):
     
     try:
         institutions = perun_data.get('organizations')
-        print('institution_id', institution_id)
         # Gets the first institution if there is one,
         # else, returns None
         institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)

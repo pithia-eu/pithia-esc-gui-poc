@@ -103,7 +103,6 @@ def get_time_handle_was_issued_as_string(handle: str) -> str:
 
 def get_date_handle_was_issued_as_string(handle: str) -> str:
     handle_issue_time_string = get_time_handle_was_issued_as_string(handle)
-    print('handle_issue_time_string', handle_issue_time_string)
     handle_issue_date = parser.isoparse(handle_issue_time_string).strftime('%Y-%m-%d')
     return handle_issue_date
 
