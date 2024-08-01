@@ -119,8 +119,7 @@ class LoginMiddleware(object):
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
             messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
-            if '/authorised' in request.path:
-                return remove_login_session_variables_and_redirect_user_to_logout_page(request)
+            return remove_login_session_variables_and_redirect_user_to_logout_page(request)
 
         response = self.get_response(request)
 
