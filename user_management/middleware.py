@@ -1,6 +1,5 @@
 import logging
 from django.http import HttpResponseRedirect
-from django.contrib import messages
 from django.urls import reverse
 
 from common.forms import InstitutionForLoginSessionForm
@@ -12,7 +11,6 @@ from user_management.services import (
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
     remove_login_session_variables,
-    remove_login_session_variables_and_redirect_user_to_logout_page,
     set_institution_for_login_session,
 )
 
@@ -118,8 +116,9 @@ class LoginMiddleware(object):
                 )
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
-            messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
-            return remove_login_session_variables_and_redirect_user_to_logout_page(request)
+            remove_login_session_variables(request.session)
+            if '/authorised' in request.path:
+                return HttpResponseRedirect(reverse('home'))
 
         response = self.get_response(request)
 
