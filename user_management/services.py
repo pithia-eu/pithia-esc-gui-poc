@@ -1,7 +1,11 @@
 import json
 import logging
 import os
+import re
 import requests
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.utils.http import urlencode
 from urllib.parse import unquote
 
 from pithiaesc.settings import BASE_DIR
@@ -22,13 +26,19 @@ def get_user_info(access_token):
     the logged in user's details - e.g., which
     institution they are a part of, ID, etc.
     """
-    url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
-    headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer' + ' ' + access_token
-    }
-    response = requests.get(url, headers=headers)
-    return json.loads(response.text)
+    response_text = None
+    try:
+        url = 'https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/userinfo'
+        headers = {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer' + ' ' + access_token
+        }
+        response = requests.get(url, headers=headers)
+        response_text = response.text
+        return json.loads(response_text)
+    except json.decoder.JSONDecodeError as err:
+        logger.exception(f'Could not decode user info: "{response_text}"')
+        raise err
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of
@@ -111,6 +121,11 @@ def delete_institution_for_login_session(session):
         del session['institution_for_login_session']
     if 'subgroup_for_login_session' in session:
         del session['subgroup_for_login_session']
+
+def remove_login_session_variables_and_redirect_user_to_logout_page(request):
+    remove_login_session_variables()
+    absolute_home_page_uri = re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
+    return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
 # Templates
 def get_members_by_institution_id(institution_id):

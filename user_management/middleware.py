@@ -12,6 +12,7 @@ from user_management.services import (
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
     remove_login_session_variables,
+    remove_login_session_variables_and_redirect_user_to_logout_page,
     set_institution_for_login_session,
 )
 
@@ -47,16 +48,17 @@ class LoginMiddleware(object):
 
     def _update_session_access_token_if_possible(self, request):
         access_token_in_headers = request.META.get('OIDC_access_token')
-        if access_token_in_headers:
-            # Only update the session's access token if
-            # there is one in the headers (setting it whilst
-            # there isn't one may overwrite a valid access
-            # token in the session).
+        if not access_token_in_headers:
+            return
+        # Only update the session's access token if
+        # there is one in the headers (setting it whilst
+        # there isn't one may overwrite a valid access
+        # token in the session).
 
-            # Update the session's access token with every request
-            # to ensure that any outdated session access tokens are
-            # overwritten.
-            request.session['OIDC_access_token'] = access_token_in_headers
+        # Update the session's access token with every request
+        # to ensure that any outdated session access tokens are
+        # overwritten.
+        request.session['OIDC_access_token'] = access_token_in_headers
 
     def __call__(self, request):
         # Code to be executed for each request before
@@ -116,10 +118,8 @@ class LoginMiddleware(object):
                 )
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
-            remove_login_session_variables(request.session)
             messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
-            if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('logout'))
+            return remove_login_session_variables_and_redirect_user_to_logout_page()
 
         response = self.get_response(request)
 
