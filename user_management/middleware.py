@@ -1,4 +1,6 @@
+import logging
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.urls import reverse
 
 from common.forms import InstitutionForLoginSessionForm
@@ -12,6 +14,9 @@ from user_management.services import (
     remove_login_session_variables,
     set_institution_for_login_session,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class LoginMiddleware(object):
@@ -58,57 +63,64 @@ class LoginMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        # Verify if the user is logged in or not.
-        # Check if an OIDC_access_token exists in
-        # request.META, and perform the appropriate
-        # action.
-        self._update_session_access_token_if_possible(request)
+        try:
+            # Verify if the user is logged in or not.
+            # Check if an OIDC_access_token exists in
+            # request.META, and perform the appropriate
+            # action.
+            self._update_session_access_token_if_possible(request)
 
 
-        # The access token should always be retrieved from the
-        # session. This is because the access token may not
-        # always be present in the headers.
-        access_token_in_session = request.session.get('OIDC_access_token')
-        if access_token_in_session is None:
-            # Access token is not present, so assume that the
-            # user is logged out.
+            # The access token should always be retrieved from the
+            # session. This is because the access token may not
+            # always be present in the headers.
+            access_token_in_session = request.session.get('OIDC_access_token')
+            if access_token_in_session is None:
+                # Access token is not present, so assume that the
+                # user is logged out.
+                remove_login_session_variables(request.session)
+                if '/authorised' in request.path:
+                    return HttpResponseRedirect(reverse('home'))
+            else:
+                self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
+
+            
+            # Check if the user is still a member of the
+            # institution they have logged in with. If not,
+            # perform the appropriate action.
+            logged_in_institution_id = get_institution_id_for_login_session(request.session)
+            logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
+            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
+
+            is_user_member_of_institution_for_login_session = (logged_in_institution_id is not None 
+                                                                and user_memberships is not None
+                                                                and logged_in_institution_id in user_memberships)
+            # user_memberships gets updated with every request,
+            # so it can be used to verify if a user's authorisation
+            # level (decided by the highest level of subgroup they
+            # are currently in), is still valid.
+            is_user_authorisation_level_correct = (logged_in_institution_subgroup_id is not None
+                                                    and user_memberships is not None
+                                                    and logged_in_institution_subgroup_id == user_memberships.get(logged_in_institution_id))
+            if (logged_in_institution_id is not None
+                and not is_user_member_of_institution_for_login_session):
+                delete_institution_for_login_session(request.session)
+            elif (logged_in_institution_id is not None
+                and not is_user_authorisation_level_correct):
+                # If the user's permissions changed whilst
+                # they are logged in, update the user's
+                # permission level here.
+                set_institution_for_login_session(
+                    request.session,
+                    logged_in_institution_id,
+                    user_memberships.get(logged_in_institution_id)
+                )
+        except Exception as err:
+            logger.exception(err)
             remove_login_session_variables(request.session)
+            messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
             if '/authorised' in request.path:
                 return HttpResponseRedirect(reverse('home'))
-        else:
-            self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
-
-        
-        # Check if the user is still a member of the
-        # institution they have logged in with. If not,
-        # perform the appropriate action.
-        logged_in_institution_id = get_institution_id_for_login_session(request.session)
-        logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
-        user_memberships = get_institution_memberships_of_logged_in_user(request.session)
-
-        is_user_member_of_institution_for_login_session = (logged_in_institution_id is not None 
-                                                            and user_memberships is not None
-                                                            and logged_in_institution_id in user_memberships)
-        # user_memberships gets updated with every request,
-        # so it can be used to verify if a user's authorisation
-        # level (decided by the highest level of subgroup they
-        # are currently in), is still valid.
-        is_user_authorisation_level_correct = (logged_in_institution_subgroup_id is not None
-                                                and user_memberships is not None
-                                                and logged_in_institution_subgroup_id == user_memberships.get(logged_in_institution_id))
-        if (logged_in_institution_id is not None
-            and not is_user_member_of_institution_for_login_session):
-            delete_institution_for_login_session(request.session)
-        elif (logged_in_institution_id is not None
-            and not is_user_authorisation_level_correct):
-            # If the user's permissions changed whilst
-            # they are logged in, update the user's
-            # permission level here.
-            set_institution_for_login_session(
-                request.session,
-                logged_in_institution_id,
-                user_memberships.get(logged_in_institution_id)
-            )
 
         response = self.get_response(request)
 
