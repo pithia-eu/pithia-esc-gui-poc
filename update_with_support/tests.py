@@ -16,6 +16,7 @@ from common.test_xml_files import (
 # Create your tests here.
 class AcquisitionCapabilitiesFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
+        ACQUISITION_CAPABILITIES_METADATA_XML.seek(0)
         mapper = AcquisitionCapabilitiesFormFieldsToMetadataMapper(ACQUISITION_CAPABILITIES_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
