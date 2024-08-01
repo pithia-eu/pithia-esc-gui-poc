@@ -6,6 +6,7 @@ from pyexpat import ExpatError
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
+    ComputationCapabilitiesFormFieldsToMetadataMapper,
     InstrumentFormFieldsToMetadataWrapper,
     IndividualFormFieldsToMetadataMapper,
     OperationFormFieldsToMetadataMapper,
@@ -145,7 +146,7 @@ class AcquisitionCapabilitiesUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     AcquisitionCapabilitiesEditorFormView):
     model = models.AcquisitionCapabilities
-    success_url_name = 'update:acquisition_capabilities_with_editor'
+    success_url_name = 'update:acquisition_capability_set_with_editor'
     form_field_to_metadata_mapper_class = AcquisitionCapabilitiesFormFieldsToMetadataMapper
 
 
@@ -155,3 +156,11 @@ class AcquisitionUpdateWithEditorFormView(
     model = models.Acquisition
     success_url_name = 'update:acquisition_with_editor'
     form_field_to_metadata_mapper_class = AcquisitionFormFieldsToMetadataMapper
+
+
+class ComputationCapabilitiesUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    ComputationCapabilitiesEditorFormView):
+    model = models.ComputationCapabilities
+    success_url_name = 'update:computation_capability_set_with_editor'
+    form_field_to_metadata_mapper_class = ComputationCapabilitiesFormFieldsToMetadataMapper
