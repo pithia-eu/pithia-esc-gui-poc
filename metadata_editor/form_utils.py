@@ -3,6 +3,7 @@ from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
+    RelatedPartyMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
@@ -69,3 +70,12 @@ def map_processing_inputs_to_dataclasses(form_cleaned_data):
             description=proc_input.get('description')
         )
     for proc_input in form_cleaned_data.get('processing_inputs_json')]
+
+# Related parties
+def map_related_parties_to_dataclasses(form_cleaned_data):
+    return [
+        RelatedPartyMetadataUpdate(
+            role=rp.get('role'),
+            parties=rp.get('parties')
+        )
+    for rp in form_cleaned_data.get('related_parties_json')]

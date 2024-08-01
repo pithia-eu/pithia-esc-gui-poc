@@ -86,6 +86,12 @@ class OperationTimeMetadataUpdate:
 
 
 @dataclass(kw_only=True)
+class RelatedPartyMetadataUpdate:
+    role: Optional[str] = None
+    parties: Optional[list[str]] = field(default_factory=list)
+
+
+@dataclass(kw_only=True)
 class StandardIdentifierMetadataUpdate:
     authority: Optional[str] = None
     value: Optional[str] = None

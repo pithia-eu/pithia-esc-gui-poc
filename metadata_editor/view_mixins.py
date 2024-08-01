@@ -19,6 +19,7 @@ from .form_utils import (
     get_phone_field_string_value,
     map_capability_links_to_dataclasses,
     map_process_capabilities_to_dataclasses,
+    map_related_parties_to_dataclasses,
 )
 from .service_utils import BaseMetadataEditor
 from .services import (
@@ -112,15 +113,7 @@ class RelatedPartiesViewMixin:
 
     def update_related_parties_with_metadata_editor(self, request, metadata_editor: ProjectEditor, form_cleaned_data):
         try:
-            related_parties_extra_json = form_cleaned_data.get('related_parties_extra_json', {})
-            num_additions = related_parties_extra_json.get('numAdditions', 0)
-            deleted_index_sequence = related_parties_extra_json.get('deletedIndexSequence', [])
-            metadata_editor.update_related_parties(
-                form_cleaned_data.get('related_parties_json'),
-                num_additions=num_additions,
-                deleted_index_sequence=deleted_index_sequence,
-                new=self.new
-            )
+            metadata_editor.update_related_parties(map_related_parties_to_dataclasses(form_cleaned_data))
         except BaseException as err:
             logger.exception(err)
             messages.error(request, 'Could not add related parties metadata due to an error. Please try again later.')

@@ -1,4 +1,4 @@
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, tag
 from lxml import etree
 
 from .editor_dataclasses import (
@@ -11,6 +11,7 @@ from .editor_dataclasses import (
     OperationTimeMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
+    RelatedPartyMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
@@ -196,6 +197,7 @@ class IndividualEditorTestCase(SimpleTestCase):
 
 
 class ProjectEditorTestCase(SimpleTestCase):
+    @tag('related_parties')
     def test_project_editor(self):
         project_editor = ProjectEditor()
         pithia_identifier = PithiaIdentifierMetadataUpdate(
@@ -219,22 +221,22 @@ class ProjectEditorTestCase(SimpleTestCase):
         )
         project_editor.update_documentation(documentation_update)
         related_parties = [
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-                'parties': [
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                parties=[
                     'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
                     'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
-                ],
-            },
-            {'role': '', 'parties': []},
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-                'parties': [
+                ]
+            ),
+            RelatedPartyMetadataUpdate(),
+            RelatedPartyMetadataUpdate(
+                role= 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                parties=[
                     'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
-                ],
-            },
+                ]
+            ),
         ]
-        project_editor.update_related_parties(related_parties, new=True)
+        project_editor.update_related_parties(related_parties)
         xml = project_editor.to_xml()
         print('xml', xml)
 
@@ -259,6 +261,7 @@ class PlatformEditorTestCase(SimpleTestCase):
 
 
 class OperationEditorTestCase(SimpleTestCase):
+    @tag('related_parties')
     def test_operation_editor(self):
         """Test that properties supported by the operation
         editor can be updated.
@@ -300,15 +303,15 @@ class OperationEditorTestCase(SimpleTestCase):
         )
         operation_editor.update_location(location)
         operation_editor.update_related_parties([
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-                'parties': ['https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test']
-            },
-            {'role': '', 'parties': []},
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-                'parties': ['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test']
-            },
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                parties=['https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test']
+            ),
+            RelatedPartyMetadataUpdate(),
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                parties=['https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test']
+            )
         ])
         documentation = CitationPropertyTypeMetadataUpdate(
             citation_title='Citation title',
@@ -598,6 +601,7 @@ class AcquisitionEditorTestCase(SimpleTestCase):
 
 
 class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
+    @tag('related_parties')
     def test_computation_capabilities_editor(self):
         computation_capabilities_editor = ComputationCapabilitiesEditor()
         pithia_identifier = PithiaIdentifierMetadataUpdate(
@@ -663,20 +667,24 @@ class ComputationCapabilitiesEditorTestCase(SimpleTestCase):
         ]
         computation_capabilities_editor.update_capabilities(capabilities)
         related_parties = [
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
-                'parties': [
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                parties=[
                     'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
                     'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
-                ],
-            },
-            {'role': '', 'parties': []},
-            {
-                'role': 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
-                'parties': [
+                ]
+            ),
+            RelatedPartyMetadataUpdate(),
+            RelatedPartyMetadataUpdate(
+                role='',
+                parties=[]
+            ),
+            RelatedPartyMetadataUpdate(
+                role= 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                parties=[
                     'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
-                ],
-            },
+                ]
+            ),
         ]
         computation_capabilities_editor.update_related_parties(related_parties)
         software_reference_update = CitationPropertyTypeMetadataUpdate(
