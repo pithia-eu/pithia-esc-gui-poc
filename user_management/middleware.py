@@ -86,12 +86,6 @@ class LoginMiddleware(object):
                     return HttpResponseRedirect(reverse('home'))
             else:
                 self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
-        except json.decoder.JSONDecodeError:
-            logger.exception('The User Info API response could not be decoded.')
-            messages.error(user_info_error_client_msg)
-            remove_login_session_variables(request.session)
-            if '/authorised' in request.path:
-                return HttpResponseRedirect(reverse('home'))
         except Exception:
             logger.exception('An unexpected error occurred whilst getting user info.')
             messages.error(user_info_error_client_msg)
