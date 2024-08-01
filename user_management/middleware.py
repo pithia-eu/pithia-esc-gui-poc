@@ -1,8 +1,8 @@
+import json
 import logging
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
-from json.decoder import JSONDecodeError
 
 from common.forms import InstitutionForLoginSessionForm
 from user_management.services import (
@@ -76,7 +76,7 @@ class LoginMiddleware(object):
             # request.META, and perform the appropriate
             # action.
             self._update_session_access_token_if_possible(request)
-        except JSONDecodeError:
+        except json.decoder.JSONDecodeError:
             logger.exception('The User Info API response could not be decoded.')
             messages.error(user_info_error_client_msg)
             return self._logout_user_and_redirect_to_home_page(request)

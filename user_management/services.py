@@ -33,7 +33,7 @@ def get_user_info(access_token):
         response_text = response.text
         return json.loads(response_text)
     except json.decoder.JSONDecodeError as err:
-        logger.exception(f'Could not decode user info: {response_text}')
+        logger.exception(f'Could not decode user info: "{response_text}"')
         raise err
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
