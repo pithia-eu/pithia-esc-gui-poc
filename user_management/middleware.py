@@ -12,7 +12,6 @@ from user_management.services import (
     get_institution_memberships_of_logged_in_user,
     get_subgroup_id_for_login_session,
     remove_login_session_variables,
-    remove_login_session_variables_and_redirect_user_to_logout_page,
     set_institution_for_login_session,
 )
 
@@ -31,7 +30,7 @@ class LoginMiddleware(object):
         if 'error' in user_info:
             # The User Info API will return an error if
             # the access token has been invalidated.
-            raise Exception(f'An error was found in the user info response: {user_info}')
+            raise Exception(f'An error was found in the user info response.')
 
             
         # Configuring login session variables
@@ -119,7 +118,8 @@ class LoginMiddleware(object):
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
             messages.error('You have been logged out as there was a problem authenticating your login session. Please try logging in again.')
-            return remove_login_session_variables_and_redirect_user_to_logout_page()
+            if '/authorised' in request.path:
+                return reverse('logout')
 
         response = self.get_response(request)
 
