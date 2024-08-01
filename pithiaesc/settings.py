@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'user_management.middleware.LoginMiddleware',
     'user_management.middleware.InstitutionSelectionMiddleware',
     'user_management.middleware.InstitutionSelectionFormMiddleware',
+    'common.middleware.ExceptionLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'pithiaesc.urls'
