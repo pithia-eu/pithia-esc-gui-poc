@@ -262,3 +262,19 @@ class ComputationFormFieldsToMetadataMapper(
     CapabilityLinkFormFieldsToMetadataMixin,
     BaseMetadataFormFieldsToMetadataMixin):
     capabilities_element_key = 'computationCapabilities'
+
+
+class ProcessFormFieldsToMetadataMapper(
+    CapabilitiesFormFieldsToMetadataMixin,
+    DataLevelFormFieldsToMetadataMixin,
+    DocumentationFormFieldsToMetadataMixin,
+    QualityAssessmentFormFieldsToMetadataMixin,
+    RelatedPartyFormFieldsToMetadataMixin,
+    BaseMetadataFormFieldsToMetadataMixin):
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'acquisitions': './/%s:acquisitionComponent/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'computations': './/%s:computationComponent/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings

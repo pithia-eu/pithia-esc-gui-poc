@@ -5,6 +5,7 @@ from .form_to_metadata_mappers import (
     AcquisitionFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
+    ProcessFormFieldsToMetadataMapper,
 )
 
 from common.test_xml_files import (
@@ -12,6 +13,7 @@ from common.test_xml_files import (
     ACQUISITION_WITH_TIME_SPANS_METADATA_XML,
     COMPUTATION_CAPABILITIES_FULL_METADATA_XML,
     COMPUTATION_METADATA_XML,
+    PROCESS_FULL_METADATA_XML,
 )
 
 
@@ -42,5 +44,13 @@ class ComputationFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
         COMPUTATION_METADATA_XML.seek(0)
         mapper = ComputationFormFieldsToMetadataMapper(COMPUTATION_METADATA_XML.read().decode())
+        initial_values = mapper.get_initial_form_values()
+        print('initial_values', initial_values)
+
+
+class ProcessFormToMetadataMapperTestCase(SimpleTestCase):
+    def test_mapper(self):
+        PROCESS_FULL_METADATA_XML.seek(0)
+        mapper = ProcessFormFieldsToMetadataMapper(PROCESS_FULL_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
