@@ -34,7 +34,8 @@ def get_user_info(access_token):
         return json.loads(response_text)
     except json.decoder.JSONDecodeError as err:
         logger.exception(f'Could not decode user info: "{response_text}"')
-        raise err
+    
+    return {'error': 'An unexpected error occurred whilst getting user info.'}
 
 def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement):
     # Find all groups that are a part of
