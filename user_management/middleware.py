@@ -19,44 +19,56 @@ logger = logging.getLogger(__name__)
 
 
 class LoginMiddleware(object):
+    ACCESS_TOKEN_DICT_KEY = 'OIDC_access_token'
+    USER_INSTITUTION_SUBGROUPS_DICT_KEY = 'user_institution_subgroups'
+
     def __init__(self, get_response):
         # One-time configuration and initialisation.
         self.get_response = get_response
 
-    def _verify_access_token_and_set_login_session_variables(self, request, access_token):
+    # User info
+    def _set_user_info_related_session_variables(self, request, user_info):
+        # Configuring login session variables
+        # Store user info in session to minimise
+        # calls to the User Info API.
+        request.session['is_logged_in'] = True
+        try:
+            request.session[self.USER_INSTITUTION_SUBGROUPS_DICT_KEY] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
+        except KeyError:
+            request.session[self.USER_INSTITUTION_SUBGROUPS_DICT_KEY] = {}
+        request.session['user_given_name'] = user_info.get('given_name')
+
+    def _verify_access_token_and_set_user_info_session_variables(self, request, access_token):
         # Access token verification
         user_info = get_user_info(access_token)
         if 'error' in user_info:
             # The User Info API will return an error if
             # the access token has been invalidated.
-            raise Exception(f'An error was found in the user info response.')
+            raise Exception(f'An error was found in/whilst processing the user info response.')
+        self._set_user_info_related_session_variables(request, user_info)
 
-            
-        # Configuring login session variables
-        # Store user info in session to minimise
-        # calls to the User Info API.
-        request.session['OIDC_access_token'] = access_token
-        request.session['is_logged_in'] = True
-        try:
-            request.session['user_institution_subgroups'] = get_highest_subgroup_of_each_institution_for_logged_in_user(user_info['eduperson_entitlement'])
-        except KeyError:
-            request.session['user_institution_subgroups'] = {}
-        request.session['user_id'] = request.META.get('OIDC_CLAIM_sub')
-        request.session['user_given_name'] = user_info.get('given_name')
+    # Request META variables
+    def _set_request_meta_variable_in_session_if_possible(self, request, key_in_request_meta: str, key_in_session: str = None):
+        request_meta_variable = request.META.get(key_in_request_meta)
+        if not request_meta_variable:
+            return None
+        if not key_in_session:
+            request.session[key_in_request_meta] = request_meta_variable
+            return None
+        request.session[key_in_session] = request_meta_variable
+        return None
 
-    def _update_session_access_token_if_possible(self, request):
-        access_token_in_headers = request.META.get('OIDC_access_token')
-        if not access_token_in_headers:
-            return
-        # Only update the session's access token if
-        # there is one in the headers (setting it whilst
-        # there isn't one may overwrite a valid access
-        # token in the session).
-
-        # Update the session's access token with every request
-        # to ensure that any outdated session access tokens are
-        # overwritten.
-        request.session['OIDC_access_token'] = access_token_in_headers
+    def _set_request_meta_variables_for_login_session_if_possible(self, request):
+        """The access token is stored in the session to allow the login
+        status to be checked when accessing a non-protected route, as
+        it's only present in the request headers when accessing a protected
+        route.
+        The token in the session is updated whenever it's present in the
+        request headers to ensure any outdated session access tokens are
+        overwritten.
+        """
+        self._set_request_meta_variable_in_session_if_possible(request, self.ACCESS_TOKEN_DICT_KEY)
+        self._set_request_meta_variable_in_session_if_possible(request, 'OIDC_CLAIM_sub', key_in_session='user_id')
 
     def __call__(self, request):
         # Code to be executed for each request before
@@ -67,13 +79,13 @@ class LoginMiddleware(object):
             # Check if an OIDC_access_token exists in
             # request.META, and perform the appropriate
             # action.
-            self._update_session_access_token_if_possible(request)
+            self._set_request_meta_variables_for_login_session_if_possible(request)
 
 
             # The access token should always be retrieved from the
             # session. This is because the access token may not
             # always be present in the headers.
-            access_token_in_session = request.session.get('OIDC_access_token')
+            access_token_in_session = request.session.get(self.ACCESS_TOKEN_DICT_KEY)
             if not access_token_in_session:
                 # Access token is not present, so assume that the
                 # user is logged out.
@@ -81,38 +93,48 @@ class LoginMiddleware(object):
                 if '/authorised' in request.path:
                     return HttpResponseRedirect(reverse('home'))
             else:
-                self._verify_access_token_and_set_login_session_variables(request, access_token_in_session)
+                self._verify_access_token_and_set_user_info_session_variables(request, access_token_in_session)
 
             
-            # Check if the user is still a member of the
-            # institution they have logged in with. If not,
-            # perform the appropriate action.
-            logged_in_institution_id = get_institution_id_for_login_session(request.session)
-            logged_in_institution_subgroup_id = get_subgroup_id_for_login_session(request.session)
-            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
+            # Check if the user is still a member of the institution
+            # they are logged in with. If not, perform the appropriate
+            # action.
+            institution_id_logged_in_with = get_institution_id_for_login_session(request.session)
+            memberships_of_logged_in_user = get_institution_memberships_of_logged_in_user(request.session)
+            is_user_still_member_of_institution_logged_in_with = (
+                # User is logged in with an institution
+                institution_id_logged_in_with is not None
+                # User is a member of an institution
+                and memberships_of_logged_in_user is not None
+                # User is still a member of the institution they are logged in with
+                and institution_id_logged_in_with in memberships_of_logged_in_user
+            )
 
-            is_user_member_of_institution_for_login_session = (logged_in_institution_id is not None 
-                                                                and user_memberships is not None
-                                                                and logged_in_institution_id in user_memberships)
-            # user_memberships gets updated with every request,
-            # so it can be used to verify if a user's authorisation
-            # level (decided by the highest level of subgroup they
-            # are currently in), is still valid.
-            is_user_authorisation_level_correct = (logged_in_institution_subgroup_id is not None
-                                                    and user_memberships is not None
-                                                    and logged_in_institution_subgroup_id == user_memberships.get(logged_in_institution_id))
-            if (logged_in_institution_id is not None
-                and not is_user_member_of_institution_for_login_session):
+            # The logged in user's memberships should be updated with
+            # every request, so it can be used to verify if a user's
+            # authorisation level (decided by the highest level of
+            # subgroup they are currently in), is still valid.
+            institution_subgroup_id_logged_in_with = get_subgroup_id_for_login_session(request.session)
+            is_user_authorisation_level_correct = (
+                institution_subgroup_id_logged_in_with is not None
+                and memberships_of_logged_in_user is not None
+                # Subgroup the user is logged in with still matches
+                # the information from the User Info API.
+                and institution_subgroup_id_logged_in_with == memberships_of_logged_in_user.get(institution_id_logged_in_with)
+            )
+
+            if (institution_id_logged_in_with is not None
+                and not is_user_still_member_of_institution_logged_in_with):
                 delete_institution_for_login_session(request.session)
-            elif (logged_in_institution_id is not None
+            elif (institution_id_logged_in_with is not None
                 and not is_user_authorisation_level_correct):
                 # If the user's permissions changed whilst
                 # they are logged in, update the user's
                 # permission level here.
                 set_institution_for_login_session(
                     request.session,
-                    logged_in_institution_id,
-                    user_memberships.get(logged_in_institution_id)
+                    institution_id_logged_in_with,
+                    memberships_of_logged_in_user.get(institution_id_logged_in_with)
                 )
         except Exception:
             logger.exception('An unexpected error occurred during authentication.')
@@ -137,12 +159,12 @@ class InstitutionSelectionMiddleware:
         # the view (and later middleware) are called.
 
         try:
-            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
-            if len(user_memberships.keys()) == 1:
+            memberships_of_logged_in_user = get_institution_memberships_of_logged_in_user(request.session)
+            if len(memberships_of_logged_in_user.keys()) == 1:
                 set_institution_for_login_session(
                     request.session,
-                    list(user_memberships.keys())[0],
-                    list(user_memberships.values())[0]
+                    list(memberships_of_logged_in_user.keys())[0],
+                    list(memberships_of_logged_in_user.values())[0]
                 )
         except AttributeError:
             pass
@@ -166,15 +188,15 @@ class InstitutionSelectionFormMiddleware:
         # the view (and later middleware) are called.
 
         try:
-            user_memberships = get_institution_memberships_of_logged_in_user(request.session)
-            institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in user_memberships.items()]
+            memberships_of_logged_in_user = get_institution_memberships_of_logged_in_user(request.session)
+            institution_choices = [(f'{institution}:{subgroup}', institution) for institution, subgroup in memberships_of_logged_in_user.items()]
             institution_selection_form = InstitutionForLoginSessionForm(
                 institution_choices=institution_choices,
                 initial={'next': request.path}
             )
             request.institution_selection_form = institution_selection_form
         except AttributeError:
-            # session.get('user_memberships') will raise an AttributeError if
+            # session.get('memberships_of_logged_in_user') will raise an AttributeError if
             # user memberships have not been stored in the session yet.
             pass
         except Exception:

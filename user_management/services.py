@@ -21,10 +21,9 @@ logger = logging.getLogger(__name__)
 
 
 def get_user_info(access_token):
-    """
-    Contacts the EGI Check-in UserInfo API to retrieve
-    the logged in user's details - e.g., which
-    institution they are a part of, ID, etc.
+    """Contacts the EGI Check-in UserInfo API to retrieve
+    the logged in user's details - e.g., which institution
+    they are a part of, ID, etc.
     """
     response_text = None
     try:
@@ -36,7 +35,7 @@ def get_user_info(access_token):
         response = requests.get(url, headers=headers)
         response_text = response.text
         return json.loads(response_text)
-    except json.decoder.JSONDecodeError as err:
+    except json.decoder.JSONDecodeError:
         logger.exception(f'Could not decode user info: "{response_text}"')
         return {'error': 'An error occurred whilst trying to decode the User Info API response.'}
 
@@ -70,6 +69,18 @@ def _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitle
         subgroups.append(unquote(o[:]))
     return subgroups
 
+def _is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
+        institution_name,
+        subgroup_name,
+        subgroups_by_institution_dict):
+    if (subgroup_name == 'admins'):
+        return False
+    elif (institution_name not in subgroups_by_institution_dict):
+        return False
+    else:
+        return True
+
+
 def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitlement):
     institution_subgroup_pairs = _get_institution_subgroup_pairs_from_eduperson_entitlement(eduperson_entitlement)
     subgroups_by_institution = {}
@@ -77,27 +88,26 @@ def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitl
         isgp_split = isgp.split(':')
         institution_name = isgp_split[0]
         subgroup_name = isgp_split[1]
-        if (
-            institution_name not in subgroups_by_institution
-            or (institution_name in subgroups_by_institution
-                and subgroup_name == 'admins')
-        ):
-            subgroups_by_institution[institution_name] = subgroup_name
+        if (_is_highest_inst_subgroup_pair_in_inst_subgroup_pair_dict(
+            institution_name,
+            subgroup_name,
+            subgroups_by_institution)):
+            continue
+        subgroups_by_institution[institution_name] = subgroup_name
         
     return subgroups_by_institution
 
 # Login session management
+def delete_institution_for_login_session(session):
+    session.pop('institution_for_login_session', None)
+    session.pop('subgroup_for_login_session', None)
+
 def remove_login_session_variables(session):
-    if 'OIDC_access_token' in session:
-        del session['OIDC_access_token']
-    if 'is_logged_in' in session:
-        del session['is_logged_in']
-    if 'user_institution_subgroups' in session:
-        del session['user_institution_subgroups']
-    if 'user_id' in session:
-        del session['user_id']
-    if 'user_given_name' in session:
-        del session['user_given_name']
+    session.pop('OIDC_access_token', None)
+    session.pop('is_logged_in', None)
+    session.pop('user_institution_subgroups', None)
+    session.pop('user_id', None)
+    session.pop('user_given_name', None)
     delete_institution_for_login_session(session)
 
 def get_user_id_for_login_session(session):
@@ -115,12 +125,6 @@ def get_institution_memberships_of_logged_in_user(session):
 def set_institution_for_login_session(session, institution, subgroup):
     session['institution_for_login_session'] = institution
     session['subgroup_for_login_session'] = subgroup
-
-def delete_institution_for_login_session(session):
-    if 'institution_for_login_session' in session:
-        del session['institution_for_login_session']
-    if 'subgroup_for_login_session' in session:
-        del session['subgroup_for_login_session']
 
 def remove_login_session_variables_and_redirect_user_to_logout_page(request):
     remove_login_session_variables(request.session)
