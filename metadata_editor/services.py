@@ -15,6 +15,7 @@ from .service_utils import (
     QualityAssessmentMetadataEditor,
     RelatedPartiesMetadataEditor,
     ShortNameMetadataEditor,
+    SourcePropertyTypeEditor,
     StandardIdentifierMetadataEditor,
     StatusMetadataEditor,
     TypeMetadataEditor,
@@ -26,6 +27,7 @@ from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
     InputOutputMetadataUpdate,
     OperationTimeMetadataUpdate,
+    SourceMetadataUpdate,
 )
 
 
@@ -399,4 +401,93 @@ class ProcessEditor(
                 self.get_as_xlink_href(url)
                 for url in update_data if url.strip()
             ]
+        )
+
+
+class DataCollectionEditor(
+        BaseMetadataEditor,
+        DataLevelMetadataEditor,
+        QualityAssessmentMetadataEditor,
+        RelatedPartiesMetadataEditor,
+        SourcePropertyTypeEditor,
+        TypeMultipleMetadataEditor,
+        XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('DataCollection', xml_string)
+
+    def set_empty_properties(self):
+        self.metadata_dict['%s:phenomenonTime' % NamespacePrefix.OM] = {}
+        self.metadata_dict['%s:resultTime' % NamespacePrefix.OM] = {}
+        self.metadata_dict['%s:observedProperty' % NamespacePrefix.OM] = {}
+        self.metadata_dict['%s:result' % NamespacePrefix.OM] = {}
+
+    def update_collection_results(self, update_data: list[SourceMetadataUpdate]):
+        collection_results_key = 'collectionResults'
+        self.metadata_dict.setdefault(collection_results_key, {})
+        collection_results = self.metadata_dict[collection_results_key]
+        self.update_sources(collection_results, update_data)
+        self.remove_child_element_if_empty(
+            self.metadata_dict,
+            collection_results_key
+        )
+
+    def update_permissions(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'permission',
+            [
+                self.get_as_xlink_href(ud)
+                for ud in update_data if ud.strip()
+            ]
+        )
+
+    def update_projects(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'project',
+            [
+                self.get_as_xlink_href(ud)
+                for ud in update_data if ud.strip()
+            ]
+        )
+
+    def update_sub_collections(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'subCollection',
+            [
+                self.get_as_xlink_href(ud)
+                for ud in update_data if ud.strip()
+            ]
+        )
+
+    def update_procedure(self, process_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            '%s:procedure' % NamespacePrefix.OM,
+            self.get_as_xlink_href(process_url)
+        )
+
+    def update_features_of_interest(self, update_data: list[str]):
+        # Feature of interest container element
+        feature_of_interest_container_key = '%s:featureOfInterest' % NamespacePrefix.OM
+        self.metadata_dict[feature_of_interest_container_key] = {}
+        feature_of_interest_container_element = self.metadata_dict[feature_of_interest_container_key]
+        # Nested feature of interest container element
+        nested_feature_of_interest_container_key = 'FeatureOfInterest'
+        feature_of_interest_container_element.setdefault(nested_feature_of_interest_container_key, {})
+        nested_feature_of_interest_container_element = feature_of_interest_container_element[nested_feature_of_interest_container_key]
+        # Named regions
+        self.update_child_element_and_remove_if_empty(
+            nested_feature_of_interest_container_element,
+            'namedRegion',
+            [
+                self.get_as_xlink_href(ud)
+                for ud in update_data if ud.strip()
+            ]
+        )
+        # Clean up
+        self.remove_child_element_if_empty(
+            feature_of_interest_container_element,
+            nested_feature_of_interest_container_key
         )

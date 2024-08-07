@@ -92,6 +92,16 @@ class RelatedPartyMetadataUpdate:
 
 
 @dataclass(kw_only=True)
+class SourceMetadataUpdate:
+    service_function: Optional[str] = None
+    linkage: Optional[str] = None
+    name: Optional[str] = None
+    protocol: Optional[str] = None
+    description: Optional[str] = None
+    data_formats: Optional[list[str]] = field(default_factory=list)
+
+
+@dataclass(kw_only=True)
 class StandardIdentifierMetadataUpdate:
     authority: Optional[str] = None
     value: Optional[str] = None

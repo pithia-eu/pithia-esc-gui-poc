@@ -12,6 +12,7 @@ from .editor_dataclasses import (
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
+    SourceMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
@@ -23,6 +24,7 @@ from .services import (
     AcquisitionEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
+    DataCollectionEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -34,6 +36,7 @@ from .services import (
 
 from common.test_xml_files import (
     ACQUISITION_METADATA_XML,
+    DATA_COLLECTION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     OPERATION_METADATA_XML,
     OPERATION_METADATA_WITH_TIME_INTERVAL_XML,
@@ -866,6 +869,139 @@ class ProcessEditorTestCase(SimpleTestCase):
         )
         process_editor.update_documentation(documentation)
         xml = process_editor.to_xml()
+        print('xml', xml)
+
+
+class DataCollectionEditorTestCase(SimpleTestCase):
+    def test_data_collection_editor(self):
+        data_collection_editor = DataCollectionEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='DataCollection_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        data_collection_editor.update_pithia_identifier(pithia_identifier)
+        data_collection_editor.update_name('Data Collection Test')
+        data_collection_editor.update_description('Data Collection test description')
+        data_collection_editor.set_empty_properties()
+        data_collection_editor.update_types([
+            'https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder',
+            'https://metadata.pithia.eu/ontology/2.2/computationType/IonogramScaling_Manual',
+        ])
+        data_collection_editor.update_permissions([
+            'https://metadata.pithia.eu/ontology/2.2/licence/CAA',
+            'https://metadata.pithia.eu/ontology/2.2/licence/CCBYNC',
+        ])
+        data_collection_editor.update_features_of_interest([
+            'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside',
+            'https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region',
+        ])
+        data_collection_editor.update_projects([
+            'https://metadata.pithia.eu/resources/2.2/project/test/Project_Test',
+            'https://metadata.pithia.eu/resources/2.2/project/test/Project_Test_2',
+        ])
+        data_collection_editor.update_procedure('https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test')
+        data_collection_editor.update_sub_collections([
+            'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test',
+            'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_2',
+        ])
+        data_collection_editor.update_collection_results([
+            SourceMetadataUpdate(
+                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download',
+                linkage='https://www.example.com/',
+                name='Online Resource 1',
+                protocol='HTTPS',
+                description='Description of online resource 1.',
+                data_formats=[
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-gif',
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-jpeg',
+                ]
+            ),
+            SourceMetadataUpdate(
+                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                linkage='https://www.example.com/2',
+                name='Online Resource 2',
+                protocol='FTP',
+                description='Description of online resource 2.',
+                data_formats=[
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-jpeg',
+                ]
+            ),
+            SourceMetadataUpdate(),
+            SourceMetadataUpdate(
+                linkage='https://www.example.com/2',
+                name='Online Resource 4',
+                protocol='FTP',
+            ),
+            SourceMetadataUpdate(
+                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                linkage='https://www.example.com/2',
+                description='Description of online resource 5.',
+                data_formats=[
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-jpeg',
+                ]
+            ),
+            SourceMetadataUpdate(
+                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                description='Description of online resource 6.',
+                data_formats=[
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',
+                    'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-jpeg',
+                ]
+            ),
+        ])
+        data_levels = [
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L2',
+            'https://metadata.pithia.eu/ontology/2.2/dataLevel/L4',
+        ]
+        data_collection_editor.update_data_levels(data_levels)
+        data_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ0',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ1',
+            'https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ4',
+        ]
+        metadata_quality_flags = [
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ1',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ3',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ7',
+            'https://metadata.pithia.eu/ontology/2.2/metadataQualityFlag/MQ9',
+        ]
+        data_collection_editor.update_quality_assessment(data_quality_flags, metadata_quality_flag_urls=metadata_quality_flags)
+        related_parties = [
+            RelatedPartyMetadataUpdate(
+                role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider',
+                parties=[
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test',
+                    'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2',
+                ]
+            ),
+            RelatedPartyMetadataUpdate(),
+            RelatedPartyMetadataUpdate(
+                role='',
+                parties=[]
+            ),
+            RelatedPartyMetadataUpdate(
+                role= 'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
+                parties=[
+                    'https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test',
+                ]
+            ),
+        ]
+        data_collection_editor.update_related_parties(related_parties)
+        xml = data_collection_editor.to_xml()
+        print('xml', xml)
+        parsed_xml = etree.fromstring(xml.encode('utf-8'))
+        sources = parsed_xml.findall('.//{https://metadata.pithia.eu/schemas/2.2}collectionResults/{https://metadata.pithia.eu/schemas/2.2}source/{https://metadata.pithia.eu/schemas/2.2}OnlineResource')
+        self.assertEqual(len(sources), 3)
+
+    def test_data_collection_editor_with_file(self):
+        data_collection_editor = DataCollectionEditor(DATA_COLLECTION_METADATA_XML.read().decode())
+        xml = data_collection_editor.to_xml()
         print('xml', xml)
 
 

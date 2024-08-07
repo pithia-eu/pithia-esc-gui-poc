@@ -16,6 +16,7 @@ from .editor_dataclasses import (
     PithiaIdentifierMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
+    SourceMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
@@ -848,6 +849,74 @@ class RelatedPartiesMetadataEditor(BaseMetadataComponentEditor):
 class ShortNameMetadataEditor(BaseMetadataComponentEditor):
     def update_short_name(self, short_name):
         self.metadata_dict['shortName'] = short_name
+
+
+class SourcePropertyTypeEditor(
+    BaseMetadataComponentEditor,
+    XlinkHrefMetadataEditor):
+    def update_sources(self, parent_element, sources: list[SourceMetadataUpdate]):
+        sources_key = 'source'
+        parent_element[sources_key] = []
+        source_elements = parent_element[sources_key]
+        for s in sources:
+            service_function, linkage, name, \
+            protocol, description, data_formats = attrgetter(
+                'service_function',
+                'linkage',
+                'name',
+                'protocol',
+                'description',
+                'data_formats')(s)
+            is_any_required_property_empty = (
+                not linkage
+                or not name
+                or not protocol
+            )
+            if is_any_required_property_empty:
+                continue
+            online_resource = {}
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'serviceFunction',
+                self.get_as_xlink_href(service_function)
+            )
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'linkage',
+                {
+                    '%s:URL' % NamespacePrefix.GMD: linkage,
+                }
+            )
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'name',
+                name
+            )
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'protocol',
+                protocol
+            )
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'description',
+                description
+            )
+            self.update_child_element_and_remove_if_empty(
+                online_resource,
+                'dataFormat',
+                [
+                    self.get_as_xlink_href(data_format)
+                    for data_format in data_formats if data_format.strip()
+                ]
+            )
+            source_elements.append({
+                'OnlineResource': online_resource
+            })
+        self.remove_child_element_if_empty(
+            parent_element,
+            sources_key
+        )
 
 
 class StatusMetadataEditor(BaseMetadataComponentEditor):
