@@ -16,6 +16,7 @@ from metadata_editor.forms import (
     DataCollectionEditorForm,
     WorkflowEditorForm,
 )
+from register.forms import WorkflowOpenAPISpecificationForm
 
 
 class EditorRegistrationForm(forms.Form):
@@ -111,5 +112,5 @@ class DataCollectionEditorRegistrationForm(EditorRegistrationForm, DataCollectio
     pass
 
 
-class WorkflowEditorRegistrationForm(EditorRegistrationForm, WorkflowEditorForm):
+class WorkflowEditorRegistrationForm(EditorRegistrationForm, WorkflowEditorForm, WorkflowOpenAPISpecificationForm):
     pass

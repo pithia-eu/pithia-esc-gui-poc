@@ -1,8 +1,6 @@
 from django import forms
 from .form_components import *
 
-from register.forms import WorkflowOpenAPISpecificationForm
-
 
 class OrganisationEditorForm(BaseEditorForm, ContactInfoEditorFormComponent):
     def __init__(self, *args, **kwargs):
@@ -591,7 +589,7 @@ class DataCollectionEditorForm(
     )
 
 
-class WorkflowEditorForm(BaseEditorForm, WorkflowOpenAPISpecificationForm):
+class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection_1'].choices = data_collection_choices

@@ -291,6 +291,7 @@ class WorkflowManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:workflow'
     resource_update_page_url_name = 'update:workflow'
+    resource_update_with_wizard_page_url_name = 'update:workflow_with_editor'
     resource_register_page_url_name = 'register:workflow'
     resource_register_with_editor_name = 'register:workflow_with_editor'
     resource_xml_download_page_url_name = 'utils:view_workflow_as_xml'

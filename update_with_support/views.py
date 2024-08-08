@@ -16,6 +16,7 @@ from .form_to_metadata_mappers import (
     PlatformFormFieldsToMetadataMapper,
     ProcessFormFieldsToMetadataMapper,
     ProjectFormFieldsToMetadataMapper,
+    WorkflowFormFieldsToMetadataMapper,
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
 
@@ -191,3 +192,11 @@ class DataCollectionUpdateWithEditorFormView(
     model = models.DataCollection
     success_url_name = 'update:data_collection_with_editor'
     form_field_to_metadata_mapper_class = DataCollectionFormFieldsToMetadataMapper
+
+
+class WorkflowUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    WorkflowEditorFormView):
+    model = models.Workflow
+    success_url_name = 'update:workflow_with_editor'
+    form_field_to_metadata_mapper_class = WorkflowFormFieldsToMetadataMapper

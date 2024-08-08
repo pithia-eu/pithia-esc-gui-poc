@@ -15,4 +15,5 @@ urlpatterns = [
     path('computation/<resource_id>/update-with-wizard/', views.ComputationUpdateWithEditorFormView.as_view(), name='computation_with_editor'),
     path('process/<resource_id>/update-with-wizard/', views.ProcessUpdateWithEditorFormView.as_view(), name='process_with_editor'),
     path('data-collection/<resource_id>/update-with-wizard/', views.DataCollectionUpdateWithEditorFormView.as_view(), name='data_collection_with_editor'),
+    path('workflow/<resource_id>/update-with-wizard/', views.WorkflowUpdateWithEditorFormView.as_view(), name='workflow_with_editor'),
 ]

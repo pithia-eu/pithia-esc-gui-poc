@@ -2,8 +2,11 @@
 {% load static %}
 {% load project_tags %}
 {% block extra_scripts %}
-{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'metadata_editor/workflow_editor.js' %}" type="module" defer></script>
+{% if editor_registration_setup_script_path %}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+<script src="{% static 'register_with_support/workflow_editor_registration_setup.js' %}" type="module"></script>
+{% endif %}
 {% endblock extra_scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
@@ -62,6 +65,7 @@
         </div>
     </div>
 </section>
+{% if editor_registration_setup_script_path %}
 <hr class="my-5">
 <section id="api-interaction-method-section">
     <div class="row gy-4">
@@ -91,6 +95,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 <hr class="my-5">
 <section id="workflow-details-section">
     <div class="row gy-4">
@@ -131,11 +136,13 @@
         Data Collections
     </a>
 </li>
+{% if editor_registration_setup_script_path %}
 <li class="list-group-item">
     <a href="#api-interaction-method-section">
         Link to an OpenAPI Specification
     </a>
 </li>
+{% endif %}
 <li class="list-group-item">
     <a href="#workflow-details-section">
         Link to Workflow Details
