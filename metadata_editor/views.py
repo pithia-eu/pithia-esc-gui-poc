@@ -30,6 +30,7 @@ from .services import (
     PlatformEditor,
     ProcessEditor,
     ProjectEditor,
+    WorkflowEditor,
 )
 from .view_mixins import *
 
@@ -817,10 +818,18 @@ class WorkflowEditorFormView(
     template_name = 'metadata_editor/workflow_editor.html'
 
     model = models.Workflow
+    metadata_editor_class = WorkflowEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Workflow.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
 
+    def add_form_data_to_metadata_editor(self, metadata_editor: WorkflowEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        data_collections = [form_cleaned_data.get('data_collection_1')] + form_cleaned_data.get('data_collection_2_and_others')
+        metadata_editor.update_data_collections(data_collections)
+        metadata_editor.update_workflow_details(form_cleaned_data.get('workflow_details'))
+    
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()

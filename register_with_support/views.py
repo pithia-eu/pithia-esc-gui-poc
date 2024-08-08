@@ -413,11 +413,10 @@ class DataCollectionRegisterWithEditorFormView(
 
 class WorkflowRegisterWithEditorFormView(
     WorkflowEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm
     success_url = reverse_lazy('register:workflow_with_editor')
 
-    metadata_editor_class = WorkflowMetadata
     file_upload_registration_url = reverse_lazy('register:workflow')
     save_data_local_storage_key = 'workflow_r_wizard_save_data'
 
