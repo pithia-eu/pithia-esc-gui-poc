@@ -32,6 +32,7 @@ from .services import (
     PlatformEditor,
     ProcessEditor,
     ProjectEditor,
+    WorkflowEditor,
 )
 
 from common.test_xml_files import (
@@ -1003,6 +1004,28 @@ class DataCollectionEditorTestCase(SimpleTestCase):
         DATA_COLLECTION_METADATA_XML.seek(0)
         data_collection_editor = DataCollectionEditor(DATA_COLLECTION_METADATA_XML.read().decode())
         xml = data_collection_editor.to_xml()
+        print('xml', xml)
+
+
+class WorkflowEditorTestCase(SimpleTestCase):
+    def test_workflow_editor(self):
+        workflow_editor = WorkflowEditor()
+        pithia_identifier = PithiaIdentifierMetadataUpdate(
+            localid='Workflow_Test',
+            namespace='test',
+            version='1',
+            creation_date='2022-02-03T12:50:00Z',
+            last_modification_date='2022-02-03T12:50:00Z'
+        )
+        workflow_editor.update_pithia_identifier(pithia_identifier)
+        workflow_editor.update_name('Workflow Test')
+        workflow_editor.update_description('Workflow test description')
+        workflow_editor.update_data_collections([
+            'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test',
+            'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_2',
+        ])
+        workflow_editor.update_workflow_details('https://www.example.com/')
+        xml = workflow_editor.to_xml()
         print('xml', xml)
 
 

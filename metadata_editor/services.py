@@ -491,3 +491,27 @@ class DataCollectionEditor(
             feature_of_interest_container_element,
             nested_feature_of_interest_container_key
         )
+
+
+class WorkflowEditor(
+        BaseMetadataEditor,
+        XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Workflow', xml_string)
+
+    def update_data_collections(self, update_data: list[str]):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'dataCollection',
+            [
+                self.get_as_xlink_href(url)
+                for url in update_data if url.strip()
+            ]
+        )
+
+    def update_workflow_details(self, url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'workflowDetails',
+            self.get_as_xlink_href(url)
+        )
