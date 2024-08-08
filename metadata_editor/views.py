@@ -12,13 +12,17 @@ from .editor_dataclasses import (
     StandardIdentifierMetadataUpdate,
 )
 from .forms import *
-from .form_utils import map_processing_inputs_to_dataclasses
+from .form_utils import (
+    map_processing_inputs_to_dataclasses,
+    map_sources_to_dataclasses,
+)
 from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
+    DataCollectionEditor,
     IndividualEditor,
     InstrumentEditor,
     OperationEditor,
@@ -691,20 +695,40 @@ class ProcessEditorFormView(
 
 
 class DataCollectionEditorFormView(
-    ComputationTypeSelectFormViewMixin,
-    DataCollectionSelectFormViewMixin,
-    DataLevelSelectFormViewMixin,
-    InstrumentTypeSelectFormViewMixin,
-    QualityAssessmentSelectFormViewMixin,
-    RelatedPartiesSelectFormViewMixin,
-    ResourceEditorFormView):
+        ComputationTypeSelectFormViewMixin,
+        DataCollectionSelectFormViewMixin,
+        DataLevelSelectFormViewMixin,
+        InstrumentTypeSelectFormViewMixin,
+        QualityAssessmentSelectFormViewMixin,
+        RelatedPartiesSelectFormViewMixin,
+        RelatedPartiesViewMixin,
+        ResourceEditorFormView):
     form_class = DataCollectionEditorForm
     template_name = 'metadata_editor/data_collection_editor.html'
 
     model = models.DataCollection
+    metadata_editor_class = DataCollectionEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataCollection.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: DataCollectionEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.set_empty_properties()
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_types(form_cleaned_data.get('types'))
+        metadata_editor.update_features_of_interest(form_cleaned_data.get('features_of_interest'))
+        metadata_editor.update_permissions(form_cleaned_data.get('permissions'))
+        metadata_editor.update_projects(form_cleaned_data.get('projects'))
+        metadata_editor.update_procedure(form_cleaned_data.get('process'))
+        metadata_editor.update_sub_collections(form_cleaned_data.get('sub_collections'))
+        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        metadata_editor.update_quality_assessment(
+            form_cleaned_data.get('data_quality_flags'),
+            form_cleaned_data.get('metadata_quality_flags')
+        )
+        metadata_editor.update_collection_results(map_sources_to_dataclasses(form_cleaned_data))
+        self.update_related_parties_with_metadata_editor(self.request, metadata_editor, form_cleaned_data)
 
     def register_api_interaction_method(self, request, new_registration):
         try:

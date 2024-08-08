@@ -368,11 +368,10 @@ class ProcessRegisterWithEditorFormView(
 
 class DataCollectionRegisterWithEditorFormView(
     DataCollectionEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = DataCollectionEditorRegistrationForm
     success_url = reverse_lazy('register:data_collection_with_editor')
 
-    metadata_editor_class = DataCollectionMetadata
     file_upload_registration_url = reverse_lazy('register:data_collection')
     save_data_local_storage_key = 'data_collection_r_wizard_save_data'
 

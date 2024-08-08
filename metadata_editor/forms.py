@@ -566,7 +566,7 @@ class DataCollectionEditorForm(
 
     process = forms.ChoiceField(
         label='Procedure',
-        required=False,
+        required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),

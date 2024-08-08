@@ -5,6 +5,7 @@ from .editor_dataclasses import (
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
+    SourceMetadataUpdate,
     StandardIdentifierMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
@@ -83,3 +84,16 @@ def map_related_parties_to_dataclasses(form_cleaned_data):
             parties=rp.get('parties')
         )
     for rp in form_cleaned_data.get('related_parties_json')]
+
+# Sources
+def map_sources_to_dataclasses(form_cleaned_data):
+    return [
+        SourceMetadataUpdate(
+            service_function=s.get('serviceFunction'),
+            linkage=s.get('linkage'),
+            name=s.get('name'),
+            protocol=s.get('protocol'),
+            description=s.get('description'),
+            data_formats=s.get('dataFormats')
+        )
+    for s in form_cleaned_data.get('sources_json')]
