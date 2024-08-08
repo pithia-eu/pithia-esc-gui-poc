@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 class OrganisationFormFieldsToMetadataMapper(
-    ContactInfoFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        ContactInfoFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -32,8 +32,8 @@ class OrganisationFormFieldsToMetadataMapper(
 
 
 class IndividualFormFieldsToMetadataMapper(
-    ContactInfoFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        ContactInfoFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -44,10 +44,10 @@ class IndividualFormFieldsToMetadataMapper(
 
 
 class ProjectFormFieldsToMetadataMapper(
-    ContactInfoFormFieldsToMetadataMixin,
-    DocumentationFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        ContactInfoFormFieldsToMetadataMixin,
+        DocumentationFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -60,12 +60,12 @@ class ProjectFormFieldsToMetadataMapper(
 
 
 class PlatformFormFieldsToMetadataMapper(
-    DocumentationFormFieldsToMetadataMixin,
-    LocationFormFieldsToMetadataMixin,
-    TypeFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    StandardIdentifierFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        DocumentationFormFieldsToMetadataMixin,
+        LocationFormFieldsToMetadataMixin,
+        TypeFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        StandardIdentifierFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -82,11 +82,11 @@ class PlatformFormFieldsToMetadataMapper(
 
 
 class OperationFormFieldsToMetadataMapper(
-    DocumentationFormFieldsToMetadataMixin,
-    LocationFormFieldsToMetadataMixin,
-    TypeFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        DocumentationFormFieldsToMetadataMixin,
+        LocationFormFieldsToMetadataMixin,
+        TypeFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def __init__(self, xml_string) -> None:
         super().__init__(xml_string)
         self._gml_id_xpath = '@%s:id' % NamespacePrefix.GML
@@ -116,10 +116,10 @@ class OperationFormFieldsToMetadataMapper(
 
 
 class InstrumentFormFieldsToMetadataWrapper(
-    DocumentationFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    TypeFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        DocumentationFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        TypeFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -164,12 +164,12 @@ class InstrumentFormFieldsToMetadataWrapper(
 
 
 class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
-    CapabilitiesFormFieldsToMetadataMixin,
-    DataLevelFormFieldsToMetadataMixin,
-    DocumentationFormFieldsToMetadataMixin,
-    QualityAssessmentFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        CapabilitiesFormFieldsToMetadataMixin,
+        DataLevelFormFieldsToMetadataMixin,
+        DocumentationFormFieldsToMetadataMixin,
+        QualityAssessmentFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     GCO19115_NSPREFIX = 'gco19115'
     
     def __init__(self, xml_string) -> None:
@@ -190,18 +190,18 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
         
 
 class AcquisitionFormFieldsToMetadataMapper(
-    CapabilityLinkFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        CapabilityLinkFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     capabilities_element_key = 'acquisitionCapabilities'
 
 
 class ComputationCapabilitiesFormFieldsToMetadataMapper(
-    CapabilitiesFormFieldsToMetadataMixin,
-    DataLevelFormFieldsToMetadataMixin,
-    DocumentationFormFieldsToMetadataMixin,
-    QualityAssessmentFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        CapabilitiesFormFieldsToMetadataMixin,
+        DataLevelFormFieldsToMetadataMixin,
+        DocumentationFormFieldsToMetadataMixin,
+        QualityAssessmentFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     GCO19115_NSPREFIX = 'gco19115'
     
     def __init__(self, xml_string) -> None:
@@ -260,18 +260,18 @@ class ComputationCapabilitiesFormFieldsToMetadataMapper(
 
 
 class ComputationFormFieldsToMetadataMapper(
-    CapabilityLinkFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        CapabilityLinkFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     capabilities_element_key = 'computationCapabilities'
 
 
 class ProcessFormFieldsToMetadataMapper(
-    CapabilitiesFormFieldsToMetadataMixin,
-    DataLevelFormFieldsToMetadataMixin,
-    DocumentationFormFieldsToMetadataMixin,
-    QualityAssessmentFormFieldsToMetadataMixin,
-    RelatedPartyFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        CapabilitiesFormFieldsToMetadataMixin,
+        DataLevelFormFieldsToMetadataMixin,
+        DocumentationFormFieldsToMetadataMixin,
+        QualityAssessmentFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
         mappings.update({
@@ -304,3 +304,22 @@ class DataCollectionFormFieldsToMetadataMapper(
             'types': './/%s:type/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings
+
+
+class WorkflowFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'data_collection_1': './/%s:dataCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'workflow_details': './/%s:workflowDetails/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        data_collections = self.xml_string_parsed.xpath('.//%s:dataCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+        data_collection_2_and_others = data_collections[1:]
+        initial_values.update({
+            'data_collection_2_and_others': data_collection_2_and_others,
+        })
+        return initial_values

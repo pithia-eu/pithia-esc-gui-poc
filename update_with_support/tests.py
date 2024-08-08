@@ -7,6 +7,7 @@ from .form_to_metadata_mappers import (
     ComputationFormFieldsToMetadataMapper,
     DataCollectionFormFieldsToMetadataMapper,
     ProcessFormFieldsToMetadataMapper,
+    WorkflowFormFieldsToMetadataMapper,
 )
 
 from common.test_xml_files import (
@@ -16,6 +17,7 @@ from common.test_xml_files import (
     COMPUTATION_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     PROCESS_FULL_METADATA_XML,
+    WORKFLOW_METADATA_XML,
 )
 
 
@@ -62,5 +64,13 @@ class DataCollectionFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
         DATA_COLLECTION_METADATA_XML.seek(0)
         mapper = DataCollectionFormFieldsToMetadataMapper(DATA_COLLECTION_METADATA_XML.read().decode())
+        initial_values = mapper.get_initial_form_values()
+        print('initial_values', initial_values)
+
+
+class WorkflowFormToMetadataMapperTestCase(SimpleTestCase):
+    def test_mapper(self):
+        WORKFLOW_METADATA_XML.seek(0)
+        mapper = WorkflowFormFieldsToMetadataMapper(WORKFLOW_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)

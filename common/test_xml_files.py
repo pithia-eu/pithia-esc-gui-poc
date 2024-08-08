@@ -2567,6 +2567,35 @@ CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+WORKFLOW_METADATA_XML = SimpleUploadedFile(
+    'Workflow_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Workflow
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" >
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Workflow_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2023-12-12T09:00:00Z</creationDate>
+                <lastModificationDate>2023-12-12T09:00:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>Test Workflow</name>
+        <description>
+            This is a test workflow with two collections.
+        </description>
+        <dataCollection xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
+        <dataCollection xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_2" />
+        <dataCollection xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test_3" />
+        <workflowDetails xlink:href="https://www.example.com/" />
+    </Workflow>
+    '''
+)
+
 
 # URL Testing
 METADATA_AND_ONTOLOGY_URLS_XML = SimpleUploadedFile(
