@@ -462,11 +462,11 @@ class DataCollectionEditor(
         )
 
     def update_procedure(self, process_url: str):
-        self.update_child_element_and_remove_if_empty(
-            self.metadata_dict,
-            '%s:procedure' % NamespacePrefix.OM,
-            self.get_as_xlink_href(process_url)
-        )
+        self.metadata_dict['%s:procedure' % NamespacePrefix.OM] = {}
+        if not process_url.strip():
+            return
+        self.metadata_dict['%s:procedure' % NamespacePrefix.OM] = self.get_as_xlink_href(process_url)
+            
 
     def update_features_of_interest(self, update_data: list[str]):
         # Feature of interest container element

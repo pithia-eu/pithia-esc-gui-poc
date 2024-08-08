@@ -587,7 +587,7 @@ class SourceMetadataComponent(forms.Form):
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
-        help_text='The function performed by the online resource. E.g. download, are obtained from a controlled vocabulary.'
+        help_text='The function performed by the online resource. E.g. Direct data download. Obtained from a controlled vocabulary.'
     )
 
     source_linkage = forms.URLField(
