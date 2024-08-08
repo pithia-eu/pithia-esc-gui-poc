@@ -1000,6 +1000,7 @@ class DataCollectionEditorTestCase(SimpleTestCase):
         self.assertEqual(len(sources), 3)
 
     def test_data_collection_editor_with_file(self):
+        DATA_COLLECTION_METADATA_XML.seek(0)
         data_collection_editor = DataCollectionEditor(DATA_COLLECTION_METADATA_XML.read().decode())
         xml = data_collection_editor.to_xml()
         print('xml', xml)
