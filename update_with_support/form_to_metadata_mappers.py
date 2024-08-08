@@ -9,6 +9,7 @@ from .form_to_metadata_mapper_components import (
     LocationFormFieldsToMetadataMixin,
     QualityAssessmentFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
+    SourceFormFieldsToMetadataMixin,
     StandardIdentifierFormFieldsToMetadataMixin,
     TypeFormFieldsToMetadataMixin,
 )
@@ -276,5 +277,30 @@ class ProcessFormFieldsToMetadataMapper(
         mappings.update({
             'acquisitions': './/%s:acquisitionComponent/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
             'computations': './/%s:computationComponent/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+
+class DataCollectionFormFieldsToMetadataMapper(
+        DataLevelFormFieldsToMetadataMixin,
+        QualityAssessmentFormFieldsToMetadataMixin,
+        RelatedPartyFormFieldsToMetadataMixin,
+        SourceFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'process': './/%s:procedure/@%s:href' % (NamespacePrefix.OM, NamespacePrefix.XLINK),
+        })      
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
+            'features_of_interest': './/%s:FeatureOfInterest/%s:namedRegion/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'permissions': './/%s:permission/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'projects': './/%s:project/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'sub_collections': './/%s:subCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'types': './/%s:type/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings

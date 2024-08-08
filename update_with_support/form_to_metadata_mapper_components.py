@@ -365,6 +365,40 @@ class RelatedPartyFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin
         return initial_values
 
 
+class SourceFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
+    def _map_sources_to_form(self):
+        sources = []
+        online_resource_elements = self.xml_string_parsed.xpath('.//%s:collectionResults/%s:source/%s:OnlineResource' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        for e in online_resource_elements:
+            service_functions = e.xpath('.//%s:serviceFunction/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            service_function = self._get_first_element_from_list(service_functions)
+            linkages = e.xpath('.//%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD), namespaces=self.namespaces)
+            linkage = self._get_element_text_or_blank_string(self._get_first_element_from_list(linkages))
+            names = e.xpath('.//%s:name' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+            name = self._get_element_text_or_blank_string(self._get_first_element_from_list(names))
+            protocols = e.xpath('.//%s:protocol' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+            protocol = self._get_element_text_or_blank_string(self._get_first_element_from_list(protocols))
+            descriptions = e.xpath('.//%s:description' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+            description = self._get_element_text_or_blank_string(self._get_first_element_from_list(descriptions))
+            data_formats = e.xpath('.//%s:dataFormat/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+            sources.append({
+                'serviceFunction': service_function,
+                'linkage': linkage,
+                'name': name,
+                'protocol': protocol,
+                'description': description,
+                'dataFormats': data_formats,
+            })
+        return sources
+
+    def get_initial_values_with_custom_mappings(self):
+        mappings = super().get_initial_values_with_custom_mappings()
+        mappings.update({
+            'sources_json': self._map_sources_to_form()
+        })
+        return mappings
+
+
 class TypeFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
