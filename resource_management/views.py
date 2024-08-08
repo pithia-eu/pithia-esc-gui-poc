@@ -245,6 +245,7 @@ class DataCollectionManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:data_collection'
     resource_update_page_url_name = 'update:data_collection'
+    resource_update_with_wizard_page_url_name = 'update:data_collection_with_editor'
     resource_register_page_url_name = 'register:data_collection'
     resource_register_with_editor_name = 'register:data_collection_with_editor'
     resource_xml_download_page_url_name = 'utils:view_data_collection_as_xml'

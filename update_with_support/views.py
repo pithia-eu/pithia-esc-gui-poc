@@ -8,6 +8,7 @@ from .form_to_metadata_mappers import (
     AcquisitionFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
+    DataCollectionFormFieldsToMetadataMapper,
     InstrumentFormFieldsToMetadataWrapper,
     IndividualFormFieldsToMetadataMapper,
     OperationFormFieldsToMetadataMapper,
@@ -182,3 +183,11 @@ class ProcessUpdateWithEditorFormView(
     model = models.Process
     success_url_name = 'update:process_with_editor'
     form_field_to_metadata_mapper_class = ProcessFormFieldsToMetadataMapper
+
+
+class DataCollectionUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    DataCollectionEditorFormView):
+    model = models.DataCollection
+    success_url_name = 'update:data_collection_with_editor'
+    form_field_to_metadata_mapper_class = DataCollectionFormFieldsToMetadataMapper
