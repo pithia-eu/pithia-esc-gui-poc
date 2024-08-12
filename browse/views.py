@@ -345,6 +345,8 @@ class CatalogueRelatedMetadataTreeListView(ListView):
         context['catalogue_data_subset_list'] = models.CatalogueDataSubset.objects.all()
         context['entries_by_catalogue'] = self.get_entries_categorised_by_catalogue_and_unknown()
         context['data_subsets_by_entry'] = self.get_data_subsets_categorised_by_entry_and_unknown()
+        context['uncategorised_entries'] = context['entries_by_catalogue'].pop('uncategorised', [])
+        context['uncategorised_data_subsets'] = context['data_subsets_by_entry'].pop('uncategorised', [])
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
         return context
 
