@@ -498,6 +498,31 @@ summary.data-collection-category::marker {
     transform: translateY(0.25em);
 }
 
+/* Catalogue browse list page */
+.list-tree-catalogue a {
+    text-decoration: none;
+}
+
+.list-tree-catalogue a:hover,
+.list-tree-catalogue a:focus {
+    text-decoration: underline;
+}
+
+.list-tree-catalogue details[disabled] summary::-webkit-details-marker,
+.list-tree-catalogue details[disabled] summary::marker {
+    visibility: hidden;
+    color: #fff;
+    z-index: -1;
+}
+
+.list-tree-catalogue details[disabled] summary {
+    pointer-events: none;
+}
+
+.list-tree-catalogue details[disabled] summary a {
+    pointer-events: auto;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;

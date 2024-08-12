@@ -1,13 +1,14 @@
-{% load project_tags %}
-{% if not data_subsets_by_entry|get_key_value:entry.pk %}
-<a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
+{% if not entry_data_subsets %}
+{% with catalogue_related_resource=entry %}
+{% include 'browse/catalogue_tree_list_item_content_disabled.html' %}
+{% endwith %}
 {% else %}
 <details>
     <summary>
         <a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
     </summary>
     <ul class="list-group list-tree-data-subsets">
-        {% for data_subset in data_subsets_by_entry|get_key_value:entry.pk %}
+        {% for data_subset in entry_data_subsets %}
         <li class="list-group-item">
             <a href="{{ data_subset.get_absolute_url }}">{{ data_subset.name|default:data_subset.localid }}</a>
         </li>

@@ -1,15 +1,19 @@
 {% load project_tags %}
-{% if not entries_by_catalogue|get_key_value:catalogue.pk %}
-<a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
+{% if not catalogue_entries %}
+{% with catalogue_related_resource=catalogue %}
+{% include 'browse/catalogue_tree_list_item_content_disabled.html' %}
+{% endwith %}
 {% else %}
 <details>
     <summary>
         <a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
     </summary>
     <ul class="list-group list-tree-catalogue-entry">
-        {% for entry in entries_by_catalogue|get_key_value:catalogue.pk %}
+        {% for entry in catalogue_entries %}
         <li class="list-group-item">
+            {% with entry_data_subsets=data_subsets_by_entry|get_key_value:entry.pk %}
             {% include 'browse/catalogue_entry_tree_list_item_content.html' %}
+            {% endwith %}
         </li>
         {% endfor %}
     </ul>

@@ -21,7 +21,7 @@
         <ul class="list-group list-tree-catalogue">
             {% for catalogue in catalogue_list %}
             <li class="list-group-item">
-                {% with resource=catalogue related_resource_lists_by_resource=entries_by_catalogue related_type_readable='Entry' related_type_plural_readable='Entries' %}
+                {% with catalogue_entries=entries_by_catalogue|get_key_value:catalogue.pk %}
                 {% include 'browse/catalogue_tree_list_item_content.html' %}
                 {% endwith %}
             </li>
