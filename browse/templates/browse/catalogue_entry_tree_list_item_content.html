@@ -7,9 +7,9 @@
     <summary>
         <a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
     </summary>
-    <ul class="list-group list-tree-data-subsets">
+    <ul class="list-tree-catalogue-data-subset">
         {% for data_subset in entry_data_subsets %}
-        <li class="list-group-item">
+        <li ckass="list-tree-item-catalogue-data-subset">
             <a href="{{ data_subset.get_absolute_url }}">{{ data_subset.name|default:data_subset.localid }}</a>
         </li>
         {% endfor %}

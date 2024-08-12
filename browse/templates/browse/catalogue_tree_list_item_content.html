@@ -8,9 +8,9 @@
     <summary>
         <a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
     </summary>
-    <ul class="list-group list-tree-catalogue-entry">
+    <ul class="list-tree-catalogue-entry">
         {% for entry in catalogue_entries %}
-        <li class="list-group-item">
+        <li class="list-tree-item-catalogue-entry">
             {% with entry_data_subsets=data_subsets_by_entry|get_key_value:entry.pk %}
             {% include 'browse/catalogue_entry_tree_list_item_content.html' %}
             {% endwith %}

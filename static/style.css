@@ -523,6 +523,47 @@ summary.data-collection-category::marker {
     pointer-events: auto;
 }
 
+.list-tree-catalogue li {
+    padding-block: 1rem;
+}
+
+.list-tree-catalogue-entry,
+.list-tree-catalogue-data-subset {
+    margin-top: 1rem;
+}
+
+.list-tree-catalogue-entry li,
+.list-tree-catalogue-data-subset li {
+    list-style-type: none;
+    padding-block: 1rem;
+}
+
+.list-tree-catalogue ul li {
+    border-left : 1px solid var(--bs-gray-400);
+    padding-left: 1rem;
+}
+
+.list-tree-catalogues ul li:last-child hr,
+.list-tree-catalogues ul li:last-child hr {
+    display: none;
+}
+
+.list-tree-catalogue ul li::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid var(--bs-gray-400);
+    border-width: 0 0 1px 1px;
+}
+
+.list-tree-catalogue-entry .list-tree-item-catalogue-entry:last-child:has(details[open]) {
+    padding-bottom: 0;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
