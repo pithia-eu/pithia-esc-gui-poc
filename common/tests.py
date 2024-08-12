@@ -60,6 +60,15 @@ class ScientificMetadataPropertiesTestCase(TestCase):
             print('Unable to get metadata server URL from registration.')
 
 
+class ScientificMetadataQuerySetTestCase(TestCase):
+    def test_get_by_metadata_server_url(self):
+        """Test that Organisation.DoesNotExist exception is raised
+        when providing a fake URL to get_by_metadata_server_url().
+        """
+        non_existant_organisation_url = 'https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_X'
+        self.assertRaises(Organisation.DoesNotExist, Organisation.objects.get_by_metadata_server_url, non_existant_organisation_url)
+
+
 class ImmediateMetadataDependentsTestCase(TestCase):
     def setUp(self) -> None:
         self.organisation = register_organisation_for_test()

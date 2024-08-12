@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 _INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
-_CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
+_CATALOGUE_RELATED_RESOURCE_LIST_PAGE_TITLE = models.Catalogue.type_plural_readable.title()
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
 # Create your views here.
@@ -41,7 +41,7 @@ def index(request):
     return render(request, 'browse/index.html', {
         'title': _INDEX_PAGE_TITLE,
         'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-        'catalogue_related_resource_types_page_title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
+        'catalogue_related_resource_list_page_title': _CATALOGUE_RELATED_RESOURCE_LIST_PAGE_TITLE,
     })
 
 def data_collection_related_resource_types(request):
@@ -78,26 +78,6 @@ def data_collection_related_resource_types(request):
         'num_current_computations': num_current_computations,
         'num_current_processes': num_current_processes,
         'num_current_data_collections': num_current_data_collections,
-        'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-    })
-
-def catalogue_related_resource_types(request):
-    """
-    Acts as a centre point to all registration list pages
-    for each Catalogue-related registration (i.e., all
-    scientific metadata types from Catalogues to Catalogue
-    Data Subsets). Lists the links to these pages and the
-    total number of registrations for each scientific
-    metadata type.
-    """
-    num_current_catalogues = models.Catalogue.objects.count()
-    num_current_catalogue_entries = models.CatalogueEntry.objects.count()
-    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.count()
-    return render(request, 'browse/catalogue_related_resource_types.html', {
-        'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-        'num_current_catalogues': num_current_catalogues,
-        'num_current_catalogue_entries': num_current_catalogue_entries,
-        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
@@ -313,39 +293,61 @@ class CatalogueRelatedResourceListView(ResourceListView):
     """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_LIST_PAGE_TITLE
         return context
 
-class CatalogueListView(CatalogueRelatedResourceListView):
-    """
-    A subclass of CatalogueRelatedResourceListView.
 
-    Lists the detail page links for each Catalogue
-    registration.
+class CatalogueRelatedMetadataTreeListView(ListView):
     """
-    model = models.Catalogue
-    resource_detail_page_url_name = 'browse:catalogue_detail'
+    A subclass of Django generic List View.
 
-class CatalogueEntryListView(CatalogueRelatedResourceListView):
+    Lists the detail page links for each Catalogue,
+    Catalogue Entry and Catalogue Data Subset registration
+    in a tree view.
     """
-    A subclass of CatalogueRelatedResourceListView.
+    template_name = 'browse/catalogue_tree_list.html'
+    context_object_name = 'catalogue_list'
 
-    Lists the detail page links for each Catalogue
-    Entry registration.
-    """
-    model = models.CatalogueEntry
-    resource_detail_page_url_name = 'browse:catalogue_entry_detail'
+    def get_entries_categorised_by_catalogue_and_unknown(self):
+        entries = models.CatalogueEntry.objects.all()
+        entries_categorised = {'uncategorised': []}
+        for entry in entries:
+            try:
+                catalogue_id = entry.catalogue.pk
+                if catalogue_id not in entries_categorised:
+                    entries_categorised[catalogue_id] = []
+                entries_categorised[catalogue_id].append(entry)
+            except models.Catalogue.DoesNotExist:
+                entries_categorised['uncategorised'].append(entry)
+        return entries_categorised
 
-class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
-    """
-    A subclass of CatalogueRelatedResourceListView.
+    def get_data_subsets_categorised_by_entry_and_unknown(self):
+        data_subsets = models.CatalogueDataSubset.objects.all()
+        data_subsets_categorised = {'uncategorised': []}
+        for data_subset in data_subsets:
+            try:
+                entry_id = data_subset.catalogue_entry.pk
+                if entry_id not in data_subsets_categorised:
+                    data_subsets_categorised[entry_id] = []
+                data_subsets_categorised[entry_id].append(data_subset)
+            except models.CatalogueEntry.DoesNotExist:
+                data_subsets_categorised['uncategorised'].append(data_subset)
+        return data_subsets_categorised
+    
+    def get_queryset(self):
+        return models.Catalogue.objects.all()
 
-    Lists the detail page links for each Catalogue
-    Data Subset registration.
-    """
-    model = models.CatalogueDataSubset
-    resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = models.Catalogue.type_plural_readable.title()
+        context['catalogue_description'] = models.Catalogue.type_description_readable
+        context['catalogue_entry_list'] = models.CatalogueEntry.objects.all()
+        context['catalogue_data_subset_list'] = models.CatalogueDataSubset.objects.all()
+        context['entries_by_catalogue'] = self.get_entries_categorised_by_catalogue_and_unknown()
+        context['data_subsets_by_entry'] = self.get_data_subsets_categorised_by_entry_and_unknown()
+        context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
+        return context
+
 
 class WorkflowListView(ResourceListView):
     """
@@ -654,10 +656,12 @@ class CatalogueRelatedResourceDetailView(ResourceDetailView):
     This view is intended to be subclassed and to not
     be called directly.
     """
+    template_name = 'browse/detail_catalogue_related_resource.html'
+    resource_list_by_type_url_name = 'browse:list_catalogue_related_resources'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
+        context['resource_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_LIST_PAGE_TITLE
         return context
 
 class CatalogueDetailView(CatalogueRelatedResourceDetailView):
@@ -668,7 +672,6 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     a Catalogue registration.
     """
     model = models.Catalogue
-    resource_list_by_type_url_name = 'browse:list_catalogues'
     resource_download_url_name = 'utils:view_catalogue_as_xml'
 
     def get(self, request, *args, **kwargs):
@@ -683,7 +686,6 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     a Catalogue Entry registration.
     """
     model = models.CatalogueEntry
-    resource_list_by_type_url_name = 'browse:list_catalogue_entries'
     resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
 
     def get_description_from_xml(self, resource):
@@ -701,7 +703,6 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     a Catalogue Data Subset registration.
     """
     model = models.CatalogueDataSubset
-    resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
 
     def get_description_from_xml(self, resource):

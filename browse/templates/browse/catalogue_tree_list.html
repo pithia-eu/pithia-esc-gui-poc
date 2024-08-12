@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="row flex-column gy-3">
+    <div class="col-xl-7 col-lg-8">
+        <h1 class="text-md-start text-center">{{ title }}</h1>
+    </div>
+    <div class="col-xl-7 col-lg-8">
+        <p class="d-md-inline-block d-block text-secondary-emphasis bg-light rounded py-3 px-4" style="font-size: 1.1rem;">
+            {{ catalogue_description }}
+        </p>
+    </div>
+    <div class="col-lg-12">
+        {% if not catalogue_list %}
+        <p class="text-secondary">{{ empty_catalogue_list_text }}</p>
+        {% else %}
+        <ul class="list-group list-group-catalogue-tree">
+            {% for catalogue in catalogue_list %}
+            <li class="list-group-item">
+                {% with resource=catalogue related_resource_lists_by_resource=entries_by_catalogue related_type_readable='Entry' related_type_plural_readable='Entries' %}
+                {% include 'browse/catalogue_tree_list_item.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% if uncategorised_entries %}
+<div class="row mt-5">
+    <div class="col-lg-12">
+        <h2 class="fw-normal fs-4 text-secondary">Uncategorised Catalogue Entries</h2>
+        <ul class="list-group">
+            {% for catalogue_entry in uncategorised_entries %}
+            <li class="list-group-item">
+                <a href="{{ catalogue_entry.get_absolute_url }}">{{ catalogue_entry.name|default:catalogue_entry.localid }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if uncategorised_data_subsets %}
+<div class="row mt-5">
+    <div class="col-lg-12">
+        <h2 class="fw-normal fs-4 text-secondary">Uncategorised Catalogue Data Subsets</h2>
+        <ul class="list-group">
+            {% for catalogue_data_subset in uncategorised_data_subsets %}
+            <li class="list-group-item">
+                <a href="{{ catalogue_data_subset.get_absolute_url }}">{{ catalogue_data_subset.name|default:catalogue_data_subset.localid }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

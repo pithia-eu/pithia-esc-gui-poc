@@ -1,0 +1,9 @@
+{% extends 'browse/detail.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
+{% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
+{% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
+{% endwith %}
+{% endblock breadcrumbs %}
