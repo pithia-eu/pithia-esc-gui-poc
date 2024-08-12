@@ -1,0 +1,17 @@
+{% load project_tags %}
+{% if not entries_by_catalogue|get_key_value:catalogue.pk %}
+<a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
+{% else %}
+<details>
+    <summary>
+        <a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
+    </summary>
+    <ul class="list-group list-tree-catalogue-entry">
+        {% for entry in entries_by_catalogue|get_key_value:catalogue.pk %}
+        <li class="list-group-item">
+            {% include 'browse/catalogue_entry_tree_list_item_content.html' %}
+        </li>
+        {% endfor %}
+    </ul>
+</details>
+{% endif %}

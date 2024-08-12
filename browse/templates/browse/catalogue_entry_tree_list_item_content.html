@@ -1,0 +1,17 @@
+{% load project_tags %}
+{% if not data_subsets_by_entry|get_key_value:entry.pk %}
+<a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
+{% else %}
+<details>
+    <summary>
+        <a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
+    </summary>
+    <ul class="list-group list-tree-data-subsets">
+        {% for data_subset in data_subsets_by_entry|get_key_value:entry.pk %}
+        <li class="list-group-item">
+            <a href="{{ data_subset.get_absolute_url }}">{{ data_subset.name|default:data_subset.localid }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</details>
+{% endif %}
