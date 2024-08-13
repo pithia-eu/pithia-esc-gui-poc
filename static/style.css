@@ -498,16 +498,9 @@ summary.data-collection-category::marker {
     transform: translateY(0.25em);
 }
 
-/* Catalogue browse list page */
-.list-tree-catalogue a {
-    text-decoration: none;
-}
-
-.list-tree-catalogue a:hover,
-.list-tree-catalogue a:focus {
-    text-decoration: underline;
-}
-
+/* Catalogue browsing page */
+/* Catalogue browsing - hide and inert summary marker when
+a catalogue/catalogue entry has no entries/data subsets. */
 .list-tree-catalogue details[disabled] summary::-webkit-details-marker,
 .list-tree-catalogue details[disabled] summary::marker {
     visibility: hidden;
@@ -523,15 +516,8 @@ summary.data-collection-category::marker {
     pointer-events: auto;
 }
 
-.list-tree-catalogue li {
-    padding-block: 1rem;
-}
-
-.list-tree-catalogue-entry,
-.list-tree-catalogue-data-subset {
-    margin-top: 1rem;
-}
-
+/* Catalogue browsing - left-hand grey list line denoting
+children of a catalogue/catalogue entry. */
 .list-tree-catalogue-entry li,
 .list-tree-catalogue-data-subset li {
     list-style-type: none;
@@ -543,9 +529,30 @@ summary.data-collection-category::marker {
     padding-left: 1rem;
 }
 
+/* Catalogue browsing - link styling in lists. */
+.list-tree-catalogue a {
+    text-decoration: none;
+}
+
+.list-tree-catalogue a:hover,
+.list-tree-catalogue a:focus {
+    text-decoration: underline;
+}
+
+/* Catalogue browsing - miscellaneous styles */
 .list-tree-catalogue-entry .list-tree-item-catalogue-entry:last-child:has(details[open]) {
     padding-bottom: 0;
 }
+
+.list-tree-catalogue li {
+    padding-block: 1rem;
+}
+
+.list-tree-catalogue-entry,
+.list-tree-catalogue-data-subset {
+    margin-top: 1rem;
+}
+
 
 /* Resource management list page */
 .resource-management-table td:first-child {
@@ -876,7 +883,6 @@ ul.tree ul {
 }
 
 /* Ontology browser */
-
 .ontology-term-description {
     max-width: 80ch;
 }
