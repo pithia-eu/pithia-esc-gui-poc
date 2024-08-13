@@ -21,14 +21,9 @@
                         <tr>
                             <td>
                                 {% if 'serviceFunction' in online_resource %}
-                                <div class="metadata-server-url">
-                                    <div class="placeholder-wrapper">
-                                        <div class="placeholder-wave">
-                                            <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
-                                        </div>
-                                    </div>
-                                    {{ online_resource.serviceFunction|get_key_value:'@xlink:href'|urlize }}
-                                </div>
+                                {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' max_placeholder_width=True %}
+                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                {% endwith %}
                                 {% else %}
                                 Linkage
                                 {% endif %}
