@@ -543,23 +543,6 @@ summary.data-collection-category::marker {
     padding-left: 1rem;
 }
 
-.list-tree-catalogues ul li:last-child hr,
-.list-tree-catalogues ul li:last-child hr {
-    display: none;
-}
-
-.list-tree-catalogue ul li::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: calc(var(--spacing) / -2);
-    left: -2px;
-    width: calc(var(--spacing) + 2px);
-    height: calc(var(--spacing) + 1px);
-    border: solid var(--bs-gray-400);
-    border-width: 0 0 1px 1px;
-}
-
 .list-tree-catalogue-entry .list-tree-item-catalogue-entry:last-child:has(details[open]) {
     padding-bottom: 0;
 }
@@ -900,7 +883,6 @@ ul.tree ul {
 
 .ontology-browser-terms ul.tree {
     --spacing: 1.5rem;
-    --radius: 10px;
 }
 
 .ontology-browser-terms ul.tree ul li {
