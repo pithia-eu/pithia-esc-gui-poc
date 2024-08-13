@@ -1,6 +1,6 @@
 {% load project_tags %}
 {% if not catalogue_entries %}
-{% with catalogue_related_resource=catalogue %}
+{% with catalogue_related_resource=catalogue resource_description=catalogue.description %}
 {% include 'browse/catalogue_tree_list_item_content_disabled.html' %}
 {% endwith %}
 {% else %}

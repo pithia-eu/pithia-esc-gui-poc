@@ -1,7 +1,12 @@
 <details disabled>
     <summary tabindex="-1">
-        <a href="{{ catalogue_related_resource.get_absolute_url }}">
-            {{ catalogue_related_resource.name|default:catalogue_related_resource.localid }}
-        </a>
+        <div class="d-inline-flex flex-column align-items-start">
+            <a href="{{ catalogue_related_resource.get_absolute_url }}">
+                {{ catalogue_related_resource.name|default:catalogue_related_resource.localid }}
+            </a>
+            {% if resource_description %}
+            <small class="text-secondary">{{ catalogue.description }}</small>
+            {% endif %}
+        </div>
     </summary>
 </details>
