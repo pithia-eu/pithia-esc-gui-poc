@@ -5,6 +5,7 @@ from .models import (
     ComputationCapabilities,
     Instrument,
     Organisation,
+    Project,
 )
 
 from common.test_setup import (
@@ -35,6 +36,7 @@ from common.test_xml_files import (
     COMPUTATION_CAPABILITIES_4a_METADATA_XML,
     INSTRUMENT_METADATA_XML,
     ORGANISATION_METADATA_XML,
+    PROJECT_METADATA_XML,
 )
 
 
@@ -58,6 +60,39 @@ class ScientificMetadataPropertiesTestCase(TestCase):
             print('metadata_server_url', metadata_server_url)
         except BaseException:
             print('Unable to get metadata server URL from registration.')
+
+    def test_related_parties_property(self):
+        """Test the related_parties property returns a
+        dictionary list of a scientific metadata's related
+        parties.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        try:
+            related_parties = project.related_parties
+            print('related_parties', related_parties)
+            self.assertIsInstance(related_parties, list)
+            related_party_first = related_parties[0]
+            self.assertIsInstance(related_party_first, dict)
+        except:
+            print('Unable to get related parties from registration.')
+
+    def test_empty_related_parties_property(self):
+        """Test an empty list is returned if a scientific
+        metadata registration specifies no related parties.
+        """
+        xml_file = ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        organisation = Organisation.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        try:
+            related_parties = organisation.related_parties
+            print('related_parties', related_parties)
+            self.assertListEqual(related_parties, [])
+        except:
+            print('Unable to get related parties from registration.')
 
 
 class ImmediateMetadataDependentsTestCase(TestCase):

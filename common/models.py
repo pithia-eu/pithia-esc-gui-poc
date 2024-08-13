@@ -93,6 +93,19 @@ class ScientificMetadata(models.Model):
         return self.json['description']
     
     @property
+    def related_parties(self):
+        namespaces = {
+            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
+            'xlink': 'http://www.w3.org/1999/xlink',
+        }
+        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+        related_parties = xml_parsed.findall('.//%s:ResponsiblePartyInfo' % 'pithia', namespaces=namespaces)
+        return [{
+            'role': next(iter(rp.xpath('.//%s:role/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)), ''),
+            'parties': rp.xpath('.//%s:party/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces),
+        } for rp in related_parties]
+
+    @property
     def creation_date_json(self):
         return self.pithia_identifier['creationDate']
     

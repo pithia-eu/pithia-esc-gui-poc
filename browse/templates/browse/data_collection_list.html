@@ -27,7 +27,7 @@
 <section class="my-4">
     {% if value %}
     <details open>
-        <summary class="data-collection-category" tabindex="-1">
+        <summary class="summary-marker-custom data-collection-category" tabindex="-1">
             {% with section_name=key.split|join:'-'|lower %}
             <h2 id="{{ section_name }}-heading" class="d-inline-block">
             {% endwith %}

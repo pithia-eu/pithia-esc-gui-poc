@@ -17,7 +17,7 @@
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <h1>{{ resource.name }}</h1>
-        <p class="text-secondary">{{ resource.institution_id }}</p>
+        <p class="text-secondary">Last modified at {{ resource.updated_at }}</p>
         {% block abstract %}{% endblock abstract %}
         <section>
             <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
@@ -32,48 +32,59 @@
         {% block interaction_methods %}{% endblock interaction_methods %}
         {% if scientific_metadata_readable.items|length > 0 %}
         <section>
-            <h2 class="mb-3">Properties</h2>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover resource-property-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Property</th>
-                                    <th scope="col">Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for key, value in scientific_metadata_readable.items %}
-                                {% if '_id' not in key and 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
-                                <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
-                                    <td>{{ key|safe }}</td>
-                                    <td>
-                                        {% if value.strip|length == 0 %}
-                                        <i class="text-muted">Not used</i>
-                                        {% else %}
-                                        {% if value in ontology_server_urls or value in resource_server_urls %}
-                                        <span class="metadata-server-url loading {% if value in ontology_server_urls %}ontology-server-url{% elif value in resource_server_urls %}resource-server-url{% endif %}">
-                                            <div class="placeholder-wrapper">
-                                                <div class="placeholder-wave">
-                                                    <span class="placeholder placeholder-sm col-lg-{% random_int 1 3 %} col-md-{% random_int 6 7 %} col-{% random_int 8 10 %} bg-secondary"></span>
+            <details>
+                <summary class="summary-marker-custom mb-3">
+                    <h2>Further Metadata</h2>
+                </summary>
+                <div class="row gy-4">
+                    <div class="col-lg-12">
+                        <a href="{% url resource_download_url_name resource.id %}" class="d-inline-block btn btn-light icon-link icon-link-hover px-auto" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-2" viewBox="0 0 16 16">
+                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
+                            </svg>View Metadata in XML Format
+                        </a>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover resource-property-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Property</th>
+                                        <th scope="col">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in scientific_metadata_readable.items %}
+                                    {% if '_id' not in key and 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
+                                    <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
+                                        <td>{{ key|safe }}</td>
+                                        <td>
+                                            {% if value.strip|length == 0 %}
+                                            <i class="text-muted">Not used</i>
+                                            {% else %}
+                                            {% if value in ontology_server_urls or value in resource_server_urls %}
+                                            <span class="metadata-server-url loading {% if value in ontology_server_urls %}ontology-server-url{% elif value in resource_server_urls %}resource-server-url{% endif %}">
+                                                <div class="placeholder-wrapper">
+                                                    <div class="placeholder-wave">
+                                                        <span class="placeholder placeholder-sm col-lg-{% random_int 1 3 %} col-md-{% random_int 6 7 %} col-{% random_int 8 10 %} bg-secondary"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                {{ value.strip|urlize }}
+                                            </span>
+                                            {% else %}
                                             {{ value.strip|urlize }}
-                                        </span>
-                                        {% else %}
-                                        {{ value.strip|urlize }}
-                                        {% endif %}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                            {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </details>
         </section>
         {% endif %}
         {% block workflow_details %}
@@ -81,14 +92,55 @@
     </div>
     <div class="col-lg-3">
         <div class="row gy-4">
-            <div class="col-lg-12">
-                <section class="pt-lg-0">
+            <div class="col-lg-12 d-flex flex-column row-gap-5">
+                <section class="py-0">
+                    {% if 'relatedParty' in resource.json %}
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-light resource-key-details mb-0 p-3">
+                            <caption class="caption-top pt-lg-0 fs-5">Responsible Parties</caption>
+                            <tbody>
+                                {% for rp in resource.related_parties %}
+                                <tr>
+                                    <td>
+                                        <span class="metadata-server-url loading {% if value in ontology_server_urls %}ontology-server-url{% elif value in resource_server_urls %}resource-server-url{% endif %}">
+                                            <div class="placeholder-wrapper">
+                                                <div class="placeholder-wave">
+                                                    <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                                </div>
+                                            </div>
+                                            <a href="{{ rp.role }}" class="fw-bold text-decoration-none" style="cursor: text; color: black !important;">{{ rp.role }}</a>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            {% for p in rp.parties %}
+                                            <li>
+                                                <span class="metadata-server-url loading {% if value in ontology_server_urls %}ontology-server-url{% elif value in resource_server_urls %}resource-server-url{% endif %}">
+                                                    <div class="placeholder-wrapper">
+                                                        <div class="placeholder-wave">
+                                                            <span class="placeholder placeholder-sm col-12 bg-secondary"></span>
+                                                        </div>
+                                                    </div>
+                                                    {{ p|urlize }}
+                                                </span>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </section>
+                <section class="py-0">
                     <div class="table-responsive rounded">
                         <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                            <caption class="caption-top pt-lg-0 fs-5">Information</caption>
+                            <caption class="caption-top pt-lg-0 fs-5">Metadata Information</caption>
                             <tbody>
                                 <tr>
-                                    <td><b>Owner</b></td>
+                                    <td><b>Editor</b></td>
                                     <td>{{ resource.institution_id }}</td>
                                 </tr>
                                 <tr>
@@ -106,16 +158,6 @@
                             </tbody>
                         </table>
                     </div>
-                </section>
-            </div>
-            <div class="col-lg-12">
-                <section class="text-secondary">
-                    <h2 class="fw-normal text-secondary fs-5">Download</h2>
-                    <a href="{% url resource_download_url_name resource.id %}" class="d-inline-block btn btn-light icon-link icon-link-hover px-auto w-100" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-2" viewBox="0 0 16 16">
-                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
-                        </svg>View Original XML File
-                    </a>
                 </section>
             </div>
         </div>

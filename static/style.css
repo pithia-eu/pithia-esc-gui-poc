@@ -96,6 +96,29 @@ hgroup p {
     color: var(--bs-secondary);
 }
 
+/* Custom summary marker */
+summary.summary-marker-custom::-webkit-details-marker,
+summary.summary-marker-custom::marker {
+    content: none;
+    display: none;
+    color: #fff;
+    z-index: -1;
+}
+
+summary.summary-marker-custom::before {
+    content: '▶';
+    margin: 0px 10px 0 0;
+}
+
+details[open] summary.summary-marker-custom::before {
+    content: '▼'
+}
+
+summary.summary-marker-custom > h2 {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 @counter-style paren-lower-alpha {
     system: extends lower-alpha;
     prefix: "(";
@@ -437,21 +460,6 @@ dialog .btn-close {
 .alert-institution-setting svg:first-child {
     width: 1.2rem;
     height: 1.2rem;
-}
-
-
-/* Data Collection browse page */
-summary.data-collection-category {
-    list-style: none;
-    padding-left: 0;
-}
-
-summary.data-collection-category::-webkit-details-marker,
-summary.data-collection-category::marker {
-    content: '';
-    display: none;
-    color: #fff;
-    z-index: -1;
 }
 
 
@@ -1177,6 +1185,18 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     summary.data-collection-category {
         cursor: text;
     }
+
+    summary.data-collection-category::before {
+        content: none;
+    }
+    
+    details[open] summary.data-collection-category::before {
+        content: none;
+    }
+
+    summary.data-collection-category > h2 {
+        display: block;
+    }
     
     .list-group-container {
         position: relative;
@@ -1211,26 +1231,8 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
         padding: 0.5rem;
     }
 
-    summary.data-collection-category::marker {
-        display: none
-    }
-
-    summary.data-collection-category > h2 {
-        display: inline-block;
-        vertical-align: middle;
-    }
-
     summary.data-collection-category {
         display: block
-    }
-
-    summary.data-collection-category::before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>');
-        margin: 0px 10px 0 0;
-    }
-
-    details[open] summary.data-collection-category::before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>');
     }
 
     .show-all-dcs-button-container {
