@@ -6,7 +6,19 @@
 {% else %}
 <details>
     <summary>
-        <a href="{{ catalogue.get_absolute_url }}">{{ catalogue.name|default:catalogue.localid }}</a>
+        <div class="d-inline-flex flex-column align-items-start">
+            <a href="{{ catalogue.get_absolute_url }}" class="w-auto">{{ catalogue.name|default:catalogue.localid }}</a>
+            <small class="text-secondary-emphasis">
+                {% if catalogue_entries|length == 1 %}
+                1 Entry
+                {% else %}
+                {{ catalogue_entries|length }} Entries
+                {% endif %}
+            </small>
+            <small class="text-secondary">
+                {{ catalogue.description }}
+            </small>
+        </div>
     </summary>
     <ul class="list-tree-catalogue-entry">
         {% for entry in catalogue_entries %}

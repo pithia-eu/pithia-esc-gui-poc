@@ -5,7 +5,16 @@
 {% else %}
 <details>
     <summary>
-        <a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
+        <div class="d-inline-flex flex-column align-items-start">
+            <a href="{{ entry.get_absolute_url }}">{{ entry.name|default:entry.localid }}</a>
+            <small class="text-secondary-emphasis">
+                {% if entry_data_subsets|length == 1 %}
+                1 Data Subset
+                {% else %}
+                {{ entry_data_subsets|length }} Data Subsets
+                {% endif %}
+            </small>
+        </div>
     </summary>
     <ul class="list-tree-catalogue-data-subset">
         {% for data_subset in entry_data_subsets %}
