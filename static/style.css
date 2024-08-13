@@ -499,6 +499,11 @@ summary.data-collection-category::marker {
 }
 
 /* Catalogue browsing page */
+/* Catalogue browsing - tree list top level */
+.list-tree-catalogue > li > details > summary > .d-inline-flex > a {
+    font-weight: 500;
+}
+
 /* Catalogue browsing - hide and inert summary marker when
 a catalogue/catalogue entry has no entries/data subsets. */
 .list-tree-catalogue details[disabled] summary::-webkit-details-marker,
