@@ -680,21 +680,32 @@ label.required::after {
 
 
 /* Skeleton loading animation for metadata server urls */
-.metadata-server-url {
-    opacity: 1;
-    transition: opacity 0.3s ease;
+@keyframes skeleton-loading {
+    0% {
+        background-color: hsl(200, 20%, 80%);
+    }
+    100% {
+        background-color: hsl(200, 20%, 95%);
+    }
 }
 
-.metadata-server-url.updating {
-    opacity: 0;
+.ontology-server-url a.metadata-server-url-text {
+    text-decoration: underline dashed;
 }
 
-.metadata-server-url a {
-    display: none;
+.metadata-server-url a:hover,
+.metadata-server-url a:focus {
+    text-decoration: none;
 }
 
-.metadata-server-url .placeholder-wrapper .placeholder {
-    border-radius: 12px;
+.metadata-server-url .metadata-server-url-text {
+    border-radius: var(--bs-border-radius);
+}
+
+.metadata-server-url.loading .metadata-server-url-text {
+    color: transparent;
+    background-color: hsl(200, 20%, 80%);
+    animation: skeleton-loading 1s linear infinite alternate;
 }
 
 /* View resource as XML page */

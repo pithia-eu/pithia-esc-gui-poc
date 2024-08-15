@@ -2,8 +2,9 @@
 {% load project_tags %}
 {% load static %}
 {% block scripts %}
-<script src="{% static 'browse/detail.js' %}" defer></script>
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+<script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
+<script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
@@ -97,7 +98,7 @@
                                 {% for rp in resource.related_parties %}
                                 <tr>
                                     <td>
-                                        {% with value=rp.role max_placeholder_width=True %}
+                                        {% with value=rp.role %}
                                         {% if value in ontology_server_urls %}
                                         {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                         {% elif value in resource_server_urls %}
@@ -111,7 +112,7 @@
                                         <ul class="list-unstyled mb-0">
                                             {% for p in rp.parties %}
                                             <li>
-                                                {% with value=p max_placeholder_width=True %}
+                                                {% with value=p %}
                                                 {% if value in ontology_server_urls %}
                                                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                                 {% elif value in resource_server_urls %}

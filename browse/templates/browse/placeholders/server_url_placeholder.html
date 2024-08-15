@@ -1,13 +1,10 @@
 {% load project_tags %}
-<span class="metadata-server-url {{ url_class }} loading">
-    <div class="placeholder-wrapper">
-        <div class="placeholder-wave">
-            {% if max_placeholder_width %}
-            <span class="placeholder col-lg-12 bg-secondary"></span>
-            {% else %}
-            <span class="placeholder col-lg-{% random_int 1 3 %} col-md-{% random_int 6 7 %} col-{% random_int 8 10 %} bg-secondary"></span>
-            {% endif %}
-        </div>
-    </div>
-    {{ value.strip|urlize }}
+<span class="metadata-server-url {{ url_class }} loading" data-metadata-server-url="{{ value.strip }}">
+    <a href="{{ value.strip }}" class="metadata-server-url-text">
+        {% if value.strip in server_url_to_id_mappings %}
+        {{ server_url_to_id_mappings|get_key_value:value.strip }}
+        {% else %}
+        {{ value.strip }}
+        {% endif %}
+    </a>
 </span>
