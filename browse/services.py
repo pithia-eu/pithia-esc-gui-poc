@@ -18,7 +18,6 @@ from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_pref_label_from_ontology_node_iri,
 )
-from utils.string_helpers import split_camel_case
 from utils.url_helpers import (
     create_ontology_term_detail_url_from_ontology_term_server_url,
     divide_resource_url_from_op_mode_id,
@@ -159,84 +158,3 @@ def get_server_urls_from_scientific_metadata_flattened(scientific_metadata_flatt
             resource_server_urls.add(value)
 
     return list(ontology_server_urls), list(resource_server_urls)
-
-def create_readable_scientific_metadata_flattened(scientific_metadata_flattened: dict) -> dict:
-    """
-    Creates human readable versions of the provided scientific metadata
-    dict's keys.
-    """
-    hidden_keys = [
-        '_id',
-        'description',
-    ]
-    hidden_key_regex = [
-        re.compile(r'^name'),
-        re.compile(r'^identifier'),
-        re.compile(r'.*onlineresource <b>(1/1)</b>\.description'),
-        re.compile(r'.*onlineresource <b>(1/1)</b>\.linkage'),
-        re.compile(r'^workflowdetails'),
-        # re.compile(r'.*onlineresource <b>1</b>\.name'),
-    ]
-    hidden_key_regex_exceptions = [
-        re.compile(r'^contactinfo(.*).url')
-    ]
-    scientific_metadata_readable = {}
-    for key in scientific_metadata_flattened:
-        if (key.startswith('@')
-            or any(x == key.lower() for x in hidden_keys)
-            or any(regex for regex in hidden_key_regex if re.match(regex, key.lower()))
-            and not any(regex for regex in hidden_key_regex_exceptions if re.match(regex, key.lower()))):
-            continue
-        key_split_by_dot = key.split('.')
-        human_readable_key_strings = []
-        for string in key_split_by_dot:
-            # If there is only one occurrence of a property
-            # doesn't make sense to keep the number suffix
-            is_only_numbered_key = True
-            if string.endswith('<b>(1/1)</b>'):
-                for key2 in scientific_metadata_flattened:
-                    if string.replace('<b>(1/', '<b>(2/') in key2:
-                        is_only_numbered_key = False
-            if is_only_numbered_key:
-                string = string.replace('<b>(1/1)</b>', '')
-
-            # Skip these strings
-            if  string.startswith('#') or string == '@xlink:href':
-                continue
-
-            # Only keep the part of the key after the ':'
-            if ':' in string:
-                index_of_colon = string.index(':')
-                string = string[index_of_colon + 1:]
-            # Only keep the part of the key after the '@'
-            if '@' in string:
-                index_of_at_symbol = string.index('@')
-                string = string[index_of_at_symbol + 1:]
-
-            # Append the string that the be part of the 
-            # human-readable key
-            if string == '_id' or string.isupper():
-                human_readable_key_strings.append(string)
-            elif '_' in string:
-                human_readable_string = ' '.join(string.split('_'))
-                human_readable_string = ' '.join(split_camel_case(human_readable_string))
-                human_readable_key_strings.append(human_readable_string)
-            else:
-                human_readable_string = ' '.join(split_camel_case(string))
-                if not human_readable_string[0].isupper():
-                    human_readable_string = human_readable_string.title()
-                human_readable_key_strings.append(human_readable_string)
-        human_readable_key_strings[-1] = f'<b>{human_readable_key_strings[-1]}</b>'
-        human_readable_key_last_string = human_readable_key_strings[-1]
-        human_readable_key_strings.pop()
-
-        human_readable_key = ' > '.join(human_readable_key_strings).strip()
-        if human_readable_key.startswith('Om:'):
-            human_readable_key = human_readable_key.replace('Om:', '')
-        if len(human_readable_key_strings):
-            human_readable_key = f'{human_readable_key_last_string} <small class="text-muted fst-italic">(from {human_readable_key})</small>'
-        else:
-            human_readable_key = human_readable_key_last_string
-        if human_readable_key != '':
-            scientific_metadata_readable[human_readable_key] = scientific_metadata_flattened[key]
-    return scientific_metadata_readable

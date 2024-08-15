@@ -15,11 +15,11 @@ from django.views.generic import (
 from lxml import etree
 
 from .services import (
-    create_readable_scientific_metadata_flattened,
     get_server_urls_from_scientific_metadata_flattened,
     map_metadata_server_urls_to_browse_urls,
     map_ontology_server_urls_to_browse_urls,
 )
+from .utils import reformat_and_clean_flattened_property_table_dict_keys_for_display
 
 from common import models
 from handle_management.handle_api import (
@@ -358,6 +358,7 @@ class WorkflowListView(ResourceListView):
     model = models.Workflow
     resource_detail_page_url_name = 'browse:workflow_detail'
 
+
 class ResourceDetailView(TemplateView):
     """
     The detail page for a scientific metadata
@@ -393,11 +394,17 @@ class ResourceDetailView(TemplateView):
             description_formatted_split[counter] = s.replace('\n', ' ')
         return description_formatted_split
 
+    def map_server_urls_to_ids(self, server_urls):
+        return {
+            url: url.split('/')[-1]
+            for url in server_urls
+        }
+
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
         self.scientific_metadata = self.process_scientific_metadata()
         self.scientific_metadata_flattened = flatten(self.scientific_metadata)
-        self.scientific_metadata_readable = create_readable_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.scientific_metadata_readable = reformat_and_clean_flattened_property_table_dict_keys_for_display(self.scientific_metadata_flattened)
         self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
         self.title = self.resource.name
         if self.resource.description and self.resource.description.strip() != '':
@@ -420,6 +427,10 @@ class ResourceDetailView(TemplateView):
         context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
         context['resource_server_urls'] = self.resource_server_urls
+        context['server_url_to_id_mappings'] = {
+            **self.map_server_urls_to_ids(self.ontology_server_urls),
+            **self.map_server_urls_to_ids(self.resource_server_urls),
+        }
         context['scientific_metadata_readable'] = self.scientific_metadata_readable
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
@@ -711,7 +722,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
         context['handles'] = self.handles
         context['data_for_handles'] = []
         if self.data_for_handles:
-            context['data_for_handles'] = [create_readable_scientific_metadata_flattened(data) for data in self.data_for_handles if data is not None]
+            context['data_for_handles'] = [reformat_and_clean_flattened_property_table_dict_keys_for_display(data) for data in self.data_for_handles if data is not None]
         return context
 
     def get(self, request, *args, **kwargs):
