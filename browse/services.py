@@ -18,7 +18,7 @@ from ontology.utils import (
     get_graph_of_pithia_ontology_component,
     get_pref_label_from_ontology_node_iri,
 )
-from utils.string_helpers import _split_camel_case
+from utils.string_helpers import split_camel_case
 from utils.url_helpers import (
     create_ontology_term_detail_url_from_ontology_term_server_url,
     divide_resource_url_from_op_mode_id,
@@ -219,10 +219,10 @@ def create_readable_scientific_metadata_flattened(scientific_metadata_flattened:
                 human_readable_key_strings.append(string)
             elif '_' in string:
                 human_readable_string = ' '.join(string.split('_'))
-                human_readable_string = ' '.join(_split_camel_case(human_readable_string))
+                human_readable_string = ' '.join(split_camel_case(human_readable_string))
                 human_readable_key_strings.append(human_readable_string)
             else:
-                human_readable_string = ' '.join(_split_camel_case(string))
+                human_readable_string = ' '.join(split_camel_case(string))
                 if not human_readable_string[0].isupper():
                     human_readable_string = human_readable_string.title()
                 human_readable_key_strings.append(human_readable_string)
