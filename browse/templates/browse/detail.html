@@ -15,6 +15,7 @@
 {% endwith %}
 {% endblock breadcrumbs %}
 {% block content %}
+{% csrf_token %}
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <h1>{{ resource.name }}</h1>

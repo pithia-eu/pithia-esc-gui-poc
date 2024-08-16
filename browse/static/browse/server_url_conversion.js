@@ -2,9 +2,9 @@ const CONVERSION_URL = JSON.parse(document.getElementById("server-url-conversion
 
 
 export class ServerURLConverter {
-    constructor(serverUrlElementClassSelector, queryStringParamName, responseUrlsKey) {
+    constructor(serverUrlElementClassSelector, requestParamName, responseUrlsKey) {
         this.serverUrlElementClassSelector = serverUrlElementClassSelector;
-        this.queryStringParamName = queryStringParamName;
+        this.requestParamName = requestParamName;
         this.responseUrlsKey = responseUrlsKey;
     }
     
@@ -15,8 +15,12 @@ export class ServerURLConverter {
     
     async getResourceServerUrlToDetailPageUrlMappings(urls) {
         try {
-            const response = await fetch(`${CONVERSION_URL}?${this.queryStringParamName}=${urls.join(",")}`, {
-                method: "GET",
+            const formData = new FormData();
+            formData.append(this.requestParamName, JSON.stringify(urls));
+            formData.append("csrfmiddlewaretoken", document.querySelector("input[name='csrfmiddlewaretoken']").value);
+            const response = await fetch(`${CONVERSION_URL}`, {
+                method: "POST",
+                body: formData,
             });
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
@@ -25,7 +29,7 @@ export class ServerURLConverter {
             const json = await response.json();
             return json[this.responseUrlsKey];
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
         }
         return [];
     }

@@ -3,6 +3,7 @@ import logging
 import re
 from dateutil.parser import parse
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import (
     get_object_or_404,
     render,
@@ -20,6 +21,8 @@ from .services import (
     map_ontology_server_urls_to_browse_urls,
 )
 from .utils import reformat_and_clean_flattened_property_table_dict_keys_for_display
+
+import json
 
 from common import models
 from handle_management.handle_api import (
@@ -777,19 +780,15 @@ class WorkflowDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['workflow_id']
         return super().get(request, *args, **kwargs)
 
+@require_POST
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
-    """
-    Used for mapping ontology server URLs and
+    """Used for mapping ontology server URLs and
     metadata server URLs to their corresponding
     detail pages. Mappings are displayed in 
     scientific metadata detail pages.
     """
-    ontology_server_urls = []
-    resource_server_urls = []
-    if 'ontology-server-urls' in request.GET:
-        ontology_server_urls = request.GET['ontology-server-urls'].split(',')
-    if 'resource-server-urls' in request.GET:
-        resource_server_urls = request.GET['resource-server-urls'].split(',')
+    ontology_server_urls = json.loads(request.POST.get('ontology-server-urls', '[]'))
+    resource_server_urls = json.loads(request.POST.get('resource-server-urls', '[]'))
     esc_ontology_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
     esc_resource_urls = map_metadata_server_urls_to_browse_urls(resource_server_urls)
     
