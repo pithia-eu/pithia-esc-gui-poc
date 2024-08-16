@@ -1,80 +1,105 @@
 {% extends 'browse/detail.html' %}
 {% load project_tags %}
 {% block interaction_methods %}
-<section>
-    <h2 class="mb-3">Interact</h2>
-    <div class="row">
-        <div class="col-lg-12">
-            {% if api_interaction_methods|length > 0 or link_interaction_methods|length > 0 %}
-            <div class="table-responsive">
-                <table class="table table-hover interaction-method-table">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Link</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for source in link_interaction_methods %}
-                        {% with online_resource=source.OnlineResource %}
-                        <tr>
-                            <td>
-                                {% if 'serviceFunction' in online_resource %}
-                                {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' max_placeholder_width=True %}
-                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                {% endwith %}
-                                {% else %}
-                                Linkage
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if 'description' in online_resource and online_resource.description %}
-                                {{ online_resource.description|urlize }}
-                                {% else %}
-                                <i class="text-secondary">None</i>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="d-flex flex-column">
-                                    <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" target="_blank" rel="noopener noreferrer">
-                                        {{ online_resource.name }}
-                                    </a>
-                                    <small class="text-secondary">(link opens in new tab)</small>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endwith %}
-                        {% endfor %}
-                        {% for method in api_interaction_methods %}
-                        <tr>
-                            <td>API</td>
-                            <td>
-                                {% if 'description' in method.config and method.config.description|length > 0 %}
-                                {{ method.config.description|urlize }}
-                                {% else %}
-                                <i class="text-muted">None</i>
-                                {% endif %}
-                            </td>
-                            <td>N/A</td>
-                            <td>
-                                <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" target="_blank" rel="noopener noreferrer" class="icon-link icon-link-hover">
-                                    Open API Interface
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                                    </svg>
-                                </a>
-                                <small class="text-secondary">(opens in new tab)</small>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+{% if api_interaction_methods %}
+<section class="mb-3">
+    <h2 class="mb-3">API</h2>
+    <ul class="list-group mt-0">
+        {% for method in api_interaction_methods %}
+        <li class="list-group-item">
+            <div class="d-flex flex-column row-gap-3 py-2">
+                <div>
+                    <h3 class="fs-5">
+                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="icon-link icon-link-hover icon-link-interaction-method text-decoration-none" target="_blank" rel="noopener noreferrer">
+                            Interact
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-xl-1 ms-3" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                            </svg>
+                        </a>
+                    </h3>
+                    <div>
+                        <span class="badge rounded-pill text-bg-light">
+                            API
+                        </span>
+                    </div>
+                </div>
+                {% if 'description' in method.config and method.config.description|length > 0 %}
+                <p class="mb-0">
+                    {{ method.config.description|urlize }}
+                </p>
+                {% endif %}
             </div>
-            {% else %}
-            <i class="text-muted">This data collection has no interaction methods.</i>
-            {% endif %}
-        </div>
-    </div>
+        </li>
+        {% endfor %}
+    </ul>
 </section>
+{% endif %}
+{% if link_interaction_methods %}
+<section class="mb-3">
+    <h2 class="mb-3">Results</h2>
+    <ul class="list-group mt-0">
+        {% for source in link_interaction_methods %}
+        {% with online_resource=source.OnlineResource %}
+        <li class="list-group-item py-3">
+            <details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter0 == 0 %}open{% endif %}>
+                <summary class="summary-marker-custom">
+                    <span class="d-inline-flex flex-column">
+                        <h3 class="fs-5">
+                            <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover icon-link-interaction-method" target="_blank" rel="noopener noreferrer">
+                                {{ online_resource.name }}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-xl-1 ms-3" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                </svg>
+                            </a>
+                        </h3>
+                        <div>
+                            {% if 'serviceFunction' in online_resource %}
+                            {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' %}
+                            {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+                            {% endwith %}
+                            {% else %}
+                            <span class="badge rounded-pill text-bg-secondary">
+                                Linkage
+                            </span>
+                            {% endif %}
+                        </div>
+                    </span>
+                </summary>
+                <div class="d-flex flex-column ps-4">
+                    {% if 'description' in online_resource and online_resource.description %}
+                    <p class="mt-3 mb-0">
+                        {{ online_resource.description|urlize }}
+                    </p>
+                    {% endif %}
+                    <details class="mt-3">
+                        <summary>More details</summary>
+                        <dl class="mt-3">
+                            <div>
+                                <dt>Protocol</dt>
+                                <dd>{{ online_resource.protocol }}</dd>
+                            </div>
+                            <div>
+                                <dt>Data Formats</dt>
+                                <dd>
+                                    <ul style="list-style-type: disc;">
+                                        {% for data_format in online_resource.dataFormat %}
+                                        <li>
+                                            {% with value=data_format|get_key_value:'@xlink:href' %}
+                                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                            {% endwith %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </dd>
+                            </div>
+                        </dl>
+                    </details>
+                </div>
+            </details>
+        </li>
+        {% endwith %}
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% endblock interaction_methods %}
