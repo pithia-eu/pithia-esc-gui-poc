@@ -701,6 +701,7 @@ label.required::after {
 .metadata-server-url .metadata-server-url-text {
     border-radius: var(--bs-border-radius);
     opacity: 1;
+    box-decoration-break: clone;
     transition: opacity 0.5s ease
 }
 
@@ -709,6 +710,10 @@ label.required::after {
     opacity: 0.5;
     background-color: hsl(200, 20%, 80%);
     animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.resource-key-details td:has(.metadata-server-url.loading) {
+    max-width: min-content;
 }
 
 /* View resource as XML page */
