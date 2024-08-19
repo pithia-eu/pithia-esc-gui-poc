@@ -1,11 +1,19 @@
+import logging
 from django.db import models
 from django.urls import reverse
 from lxml import etree
 
 from .managers import *
 from .querysets import *
-from .constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
+from .constants import (
+    PITHIA_METADATA_SERVER_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
+)
 from .converted_xml_correction_functions import *
+
+
+logger = logging.getLogger(__name__)
+
 
 # Create your models here.
 class ScientificMetadata(models.Model):
@@ -104,6 +112,26 @@ class ScientificMetadata(models.Model):
             'role': next(iter(rp.xpath('.//%s:role/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)), ''),
             'parties': rp.xpath('.//%s:party/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces),
         } for rp in related_parties]
+
+    @property
+    def ontology_urls(self):
+        try:
+            namespaces = {'xlink': 'http://www.w3.org/1999/xlink'}
+            xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+            return list(set(xml_parsed.xpath(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % ('xlink', SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE, namespaces['xlink']), namespaces=namespaces)))
+        except Exception as err:
+            logger.exception(err)
+        return []
+    
+    @property
+    def metadata_urls(self):
+        try:
+            namespaces = {'xlink': 'http://www.w3.org/1999/xlink'}
+            xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+            return list(set(xml_parsed.xpath(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % ('xlink', PITHIA_METADATA_SERVER_URL_BASE, namespaces['xlink']), namespaces=namespaces)))
+        except Exception as err:
+            logger.exception(err)
+        return []
 
     @property
     def creation_date_json(self):
