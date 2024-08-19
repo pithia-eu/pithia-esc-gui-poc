@@ -606,6 +606,17 @@ class DataCollection(ScientificMetadata):
             pass
         return []
 
+    @property
+    def permission_urls(self):
+        try:
+            permission_urls = self.json['permission']
+            if isinstance(permission_urls, list):
+                return permission_urls
+            return [permission_urls]
+        except KeyError:
+            pass
+        return []
+
     objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
     class Meta:
