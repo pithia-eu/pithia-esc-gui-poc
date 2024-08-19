@@ -3,8 +3,10 @@
 {% load static %}
 {% block scripts %}
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+{{ ontology_node_properties_mapping_url|json_script:'ontology-node-properties-mapping-url' }}
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
+<script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
@@ -32,6 +34,33 @@
             {% endif %}
         </section>
         {% block interaction_methods %}{% endblock interaction_methods %}
+        {% if resource.permission_urls %}
+        <section class="mb-3">
+            <h2>Permissions</h2>
+            <ul class="list-group">
+                {% for p in resource.permission_urls %}
+                {% with value=p|get_key_value:'@xlink:href' %}
+                <li class="list-group-item permission-list-group-item" data-metadata-server-url={{ value }}>
+                    <details>
+                        <summary>
+                            {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
+                            {% include 'browse/placeholders/server_urL_placeholder_no_link.html' %}
+                            {% endwith %}
+                        </summary>
+                        <p class="permission-definition mt-3 ms-3">
+                            <span class="placeholder-glow">
+                                <span class="placeholder rounded bg-secondary col-7"></span>
+                                <span class="placeholder rounded bg-secondary col-7"></span>
+                                <span class="placeholder rounded bg-secondary col-7"></span>
+                            </span>
+                        </p>
+                    </details>
+                </li>
+                {% endwith %}
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
         <section>
             <details>
                 <summary class="summary-marker-custom mb-3">

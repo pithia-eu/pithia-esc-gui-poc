@@ -17,6 +17,7 @@ from django.views.generic import (
 from lxml import etree
 
 from .services import (
+    get_properties_for_ontology_server_urls,
     map_metadata_server_urls_to_browse_urls,
     map_ontology_server_urls_to_browse_urls,
 )
@@ -437,6 +438,7 @@ class ResourceDetailView(TemplateView):
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
+        context['ontology_node_properties_mapping_url'] = reverse('browse:ontology_node_properties_mapping_url')
         return context
 
 class OrganisationDetailView(ResourceDetailView):
@@ -834,3 +836,16 @@ def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(requ
         'ontology_urls': esc_ontology_urls,
         'resource_urls': esc_resource_urls,
     })
+
+@require_POST
+def map_ontology_server_urls_to_corresponding_properties(request):
+    """Maps ontology server URLs to corresponding
+    ontology properties and ontology browser URL.
+    """
+    ontology_server_urls = json.loads(request.POST.get('urls', []))
+    properties_to_get = json.loads(request.POST.get('properties', []))
+    properties_for_ontology_server_urls = get_properties_for_ontology_server_urls(
+        ontology_server_urls,
+        properties_to_get
+    )
+    return JsonResponse(properties_for_ontology_server_urls)

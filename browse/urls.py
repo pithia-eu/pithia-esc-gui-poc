@@ -39,5 +39,6 @@ urlpatterns = [
     path('catalogue-entries/<catalogue_entry_id>/', views.CatalogueEntryDetailView.as_view(), name='catalogue_entry_detail'),
     path('catalogue-data-subsets/<catalogue_data_subset_id>/', views.CatalogueDataSubsetDetailView.as_view(), name='catalogue_data_subset_detail'),
     path('workflows/<workflow_id>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),
-    path('utils/convert/urls', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),
+    path('utils/convert/urls/', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),
+    path('utils/map/ontology-urls-to-properties/', views.map_ontology_server_urls_to_corresponding_properties, name='ontology_node_properties_mapping_url'),
 ]

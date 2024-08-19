@@ -1,3 +1,4 @@
+import logging
 from django.core.exceptions import ObjectDoesNotExist
 from operator import itemgetter
 from typing import Union
@@ -8,6 +9,7 @@ from common.models import (
 )
 from ontology.utils import (
     get_graph_of_pithia_ontology_component,
+    get_skos_properties_from_ontology_node,
     get_pref_label_from_ontology_node_iri,
 )
 from utils.url_helpers import (
@@ -19,7 +21,46 @@ from utils.url_helpers import (
 from validation.url_validation_services import MetadataFileOntologyURLReferencesValidator
 
 
+logger = logging.getLogger(__name__)
+
+
 # Server URL mapping
+def get_properties_for_ontology_server_urls(ontology_server_urls: list, skos_properties: list = ['prefLabel']) -> list:
+    """Gets the ontology properties and corresponding ontology browser URL
+    for each ontology server URL passed in a given list.
+    """
+    properties_by_ontology_url = {}
+    for url in ontology_server_urls:
+        if url in properties_by_ontology_url:
+            continue
+        corresponding_ontology_browser_url = None
+        try:
+            corresponding_ontology_browser_url = create_ontology_term_detail_url_from_ontology_term_server_url(url)
+        except Exception as err:
+            logger.exception(err)
+        
+        # SKOS properties
+        corresponding_properties = {}
+        try:
+            category_from_url = url.split('/')[-2]
+            ontology_graphs_by_category = {}
+            if category_from_url not in ontology_graphs_by_category:
+                ontology_graphs_by_category[category_from_url] = get_graph_of_pithia_ontology_component(category_from_url)
+            corresponding_graph = ontology_graphs_by_category[category_from_url]
+            corresponding_properties = get_skos_properties_from_ontology_node(
+                url,
+                skos_properties,
+                corresponding_graph
+            )
+        except Exception as err:
+            logger.exception(err)
+
+        properties_by_ontology_url[url] = {
+            'ontology_browser_url': corresponding_ontology_browser_url,
+            'skos_properties': corresponding_properties
+        }
+    return properties_by_ontology_url
+
 def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
     """
     Maps ontology server URLs to e-Science Centre ontology browse page URLs
