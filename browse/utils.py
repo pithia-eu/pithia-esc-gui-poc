@@ -2,46 +2,56 @@ import copy
 from itertools import groupby
 import re
 
+from utils.dict_helpers import flatten
 from utils.string_helpers import split_camel_case
 
 
-def remove_disallowed_properties_from_flattened_property_table_dict(flattened_property_table_dict):
+def remove_disallowed_properties_from_property_table_dict(
+        property_table_dict,
+        disallowed_property_keys=[],
+        disallowed_property_key_regexes=[],
+        disallowed_property_key_regex_exceptions=[]):
     """Removes any properties that shouldn't be presented in the
     metadata registration property table for any particular reason
     - e.g. the property is displayed in a dedicated format elsewhere
     in the page or the property is only relevant for
     XML/database/JSON support usage.
     """
-    flattened_property_table_dict_copy = copy.deepcopy(flattened_property_table_dict)
-    disallowed_keys = [
-        'id',
-        'name',
-        'description',
-    ]
+    property_table_dict_copy = copy.deepcopy(property_table_dict)
+    for key in property_table_dict:
+        if (not (any(x == key for x in disallowed_property_keys)
+            or any(regex for regex in disallowed_property_key_regexes if re.match(regex, key))
+            and not any(regex for regex in disallowed_property_key_regex_exceptions if re.match(regex, key)))):
+            continue
+        property_table_dict_copy.pop(key, None)
+
+    return property_table_dict_copy
+
+def remove_common_disallowed_properties_from_property_table_dict(property_table_dict):
+    """Removes properties common to most metadata types
+    as they are handled in a dedicated format elsewhere
+    in the page, or they are only relevant for
+    XML/database/JSON support usage.
+    """
     # Selector should only work on top-level
     # attributes which should only be XML namespace
     # attributes.
     # Stored in variable to make purpose clearer.
     namespace_prefix_attribute_selector = '@'
-    disallowed_key_regex = [
-        re.compile(rf'^{namespace_prefix_attribute_selector}'),
-        re.compile(r'^name'),
-        re.compile(r'^identifier'),
-        re.compile(r'.*onlineresource (1/1)\.description'),
-        re.compile(r'.*onlineresource (1/1)\.linkage'),
-        re.compile(r'^workflowdetails'),
-    ]
-    disallowed_key_regex_exceptions = [
-        re.compile(r'^contactinfo(.*).url')
-    ]
-    for key in flattened_property_table_dict:
-        if (not(any(x == key.lower() for x in disallowed_keys)
-            or any(regex for regex in disallowed_key_regex if re.match(regex, key.lower()))
-            and not any(regex for regex in disallowed_key_regex_exceptions if re.match(regex, key.lower())))):
-            continue
-        flattened_property_table_dict_copy.pop(key, None)
-
-    return flattened_property_table_dict_copy
+    cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+        property_table_dict,
+        disallowed_property_keys=[
+            'id',
+            'name',
+            'description',
+        ],
+        disallowed_property_key_regexes=[
+            re.compile(rf'^{namespace_prefix_attribute_selector}'),
+            re.compile(r'^name'),
+            re.compile(r'^identifier'),
+        ]
+    )
+    return cleaned_property_table_dict
 
 def _remove_numbering_from_key_section(key_section):
     """Removes numbering from a property if it appears
@@ -118,7 +128,7 @@ def _remove_duplicate_consecutive_key_sections(key_sections: list):
     """
     return [key_section for key_section, _group in groupby(key_sections)]
 
-def reformat_and_clean_flattened_property_table_dict_keys_for_display(flattened_dict) -> dict:
+def reformat_and_clean_resource_copy_for_property_table(property_table_dict) -> dict:
     """Reformats the keys of a metadata registration's JSON support dict
     from the default XML format that is passed on from the registration
     XML the JSON support dict was derived from, to a format that is easier
@@ -127,10 +137,10 @@ def reformat_and_clean_flattened_property_table_dict_keys_for_display(flattened_
     Some HTML may be added to the reformatted key after the initial reformatting
     step to update how it presents in a web page.
     """
-    cleaned_flattened_dict = remove_disallowed_properties_from_flattened_property_table_dict(flattened_dict)
+    flattened_dict = flatten(property_table_dict)
 
     flattened_dict_with_reformatted_keys = {}
-    for key in cleaned_flattened_dict:
+    for key in flattened_dict:
         reformatted_key_sections = _reformat_key_contents_for_display(key)
         reformatted_key_sections = _remove_duplicate_consecutive_key_sections(reformatted_key_sections)
         last_reformatted_key_section = f'<b>{reformatted_key_sections.pop()}</b>'
@@ -141,6 +151,6 @@ def reformat_and_clean_flattened_property_table_dict_keys_for_display(flattened_
         
         reformatted_key = f'{last_reformatted_key_section} {reformatted_key_path}'.strip()
         if reformatted_key != '':
-            flattened_dict_with_reformatted_keys[reformatted_key] = cleaned_flattened_dict[key]
+            flattened_dict_with_reformatted_keys[reformatted_key] = flattened_dict[key]
 
     return flattened_dict_with_reformatted_keys

@@ -1,15 +1,7 @@
-import re
 from django.core.exceptions import ObjectDoesNotExist
 from operator import itemgetter
-from typing import (
-    Tuple,
-    Union,
-)
+from typing import Union
 
-from common.constants import (
-    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
-    SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE,
-)
 from common.models import (
     Instrument,
     ScientificMetadata,
@@ -142,19 +134,3 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         url_mapping['converted_url_text'] = referenced_resource.name
         mapped_resource_server_urls.append(url_mapping)
     return mapped_resource_server_urls
-
-
-def get_server_urls_from_scientific_metadata_flattened(scientific_metadata_flattened: dict) -> Tuple[list, list]:
-    """
-    Finds server URLs (ontology, metadata) in a scientific metadata dict
-    that has been flattened.
-    """
-    ontology_server_urls = set()
-    resource_server_urls = set()
-    for key, value in scientific_metadata_flattened.items():
-        if key.endswith('@xlink:href') and value.startswith(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE):
-            ontology_server_urls.add(value)
-        if key.endswith('@xlink:href') and value.startswith(PITHIA_METADATA_SERVER_HTTPS_URL_BASE):
-            resource_server_urls.add(value)
-
-    return list(ontology_server_urls), list(resource_server_urls)

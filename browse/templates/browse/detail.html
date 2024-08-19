@@ -45,7 +45,7 @@
                             </svg>View Metadata in XML Format
                         </a>
                     </div>
-                    {% if scientific_metadata_readable.items|length > 0 %}
+                    {% if property_table_dict.items|length > 0 %}
                     <div class="col-lg-12">
                         <div class="table-responsive">
                             <table class="table table-hover resource-property-table">
@@ -56,7 +56,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for key, value in scientific_metadata_readable.items %}
+                                    {% for key, value in property_table_dict.items %}
                                     {# Prevent repeating properties like name and description. #}
                                     {% if 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
                                     {# An ID is added to the <tr> for operational modes to allow them to be linked to directly. #}

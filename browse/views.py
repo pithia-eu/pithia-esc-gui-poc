@@ -1,4 +1,5 @@
 import copy
+import json
 import logging
 import re
 from dateutil.parser import parse
@@ -16,21 +17,20 @@ from django.views.generic import (
 from lxml import etree
 
 from .services import (
-    get_server_urls_from_scientific_metadata_flattened,
     map_metadata_server_urls_to_browse_urls,
     map_ontology_server_urls_to_browse_urls,
 )
-from .utils import reformat_and_clean_flattened_property_table_dict_keys_for_display
-
-import json
+from .utils import (
+    reformat_and_clean_resource_copy_for_property_table,
+    remove_common_disallowed_properties_from_property_table_dict,
+    remove_disallowed_properties_from_property_table_dict,
+)
 
 from common import models
 from handle_management.handle_api import (
     get_handle_record,
     instantiate_client_and_load_credentials,
 )
-from utils.dict_helpers import flatten
-from utils.mapping_functions import prepare_resource_for_template
 
 logger = logging.getLogger(__name__)
 
@@ -374,7 +374,6 @@ class ResourceDetailView(TemplateView):
     title = 'Resource Detail'
     resource = None
     resource_id = ''
-    resource_flattened = None
     resource_human_readable = {}
     resource_description_split = []
     ontology_server_urls = []
@@ -383,8 +382,9 @@ class ResourceDetailView(TemplateView):
     resource_download_url_name = ''
     template_name = 'browse/detail.html'
 
-    def process_scientific_metadata(self):
-        return prepare_resource_for_template(self.resource.json)
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        property_table_dict = remove_common_disallowed_properties_from_property_table_dict(property_table_dict)
+        return property_table_dict
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
@@ -405,10 +405,10 @@ class ResourceDetailView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
-        self.scientific_metadata = self.process_scientific_metadata()
-        self.scientific_metadata_flattened = flatten(self.scientific_metadata)
-        self.scientific_metadata_readable = reformat_and_clean_flattened_property_table_dict_keys_for_display(self.scientific_metadata_flattened)
-        self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.ontology_server_urls = self.resource.ontology_urls
+        self.resource_server_urls = self.resource.metadata_urls
+        self.property_table_dict = self.configure_resource_copy_for_property_table(copy.deepcopy(self.resource.json))
+        self.property_table_dict = reformat_and_clean_resource_copy_for_property_table(self.property_table_dict)
         self.title = self.resource.name
         if self.resource.description and self.resource.description.strip() != '':
             description_from_xml = self.get_description_from_xml(self.resource)
@@ -427,14 +427,13 @@ class ResourceDetailView(TemplateView):
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         context['resource_download_url_name'] = self.resource_download_url_name
         context['resource'] = self.resource
-        context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
         context['resource_server_urls'] = self.resource_server_urls
         context['server_url_to_id_mappings'] = {
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
         }
-        context['scientific_metadata_readable'] = self.scientific_metadata_readable
+        context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
@@ -487,15 +486,13 @@ class ProjectDetailView(ResourceDetailView):
     def get_abstract_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}abstract').text
 
-    def process_scientific_metadata(self):
-        scientific_metadata = copy.deepcopy(prepare_resource_for_template(self.resource.json))
-        # Only pop the 'abstract' key from the scientific_metadata
-        # dict if there is a value, so it doesn't appear in the
-        # property table.
-        if (self.resource.abstract
-            and len(self.resource.abstract.strip()) > 0):
-            scientific_metadata.pop('abstract', None)
-        return scientific_metadata
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=['abstract']
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -640,6 +637,17 @@ class DataCollectionDetailView(ResourceDetailView):
     interaction_methods = []
     link_interaction_methods = []
 
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'collectionResults',
+                'relatedParty',
+            ]
+        )
+        return cleaned_property_table_dict
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
@@ -703,6 +711,17 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
 
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'entryName',
+                'entryDescription',
+            ]
+        )
+        return cleaned_property_table_dict
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().get(request, *args, **kwargs)
@@ -721,11 +740,22 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}dataSubsetDescription').text
 
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'dataSubsetName',
+                'dataSubsetDescription',
+            ]
+        )
+        return cleaned_property_table_dict
+
     def add_handle_data_to_context(self, context):
         context['handles'] = self.handles
         context['data_for_handles'] = []
         if self.data_for_handles:
-            context['data_for_handles'] = [reformat_and_clean_flattened_property_table_dict_keys_for_display(data) for data in self.data_for_handles if data is not None]
+            context['data_for_handles'] = [reformat_and_clean_resource_copy_for_property_table(data) for data in self.data_for_handles if data is not None]
         return context
 
     def get(self, request, *args, **kwargs):
@@ -770,6 +800,14 @@ class WorkflowDetailView(ResourceDetailView):
     model = models.Workflow
     resource_list_by_type_url_name = 'browse:list_workflows'
     resource_download_url_name = 'utils:view_workflow_as_xml'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=['workflowDetails']
+        )
+        return cleaned_property_table_dict
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
