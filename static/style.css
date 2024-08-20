@@ -479,6 +479,21 @@ dialog .btn-close {
     width: 20%;
 }
 
+.resource-description-wrapper .resource-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+}
+
+.resource-description-wrapper .resource-description.expanded {
+    display: block;
+}
+
+.btn-expand-resource-description.hidden {
+    display: none;
+}
+
 .col-lg-3 .resource-key-details {
     font-size: 0.875rem;
 }

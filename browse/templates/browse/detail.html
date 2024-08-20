@@ -8,6 +8,7 @@
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
+<script src="{% static 'browse/detail.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
@@ -28,7 +29,10 @@
             <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
             {% if resource.description and resource.description|cut:' ' != '' %}
             {% for dp in resource_description_split %}
-            <p class="resource-description">{{ dp|urlize }}</p>
+            <div class="resource-description-wrapper mb-3">
+                <p class="resource-description">{{ dp|urlize }}</p>
+                <button class="btn btn-light btn-expand-resource-description">Show more</button>
+            </div>
             {% endfor %}
             {% else %}
             <p class="resource-description text-muted fst-italic">{% block no_description_text %}No description{% endblock no_description_text %}</p>
@@ -43,7 +47,7 @@
                 {% with value=p|get_key_value:'@xlink:href' %}
                 <li class="list-group-item permission-list-group-item py-3" data-metadata-server-url={{ value }}>
                     <details>
-                        <summary>
+                        <summary class="summary-marker-custom">
                             <h3 class="d-inline-block fs-5 mb-0">
                                 {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
                                 {% include 'browse/placeholders/server_urL_placeholder_no_link.html' %}
