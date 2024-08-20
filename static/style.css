@@ -732,9 +732,14 @@ label.required::after {
     color: #fff !important;
 }
 
+.metadata-server-url.loading {
+    cursor: wait;
+}
+
 .metadata-server-url.loading .metadata-server-url-text {
     color: transparent !important;
     opacity: 0.5;
+    pointer-events: none;
     background-color: hsl(200, 20%, 80%);
     animation: skeleton-loading 1s linear infinite alternate;
 }
