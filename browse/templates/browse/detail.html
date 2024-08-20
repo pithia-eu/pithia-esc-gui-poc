@@ -23,7 +23,7 @@
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <h1>{{ resource.name }}</h1>
-        <p class="text-secondary">Last modified at {{ resource.updated_at }}</p>
+        <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M d, Y, H:i' }}</p>
         {% block abstract %}{% endblock abstract %}
         <section>
             <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
@@ -153,16 +153,16 @@
                 <section class="py-0">
                     <div class="table-responsive">
                         <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                            <caption class="caption-top pt-lg-0 fs-5">Responsible Parties</caption>
+                            <caption class="text-black caption-top pt-lg-0 fs-5">Responsible Parties</caption>
                             <tbody>
                                 {% for rp in resource.related_parties %}
                                 <tr>
                                     <td>
                                         {% with value=rp.role %}
                                         {% if value in ontology_server_urls %}
-                                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                                         {% elif value in resource_server_urls %}
-                                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                        {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
                                         {% else %}
                                         {{ value.strip|urlize }}
                                         {% endif %}
