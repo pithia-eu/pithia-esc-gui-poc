@@ -46,7 +46,7 @@
                 {% for p in resource.permission_urls %}
                 {% with value=p|get_key_value:'@xlink:href' %}
                 <li class="list-group-item permission-list-group-item py-3" data-metadata-server-url={{ value }}>
-                    <details>
+                    <details name="details-permissions">
                         <summary class="summary-marker-custom">
                             <h3 class="d-inline-block fs-5 mb-0">
                                 {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
