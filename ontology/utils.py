@@ -111,6 +111,14 @@ def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
         g = get_graph_of_pithia_ontology_component(ontology_term_category)
     return str(g.value(URIRef(ontology_node_iri), SKOS.prefLabel))
 
+def get_skos_properties_from_ontology_node(iri, skos_properties, g=None):
+    if not g:
+        g = get_graph_of_pithia_ontology_component(iri.split('/')[-2])
+    property_dict = {
+        sp: str(g.value(URIRef(iri), SKOS[sp]))
+    for sp in skos_properties}
+    return property_dict
+
 # Credit for get_path: https://stackoverflow.com/a/22171182
 def getpath(nested_dict, value, prepath=()):
     for k, v in nested_dict.items():
