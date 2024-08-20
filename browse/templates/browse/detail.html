@@ -2,6 +2,7 @@
 {% load project_tags %}
 {% load static %}
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
 {{ ontology_node_properties_mapping_url|json_script:'ontology-node-properties-mapping-url' }}
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
@@ -40,14 +41,16 @@
             <ul class="list-group">
                 {% for p in resource.permission_urls %}
                 {% with value=p|get_key_value:'@xlink:href' %}
-                <li class="list-group-item permission-list-group-item" data-metadata-server-url={{ value }}>
+                <li class="list-group-item permission-list-group-item py-3" data-metadata-server-url={{ value }}>
                     <details>
                         <summary>
-                            {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
-                            {% include 'browse/placeholders/server_urL_placeholder_no_link.html' %}
-                            {% endwith %}
+                            <h3 class="d-inline-block fs-5 mb-0">
+                                {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
+                                {% include 'browse/placeholders/server_urL_placeholder_no_link.html' %}
+                                {% endwith %}
+                            </h3>
                         </summary>
-                        <p class="permission-definition mt-3 ms-3">
+                        <p class="permission-definition mt-3 ms-3 mb-0">
                             <span class="placeholder-glow">
                                 <span class="placeholder rounded bg-secondary col-7"></span>
                                 <span class="placeholder rounded bg-secondary col-7"></span>

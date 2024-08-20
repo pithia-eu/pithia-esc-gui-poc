@@ -34,8 +34,7 @@ function addPropertiesForOntologyUrlToPage(url, properties) {
     const ontologyDefinition = properties.skos_properties.definition;
     const ontologyDefinitionElements = document.querySelectorAll(`[data-metadata-server-url="${url}"] .permission-definition`);
     for (const el of ontologyDefinitionElements) {
-        el.innerHTML = "";
-        el.innerText = ontologyDefinition;
+        el.innerHTML = DOMPurify.sanitize(ontologyDefinition);
     }
 }
 
