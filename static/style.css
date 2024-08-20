@@ -54,6 +54,15 @@ a:not(.btn, .nav-link):focus,
     text-decoration: underline;
 }
 
+a.link-plain-by-default {
+    text-decoration: none;
+}
+
+a.link-plain-by-default:hover,
+a.link-plain-by-default:focus {
+    text-decoration: underline;
+}
+
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 .card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
@@ -727,9 +736,20 @@ label.required::after {
     transition: opacity 0.5s ease
 }
 
-.metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-secondary {
+.metadata-server-url:not(.loading) .metadata-server-url-text.badge {
     text-decoration: none;
+}
+
+.metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-secondary {
     color: #fff !important;
+}
+
+.metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-info {
+    color: #fff !important;
+}
+
+.metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-light {
+    color: #000 !important;
 }
 
 .metadata-server-url.loading {
@@ -740,7 +760,7 @@ label.required::after {
     color: transparent !important;
     opacity: 0.5;
     pointer-events: none;
-    background-color: hsl(200, 20%, 80%);
+    background-color: hsl(200, 20%, 80%) !important;
     animation: skeleton-loading 1s linear infinite alternate;
 }
 
