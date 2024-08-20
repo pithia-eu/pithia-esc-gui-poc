@@ -51,19 +51,16 @@ export class ServerURLConverter {
     async convertServerUrlsToDetailPageUrlsAndDisplayInPage() {
         const urls = this.getURLsToConvert();
         const urlMappings = await this.getResourceServerUrlToDetailPageUrlMappings(urls);
-        if (urlMappings.length === 0) {
-            const hiddenElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url]`);
-            for (const e of hiddenElements) {
-                this.showElementWithConvertedUrlInPage(e);
-            }
-            return;
-        }
         for (const urlMapping of urlMappings) {
             this.swapAnchorElementUrlsWithConvertedUrlInPage(
                 urlMapping.original_server_url,
                 urlMapping.converted_url,
                 urlMapping.converted_url_text
             );
+        }
+        const remainingElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url].loading`);
+        for (const e of remainingElements) {
+            this.showElementWithConvertedUrlInPage(e);
         }
     }
 }
