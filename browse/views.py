@@ -645,6 +645,8 @@ class DataCollectionDetailView(ResourceDetailView):
             cleaned_property_table_dict,
             disallowed_property_keys=[
                 'collectionResults',
+                'permission',
+                'qualityAssessment',
                 'relatedParty',
             ]
         )

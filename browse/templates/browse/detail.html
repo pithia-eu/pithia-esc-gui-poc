@@ -23,7 +23,7 @@
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <h1>{{ resource.name }}</h1>
-        <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M d, Y, H:i' }}</p>
+        <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
         {% block abstract %}{% endblock abstract %}
         <section>
             <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
@@ -190,6 +190,87 @@
                             </tbody>
                         </table>
                     </div>
+                </section>
+                {% endif %}
+                {% if resource.data_quality_flags or resource.metadata_quality_flags or resource.science_relevance_indicators %}
+                <section class="py-0">
+                    <details>
+                        <summary class="summary-marker-custom">
+                            <h2 class="fs-5">Quality Assessment</h2>
+                        </summary>
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
+                                <tbody>
+                                    {% if resource.data_quality_flags %}
+                                    <tr>
+                                        <td>Data Quality Flags</td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                {% for dqf in resource.data_quality_flags %}
+                                                <li>
+                                                    {% with value=dqf %}
+                                                    {% if value in ontology_server_urls %}
+                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                    {% elif value in resource_server_urls %}
+                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                    {% else %}
+                                                    {{ value.strip|urlize }}
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if resource.metadata_quality_flags %}
+                                    <tr>
+                                        <td>Metadata Quality Flags</td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                {% for mqf in resource.metadata_quality_flags %}
+                                                <li>
+                                                    {% with value=mqf %}
+                                                    {% if value in ontology_server_urls %}
+                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                    {% elif value in resource_server_urls %}
+                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                    {% else %}
+                                                    {{ value.strip|urlize }}
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if resource.science_relevance_indicators %}
+                                    <tr>
+                                        <td>Science Relevance Indicators</td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                {% for sri in resource.science_relevance_indicators %}
+                                                <li>
+                                                    {% with value=sri %}
+                                                    {% if value in ontology_server_urls %}
+                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                    {% elif value in resource_server_urls %}
+                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                    {% else %}
+                                                    {{ value.strip|urlize }}
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
                 </section>
                 {% endif %}
             </div>

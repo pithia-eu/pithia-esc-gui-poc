@@ -7,6 +7,7 @@ from .managers import *
 from .querysets import *
 from .constants import (
     PITHIA_METADATA_SERVER_URL_BASE,
+    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
     SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
 )
 from .converted_xml_correction_functions import *
@@ -112,6 +113,36 @@ class ScientificMetadata(models.Model):
             'role': next(iter(rp.xpath('.//%s:role/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)), ''),
             'parties': rp.xpath('.//%s:party/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces),
         } for rp in related_parties]
+
+    @property
+    def data_quality_flags(self):
+        namespaces = {
+            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
+            'xlink': 'http://www.w3.org/1999/xlink',
+        }
+        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+        data_quality_flags = xml_parsed.xpath('.//%s:dataQualityFlag/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
+        return data_quality_flags
+
+    @property
+    def metadata_quality_flags(self):
+        namespaces = {
+            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
+            'xlink': 'http://www.w3.org/1999/xlink',
+        }
+        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+        metadata_quality_flags = xml_parsed.xpath('.//%s:metadataQualityFlag/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
+        return metadata_quality_flags
+
+    @property
+    def science_relevance_indicators(self):
+        namespaces = {
+            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
+            'xlink': 'http://www.w3.org/1999/xlink',
+        }
+        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
+        science_relevance_indicators = xml_parsed.xpath('.//%s:scienceRelevanceIndicator/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
+        return science_relevance_indicators
 
     @property
     def ontology_urls(self):
