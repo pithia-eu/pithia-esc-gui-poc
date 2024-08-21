@@ -1,6 +1,6 @@
 import logging
-import re
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.html import urlize
 from operator import itemgetter
 from typing import Union
 
@@ -19,7 +19,6 @@ from utils.url_helpers import (
     divide_resource_url_into_main_components,
     is_operational_mode_url,
 )
-from validation.url_validation_services import MetadataFileOntologyURLReferencesValidator
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +52,8 @@ def get_properties_for_ontology_server_urls(ontology_server_urls: list, skos_pro
                 skos_properties,
                 corresponding_graph
             )
+            for key, value in corresponding_properties.items():
+                corresponding_properties.update({key: urlize(value)})
         except Exception as err:
             logger.exception(err)
 
@@ -85,7 +86,7 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
                 graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
                 ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
             converted_url_text = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
-            if converted_url_text is None:
+            if not converted_url_text:
                 converted_url_text = ontology_term_id
         except Exception as err:
             logger.exception(err)
