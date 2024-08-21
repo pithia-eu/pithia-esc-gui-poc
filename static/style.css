@@ -492,6 +492,10 @@ dialog .btn-close {
     width: 20%;
 }
 
+.resource-description:last-child {
+    margin-bottom: 0;
+}
+
 .resource-description-wrapper {
     display: -webkit-box;
     -webkit-box-orient: vertical;
