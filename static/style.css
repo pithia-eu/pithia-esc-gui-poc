@@ -121,7 +121,7 @@ summary.summary-marker-custom::marker {
 }
 
 summary.summary-marker-custom::before {
-    content: '▶';
+    content: '\25B6\FE0E';
     margin: 0 1em 0 0;
 }
 
