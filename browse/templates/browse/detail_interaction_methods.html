@@ -2,8 +2,8 @@
 {% load project_tags %}
 {% block interaction_methods %}
 {% if api_interaction_methods %}
-<section class="mb-3">
-    <h2 class="mb-3">Execute from e-Science Centre</h2>
+<section class="resource-detail-section">
+    <h2>Execute from e-Science Centre</h2>
     <ul class="list-group mt-0">
         {% for method in api_interaction_methods %}
         <li class="list-group-item">
@@ -35,8 +35,8 @@
 </section>
 {% endif %}
 {% if link_interaction_methods %}
-<section class="mb-3">
-    <h2 class="mb-3">Collection Results</h2>
+<section class="resource-detail-section">
+    <h2>Collection Results</h2>
     <ul class="list-group mt-0">
         {% for source in link_interaction_methods %}
         {% with online_resource=source.OnlineResource %}
@@ -51,7 +51,7 @@
                 <div class="d-flex flex-column row-gap-3">
                     {% if 'serviceFunction' in online_resource %}
                     {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' %}
-                    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+                    {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
                     {% endwith %}
                     {% else %}
                     <span class="badge rounded-pill text-bg-light">

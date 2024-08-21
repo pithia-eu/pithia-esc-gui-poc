@@ -1,8 +1,8 @@
 {% extends 'browse/detail.html' %}
 {% block abstract %}
 {% if resource.abstract.strip|length > 0 %}
-<section class="mt-4">
-    <h2 class="mb-3">Abstract</h2>
+<section class="resource-detail-section">
+    <h2>Abstract</h2>
     {% if project_abstract_split %}
     {% for ap in project_abstract_split %}
     <p class="resource-description">{{ ap|urlize }}</p>

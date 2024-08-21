@@ -22,25 +22,46 @@
 {% csrf_token %}
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
-        <h1>{{ resource.name }}</h1>
-        <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+        <div class="resource-detail-top-section">
+            <h1>{{ resource.name }}</h1>
+            <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+            {% if 'type' in resource.json %}
+            <div class="d-flex flex-wrap column-gap-2">
+                {% if '@xlink:href' in resource.json.type %}
+                <div>
+                    {% with value=resource.json.type|get_key_value:'@xlink:href' %}
+                    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+                    {% endwith %}
+                </div>
+                {% else %}
+                {% for type in resource.json.type %}
+                <div>
+                    {% with value=type|get_key_value:'@xlink:href' %}
+                    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+                    {% endwith %}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
         {% block abstract %}{% endblock abstract %}
-        <section>
-            <h2 class="mb-3">{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
+        <section class="resource-detail-section">
+            <h2>{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
             {% if resource.description and resource.description|cut:' ' != '' %}
-            <div class="resource-description-wrapper mb-3">
+            <div class="resource-description-wrapper">
                 {% for dp in resource_description_split %}
                 <p class="resource-description">{{ dp|urlize }}</p>
                 {% endfor %}
             </div>
-            <button class="btn btn-light btn-expand-resource-description mb-3">Show more</button>
+            <button class="btn btn-light btn-expand-resource-description mt-3">Show more</button>
             {% else %}
             <p class="resource-description text-muted fst-italic">{% block no_description_text %}No description{% endblock no_description_text %}</p>
             {% endif %}
         </section>
         {% block interaction_methods %}{% endblock interaction_methods %}
         {% if resource.permission_urls %}
-        <section class="mb-3">
+        <section class="resource-detail-section">
             <h2>Permissions</h2>
             <ul class="list-group">
                 {% for p in resource.permission_urls %}
@@ -68,7 +89,7 @@
             </ul>
         </section>
         {% endif %}
-        <section>
+        <section class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom mb-3">
                     <h2>Further Information and Resources</h2>
@@ -151,45 +172,49 @@
             <div class="col-lg-12 d-flex flex-column row-gap-5">
                 {% if resource.related_parties %}
                 <section class="py-0">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                            <caption class="text-black caption-top pt-lg-0 fs-5">Responsible Parties</caption>
-                            <tbody>
-                                {% for rp in resource.related_parties %}
-                                <tr>
-                                    <td>
-                                        {% with value=rp.role %}
-                                        {% if value in ontology_server_urls %}
-                                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                                        {% elif value in resource_server_urls %}
-                                        {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                                        {% else %}
-                                        {{ value.strip|urlize }}
-                                        {% endif %}
-                                        {% endwith %}
-                                    </td>
-                                    <td>
-                                        <ul class="list-unstyled mb-0">
-                                            {% for p in rp.parties %}
-                                            <li>
-                                                {% with value=p %}
-                                                {% if value in ontology_server_urls %}
-                                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                                {% elif value in resource_server_urls %}
-                                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                                {% else %}
-                                                {{ value.strip|urlize }}
-                                                {% endif %}
-                                                {% endwith %}
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    <details open>
+                        <summary class="summary-marker-custom">
+                            <h2 class="fs-5">Responsible Parties</h2>
+                        </summary>
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
+                                <tbody>
+                                    {% for rp in resource.related_parties %}
+                                    <tr>
+                                        <td>
+                                            {% with value=rp.role %}
+                                            {% if value in ontology_server_urls %}
+                                            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                                            {% elif value in resource_server_urls %}
+                                            {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                                            {% else %}
+                                            {{ value.strip|urlize }}
+                                            {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                {% for p in rp.parties %}
+                                                <li>
+                                                    {% with value=p %}
+                                                    {% if value in ontology_server_urls %}
+                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                    {% elif value in resource_server_urls %}
+                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                    {% else %}
+                                                    {{ value.strip|urlize }}
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
                 </section>
                 {% endif %}
                 {% if resource.data_quality_flags or resource.metadata_quality_flags or resource.science_relevance_indicators %}

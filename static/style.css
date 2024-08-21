@@ -154,8 +154,7 @@ h2 + .card-menu {
     margin-top: 1.5rem;
 }
 
-h1 + .list-group,
-h2 + .list-group:not(.file-validation-status-list) {
+h1 + .list-group {
     margin-top: 1.5rem;
 }
 
@@ -490,6 +489,31 @@ dialog .btn-close {
 .ontology-term-table td:first-child,
 .resource-property-table td:first-child {
     width: 20%;
+}
+
+.resource-detail-top-section {
+    padding-bottom: 1.5rem;
+}
+
+.resource-detail-section {
+    padding: 1.5rem 0;
+}
+
+.resource-detail-section > h2 {
+    margin-bottom: 1rem;
+}
+
+.resource-detail-section > h2:has(+ ul) {
+    margin-bottom: 1rem;
+}
+
+.resource-detail-section > h2 + ul {
+    margin-top: 0;
+}
+
+.resource-detail-top-section :last-child,
+.resource-detail-section :last-child {
+    margin-bottom: 0;
 }
 
 .resource-description:last-child {
