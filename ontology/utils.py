@@ -109,7 +109,10 @@ def get_pref_label_from_ontology_node_iri(ontology_node_iri, g=None):
     if g is None:
         ontology_term_category = ontology_node_iri.split('/')[-2]
         g = get_graph_of_pithia_ontology_component(ontology_term_category)
-    return str(g.value(URIRef(ontology_node_iri), SKOS.prefLabel))
+    pref_label = g.value(URIRef(ontology_node_iri), SKOS.prefLabel)
+    if not pref_label:
+        return None
+    return str(pref_label)
 
 def get_skos_properties_from_ontology_node(iri, skos_properties, g=None):
     if not g:
