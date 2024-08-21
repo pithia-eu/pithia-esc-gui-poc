@@ -488,14 +488,14 @@ dialog .btn-close {
     width: 20%;
 }
 
-.resource-description-wrapper .resource-description {
+.resource-description-wrapper {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
     overflow: hidden;
 }
 
-.resource-description-wrapper .resource-description.expanded {
+.resource-description-wrapper.expanded {
     display: block;
 }
 
