@@ -63,46 +63,36 @@ def get_properties_for_ontology_server_urls(ontology_server_urls: list, skos_pro
     return properties_by_ontology_url
 
 def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
-    """
-    Maps ontology server URLs to e-Science Centre ontology browse page URLs
+    """Maps ontology server URLs to e-Science Centre ontology browse page URLs
     based on the ontology term that each ontology server URL is for.
     """
     converted_ontology_server_urls = []
     ontology_term_category_graphs = {}
 
-    invalid_ontology_server_urls = []
-    invalid_ontology_server_urls = MetadataFileOntologyURLReferencesValidator._is_each_ontology_url_valid(ontology_server_urls)
-    for url in invalid_ontology_server_urls:
-        converted_url_text = url
-        ontology_url_pattern = re.compile('/https:\/\/metadata\.pithia\.eu\/ontology\/2\.2\/\w+\/\w+$')
-        if ontology_url_pattern.match(url):
-            converted_url_text = url.split('/')[-1]
-        converted_ontology_server_urls.append({
-            'original_server_url': url,
-            'converted_url': url,
-            'converted_url_text': converted_url_text,
-        })
-    
-    valid_ontology_server_urls = [url for url in ontology_server_urls if url not in invalid_ontology_server_urls]
-    for ontology_server_url in valid_ontology_server_urls:
-        ontology_term_detail_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
-        ontology_term_id = ontology_server_url.split('/')[-1]
-        ontology_term_category = ontology_server_url.split('/')[-2]
-        # If the graph for the ontology term has already been fetched,
-        # get the stored version of it to improve page loading times
-        graph_for_ontology_term = None
-        if ontology_term_category in ontology_term_category_graphs:
-            graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
-        else:
-            graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
-            ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
-        ontology_term_pref_label = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
-        if ontology_term_pref_label is None:
-            ontology_term_pref_label = ontology_term_id
+    for ontology_server_url in ontology_server_urls:
+        converted_url = ontology_server_url
+        converted_url_text = ontology_server_url
+        try:
+            converted_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
+            ontology_term_id = ontology_server_url.split('/')[-1]
+            ontology_term_category = ontology_server_url.split('/')[-2]
+            # If the graph for the ontology term has already been fetched,
+            # get the stored version of it to improve page loading times
+            graph_for_ontology_term = None
+            if ontology_term_category in ontology_term_category_graphs:
+                graph_for_ontology_term = ontology_term_category_graphs[ontology_term_category]
+            else:
+                graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
+                ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
+            converted_url_text = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
+            if converted_url_text is None:
+                converted_url_text = ontology_term_id
+        except Exception as err:
+            logger.exception(err)
         converted_ontology_server_urls.append({
             'original_server_url': ontology_server_url,
-            'converted_url': ontology_term_detail_url,
-            'converted_url_text': ontology_term_pref_label,
+            'converted_url': converted_url,
+            'converted_url_text': converted_url_text,
         })
     return converted_ontology_server_urls
 
