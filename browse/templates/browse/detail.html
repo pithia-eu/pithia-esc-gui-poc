@@ -69,7 +69,7 @@
                 <li class="list-group-item permission-list-group-item py-3" data-metadata-server-url={{ value }}>
                     <details name="details-permissions">
                         <summary class="summary-marker-custom">
-                            <h3 class="d-inline-block fs-5 mb-0">
+                            <h3 class="d-inline-block fs-5 fw-normal mb-0">
                                 {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}
                                 {% include 'browse/placeholders/server_urL_placeholder_no_link.html' %}
                                 {% endwith %}
@@ -89,6 +89,73 @@
             </ul>
         </section>
         {% endif %}
+        {% if resource.data_quality_flags or resource.metadata_quality_flags or resource.science_relevance_indicators %}
+        <section class="resource-detail-section">
+            <h2>Quality Assessment</h2>
+            <div class="d-flex flex-column row-gap-4 mt-4">
+                {% if resource.data_quality_flags %}
+                <div>
+                    <h3 class="fs-5">Data Quality Flags</h3>
+                    <ul class="list-group">
+                        {% for dqf in resource.data_quality_flags %}
+                        <li class="list-group-item">
+                            {% with value=dqf %}
+                            {% if value in ontology_server_urls %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% elif value in resource_server_urls %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% else %}
+                            {{ value.strip|urlize }}
+                            {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if resource.metadata_quality_flags %}
+                <div>
+                    <h3 class="fs-5">Metadata Quality Flags</h3>
+                    <ul class="list-group">
+                        {% for mqf in resource.metadata_quality_flags %}
+                        <li class="list-group-item">
+                            {% with value=mqf %}
+                            {% if value in ontology_server_urls %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% elif value in resource_server_urls %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% else %}
+                            {{ value.strip|urlize }}
+                            {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if resource.science_relevance_indicators %}
+                <div>
+                    <h3 class="fs-5 fw-normal">Science Relevance Indicators</h3>
+                    <ul class="list-group">
+                        {% for sri in resource.science_relevance_indicators %}
+                        <li class="list-group-item">
+                            {% with value=sri %}
+                            {% if value in ontology_server_urls %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% elif value in resource_server_urls %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% else %}
+                            {{ value.strip|urlize }}
+                            {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
         <section class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom mb-3">
@@ -96,14 +163,20 @@
                 </summary>
                 <div class="row gy-4">
                     <div class="col-lg-12">
-                        <a href="{% url resource_download_url_name resource.id %}" class="d-inline-block btn btn-light icon-link icon-link-hover px-auto" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-2" viewBox="0 0 16 16">
-                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
-                            </svg>View Metadata in XML Format
-                        </a>
+                        <h3 class="fs-5">Resources</h3>
+                        <ul>
+                            <li>
+                                <a href="{% url resource_download_url_name resource.id %}" class="icon-link icon-link-hover" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
+                                    </svg>Metadata File (XML)
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     {% if property_table_dict.items|length > 0 %}
                     <div class="col-lg-12">
+                        <h3 class="fs-5">Further Information</h3>
                         <div class="table-responsive">
                             <table class="table table-hover resource-property-table">
                                 <thead>
@@ -176,124 +249,78 @@
                         <summary class="summary-marker-custom">
                             <h2 class="fs-5">Responsible Parties</h2>
                         </summary>
-                        <div class="table-responsive">
-                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                                <tbody>
-                                    {% for rp in resource.related_parties %}
-                                    <tr>
-                                        <td>
-                                            {% with value=rp.role %}
-                                            {% if value in ontology_server_urls %}
-                                            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                                            {% elif value in resource_server_urls %}
-                                            {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                                            {% else %}
-                                            {{ value.strip|urlize }}
-                                            {% endif %}
-                                            {% endwith %}
-                                        </td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0">
-                                                {% for p in rp.parties %}
-                                                <li>
-                                                    {% with value=p %}
-                                                    {% if value in ontology_server_urls %}
-                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                                    {% elif value in resource_server_urls %}
-                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                                    {% else %}
-                                                    {{ value.strip|urlize }}
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        <div class="bg-light p-3">
+                            <dl class="d-flex flex-column row-gap-4 mb-0">
+                                {% for rp in resource.related_parties %}
+                                <div>
+                                    <dt class="mb-2">
+                                        {% with value=rp.role %}
+                                        {% if value in ontology_server_urls %}
+                                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                                        {% elif value in resource_server_urls %}
+                                        {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                                        {% else %}
+                                        {{ value.strip|urlize }}
+                                        {% endif %}
+                                        {% endwith %}
+                                    </dt>
+                                    <dd>
+                                        <ul class="mb-0">
+                                            {% for p in rp.parties %}
+                                            <li>
+                                                {% with value=p %}
+                                                {% if value in ontology_server_urls %}
+                                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                                {% elif value in resource_server_urls %}
+                                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                                {% else %}
+                                                {{ value.strip|urlize }}
+                                                {% endif %}
+                                                {% endwith %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </dd>
+                                </div>
+                                {% endfor %}
+                            </dl>
                         </div>
                     </details>
                 </section>
                 {% endif %}
-                {% if resource.data_quality_flags or resource.metadata_quality_flags or resource.science_relevance_indicators %}
+                {% if 'project' in resource.json or 'om:procedure' in resource.json %}
                 <section class="py-0">
                     <details>
                         <summary class="summary-marker-custom">
-                            <h2 class="fs-5">Quality Assessment</h2>
+                            <h2 class="fs-5">See Also</h2>
                         </summary>
-                        <div class="table-responsive">
-                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                                <tbody>
-                                    {% if resource.data_quality_flags %}
-                                    <tr>
-                                        <td>Data Quality Flags</td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0">
-                                                {% for dqf in resource.data_quality_flags %}
-                                                <li>
-                                                    {% with value=dqf %}
-                                                    {% if value in ontology_server_urls %}
-                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                                    {% elif value in resource_server_urls %}
-                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                                    {% else %}
-                                                    {{ value.strip|urlize }}
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                    {% if resource.metadata_quality_flags %}
-                                    <tr>
-                                        <td>Metadata Quality Flags</td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0">
-                                                {% for mqf in resource.metadata_quality_flags %}
-                                                <li>
-                                                    {% with value=mqf %}
-                                                    {% if value in ontology_server_urls %}
-                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                                    {% elif value in resource_server_urls %}
-                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                                    {% else %}
-                                                    {{ value.strip|urlize }}
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                    {% if resource.science_relevance_indicators %}
-                                    <tr>
-                                        <td>Science Relevance Indicators</td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0">
-                                                {% for sri in resource.science_relevance_indicators %}
-                                                <li>
-                                                    {% with value=sri %}
-                                                    {% if value in ontology_server_urls %}
-                                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                                    {% elif value in resource_server_urls %}
-                                                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                                    {% else %}
-                                                    {{ value.strip|urlize }}
-                                                    {% endif %}
-                                                    {% endwith %}
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                </tbody>
-                            </table>
+                        <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
+                            {% if 'project' in resource.json %}
+                            <div>
+                                <h3 class="fs-6">Projects</h3>
+                                <ul class="mb-0">
+                                    {% for project in resource.json.project %}
+                                    <li>
+                                        {% with value=project|get_key_value:'@xlink:href' %}
+                                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                        {% endwith %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% if 'om:procedure' in resource.json %}
+                            <div>
+                                <h3 class="fs-6">Procedure</h3>
+                                <ul class="mb-0">
+                                    <li>
+                                        {% with value=resource.json|get_key_value:'om:procedure'|get_key_value:'@xlink:href' %}
+                                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                        {% endwith %}
+                                    </li>
+                                </ul>
+                            </div>
+                            {% endif %}
                         </div>
                     </details>
                 </section>
