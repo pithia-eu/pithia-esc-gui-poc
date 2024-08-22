@@ -3,11 +3,9 @@
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2>Abstract</h2>
-    {% if project_abstract_split %}
-    {% for ap in project_abstract_split %}
-    <p class="resource-description">{{ ap|urlize }}</p>
-    {% endfor %}
-    {% endif %}
+    {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split %}
+    {% include 'browse/detail/components/expandable_text_block.html' %}
+    {% endwith %}
 </section>
 {% endif %}
 {% endblock pre_description_content %}

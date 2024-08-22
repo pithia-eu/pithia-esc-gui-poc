@@ -1,9 +1,14 @@
-const descriptionWrapperElement = document.querySelector(".resource-description-wrapper");
-const expandDescriptionButton = document.querySelector(".btn-expand-resource-description");
+const expandDescriptionButtons = document.querySelectorAll(".btn-expand-resource-description");
 
-function setupExpandDescriptionButton() {
-    // Credit for overflow detection: https://stackoverflow.com/a/67455839.
-    const isTextClamped = el => el.scrollHeight > el.clientHeight;
+
+// Credit for overflow detection: https://stackoverflow.com/a/67455839.
+const isTextClamped = el => el.scrollHeight > el.clientHeight;
+
+function setupExpandDescriptionButton(expandDescriptionButton) {
+    const descriptionWrapperElement = document.querySelector(`#${expandDescriptionButton.dataset.target}`);
+    if (!descriptionWrapperElement) {
+        return;
+    }
     new ResizeObserver(e => {
         if (descriptionWrapperElement.classList.contains("expanded")) {
             return expandDescriptionButton.classList.remove("hidden");
@@ -29,8 +34,10 @@ function setupExpandDescriptionButton() {
 }
 
 window.addEventListener("load", () => {
-    if (!descriptionWrapperElement) {
+    if (!expandDescriptionButtons) {
         return;
     }
-    setupExpandDescriptionButton();
+    for (const expandDescriptionButton of expandDescriptionButtons) {
+        setupExpandDescriptionButton(expandDescriptionButton);
+    }
 });
