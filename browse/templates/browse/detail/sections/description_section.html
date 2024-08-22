@@ -1,13 +1,11 @@
+{% if resource.description and resource.description|cut:' ' != '' %}
 <section class="resource-detail-section">
     <h2>{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
-    {% if resource.description and resource.description|cut:' ' != '' %}
     <div class="resource-description-wrapper">
         {% for dp in resource_description_split %}
         <p class="resource-description">{{ dp|urlize }}</p>
         {% endfor %}
     </div>
     <button class="btn btn-light btn-expand-resource-description mt-3">Show more</button>
-    {% else %}
-    <p class="resource-description text-muted fst-italic">{% block no_description_text %}No description{% endblock no_description_text %}</p>
-    {% endif %}
 </section>
+{% endif %}
