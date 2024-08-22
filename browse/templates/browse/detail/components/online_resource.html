@@ -6,7 +6,7 @@
                 {{ online_resource.name }}</a>
         </h3>
     </summary>
-    <div class="d-flex flex-column row-gap-3">
+    <div class="d-flex flex-column align-items-start row-gap-3">
         {% if 'serviceFunction' in online_resource %}
         {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' %}
         {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
@@ -23,12 +23,12 @@
         {% endif %}
         <details>
             <summary>More details</summary>
-            <dl class="mt-3">
+            <dl class="mt-3 ms-3">
                 <div>
                     <dt>Protocol</dt>
                     <dd>{{ online_resource.protocol }}</dd>
                 </div>
-                <div>
+                <div class="mt-3">
                     <dt>Data Formats</dt>
                     <dd>
                         <ul style="list-style-type: disc;">
