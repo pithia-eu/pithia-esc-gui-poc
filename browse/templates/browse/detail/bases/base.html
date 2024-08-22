@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block scripts %}
+{{ server_url_conversion_url|json_script:'server-url-conversion-url' }}
+<script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
+<script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
+<script src="{% static 'browse/detail.js' %}" type="module"></script>
+{% block extra_scripts %}{% endblock extra_scripts %}
+{% endblock scripts %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
+{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
+{% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
+{% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
+{% endwith %}
+{% endblock breadcrumbs %}
+{% block content %}
+{% csrf_token %}
+<div class="row gy-4 gx-md-5">
+    <div class="col-lg-9">
+        <div class="resource-detail-top-section">
+            <h1>{{ resource.name }}</h1>
+            <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+            {% include 'browse/detail/components/type_badges.html' %}
+            {% block top_section_extra_content %}{% endblock top_section_extra_content %}
+        </div>
+        {% block pre_description_content %}{% endblock pre_description_content %}
+        {% include 'browse/detail/sections/description_section.html' %}
+        {% block post_description_content %}{% endblock post_description_content %}
+        <section class="resource-detail-section">
+            <details>
+                <summary class="summary-marker-custom mb-3">
+                    <h2>Further Information and Resources</h2>
+                </summary>
+                <div class="row gy-4">
+                    <div class="col-lg-12">
+                        <h3 class="fs-5">Resources</h3>
+                        <ul>
+                            <li>
+                                <a href="{% url resource_download_url_name resource.id %}" class="icon-link icon-link-hover" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
+                                    </svg>Metadata File (XML)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% if property_table_dict.items|length > 0 %}
+                    <div class="col-lg-12">
+                        <h3 class="fs-5">Further Information</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover resource-property-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Property</th>
+                                        <th scope="col">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in property_table_dict.items %}
+                                    {# Prevent repeating properties like name and description. #}
+                                    {% if 'Entry Name' not in key and 'Entry Description' not in key and 'Data Subset Name' not in key and 'Data Subset Description' not in key %}
+                                    {# An ID is added to the <tr> for operational modes to allow them to be linked to directly. #}
+                                    <tr {% if 'Instrument Operational Mode' in key and 'Id' in key %}id="{{ value.strip }}"{% endif %}>
+                                        <td>{{ key|safe }}</td>
+                                        <td>
+                                            {% if not value.strip %}
+                                            <i class="text-muted">Not used</i>
+                                            {% elif value in ontology_server_urls %}
+                                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                            {% elif value in resource_server_urls %}
+                                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                            {% else %}
+                                            {{ value.strip|urlize }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="col-lg-12">
+                        <div class="table-responsive rounded">
+                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
+                                <caption class="caption-top pt-lg-0 fs-5">Metadata Information</caption>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Editor</b></td>
+                                        <td>{{ resource.institution_id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Version</b></td>
+                                        <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Created</b></td>
+                                        <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Last Modified</b></td>
+                                        <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
+    <aside class="col-lg-3 resource-detail-aside">
+        {% block aside_sections %}{% endblock aside_sections %}
+    </aside>
+</div>
+{% endblock content %}

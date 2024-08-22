@@ -1,0 +1,46 @@
+{% load project_tags %}
+{% if resource.related_parties %}
+<section class="resource-detail-aside-section">
+    <details open>
+        <summary class="summary-marker-custom">
+            <h2 class="fs-5">Responsible Parties</h2>
+        </summary>
+        <div class="bg-light p-3">
+            <dl class="d-flex flex-column row-gap-4 mb-0">
+                {% for rp in resource.related_parties %}
+                <div>
+                    <dt class="mb-2">
+                        {% with value=rp.role %}
+                        {% if value in ontology_server_urls %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                        {% elif value in resource_server_urls %}
+                        {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                        {% else %}
+                        {{ value.strip|urlize }}
+                        {% endif %}
+                        {% endwith %}
+                    </dt>
+                    <dd>
+                        <ul class="mb-0">
+                            {% for p in rp.parties %}
+                            <li>
+                                {% with value=p %}
+                                {% if value in ontology_server_urls %}
+                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                {% elif value in resource_server_urls %}
+                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                                {% else %}
+                                {{ value.strip|urlize }}
+                                {% endif %}
+                                {% endwith %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </dd>
+                </div>
+                {% endfor %}
+            </dl>
+        </div>
+    </details>
+</section>
+{% endif %}

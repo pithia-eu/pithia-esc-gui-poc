@@ -517,6 +517,20 @@ dialog .btn-close {
     margin-bottom: 0;
 }
 
+.resource-detail-aside {
+    display: flex;
+    flex-direction: column;
+    row-gap: 3rem;
+}
+
+.resource-detail-aside .resource-detail-aside-section {
+    padding-block: 0;
+}
+
+.resource-detail-aside .resource-detail-aside-section :last-child {
+    margin-bottom: 0;
+}
+
 .resource-description:last-child {
     margin-bottom: 0;
 }

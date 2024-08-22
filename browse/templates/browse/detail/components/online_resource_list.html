@@ -1,0 +1,9 @@
+<ul class="list-group">
+    {% for source in sources %}
+    {% with online_resource=source.OnlineResource %}
+    <li class="list-group-item py-3">
+        {% include 'browse/detail/components/online_resource.html' %}
+    </li>
+    {% endwith %}
+    {% endfor %}
+</ul>

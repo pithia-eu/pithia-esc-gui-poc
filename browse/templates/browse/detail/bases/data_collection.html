@@ -1,0 +1,23 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% load project_tags %}
+{% load static %}
+{% block extra_scripts %}
+{{ ontology_node_properties_mapping_url|json_script:'ontology-node-properties-mapping-url' }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
+{% endblock extra_scripts %}
+{% block post_description_content %}
+{% if link_interaction_methods %}
+<section class="resource-detail-section">
+    <h2>Collection Results</h2>
+    {% with sources=link_interaction_methods %}
+    {% include 'browse/detail/components/online_resource_list.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% include 'browse/detail/sections/permissions_section.html' %}
+{% include 'browse/detail/sections/quality_assessment_section.html' %}
+{% endblock post_description_content %}
+{% block aside_sections %}
+{% include 'browse/detail/asides/data_collection_aside.html' %}
+{% endblock aside_sections %}

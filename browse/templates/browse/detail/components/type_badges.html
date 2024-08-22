@@ -1,0 +1,20 @@
+{% load project_tags %}
+{% if 'type' in resource.json %}
+<div class="d-flex flex-wrap column-gap-2">
+    {% if '@xlink:href' in resource.json.type %}
+    <div>
+        {% with value=resource.json.type|get_key_value:'@xlink:href' %}
+        {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+        {% endwith %}
+    </div>
+    {% else %}
+    {% for type in resource.json.type %}
+    <div>
+        {% with value=type|get_key_value:'@xlink:href' %}
+        {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+        {% endwith %}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endif %}

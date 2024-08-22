@@ -381,7 +381,7 @@ class ResourceDetailView(TemplateView):
     resource_server_urls = []
     resource_list_by_type_url_name = ''
     resource_download_url_name = ''
-    template_name = 'browse/detail.html'
+    template_name = 'browse/detail/bases/base.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         property_table_dict = remove_common_disallowed_properties_from_property_table_dict(property_table_dict)
@@ -635,7 +635,7 @@ class DataCollectionDetailView(ResourceDetailView):
     model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
     resource_download_url_name = 'utils:view_data_collection_as_xml'
-    template_name = 'browse/detail_interaction_methods.html'
+    template_name = 'browse/detail/bases/data_collection.html'
     interaction_methods = []
     link_interaction_methods = []
 
