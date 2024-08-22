@@ -292,7 +292,7 @@
                 <section class="py-0">
                     <details>
                         <summary class="summary-marker-custom">
-                            <h2 class="fs-5">See Also</h2>
+                            <h2 class="fs-5">Related</h2>
                         </summary>
                         <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
                             {% if 'project' in resource.json %}
@@ -309,18 +309,18 @@
                                 </ul>
                             </div>
                             {% endif %}
-                            {% if 'om:procedure' in resource.json %}
+                            {% with value=resource.json|get_key_value:'om:procedure'|get_key_value_or_blank_string:'@xlink:href' %}
+                            {% if value %}
                             <div>
                                 <h3 class="fs-6">Procedure</h3>
                                 <ul class="mb-0">
                                     <li>
-                                        {% with value=resource.json|get_key_value:'om:procedure'|get_key_value:'@xlink:href' %}
                                         {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                        {% endwith %}
                                     </li>
                                 </ul>
                             </div>
                             {% endif %}
+                            {% endwith %}
                         </div>
                     </details>
                 </section>
