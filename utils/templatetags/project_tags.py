@@ -32,6 +32,13 @@ def get_key_value(dict, key):
     return dict.get(key, '')
 
 @register.filter
+def get_key_value_or_blank_string(dict, key):
+    try:
+        return dict.get(key, '')
+    except AttributeError:
+        return ''
+
+@register.filter
 def get_type(value):
     return type(value).__name__
 
