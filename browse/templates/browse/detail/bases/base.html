@@ -22,6 +22,9 @@
     <div class="col-lg-9">
         <div class="resource-detail-top-section">
             <h1>{{ resource.name }}</h1>
+            {% if 'shortName' in resource.json and resource.json.shortName %}
+            <p class="text-secondary">{{ resource.json.shortName }}</p>
+            {% endif %}
             <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
             {% include 'browse/detail/components/type_badges.html' %}
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
