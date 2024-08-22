@@ -114,7 +114,8 @@
         </section>
     </div>
     <aside class="col-lg-3 resource-detail-aside">
-        {% block aside_sections %}{% endblock aside_sections %}
+        {% include 'browse/detail/asides/base_aside.html' %}
+        {% block aside_extra_sections %}{% endblock aside_extra_sections %}
     </aside>
 </div>
 {% endblock content %}
