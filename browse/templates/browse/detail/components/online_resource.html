@@ -1,5 +1,5 @@
 {% load project_tags %}
-<details class="details-interaction-methods" name="details-collection-results">
+<details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter == 1 %}open{% endif %}>
     <summary class="summary-marker-custom">
         <h3 class="fs-5">
             <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="link-plain-by-default" target="_blank" rel="noopener noreferrer">
