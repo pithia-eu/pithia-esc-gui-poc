@@ -21,10 +21,12 @@
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <div class="resource-detail-top-section">
-            <h1>{{ resource.name }}</h1>
-            {% if 'shortName' in resource.json and resource.json.shortName %}
-            <p class="text-secondary">{{ resource.json.shortName }}</p>
-            {% endif %}
+            <div class="d-flex flex-wrap align-items-baseline row-gap-1 column-gap-3 mb-3">
+                <h1 class="mb-0">{{ resource.name }}</h1>
+                {% if 'shortName' in resource.json and resource.json.shortName %}
+                <span class="text-secondary">({{ resource.json.shortName }})</span>
+                {% endif %}
+            </div>
             <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
             {% include 'browse/detail/components/type_badges.html' %}
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
