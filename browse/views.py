@@ -396,7 +396,7 @@ class ResourceDetailView(TemplateView):
     def clean_related_registrations_dict(self, related_registrations_dict):
         cleaned_related_registrations_dict = {}
         for key, value in related_registrations_dict.items():
-            if not len(value):
+            if not value:
                 continue
             elif isinstance(value, dict) and not value.get('@xlink:href'):
                 continue
