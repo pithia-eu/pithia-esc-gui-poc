@@ -500,6 +500,10 @@ dialog .btn-close {
     padding: 1.5rem 0;
 }
 
+.resource-detail-subsection {
+    padding: 1rem 0;
+}
+
 .resource-detail-section > h2 {
     margin-bottom: 1rem;
 }
