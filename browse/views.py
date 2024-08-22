@@ -481,7 +481,7 @@ class ProjectDetailView(ResourceDetailView):
     project_abstract_split = []
 
     model = models.Project
-    template_name = 'browse/detail_project.html'
+    template_name = 'browse/detail/bases/project.html'
     resource_list_by_type_url_name = 'browse:list_projects'
     resource_download_url_name = 'utils:view_project_as_xml'
 
@@ -805,7 +805,7 @@ class WorkflowDetailView(ResourceDetailView):
     A detail page displaying the properties of
     a Workflow registration.
     """
-    template_name = 'browse/detail_workflow.html'
+    template_name = 'browse/detail/bases/workflow.html'
     model = models.Workflow
     resource_list_by_type_url_name = 'browse:list_workflows'
     resource_download_url_name = 'utils:view_workflow_as_xml'

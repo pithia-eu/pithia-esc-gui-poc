@@ -1,5 +1,5 @@
-{% extends 'browse/detail.html' %}
-{% block abstract %}
+{% extends 'browse/detail/bases/base.html' %}
+{% block pre_description_content %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2>Abstract</h2>
@@ -10,8 +10,7 @@
     {% endif %}
 </section>
 {% endif %}
-{% endblock abstract %}
-
+{% endblock pre_description_content %}
 {% block description_heading_text %}
 {% if resource.abstract.strip|length > 0 %}
 Additional Description
@@ -19,11 +18,3 @@ Additional Description
 Description
 {% endif %}
 {% endblock description_heading_text %}
-
-{% block no_description_text %}
-{% if resource.abstract.strip|length > 0 %}
-No additional description
-{% else %}
-No description
-{% endif %}
-{% endblock no_description_text %}
