@@ -407,12 +407,16 @@ class ResourceDetailView(TemplateView):
         
     
     def format_and_split_string_by_multi_newlines(self, description):
-        description_formatted = description.replace('\t', '')
-        description_formatted = re.sub('\n\s+\n', '\n\n', description_formatted)
-        description_formatted_split = description_formatted.split('\n\n')
-        for counter, s in enumerate(description_formatted_split):
-            description_formatted_split[counter] = s.replace('\n', ' ')
-        return description_formatted_split
+        try:
+            description_formatted = description.replace('\t', '')
+            description_formatted = re.sub('\n\s+\n', '\n\n', description_formatted)
+            description_formatted_split = description_formatted.split('\n\n')
+            for counter, s in enumerate(description_formatted_split):
+                description_formatted_split[counter] = s.replace('\n', ' ')
+            return description_formatted_split
+        except AttributeError as err:
+            logger.exception(err)
+        return []
 
     def map_server_urls_to_ids(self, server_urls):
         return {
