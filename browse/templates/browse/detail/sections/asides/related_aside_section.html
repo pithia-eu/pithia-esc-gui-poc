@@ -1,37 +1,33 @@
 {% load project_tags %}
-{% if 'project' in resource.json or 'om:procedure' in resource.json %}
+{% if related_registrations %}
 <section class="resource-detail-aside-section">
     <details name="resource-detail-aside-section">
         <summary class="summary-marker-custom">
-            <h2 class="fs-5">Related</h2>
+            <h2 class="fs-5">See Related</h2>
         </summary>
         <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
-            {% if 'project' in resource.json %}
+            {% for heading_text, resource_list_or_resource in related_registrations.items %}
             <div>
-                <h3 class="fs-6">Projects</h3>
+                <h3 class="fs-6">{{ heading_text }}</h3>
                 <ul class="mb-0">
-                    {% for project in resource.json.project %}
+                    {% if '@xlink:href' in resource_list_or_resource %}
                     <li>
-                        {% with value=project|get_key_value:'@xlink:href' %}
+                        {% with value=resource_list_or_resource|get_key_value:'@xlink:href' %}
+                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                        {% endwith %}
+                    </li>
+                    {% else %}
+                    {% for resource in resource_list_or_resource %}
+                    <li>
+                        {% with value=resource|get_key_value:'@xlink:href' %}
                         {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                         {% endwith %}
                     </li>
                     {% endfor %}
+                    {% endif %}
                 </ul>
             </div>
-            {% endif %}
-            {% with value=resource.json|get_key_value:'om:procedure'|get_key_value_or_blank_string:'@xlink:href' %}
-            {% if value %}
-            <div>
-                <h3 class="fs-6">Procedure</h3>
-                <ul class="mb-0">
-                    <li>
-                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                    </li>
-                </ul>
-            </div>
-            {% endif %}
-            {% endwith %}
+            {% endfor %}
         </div>
     </details>
 </section>

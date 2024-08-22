@@ -389,6 +389,9 @@ class ResourceDetailView(TemplateView):
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
+
+    def get_urls_of_related_registrations(self):
+        return {}
     
     def format_and_split_string_by_multi_newlines(self, description):
         description_formatted = description.replace('\t', '')
@@ -433,6 +436,10 @@ class ResourceDetailView(TemplateView):
         context['server_url_to_id_mappings'] = {
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
+        }
+        context['related_registrations'] = {
+            key: value
+            for key, value in self.get_urls_of_related_registrations().items() if value
         }
         context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
@@ -656,6 +663,15 @@ class DataCollectionDetailView(ResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
+
+    def get_urls_of_related_registrations(self):
+        url_dict = super().get_urls_of_related_registrations()
+        url_dict = {
+            'Projects': self.resource.json.get('project'),
+            'Procedure': self.resource.json.get('om:procedure', {}),
+            'Sub-collections': self.resource.json.get('subCollection', []),
+        }
+        return url_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
