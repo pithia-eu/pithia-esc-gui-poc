@@ -390,8 +390,21 @@ class ResourceDetailView(TemplateView):
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
 
-    def get_urls_of_related_registrations(self):
+    def get_related_registrations(self):
         return {}
+
+    def clean_related_registrations_dict(self, related_registrations_dict):
+        cleaned_related_registrations_dict = {}
+        for key, value in related_registrations_dict.items():
+            if not len(value):
+                continue
+            elif isinstance(value, dict) and not value.get('@xlink:href'):
+                continue
+            cleaned_related_registrations_dict.update({
+                key: value
+            })
+        return cleaned_related_registrations_dict
+        
     
     def format_and_split_string_by_multi_newlines(self, description):
         description_formatted = description.replace('\t', '')
@@ -437,10 +450,7 @@ class ResourceDetailView(TemplateView):
             **self.map_server_urls_to_ids(self.ontology_server_urls),
             **self.map_server_urls_to_ids(self.resource_server_urls),
         }
-        context['related_registrations'] = {
-            key: value
-            for key, value in self.get_urls_of_related_registrations().items() if value
-        }
+        context['related_registrations'] = self.clean_related_registrations_dict(self.get_related_registrations())
         context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
@@ -664,8 +674,8 @@ class DataCollectionDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
-    def get_urls_of_related_registrations(self):
-        url_dict = super().get_urls_of_related_registrations()
+    def get_related_registrations(self):
+        url_dict = super().get_related_registrations()
         url_dict = {
             'Projects': self.resource.json.get('project'),
             'Procedure': self.resource.json.get('om:procedure', {}),
