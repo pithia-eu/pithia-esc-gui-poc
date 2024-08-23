@@ -488,6 +488,13 @@ class IndividualDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_individuals'
     resource_download_url_name = 'utils:view_individual_as_xml'
 
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Organisation': self.resource.json.get('organisation'),
+        })
+        return related_registrations
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
         return super().get(request, *args, **kwargs)
@@ -517,6 +524,13 @@ class ProjectDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Sub-projects': self.resource.json.get('subProject'),
+        })
+        return related_registrations
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
         return super().get(request, *args, **kwargs)
@@ -537,6 +551,13 @@ class PlatformDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_platforms'
     resource_download_url_name = 'utils:view_platform_as_xml'
 
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Child Platforms': self.resource.json.get('childPlatform'),
+        })
+        return related_registrations
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
         return super().get(request, *args, **kwargs)
@@ -552,6 +573,13 @@ class InstrumentDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_instruments'
     resource_download_url_name = 'utils:view_instrument_as_xml'
 
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Members': self.resource.json.get('member'),
+        })
+        return related_registrations
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
         return super().get(request, *args, **kwargs)
@@ -566,6 +594,13 @@ class OperationDetailView(ResourceDetailView):
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
     resource_download_url_name = 'utils:view_operation_as_xml'
+
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Platforms': self.resource.json.get('platform'),
+        })
+        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -612,6 +647,13 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
     resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
 
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Child Computations': self.resource.json.get('childComputation'),
+        })
+        return related_registrations
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
         return super().get(request, *args, **kwargs)
@@ -641,6 +683,14 @@ class ProcessDetailView(ResourceDetailView):
     model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
     resource_download_url_name = 'utils:view_process_as_xml'
+
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Acquisitions': self.resource.json.get('acquisitionComponent'),
+            'Computations': self.resource.json.get('computationComponent'),
+        })
+        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -760,6 +810,13 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
+
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'From Catalogue': self.resource.json.get('catalogueIdentifier'),
+        })
+        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
