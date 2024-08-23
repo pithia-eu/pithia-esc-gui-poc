@@ -552,6 +552,13 @@ dialog .btn-close {
     margin-bottom: 1rem;
 }
 
+.resource-detail-aside .metadata-server-url {
+    display: inline-block;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    vertical-align: top;
+}
+
 .resource-description:last-child {
     margin-bottom: 0;
 }
