@@ -21,13 +21,17 @@
             {{ online_resource.description|urlize }}
         </p>
         {% endif %}
+        {% if 'protocol' in online_resource or 'dataFormat' in online_resource %}
         <details>
             <summary>More details</summary>
             <dl class="mt-3 ms-3">
+                {% if 'protocol' in online_resource %}
                 <div>
                     <dt>Protocol</dt>
                     <dd>{{ online_resource.protocol }}</dd>
                 </div>
+                {% endif %}
+                {% if 'dataFormat' in online_resource %}
                 <div class="mt-3">
                     <dt>Data Formats</dt>
                     <dd>
@@ -42,7 +46,9 @@
                         </ul>
                     </dd>
                 </div>
+                {% endif %}
             </dl>
         </details>
+        {% endif %}
     </div>
 </details>
