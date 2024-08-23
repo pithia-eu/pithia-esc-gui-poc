@@ -1,26 +1,22 @@
 {% load project_tags %}
 {% if related_registrations %}
 <section class="resource-detail-aside-section">
-    <details name="resource-detail-aside-section">
-        <summary class="summary-marker-custom">
-            <h2 class="fs-5">See Related</h2>
-        </summary>
-        <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
-            {% for heading_text, resource_list in related_registrations.items %}
-            <div>
-                <h3 class="fs-6">{{ heading_text }}</h3>
-                <ul class="mb-0">
-                    {% for resource in resource_list|wrap_in_list_if_dict %}
-                    <li>
-                        {% with value=resource|get_key_value:'@xlink:href' %}
-                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                        {% endwith %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endfor %}
+    <h2 class="fs-5">See Related</h2>
+    <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
+        {% for heading_text, resource_list in related_registrations.items %}
+        <div>
+            <h3 class="fs-6">{{ heading_text }}</h3>
+            <ul class="mb-0">
+                {% for resource in resource_list|wrap_in_list_if_dict %}
+                <li>
+                    {% with value=resource|get_key_value:'@xlink:href' %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-    </details>
+        {% endfor %}
+    </div>
 </section>
 {% endif %}
