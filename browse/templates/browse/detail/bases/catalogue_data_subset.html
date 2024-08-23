@@ -1,0 +1,11 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% block post_description_content %}
+{% if 'source' in resource.json %}
+<section class="resource-detail-section">
+    <h2>Sources</h2>
+    {% with sources=resource.json.source only_online_resource=True %}
+    {% include 'browse/detail/components/online_resource_list.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock post_description_content %}

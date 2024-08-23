@@ -1,5 +1,5 @@
 {% load project_tags %}
-<details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter == 1 %}open{% endif %}>
+<details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter == 1 or only_online_resource %}open{% endif %}>
     <summary class="summary-marker-custom">
         <h3 class="fs-5">
             <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="link-plain-by-default" target="_blank" rel="noopener noreferrer">
@@ -32,6 +32,13 @@
                     <dt>Data Formats</dt>
                     <dd>
                         <ul style="list-style-type: disc;">
+                            {% if online_resource.dataFormat|get_type == 'dict' %}
+                            <li>
+                                {% with value=online_resource.dataFormat|get_key_value:'@xlink:href' %}
+                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                {% endwith %}
+                            </li>
+                            {% else %}
                             {% for data_format in online_resource.dataFormat %}
                             <li>
                                 {% with value=data_format|get_key_value:'@xlink:href' %}
@@ -39,6 +46,7 @@
                                 {% endwith %}
                             </li>
                             {% endfor %}
+                            {% endif %}
                         </ul>
                     </dd>
                 </div>

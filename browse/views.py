@@ -775,6 +775,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     model = models.CatalogueDataSubset
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
+    template_name = 'browse/detail/bases/catalogue_data_subset.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}dataSubsetDescription').text
@@ -786,6 +787,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
             disallowed_property_keys=[
                 'dataSubsetName',
                 'dataSubsetDescription',
+                'source',
             ]
         )
         return cleaned_property_table_dict
