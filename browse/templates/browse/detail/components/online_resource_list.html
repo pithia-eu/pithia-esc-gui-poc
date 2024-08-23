@@ -1,18 +1,10 @@
 {% load project_tags %}
 <ul class="list-group">
-    {% if sources|get_type == 'dict' %}
-    {% with online_resource=sources.OnlineResource %}
-    <li class="list-group-item py-3">
-        {% include 'browse/detail/components/online_resource.html' %}
-    </li>
-    {% endwith %}
-    {% else %}
-    {% for source in sources %}
+    {% for source in sources|wrap_in_list_if_dict %}
     {% with online_resource=source.OnlineResource %}
     <li class="list-group-item py-3">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}
     {% endfor %}
-    {% endif %}
 </ul>

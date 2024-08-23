@@ -1,6 +1,7 @@
 import random
 from django.urls import reverse
 from django import template
+from typing import Union
 
 register = template.Library()
 
@@ -41,6 +42,12 @@ def get_key_value_or_blank_string(dict, key):
 @register.filter
 def get_type(value):
     return type(value).__name__
+
+@register.filter
+def wrap_in_list_if_dict(dict_or_list: Union[dict, list]) -> list:
+    if isinstance(dict_or_list, list):
+        return dict_or_list
+    return [dict_or_list]
 
 # Credit for filter implementation: https://stackoverflow.com/a/2507447/10640126
 @register.filter(is_safe=True)

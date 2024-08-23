@@ -47,7 +47,7 @@
 <section class="resource-detail-section">
     <h2>Data Collections</h2>
     <ul class="list-group">
-        {% for data_collection in resource.json.dataCollection %}
+        {% for data_collection in resource.json.dataCollection|wrap_in_list_if_dict %}
         <li class="list-group-item">
             {% with value=data_collection|get_key_value:'@xlink:href' %}
             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}

@@ -3,7 +3,7 @@
 {% if 'source' in resource.json %}
 <section class="resource-detail-section">
     <h2>Sources</h2>
-    {% with sources=resource.json.source only_online_resource=True %}
+    {% with sources=resource.json.source %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}
 </section>

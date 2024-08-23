@@ -6,25 +6,17 @@
             <h2 class="fs-5">See Related</h2>
         </summary>
         <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
-            {% for heading_text, resource_list_or_resource in related_registrations.items %}
+            {% for heading_text, resource_list in related_registrations.items %}
             <div>
                 <h3 class="fs-6">{{ heading_text }}</h3>
                 <ul class="mb-0">
-                    {% if '@xlink:href' in resource_list_or_resource %}
-                    <li>
-                        {% with value=resource_list_or_resource|get_key_value:'@xlink:href' %}
-                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                        {% endwith %}
-                    </li>
-                    {% else %}
-                    {% for resource in resource_list_or_resource %}
+                    {% for resource in resource_list|wrap_in_list_if_dict %}
                     <li>
                         {% with value=resource|get_key_value:'@xlink:href' %}
                         {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                         {% endwith %}
                     </li>
                     {% endfor %}
-                    {% endif %}
                 </ul>
             </div>
             {% endfor %}
