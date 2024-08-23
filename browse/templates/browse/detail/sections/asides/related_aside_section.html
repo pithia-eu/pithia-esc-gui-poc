@@ -1,10 +1,10 @@
 {% load project_tags %}
 {% if related_registrations %}
 <section class="resource-detail-aside-section">
-    <h2 class="fs-5">See Related</h2>
-    <div class="d-flex flex-column row-gap-3 bg-light rounded p-3">
+    <h2 class="fs-5">Related</h2>
+    <div class="d-flex flex-column row-gap-3">
         {% for heading_text, resource_list in related_registrations.items %}
-        <div>
+        <div class="resource-detail-aside-subsection">
             <h3 class="fs-6">{{ heading_text }}</h3>
             <ul class="mb-0">
                 {% for resource in resource_list|wrap_in_list_if_dict %}

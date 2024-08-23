@@ -1,6 +1,8 @@
-<div id="{{ text_block_id }}" class="resource-description-wrapper">
-    {% for p in text_block_paragraphs %}
-    <p class="resource-description">{{ p|urlize }}</p>
-    {% endfor %}
+<div class="rounded bg-light p-3">
+    <div id="{{ text_block_id }}" class="resource-description-wrapper">
+        {% for p in text_block_paragraphs %}
+        <p class="resource-description">{{ p|urlize }}</p>
+        {% endfor %}
+    </div>
 </div>
 <button class="btn btn-light btn-expand-resource-description mt-3" data-target="{{ text_block_id }}">Show more</button>

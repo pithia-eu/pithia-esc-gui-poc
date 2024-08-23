@@ -521,18 +521,35 @@ dialog .btn-close {
     margin-bottom: 0;
 }
 
+.resource-detail-section .resource-detail-subsection:last-child {
+    padding-bottom: 0;
+}
+
 .resource-detail-aside {
     display: flex;
     flex-direction: column;
-    row-gap: 3rem;
+    font-size: 0.875em;
 }
 
 .resource-detail-aside .resource-detail-aside-section {
-    padding-block: 0;
+    border-bottom: var(--bs-gray-300) solid 1px;
+    padding-block: 2rem;
+}
+
+.resource-detail-aside .resource-detail-aside-section:first-child {
+    padding-top: 1rem;
+}
+
+.resource-detail-aside .resource-detail-aside-section:last-child {
+    border-bottom: none;
 }
 
 .resource-detail-aside .resource-detail-aside-section :last-child {
     margin-bottom: 0;
+}
+
+.resource-detail-aside .resource-detail-aside-section > h2 {
+    margin-bottom: 1rem;
 }
 
 .resource-description:last-child {
