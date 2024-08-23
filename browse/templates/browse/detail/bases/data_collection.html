@@ -7,9 +7,41 @@
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block post_description_content %}
+{% if api_interaction_methods %}
+<section class="resource-detail-section"><h2 class="mb-3">Execute from e-Science Centre</h2>
+    <ul class="list-group mt-0 mb-0">
+        {% for method in api_interaction_methods %}
+        <li class="list-group-item">
+            <div class="d-flex flex-column row-gap-3 py-2">
+                <div>
+                    <h3 class="fs-5">
+                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="icon-link icon-link-hover icon-link-interaction-method link-plain-by-default" target="_blank" rel="noopener noreferrer">
+                            Interact
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-xl-1 ms-3" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                            </svg>
+                        </a>
+                    </h3>
+                    <div>
+                        <span class="badge rounded-pill text-bg-light">
+                            API
+                        </span>
+                    </div>
+                </div>
+                {% if 'description' in method.config and method.config.description|length > 0 %}
+                <p class="mb-0">
+                    {{ method.config.description|urlize }}
+                </p>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% if link_interaction_methods %}
 <section class="resource-detail-section">
-    <h2>Collection Results</h2>
+    <h2>Access Collection Results</h2>
     {% with sources=link_interaction_methods %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}
