@@ -45,6 +45,8 @@ def get_type(value):
 
 @register.filter
 def wrap_in_list_if_dict(dict_or_list: Union[dict, list]) -> list:
+    if not dict_or_list:
+        return []
     if isinstance(dict_or_list, list):
         return dict_or_list
     return [dict_or_list]
