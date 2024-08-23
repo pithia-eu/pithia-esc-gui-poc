@@ -679,13 +679,13 @@ class DataCollectionDetailView(ResourceDetailView):
         return cleaned_property_table_dict
 
     def get_related_registrations(self):
-        url_dict = super().get_related_registrations()
-        url_dict = {
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
             'Projects': self.resource.json.get('project'),
             'Procedure': self.resource.json.get('om:procedure', {}),
             'Sub-collections': self.resource.json.get('subCollection', []),
-        }
-        return url_dict
+        })
+        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -785,12 +785,24 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
             disallowed_property_keys=[
+                'dataCollection',
+                'dataLevel',
                 'dataSubsetName',
                 'dataSubsetDescription',
+                'entryIdentifier',
+                'qualityAssessment',
                 'source',
             ]
         )
         return cleaned_property_table_dict
+
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'From Data Collection': self.resource.json.get('dataCollection'),
+            'Catalogue Entry': self.resource.json.get('entryIdentifier'),
+        })
+        return related_registrations
 
     def add_handle_data_to_context(self, context):
         context['handles'] = self.handles
