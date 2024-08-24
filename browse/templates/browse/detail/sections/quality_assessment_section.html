@@ -4,9 +4,9 @@
     {% if resource.data_quality_flags %}
     <div class="resource-detail-subsection">
         <h3 class="fs-5">Data Quality Flags</h3>
-        <ul class="list-group">
+        <ul>
             {% for dqf in resource.data_quality_flags %}
-            <li class="list-group-item">
+            <li>
                 {% with value=dqf %}
                 {% if value in ontology_server_urls %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
@@ -24,9 +24,9 @@
     {% if resource.metadata_quality_flags %}
     <div class="resource-detail-subsection">
         <h3 class="fs-5">Metadata Quality Flags</h3>
-        <ul class="list-group">
+        <ul>
             {% for mqf in resource.metadata_quality_flags %}
-            <li class="list-group-item">
+            <li>
                 {% with value=mqf %}
                 {% if value in ontology_server_urls %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
@@ -44,9 +44,9 @@
     {% if resource.science_relevance_indicators %}
     <div class="resource-detail-subsection">
         <h3 class="fs-5 fw-normal">Science Relevance Indicators</h3>
-        <ul class="list-group">
+        <ul>
             {% for sri in resource.science_relevance_indicators %}
-            <li class="list-group-item">
+            <li>
                 {% with value=sri %}
                 {% if value in ontology_server_urls %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}

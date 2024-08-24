@@ -921,6 +921,13 @@ class WorkflowDetailView(ResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
+    
+    def get_related_registrations(self):
+        related_registrations = super().get_related_registrations()
+        related_registrations.update({
+            'Involved Data Collections': self.resource.json.get('dataCollection'),
+        })
+        return related_registrations
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

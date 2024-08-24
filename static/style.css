@@ -63,6 +63,15 @@ a.link-plain-by-default:focus {
     text-decoration: underline;
 }
 
+a.link-underline-by-default {
+    text-decoration: underline;
+}
+
+a.link-underline-by-default:hover,
+a.link-underline-by-default:focus {
+    text-decoration: none;
+}
+
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 .card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
@@ -493,11 +502,12 @@ dialog .btn-close {
 }
 
 .resource-detail-top-section {
-    padding-bottom: 1.5rem;
+    padding-bottom: 2rem;
 }
 
 .resource-detail-section {
-    padding: 1.5rem 0;
+    padding: 2rem 0;
+    border-top: 1px solid var(--bs-gray-300);
 }
 
 .resource-detail-subsection {
@@ -523,6 +533,10 @@ dialog .btn-close {
 
 .resource-detail-section .resource-detail-subsection:last-child {
     padding-bottom: 0;
+}
+
+.resource-detail-section .online-resource-list > li:last-child {
+    padding-bottom: 0 !important;
 }
 
 .resource-detail-aside {
