@@ -21,7 +21,7 @@
 <div class="row gy-4 gx-md-5">
     <div class="col-lg-9">
         <div class="resource-detail-top-section">
-            <div class="d-flex flex-wrap align-items-baseline row-gap-1 column-gap-3 mb-3">
+            <div class="d-flex flex-column align-items-start row-gap-1 mb-3">
                 <h1 class="mb-0">{{ resource.name }}</h1>
                 {% if 'shortName' in resource.json and resource.json.shortName %}
                 <span class="text-secondary">({{ resource.json.shortName }})</span>
