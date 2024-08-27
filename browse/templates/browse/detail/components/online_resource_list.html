@@ -1,8 +1,8 @@
 {% load project_tags %}
-<ul class="list-unstyled online-resource-list">
+<ul class="list-group list-group-flush online-resource-list">
     {% for source in sources|wrap_in_list_if_dict %}
     {% with online_resource=source.OnlineResource %}
-    <li class="py-3">
+    <li class="list-group-item ps-0">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}
