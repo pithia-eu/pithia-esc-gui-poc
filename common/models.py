@@ -3,14 +3,18 @@ from django.db import models
 from django.urls import reverse
 from lxml import etree
 
-from .managers import *
-from .querysets import *
 from .constants import (
     PITHIA_METADATA_SERVER_URL_BASE,
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
     SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
 )
 from .converted_xml_correction_functions import *
+from .managers import *
+from .querysets import *
+from .xml_metadata_mapping_shortcuts import (
+    IndividualXmlMappingShortcuts,
+    OrganisationXmlMappingShortcuts,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -381,6 +385,10 @@ class Organisation(ScientificMetadata):
     def short_name(self):
         return self.json['shortName']
 
+    @property
+    def properties(self):
+        return OrganisationXmlMappingShortcuts(self.xml)
+
     class Meta:
         proxy = True
 
@@ -401,6 +409,10 @@ class Individual(ScientificMetadata):
     @property
     def organisation_url(self):
         return self.json['organisation']['@xlink:href']
+
+    @property
+    def properties(self):
+        return IndividualXmlMappingShortcuts(self.xml)
 
     objects = IndividualManager.from_queryset(IndividualQuerySet)()
 
