@@ -472,6 +472,19 @@ class OrganisationDetailView(ResourceDetailView):
     model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
     resource_download_url_name = 'utils:view_organisation_as_xml'
+    template_name = 'browse/detail/bases/organisation.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'contactInfo',
+                'positionName',
+                'shortName',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -487,6 +500,19 @@ class IndividualDetailView(ResourceDetailView):
     model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
     resource_download_url_name = 'utils:view_individual_as_xml'
+    template_name = 'browse/detail/bases/individual.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'contactInfo',
+                'organisation',
+                'positionName',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()

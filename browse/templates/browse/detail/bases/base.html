@@ -26,6 +26,7 @@
                 {% if 'shortName' in resource.json and resource.json.shortName %}
                 <span class="text-secondary">({{ resource.json.shortName }})</span>
                 {% endif %}
+                {% block pre_last_modified_date_content %}{% endblock pre_last_modified_date_content %}
             </div>
             <p class="text-secondary">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
             {% include 'browse/detail/components/type_badges.html' %}
