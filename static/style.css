@@ -588,6 +588,14 @@ dialog .btn-close {
     display: block;
 }
 
+.dd-list-item {
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-block: 0;
+    padding-left: 1rem;
+}
+
 .btn-expand-resource-description.hidden {
     display: none;
 }

@@ -6,10 +6,10 @@
             <h2 class="fs-5">Responsible Parties</h2>
         </summary>
         <div class="resource-detail-aside-subsection">
-            <dl class="d-flex flex-column row-gap-3 mb-0">
+            <div class="d-flex flex-column row-gap-3 mb-0">
                 {% for rp in resource.related_parties %}
                 <div>
-                    <dt class="mb-2">
+                    <h3 class="fs-6">
                         {% with value=rp.role %}
                         {% if value in ontology_server_urls %}
                         {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
@@ -19,27 +19,25 @@
                         {{ value.strip|urlize }}
                         {% endif %}
                         {% endwith %}
-                    </dt>
-                    <dd>
-                        <ul class="mb-0">
-                            {% for p in rp.parties %}
-                            <li>
-                                {% with value=p %}
-                                {% if value in ontology_server_urls %}
-                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                {% elif value in resource_server_urls %}
-                                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                                {% else %}
-                                {{ value.strip|urlize }}
-                                {% endif %}
-                                {% endwith %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </dd>
+                    </h3>
+                    <ul class="mb-0">
+                        {% for p in rp.parties %}
+                        <li>
+                            {% with value=p %}
+                            {% if value in ontology_server_urls %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% elif value in resource_server_urls %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% else %}
+                            {{ value.strip|urlize }}
+                            {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 {% endfor %}
-            </dl>
+            </div>
         </div>
     </details>
 </section>

@@ -34,17 +34,13 @@
                 {% if 'dataFormat' in online_resource %}
                 <div class="mt-3">
                     <dt>Data Formats</dt>
-                    <dd>
-                        <ul style="list-style-type: disc;">
-                            {% for data_format in online_resource.dataFormat|wrap_in_list_if_dict %}
-                            <li>
-                                {% with value=data_format|get_key_value:'@xlink:href' %}
-                                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                                {% endwith %}
-                            </li>
-                            {% endfor %}
-                        </ul>
+                    {% for data_format in online_resource.dataFormat|wrap_in_list_if_dict %}
+                    <dd class="dd-list-item">
+                        {% with value=data_format|get_key_value:'@xlink:href' %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                        {% endwith %}
                     </dd>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </dl>
