@@ -709,6 +709,7 @@ class ComputationDetailView(ResourceDetailView):
     model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
     resource_download_url_name = 'utils:view_computation_as_xml'
+    template_name = 'browse/detail/bases/computation.html'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']

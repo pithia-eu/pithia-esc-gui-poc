@@ -3,6 +3,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     GmdUrlMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
+    PithiaCapabilityLinkMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
 )
@@ -77,9 +78,11 @@ class ComputationCapabilitiesXmlMappingShortcuts(
 
 class ComputationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        PithiaCapabilityLinkMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    capabilities_element_key_xml = 'computationCapabilities'
+    capabilities_element_key = 'computation_capabilities'
 
 
 class ProcessXmlMappingShortcuts(

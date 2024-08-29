@@ -1,0 +1,62 @@
+{% if resource.properties.capability_links %}
+<section class="resource-detail-section">
+    <h2>Capability Links</h2>
+    <ul class="list-group list-group-flush">
+        {% for cl in resource.properties.capability_links %}
+        <li class="list-group-item ps-0">
+            <details class="py-2" name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
+                <summary class="summary-marker-custom">
+                    <h3 class="text-secondary fw-normal fs-6">
+                        Capability Link {{ forloop.counter }}
+                    </h3>
+                </summary>
+                <dl class="d-flex flex-column row-gap-3 pb-2">
+                    {% if 'platforms' in cl %}
+                    <div>
+                        <dt>Platforms</dt>
+                        {% for platform in cl.platforms %}
+                        <dd class="dd-list-item">
+                            {% with value=platform %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if 'standard_identifiers' in cl %}
+                    <div>
+                        <dt>Standard Platform Identifiers</dt>
+                        {% for si in cl.standard_identifiers %}
+                        <dd class="dd-list-item">
+                            {{ si.value }} <span class="text-secondary">({{ si.authority }})</span>
+                        </dd>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if 'computation_capabilities' in cl %}
+                    <div>
+                        <dt>Computation Capabilities</dt>
+                        <dd>
+                            {% with value=cl.computation_capabilities %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if 'acquisition_capabilities' in cl %}
+                    <div>
+                        <dt>Acquisition Capabilities</dt>
+                        <dd>
+                            {% with value=cl.acquisition_capabilities %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                </dl>
+            </details>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

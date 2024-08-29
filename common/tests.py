@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from .models import (
     AcquisitionCapabilities,
+    Computation,
     ComputationCapabilities,
     Instrument,
     Organisation,
@@ -30,6 +31,7 @@ from common.test_setup import (
 )
 from common.test_xml_files import (
     ACQUISITION_CAPABILITIES_METADATA_XML,
+    COMPUTATION_METADATA_XML,
     COMPUTATION_CAPABILITIES_METADATA_XML,
     COMPUTATION_CAPABILITIES_2_METADATA_XML,
     COMPUTATION_CAPABILITIES_3_METADATA_XML,
@@ -448,3 +450,15 @@ class ModelPropertiesAttributeTestCase(TestCase):
         gmd_url = project.properties.gmd_url
         print('gmd_url', gmd_url)
         self.assertTrue(isinstance(gmd_url, str))
+
+    def test_capability_links_property(self):
+        """The shortcut returns a list of capability link
+        dictionaries.
+        """
+        xml_file = COMPUTATION_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation = Computation.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        capability_links = computation.properties.capability_links
+        print('capability_links', capability_links)
+        self.assertTrue(isinstance(capability_links, list))

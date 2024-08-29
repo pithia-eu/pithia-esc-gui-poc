@@ -27,26 +27,31 @@ class BaseMetadataPropertiesShortcutMixin:
             NamespacePrefix.XSI: Namespace.XSI,
         }
 
-    def _get_elements_with_xpath_query(self, xpath_query: str):
-        return self.xml_parsed.xpath(xpath_query, namespaces=self.namespaces)
+    def _get_elements_with_xpath_query(self, xpath_query: str, parent_element=None):
+        if not parent_element:
+            parent_element = self.xml_parsed
+        return parent_element.xpath(xpath_query, namespaces=self.namespaces)
+
+    def _get_element_value_or_blank_string(self, element):
+        try:
+            return element.text
+        except AttributeError as err:
+            logger.exception(err)
+            return element
+        except Exception as err:
+            logger.exception(err)
+            return ''
 
     def _get_first_element_from_list(self, element_list: list):
         return next(iter(element_list), '')
 
-    def _get_first_element_value_or_blank_string_with_xpath_query(self, xpath_query: str):
-        element_list = self._get_elements_with_xpath_query(xpath_query)
+    def _get_first_element_value_or_blank_string_with_xpath_query(self, xpath_query: str, parent_element=None):
+        element_list = self._get_elements_with_xpath_query(xpath_query, parent_element=parent_element)
         if not len(element_list):
             return ''
 
         first_element = self._get_first_element_from_list(element_list)
-        try:
-            return first_element.text
-        except AttributeError as err:
-            logger.exception(err)
-            return first_element
-        except Exception as err:
-            logger.exception(err)
-            return ''
+        return self._get_element_value_or_blank_string(first_element)
 
 
 class PithiaCoreMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
@@ -138,6 +143,59 @@ class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
     @property
     def catalogue_entry_urls(self):
         return self._get_elements_with_xpath_query('.//%s:entryIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
+
+
+class StandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_standard_identifiers_from_parent_element(self, parent_element):
+        standard_identifier_elements = self._get_elements_with_xpath_query('.//%s:standardIdentifier' % self.PITHIA_NSPREFIX_XPATH, parent_element=parent_element)
+        standard_identifiers = []
+        for e in standard_identifier_elements:
+            value = self._get_element_value_or_blank_string(e)
+            standard_identifiers.append({
+                'authority': e.get('authority', ''),
+                'value': value,
+            })
+        return standard_identifiers
+
+    @property
+    def standard_identifiers(self):
+        return self._get_standard_identifiers_from_parent_element(self.xml_parsed)
+
+
+class PithiaCapabilityLinkMetadataPropertiesMixin(StandardIdentifiersMetadataPropertiesMixin):
+    def _get_time_spans_from_capability_link_element(self, parent_element):
+        time_span_elements = self._get_elements_with_xpath_query('.//%s:timeSpan' % self.PITHIA_NSPREFIX_XPATH, parent_element=parent_element)
+        time_spans = []
+        for time_span_elem in time_span_elements:
+            begin_positions = self._get_elements_with_xpath_query('.//%s:beginPosition' % NamespacePrefix.GML, parent_element=time_span_elem)
+            begin_position = self._get_element_value_or_blank_string(self._get_first_element_from_list(begin_positions))
+            end_positions = self._get_elements_with_xpath_query('.//%s:endPosition/@indeterminatePosition' % NamespacePrefix.GML, parent_element=time_span_elem)
+            end_position = self._get_first_element_from_list(end_positions)
+            time_spans.append({
+                'begin_position': begin_position,
+                'end_position': end_position,
+            })
+        return time_spans
+
+    def _get_capability_links_from_metadata(self):
+        capability_link_elements = self._get_elements_with_xpath_query('.//%s:capabilityLink' % self.PITHIA_NSPREFIX_XPATH)
+        capability_links = []
+        for cap_link_elem in capability_link_elements:
+            platforms = self._get_elements_with_xpath_query('.//%s:platform/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=cap_link_elem)
+            capabilities = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:%s/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, self.capabilities_element_key_xml, NamespacePrefix.XLINK), parent_element=cap_link_elem)
+            standard_identifiers = self._get_standard_identifiers_from_parent_element(cap_link_elem)
+            time_spans = self._get_time_spans_from_capability_link_element(cap_link_elem)
+            capability_links.append({
+                'platforms': platforms,
+                self.capabilities_element_key: capabilities,
+                'standard_identifiers': standard_identifiers,
+                'time_spans': time_spans,
+            })
+        return capability_links
+    
+    @property
+    def capability_links(self):
+        return self._get_capability_links_from_metadata()
 
 
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
