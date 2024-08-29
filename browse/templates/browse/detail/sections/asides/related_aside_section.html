@@ -3,13 +3,13 @@
 <section class="resource-detail-aside-section">
     <h2 class="fs-5">Related</h2>
     <div class="d-flex flex-column row-gap-3">
-        {% for heading_text, resource_list in related_registrations.items %}
+        {% for heading_text, resource_url_list in related_registrations.items %}
         <div class="resource-detail-aside-subsection">
             <h3 class="fs-6">{{ heading_text }}</h3>
             <ul class="mb-0">
-                {% for resource in resource_list|wrap_in_list_if_dict %}
+                {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
                 <li>
-                    {% with value=resource|get_key_value:'@xlink:href' %}
+                    {% with value=resource_url %}
                     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                     {% endwith %}
                 </li>

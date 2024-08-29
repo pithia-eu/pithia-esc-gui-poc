@@ -5,6 +5,7 @@ from .models import (
     ComputationCapabilities,
     Instrument,
     Organisation,
+    Platform,
     Project,
 )
 
@@ -36,6 +37,7 @@ from common.test_xml_files import (
     COMPUTATION_CAPABILITIES_4a_METADATA_XML,
     INSTRUMENT_METADATA_XML,
     ORGANISATION_METADATA_XML,
+    PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML,
     PROJECT_METADATA_XML,
 )
 
@@ -415,3 +417,22 @@ class ComputationCapabilitiesQuerySetSearchTestCase(TestCase):
         # Only CC_4a should match here, which has no referers.
         search_results_2 = ComputationCapabilities.objects.for_search(computation_type_urls_2, [])
         self.assertEqual(len(search_results_2), 1)
+
+
+class ModelPropertiesAttributeTestCase(TestCase):
+    def test_resource_url_properties(self):
+        """The shortcut returns a list of resource URLs by
+        type from XML metadata.
+        """
+        xml_file = PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        platform = Platform.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        organisation_urls = platform.properties.organisation_urls
+        individual_urls = platform.properties.individual_urls
+        platform_urls = platform.properties.platform_urls
+        print('organisation_urls', organisation_urls)
+        print('individual_urls', individual_urls)
+        print('platform_urls', platform_urls)
+        self.assertTrue(isinstance(organisation_urls, list))
+        self.assertTrue(len(organisation_urls) > 0)

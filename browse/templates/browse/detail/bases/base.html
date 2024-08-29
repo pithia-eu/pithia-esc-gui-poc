@@ -120,9 +120,9 @@
         </section>
     </div>
     <aside class="col-lg-3 resource-detail-aside">
-        {% include 'browse/detail/sections/asides/related_aside_section.html' %}
         {% include 'browse/detail/sections/asides/responsible_parties_aside_section.html' %}
         {% block aside_extra_content %}{% endblock aside_extra_content %}
+        {% include 'browse/detail/sections/asides/related_aside_section.html' %}
     </aside>
 </div>
 {% endblock content %}

@@ -391,7 +391,22 @@ class ResourceDetailView(TemplateView):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
 
     def get_related_registrations(self):
-        return {}
+        return {
+            'Organisations': self.resource.properties.organisation_urls,
+            'Individuals': self.resource.properties.individual_urls,
+            'Projects': self.resource.properties.project_urls,
+            'Platforms': self.resource.properties.platform_urls,
+            'Operations': self.resource.properties.operation_urls,
+            'Instruments': self.resource.properties.instrument_urls,
+            'Acquisition Capabilities': self.resource.properties.acquisition_capabilities_urls,
+            'Acquisitions': self.resource.properties.acquisition_urls,
+            'Computation Capabilities': self.resource.properties.computation_capabilities_urls,
+            'Computations': self.resource.properties.computation_urls,
+            'Processes': self.resource.properties.process_urls,
+            'Data Collections': self.resource.properties.data_collection_urls,
+            'Catalogues': self.resource.properties.catalogue_urls,
+            'Catalogue Entries': self.resource.properties.catalogue_entry_urls,
+        }
 
     def clean_related_registrations_dict(self, related_registrations_dict):
         cleaned_related_registrations_dict = {}
@@ -517,7 +532,7 @@ class IndividualDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Organisation': self.resource.json.get('organisation'),
+            'Organisation': related_registrations.pop('Organisations'),
         })
         return related_registrations
 
@@ -553,7 +568,7 @@ class ProjectDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Sub-projects': self.resource.json.get('subProject'),
+            'Sub-projects': related_registrations.pop('Projects'),
         })
         return related_registrations
 
@@ -580,7 +595,7 @@ class PlatformDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Child Platforms': self.resource.json.get('childPlatform'),
+            'Child Platforms': related_registrations.pop('Platforms'),
         })
         return related_registrations
 
@@ -602,7 +617,7 @@ class InstrumentDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Members': self.resource.json.get('member'),
+            'Members': related_registrations.pop('Instruments'),
         })
         return related_registrations
 
@@ -624,7 +639,7 @@ class OperationDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Platforms': self.resource.json.get('platform'),
+            'Platforms': related_registrations.pop('Platforms'),
         })
         return related_registrations
 
@@ -676,7 +691,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Child Computations': self.resource.json.get('childComputation'),
+            'Child Computations': related_registrations.pop('Computation Capabilities'),
         })
         return related_registrations
 
@@ -713,8 +728,8 @@ class ProcessDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Acquisitions': self.resource.json.get('acquisitionComponent'),
-            'Computations': self.resource.json.get('computationComponent'),
+            'Acquisitions': related_registrations.pop('Acquisitions'),
+            'Computations': related_registrations.pop('Computations'),
         })
         return related_registrations
 
@@ -757,9 +772,9 @@ class DataCollectionDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Projects': self.resource.json.get('project'),
-            'Procedure': self.resource.json.get('om:procedure', {}),
-            'Sub-collections': self.resource.json.get('subCollection', []),
+            'Projects': related_registrations.pop('Projects'),
+            'Procedure': related_registrations.pop('Processes'),
+            'Sub-collections': related_registrations.pop('Data Collections'),
         })
         return related_registrations
 
@@ -840,7 +855,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'From Catalogue': self.resource.json.get('catalogueIdentifier'),
+            'From Catalogue': related_registrations.pop('Catalogues'),
         })
         return related_registrations
 
@@ -882,8 +897,8 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'From Data Collection': self.resource.json.get('dataCollection'),
-            'Catalogue Entry': self.resource.json.get('entryIdentifier'),
+            'From Data Collection': related_registrations.pop('Data Collections'),
+            'Catalogue Entry': related_registrations.pop('Catalogue Entries'),
         })
         return related_registrations
 
@@ -951,7 +966,7 @@ class WorkflowDetailView(ResourceDetailView):
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()
         related_registrations.update({
-            'Involved Data Collections': self.resource.json.get('dataCollection'),
+            'Involved Data Collections': related_registrations.pop('Data Collections'),
         })
         return related_registrations
 

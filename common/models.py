@@ -12,8 +12,22 @@ from .converted_xml_correction_functions import *
 from .managers import *
 from .querysets import *
 from .xml_metadata_mapping_shortcuts import (
+    AcquisitionCapabilitiesXmlMappingShortcuts,
+    AcquisitionXmlMappingShortcuts,
+    CatalogueDataSubsetXmlMappingShortcuts,
+    CatalogueEntryXmlMappingShortcuts,
+    CatalogueXmlMappingShortcuts,
+    ComputationCapabilitiesXmlMappingShortcuts,
+    ComputationXmlMappingShortcuts,
+    DataCollectionXmlMappingShortcuts,
     IndividualXmlMappingShortcuts,
+    InstrumentXmlMappingShortcuts,
+    OperationXmlMappingShortcuts,
     OrganisationXmlMappingShortcuts,
+    PlatformXmlMappingShortcuts,
+    ProcessXmlMappingShortcuts,
+    ProjectXmlMappingShortcuts,
+    WorkflowXmlMappingShortcuts,
 )
 
 
@@ -434,6 +448,10 @@ class Project(ScientificMetadata):
     def abstract(self):
         return self.json['abstract']
 
+    @property
+    def properties(self):
+        return ProjectXmlMappingShortcuts(self.xml)
+
     objects = ProjectManager.from_queryset(ProjectQuerySet)()
 
     class Meta:
@@ -449,6 +467,10 @@ class Platform(ScientificMetadata):
     converted_xml_correction_function = correct_platform_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:platform_detail'
     root_element_name = 'Platform'
+
+    @property
+    def properties(self):
+        return PlatformXmlMappingShortcuts(self.xml)
 
     objects = PlatformManager.from_queryset(PlatformQuerySet)()
 
@@ -467,6 +489,10 @@ class Operation(ScientificMetadata):
     root_element_name = 'Operation'
 
     objects = OperationManager.from_queryset(OperationQuerySet)()
+
+    @property
+    def properties(self):
+        return OperationXmlMappingShortcuts(self.xml)
 
     class Meta:
         proxy = True
@@ -504,6 +530,10 @@ class Instrument(ScientificMetadata):
             pass
         return None
 
+    @property
+    def properties(self):
+        return InstrumentXmlMappingShortcuts(self.xml)
+
     objects = InstrumentManager.from_queryset(InstrumentQuerySet)()
 
     class Meta:
@@ -527,6 +557,10 @@ class AcquisitionCapabilities(ScientificMetadata):
         except KeyError:
             return []
 
+    @property
+    def properties(self):
+        return AcquisitionCapabilitiesXmlMappingShortcuts(self.xml)
+
     objects = AcquisitionCapabilitiesManager.from_queryset(AcquisitionCapabilitiesQuerySet)()
 
     class Meta:
@@ -542,6 +576,10 @@ class Acquisition(ScientificMetadata):
     converted_xml_correction_function = correct_acquisition_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_detail'
     root_element_name = 'Acquisition'
+
+    @property
+    def properties(self):
+        return AcquisitionXmlMappingShortcuts(self.xml)
 
     objects = AcquisitionManager.from_queryset(AcquisitionQuerySet)()
 
@@ -573,6 +611,10 @@ class ComputationCapabilities(ScientificMetadata):
         except KeyError:
             return []
 
+    @property
+    def properties(self):
+        return ComputationCapabilitiesXmlMappingShortcuts(self.xml)
+
     objects = ComputationCapabilitiesManager.from_queryset(ComputationCapabilitiesQuerySet)()
 
     class Meta:
@@ -589,6 +631,10 @@ class Computation(ScientificMetadata):
     _browse_detail_page_url_name = 'browse:computation_detail'
     root_element_name = 'Computation'
 
+    @property
+    def properties(self):
+        return ComputationXmlMappingShortcuts(self.xml)
+
     objects = ComputationManager.from_queryset(ComputationQuerySet)()
 
     class Meta:
@@ -604,6 +650,10 @@ class Process(ScientificMetadata):
     converted_xml_correction_function = correct_process_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:process_detail'
     root_element_name = 'CompositeProcess'
+
+    @property
+    def properties(self):
+        return ProcessXmlMappingShortcuts(self.xml)
 
     objects = ProcessManager.from_queryset(ProcessQuerySet)()
 
@@ -660,6 +710,10 @@ class DataCollection(ScientificMetadata):
             pass
         return []
 
+    @property
+    def properties(self):
+        return DataCollectionXmlMappingShortcuts(self.xml)
+
     objects = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
 
     class Meta:
@@ -678,6 +732,10 @@ class Catalogue(ScientificMetadata):
     @property
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}'
+
+    @property
+    def properties(self):
+        return CatalogueXmlMappingShortcuts(self.xml)
 
     objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
 
@@ -713,6 +771,10 @@ class CatalogueEntry(ScientificMetadata):
     @property
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
+
+    @property
+    def properties(self):
+        return CatalogueEntryXmlMappingShortcuts(self.xml)
 
     objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
 
@@ -757,6 +819,10 @@ class CatalogueDataSubset(ScientificMetadata):
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
 
+    @property
+    def properties(self):
+        return CatalogueDataSubsetXmlMappingShortcuts(self.xml)
+
     objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
 
     class Meta:
@@ -781,6 +847,10 @@ graph (DAG) and in its simplest form, a linear sequence of steps.'''
     @property
     def data_collection_url(self):
         return self.json['dataCollection']['@xlink:href']
+
+    @property
+    def properties(self):
+        return WorkflowXmlMappingShortcuts(self.xml)
 
     objects = WorkflowManager.from_queryset(WorkflowQuerySet)()
 

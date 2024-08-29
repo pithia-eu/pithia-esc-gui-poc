@@ -1,6 +1,7 @@
 import logging
 from lxml import etree
 
+from .constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 from .xml_metadata_utils import (
     Namespace,
     NamespacePrefix,
@@ -76,6 +77,67 @@ class PithiaShortNameMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin
     @property
     def short_name(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:shortName' % self.PITHIA_NSPREFIX_XPATH)
+
+
+class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_resource_urls_with_type(self, type):
+        return list(set(self._get_elements_with_xpath_query(f'.//*[contains(@xlink:href, "{PITHIA_METADATA_SERVER_HTTPS_URL_BASE}/{type}/")]/@xlink:href')))
+
+    @property
+    def organisation_urls(self):
+        return self._get_resource_urls_with_type('organisation')
+
+    @property
+    def individual_urls(self):
+        return self._get_resource_urls_with_type('individual')
+
+    @property
+    def project_urls(self):
+        return self._get_resource_urls_with_type('project')
+
+    @property
+    def platform_urls(self):
+        return self._get_resource_urls_with_type('platform')
+
+    @property
+    def operation_urls(self):
+        return self._get_resource_urls_with_type('operation')
+
+    @property
+    def instrument_urls(self):
+        return self._get_resource_urls_with_type('instrument')
+
+    @property
+    def acquisition_capabilities_urls(self):
+        return self._get_resource_urls_with_type('acquisitionCapabilities')
+
+    @property
+    def acquisition_urls(self):
+        return self._get_resource_urls_with_type('acquisition')
+
+    @property
+    def computation_capabilities_urls(self):
+        return self._get_resource_urls_with_type('computationCapabilities')
+
+    @property
+    def computation_urls(self):
+        return self._get_resource_urls_with_type('computation')
+
+    @property
+    def process_urls(self):
+        return self._get_resource_urls_with_type('process')
+
+    @property
+    def data_collection_urls(self):
+        return self._get_resource_urls_with_type('collection')
+
+    @property
+    def catalogue_urls(self):
+        return self._get_elements_with_xpath_query('.//%s:catalogueIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
+
+    @property
+    def catalogue_entry_urls(self):
+        return self._get_elements_with_xpath_query('.//%s:entryIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
 
 
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
