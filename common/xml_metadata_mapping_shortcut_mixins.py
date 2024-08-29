@@ -220,7 +220,12 @@ class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin)
             'delivery_point': self.phone,
             'postal_code': self.phone,
         }
-        print('unformatted_address_dict', unformatted_address_dict)
         return {
             key: value
         for key, value in unformatted_address_dict.items() if value}
+
+
+class GmdUrlMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def gmd_url(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:URL/%s:URL' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD))

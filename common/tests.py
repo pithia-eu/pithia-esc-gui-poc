@@ -436,3 +436,15 @@ class ModelPropertiesAttributeTestCase(TestCase):
         print('platform_urls', platform_urls)
         self.assertTrue(isinstance(organisation_urls, list))
         self.assertTrue(len(organisation_urls) > 0)
+
+    def test_gmd_url_property(self):
+        """The shortcut returns the text of the first gmd:URL
+        element in the XML metadata.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        gmd_url = project.properties.gmd_url
+        print('gmd_url', gmd_url)
+        self.assertTrue(isinstance(gmd_url, str))
