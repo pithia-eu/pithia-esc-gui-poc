@@ -687,6 +687,20 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
     resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
+    template_name = 'browse/detail/bases/computation_capabilities.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilities',
+                'dataLevel',
+                'qualityAssessment',
+                'type',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get_related_registrations(self):
         related_registrations = super().get_related_registrations()

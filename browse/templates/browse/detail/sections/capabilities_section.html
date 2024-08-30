@@ -1,0 +1,101 @@
+{% if resource.properties.capabilities %}
+<section class="resource-detail-section">
+    <h2>Capabilities</h2>
+    <ul class="list-group list-group-flush">
+        {% for cap in resource.properties.capabilities %}
+        <li class="list-group-item">
+            <details class="py-2">
+                <summary class="summary-marker-custom">
+                    <h3 class="fs-5">{{ cap.name }}</h3>
+                </summary>
+                <dl>
+                    {% if cap.observed_property %}
+                    <div class="py-2">
+                        <dt>Observed Property</dt>
+                        <dd>
+                            {% with value=cap.observed_property %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.dimensionality_instance %}
+                    <div class="py-2">
+                        <dt>Dimensionality Instance</dt>
+                        <dd>
+                            {% with value=cap.dimensionality_instance %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.dimensionality_timeline %}
+                    <div class="py-2">
+                        <dt>Dimensionality Timeline</dt>
+                        <dd>
+                            {% with value=cap.dimensionality_timeline %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.cadence %}
+                    <div class="py-2">
+                        <dt>Cadence</dt>
+                        <dd>
+                            {% with value=cap.observed_property %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                        <dd>
+                            Units: {{ cap.cadence_units }}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.vector_representation %}
+                    <div class="py-2">
+                        <dt>Vector Representation</dt>
+                        <dd>
+                            {% with value=cap.vector_representation %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.coordinate_system %}
+                    <div class="py-2">
+                        <dt>Co-ordinate System</dt>
+                        <dd>
+                            {% with value=cap.coordinate_system %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.units %}
+                    <div class="py-2">
+                        <dt>Units</dt>
+                        <dd>
+                            {% with value=cap.units %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap.qualifier %}
+                    <div class="py-2">
+                        <dt>Qualifier</dt>
+                        <dd>
+                            {% with value=cap.qualifier %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                </dl>
+            </details>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
