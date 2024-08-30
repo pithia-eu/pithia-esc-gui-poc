@@ -1,20 +1,46 @@
 {% if resource.properties.capability_links %}
 <section class="resource-detail-section">
-    <h2>Capability Links</h2>
+    <div class="d-flex align-items-center column-gap-3 mb-3">
+        <h2 class="mb-0">Capability Links</h2>
+        <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle" style="aspect-ratio: 1 / 1; line-height: 0;"  data-bs-toggle="popover" data-bs-content="The list below describes different &quot;links&quot; between the capabilities of this acquisition/computation and registered platforms.">
+            ?
+        </button>
+    </div>
     <ul class="list-group list-group-flush">
-        {% for cl in resource.properties.capability_links %}
+        {% for cap_link in resource.properties.capability_links %}
         <li class="list-group-item ps-0">
             <details class="py-2" name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
-                <summary class="summary-marker-custom">
-                    <h3 class="text-secondary fw-normal fs-6">
-                        Capability Link {{ forloop.counter }}
-                    </h3>
+                <summary class="summary-marker-custom summary-marker-custom-baseline">
+                    <div class="d-flex flex-column">
+                        <h3 class="fw-normal fs-6">
+                            Capability Link {{ forloop.counter }}
+                        </h3>
+                        <small class="d-flex flex-column text-secondary">
+                            {% if cap_link.platforms %}
+                            {% with value=cap_link.platforms.0 %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                            {% endwith %}
+                            {% endif %}
+
+                            {% if cap_link.computation_capabilities %}
+                            {% with value=cap_link.computation_capabilities %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                            {% endwith %}
+                            {% endif %}
+                            
+                            {% if cap_link.acquisition_capabilities %}
+                            {% with value=cap_link.acquisition_capabilities %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                            {% endwith %}
+                            {% endif %}
+                        </small>
+                    </div>
                 </summary>
                 <dl class="d-flex flex-column row-gap-3 pb-2">
-                    {% if 'platforms' in cl %}
+                    {% if cap_link.platforms %}
                     <div>
                         <dt>Platforms</dt>
-                        {% for platform in cl.platforms %}
+                        {% for platform in cap_link.platforms %}
                         <dd class="dd-list-item">
                             {% with value=platform %}
                             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
@@ -23,33 +49,53 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    {% if 'standard_identifiers' in cl %}
+                    {% if cap_link.standard_identifiers %}
                     <div>
                         <dt>Standard Platform Identifiers</dt>
-                        {% for si in cl.standard_identifiers %}
+                        {% for si in cap_link.standard_identifiers %}
                         <dd class="dd-list-item">
                             {{ si.value }} <span class="text-secondary">({{ si.authority }})</span>
                         </dd>
                         {% endfor %}
                     </div>
                     {% endif %}
-                    {% if 'computation_capabilities' in cl %}
+                    {% if cap_link.computation_capabilities %}
                     <div>
                         <dt>Computation Capabilities</dt>
                         <dd>
-                            {% with value=cl.computation_capabilities %}
+                            {% with value=cap_link.computation_capabilities %}
                             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                             {% endwith %}
                         </dd>
                     </div>
                     {% endif %}
-                    {% if 'acquisition_capabilities' in cl %}
+                    {% if cap_link.acquisition_capabilities %}
                     <div>
                         <dt>Acquisition Capabilities</dt>
                         <dd>
-                            {% with value=cl.acquisition_capabilities %}
+                            {% with value=cap_link.acquisition_capabilities %}
                             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                             {% endwith %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                    {% if cap_link.time_spans %}
+                    <div>
+                        <dt class="pb-2">Time Spans</dt>
+                        <dd>
+                            <dl>
+                                {% for time_span in cap_link.time_spans %}
+                                <dt class="text-secondary pt-2 pb-1">Time Span {{ forloop.counter }}</dt>
+                                <dd>
+                                    <dl>
+                                        <dt>Begin Position</dt>
+                                        <dd>{{ time_span.begin_position }}</dd>
+                                        <dt>End Position (Indeterminate)</dt>
+                                        <dd>{{ time_span.end_position }}</dd>
+                                    </dl>
+                                </dd>
+                                {% endfor %}
+                            </dl>
                         </dd>
                     </div>
                     {% endif %}

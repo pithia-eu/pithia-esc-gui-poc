@@ -121,6 +121,10 @@ summary.summary-marker-custom {
     align-items: center;
 }
 
+summary.summary-marker-custom-baseline {
+    align-items: baseline;
+}
+
 summary.summary-marker-custom::-webkit-details-marker,
 summary.summary-marker-custom::marker {
     content: none;
