@@ -711,6 +711,16 @@ class ComputationDetailView(ResourceDetailView):
     resource_download_url_name = 'utils:view_computation_as_xml'
     template_name = 'browse/detail/bases/computation.html'
 
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilityLinks',
+            ]
+        )
+        return cleaned_property_table_dict
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
         return super().get(request, *args, **kwargs)
