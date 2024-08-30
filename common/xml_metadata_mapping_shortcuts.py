@@ -1,9 +1,10 @@
 from .xml_metadata_mapping_shortcut_mixins import (
     GmdContactInfoMetadataPropertiesMixin,
     GmdUrlMetadataPropertiesMixin,
+    PithiaCapabilitiesMetadataPropertiesMixin,
+    PithiaCapabilityLinkMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
-    PithiaCapabilityLinkMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
 )
@@ -71,6 +72,7 @@ class AcquisitionXmlMappingShortcuts(
 
 class ComputationCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass

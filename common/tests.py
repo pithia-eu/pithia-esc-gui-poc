@@ -32,11 +32,12 @@ from common.test_setup import (
 from common.test_xml_files import (
     ACQUISITION_CAPABILITIES_METADATA_XML,
     COMPUTATION_METADATA_XML,
-    COMPUTATION_CAPABILITIES_METADATA_XML,
     COMPUTATION_CAPABILITIES_2_METADATA_XML,
     COMPUTATION_CAPABILITIES_3_METADATA_XML,
     COMPUTATION_CAPABILITIES_4_METADATA_XML,
     COMPUTATION_CAPABILITIES_4a_METADATA_XML,
+    COMPUTATION_CAPABILITIES_FULL_METADATA_XML,
+    COMPUTATION_CAPABILITIES_METADATA_XML,
     INSTRUMENT_METADATA_XML,
     ORGANISATION_METADATA_XML,
     PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML,
@@ -462,3 +463,15 @@ class ModelPropertiesAttributeTestCase(TestCase):
         capability_links = computation.properties.capability_links
         print('capability_links', capability_links)
         self.assertTrue(isinstance(capability_links, list))
+
+    def test_capabilities_property(self):
+        """The shortcut returns a list of process capability
+        dictionaries.
+        """
+        xml_file = COMPUTATION_CAPABILITIES_FULL_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation_capabilities = ComputationCapabilities.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        capabilities = computation_capabilities.properties.capabilities
+        print('capabilities', capabilities)
+        self.assertTrue(isinstance(capabilities, list))

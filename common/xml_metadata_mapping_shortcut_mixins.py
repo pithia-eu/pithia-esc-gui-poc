@@ -145,7 +145,7 @@ class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
         return self._get_elements_with_xpath_query('.//%s:entryIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
 
 
-class StandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+class PithiaStandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_standard_identifiers_from_parent_element(self, parent_element):
         standard_identifier_elements = self._get_elements_with_xpath_query('.//%s:standardIdentifier' % self.PITHIA_NSPREFIX_XPATH, parent_element=parent_element)
         standard_identifiers = []
@@ -162,7 +162,7 @@ class StandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesShortcutM
         return self._get_standard_identifiers_from_parent_element(self.xml_parsed)
 
 
-class PithiaCapabilityLinkMetadataPropertiesMixin(StandardIdentifiersMetadataPropertiesMixin):
+class PithiaCapabilityLinkMetadataPropertiesMixin(PithiaStandardIdentifiersMetadataPropertiesMixin):
     def _get_time_spans_from_capability_link_element(self, parent_element):
         time_span_elements = self._get_elements_with_xpath_query('.//%s:timeSpan' % self.PITHIA_NSPREFIX_XPATH, parent_element=parent_element)
         time_spans = []
@@ -196,6 +196,56 @@ class PithiaCapabilityLinkMetadataPropertiesMixin(StandardIdentifiersMetadataPro
     @property
     def capability_links(self):
         return self._get_capability_links_from_metadata()
+
+
+class PithiaCapabilitiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_capabilities_from_metadata(self):
+        process_capability_elements = self._get_elements_with_xpath_query('.//%s:capabilities/%s:processCapability' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH))
+        process_capabilities = []
+        for e in process_capability_elements:
+            name_elements = self._get_elements_with_xpath_query('.//%s:name' % self.PITHIA_NSPREFIX_XPATH, parent_element=e)
+            name = ''
+            try:
+                name = self._get_element_value_or_blank_string(self._get_first_element_from_list(name_elements))
+            except AttributeError:
+                pass
+            observed_property_elements = self._get_elements_with_xpath_query('.//%s:observedProperty/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            observed_property = self._get_first_element_from_list(observed_property_elements)
+            dimensionality_instance_elements = self._get_elements_with_xpath_query('.//%s:dimensionalityInstance/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            dimensionality_instance = self._get_first_element_from_list(dimensionality_instance_elements)
+            dimensionality_timeline_elements = self._get_elements_with_xpath_query('.//%s:dimensionalityTimeline/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            dimensionality_timeline = self._get_first_element_from_list(dimensionality_timeline_elements)
+            cadence_elements = self._get_elements_with_xpath_query('.//%s:cadence' % self.PITHIA_NSPREFIX_XPATH, parent_element=e)
+            cadence = ''
+            try:
+                cadence = self._get_element_value_or_blank_string(self._get_first_element_from_list(cadence_elements))
+            except AttributeError:
+                pass
+            cadence_unit_attributes = self._get_elements_with_xpath_query('.//%s:cadence/@unit' % self.PITHIA_NSPREFIX_XPATH, parent_element=e)
+            cadence_unit = self._get_first_element_from_list(cadence_unit_attributes)
+            vector_representations = self._get_elements_with_xpath_query('.//%s:vectorRepresentation/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            coordinate_system_elements = self._get_elements_with_xpath_query('.//%s:coordinateSystem/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            coordinate_system = self._get_first_element_from_list(coordinate_system_elements)
+            units_elements = self._get_elements_with_xpath_query('.//%s:units/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            units = self._get_first_element_from_list(units_elements)
+            qualifiers = self._get_elements_with_xpath_query('.//%s:qualifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=e)
+            process_capabilities.append({
+                'name': name,
+                'observed_property': observed_property,
+                'dimensionality_instance': dimensionality_instance,
+                'dimensionality_timeline': dimensionality_timeline,
+                'cadence': cadence,
+                'cadence_units': cadence_unit,
+                'vector_representation': vector_representations,
+                'coordinate_system': coordinate_system,
+                'units': units,
+                'qualifier': qualifiers,
+            })
+        return process_capabilities
+
+    @property
+    def capabilities(self):
+        return self._get_capabilities_from_metadata()
 
 
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
