@@ -4,7 +4,7 @@
     <ul class="list-group list-group-flush">
         {% for cap in resource.properties.capabilities %}
         <li class="list-group-item">
-            <details class="py-2" {% if forloop.counter == 1 %}open{% endif %}>
+            <details name="details-capabilities" class="py-2" {% if forloop.counter == 1 %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
                     <div class="d-flex flex-column">
                         <h3 class="fs-5">{{ cap.name }}</h3>
