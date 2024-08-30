@@ -4,9 +4,18 @@
     <ul class="list-group list-group-flush">
         {% for cap in resource.properties.capabilities %}
         <li class="list-group-item">
-            <details class="py-2">
-                <summary class="summary-marker-custom">
-                    <h3 class="fs-5">{{ cap.name }}</h3>
+            <details class="py-2" {% if forloop.counter == 1 %}open{% endif %}>
+                <summary class="summary-marker-custom summary-marker-custom-baseline">
+                    <div class="d-flex flex-column">
+                        <h3 class="fs-5">{{ cap.name }}</h3>
+                        {% if cap.observed_property %}
+                        <small class="text-secondary">
+                            {% with value=cap.observed_property %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                            {% endwith %}
+                        </small>
+                        {% endif %}
+                    </div>
                 </summary>
                 <dl>
                     {% if cap.observed_property %}
@@ -43,23 +52,25 @@
                     <div class="py-2">
                         <dt>Cadence</dt>
                         <dd>
-                            {% with value=cap.observed_property %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                        <dd>
-                            Units: {{ cap.cadence_units }}
+                            Every
+                            {% if cap.cadence == '1' %}
+                            {{ cap.cadence_units|default:'N/A' }}
+                            {% else %}
+                            {{ cap.cadence|default:'N/A' }} {{ cap.cadence_units|default:'unknown units' }}s
+                            {% endif %}
                         </dd>
                     </div>
                     {% endif %}
-                    {% if cap.vector_representation %}
+                    {% if cap.vector_representations %}
                     <div class="py-2">
                         <dt>Vector Representation</dt>
-                        <dd>
-                            {% with value=cap.vector_representation %}
+                        {% for vector_representation in cap.vector_representations %}
+                        <dd class="dd-list-item">
+                            {% with value=vector_representation %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
                         </dd>
+                        {% endfor %}
                     </div>
                     {% endif %}
                     {% if cap.coordinate_system %}
@@ -82,14 +93,16 @@
                         </dd>
                     </div>
                     {% endif %}
-                    {% if cap.qualifier %}
+                    {% if cap.qualifiers %}
                     <div class="py-2">
-                        <dt>Qualifier</dt>
-                        <dd>
-                            {% with value=cap.qualifier %}
+                        <dt>Qualifiers</dt>
+                        {% for qualifier in cap.qualifiers %}
+                        <dd class="dd-list-item">
+                            {% with value=qualifier %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
                         </dd>
+                        {% endfor %}
                     </div>
                     {% endif %}
                 </dl>

@@ -219,7 +219,13 @@ class PithiaCapabilitiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
             cadence = ''
             try:
                 cadence = self._get_element_value_or_blank_string(self._get_first_element_from_list(cadence_elements))
+                cadence = float(cadence)
+                if float.is_integer(cadence):
+                    cadence = int(cadence)
+                cadence = str(cadence)
             except AttributeError:
+                pass
+            except ValueError:
                 pass
             cadence_unit_attributes = self._get_elements_with_xpath_query('.//%s:cadence/@unit' % self.PITHIA_NSPREFIX_XPATH, parent_element=e)
             cadence_unit = self._get_first_element_from_list(cadence_unit_attributes)
@@ -236,10 +242,10 @@ class PithiaCapabilitiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
                 'dimensionality_timeline': dimensionality_timeline,
                 'cadence': cadence,
                 'cadence_units': cadence_unit,
-                'vector_representation': vector_representations,
+                'vector_representations': vector_representations,
                 'coordinate_system': coordinate_system,
                 'units': units,
-                'qualifier': qualifiers,
+                'qualifiers': qualifiers,
             })
         return process_capabilities
 
