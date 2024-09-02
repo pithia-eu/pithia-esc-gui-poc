@@ -529,13 +529,6 @@ class IndividualDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Organisation': related_registrations.pop('Organisations'),
-        })
-        return related_registrations
-
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
         return super().get(request, *args, **kwargs)
@@ -565,13 +558,6 @@ class ProjectDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Sub-projects': related_registrations.pop('Projects'),
-        })
-        return related_registrations
-
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
         return super().get(request, *args, **kwargs)
@@ -591,13 +577,20 @@ class PlatformDetailView(ResourceDetailView):
     model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
     resource_download_url_name = 'utils:view_platform_as_xml'
+    template_name = 'browse/detail/bases/platform.html'
 
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Child Platforms': related_registrations.pop('Platforms'),
-        })
-        return related_registrations
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'childPlatform',
+                'shortName',
+                'type',
+                'URL',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -613,13 +606,7 @@ class InstrumentDetailView(ResourceDetailView):
     model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
     resource_download_url_name = 'utils:view_instrument_as_xml'
-
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Members': related_registrations.pop('Instruments'),
-        })
-        return related_registrations
+    template_name = 'browse/detail/bases/instrument.html'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -635,13 +622,7 @@ class OperationDetailView(ResourceDetailView):
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
     resource_download_url_name = 'utils:view_operation_as_xml'
-
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Platforms': related_registrations.pop('Platforms'),
-        })
-        return related_registrations
+    template_name = 'browse/detail/bases/operation.html'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -713,13 +694,6 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Child Computations': related_registrations.pop('Computation Capabilities'),
-        })
-        return related_registrations
-
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
         return super().get(request, *args, **kwargs)
@@ -775,14 +749,6 @@ class ProcessDetailView(ResourceDetailView):
         )
         return cleaned_property_table_dict
 
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Acquisitions': related_registrations.pop('Acquisitions'),
-            'Computations': related_registrations.pop('Computations'),
-        })
-        return related_registrations
-
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
         return super().get(request, *args, **kwargs)
@@ -818,15 +784,6 @@ class DataCollectionDetailView(ResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
-
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Projects': related_registrations.pop('Projects'),
-            'Procedure': related_registrations.pop('Processes'),
-            'Sub-collections': related_registrations.pop('Data Collections'),
-        })
-        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -887,6 +844,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     model = models.CatalogueEntry
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
     resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
+    template_name = 'browse/detail/bases/catalogue_entry.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
@@ -901,13 +859,6 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
-
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'From Catalogue': related_registrations.pop('Catalogues'),
-        })
-        return related_registrations
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
@@ -943,14 +894,6 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
-
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'From Data Collection': related_registrations.pop('Data Collections'),
-            'Catalogue Entry': related_registrations.pop('Catalogue Entries'),
-        })
-        return related_registrations
 
     def add_handle_data_to_context(self, context):
         context['handles'] = self.handles
@@ -1012,13 +955,6 @@ class WorkflowDetailView(ResourceDetailView):
             ]
         )
         return cleaned_property_table_dict
-    
-    def get_related_registrations(self):
-        related_registrations = super().get_related_registrations()
-        related_registrations.update({
-            'Involved Data Collections': related_registrations.pop('Data Collections'),
-        })
-        return related_registrations
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

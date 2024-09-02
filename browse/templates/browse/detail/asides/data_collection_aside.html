@@ -1,4 +1,4 @@
-{% if resource.feature_of_interest_urls %}
+{% if resource.properties.features_of_interest %}
 <section class="resource-detail-aside-section resource-detail-aside-key-section">
     <details name="resource-detail-aside-section">
         <summary class="summary-marker-custom">
@@ -6,7 +6,7 @@
         </summary>
         <div class="resource-detail-aside-subsection">
             <ul>
-                {% for foi in resource.feature_of_interest_urls %}
+                {% for foi in resource.properties.features_of_interest %}
                 <li>
                     {% with value=foi %}
                     {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}

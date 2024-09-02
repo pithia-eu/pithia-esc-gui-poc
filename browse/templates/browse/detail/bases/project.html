@@ -16,3 +16,19 @@ Additional Description
 Description
 {% endif %}
 {% endblock description_heading_text %}
+{% block post_description_content %}
+{% if resource.properties.sub_projects %}
+<section class="resource-detail-section">
+    <h2>Sub-projects</h2>
+    <ul>
+        {% for project_url in resource.properties.sub_projects %}
+        <li>
+            {% with value=project_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock post_description_content %}

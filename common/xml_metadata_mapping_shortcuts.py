@@ -1,6 +1,7 @@
 from .xml_metadata_mapping_shortcut_mixins import (
     GmdContactInfoMetadataPropertiesMixin,
     GmdUrlMetadataPropertiesMixin,
+    NamespacePrefix,
     PithiaCapabilitiesMetadataPropertiesMixin,
     PithiaCapabilityLinksMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
@@ -32,28 +33,36 @@ class ProjectXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def sub_projects(self):
+        return self._get_elements_with_xpath_query('.//%s:subProject/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class PlatformXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def child_platforms(self):
+        return self._get_elements_with_xpath_query('.//%s:childPlatform/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class OperationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def platforms(self):
+        return self._get_elements_with_xpath_query('.//%s:platform/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class InstrumentXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def members(self):
+        return self._get_elements_with_xpath_query('.//%s:member/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class AcquisitionCapabilitiesXmlMappingShortcuts(
@@ -77,7 +86,9 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def child_computations(self):
+        return self._get_elements_with_xpath_query('.//%s:childComputation/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class ComputationXmlMappingShortcuts(
@@ -93,14 +104,32 @@ class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    def acquisition_components(self):
+        return self._get_elements_with_xpath_query('.//%s:acquisitionComponent/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+    
+    def computation_components(self):
+        return self._get_elements_with_xpath_query('.//%s:computationComponent/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def features_of_interest(self):
+        return self._get_elements_with_xpath_query('.//%s:namedRegion/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+    
+    @property
+    def procedure(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:procedure/@%s:href' % (NamespacePrefix.OM, NamespacePrefix.XLINK))
+    
+    @property
+    def projects(self):
+        return self._get_elements_with_xpath_query('.//%s:project/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+    
+    @property
+    def sub_collections(self):
+        return self._get_elements_with_xpath_query('.//%s:subCollection/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class CatalogueXmlMappingShortcuts(

@@ -31,4 +31,18 @@
         </a>
     </div>
 </section>
+{% if resource.properties.data_collection_urls %}
+<section class="resource-detail-section">
+    <h2>Data Collections in this Workflow</h2>
+    <ul>
+        {% for data_collection_url in resource.properties.data_collection_urls %}
+        <li>
+            {% with value=data_collection_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% endblock post_description_content %}

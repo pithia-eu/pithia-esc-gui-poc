@@ -1,7 +1,25 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% load project_tags %}
-{% block pre_description_content %}
-{% endblock pre_description_content %}
+{% block top_section_extra_content %}
+<div class="d-flex flex-wrap column-gap-3 row-gap-3 mt-4">
+    {% if resource.properties.catalogue_entry_urls %}
+    <div>
+        <h2 class="fs-6">From Catalogue Entry</h2>
+        {% with value=resource.properties.catalogue_entry_urls.0 %}
+        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+        {% endwith %}
+    </div>
+    {% endif %}
+    {% if resource.properties.data_collection_urls %}
+    <div>
+        <h2 class="fs-6">Subset of Data Collection</h2>
+        {% with value=resource.properties.data_collection_urls.0 %}
+        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+        {% endwith %}
+    </div>
+    {% endif %}
+</div>
+{% endblock top_section_extra_content %}
 {% block post_description_content %}
 {% if 'source' in resource.json %}
 <section class="resource-detail-section">
