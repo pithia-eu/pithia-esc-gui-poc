@@ -49,7 +49,7 @@
         {% include 'browse/detail/sections/description_section.html' %}
         {% include 'browse/detail/sections/responsible_parties_section.html' %}
         {% block post_description_content %}{% endblock post_description_content %}
-        <section class="resource-detail-section">
+        <section id="further-information-section" class="resource-detail-section">
             <details>
                 <summary class="summary-marker-custom">
                     <h2>Further Information and Resources</h2>
@@ -59,7 +59,7 @@
                         <h3 class="fs-5">Resources</h3>
                         <ul>
                             <li>
-                                <a href="{% url resource_download_url_name resource.id %}" class="icon-link icon-link-hover" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                                <a href="{% url resource_download_url_name resource.id %}" id="metadata-file-link" class="icon-link icon-link-hover" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill" viewBox="0 0 16 16">
                                         <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/>
                                     </svg>Metadata File (XML)
@@ -104,7 +104,7 @@
                         </div>
                     </section>
                     {% endif %}
-                    <section>
+                    <section id="metadata-information-section">
                         <div class="table-responsive rounded">
                             <table class="table table-borderless table-light resource-key-details mb-0 p-3">
                                 <caption class="caption-top pt-lg-0 fs-5">Metadata Information</caption>
@@ -138,11 +138,16 @@
         {% block aside_extra_content %}{% endblock aside_extra_content %}
         {% include 'browse/detail/sections/asides/related_aside_section.html' %}
         <section class="resource-detail-aside-section">
-            <h2 class="fs-6 text-secondary">Page Information & Feedback</h2>
-            <a href="{% url 'support' %}#support-heading" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-quote-fill me-2" viewBox="0 0 16 16">
-                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm7.194 2.766a1.7 1.7 0 0 0-.227-.272 1.5 1.5 0 0 0-.469-.324l-.008-.004A1.8 1.8 0 0 0 5.734 4C4.776 4 4 4.746 4 5.667c0 .92.776 1.666 1.734 1.666.343 0 .662-.095.931-.26-.137.389-.39.804-.81 1.22a.405.405 0 0 0 .011.59c.173.16.447.155.614-.01 1.334-1.329 1.37-2.758.941-3.706a2.5 2.5 0 0 0-.227-.4zM11 7.073c-.136.389-.39.804-.81 1.22a.405.405 0 0 0 .012.59c.172.16.446.155.613-.01 1.334-1.329 1.37-2.758.942-3.706a2.5 2.5 0 0 0-.228-.4 1.7 1.7 0 0 0-.227-.273 1.5 1.5 0 0 0-.469-.324l-.008-.004A1.8 1.8 0 0 0 10.07 4c-.957 0-1.734.746-1.734 1.667 0 .92.777 1.666 1.734 1.666.343 0 .662-.095.931-.26z"/>
-                  </svg>Provide feedback</a>
+            <h2 class="fs-6 text-secondary">Page Suggestions & Support</h2>
+            <ul class="list-unstyled">
+                <li>
+                    <a href="{% url 'support' %}#support-heading" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-quote-fill me-1" viewBox="0 0 16 16">
+                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793zm7.194 2.766a1.7 1.7 0 0 0-.227-.272 1.5 1.5 0 0 0-.469-.324l-.008-.004A1.8 1.8 0 0 0 5.734 4C4.776 4 4 4.746 4 5.667c0 .92.776 1.666 1.734 1.666.343 0 .662-.095.931-.26-.137.389-.39.804-.81 1.22a.405.405 0 0 0 .011.59c.173.16.447.155.614-.01 1.334-1.329 1.37-2.758.941-3.706a2.5 2.5 0 0 0-.227-.4zM11 7.073c-.136.389-.39.804-.81 1.22a.405.405 0 0 0 .012.59c.172.16.446.155.613-.01 1.334-1.329 1.37-2.758.942-3.706a2.5 2.5 0 0 0-.228-.4 1.7 1.7 0 0 0-.227-.273 1.5 1.5 0 0 0-.469-.324l-.008-.004A1.8 1.8 0 0 0 10.07 4c-.957 0-1.734.746-1.734 1.667 0 .92.777 1.666 1.734 1.666.343 0 .662-.095.931-.26z"/>
+                          </svg>Provide feedback
+                    </a>
+                </li>
+            </ul>
         </section>
     </aside>
 </div>
