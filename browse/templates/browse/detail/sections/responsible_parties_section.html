@@ -1,0 +1,37 @@
+{% if resource.related_parties %}
+<section class="resource-detail-section resource-detail-section-from-aside">
+    <h2>Responsible Parties</h2>
+    <div class="d-flex flex-column">
+        {% for rp in resource.related_parties %}
+        <div class="resource-detail-subsection">
+            <h3 class="fs-5">
+                {% with value=rp.role %}
+                {% if value in ontology_server_urls %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                {% elif value in resource_server_urls %}
+                {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
+                {% else %}
+                {{ value.strip|urlize }}
+                {% endif %}
+                {% endwith %}
+            </h3>
+            <ul class="mb-0">
+                {% for p in rp.parties %}
+                <li>
+                    {% with value=p %}
+                    {% if value in ontology_server_urls %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% elif value in resource_server_urls %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                    {% else %}
+                    {{ value.strip|urlize }}
+                    {% endif %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

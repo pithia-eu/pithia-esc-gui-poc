@@ -7,6 +7,26 @@
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block post_description_content %}
+{% if resource.properties.process_urls %}
+<section class="resource-detail-section">
+    <h2>Procedure</h2>
+    {% with value=resource.properties.process_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+<section class="resource-detail-section resource-detail-section-from-aside">
+    <h2>Features of Interest</h2>
+    <ul>
+        {% for foi in resource.feature_of_interest_urls %}
+        <li>
+            {% with value=foi %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
 {% if api_interaction_methods %}
 <section class="resource-detail-section"><h2 class="mb-3">Run from e-Science Centre</h2>
     <ul class="list-unstyled mt-0 mb-0">

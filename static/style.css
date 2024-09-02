@@ -570,6 +570,14 @@ dialog .btn-close {
     margin-bottom: 1rem;
 }
 
+.resource-detail-section-from-aside {
+    display: block;
+}
+
+.resource-detail-aside .resource-detail-aside-key-section {
+    display: none;
+}
+
 .resource-detail-aside .metadata-server-url {
     display: inline-block;
     overflow-wrap: break-word;
@@ -1291,6 +1299,14 @@ a.support-link {
     
     .user-dropdown {
         text-align: end;
+    }
+
+    .resource-detail-section-from-aside {
+        display: none;
+    }
+
+    .resource-detail-aside .resource-detail-aside-key-section {
+        display: block;
     }
 }
 
