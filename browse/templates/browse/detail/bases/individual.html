@@ -1,11 +1,6 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block pre_last_modified_date_content %}
-{% if 'positionName' in resource.json %}
-<span class="text-secondary-emphasis">
-    {{ resource.json.positionName }}
-</span>
-{% endif %}
-{% endblock pre_last_modified_date_content %}
 {% block top_section_extra_content %}
+{% with contact_info_details_top_section_heading='Personal Details' %}
 {% include 'browse/detail/components/top_section_extra_content/contact_info.html' %}
+{% endwith %}
 {% endblock top_section_extra_content %}
