@@ -1,11 +1,13 @@
 {% load project_tags %}
+{% if resource.properties.contact_info %}
 <address class="mt-4">
-    <div class="row gy-4">
+    <div class="row row-gap-4">
+        {% if resource.properties.non_address_contact_info %}
         <div class="col-lg-6">
+            <h2 class="fs-6 mb-1">{{ contact_info_details_top_section_heading }}</h2>
             <div class="d-flex flex-column row-gap-4">
                 {% if 'organisation' in resource.json or 'positionName' in resource.json or resource.properties.online_resource.strip %}
                 <div class="d-flex flex-column align-items-start row-gap-1">
-                    <h2 class="fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
                     {% if 'organisation' in resource.json %}
                     {% with organisation_url=resource.json.organisation|get_key_value_or_blank_string:'@xlink:href' %}
                     <span class="metadata-server-url resource-server-url loading" data-metadata-server-url="{{ organisation_url.strip }}">
@@ -45,6 +47,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         {% if resource.properties.address %}
         <div class="col-lg-6">
             <div class="d-flex flex-column row-gap-1">
@@ -74,3 +77,4 @@
         {% endif %}
     </div>
 </address>
+{% endif %}

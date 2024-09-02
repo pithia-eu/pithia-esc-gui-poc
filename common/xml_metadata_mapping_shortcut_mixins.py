@@ -304,6 +304,28 @@ class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin)
             key: value
         for key, value in unformatted_address_dict.items() if value and value.strip()}
 
+    @property
+    def non_address_contact_info(self):
+        unformatted_non_address_contact_info = {
+            'phone': self.phone,
+            'email_address': self.email_address,
+            'online_resource': self.online_resource,
+            'contact_instructions': self.contact_instructions,
+        }
+        formatted_non_address_contact_info = {
+            key: value
+            for key, value in unformatted_non_address_contact_info.items()
+            if value and value.strip()
+        }
+        return formatted_non_address_contact_info
+
+    @property
+    def contact_info(self):
+        contact_info = {}
+        contact_info.update(self.address)
+        contact_info.update(self.non_address_contact_info)
+        return contact_info
+
 
 class GmdUrlMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
