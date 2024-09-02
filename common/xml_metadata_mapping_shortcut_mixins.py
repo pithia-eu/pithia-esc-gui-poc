@@ -162,7 +162,7 @@ class PithiaStandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesSho
         return self._get_standard_identifiers_from_parent_element(self.xml_parsed)
 
 
-class PithiaCapabilityLinkMetadataPropertiesMixin(PithiaStandardIdentifiersMetadataPropertiesMixin):
+class PithiaCapabilityLinksMetadataPropertiesMixin(PithiaStandardIdentifiersMetadataPropertiesMixin):
     def _get_time_spans_from_capability_link_element(self, parent_element):
         time_span_elements = self._get_elements_with_xpath_query('.//%s:timeSpan' % self.PITHIA_NSPREFIX_XPATH, parent_element=parent_element)
         time_spans = []
@@ -292,51 +292,17 @@ class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin)
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:contactInstructions/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
 
     @property
-    def non_location_contact_info(self):
-        unformatted_nl_contact_info_dict = {
-            'administrative_area': self.phone,
-            'city': self.phone,
-            'contact_instructions': self.phone,
-            'country': self.phone,
-            'delivery_point': self.phone,
-            'email_address': self.phone,
-            'online_resource': self.phone,
-            'phone': self.phone,
-            'postal_code': self.phone,
-        }
-        return {
-            key: value
-        for key, value in unformatted_nl_contact_info_dict.items() if value}
-
-    @property
-    def contact_info(self):
-        unformatted_contact_info_dict = {
-            'administrative_area': self.phone,
-            'city': self.phone,
-            'contact_instructions': self.phone,
-            'country': self.phone,
-            'delivery_point': self.phone,
-            'email_address': self.phone,
-            'online_resource': self.phone,
-            'phone': self.phone,
-            'postal_code': self.phone,
-        }
-        return {
-            key: value
-        for key, value in unformatted_contact_info_dict.items() if value}
-
-    @property
     def address(self):
         unformatted_address_dict = {
-            'administrative_area': self.phone,
-            'city': self.phone,
-            'country': self.phone,
-            'delivery_point': self.phone,
-            'postal_code': self.phone,
+            'delivery_point': self.delivery_point,
+            'city': self.city,
+            'administrative_area': self.administrative_area,
+            'postal_code': self.postal_code,
+            'country': self.country,
         }
         return {
             key: value
-        for key, value in unformatted_address_dict.items() if value}
+        for key, value in unformatted_address_dict.items() if value and value.strip()}
 
 
 class GmdUrlMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):

@@ -2,7 +2,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     GmdContactInfoMetadataPropertiesMixin,
     GmdUrlMetadataPropertiesMixin,
     PithiaCapabilitiesMetadataPropertiesMixin,
-    PithiaCapabilityLinkMetadataPropertiesMixin,
+    PithiaCapabilityLinksMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
@@ -65,9 +65,11 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
 
 class AcquisitionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        PithiaCapabilityLinksMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    capabilities_element_key_xml = 'acquisitionCapabilities'
+    capabilities_element_key = 'acquisition_capabilities'
 
 
 class ComputationCapabilitiesXmlMappingShortcuts(
@@ -80,7 +82,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
 
 class ComputationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
-        PithiaCapabilityLinkMetadataPropertiesMixin,
+        PithiaCapabilityLinksMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     capabilities_element_key_xml = 'computationCapabilities'
