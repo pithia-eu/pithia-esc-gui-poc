@@ -1317,6 +1317,10 @@ a.support-link {
         text-align: end;
     }
 
+    .resource-detail-section.resource-detail-section-from-aside:first-of-type + .resource-detail-section {
+        border-top: none;
+    }
+
     .resource-detail-section-from-aside {
         display: none;
     }
