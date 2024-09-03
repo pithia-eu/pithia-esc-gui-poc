@@ -2,10 +2,10 @@
 {% if resource.permission_urls %}
 <section class="resource-detail-section">
     <h2>Permissions</h2>
-    <ul class="list-unstyled">
+    <ul class="list-group list-group-flush">
         {% for p in resource.permission_urls %}
         {% with value=p|get_key_value:'@xlink:href' %}
-        <li class="permission-list-group-item py-3" data-metadata-server-url={{ value }}>
+        <li class="list-group-item py-3 ps-0" data-metadata-server-url={{ value }}>
             <details name="details-permissions">
                 <summary class="summary-marker-custom">
                     <h3 class="d-inline-block fs-5 fw-normal mb-0">

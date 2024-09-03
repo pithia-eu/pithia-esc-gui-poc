@@ -1,10 +1,10 @@
 {% if resource.related_parties %}
-<section class="resource-detail-aside-section resource-detail-aside-key-section">
-    <h2 class="fs-5">Responsible Parties</h2>
-    <div class="d-flex flex-column row-gap-3 mb-0">
+<section id="responsible-parties-aside-section" class="resource-detail-aside-section resource-detail-aside-key-section">
+    <h2 class="visually-hidden">Responsible Parties</h2>
+    <div class="d-flex flex-column row-gap-4 mb-0">
         {% for rp in resource.related_parties %}
         <div>
-            <h3 class="fs-6">
+            <h3>
                 {% with value=rp.role %}
                 {% if value in ontology_server_urls %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
