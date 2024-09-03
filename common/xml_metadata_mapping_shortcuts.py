@@ -26,7 +26,13 @@ class IndividualXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def position_name(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:positionName' % self.PITHIA_NSPREFIX_XPATH)
+    
+    @property
+    def organisation(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:organisation/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class ProjectXmlMappingShortcuts(

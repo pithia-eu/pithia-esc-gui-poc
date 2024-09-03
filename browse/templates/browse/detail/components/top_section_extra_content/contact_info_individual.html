@@ -1,0 +1,21 @@
+{% extends 'browse/detail/components/top_section_extra_content/contact_info.html' %}
+{% block position_name_section %}
+{% if resource.properties.organisation %}
+<section class="d-flex flex-column align-items-start row-gap-1 py-0">
+    <h2 class="fs-6 mb-0">Organisation</h2>
+    {% if resource.properties.organisation.strip %}
+    {% with value=resource.properties.organisation %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+    {% endif %}
+</section>
+{% endif %}
+{% if resource.properties.position_name %}
+<section class="d-flex flex-column align-items-start row-gap-1 py-0">
+    <h2 class="fs-6">Position</h2>
+    {% if resource.properties.position_name %}
+    {{ resource.properties.position_name }}
+    {% endif %}
+</section>
+{% endif %}
+{% endblock position_name_section %}

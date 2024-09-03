@@ -1,39 +1,19 @@
 {% load project_tags %}
 {% if resource.properties.contact_info %}
-<address class="mt-4">
+<address class="bg-light rounded p-4 mt-4">
     <div class="row row-gap-4">
-        {% if resource.properties.non_address_contact_info %}
+        {% if resource.properties.position_name or resource.properties.organisation or resource.properties.non_address_contact_info %}
         <div class="col-lg-6">
-            <h2 class="fs-6 mb-1">{{ contact_info_details_top_section_heading }}</h2>
             <div class="d-flex flex-column row-gap-4">
-                {% if 'organisation' in resource.json or 'positionName' in resource.json or resource.properties.online_resource.strip %}
-                <div class="d-flex flex-column align-items-start row-gap-1">
-                    {% if 'organisation' in resource.json %}
-                    {% with organisation_url=resource.json.organisation|get_key_value_or_blank_string:'@xlink:href' %}
-                    <span class="metadata-server-url resource-server-url loading" data-metadata-server-url="{{ organisation_url.strip }}">
-                        <a href="{{ organisation_url }}" class="icon-link icon-link-hover link-underline-by-default metadata-server-url-text">
-                            {% if organisation_url.strip in server_url_to_id_mappings %}
-                            {{ server_url_to_id_mappings|get_key_value:organisation_url.strip }}
-                            {% else %}
-                            {{ organisation_url.strip }}
-                            {% endif %}
-                        </a>
-                    </span>
-                    {% endwith %}
-                    {% endif %}
-                    {% if 'positionName' in resource.json %}
-                    <span class="text-secondary-emphasis">
-                        {{ resource.json.positionName }}
-                    </span>
-                    {% endif %}
+                {% block position_name_section %}{% endblock position_name_section %}
+                {% if resource.properties.online_resource.strip or resource.properties.email_address or resource.properties.phone %}
+                <section class="d-flex flex-column align-items-start row-gap-1 py-0">
+                    <h2 class="fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
                     {% if resource.properties.online_resource.strip %}
-                    <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                    <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default mb-auto" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
                         {{ resource.properties.online_resource }}
                     </a>
                     {% endif %}
-                </div>
-                {% endif %}
-                <div class="d-flex flex-column align-items-start row-gap-1">
                     {% if resource.properties.email_address %}
                     <a href="mailto:{{ resource.properties.email_address }}" class="link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
                         Send email
@@ -44,13 +24,14 @@
                         {{ resource.properties.phone }}
                     </a>
                     {% endif %}
-                </div>
+                </section>
+                {% endif %}
             </div>
         </div>
         {% endif %}
         {% if resource.properties.address %}
         <div class="col-lg-6">
-            <div class="d-flex flex-column row-gap-1">
+            <section class="d-flex flex-column row-gap-1 py-0">
                 <h2 class="fs-6 mb-0">Location</h2>
                 <div>
                     {% if resource.properties.delivery_point %}
@@ -72,7 +53,7 @@
                     <p class="mb-0">{{ resource.properties.country }}</p>
                     {% endif %}
                 </div>
-            </div>
+            </section>
         </div>
         {% endif %}
     </div>
