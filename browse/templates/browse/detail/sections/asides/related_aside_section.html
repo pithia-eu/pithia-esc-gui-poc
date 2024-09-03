@@ -1,22 +1,26 @@
 {% load project_tags %}
 {% if related_registrations %}
 <section class="resource-detail-aside-section">
-    <h2 class="fs-5">Related Registrations</h2>
-    <div class="d-flex flex-column row-gap-3">
-        {% for heading_text, resource_url_list in related_registrations.items %}
-        <div class="resource-detail-aside-subsection">
-            <h3 class="fs-6">{{ heading_text }}</h3>
-            <ul class="mb-0">
-                {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
-                <li>
-                    {% with value=resource_url %}
-                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                    {% endwith %}
-                </li>
-                {% endfor %}
-            </ul>
+    <details>
+        <summary class="summary-marker-custom">
+            <h2 class="d-inline-block fs-5">Related Registrations</h2>
+        </summary>
+        <div class="d-flex flex-column row-gap-3">
+            {% for heading_text, resource_url_list in related_registrations.items %}
+            <div class="resource-detail-aside-subsection">
+                <h3 class="fs-6">{{ heading_text }}</h3>
+                <ul class="mb-0">
+                    {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
+                    <li>
+                        {% with value=resource_url %}
+                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
+    </details>
 </section>
 {% endif %}

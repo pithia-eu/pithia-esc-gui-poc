@@ -55,8 +55,9 @@
                     <h2>Further Information and Resources</h2>
                 </summary>
                 <div class="d-flex flex-column">
-                    <section>
-                        <h3 class="fs-5">Resources</h3>
+                    {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
+                    <section class="resource-detail-section">
+                        <h3>Resources</h3>
                         <ul>
                             <li>
                                 <a href="{% url resource_download_url_name resource.id %}" id="metadata-file-link" class="icon-link icon-link-hover" target="_blank" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
@@ -69,7 +70,7 @@
                     </section>
                     {% if property_table_dict.items|length > 0 %}
                     <section>
-                        <h3 class="fs-5">More Properties</h3>
+                        <h3>More Properties</h3>
                         <div class="table-responsive">
                             <table class="table table-hover resource-property-table">
                                 <thead>
@@ -107,7 +108,7 @@
                     <section id="metadata-information-section">
                         <div class="table-responsive rounded">
                             <table class="table table-borderless table-light resource-key-details mb-0 p-3">
-                                <caption class="caption-top pt-lg-0 fs-5">Metadata Information</caption>
+                                <caption class="caption-top pt-lg-0 fs-4">Metadata Information</caption>
                                 <tbody>
                                     <tr>
                                         <td><b>Editor</b></td>

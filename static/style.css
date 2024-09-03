@@ -514,10 +514,6 @@ dialog .btn-close {
     border-top: 1px solid var(--bs-gray-300);
 }
 
-.resource-detail-subsection {
-    padding: 1rem 0;
-}
-
 .resource-detail-section > h2 {
     margin-bottom: 1rem;
 }
@@ -535,12 +531,28 @@ dialog .btn-close {
     margin-bottom: 0;
 }
 
+.resource-detail-subsection {
+    padding: 1rem 0;
+}
+
 .resource-detail-section .resource-detail-subsection:last-child {
     padding-bottom: 0;
 }
 
 .resource-detail-section .online-resource-list > li:last-child {
     padding-bottom: 0 !important;
+}
+
+#further-information-section .resource-detail-section:first-child {
+    border-top: none;
+}
+
+#further-information-section h3 {
+    font-size: 1.5rem;
+}
+
+#further-information-section h4 {
+    font-size: 1.25rem;
 }
 
 .resource-detail-aside {

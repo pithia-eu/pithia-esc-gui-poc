@@ -7,42 +7,6 @@
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block post_description_content %}
-{% if resource.properties.procedure %}
-<section class="resource-detail-section">
-    <h2>Procedure</h2>
-    {% with value=resource.properties.procedure %}
-    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-    {% endwith %}
-</section>
-{% endif %}
-{% if resource.properties.features_of_interest %}
-<section class="resource-detail-section resource-detail-section-from-aside">
-    <h2>Features of Interest</h2>
-    <ul>
-        {% for foi in resource.properties.features_of_interest %}
-        <li>
-            {% with value=foi %}
-            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% if resource.properties.projects %}
-<section class="resource-detail-section">
-    <h2>Projects</h2>
-    <ul>
-        {% for project in resource.properties.projects %}
-        <li>
-            {% with value=project %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
 {% if api_interaction_methods %}
 <section class="resource-detail-section"><h2 class="mb-3">Run from e-Science Centre</h2>
     <ul class="list-unstyled mt-0 mb-0">
@@ -71,24 +35,62 @@
 {% endif %}
 {% if link_interaction_methods %}
 <section class="resource-detail-section">
-    <h2>Collection Results</h2>
+    <h2>Interaction Methods</h2>
     {% with sources=link_interaction_methods %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}
 </section>
 {% endif %}
+{% include 'browse/detail/sections/permissions_section.html' %}
+{% endblock post_description_content %}
+{% block further_information_extra_sections %}
+{% if resource.properties.procedure %}
+<section class="resource-detail-section">
+    <h3>Procedure</h3>
+    {% with value=resource.properties.procedure %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% if resource.properties.projects %}
+<section class="resource-detail-section">
+    <h3>Projects</h3>
+    <ul>
+        {% for project in resource.properties.projects %}
+        <li>
+            {% with value=project %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% if resource.properties.sub_collections %}
 <section class="resource-detail-section">
-    <h2>Sub-collections</h2>
+    <h3>Sub-collections</h3>
     {% with value=resource.properties.sub_collections %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
 </section>
 {% endif %}
-{% include 'browse/detail/sections/quality_assessment_section.html' %}
-{% include 'browse/detail/sections/data_levels_section.html' %}
-{% include 'browse/detail/sections/permissions_section.html' %}
-{% endblock post_description_content %}
+{% if resource.properties.features_of_interest %}
+<section class="resource-detail-section">
+    <h3>Features of Interest</h3>
+    <ul>
+        {% for foi in resource.properties.features_of_interest %}
+        <li>
+            {% with value=foi %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
+{% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
+{% endblock further_information_extra_sections %}
 {% block aside_extra_content %}
 {% include 'browse/detail/asides/data_collection_aside.html' %}
 {% endblock aside_extra_content %}
