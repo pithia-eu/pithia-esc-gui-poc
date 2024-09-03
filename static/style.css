@@ -506,15 +506,16 @@ dialog .btn-close {
 }
 
 .resource-detail-top-section {
-    padding-bottom: 2rem;
+    padding-bottom: var(--resource-detail-top-section-padding);
 }
 
 .resource-detail-section {
-    padding: 2rem 0;
+    padding: var(--resource-detail-section-padding) 0;
     border-top: 1px solid var(--bs-gray-300);
 }
 
 .resource-detail-section:first-of-type {
+    padding-top: 0;
     border-top: none;
 }
 
@@ -549,6 +550,7 @@ dialog .btn-close {
 
 #further-information-section .resource-detail-section:first-child {
     border-top: none;
+    padding-top: var(--resource-detail-section-padding);
 }
 
 #further-information-section h3 {
@@ -567,7 +569,7 @@ dialog .btn-close {
 
 .resource-detail-aside .resource-detail-aside-section {
     border-bottom: var(--bs-gray-300) solid 1px;
-    padding-block: 2rem;
+    padding-block: var(--resource-detail-aside-section-padding);
 }
 
 .resource-detail-aside .resource-detail-aside-section:first-child {
@@ -1318,6 +1320,7 @@ a.support-link {
     }
 
     .resource-detail-section.resource-detail-section-from-aside:first-of-type + .resource-detail-section {
+        padding-top: 0;
         border-top: none;
     }
 
@@ -1516,4 +1519,8 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     --circle-5-position: var(--circle-x-position) var(--circle-5-y-position);
 
     --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>');
+
+    --resource-detail-top-section-padding: 3.5rem;
+    --resource-detail-section-padding: 2rem;
+    --resource-detail-aside-section-padding: 2rem;
 }
