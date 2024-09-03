@@ -1,0 +1,31 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% block post_description_content %}
+{% include 'browse/detail/sections/capabilities_section.html' %}
+{% include 'browse/detail/sections/data_levels_section.html' %}
+{% include 'browse/detail/sections/quality_assessment_section.html' %}
+{% if resource.properties.instrument_mode_pair %}
+<section class="resource-detail-section">
+    <h2>Instrument Mode Pair</h2>
+    {% with instrument_mode_pair=resource.properties.instrument_mode_pair %}
+    <dl class="d-flex flex-column row-gap-3">
+        <div>
+            <dt>Instrument</dt>
+            <dd>
+                {% with value=instrument_mode_pair.instrument %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </dd>
+        </div>
+        <div>
+            <dt>Mode</dt>
+            <dd>
+                {% with value=instrument_mode_pair.mode %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </dd>
+        </div>
+    </dl>
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock post_description_content %}

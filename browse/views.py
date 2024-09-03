@@ -638,6 +638,20 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
     resource_download_url_name = 'utils:view_acquisition_capability_set_as_xml'
+    template_name = 'browse/detail/bases/acquisition_capabilities.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilities',
+                'dataLevel',
+                'instrumentModePair',
+                'qualityAssessment',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']

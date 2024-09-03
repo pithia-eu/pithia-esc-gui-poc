@@ -67,9 +67,22 @@ class InstrumentXmlMappingShortcuts(
 
 class AcquisitionCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def instrument_mode_pair(self):
+        instrument_mode_pair_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:InstrumentOperationalModePair' % self.PITHIA_NSPREFIX_XPATH))
+        instrument = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:instrument/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=instrument_mode_pair_element)
+        mode = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:mode/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=instrument_mode_pair_element)
+        if not instrument:
+            return {}
+        if not mode:
+            return {}
+        return {
+            'instrument': instrument,
+            'mode': mode,
+        }
 
 
 class AcquisitionXmlMappingShortcuts(
