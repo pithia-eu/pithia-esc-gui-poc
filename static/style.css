@@ -514,6 +514,10 @@ dialog .btn-close {
     border-top: 1px solid var(--bs-gray-300);
 }
 
+.resource-detail-section:first-of-type {
+    border-top: none;
+}
+
 .resource-detail-section > h2 {
     margin-bottom: 1rem;
 }
