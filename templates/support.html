@@ -7,7 +7,7 @@
 {% block content %}
 <h1>{{ title }}</h1>
 <div class="row">
-    <div class="col-lg-7">
+    <div class="col-xl-7 col-lg-9">
         <hr class="mt-3 mb-4">
     </div>
 </div>
@@ -16,7 +16,7 @@
         <div class="col-lg-12">
             <h2>Help</h2>
         </div>
-        <div class="col-lg-7">
+        <div class="col-xl-7 col-lg-9">
             <p>
                 We are currently working on adding <a href="{% url 'help:index' %}">help articles</a>
                 to the e-Science Centre. If what is currently available does not meet your needs, we
@@ -33,7 +33,7 @@
     </div>
 </section>
 <div class="row">
-    <div class="col-lg-7">
+    <div class="col-xl-7 col-lg-9">
         <hr class="my-4">
     </div>
 </div>
@@ -43,59 +43,78 @@
             <div class="col-lg-12">
                 <h2 id="support-heading" class="mb-3">Contact Support</h2>
             </div>
-            <div class="col-lg-7">
+            <div class="col-xl-7 col-lg-9">
                 <section>
                     <h3>Raise a Ticket</h3>
                     <p>
-                        You will need to create or log in to an EGI Check-in account to submit a ticket as
-                        we use the GGUS helpdesk service for managing tickets. You will be asked to do so
-                        before starting your ticket.
+                        You can raise a ticket via the external GGUS helpdesk service.
+                        To use GGUS, you will need to sign up/log in with an EGI
+                        Check-in account, which GGUS will ask for before starting your
+                        ticket.
                     </p>
                 </section>
             </div>
-            <div class="col-lg-7">
-                <h3 id="ggus-instructions-heading" class="mb-3">Before Submitting Your Ticket</h3>
-                <p>
-                    The points below provide instructions and suggestions to follow/consider
-                    before submitting your ticket.
-                </p>
+            <div class="col-xl-7 col-lg-9">
+                <h3 id="ggus-instructions-heading" class="fs-4">Assign your Ticket to the PITHIA e-Science Centre Support Unit</h3>
+                <ul class="list-unstyled">
+                    <li>
+                        <div class="alert alert-light my-4">
+                            <p class="d-flex align-items-baseline">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill flex-shrink-0 me-3" viewBox="0 0 16 16" style="transform: translateY(0.125rem);">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                                </svg>
+                                <span class="d-inline-flex flex-column">
+                                    <span class="fw-bold">
+                                        Assign your ticket to the PITHIA e-Science Centre support unit (SU) to ensure
+                                        it reaches us.
+                                    </span>
+                                </span>
+                            </p>
+                            <p>If appropriate, also consider attaching screenshots and/or files to help us better understand the ticket.</p>
+                            <details>
+                                <summary class="fw-bold">GGUS Ticket Form Guide</summary>
+                                <div class="d-flex flex-column row-gap-3">
+                                    <p class="mb-0">
+                                        From the ticket form:
+                                        <ol>
+                                            <li>
+                                                Open the <em>Assign to support unit</em> dropdown menu in the bottom-right of the ticket form.
+                                            </li>
+                                            <li>
+                                                Select "PITHIA e-Science Centre" (under the "PITHIA Community" group) within the menu.
+                                            </li>
+                                        </ol>
+                                    </p>
+                                    <figure>
+                                        <figcaption>The ticket form:</figcaption>
+                                        <img src="{% static 'help/ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
+                                    </figure>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <figure>
+                                                <figcaption>Assigning a support unit:</figcaption>
+                                                <img src="{% static 'help/ggus_ticket_form_assign_su.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the 'PITHIA e-Science Centre' support unit option highlighted within the dropdown menu for the 'Assign to support unit' field.">
+                                            </figure>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <figure>
+                                                <figcaption>Attaching files:</figcaption>
+                                                <div class="d-flex flex-column row-gap-2">
+                                                    <img src="{% static 'help/ggus_ticket_form_attach_files_1.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the file upload fields.">
+                                                    <img src="{% static 'help/ggus_ticket_form_attach_files_2.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the file upload fields.">
+                                                </div>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </li>
+                </ul>
+                <a href="https://ggus.eu/index.php?mode=ticket_submit" target="_blank" id="raise-ticket-link" class="btn btn-outline-dark btn-lg fw-bold">
+                    Raise a ticket with GGUS</a>
             </div>
         </div>
-        <article>
-            <div class="row flex-column g-md-5 g-4">
-                <div class="col-lg-5">
-                    <div class="d-flex flex-column align-items-end row-gap-5">
-                        <img src="{% static 'help/ggus_ticket_form_annotated.png' %}" class="img-fluid" alt="A screenshot of the GGUS ticket form with two red boxes highlighting key sections of the form. The first red box, labelled '1', highlights the 'Assign to support unit' field. The second red box, labelled '2', highlights the file input fields.">
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <h4><span class="me-2">1.</span> Assign the right support unit</h4>
-                    <div class="alert alert-light my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill me-3" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-                        </svg>Completing this instruction will ensure your ticket reaches our support team.
-                    </div>
-                    <p>
-                        The support unit can be assigned from the dropdown menu for the <em>Assign
-                        to support unit</em> field (bottom-right of the ticket form). Within this,
-                        select "PITHIA e-Science Centre" under the "PITHIA Community" dropdown group.
-                    </p>
-                    <img src="{% static 'help/ggus_ticket_form_assign_su.png' %}" class="w-100" style="max-width: 20rem;" alt="A cropped screenshot of the GGUS ticket form showing the 'PITHIA e-Science Centre' support unit option highlighted within the dropdown menu for the 'Assign to support unit' field.">
-                    <h4 class="mt-5"><span class="me-2">2.</span> Attach files</h4>
-                    <p>
-                        If applicable, attach relevant files (e.g., a file that failed metadata validation) or
-                        screenshots of any errors to help us to better understand your problem.
-                    </p>
-                </div>
-                <div class="col-lg-12">
-                    <div class="d-flex justify-content-lg-start justify-content-center">
-                        <a href="https://ggus.eu/index.php?mode=ticket_submit" target="_blank" id="raise-ticket-link" class="btn btn-outline-dark btn-lg fw-bold">
-                            Raise a ticket
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </article>
     </div>
 </section>
 {% endblock content %}
