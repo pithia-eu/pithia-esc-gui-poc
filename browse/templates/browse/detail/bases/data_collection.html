@@ -7,39 +7,44 @@
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block post_description_content %}
-{% if api_interaction_methods %}
-<section class="resource-detail-section">
-    <h2 class="mb-3">Interact from the e-Science Centre</h2>
-    <ul class="list-unstyled mt-0 mb-0">
+{% if api_interaction_methods or link_interaction_methods %}
+<section class="interaction-methods-section resource-detail-section">
+    <h2>Access this Data Collection</h2>
+    <div class="d-flex flex-column row-gap-4">
+        {% if api_interaction_methods %}
         {% for method in api_interaction_methods %}
-        <li>
-            <div class="d-flex flex-column align-items-start row-gap-4 py-2">
+        <div class="api-interaction-methods-section d-flex flex-column align-items-start row-gap-4">
+            <h3>
                 <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="btn btn-outline-dark icon-link icon-link-hover fs-5" target="_blank" rel="noopener noreferrer">
                     Go to API
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
                     </svg>
                 </a>
-                {% if 'description' in method.config and method.config.description|length > 0 %}
-                <div>
-                    <h3 class="fs-5">Description</h3>
-                    <p class="mb-0">
-                        {{ method.config.description|urlize }}
-                    </p>
-                </div>
-                {% endif %}
+            </h3>
+            {% if 'description' in method.config and method.config.description|length > 0 %}
+            <div>
+                <h4 class="fs-6">API Description</h4>
+                <p class="mb-0">
+                    {{ method.config.description|urlize }}
+                </p>
             </div>
-        </li>
+            {% endif %}
+        </div>
         {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% if link_interaction_methods %}
-<section class="resource-detail-section">
-    <h2>Interaction Methods</h2>
-    {% with sources=link_interaction_methods %}
-    {% include 'browse/detail/components/online_resource_list.html' %}
-    {% endwith %}
+        {% endif %}
+        {% if link_interaction_methods %}
+        <ul class="list-group list-group-flush online-resource-list">
+            {% for source in link_interaction_methods|wrap_in_list_if_dict %}
+            {% with online_resource=source.OnlineResource %}
+            <li class="list-group-item ps-0">
+                {% include 'browse/detail/components/online_resource.html' %}
+            </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 </section>
 {% endif %}
 {% include 'browse/detail/sections/permissions_section.html' %}

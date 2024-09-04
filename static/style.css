@@ -26,7 +26,7 @@ a:not(.btn, .header-logo-link, footer a),
 a:hover:not(.btn, .header-logo-link, footer a),
 a:focus:not(.btn, .header-logo-link, footer a) {
     color: var(--pithia-blue);
-    text-decoration-color: var(--pithia-blue):
+    text-decoration-color: var(--pithia-blue);
 }
 
 a:not(
@@ -38,7 +38,8 @@ a:not(
     .card-menu a,
     a.dropdown-item,
     a.support-link,
-    .toc-container a):visited {
+    .toc-container a,
+    .badge):visited {
     color: #551A8B !important;
     text-decoration-color: #551A8B;
 }
@@ -564,6 +565,40 @@ dialog .btn-close {
 
 #further-information-section h4 {
     font-size: 1.25rem;
+}
+
+.interaction-methods-section.resource-detail-section:first-of-type {
+    margin-top: var(--resource-detail-section-padding);
+}
+
+.interaction-methods-section {
+    border: none;
+    padding: 1.5rem;
+    border-radius: var(--bs-border-radius);
+    background-color: var(--bs-light);
+}
+
+.interaction-methods-section details,
+.interaction-methods-section li {
+    background-color: var(--bs-light);
+}
+
+.interaction-methods-section + .resource-detail-section {
+    border-top: none;
+}
+
+.api-interaction-methods-section {
+    padding-top: 0.5rem;
+}
+
+.api-interaction-methods-section:has(+ .online-resource-list) {
+    border-bottom: 1px solid var(--bs-gray-300);
+    padding-bottom: 2.25rem;
+}
+
+.resource-detail-top-section:has(+ .interaction-methods-section),
+#responsible-parties-top-section:has(+ .interaction-methods-section) {
+    border-bottom: 1px solid var(--bs-gray-300);
 }
 
 #responsible-parties-aside-section h3 {
@@ -1379,6 +1414,10 @@ a.support-link {
 
     #responsible-parties-top-section dl > div {
         max-width: 12rem;
+    }
+
+    .interaction-methods-section {
+        padding: 2rem;
     }
 }
 

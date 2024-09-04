@@ -1,9 +1,9 @@
 {% load project_tags %}
 {% if 'type' in resource.json %}
-<div class="d-flex flex-wrap column-gap-2">
+<div class="d-flex flex-wrap column-gap-2 fs-5">
     {% for type in resource.json.type|wrap_in_list_if_dict %}
     <div>
-        {% with value=type|get_key_value:'@xlink:href' %}
+        {% with value=type|get_key_value:'@xlink:href' pill_type='dark' %}
         {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
         {% endwith %}
     </div>

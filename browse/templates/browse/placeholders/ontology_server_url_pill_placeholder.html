@@ -1,5 +1,5 @@
-{% with pill_type=pill_type|default:'light' %}
-{% with url_class='ontology-server-url' url_text_extra_classes='badge rounded-pill text-bg-'|add:pill_type %}
+{% with pill_type=pill_type|default:'light' extra_badge_classes=extra_badge_classes|default:'' %}
+{% with url_class='ontology-server-url' url_text_extra_classes='badge text-bg-'|add:pill_type|add:' '|add:extra_badge_classes %}
 {% include 'browse/placeholders/server_url_placeholder.html' %}
 {% endwith %}
 {% endwith %}
