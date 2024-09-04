@@ -635,6 +635,18 @@ dialog .btn-close {
     display: none;
 }
 
+.bi-lg {
+    font-size: 1.75rem;
+}
+
+.details-interaction-methods summary small {
+    color: var(--bs-secondary);
+}
+
+.details-interaction-methods[open] summary small {
+    color: var(--bs-secondary-emphasis);
+}
+
 .col-lg-3 .resource-key-details {
     font-size: 0.875rem;
 }
