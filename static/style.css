@@ -587,18 +587,13 @@ dialog .btn-close {
     border-top: none;
 }
 
-.api-interaction-methods-section {
-    padding-top: 0.5rem;
+.interaction-methods-section + .interaction-methods-section {
+    margin-top: var(--resource-detail-section-padding);
 }
 
-.api-interaction-methods-section:has(+ .online-resource-list) {
-    border-bottom: 1px solid var(--bs-gray-300);
-    padding-bottom: 2.25rem;
-}
-
-.resource-detail-top-section:has(+ .interaction-methods-section),
-#responsible-parties-top-section:has(+ .interaction-methods-section) {
-    border-bottom: 1px solid var(--bs-gray-300);
+.resource-detail-top-section + .interaction-methods-section,
+#responsible-parties-top-section + .interaction-methods-section {
+    margin-top: calc(var(--resource-detail-section-padding) - var(--resource-detail-top-section-padding)) !important;
 }
 
 #responsible-parties-aside-section h3 {
@@ -671,7 +666,7 @@ dialog .btn-close {
 }
 
 .bi-lg {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
 }
 
 .details-interaction-methods:not([open]) summary small {
@@ -1577,6 +1572,6 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>');
 
     --resource-detail-top-section-padding: 1.5rem;
-    --resource-detail-section-padding: 2.5rem;
+    --resource-detail-section-padding: 3.25rem;
     --resource-detail-aside-section-padding: 2rem;
 }

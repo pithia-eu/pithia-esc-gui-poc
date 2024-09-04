@@ -6,47 +6,48 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
 {% endblock extra_scripts %}
-{% block post_description_content %}
-{% if api_interaction_methods or link_interaction_methods %}
-<section class="interaction-methods-section resource-detail-section">
-    <h2>Access this Data Collection</h2>
-    <div class="d-flex flex-column row-gap-4">
-        {% if api_interaction_methods %}
-        {% for method in api_interaction_methods %}
-        <div class="api-interaction-methods-section d-flex flex-column align-items-start row-gap-4">
-            <h3>
-                <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="btn btn-outline-dark icon-link icon-link-hover fs-5" target="_blank" rel="noopener noreferrer">
-                    Go to API
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                    </svg>
-                </a>
-            </h3>
-            {% if 'description' in method.config and method.config.description|length > 0 %}
-            <div>
-                <h4 class="fs-6">API Description</h4>
-                <p class="mb-0">
-                    {{ method.config.description|urlize }}
-                </p>
-            </div>
-            {% endif %}
-        </div>
+{% block pre_description_content %}
+{% if link_interaction_methods %}
+<section class="link-interaction-methods-section interaction-methods-section resource-detail-section">
+    <h2>Access Data</h2>
+    <ul class="list-group list-group-flush online-resource-list">
+        {% for source in link_interaction_methods|wrap_in_list_if_dict %}
+        {% with online_resource=source.OnlineResource %}
+        <li class="list-group-item ps-0">
+            {% include 'browse/detail/components/online_resource.html' %}
+        </li>
+        {% endwith %}
         {% endfor %}
-        {% endif %}
-        {% if link_interaction_methods %}
-        <ul class="list-group list-group-flush online-resource-list">
-            {% for source in link_interaction_methods|wrap_in_list_if_dict %}
-            {% with online_resource=source.OnlineResource %}
-            <li class="list-group-item ps-0">
-                {% include 'browse/detail/components/online_resource.html' %}
-            </li>
-            {% endwith %}
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
+    </ul>
 </section>
 {% endif %}
+{% if api_interaction_methods %}
+<section class="api-interaction-methods-section interaction-methods-section resource-detail-section">
+    <h2>Access Data with Integrated API Environment</h2>
+    {% for method in api_interaction_methods %}
+    <div class="d-flex flex-column align-items-start row-gap-4 mt-4">
+        <h3>
+            <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="btn btn-outline-dark icon-link icon-link-hover fs-5" target="_blank" rel="noopener noreferrer">
+                Go to API
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                </svg>
+            </a>
+        </h3>
+        {% if 'description' in method.config and method.config.description|length > 0 %}
+        <dl>
+            <dt class="fs-6">Description</dt>
+            <dd class="mb-0">
+                {{ method.config.description|urlize }}
+            </dd>
+        </dl>
+        {% endif %}
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+{% endblock pre_description_content %}
+{% block post_description_content %}
 {% include 'browse/detail/sections/permissions_section.html' %}
 {% endblock post_description_content %}
 {% block further_information_extra_sections %}
