@@ -6,6 +6,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaCapabilityLinksMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
+    PithiaRelatedPartiesMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
 )
@@ -16,6 +17,7 @@ class OrganisationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaDescriptionMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin,
         PithiaShortNameMetadataPropertiesMixin):
     pass
@@ -25,6 +27,7 @@ class IndividualXmlMappingShortcuts(
         GmdContactInfoMetadataPropertiesMixin,
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def position_name(self):
@@ -38,6 +41,7 @@ class IndividualXmlMappingShortcuts(
 class ProjectXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def sub_projects(self):
@@ -47,6 +51,7 @@ class ProjectXmlMappingShortcuts(
 class PlatformXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def child_platforms(self):
@@ -56,6 +61,7 @@ class PlatformXmlMappingShortcuts(
 class OperationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def platforms(self):
@@ -65,6 +71,7 @@ class OperationXmlMappingShortcuts(
 class InstrumentXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def members(self):
@@ -75,6 +82,7 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def instrument_mode_pair(self):
@@ -95,6 +103,7 @@ class AcquisitionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilityLinksMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     capabilities_element_key_xml = 'acquisitionCapabilities'
     capabilities_element_key = 'acquisition_capabilities'
@@ -104,6 +113,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def child_computations(self):
@@ -114,6 +124,7 @@ class ComputationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilityLinksMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     capabilities_element_key_xml = 'computationCapabilities'
     capabilities_element_key = 'computation_capabilities'
@@ -122,6 +133,7 @@ class ComputationXmlMappingShortcuts(
 class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     def acquisition_components(self):
         return self._get_elements_with_xpath_query('.//%s:acquisitionComponent/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
@@ -133,6 +145,7 @@ class ProcessXmlMappingShortcuts(
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
     def features_of_interest(self):
@@ -154,6 +167,7 @@ class DataCollectionXmlMappingShortcuts(
 class CatalogueXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass
 
@@ -161,6 +175,7 @@ class CatalogueXmlMappingShortcuts(
 class CatalogueEntryXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass
 
@@ -168,6 +183,7 @@ class CatalogueEntryXmlMappingShortcuts(
 class CatalogueDataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass
 
@@ -175,5 +191,6 @@ class CatalogueDataSubsetXmlMappingShortcuts(
 class WorkflowXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass

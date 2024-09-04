@@ -627,9 +627,8 @@ dialog .btn-close {
 .dd-list-item {
     display: list-item;
     list-style-type: disc;
-    list-style-position: inside;
     margin-block: 0;
-    padding-left: 1rem;
+    margin-left: 2rem;
 }
 
 .btn-expand-resource-description.hidden {
@@ -866,6 +865,7 @@ label.required::after {
     opacity: 1;
     box-decoration-break: clone;
     overflow-wrap: break-word;
+    word-break: break-word;
     transition: opacity 0.5s ease
 }
 
@@ -1333,10 +1333,6 @@ a.support-link {
         display: block;
     }
 
-    .resource-detail-aside .resource-detail-aside-section:first-child {
-        padding-top: 1rem;
-    }
-
     .resource-detail-aside h2 {
         font-size: 1.25rem;
     }
@@ -1371,6 +1367,10 @@ a.support-link {
 
     .file-list-group-item .details-validation > ul {
         padding-left: 30px;
+    }
+
+    #responsible-parties-top-section dl > div {
+        max-width: 12rem;
     }
 }
 

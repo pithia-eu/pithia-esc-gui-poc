@@ -18,7 +18,7 @@
 {% endblock breadcrumbs %}
 {% block content %}
 {% csrf_token %}
-<div class="row gx-md-5">
+<div class="row align-items-lg-baseline gx-md-5">
     <div class="col-lg-9">
         <div class="resource-detail-top-section">
             <div class="d-flex flex-column align-items-start row-gap-1 mb-3">
@@ -45,32 +45,20 @@
             </div>
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
         </div>
-        {% if resource.related_parties %}
+        {% if resource.properties.related_parties %}
         <div id="responsible-parties-top-section">
             <dl class="d-flex flex-wrap column-gap-5 row-gap-4 mb-0">
-                {% for rp in resource.related_parties %}
-                <div class="d-flex flex-column row-gap-1" style="max-width: 10rem;">
+                {% for rp in resource.properties.related_parties %}
+                <div class="d-flex flex-column row-gap-2">
                     <dt>
                         {% with value=rp.role %}
-                        {% if value in ontology_server_urls %}
                         {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                        {% elif value in resource_server_urls %}
-                        {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
-                        {% else %}
-                        {{ value.strip|urlize }}
-                        {% endif %}
                         {% endwith %}
                     </dt>
                     {% for p in rp.parties %}
                     <dd class="mb-0">
                         {% with value=p %}
-                        {% if value in ontology_server_urls %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                        {% elif value in resource_server_urls %}
                         {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                        {% else %}
-                        {{ value.strip|urlize }}
-                        {% endif %}
                         {% endwith %}
                     </dd>
                     {% endfor %}

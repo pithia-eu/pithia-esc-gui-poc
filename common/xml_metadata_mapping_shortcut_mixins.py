@@ -84,6 +84,30 @@ class PithiaShortNameMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:shortName' % self.PITHIA_NSPREFIX_XPATH)
 
 
+class PithiaRelatedPartiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_related_parties_from_metadata(self):
+        related_party_elements = self._get_elements_with_xpath_query('.//%s:ResponsiblePartyInfo' % self.PITHIA_NSPREFIX_XPATH)
+        related_parties_by_role = {}
+        for rp in related_party_elements:
+            role = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:role/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=rp)
+            if not role:
+                continue
+            parties = self._get_elements_with_xpath_query('.//%s:party/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), parent_element=rp)
+            if not parties:
+                continue
+            if role not in related_parties_by_role:
+                related_parties_by_role[role] = []
+            related_parties_by_role[role] = related_parties_by_role[role] + parties
+        return [{
+            'role': role,
+            'parties': parties,
+        } for role, parties in related_parties_by_role.items()]
+
+    @property
+    def related_parties(self):
+        return self._get_related_parties_from_metadata()
+
+
 class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_resource_urls_with_type(self, type):
         return list(set(self._get_elements_with_xpath_query(f'.//*[contains(@xlink:href, "{PITHIA_METADATA_SERVER_HTTPS_URL_BASE}/{type}/")]/@xlink:href')))
