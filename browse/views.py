@@ -441,8 +441,8 @@ class ResourceDetailView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
-        self.ontology_server_urls = self.resource.ontology_urls
-        self.resource_server_urls = self.resource.metadata_urls
+        self.ontology_server_urls = self.resource.properties.ontology_urls
+        self.resource_server_urls = self.resource.properties.resource_urls
         self.property_table_dict = self.configure_resource_copy_for_property_table(copy.deepcopy(self.resource.json))
         self.property_table_dict = reformat_and_clean_resource_copy_for_property_table(self.property_table_dict)
         self.title = self.resource.name

@@ -1,7 +1,11 @@
 import logging
 from lxml import etree
 
-from .constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
+from .constants import (
+    PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
+    PITHIA_METADATA_SERVER_URL_BASE,
+    SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
+)
 from .xml_metadata_utils import (
     Namespace,
     NamespacePrefix,
@@ -78,6 +82,12 @@ class PithiaDescriptionMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMix
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % self.PITHIA_NSPREFIX_XPATH)
 
 
+class PithiaOntologyUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def ontology_urls(self):
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % (NamespacePrefix.XLINK, SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE, Namespace.XLINK))))
+
+
 class PithiaQualityAssessmentMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def data_quality_flags(self):
@@ -125,6 +135,10 @@ class PithiaRelatedPartiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcut
 class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_resource_urls_with_type(self, type):
         return list(set(self._get_elements_with_xpath_query(f'.//*[contains(@xlink:href, "{PITHIA_METADATA_SERVER_HTTPS_URL_BASE}/{type}/")]/@xlink:href')))
+
+    @property
+    def resource_urls(self):
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_URL_BASE, Namespace.XLINK))))
 
     @property
     def organisation_urls(self):

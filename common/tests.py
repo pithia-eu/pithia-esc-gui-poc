@@ -476,7 +476,7 @@ class ModelPropertiesAttributeTestCase(TestCase):
             print('Unable to get related parties from registration.')
 
     def test_quality_assessment_related_properties(self):
-        """The shortcut returns any data quality flags, metadata
+        """The shortcuts return any data quality flags, metadata
         quality flags or science relevance indicators specified
         in the metadata.
         """
@@ -499,3 +499,25 @@ class ModelPropertiesAttributeTestCase(TestCase):
         science_relevance_indicators = computation_capabilities.properties.science_relevance_indicators
         print('science_relevance_indicators', science_relevance_indicators)
         self.assertTrue(isinstance(science_relevance_indicators, list))
+
+    def test_server_url_properties(self):
+        """The shortcuts returns a list of unique resource
+        server URLs and/or ontology server URLs specified
+        in the metadata.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+
+        # Resource server URLs
+        resource_urls = project.properties.resource_urls
+        print('resource_urls', resource_urls)
+        self.assertTrue(isinstance(resource_urls, list))
+        self.assertTrue(isinstance(resource_urls[0], str))
+
+        # Ontology server URLs
+        ontology_urls = project.properties.ontology_urls
+        print('ontology_urls', ontology_urls)
+        self.assertTrue(isinstance(ontology_urls, list))
+        self.assertTrue(isinstance(ontology_urls[0], str))
