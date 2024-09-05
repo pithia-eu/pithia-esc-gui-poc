@@ -23,11 +23,15 @@
             {% endif %}
         </div>
     </summary>
-    <div class="d-flex flex-column align-items-start row-gap-3">
+    <div class="d-flex flex-column align-items-start row-gap-4">
         {% if 'description' in online_resource and online_resource.description %}
-        <p class="mb-0">
-            {{ online_resource.description|urlize }}
-        </p>
+        <div>
+            {% with online_resource_urlized=online_resource.description|urlize %}
+            {% with text_block_paragraphs=online_resource_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+            {% include 'browse/detail/components/expandable_text_block.html' %}
+            {% endwith %}
+            {% endwith %}
+        </div>
         {% endif %}
         {% if 'protocol' in online_resource or 'dataFormat' in online_resource %}
         <details>

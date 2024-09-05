@@ -10,15 +10,9 @@
 {% if link_interaction_methods %}
 <section class="link-interaction-methods-section resource-detail-emphasised-section resource-detail-section">
     <h2>Access this Data Collection</h2>
-    <ul class="list-group list-group-flush online-resource-list">
-        {% for source in link_interaction_methods|wrap_in_list_if_dict %}
-        {% with online_resource=source.OnlineResource %}
-        <li class="list-group-item ps-0">
-            {% include 'browse/detail/components/online_resource.html' %}
-        </li>
-        {% endwith %}
-        {% endfor %}
-    </ul>
+    {% with sources=link_interaction_methods|wrap_in_list_if_dict %}
+    {% include 'browse/detail/components/online_resource_list.html' %}
+    {% endwith %}
 </section>
 {% endif %}
 {% if api_interaction_methods %}
