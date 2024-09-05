@@ -1,11 +1,11 @@
-{% if resource.data_quality_flags or resource.metadata_quality_flags or resource.science_relevance_indicators %}
+{% if resource.properties.data_quality_flags or resource.properties.metadata_quality_flags or resource.properties.science_relevance_indicators %}
 <section class="resource-detail-section">
     <h3>Quality Assessment</h3>
-    {% if resource.data_quality_flags %}
+    {% if resource.properties.data_quality_flags %}
     <div class="resource-detail-subsection">
         <h4>Data Quality Flags</h4>
         <ul>
-            {% for dqf in resource.data_quality_flags %}
+            {% for dqf in resource.properties.data_quality_flags %}
             <li>
                 {% with value=dqf %}
                 {% if value in ontology_server_urls %}
@@ -21,11 +21,11 @@
         </ul>
     </div>
     {% endif %}
-    {% if resource.metadata_quality_flags %}
+    {% if resource.properties.metadata_quality_flags %}
     <div class="resource-detail-subsection">
         <h4>Metadata Quality Flags</h4>
         <ul>
-            {% for mqf in resource.metadata_quality_flags %}
+            {% for mqf in resource.properties.metadata_quality_flags %}
             <li>
                 {% with value=mqf %}
                 {% if value in ontology_server_urls %}
@@ -41,11 +41,11 @@
         </ul>
     </div>
     {% endif %}
-    {% if resource.science_relevance_indicators %}
+    {% if resource.properties.science_relevance_indicators %}
     <div class="resource-detail-subsection">
         <h4 class="fs-5 fw-normal">Science Relevance Indicators</h4>
         <ul>
-            {% for sri in resource.science_relevance_indicators %}
+            {% for sri in resource.properties.science_relevance_indicators %}
             <li>
                 {% with value=sri %}
                 {% if value in ontology_server_urls %}

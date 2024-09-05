@@ -78,6 +78,20 @@ class PithiaDescriptionMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMix
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % self.PITHIA_NSPREFIX_XPATH)
 
 
+class PithiaQualityAssessmentMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def data_quality_flags(self):
+        return self._get_elements_with_xpath_query('.//%s:dataQualityFlag/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+        
+    @property
+    def metadata_quality_flags(self):
+        return self._get_elements_with_xpath_query('.//%s:metadataQualityFlag/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+    @property
+    def science_relevance_indicators(self):
+        return self._get_elements_with_xpath_query('.//%s:scienceRelevanceIndicator/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+
 class PithiaShortNameMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def short_name(self):

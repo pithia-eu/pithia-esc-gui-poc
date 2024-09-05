@@ -120,36 +120,6 @@ class ScientificMetadata(models.Model):
         return self.json['description']
 
     @property
-    def data_quality_flags(self):
-        namespaces = {
-            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
-            'xlink': 'http://www.w3.org/1999/xlink',
-        }
-        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
-        data_quality_flags = xml_parsed.xpath('.//%s:dataQualityFlag/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
-        return data_quality_flags
-
-    @property
-    def metadata_quality_flags(self):
-        namespaces = {
-            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
-            'xlink': 'http://www.w3.org/1999/xlink',
-        }
-        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
-        metadata_quality_flags = xml_parsed.xpath('.//%s:metadataQualityFlag/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
-        return metadata_quality_flags
-
-    @property
-    def science_relevance_indicators(self):
-        namespaces = {
-            'pithia': 'https://metadata.pithia.eu/schemas/2.2',
-            'xlink': 'http://www.w3.org/1999/xlink',
-        }
-        xml_parsed = etree.fromstring(self.xml.encode('utf-8'))
-        science_relevance_indicators = xml_parsed.xpath('.//%s:scienceRelevanceIndicator/@%s:href' % ('pithia', 'xlink'), namespaces=namespaces)
-        return science_relevance_indicators
-
-    @property
     def ontology_urls(self):
         try:
             namespaces = {'xlink': 'http://www.w3.org/1999/xlink'}

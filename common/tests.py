@@ -461,8 +461,8 @@ class ModelPropertiesAttributeTestCase(TestCase):
             print('Unable to get related parties from registration.')
 
     def test_empty_related_parties_property(self):
-        """Test an empty list is returned if a scientific
-        metadata registration specifies no related parties.
+        """The shortcut returns an empty list if the metadata
+        does not specify any related parties.
         """
         xml_file = ORGANISATION_METADATA_XML
         xml_file.seek(0)
@@ -474,3 +474,28 @@ class ModelPropertiesAttributeTestCase(TestCase):
             self.assertListEqual(related_parties, [])
         except:
             print('Unable to get related parties from registration.')
+
+    def test_quality_assessment_related_properties(self):
+        """The shortcut returns any data quality flags, metadata
+        quality flags or science relevance indicators specified
+        in the metadata.
+        """
+        xml_file = COMPUTATION_CAPABILITIES_FULL_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation_capabilities = ComputationCapabilities.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        
+        # Data quality flags
+        data_quality_flags = computation_capabilities.properties.data_quality_flags
+        print('data_quality_flags', data_quality_flags)
+        self.assertTrue(isinstance(data_quality_flags, list))
+        
+        # Metadata quality flags
+        metadata_quality_flags = computation_capabilities.properties.metadata_quality_flags
+        print('metadata_quality_flags', metadata_quality_flags)
+        self.assertTrue(isinstance(metadata_quality_flags, list))
+        
+        # Science relevance indicators
+        science_relevance_indicators = computation_capabilities.properties.science_relevance_indicators
+        print('science_relevance_indicators', science_relevance_indicators)
+        self.assertTrue(isinstance(science_relevance_indicators, list))

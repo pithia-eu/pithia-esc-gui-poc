@@ -6,6 +6,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaCapabilityLinksMetadataPropertiesMixin,
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
+    PithiaQualityAssessmentMetadataPropertiesMixin,
     PithiaRelatedPartiesMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
@@ -82,6 +83,7 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
@@ -113,6 +115,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
@@ -133,6 +136,7 @@ class ComputationXmlMappingShortcuts(
 class ProcessXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     def acquisition_components(self):
@@ -145,6 +149,7 @@ class ProcessXmlMappingShortcuts(
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
@@ -183,6 +188,7 @@ class CatalogueEntryXmlMappingShortcuts(
 class CatalogueDataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     pass
