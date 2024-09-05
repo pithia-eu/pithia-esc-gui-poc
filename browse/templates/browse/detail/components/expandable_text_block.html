@@ -5,4 +5,4 @@
         {% endfor %}
     </div>
 </div>
-<button class="btn btn-light btn-expand-resource-description mt-3" data-target="{{ text_block_id }}">Show more</button>
+<button class="btn btn-{{ expand_btn_type|default:'light' }} btn-expand-resource-description {{ expand_btn_top_margin|default:'mt-3' }}" data-target="{{ text_block_id }}">{{ expand_btn_text|default:'Show more' }}</button>

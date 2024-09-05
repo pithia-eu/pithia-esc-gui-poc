@@ -1,10 +1,12 @@
 {% load project_tags %}
 <ul class="list-group list-group-flush online-resource-list">
     {% for source in sources|wrap_in_list_if_dict %}
+    {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
     {% with online_resource=source.OnlineResource %}
     <li class="list-group-item ps-0">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
+    {% endwith %}
     {% endwith %}
     {% endfor %}
 </ul>
