@@ -23,7 +23,7 @@
 {% block pre_description_content %}
 {% if 'source' in resource.json %}
 <section class="interaction-methods-section resource-detail-section">
-    <h2>Sources</h2>
+    <h2>Access this Data Subset</h2>
     {% with sources=resource.json.source %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}

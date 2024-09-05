@@ -9,7 +9,7 @@
 {% block pre_description_content %}
 {% if link_interaction_methods %}
 <section class="link-interaction-methods-section interaction-methods-section resource-detail-section">
-    <h2>Access Data</h2>
+    <h2>Access this Data Collection</h2>
     <ul class="list-group list-group-flush online-resource-list">
         {% for source in link_interaction_methods|wrap_in_list_if_dict %}
         {% with online_resource=source.OnlineResource %}
@@ -23,7 +23,10 @@
 {% endif %}
 {% if api_interaction_methods %}
 <section class="api-interaction-methods-section interaction-methods-section resource-detail-section">
-    <h2>Access Data with Integrated API Environment</h2>
+    <hgroup>
+        <h2>Access this Data Collection</h2>
+        <p class="fs-6 mb-0">With the PITHIA e-Science Centre</p>
+    </hgroup>
     {% for method in api_interaction_methods %}
     <div class="d-flex flex-column align-items-start row-gap-4 mt-4">
         <h3>
