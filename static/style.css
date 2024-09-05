@@ -910,6 +910,10 @@ label.required::after {
     transition: opacity 0.5s ease
 }
 
+.metadata-server-url.loading .metadata-server-url-text {
+    text-decoration: none;
+}
+
 .metadata-server-url:not(.loading) .metadata-server-url-text.badge {
     text-decoration: none;
 }
@@ -1575,6 +1579,6 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
     --bs-breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>');
 
     --resource-detail-top-section-padding: 1.5rem;
-    --resource-detail-section-padding: 3.25rem;
+    --resource-detail-section-padding: 3rem;
     --resource-detail-aside-section-padding: 2rem;
 }

@@ -8,8 +8,8 @@
     </div>
     <ul class="list-group list-group-flush">
         {% for cap_link in resource.properties.capability_links %}
-        <li class="list-group-item ps-0">
-            <details class="py-2" name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
+        <li class="list-group-item px-0 {% if forloop.last %}pt-4{% else %}py-4{% endif %}">
+            <details name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
                     <div class="d-flex flex-column">
                         <h3 class="fw-normal fs-6">
@@ -36,7 +36,7 @@
                         </small>
                     </div>
                 </summary>
-                <dl class="d-flex flex-column row-gap-3 pb-2">
+                <dl class="d-flex flex-column row-gap-4">
                     {% if cap_link.platforms %}
                     <div>
                         <dt>Platforms</dt>
@@ -82,10 +82,10 @@
                     {% if cap_link.time_spans %}
                     <div>
                         <dt class="pb-2">Time Spans</dt>
-                        <dd>
+                        <dd class="dd-list-item">
                             <dl>
                                 {% for time_span in cap_link.time_spans %}
-                                <dt class="text-secondary pt-2 pb-1">Time Span {{ forloop.counter }}</dt>
+                                <dt class="pt-2 pb-2">Time Span {{ forloop.counter }}</dt>
                                 <dd>
                                     <dl>
                                         <dt>Begin Position</dt>
