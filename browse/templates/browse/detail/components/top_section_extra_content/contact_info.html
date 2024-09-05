@@ -1,6 +1,6 @@
 {% load project_tags %}
 {% if resource.properties.contact_info %}
-<address class="bg-light rounded p-4 mt-4">
+<address id="contact-info-section" class="resource-detail-emphasised-section">
     <div class="row row-gap-4">
         {% if resource.properties.position_name or resource.properties.organisation or resource.properties.non_address_contact_info %}
         <div class="col-lg-6">
@@ -24,6 +24,12 @@
                         {{ resource.properties.phone }}
                     </a>
                     {% endif %}
+                </section>
+                {% endif %}
+                {% if resource.properties.hours_of_service %}
+                <section class="d-flex flex-column row-gap-1 py-0">
+                    <h2 class="fs-6 mb-0">Hours of Service</h2>
+                    <p class="mb-0">{{ resource.properties.hours_of_service }}</p>
                 </section>
                 {% endif %}
             </div>

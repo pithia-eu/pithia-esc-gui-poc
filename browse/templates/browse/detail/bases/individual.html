@@ -1,5 +1,5 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block top_section_extra_content %}
+{% block post_description_content %}
 {% if resource.properties.online_resource %}
 {% with contact_info_details_top_section_heading='Website and Contact Details' %}
 {% include 'browse/detail/components/top_section_extra_content/contact_info_individual.html' %}
@@ -9,4 +9,4 @@
 {% include 'browse/detail/components/top_section_extra_content/contact_info_individual.html' %}
 {% endwith %}
 {% endif %}
-{% endblock top_section_extra_content %}
+{% endblock post_description_content %}

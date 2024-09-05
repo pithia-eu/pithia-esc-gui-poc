@@ -567,38 +567,41 @@ dialog .btn-close {
     font-size: 1.25rem;
 }
 
-.interaction-methods-section.resource-detail-section:first-of-type {
+.resource-detail-emphasised-section.resource-detail-section:first-of-type {
     margin-top: var(--resource-detail-section-padding);
 }
 
-.interaction-methods-section {
+.resource-detail-emphasised-section {
     border: none;
     padding: 1.5rem;
     border-radius: var(--bs-border-radius);
     background-color: var(--bs-light);
 }
 
-.interaction-methods-section details,
-.interaction-methods-section li {
+.resource-detail-emphasised-section details,
+.resource-detail-emphasised-section li {
     background-color: var(--bs-light);
 }
 
-.interaction-methods-section + .resource-detail-section {
+.resource-detail-emphasised-section + .resource-detail-section {
     border-top: none;
 }
 
-.interaction-methods-section + .interaction-methods-section {
+.resource-detail-emphasised-section + .resource-detail-emphasised-section {
     margin-top: var(--resource-detail-section-padding);
 }
 
-.resource-detail-top-section + .interaction-methods-section,
-#responsible-parties-top-section + .interaction-methods-section {
-    margin-top: calc(var(--resource-detail-section-padding) - var(--resource-detail-top-section-padding)) !important;
+.resource-detail-top-section + .resource-detail-emphasised-section:first-of-type,
+#responsible-parties-top-section + .resource-detail-emphasised-section:first-of-type {
+    margin-top: calc(var(--resource-detail-section-padding) - var(--resource-detail-top-section-padding));
 }
 
-#responsible-parties-aside-section h3 {
-    font-size: 1rem;
-    font-weight: 600;
+.resource-detail-top-section + #contact-info-section.resource-detail-emphasised-section {
+    margin-top: 0.5rem;
+}
+
+.resource-detail-emphasised-section + #further-information-section {
+    border-bottom: none;
 }
 
 .resource-detail-aside {
@@ -1372,7 +1375,7 @@ a.support-link {
     }
 
     .resource-detail-aside h2 {
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
 }
 
@@ -1411,7 +1414,7 @@ a.support-link {
         max-width: 12rem;
     }
 
-    .interaction-methods-section {
+    .resource-detail-emphasised-section {
         padding: 2rem;
     }
 }

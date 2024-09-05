@@ -344,6 +344,10 @@ class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin)
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:contactInstructions/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
 
     @property
+    def hours_of_service(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:hoursOfService/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
+
+    @property
     def address(self):
         unformatted_address_dict = {
             'delivery_point': self.delivery_point,
@@ -363,6 +367,7 @@ class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin)
             'email_address': self.email_address,
             'online_resource': self.online_resource,
             'contact_instructions': self.contact_instructions,
+            'hours_of_service': self.hours_of_service,
         }
         formatted_non_address_contact_info = {
             key: value
