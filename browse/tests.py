@@ -20,8 +20,7 @@ from common.test_setup import (
 # Create your tests here.
 class BulkOntologyUrlMappingTestCase(SimpleTestCase):
     def test_bulk_ontology_url_mapping_with_real_and_fake_urls(self):
-        """
-        Returns a list of dicts containing a mapping of the original
+        """Returns a list of dicts containing a mapping of the original
         ontology URL to the corresponding page URL in the eSC.
         """
         ontology_server_urls = [
@@ -32,7 +31,7 @@ class BulkOntologyUrlMappingTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/ontology/2.2/test/test',
         ]
         converted_ontology_server_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
-        self.assertTrue(any(mapping['original_server_url'] == mapping['converted_url'] for mapping in converted_ontology_server_urls))
+        self.assertTrue(any(mapping['original_server_url'] == mapping['converted_url_text'] for mapping in converted_ontology_server_urls))
 
 
 class BulkMetadataUrlMappingTestCase(TestCase):
