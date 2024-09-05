@@ -32,6 +32,7 @@ class AcquisitionCapabilitiesFormToMetadataMapperTestCase(SimpleTestCase):
 
 class AcquisitionFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper_capability_links(self):
+        ACQUISITION_WITH_TIME_SPANS_METADATA_XML.seek(0)
         mapper = AcquisitionFormFieldsToMetadataMapper(ACQUISITION_WITH_TIME_SPANS_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
@@ -39,6 +40,7 @@ class AcquisitionFormToMetadataMapperTestCase(SimpleTestCase):
     
 class ComputationCapabilitiesFormToMetadataMapperTestCase(SimpleTestCase):
     def test_mapper(self):
+        COMPUTATION_CAPABILITIES_FULL_METADATA_XML.seek(0)
         mapper = ComputationCapabilitiesFormFieldsToMetadataMapper(COMPUTATION_CAPABILITIES_FULL_METADATA_XML.read().decode())
         initial_values = mapper.get_initial_form_values()
         print('initial_values', initial_values)
