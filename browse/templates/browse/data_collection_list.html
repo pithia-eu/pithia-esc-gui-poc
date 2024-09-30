@@ -56,14 +56,14 @@
             {% endif %}
         </a>
     </div>
-    {% else %}
+    {% elif not value and not key|lower == 'other' %}
     {% with section_name=key.split|join:'-'|lower %}
     <h2 id="{{ section_name }}-heading">
     {% endwith %}
         {{ key }}
     </h2>
     <p class="text-secondary">
-        {% if key|lower == 'mixed' or key|lower == 'other' %}
+        {% if key|lower == 'mixed' %}
         No {{ key|lower }} data collections.
         {% else %}
         No {{ key|lower }} were found.
