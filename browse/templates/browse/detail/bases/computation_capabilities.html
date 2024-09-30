@@ -1,4 +1,16 @@
 {% extends 'browse/detail/bases/base.html' %}
+{% block pre_description_content %}
+{% if resource.properties.computation_version %}
+<section class="resource-detail-pre-description-section">
+    <dl class="mb-0">
+        <div class="d-flex flex-column row-gap-2">
+            <dt>Version</dt>
+            <dd class="mb-0">{{ resource.properties.computation_version }}</dd>
+        </div>
+    </dl>
+</section>
+{% endif %}
+{% endblock pre_description_content %}
 {% block post_description_content %}
 {% if resource.properties.child_computations %}
 <section class="resource-detail-section">

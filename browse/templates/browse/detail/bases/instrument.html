@@ -3,8 +3,10 @@
 {% if resource.properties.instrument_version %}
 <section class="resource-detail-pre-description-section">
     <dl class="mb-0">
-        <dt>Version</dt>
-        <dd class="mb-0">{{ resource.properties.instrument_version }}</dd>
+        <div class="d-flex flex-column row-gap-2">
+            <dt>Version</dt>
+            <dd class="mb-0">{{ resource.properties.instrument_version }}</dd>
+        </div>
     </dl>
 </section>
 {% endif %}

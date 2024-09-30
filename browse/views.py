@@ -715,9 +715,11 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
             cleaned_property_table_dict,
             disallowed_property_keys=[
                 'capabilities',
+                'childComputation',
                 'dataLevel',
                 'qualityAssessment',
                 'type',
+                'version',
             ]
         )
         return cleaned_property_table_dict
