@@ -49,6 +49,21 @@ class ProjectXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
+    def keywords(self):
+        keyword_elements = self._get_elements_with_xpath_query('.//%s:keyword/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
+        keywords = []
+        for kw_elem in keyword_elements:
+            keyword = self._get_element_value_or_blank_string(kw_elem)
+            if not keyword:
+                continue
+            keywords.append(keyword)
+        return list(set(keywords))
+    
+    @property
+    def status(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:status/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+    @property
     def sub_projects(self):
         return self._get_elements_with_xpath_query('.//%s:subProject/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 

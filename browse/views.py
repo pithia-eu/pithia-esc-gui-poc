@@ -554,7 +554,12 @@ class ProjectDetailView(ResourceDetailView):
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
-            disallowed_property_keys=['abstract']
+            disallowed_property_keys=[
+                'abstract',
+                'keywords',
+                'status',
+                'URL',
+            ]
         )
         return cleaned_property_table_dict
 

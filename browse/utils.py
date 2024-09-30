@@ -45,6 +45,7 @@ def remove_common_disallowed_properties_from_property_table_dict(property_table_
             'name',
             'description',
             'relatedParty',
+            'shortName',
         ],
         disallowed_property_key_regexes=[
             re.compile(rf'^{namespace_prefix_attribute_selector}'),
