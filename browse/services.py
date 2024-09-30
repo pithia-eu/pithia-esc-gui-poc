@@ -141,7 +141,7 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
             operational_mode_name = instrument.get_operational_mode_by_id(operational_mode_id).get('name')
         except AttributeError:
             pass
-        url_mapping['converted_url'] = f'{instrument.get_absolute_url()}#{operational_mode_id}'
+        url_mapping['converted_url'] = f'{instrument.get_absolute_url()}?operational_mode_id={operational_mode_id}#{operational_mode_id}'
         url_mapping['converted_url_text'] = f'{instrument.name}#{operational_mode_name}'
         mapped_resource_server_urls.append(url_mapping)
 

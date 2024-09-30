@@ -1,5 +1,40 @@
 {% extends 'browse/detail/bases/base.html' %}
+{% block pre_description_content %}
+{% if resource.properties.instrument_version %}
+<section class="resource-detail-pre-description-section">
+    <dl class="mb-0">
+        <dt>Version</dt>
+        <dd class="mb-0">{{ resource.properties.instrument_version }}</dd>
+    </dl>
+</section>
+{% endif %}
+{% endblock pre_description_content %}
 {% block post_description_content %}
+{% if resource.properties.operational_modes %}
+<section class="resource-detail-section">
+    <h2>Operational Modes</h2>
+    <ul class="list-group list-group-flush">
+        {% for operational_mode in resource.properties.operational_modes %}
+        <li class="list-group-item py-2 ps-0">
+            <details id="{{ operational_mode.id }}" name="details-operational-modes" class="py-2" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
+                <summary class="summary-marker-custom">
+                    <div class="d-flex flex-column">
+                        <h3 class="fs-5">{{ operational_mode.name }}</h3>
+                        <small class="text-secondary">
+                            {{ operational_mode.id }}
+                        </small>
+                    </div>
+                </summary>
+                <dl>
+                    <dt>Description</dt>
+                    <dd>{{ operational_mode.description }}</dd>
+                </dl>
+            </details>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
 {% if resource.properties.members %}
 <section class="resource-detail-section">
     <h2>Members</h2>

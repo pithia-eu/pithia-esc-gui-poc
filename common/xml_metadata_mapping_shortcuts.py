@@ -82,8 +82,27 @@ class InstrumentXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
+    def instrument_version(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('/%s:Instrument/%s:version' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH))
+
+    @property
     def members(self):
         return self._get_elements_with_xpath_query('.//%s:member/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+    @property
+    def operational_modes(self):
+        operational_mode_elements = self._get_elements_with_xpath_query('.//%s:InstrumentOperationalMode' % self.PITHIA_NSPREFIX_XPATH)
+        operational_modes = []
+        for om in operational_mode_elements:
+            om_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:id' % self.PITHIA_NSPREFIX_XPATH, parent_element=om)
+            om_name = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name' % self.PITHIA_NSPREFIX_XPATH, parent_element=om)
+            om_description = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % self.PITHIA_NSPREFIX_XPATH, parent_element=om)
+            operational_modes.append({
+                'id': om_id,
+                'name': om_name,
+                'description': om_description,
+            })
+        return operational_modes
 
 
 class AcquisitionCapabilitiesXmlMappingShortcuts(
@@ -128,6 +147,10 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
+    @property
+    def computation_version(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('/%s:ComputationCapabilities/%s:version' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH))
+
     @property
     def child_computations(self):
         return self._get_elements_with_xpath_query('.//%s:childComputation/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))

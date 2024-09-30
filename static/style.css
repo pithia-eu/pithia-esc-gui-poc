@@ -511,7 +511,8 @@ dialog .btn-close {
     padding-bottom: var(--resource-detail-top-section-padding);
 }
 
-#responsible-parties-top-section {
+#responsible-parties-top-section,
+.resource-detail-pre-description-section {
     font-size: 0.875rem;
     padding-block: 1.5rem;
     border-top: 1px solid var(--bs-gray-300)
