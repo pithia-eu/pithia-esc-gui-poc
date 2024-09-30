@@ -46,6 +46,7 @@ a:not(
 
 a {
     overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 a:not(.btn, .nav-link):hover,
