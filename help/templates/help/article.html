@@ -14,7 +14,7 @@
             <p class="text-secondary">{{ help_topic }}</p>
         </hgroup>
         {% if hover_text %}
-        <section>
+        <section class="border-top py-5">
             <h2 class="d-inline-block mb-0">
                 Introduction
             </h2>
@@ -25,7 +25,7 @@
             </div>
         </section>
         {% endif %}
-        <section>
+        <section class="border-top py-5">
             <h2 class="d-inline-block mb-0">Description</h2>
             <div class="mt-2">
                 {% if main_text %}
@@ -38,7 +38,7 @@
             </div>
         </section>
         {% if links %}
-        <section>
+        <section class="border-top py-5">
             <h2>Links</h2>
             <ul class="mt-2">
                 {% for link in links %}
@@ -51,9 +51,9 @@
         {% endif %}
     </div>
     <div class="col-lg-3">
+        {% if closely_related_links %}
         <section>
-            <h2 class="fs-4">Closely Related Topics</h2>
-            {% if closely_related_links %}
+            <h2 class="fs-5 fw-normal">Closely Related Topics</h2>
             <ul class="list-group mt-3">
                 {% for link in closely_related_links %}
                 <li class="list-group-item">
@@ -61,13 +61,11 @@
                 </li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <p><i class="text-secondary">None yet.</i></p>
-            {% endif %}
         </section>
+        {% endif %}
+        {% if broadly_related_links %}
         <section>
-            <h2 class="fs-4">Broadly Related Topics</h2>
-            {% if broadly_related_links %}
+            <h2 class="fs-5 fw-normal">Broadly Related Topics</h2>
             <ul class="list-group mt-3">
                 {% for link in broadly_related_links %}
                 <li class="list-group-item">
@@ -75,10 +73,32 @@
                 </li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <p><i class="text-secondary">None yet.</i></p>
-            {% endif %}
         </section>
+        {% endif %}
+        {% if related_guides %}
+        <section>
+            <h2 class="fs-5 fw-normal">Related Guides</h2>
+            <ul class="list-group mt-3">
+                {% for link in related_guides %}
+                <li class="list-group-item">
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        {% if related_functionalities %}
+        <section>
+            <h2 class="fs-5 fw-normal">Related Pages</h2>
+            <ul class="list-group mt-3">
+                {% for link in related_functionalities %}
+                <li class="list-group-item">
+                    <a href="{{ link.1 }}">{{ link.0 }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}

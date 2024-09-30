@@ -28,6 +28,8 @@ class HelpArticleView(TemplateView):
         context['links'] = self.help_article_content.links
         context['closely_related_links'] = self.help_article_content.closely_related_links
         context['broadly_related_links'] = self.help_article_content.broadly_related_links
+        context['related_guides'] = self.help_article_content.related_guides
+        context['related_functionalities'] = self.help_article_content.related_functionalities
         return context
 
 class SearchDataCollectionsByContentHelpArticleView(HelpArticleView):
