@@ -1,5 +1,41 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% block post_description_content %}
+{% if resource.properties.location %}
+<section class="resource-detail-section">
+    <h2>Location</h2>
+    <dl class="row align-items-baseline justify-content-evenly row-gap-4">
+        <div class="col-lg-6">
+            <dt class="fs-5 fw-medium">Point</dt>
+            <dd>
+                <dl>
+                    <div class="mb-3">
+                        <dt>ID</dt>
+                        <dd>{{ resource.properties.location.point.id }}</dd>
+                    </div>
+                    <div class="mb-3">
+                        <dt>SRS Name</dt>
+                        <dd>
+                            {% with value=resource.properties.location.point.srs_name %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Position</dt>
+                        <dd>{{ resource.properties.location.point.pos }}</dd>
+                    </div>
+                </dl>
+            </dd>
+        </div>
+        {% if resource.properties.location.name %}
+        <div class="col-lg-6">
+            <dt class="fs-5 fw-medium">Name</dt>
+            <dd>{{ resource.properties.location.name }}</dd>
+        </div>
+        {% endif %}
+    </dl>
+</section>
+{% endif %}
 {% if resource.properties.child_platforms %}
 <section class="resource-detail-section">
     <h2>Child Platforms</h2>

@@ -75,6 +75,21 @@ class PlatformXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
+    def location(self):
+        gml_point = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:geometryLocation' % (self.PITHIA_NSPREFIX_XPATH)))
+        if not gml_point:
+            return None
+        nl_identifier = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:nameLocation/%s:EX_GeographicDescription/%s:geographicIdentifier/%s:MD_Identifier/%s:code/%s:CharacterString' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO))
+        return {
+            'name': nl_identifier,
+            'point': {
+                'id': self._get_first_element_value_or_blank_string_with_xpath_query('.//@%s:id' % NamespacePrefix.GML, parent_element=gml_point),
+                'srs_name': self._get_first_element_value_or_blank_string_with_xpath_query('.//@srsName', parent_element=gml_point),
+                'pos': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:pos' % NamespacePrefix.GML, parent_element=gml_point),
+            },
+        }
+
+    @property
     def child_platforms(self):
         return self._get_elements_with_xpath_query('.//%s:childPlatform/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 

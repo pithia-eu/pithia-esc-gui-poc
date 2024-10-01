@@ -40,7 +40,9 @@ class BaseMetadataPropertiesShortcutMixin:
         try:
             return element.text
         except AttributeError as err:
-            logger.exception(err)
+            # Remove logging as errors are expected here
+            # if element does not have text.
+            # logger.exception(err)
             return element
         except Exception as err:
             logger.exception(err)
@@ -85,7 +87,7 @@ class PithiaDescriptionMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMix
 class PithiaOntologyUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def ontology_urls(self):
-        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % (NamespacePrefix.XLINK, SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE, Namespace.XLINK))))
+        return self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@%s:href | .//*[contains(@srsName, '%s')]/@srsName" % (NamespacePrefix.XLINK, SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE, NamespacePrefix.XLINK, SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE))
 
 
 class PithiaQualityAssessmentMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
