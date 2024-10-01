@@ -18,7 +18,7 @@
         {% if not catalogue_list %}
         <p class="text-secondary">{{ empty_catalogue_list_text }}</p>
         {% else %}
-        <ul class="list-group list-tree-catalogue">
+        <ul class="list-group list-group-flush list-tree-catalogue">
             {% for catalogue in catalogue_list %}
             <li class="list-group-item">
                 {% with catalogue_entries=entries_by_catalogue|get_key_value:catalogue.pk %}
