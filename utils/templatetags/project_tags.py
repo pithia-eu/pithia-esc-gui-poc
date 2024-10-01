@@ -51,6 +51,15 @@ def wrap_in_list_if_dict(dict_or_list: Union[dict, list]) -> list:
         return dict_or_list
     return [dict_or_list]
 
+@register.filter
+def server_url_id(server_url: str) -> str:
+    try:
+        return server_url.split('/')[-1].strip()
+    except IndexError:
+        return server_url
+    except AttributeError:
+        return server_url
+
 # Credit for filter implementation: https://stackoverflow.com/a/2507447/10640126
 @register.filter(is_safe=True)
 def url_target_blank(a_tag_text):

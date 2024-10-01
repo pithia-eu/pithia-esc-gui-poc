@@ -241,7 +241,9 @@ class CatalogueXmlMappingShortcuts(
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def catalogue_category(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:catalogueCategory/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class CatalogueEntryXmlMappingShortcuts(

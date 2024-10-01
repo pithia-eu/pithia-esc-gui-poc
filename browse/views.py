@@ -865,6 +865,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     model = models.Catalogue
     resource_list_by_type_url_name = 'browse:list_catalogues'
     resource_download_url_name = 'utils:view_catalogue_as_xml'
+    template_name = 'browse/detail/bases/catalogue.html'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']

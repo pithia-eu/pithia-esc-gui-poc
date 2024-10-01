@@ -1,11 +1,29 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block pre_description_content %}
-{% if resource.properties.catalogue_urls %}
+{% block top_section_extra_content %}
+<div class="d-flex flex-column row-gap-4">
+    {% if resource.properties.catalogue_urls %}
+    <div class="mt-4">
+        <h2 class="fs-6">From Catalogue</h2>
+        {% with value=resource.properties.catalogue_urls.0 %}
+        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+        {% endwith %}
+    </div>
+    {% endif %}
+</div>
+{% endblock top_section_extra_content %}
+{% block post_description_content %}
+{% if resource.data_subsets %}
 <section class="resource-detail-section">
-    <h2>From Catalogue</h2>
-    {% with value=resource.properties.catalogue_urls.0 %}
-    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-    {% endwith %}
+    <h2>Data Subsets</h2>
+    <ul>
+        {% for data_subset in resource.data_subsets %}
+        <li>
+            {% with value=data_subset.metadata_server_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
 </section>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_description_content %}

@@ -136,11 +136,11 @@ class PithiaRelatedPartiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcut
 
 class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_resource_urls_with_type(self, type):
-        return list(set(self._get_elements_with_xpath_query(f'.//*[contains(@xlink:href, "{PITHIA_METADATA_SERVER_HTTPS_URL_BASE}/{type}/")]/@xlink:href')))
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s/%s/')]/@%s:href" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_HTTPS_URL_BASE, type, NamespacePrefix.XLINK))))
 
     @property
     def resource_urls(self):
-        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_URL_BASE, Namespace.XLINK))))
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@%s:href" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_URL_BASE, NamespacePrefix.XLINK))))
 
     @property
     def organisation_urls(self):

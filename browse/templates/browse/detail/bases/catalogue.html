@@ -1,0 +1,29 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% load project_tags %}
+{% block top_section_extra_content %}
+<div class="pt-4">
+    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='fs-6' %}
+    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+    {% endwith %}
+</div>
+{% endblock top_section_extra_content %}
+{% block post_description_content %}
+{% if resource.entries %}
+<section class="resource-detail-section">
+    <h2>Entries</h2>
+    <ul>
+        {% for entry in resource.entries %}
+        <li>
+            {% with value=entry.metadata_server_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock post_description_content %}
+{% block further_information_extra_sections %}
+{% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
+{% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
+{% endblock further_information_extra_sections %}

@@ -662,9 +662,13 @@ class Catalogue(ScientificMetadata):
     weight = 13
     type_readable = 'catalogue'
     type_plural_readable = 'catalogues'
-    type_description_readable = ''
+    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
+
+    @property
+    def entries(self):
+        return CatalogueEntry.objects.referencing_catalogue_url(self.metadata_server_url)
 
     @property
     def metadata_server_url(self):
@@ -704,6 +708,10 @@ class CatalogueEntry(ScientificMetadata):
     @property
     def catalogue(self):
         return Catalogue.objects.get_by_metadata_server_url(self.catalogue_url)
+
+    @property
+    def data_subsets(self):
+        return CatalogueDataSubset.objects.referencing_catalogue_entry_url(self.metadata_server_url)
 
     @property
     def metadata_server_url(self):
