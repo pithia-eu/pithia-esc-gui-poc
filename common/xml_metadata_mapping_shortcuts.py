@@ -1,6 +1,7 @@
 from .xml_metadata_mapping_shortcut_mixins import (
     GmdContactInfoMetadataPropertiesMixin,
     GmdUrlMetadataPropertiesMixin,
+    GmlTimePeriodMetadataPropertiesMixin,
     NamespacePrefix,
     PithiaCapabilitiesMetadataPropertiesMixin,
     PithiaCapabilityLinksMetadataPropertiesMixin,
@@ -248,21 +249,31 @@ class CatalogueXmlMappingShortcuts(
 
 class CatalogueEntryXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def phenomenon_time(self):
+        phenomenon_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:phenomenonTime' % self.PITHIA_NSPREFIX_XPATH))
+        return self._gml_time_period(phenomenon_time_element)
 
 
 class CatalogueDataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
-    pass
+    @property
+    def result_time(self):
+        result_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:resultTime' % self.PITHIA_NSPREFIX_XPATH))
+        if not result_time_element:
+            return None
+        return self._gml_time_period(result_time_element)
 
 
 class WorkflowXmlMappingShortcuts(
