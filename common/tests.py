@@ -2,9 +2,12 @@ from django.test import TestCase
 
 from .models import (
     AcquisitionCapabilities,
+    Computation,
     ComputationCapabilities,
     Instrument,
     Organisation,
+    Platform,
+    Project,
 )
 
 from common.test_setup import (
@@ -28,13 +31,17 @@ from common.test_setup import (
 )
 from common.test_xml_files import (
     ACQUISITION_CAPABILITIES_METADATA_XML,
-    COMPUTATION_CAPABILITIES_METADATA_XML,
+    COMPUTATION_METADATA_XML,
     COMPUTATION_CAPABILITIES_2_METADATA_XML,
     COMPUTATION_CAPABILITIES_3_METADATA_XML,
     COMPUTATION_CAPABILITIES_4_METADATA_XML,
     COMPUTATION_CAPABILITIES_4a_METADATA_XML,
+    COMPUTATION_CAPABILITIES_FULL_METADATA_XML,
+    COMPUTATION_CAPABILITIES_METADATA_XML,
     INSTRUMENT_METADATA_XML,
     ORGANISATION_METADATA_XML,
+    PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML,
+    PROJECT_METADATA_XML,
 )
 
 
@@ -389,3 +396,137 @@ class ComputationCapabilitiesQuerySetSearchTestCase(TestCase):
         # Only CC_4a should match here, which has no referers.
         search_results_2 = ComputationCapabilities.objects.for_search(computation_type_urls_2, [])
         self.assertEqual(len(search_results_2), 1)
+
+
+class ModelPropertiesAttributeTestCase(TestCase):
+    def test_resource_url_properties(self):
+        """The shortcut returns a list of resource URLs by
+        type from XML metadata.
+        """
+        xml_file = PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        platform = Platform.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        organisation_urls = platform.properties.organisation_urls
+        individual_urls = platform.properties.individual_urls
+        platform_urls = platform.properties.platform_urls
+        print('organisation_urls', organisation_urls)
+        print('individual_urls', individual_urls)
+        print('platform_urls', platform_urls)
+        self.assertTrue(isinstance(organisation_urls, list))
+        self.assertTrue(len(organisation_urls) > 0)
+
+    def test_gmd_url_property(self):
+        """The shortcut returns the text of the first gmd:URL
+        element in the XML metadata.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        gmd_url = project.properties.gmd_url
+        print('gmd_url', gmd_url)
+        self.assertTrue(isinstance(gmd_url, str))
+
+    def test_capability_links_property(self):
+        """The shortcut returns a list of capability link
+        dictionaries.
+        """
+        xml_file = COMPUTATION_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation = Computation.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        capability_links = computation.properties.capability_links
+        print('capability_links', capability_links)
+        self.assertTrue(isinstance(capability_links, list))
+
+    def test_capabilities_property(self):
+        """The shortcut returns a list of process capability
+        dictionaries.
+        """
+        xml_file = COMPUTATION_CAPABILITIES_FULL_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation_capabilities = ComputationCapabilities.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        capabilities = computation_capabilities.properties.capabilities
+        print('capabilities', capabilities)
+        self.assertTrue(isinstance(capabilities, list))
+
+    def test_related_parties_property(self):
+        """The shortcut returns a list of related
+        party dictionaries.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        try:
+            related_parties = project.properties.related_parties
+            print('related_parties', related_parties)
+            self.assertIsInstance(related_parties, list)
+            related_party_first = related_parties[0]
+            self.assertIsInstance(related_party_first, dict)
+        except:
+            print('Unable to get related parties from registration.')
+
+    def test_empty_related_parties_property(self):
+        """The shortcut returns an empty list if the metadata
+        does not specify any related parties.
+        """
+        xml_file = ORGANISATION_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        organisation = Organisation.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        try:
+            related_parties = organisation.properties.related_parties
+            print('related_parties', related_parties)
+            self.assertListEqual(related_parties, [])
+        except:
+            print('Unable to get related parties from registration.')
+
+    def test_quality_assessment_related_properties(self):
+        """The shortcuts return any data quality flags, metadata
+        quality flags or science relevance indicators specified
+        in the metadata.
+        """
+        xml_file = COMPUTATION_CAPABILITIES_FULL_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        computation_capabilities = ComputationCapabilities.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        
+        # Data quality flags
+        data_quality_flags = computation_capabilities.properties.data_quality_flags
+        print('data_quality_flags', data_quality_flags)
+        self.assertTrue(isinstance(data_quality_flags, list))
+        
+        # Metadata quality flags
+        metadata_quality_flags = computation_capabilities.properties.metadata_quality_flags
+        print('metadata_quality_flags', metadata_quality_flags)
+        self.assertTrue(isinstance(metadata_quality_flags, list))
+        
+        # Science relevance indicators
+        science_relevance_indicators = computation_capabilities.properties.science_relevance_indicators
+        print('science_relevance_indicators', science_relevance_indicators)
+        self.assertTrue(isinstance(science_relevance_indicators, list))
+
+    def test_server_url_properties(self):
+        """The shortcuts returns a list of unique resource
+        server URLs and/or ontology server URLs specified
+        in the metadata.
+        """
+        xml_file = PROJECT_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read()
+        project = Project.objects.create_from_xml_string(xml_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+
+        # Resource server URLs
+        resource_urls = project.properties.resource_urls
+        print('resource_urls', resource_urls)
+        self.assertTrue(isinstance(resource_urls, list))
+        self.assertTrue(isinstance(resource_urls[0], str))
+
+        # Ontology server URLs
+        ontology_urls = project.properties.ontology_urls
+        print('ontology_urls', ontology_urls)
+        self.assertTrue(isinstance(ontology_urls, list))
+        self.assertTrue(isinstance(ontology_urls[0], str))

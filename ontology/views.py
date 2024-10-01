@@ -24,7 +24,7 @@ from search.services import (
     get_registered_observed_properties,
     get_registered_phenomenons
 )
-from utils.string_helpers import _split_camel_case
+from utils.string_helpers import split_camel_case
 from utils.url_helpers import create_ontology_term_detail_url_from_ontology_term_server_url
 from utils.html_helpers import create_anchor_tag_html_from_ontology_term_details
 
@@ -43,7 +43,7 @@ def ontology_guide(request):
         return HttpResponseNotFound('The ontology guide was not found.')
     
 def _get_ontology_category_term_list_page_title_from_category(category):
-    title_base = ' '.join(_split_camel_case(category)).title()
+    title_base = ' '.join(split_camel_case(category)).title()
     if category.lower() == 'crs':
         title_base = 'Co-ordinate Reference System'
     elif category.lower() == 'verticalcrs':
@@ -157,7 +157,7 @@ def ontology_term_detail(request, category, term_id):
         elif p == 'qualifier':
             resource_predicates_readable[p] = 'Qualifiers'
         else:
-            resource_predicates_readable[p] = ' '.join(_split_camel_case(p)).title() 
+            resource_predicates_readable[p] = ' '.join(split_camel_case(p)).title() 
     return render(request, 'ontology/ontology_term_detail.html', {
         'title': resource_dictionary['prefLabel'],
         'resource_ontology_url': f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{category}/{term_id}',

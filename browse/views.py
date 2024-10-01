@@ -1,8 +1,10 @@
 import copy
+import json
 import logging
 import re
 from dateutil.parser import parse
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import (
     get_object_or_404,
     render,
@@ -15,10 +17,14 @@ from django.views.generic import (
 from lxml import etree
 
 from .services import (
-    create_readable_scientific_metadata_flattened,
-    get_server_urls_from_scientific_metadata_flattened,
+    get_properties_for_ontology_server_urls,
     map_metadata_server_urls_to_browse_urls,
     map_ontology_server_urls_to_browse_urls,
+)
+from .utils import (
+    reformat_and_clean_resource_copy_for_property_table,
+    remove_common_disallowed_properties_from_property_table_dict,
+    remove_disallowed_properties_from_property_table_dict,
 )
 
 from common import models
@@ -26,8 +32,6 @@ from handle_management.handle_api import (
     get_handle_record,
     instantiate_client_and_load_credentials,
 )
-from utils.dict_helpers import flatten
-from utils.mapping_functions import prepare_resource_for_template
 
 logger = logging.getLogger(__name__)
 
@@ -362,6 +366,7 @@ class WorkflowListView(ResourceListView):
     model = models.Workflow
     resource_detail_page_url_name = 'browse:workflow_detail'
 
+
 class ResourceDetailView(TemplateView):
     """
     The detail page for a scientific metadata
@@ -374,35 +379,76 @@ class ResourceDetailView(TemplateView):
     title = 'Resource Detail'
     resource = None
     resource_id = ''
-    resource_flattened = None
     resource_human_readable = {}
     resource_description_split = []
     ontology_server_urls = []
     resource_server_urls = []
     resource_list_by_type_url_name = ''
     resource_download_url_name = ''
-    template_name = 'browse/detail.html'
+    template_name = 'browse/detail/bases/base.html'
 
-    def process_scientific_metadata(self):
-        return prepare_resource_for_template(self.resource.json)
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        property_table_dict = remove_common_disallowed_properties_from_property_table_dict(property_table_dict)
+        return property_table_dict
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}description').text
+
+    def get_related_registrations(self):
+        return {
+            'Organisations': self.resource.properties.organisation_urls,
+            'Individuals': self.resource.properties.individual_urls,
+            'Projects': self.resource.properties.project_urls,
+            'Platforms': self.resource.properties.platform_urls,
+            'Operations': self.resource.properties.operation_urls,
+            'Instruments': self.resource.properties.instrument_urls,
+            'Acquisition Capabilities': self.resource.properties.acquisition_capabilities_urls,
+            'Acquisitions': self.resource.properties.acquisition_urls,
+            'Computation Capabilities': self.resource.properties.computation_capabilities_urls,
+            'Computations': self.resource.properties.computation_urls,
+            'Processes': self.resource.properties.process_urls,
+            'Data Collections': self.resource.properties.data_collection_urls,
+            'Catalogues': self.resource.properties.catalogue_urls,
+            'Catalogue Entries': self.resource.properties.catalogue_entry_urls,
+        }
+
+    def clean_related_registrations_dict(self, related_registrations_dict):
+        cleaned_related_registrations_dict = {}
+        for key, value in related_registrations_dict.items():
+            if not value:
+                continue
+            elif isinstance(value, dict) and not value.get('@xlink:href'):
+                continue
+            cleaned_related_registrations_dict.update({
+                key: value
+            })
+        return cleaned_related_registrations_dict
+        
     
     def format_and_split_string_by_multi_newlines(self, description):
-        description_formatted = description.replace('\t', '')
-        description_formatted = re.sub('\n\s+\n', '\n\n', description_formatted)
-        description_formatted_split = description_formatted.split('\n\n')
-        for counter, s in enumerate(description_formatted_split):
-            description_formatted_split[counter] = s.replace('\n', ' ')
-        return description_formatted_split
+        try:
+            description_formatted = description.replace('\t', '')
+            description_formatted = re.sub('\n\s+\n', '\n\n', description_formatted)
+            description_formatted_split = description_formatted.split('\n\n')
+            for counter, s in enumerate(description_formatted_split):
+                description_formatted_split[counter] = s.replace('\n', ' ')
+            return description_formatted_split
+        except AttributeError as err:
+            logger.exception(err)
+        return []
+
+    def map_server_urls_to_ids(self, server_urls):
+        return {
+            url: url.split('/')[-1]
+            for url in server_urls
+        }
 
     def get(self, request, *args, **kwargs):
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
-        self.scientific_metadata = self.process_scientific_metadata()
-        self.scientific_metadata_flattened = flatten(self.scientific_metadata)
-        self.scientific_metadata_readable = create_readable_scientific_metadata_flattened(self.scientific_metadata_flattened)
-        self.ontology_server_urls, self.resource_server_urls = get_server_urls_from_scientific_metadata_flattened(self.scientific_metadata_flattened)
+        self.ontology_server_urls = self.resource.properties.ontology_urls
+        self.resource_server_urls = self.resource.properties.resource_urls
+        self.property_table_dict = self.configure_resource_copy_for_property_table(copy.deepcopy(self.resource.json))
+        self.property_table_dict = reformat_and_clean_resource_copy_for_property_table(self.property_table_dict)
         self.title = self.resource.name
         if self.resource.description and self.resource.description.strip() != '':
             description_from_xml = self.get_description_from_xml(self.resource)
@@ -421,13 +467,18 @@ class ResourceDetailView(TemplateView):
         context['resource_list_page_breadcrumb_url_name'] = self.resource_list_by_type_url_name
         context['resource_download_url_name'] = self.resource_download_url_name
         context['resource'] = self.resource
-        context['scientific_metadata_flattened'] = self.scientific_metadata_flattened
         context['ontology_server_urls'] = self.ontology_server_urls
         context['resource_server_urls'] = self.resource_server_urls
-        context['scientific_metadata_readable'] = self.scientific_metadata_readable
+        context['server_url_to_id_mappings'] = {
+            **self.map_server_urls_to_ids(self.ontology_server_urls),
+            **self.map_server_urls_to_ids(self.resource_server_urls),
+        }
+        context['related_registrations'] = self.clean_related_registrations_dict(self.get_related_registrations())
+        context['property_table_dict'] = self.property_table_dict
         context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
         context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
+        context['ontology_node_properties_mapping_url'] = reverse('browse:ontology_node_properties_mapping_url')
         return context
 
 class OrganisationDetailView(ResourceDetailView):
@@ -440,6 +491,19 @@ class OrganisationDetailView(ResourceDetailView):
     model = models.Organisation
     resource_list_by_type_url_name = 'browse:list_organisations'
     resource_download_url_name = 'utils:view_organisation_as_xml'
+    template_name = 'browse/detail/bases/organisation.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'contactInfo',
+                'positionName',
+                'shortName',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['organisation_id']
@@ -455,6 +519,19 @@ class IndividualDetailView(ResourceDetailView):
     model = models.Individual
     resource_list_by_type_url_name = 'browse:list_individuals'
     resource_download_url_name = 'utils:view_individual_as_xml'
+    template_name = 'browse/detail/bases/individual.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'contactInfo',
+                'organisation',
+                'positionName',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['individual_id']
@@ -470,22 +547,25 @@ class ProjectDetailView(ResourceDetailView):
     project_abstract_split = []
 
     model = models.Project
-    template_name = 'browse/detail_project.html'
+    template_name = 'browse/detail/bases/project.html'
     resource_list_by_type_url_name = 'browse:list_projects'
     resource_download_url_name = 'utils:view_project_as_xml'
 
     def get_abstract_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}abstract').text
 
-    def process_scientific_metadata(self):
-        scientific_metadata = copy.deepcopy(prepare_resource_for_template(self.resource.json))
-        # Only pop the 'abstract' key from the scientific_metadata
-        # dict if there is a value, so it doesn't appear in the
-        # property table.
-        if (self.resource.abstract
-            and len(self.resource.abstract.strip()) > 0):
-            scientific_metadata.pop('abstract', None)
-        return scientific_metadata
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'abstract',
+                'keywords',
+                'status',
+                'URL',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['project_id']
@@ -506,6 +586,21 @@ class PlatformDetailView(ResourceDetailView):
     model = models.Platform
     resource_list_by_type_url_name = 'browse:list_platforms'
     resource_download_url_name = 'utils:view_platform_as_xml'
+    template_name = 'browse/detail/bases/platform.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'childPlatform',
+                'location',
+                'shortName',
+                'type',
+                'URL',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['platform_id']
@@ -521,6 +616,21 @@ class InstrumentDetailView(ResourceDetailView):
     model = models.Instrument
     resource_list_by_type_url_name = 'browse:list_instruments'
     resource_download_url_name = 'utils:view_instrument_as_xml'
+    template_name = 'browse/detail/bases/instrument.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'member',
+                'operationalMode',
+                'type',
+                'URL',
+                'version',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['instrument_id']
@@ -536,6 +646,7 @@ class OperationDetailView(ResourceDetailView):
     model = models.Operation
     resource_list_by_type_url_name = 'browse:list_operations'
     resource_download_url_name = 'utils:view_operation_as_xml'
+    template_name = 'browse/detail/bases/operation.html'
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['operation_id']
@@ -551,6 +662,20 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
     model = models.AcquisitionCapabilities
     resource_list_by_type_url_name = 'browse:list_acquisition_capability_sets'
     resource_download_url_name = 'utils:view_acquisition_capability_set_as_xml'
+    template_name = 'browse/detail/bases/acquisition_capabilities.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilities',
+                'dataLevel',
+                'instrumentModePair',
+                'qualityAssessment',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_capability_set_id']
@@ -566,6 +691,17 @@ class AcquisitionDetailView(ResourceDetailView):
     model = models.Acquisition
     resource_list_by_type_url_name = 'browse:list_acquisitions'
     resource_download_url_name = 'utils:view_acquisition_as_xml'
+    template_name = 'browse/detail/bases/acquisition.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilityLinks',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['acquisition_id']
@@ -581,6 +717,22 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
     model = models.ComputationCapabilities
     resource_list_by_type_url_name = 'browse:list_computation_capability_sets'
     resource_download_url_name = 'utils:view_computation_capability_set_as_xml'
+    template_name = 'browse/detail/bases/computation_capabilities.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilities',
+                'childComputation',
+                'dataLevel',
+                'qualityAssessment',
+                'type',
+                'version',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_capability_set_id']
@@ -596,6 +748,17 @@ class ComputationDetailView(ResourceDetailView):
     model = models.Computation
     resource_list_by_type_url_name = 'browse:list_computations'
     resource_download_url_name = 'utils:view_computation_as_xml'
+    template_name = 'browse/detail/bases/computation.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'capabilityLinks',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['computation_id']
@@ -611,6 +774,20 @@ class ProcessDetailView(ResourceDetailView):
     model = models.Process
     resource_list_by_type_url_name = 'browse:list_processes'
     resource_download_url_name = 'utils:view_process_as_xml'
+    template_name = 'browse/detail/bases/process.html'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'acquisitionComponent',
+                'computationComponent',
+                'dataLevel',
+                'qualityAssessment',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['process_id']
@@ -626,9 +803,27 @@ class DataCollectionDetailView(ResourceDetailView):
     model = models.DataCollection
     resource_list_by_type_url_name = 'browse:list_data_collections'
     resource_download_url_name = 'utils:view_data_collection_as_xml'
-    template_name = 'browse/detail_interaction_methods.html'
+    template_name = 'browse/detail/bases/data_collection.html'
     interaction_methods = []
     link_interaction_methods = []
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'collectionResults',
+                'dataLevel',
+                'om:featureOfInterest',
+                'om:procedure',
+                'permission',
+                'project',
+                'qualityAssessment',
+                'relatedParty',
+                'type',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
@@ -689,9 +884,21 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueEntry
     resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
+    template_name = 'browse/detail/bases/catalogue_entry.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'entryName',
+                'entryDescription',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_entry_id']
@@ -706,15 +913,32 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
     """
     model = models.CatalogueDataSubset
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
+    template_name = 'browse/detail/bases/catalogue_data_subset.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}dataSubsetDescription').text
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'dataCollection',
+                'dataLevel',
+                'dataSubsetName',
+                'dataSubsetDescription',
+                'entryIdentifier',
+                'qualityAssessment',
+                'source',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def add_handle_data_to_context(self, context):
         context['handles'] = self.handles
         context['data_for_handles'] = []
         if self.data_for_handles:
-            context['data_for_handles'] = [create_readable_scientific_metadata_flattened(data) for data in self.data_for_handles if data is not None]
+            context['data_for_handles'] = [reformat_and_clean_resource_copy_for_property_table(data) for data in self.data_for_handles if data is not None]
         return context
 
     def get(self, request, *args, **kwargs):
@@ -755,10 +979,21 @@ class WorkflowDetailView(ResourceDetailView):
     A detail page displaying the properties of
     a Workflow registration.
     """
-    template_name = 'browse/detail_workflow.html'
+    template_name = 'browse/detail/bases/workflow.html'
     model = models.Workflow
     resource_list_by_type_url_name = 'browse:list_workflows'
     resource_download_url_name = 'utils:view_workflow_as_xml'
+
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table_dict,
+            disallowed_property_keys=[
+                'workflowDetails',
+                'dataCollection',
+            ]
+        )
+        return cleaned_property_table_dict
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -769,19 +1004,15 @@ class WorkflowDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['workflow_id']
         return super().get(request, *args, **kwargs)
 
+@require_POST
 def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(request):
-    """
-    Used for mapping ontology server URLs and
+    """Used for mapping ontology server URLs and
     metadata server URLs to their corresponding
     detail pages. Mappings are displayed in 
     scientific metadata detail pages.
     """
-    ontology_server_urls = []
-    resource_server_urls = []
-    if 'ontology-server-urls' in request.GET:
-        ontology_server_urls = request.GET['ontology-server-urls'].split(',')
-    if 'resource-server-urls' in request.GET:
-        resource_server_urls = request.GET['resource-server-urls'].split(',')
+    ontology_server_urls = json.loads(request.POST.get('ontology-server-urls', '[]'))
+    resource_server_urls = json.loads(request.POST.get('resource-server-urls', '[]'))
     esc_ontology_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
     esc_resource_urls = map_metadata_server_urls_to_browse_urls(resource_server_urls)
     
@@ -789,3 +1020,16 @@ def get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls(requ
         'ontology_urls': esc_ontology_urls,
         'resource_urls': esc_resource_urls,
     })
+
+@require_POST
+def map_ontology_server_urls_to_corresponding_properties(request):
+    """Maps ontology server URLs to corresponding
+    ontology properties and ontology browser URL.
+    """
+    ontology_server_urls = json.loads(request.POST.get('urls', []))
+    properties_to_get = json.loads(request.POST.get('properties', []))
+    properties_for_ontology_server_urls = get_properties_for_ontology_server_urls(
+        ontology_server_urls,
+        properties_to_get
+    )
+    return JsonResponse(properties_for_ontology_server_urls)

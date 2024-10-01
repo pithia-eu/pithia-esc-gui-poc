@@ -1,0 +1,17 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% block post_description_content %}
+{% if resource.properties.platforms %}
+<section class="resource-detail-section">
+    <h2>Platforms</h2>
+    <ul>
+        {% for platform_url in resource.properties.platforms %}
+        <li>
+            {% with value=platform_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock post_description_content %}

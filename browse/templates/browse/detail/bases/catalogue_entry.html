@@ -1,0 +1,11 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% block pre_description_content %}
+{% if resource.properties.catalogue_urls %}
+<section class="resource-detail-section">
+    <h2>From Catalogue</h2>
+    {% with value=resource.properties.catalogue_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock pre_description_content %}

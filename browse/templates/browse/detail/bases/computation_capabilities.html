@@ -1,0 +1,32 @@
+{% extends 'browse/detail/bases/base.html' %}
+{% block pre_description_content %}
+{% if resource.properties.computation_version %}
+<section class="resource-detail-small-top-section">
+    <dl class="mb-0">
+        <div class="d-flex flex-column row-gap-2">
+            <dt>Version</dt>
+            <dd class="mb-0">{{ resource.properties.computation_version }}</dd>
+        </div>
+    </dl>
+</section>
+{% endif %}
+{% endblock pre_description_content %}
+{% block post_description_content %}
+{% if resource.properties.child_computations %}
+<section class="resource-detail-section">
+    <h2>Child Computations</h2>
+    <ul>
+        {% for child_computation_url in resource.properties.child_computations %}
+        <li>
+            {% with value=child_computation_url %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% include 'browse/detail/sections/capabilities_section.html' %}
+{% include 'browse/detail/sections/data_levels_section.html' %}
+{% include 'browse/detail/sections/quality_assessment_section.html' %}
+{% endblock post_description_content %}

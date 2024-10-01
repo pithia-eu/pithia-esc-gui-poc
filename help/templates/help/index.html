@@ -5,27 +5,31 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<p>
-    Use the help articles below for help and descriptions on e-Science Centre aspects and functionalities.
-</p>
-<section>
-    <h2>Data Collection Search</h2>
-    <ul class="list-group mt-3">
-        <li class="list-group-item">
-            <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
-        </li>
-        <li class="list-group-item">
-            <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
-        </li>
-    </ul>
-</section>
-<section>
-    <h2>Scientific Metadata</h2>
-    <ul class="list-group mt-3">
-        <li class="list-group-item">
-            <a href="{% url 'help:data_collections' %}">Data Collections</a>
-        </li>
-    </ul>
-</section>
+<div class="col-xl-7 col-lg-9">
+    <section class="border-bottom mb-3">
+        <h1>{{ title }}</h1>
+        <p>
+            Use the help articles below for help and descriptions on e-Science Centre aspects and functionalities.
+        </p>
+    </section>
+    <section>
+        <h2>Data Collection Search</h2>
+        <ul class="list-group pb-3 mt-3">
+            <li class="list-group-item">
+                <a href="{% url 'help:search_data_collections_by_content' %}">Search Data Collections by Content</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>Scientific Metadata</h2>
+        <ul class="list-group mt-3">
+            <li class="list-group-item">
+                <a href="{% url 'help:data_collections' %}">Data Collections</a>
+            </li>
+        </ul>
+    </section>
+</div>
 {% endblock content %}
