@@ -20,14 +20,14 @@
     {% endif %}
 </div>
 {% if resource.properties.result_time %}
-<section class="resource-detail-top-section mt-4 pb-0">
+<section class="resource-detail-top-section border-top pt-4 mt-4 pb-0">
     <h2 class="fs-6">Result Time</h2>
     <dl class="d-flex justify-content-start column-gap-4">
-        <div>
+        <div class="d-flex flex-column-reverse">
             <dt>Begin</dt>
             <dd>{{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
         </div>
-        <div>
+        <div class="d-flex flex-column-reverse">
             <dt>End</dt>
             <dd>{{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i e' }}</dd>
         </div>

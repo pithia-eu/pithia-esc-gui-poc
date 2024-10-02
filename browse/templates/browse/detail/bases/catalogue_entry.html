@@ -1,8 +1,8 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% block top_section_extra_content %}
-<div class="row gy-4 pt-4 pb-2">
+<div class="d-flex flex-column row-gap-4 pt-4">
     {% if resource.properties.catalogue_urls %}
-    <div class="col-md-6">
+    <div>
         <h2 class="fs-6">From Catalogue</h2>
         {% with value=resource.properties.catalogue_urls.0 %}
         {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
@@ -10,7 +10,7 @@
     </div>
     {% endif %}
     {% if resource.properties.phenomenon_time %}
-    <div class="col-md-6">
+    <div class="border-top pt-4">
         <h2 class="fs-6">Phenomenon Time</h2>
         <dl class="d-flex justify-content-start column-gap-3">
             <div class="d-flex flex-column-reverse">
