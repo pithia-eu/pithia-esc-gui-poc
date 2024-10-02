@@ -1431,6 +1431,10 @@ a.support-link {
     .resource-detail-emphasised-section {
         padding: 2rem;
     }
+
+    .catalogue-category-badge {
+        font-size: 1rem;
+    }
 }
 
 @media (min-width: 450px) {

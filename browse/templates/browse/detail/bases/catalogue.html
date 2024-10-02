@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% block top_section_extra_content %}
 <div class="pt-4">
-    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='fs-6' %}
+    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='catalogue-category-badge' %}
     {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
     {% endwith %}
 </div>
