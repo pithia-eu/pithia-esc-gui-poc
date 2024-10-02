@@ -867,6 +867,16 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     resource_download_url_name = 'utils:view_catalogue_as_xml'
     template_name = 'browse/detail/bases/catalogue.html'
 
+    def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
+        cleaned_property_table = super().configure_resource_copy_for_property_table(property_table_dict)
+        cleaned_property_table = remove_disallowed_properties_from_property_table_dict(
+            cleaned_property_table,
+            disallowed_property_keys=[
+                'catalogueCategory',
+            ]
+        )
+        return cleaned_property_table
+
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
