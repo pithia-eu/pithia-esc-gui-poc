@@ -535,26 +535,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         pass
 
 class AbstractCatalogueDatabaseQueries(ABC):
-    @abstractmethod
-    def referencing_catalogue_entry_url(self, catalogue_entry_url: str):
-        """Catalogue Data Subsets referencing a given Catalogue
-        Entry's URL.
-        """
-        pass
-
-    @abstractmethod
-    def referencing_catalogue_entry_id(self, catalogue_entry_id: str):
-        """Catalogue Data Subsets referencing a given Catalogue
-        Entry's local ID.
-        """
-        pass
-
-    @abstractmethod
-    def referencing_data_collection_url(self, data_collection_url: str):
-        """Catalogue Data Subsets referencing a given Data
-        Collection's URL.
-        """
-        pass
+    pass
 
 class AbstractCatalogueEntryDatabaseQueries(ABC):
     @abstractmethod
@@ -586,6 +567,13 @@ class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
         """
         Catalogue Data Subsets referencing a given Catalogue
         Entry URL.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_catalogue_entry_id(self, catalogue_entry_id: str):
+        """Catalogue Data Subsets referencing a given Catalogue
+        Entry's local ID.
         """
         pass
 
