@@ -1,7 +1,7 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% load project_tags %}
 {% block top_section_extra_content %}
-<div class="d-flex flex-wrap column-gap-5 row-gap-3 mt-4">
+<div class="d-flex flex-wrap column-gap-5 row-gap-4 mt-4">
     {% if resource.properties.catalogue_entry_urls %}
     <div>
         <h2 class="fs-6">From Catalogue Entry</h2>
@@ -19,25 +19,23 @@
     </div>
     {% endif %}
 </div>
-{% endblock top_section_extra_content %}
-{% block pre_description_content %}
 {% if resource.properties.result_time %}
-<section class="resource-detail-small-top-section">
-    <div class="mt-4 mb-3">
-        <h2 class="fs-6">Result Time</h2>
-        <dl class="d-flex justify-content-start column-gap-4">
-            <div>
-                <dt>Begin</dt>
-                <dd>{{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
-            </div>
-            <div>
-                <dt>End</dt>
-                <dd>{{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i e' }}</dd>
-            </div>
-        </dl>
-    </div>
+<section class="resource-detail-top-section mt-4 pb-0">
+    <h2 class="fs-6">Result Time</h2>
+    <dl class="d-flex justify-content-start column-gap-4">
+        <div>
+            <dt>Begin</dt>
+            <dd>{{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
+        </div>
+        <div>
+            <dt>End</dt>
+            <dd>{{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i e' }}</dd>
+        </div>
+    </dl>
 </section>
 {% endif %}
+{% endblock top_section_extra_content %}
+{% block pre_description_content %}
 {% if 'source' in resource.json %}
 <section class="resource-detail-emphasised-section resource-detail-section">
     <h2>Access this Data Subset</h2>

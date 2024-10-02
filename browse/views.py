@@ -891,8 +891,10 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
             disallowed_property_keys=[
+                'catalogueIdentifier',
                 'entryName',
                 'entryDescription',
+                'phenomenonTime',
             ]
         )
         return cleaned_property_table_dict
@@ -927,6 +929,7 @@ class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
                 'dataSubsetDescription',
                 'entryIdentifier',
                 'qualityAssessment',
+                'resultTime',
                 'source',
             ]
         )
