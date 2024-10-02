@@ -668,7 +668,7 @@ class Catalogue(ScientificMetadata):
 
     @property
     def entries(self):
-        return CatalogueEntry.objects.referencing_catalogue_url(self.metadata_server_url)
+        return CatalogueEntry.objects.referencing_catalogue_id(self.localid)
 
     @property
     def metadata_server_url(self):
@@ -711,7 +711,7 @@ class CatalogueEntry(ScientificMetadata):
 
     @property
     def data_subsets(self):
-        return CatalogueDataSubset.objects.referencing_catalogue_entry_url(self.metadata_server_url)
+        return CatalogueDataSubset.objects.referencing_catalogue_entry_id(self.localid)
 
     @property
     def metadata_server_url(self):

@@ -490,6 +490,9 @@ class CatalogueQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDatabaseQue
 class CatalogueEntryQuerySet(ScientificMetadataQuerySet, AbstractCatalogueEntryDatabaseQueries):
     def referencing_catalogue_url(self, catalogue_url: str):
         return self.filter(**{'json__catalogueIdentifier__@xlink:href': catalogue_url})
+    
+    def referencing_catalogue_id(self, catalogue_id: str):
+        return self.filter(**{'json__catalogueIdentifier__@xlink:href__endswith': catalogue_id})
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_catalogue_url = self.referencing_catalogue_url(metadata_server_url)
@@ -498,7 +501,10 @@ class CatalogueEntryQuerySet(ScientificMetadataQuerySet, AbstractCatalogueEntryD
 class CatalogueDataSubsetQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
     def referencing_catalogue_entry_url(self, catalogue_entry_url: str):
         return self.filter(**{'json__entryIdentifier__@xlink:href': catalogue_entry_url})
-    
+
+    def referencing_catalogue_entry_id(self, catalogue_entry_id: str):
+        return self.filter(**{'json__entryIdentifier__@xlink:href__endswith': catalogue_entry_id})
+
     def referencing_data_collection_url(self, data_collection_url: str):
         return self.filter(**{'json__dataCollection__@xlink:href': data_collection_url})
 
