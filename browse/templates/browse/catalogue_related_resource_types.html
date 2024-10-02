@@ -5,8 +5,8 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<ul class="list-group">
+<h1 class="col-xl-7 col-lg-9">{{ title }}</h1>
+<ul class="list-group col-xl-7 col-lg-9">
     <li class="list-group-item">
         <a href="{% url 'browse:list_catalogues' %}">Catalogues</a>
         <span class="text-muted">{{ num_current_catalogues }}</span>
