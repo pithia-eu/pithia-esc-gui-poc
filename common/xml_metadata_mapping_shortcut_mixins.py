@@ -1,4 +1,5 @@
 import logging
+from dateutil.parser import parse
 from lxml import etree
 
 from .constants import (
@@ -136,11 +137,11 @@ class PithiaRelatedPartiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcut
 
 class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_resource_urls_with_type(self, type):
-        return list(set(self._get_elements_with_xpath_query(f'.//*[contains(@xlink:href, "{PITHIA_METADATA_SERVER_HTTPS_URL_BASE}/{type}/")]/@xlink:href')))
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s/%s/')]/@%s:href" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_HTTPS_URL_BASE, type, NamespacePrefix.XLINK))))
 
     @property
     def resource_urls(self):
-        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@*[local-name()='href' and namespace-uri()='%s']" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_URL_BASE, Namespace.XLINK))))
+        return list(set(self._get_elements_with_xpath_query(".//*[contains(@%s:href, '%s')]/@%s:href" % (NamespacePrefix.XLINK, PITHIA_METADATA_SERVER_URL_BASE, NamespacePrefix.XLINK))))
 
     @property
     def organisation_urls(self):
@@ -192,11 +193,11 @@ class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
 
     @property
     def catalogue_urls(self):
-        return self._get_elements_with_xpath_query('.//%s:catalogueIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
+        return self._get_elements_with_xpath_query('.//%s:catalogueIdentifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
     @property
     def catalogue_entry_urls(self):
-        return self._get_elements_with_xpath_query('.//%s:entryIdentifier/@xlink:href' % self.PITHIA_NSPREFIX_XPATH)
+        return self._get_elements_with_xpath_query('.//%s:entryIdentifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
 class PithiaStandardIdentifiersMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
@@ -390,3 +391,29 @@ class GmdUrlMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def gmd_url(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:URL/%s:URL' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD))
+
+
+class GmlTimePeriodMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _gml_time_period(self, time_period_container_element):
+        time_period_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimePeriod/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_container_element)
+        # Time period - begin
+        time_period_begin_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:begin' % NamespacePrefix.GML, time_period_container_element))
+        time_period_begin_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimeInstant/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_begin_element)
+        time_period_begin_position = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:timePosition' % NamespacePrefix.GML, time_period_begin_element)
+        # Time period - end
+        time_period_end_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:end' % NamespacePrefix.GML, time_period_container_element))
+        time_period_end_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimeInstant/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_end_element)
+        time_period_end_position = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:timePosition' % NamespacePrefix.GML, time_period_end_element)
+        return {
+            'time_period': {
+                'id': time_period_id,
+                'begin': {
+                    'id': time_period_begin_id,
+                    'time_position': parse(time_period_begin_position),
+                },
+                'end': {
+                    'id': time_period_end_id,
+                    'time_position': parse(time_period_end_position),
+                },
+            }
+        }

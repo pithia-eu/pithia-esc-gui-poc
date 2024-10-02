@@ -1,10 +1,6 @@
 {% load project_tags %}
 <span class="metadata-server-url {{ url_class }} loading" data-metadata-server-url="{{ value.strip }}">
     <a href="{{ value.strip }}" class="{{ url_text_extra_classes }} metadata-server-url-text">
-        {% if value.strip in server_url_to_id_mappings %}
-        {{ server_url_to_id_mappings|get_key_value:value.strip }}
-        {% else %}
-        {{ value.strip }}
-        {% endif %}
+        {{ value|server_url_id }}
     </a>
 </span>

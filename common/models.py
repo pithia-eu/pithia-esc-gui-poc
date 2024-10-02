@@ -667,6 +667,10 @@ class Catalogue(ScientificMetadata):
     root_element_name = 'Catalogue'
 
     @property
+    def entries(self):
+        return CatalogueEntry.objects.referencing_catalogue_id(self.localid)
+
+    @property
     def metadata_server_url(self):
         return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}'
 
@@ -704,6 +708,10 @@ class CatalogueEntry(ScientificMetadata):
     @property
     def catalogue(self):
         return Catalogue.objects.get_by_metadata_server_url(self.catalogue_url)
+
+    @property
+    def data_subsets(self):
+        return CatalogueDataSubset.objects.referencing_catalogue_entry_id(self.localid)
 
     @property
     def metadata_server_url(self):

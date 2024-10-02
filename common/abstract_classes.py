@@ -546,6 +546,13 @@ class AbstractCatalogueEntryDatabaseQueries(ABC):
         pass
 
     @abstractmethod
+    def referencing_catalogue_id(self, catalogue_id: str):
+        """Catalogue Entries referencing a given Catalogue's
+        local ID.
+        """
+        pass
+
+    @abstractmethod
     def for_delete_chain(self, metadata_server_url: str):
         """
         Catalogue Entries referencing a URL corresponding
@@ -560,6 +567,13 @@ class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
         """
         Catalogue Data Subsets referencing a given Catalogue
         Entry URL.
+        """
+        pass
+
+    @abstractmethod
+    def referencing_catalogue_entry_id(self, catalogue_entry_id: str):
+        """Catalogue Data Subsets referencing a given Catalogue
+        Entry's local ID.
         """
         pass
 
