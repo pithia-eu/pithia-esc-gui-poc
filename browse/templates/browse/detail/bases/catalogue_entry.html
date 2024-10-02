@@ -26,9 +26,9 @@
     {% endif %}
 </div>
 {% endblock top_section_extra_content %}
-{% block post_description_content %}
+{% block pre_description_content %}
 {% if resource.data_subsets %}
-<section class="resource-detail-section">
+<section class="resource-detail-emphasised-section resource-detail-section">
     <h2 class="mb-4">Data Subsets</h2>
     <ul>
         {% for data_subset in resource.data_subsets %}
@@ -41,4 +41,4 @@
     </ul>
 </section>
 {% endif %}
-{% endblock post_description_content %}
+{% endblock pre_description_content %}

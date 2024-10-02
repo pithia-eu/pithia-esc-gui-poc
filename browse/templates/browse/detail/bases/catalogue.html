@@ -7,9 +7,9 @@
     {% endwith %}
 </div>
 {% endblock top_section_extra_content %}
-{% block post_description_content %}
+{% block pre_description_content %}
 {% if resource.entries %}
-<section class="resource-detail-section">
+<section class="resource-detail-emphasised-section resource-detail-section">
     <h2 class="mb-4">Entries</h2>
     <ul>
         {% for entry in resource.entries %}
@@ -22,7 +22,7 @@
     </ul>
 </section>
 {% endif %}
-{% endblock post_description_content %}
+{% endblock pre_description_content %}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
