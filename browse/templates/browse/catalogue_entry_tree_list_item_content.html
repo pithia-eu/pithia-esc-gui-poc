@@ -18,7 +18,7 @@
     </summary>
     <ul class="list-tree-catalogue-data-subset">
         {% for data_subset in entry_data_subsets %}
-        <li ckass="list-tree-item-catalogue-data-subset">
+        <li class="list-tree-item-catalogue-data-subset">
             <a href="{{ data_subset.get_absolute_url }}">{{ data_subset.name|default:data_subset.localid }}</a>
         </li>
         {% endfor %}

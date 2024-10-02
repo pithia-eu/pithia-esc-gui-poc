@@ -14,11 +14,11 @@
             {{ catalogue_description }}
         </p>
     </div>
-    <div class="col-lg-12">
+    <div class="col-xl-7 col-lg-9">
         {% if not catalogue_list %}
         <p class="text-secondary">{{ empty_catalogue_list_text }}</p>
         {% else %}
-        <ul class="list-group list-group-flush list-tree-catalogue">
+        <ul class="list-group list-group-flush list-tree-catalogue border rounded">
             {% for catalogue in catalogue_list %}
             <li class="list-group-item">
                 {% with catalogue_entries=entries_by_catalogue|get_key_value:catalogue.pk %}
@@ -32,7 +32,7 @@
 </div>
 {% if uncategorised_entries %}
 <div class="row mt-5">
-    <div class="col-lg-12">
+    <div class="col-xl-7 col-lg-9">
         <h2 class="fw-normal fs-4 text-secondary">Uncategorised Catalogue Entries</h2>
         <ul class="list-group">
             {% for catalogue_entry in uncategorised_entries %}
@@ -46,7 +46,7 @@
 {% endif %}
 {% if uncategorised_data_subsets %}
 <div class="row mt-5">
-    <div class="col-lg-12">
+    <div class="col-xl-7 col-lg-9">
         <h2 class="fw-normal fs-4 text-secondary">Uncategorised Catalogue Data Subsets</h2>
         <ul class="list-group">
             {% for catalogue_data_subset in uncategorised_data_subsets %}

@@ -744,14 +744,12 @@ a catalogue/catalogue entry has no entries/data subsets. */
 
 /* Catalogue browsing - left-hand grey list line denoting
 children of a catalogue/catalogue entry. */
-.list-tree-catalogue-entry li,
-.list-tree-catalogue-data-subset li {
-    list-style-type: none;
-    padding-block: 1rem;
+.list-tree-catalogue .list-tree-catalogue-entry > li {
+    border-left : 1px solid var(--bs-gray-400);
 }
 
-.list-tree-catalogue ul li {
-    border-left : 1px solid var(--bs-gray-400);
+.list-tree-catalogue > li,
+.list-tree-catalogue-entry > li {
     padding-left: 1rem;
 }
 
@@ -765,18 +763,29 @@ children of a catalogue/catalogue entry. */
     text-decoration: underline;
 }
 
-/* Catalogue browsing - miscellaneous styles */
-.list-tree-catalogue-entry .list-tree-item-catalogue-entry:last-child:has(details[open]) {
-    padding-bottom: 0;
+/* Catalogue entry browsing styles */
+.list-tree-catalogue-entry {
+    margin-top: 1rem;
 }
 
-.list-tree-catalogue li {
-    padding-block: 1rem;
+.list-tree-catalogue-entry > li {
+    list-style-type: none;
 }
 
-.list-tree-catalogue-entry,
+/* Catalogue data subset browsing styles */
 .list-tree-catalogue-data-subset {
     margin-top: 1rem;
+}
+
+.list-tree-catalogue-data-subset li {
+    list-style-type: disc;
+    margin-left: 2rem;
+}
+
+/* Catalogue browsing - miscellaneous styles */
+.list-tree-catalogue > li,
+.list-tree-catalogue-entry > li {
+    padding-block: 1rem;
 }
 
 
