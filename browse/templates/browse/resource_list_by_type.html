@@ -7,18 +7,18 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="row flex-column gy-3">
-    <div class="col-xl-7 col-lg-8">
+    <div class="col-xl-7 col-lg-9">
         <h1 class="text-md-start text-center">{{ title }}</h1>
     </div>
     {% if description %}
-    <div class="col-xl-7 col-lg-8">
+    <div class="col-xl-7 col-lg-9">
         <p class="d-md-inline-block d-block text-secondary-emphasis bg-light rounded py-3 px-4" style="font-size: 1.1rem;">
             {{ description }}
         </p>
     </div>
     {% endif %}
     {% block aside %}{% endblock aside %}
-    <div class="col-lg-12">
+    <div class="col-xl-7 col-lg-9">
         {% block resource_list_outer %}
         {% if not resources %}
         <p class="text-secondary">{{ empty_resource_list_text }}</p>
