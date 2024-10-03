@@ -162,11 +162,17 @@
             </div>
         </div>
     </div>
+    <a href="{% url 'support' %}" class="d-lg-none d-block w-100 text-center support-link" style="min-width: fit-content;">
+        <small>Help & Support</small>
+    </a>
     {% else %}
     <div class="col-12 col-lg-2 text-lg-end text-center">
         <a href="{% url 'data_provider_home' %}" class="btn btn-sm btn-outline-primary" style="white-space: nowrap;">
             Provider Login/Sign up
         </a>
     </div>
+    <a href="{% url 'support' %}" class="d-lg-none d-block w-100 text-center support-link" style="min-width: fit-content;">
+        <small>Help & Support</small>
+    </a>
     {% endif %}
 </header>

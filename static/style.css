@@ -1135,10 +1135,6 @@ ul.tree ul {
 }
 
 /* Support page */
-a.support-link {
-    transform: translateY(0.25rem);
-}
-
 .support-page-description {
     max-width: 70ch;
 }
