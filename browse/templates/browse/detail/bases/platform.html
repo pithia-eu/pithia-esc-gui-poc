@@ -3,14 +3,14 @@
 {% if resource.properties.location %}
 <section class="resource-detail-section">
     <h2>Location</h2>
-    <dl class="row align-items-center g-4">
+    <dl class="d-flex flex-column row-gap-4">
         {% if resource.properties.location.name %}
-        <div class="col-lg-6">
+        <div>
             <dt class="fs-5 fw-medium">Name</dt>
             <dd>{{ resource.properties.location.name }}</dd>
         </div>
         {% endif %}
-        <div class="col-lg-6">
+        <div>
             <dt class="fs-5 fw-medium">Point</dt>
             <dd>
                 <dl>
@@ -50,4 +50,5 @@
     </ul>
 </section>
 {% endif %}
+{% include 'browse/detail/sections/documentation_section.html' %}
 {% endblock post_description_content %}

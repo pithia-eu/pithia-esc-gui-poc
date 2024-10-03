@@ -1,0 +1,57 @@
+{% if resource.properties.documentation %}
+{% with documentation=resource.properties.documentation %}
+<section class="resource-detail-section">
+    <h2 class="mb-4">Documentation</h2>
+    <details>
+        <summary class="summary-marker-custom align-items-baseline">
+            <div class="d-inline-flex flex-column row-gap-1">
+                <div class="fs-5">
+                    {% if documentation.title %}
+                    {{ documentation.title }}
+                    {% elif documentation.online_resource %}
+                    {{ documentation.online_resource|urlize }}
+                    {% else %}
+                    <i class="text-secondary">Unnamed Documentation</i>
+                    {% endif %}
+                </div>
+                {% if documentation.date %}
+                <span class="text-secondary">
+                    {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
+                    Published on {{ documentation.date|date }}
+                    {% else %}
+                    {{ documentation.date|date }} ({{ documentation.date_type }})
+                    {% endif %}
+                </span>
+                {% endif %}
+            </div>
+        </summary>
+        <dl class="d-flex flex-column row-gap-4 pt-2">
+            {% if documentation.title and documentation.online_resource %}
+            <div>
+                <dt>Online Resource</dt>
+                <dd>{{ documentation.online_resource|urlize }}</dd>
+            </div>
+            {% endif %}
+            {% if documentation.identifier %}
+            <div>
+                <dt>
+                    {% if 'doi' in documentation.identifier|lower %}
+                    DOI
+                    {% else %}
+                    Identifier
+                    {% endif %}
+                </dt>
+                <dd>{{ documentation.identifier|urlize }}</dd>
+            </div>
+            {% endif %}
+            {% if documentation.other_documentation_details %}
+            <div>
+                <dt>Full Citation</dt>
+                <dd>{{ documentation.other_documentation_details }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </details>
+</section>
+{% endwith %}
+{% endif %}

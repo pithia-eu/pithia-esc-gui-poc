@@ -1,5 +1,6 @@
 import logging
 from dateutil.parser import parse
+from dateutil.parser._parser import ParserError
 from lxml import etree
 
 from .constants import (
@@ -307,7 +308,52 @@ class PithiaCapabilitiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
     @property
     def capabilities(self):
         return self._get_capabilities_from_metadata()
-    
+
+
+class PithiaDocumentationMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def documentation(self):
+        citation_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:documentation/%s:Citation' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH)))
+        if not citation_element:
+            return None
+        title = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:title/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO), citation_element)
+        
+        ci_date_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:date/%s:CI_Date' % (NamespacePrefix.GMD, NamespacePrefix.GMD)))
+        try:
+            # Date
+            date = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:date/%s:Date' % (NamespacePrefix.GMD, NamespacePrefix.GCO), parent_element=ci_date_element)
+            date = parse(date)
+        except ParserError as err:
+            logger.exception(err)
+            date = None
+        except AttributeError as err:
+            logger.exception(err)
+            date = None
+
+        try:
+            # Date type
+            date_type = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:dateType/%s:CI_DateTypeCode' % (NamespacePrefix.GMD, NamespacePrefix.GMD))
+        except AttributeError as err:
+            logger.exception(err)
+            date_type = None
+
+        # Identifer (usually DOI)
+        identifier = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:identifier/%s:MD_Identifier/%s:code/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GCO))
+
+        # Online resource
+        online_resource = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:onlineResource/%s:CI_OnlineResource/%s:linkage/%s:URL' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD, NamespacePrefix.GMD, NamespacePrefix.GMD))
+        
+        # Other documentation details
+        other_documentation_details = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:otherCitationDetails/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
+        return {
+            'title': title,
+            'date': date,
+            'date_type': date_type,
+            'identifier': identifier,
+            'online_resource': online_resource,
+            'other_documentation_details': other_documentation_details,
+        }
+
 
 class PithiaStatusMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property

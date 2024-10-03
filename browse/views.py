@@ -556,6 +556,7 @@ class ProjectDetailView(ResourceDetailView):
             cleaned_property_table_dict,
             disallowed_property_keys=[
                 'abstract',
+                'documentation',
                 'keywords',
                 'status',
                 'URL',
@@ -590,6 +591,7 @@ class PlatformDetailView(ResourceDetailView):
             cleaned_property_table_dict,
             disallowed_property_keys=[
                 'childPlatform',
+                'documentation',
                 'location',
                 'shortName',
                 'type',
@@ -619,6 +621,7 @@ class InstrumentDetailView(ResourceDetailView):
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
             disallowed_property_keys=[
+                'documentation',
                 'member',
                 'operationalMode',
                 'type',
@@ -649,6 +652,7 @@ class OperationDetailView(ResourceDetailView):
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
             disallowed_property_keys=[
+                'documentation',
                 'operationTime',
                 'platform',
                 'status',
@@ -679,6 +683,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
             disallowed_property_keys=[
                 'capabilities',
                 'dataLevel',
+                'documentation',
                 'instrumentModePair',
                 'qualityAssessment',
             ]
@@ -735,6 +740,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
                 'capabilities',
                 'childComputation',
                 'dataLevel',
+                'documentation',
                 'qualityAssessment',
                 'type',
                 'version',
@@ -792,6 +798,7 @@ class ProcessDetailView(ResourceDetailView):
                 'acquisitionComponent',
                 'computationComponent',
                 'dataLevel',
+                'documentation',
                 'qualityAssessment',
             ]
         )

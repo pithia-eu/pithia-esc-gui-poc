@@ -17,7 +17,7 @@
     <h2>Operational Modes</h2>
     <ul class="list-group list-group-flush">
         {% for operational_mode in resource.properties.operational_modes %}
-        <li class="list-group-item py-2 ps-0">
+        <li class="list-group-item py-2">
             <details id="{{ operational_mode.id }}" name="details-operational-modes" class="py-2" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
                 <summary class="summary-marker-custom">
                     <div class="d-flex flex-column">
@@ -51,4 +51,5 @@
     </ul>
 </section>
 {% endif %}
+{% include 'browse/detail/sections/documentation_section.html' %}
 {% endblock post_description_content %}
