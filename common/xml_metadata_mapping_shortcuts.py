@@ -12,6 +12,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaRelatedPartiesMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
+    PithiaStatusMetadataPropertiesMixin,
 )
 
 
@@ -48,7 +49,8 @@ class ProjectXmlMappingShortcuts(
         PithiaCoreMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        PithiaResourceUrlsMetadataPropertiesMixin,
+        PithiaStatusMetadataPropertiesMixin):
     @property
     def keywords(self):
         keyword_elements = self._get_elements_with_xpath_query('.//%s:keyword/%s:CharacterString' % (NamespacePrefix.GMD, NamespacePrefix.GCO))
@@ -59,10 +61,6 @@ class ProjectXmlMappingShortcuts(
                 continue
             keywords.append(keyword)
         return list(set(keywords))
-    
-    @property
-    def status(self):
-        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:status/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
     @property
     def sub_projects(self):
@@ -97,10 +95,17 @@ class PlatformXmlMappingShortcuts(
 
 class OperationXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
+        GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        PithiaResourceUrlsMetadataPropertiesMixin,
+        PithiaStatusMetadataPropertiesMixin):
+    @property
+    def operation_time(self):
+        operation_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:operationTime' % self.PITHIA_NSPREFIX_XPATH))
+        return self._gml_time_period(operation_time_element)
+
     @property
     def platforms(self):
         return self._get_elements_with_xpath_query('.//%s:platform/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))

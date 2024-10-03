@@ -307,6 +307,13 @@ class PithiaCapabilitiesMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
     @property
     def capabilities(self):
         return self._get_capabilities_from_metadata()
+    
+
+class PithiaStatusMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    @property
+    def status(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:status/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
 
 
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
