@@ -12,12 +12,12 @@
     {% if resource.properties.phenomenon_time %}
     <div class="border-top pt-4">
         <h2 class="fs-6">Phenomenon Time</h2>
-        <dl class="d-flex justify-content-start column-gap-3">
-            <div class="d-flex flex-column-reverse">
+        <dl class="d-flex justify-content-start column-gap-4">
+            <div class="d-flex flex-column">
                 <dt>Begin</dt>
                 <dd>{{ resource.properties.phenomenon_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
             </div>
-            <div class="d-flex flex-column-reverse">
+            <div class="d-flex flex-column">
                 <dt>End</dt>
                 <dd>{{ resource.properties.phenomenon_time.time_period.end.time_position|date:'M jS, Y, H:i e' }}</dd>
             </div>
