@@ -449,24 +449,36 @@ class GmdUrlMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
 class GmlTimePeriodMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _gml_time_period(self, time_period_container_element):
         time_period_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimePeriod/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_container_element)
+
         # Time period - begin
         time_period_begin_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:begin' % NamespacePrefix.GML, time_period_container_element))
         time_period_begin_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimeInstant/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_begin_element)
         time_period_begin_position = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:timePosition' % NamespacePrefix.GML, time_period_begin_element)
+        try:
+            time_period_begin_position_parsed = parse(time_period_begin_position)
+        except ParserError as err:
+            logger.exception(err)
+            time_period_begin_position_parsed = None
+
         # Time period - end
         time_period_end_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:end' % NamespacePrefix.GML, time_period_container_element))
         time_period_end_id = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:TimeInstant/@%s:id' % (NamespacePrefix.GML, NamespacePrefix.GML), time_period_end_element)
         time_period_end_position = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:timePosition' % NamespacePrefix.GML, time_period_end_element)
+        try:
+            time_period_end_position_parsed = parse(time_period_end_position)
+        except ParserError as err:
+            logger.exception(err)
+            time_period_end_position_parsed = None
         return {
             'time_period': {
                 'id': time_period_id,
                 'begin': {
                     'id': time_period_begin_id,
-                    'time_position': parse(time_period_begin_position),
+                    'time_position': time_period_begin_position_parsed,
                 },
                 'end': {
                     'id': time_period_end_id,
-                    'time_position': parse(time_period_end_position),
+                    'time_position': time_period_end_position_parsed,
                 },
             }
         }
