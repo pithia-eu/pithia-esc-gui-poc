@@ -1,4 +1,9 @@
 {% extends 'browse/detail/bases/base.html' %}
+{% block top_section_website %}
+{% with url_text='Instrument Website' %}
+{% include 'browse/detail/components/top_section_extra_content/url.html' %}
+{% endwith %}
+{% endblock top_section_website %}
 {% block pre_description_content %}
 {% if resource.properties.instrument_version %}
 <section class="resource-detail-small-top-section">

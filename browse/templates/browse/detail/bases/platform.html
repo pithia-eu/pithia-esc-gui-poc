@@ -1,4 +1,9 @@
 {% extends 'browse/detail/bases/base.html' %}
+{% block top_section_website %}
+{% with url_text='Platform Website' %}
+{% include 'browse/detail/components/top_section_extra_content/url.html' %}
+{% endwith %}
+{% endblock top_section_website %}
 {% block post_description_content %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">
