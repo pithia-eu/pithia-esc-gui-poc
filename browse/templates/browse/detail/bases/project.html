@@ -5,7 +5,7 @@
 {% endwith %}
 {% endblock top_section_website %}
 {% block top_section_extra_content %}
-<div class="d-flex flex-column pt-4">
+<div class="d-flex flex-column row-gap-3 pt-3">
     {% if resource.properties.status %}
     <section class="flex-shrink-0 pb-0">
         <dl class="mb-0">
@@ -19,22 +19,6 @@
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                 {% endwith %}
             </dd>
-        </dl>
-    </section>
-    {% endif %}
-    {% if resource.properties.keywords %}
-    <section class="pt-4 pb-0">
-        <dl class="mb-0">
-            <div class="d-flex flex-column">
-                <dt>
-                    <h3 class="fs-6" style="font-weight: 700;">
-                        Keywords
-                    </h3>
-                </dt>
-                <dd class="mb-0">
-                    <small>{{ resource.properties.keywords|join:', ' }}</small>
-                </dd>
-            </div>
         </dl>
     </section>
     {% endif %}
@@ -73,4 +57,10 @@ Description
 </section>
 {% endif %}
 {% include 'browse/detail/sections/documentation_section.html' %}
+<section class="resource-detail-section">
+    <h2>Keywords</h2>
+    <p>
+        {{ resource.properties.keywords|join:', ' }}
+    </p>
+</section>
 {% endblock post_description_content %}

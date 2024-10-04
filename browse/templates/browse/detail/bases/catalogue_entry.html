@@ -12,7 +12,7 @@
     {% if resource.properties.phenomenon_time %}
     <div class="border-top pt-4">
         <h2 class="fs-6">Phenomenon Time</h2>
-        <dl class="d-flex justify-content-start column-gap-4">
+        <dl class="d-flex flex-wrap justify-content-start column-gap-4 row-gap-2 pt-2">
             <div class="d-flex flex-column">
                 <dt>Begin</dt>
                 <dd>{{ resource.properties.phenomenon_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
@@ -29,7 +29,7 @@
 {% block pre_description_content %}
 {% if resource.data_subsets %}
 <section class="resource-detail-emphasised-section resource-detail-section">
-    <h2 class="mb-4">Data Subsets</h2>
+    <h2 class="fs-4 mb-4">Data Subsets</h2>
     <ul>
         {% for data_subset in resource.data_subsets %}
         <li>
