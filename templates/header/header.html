@@ -1,0 +1,18 @@
+<header>
+    <div class="container d-md-flex d-none align-items-center justify-content-between column-gap-2 py-3">
+        <a class="d-flex align-items-center column-gap-2 navbar-brand header-logo-link" href="/">
+            {% load static %}
+            <img src="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo">
+            <div class="d-md-flex d-none flex-column align-items-start text-dark text-decoration-none fs-4">
+                <span class="fs-4 lh-sm">PITHIA</span>
+                <span class="fs-6 lh-sm">e-Science Centre</span>
+            </div>
+        </a>
+        <div class="d-flex align-items-center justify-content-end column-gap-2">
+            {% include 'header/help_and_support_link.html' %}
+            <div class="vr"></div>
+            {% include 'header/user_menu.html' %}
+        </div>
+    </div>
+    {% include 'navbar.html' %}
+</header>

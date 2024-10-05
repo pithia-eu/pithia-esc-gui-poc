@@ -17,8 +17,7 @@ header .nav-link,
 .breadcrumb-item a,
 .accordion-button a,
 .card-menu a,
-.list-group-item > a,
-a.support-link {
+.list-group-item > a {
     text-decoration: none;
 }
 
@@ -38,6 +37,7 @@ a:not(
     .card-menu a,
     a.dropdown-item,
     a.support-link,
+    a.login-link,
     .toc-container a,
     .badge):visited {
     color: #551A8B !important;
@@ -242,6 +242,15 @@ header .dropdown-item {
     padding-inline: 1.5rem;
 }
 
+header a.support-link {
+    min-width: fit-content;
+}
+
+header .user-dropdown .dropdown-toggle,
+header a.support-link {
+    font-size: 0.875rem;
+}
+
 .dropdown-item:active img {
     filter: invert(100%) sepia(0%) saturate(7478%) hue-rotate(75deg) brightness(99%) contrast(106%);
 }
@@ -253,12 +262,11 @@ header .dropdown-item {
 }
 
 .user-dropdown {
-    width: 100%;
     text-align: center;
 }
 
-.user-dropdown .dropdown-menu {
-    width: 100%;
+.user-dropdown .dropdown-menu.show {
+    width: max-content;
 }
 
 .user-dropdown .institution-for-login-session {
@@ -287,15 +295,19 @@ header .dropdown-item {
     height: 1.2rem;
 }
 
+.institution-menu-dropdown .dropdown-menu.show {
+    width: max-content;
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     padding: 0.5em 0;
     margin-bottom: 2rem;
-    background-color: aliceblue;
 }
 
 .breadcrumb {
     margin-bottom: 0;
+    font-size: 0.875rem;
 }
 
 .breadcrumb-item::before {
@@ -1447,6 +1459,10 @@ ul.tree ul {
     .user-dropdown .dropdown-menu {
         max-width: 20rem;
     }
+
+    .institution-menu-dropdown .dropdown-menu {
+        max-width: 20rem;
+    }
 }
 
 /* Credit: Used this article as reference for dialog implementation:
@@ -1456,6 +1472,18 @@ https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles *
         margin-block-end: 0;
         border-end-end-radius: 0;
         border-end-start-radius: 0;
+    }
+
+    .navbar-container {
+        max-width: none;
+        margin-right: 0;
+        margin-left: 0;
+        padding-right: 0;
+        padding-left: 0;
+    }
+    
+    .navbar-container .navbar {
+        border-radius: 0 !important;
     }
 }
 

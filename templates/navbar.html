@@ -1,0 +1,73 @@
+<div class="navbar-container container">
+    <nav class="navbar navbar-expand-lg bg-light rounded">
+        <div class="container">
+            <a class="d-md-none d-inline navbar-brand header-logo-link" href="/">
+                {% load static %}
+                <img src="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo">
+            </a>
+            <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse px-lg-0 px-2 pt-lg-0 pt-2" id="navbarNav">
+                <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4">
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Search Data Collections</a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                <li>
+                                    {% url 'search:index' as search_url %}
+                                    <a href="{{ search_url }}" class="dropdown-item">Search Data Collections by Content</a>
+                                </li>
+                                <li>
+                                    {% url 'simple_search:index' as simple_search_url %}
+                                    <a href="{{ simple_search_url }}" class="dropdown-item">Data Collection Simple Search</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Scientific Metadata</a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                <li>
+                                    {% url 'browse:list_data_collections' as data_collections_url %}
+                                    <a href="{{ data_collections_url }}" class="dropdown-item">Data Collections</a>
+                                </li>
+                                <li>
+                                    {% url 'browse:catalogue_related_resource_types' as catalogues_url %}
+                                    <a href="{{ catalogues_url }}" class="dropdown-item">Catalogues</a>
+                                </li>
+                                <li>
+                                    {% url 'browse:list_workflows' as workflows_url %}
+                                    <a href="{{ workflows_url }}" class="dropdown-item">Workflows</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    {% url 'browse:index' as browse_url %}
+                                    <a href="{{ browse_url }}" class="dropdown-item">All Scientific Metadata</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        {% url 'ontology:index' as browse_ontology_url %}
+                        <a href="{{ browse_ontology_url }}" class="nav-link">
+                            Space Physics Ontology
+                        </a>
+                    </li>
+                </ul>
+                {% if request.session.institution_for_login_session %}
+                <div class="d-flex flex-column align-items-start pt-lg-0 pt-4 pb-lg-0 pb-3 px-lg-2 px-0 ms-auto">
+                    <a href="{% url 'resource_management:index' %}" class="link-plain-by-default">Manage Registrations</a>
+                </div>
+                {% endif %}
+                <div class="d-md-none d-flex align-items-center justify-content-between border-top pt-2 pb-2">
+                    {% include 'header/help_and_support_link.html' %}
+                    {% include 'header/user_menu.html' %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -41,32 +41,23 @@
     </script>
 </head>
 <body>
-    <div class="header-wrapper">
-        <div class="container">
-            {% include "header.html" %}
-        </div>
-    </div>
+    {% include 'header/header.html' %}
     {% block breadcrumb_wrapper %}
     <div class="breadcrumb-wrapper mt-2">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between column-gap-5">
+        {% url 'home' as base_url %}
+        {% if not request.path == base_url %}
+        <div class="container px-4">
+            <div class="d-flex align-items-center justify-content-between column-gap-5 px-1">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         {% load project_tags %}
-                        {% url 'home' as base_url %}
-                        {% if request.path == base_url %}
-                        {% breadcrumb_item_active 'Home' %}
-                        {% else %}
                         {% breadcrumb_item 'Home' 'home' %}
-                        {% endif %}
                         {% block breadcrumbs %}{% endblock breadcrumbs %}
                     </ol>
                 </nav>
-                <a href="{% url 'support' %}" class="d-lg-inline d-none support-link text-lg-left text-center" style="min-width: fit-content;">
-                    Help & Support
-                </a>
             </div>
         </div>
+        {% endif %}
     </div>
     {% endblock breadcrumb_wrapper %}
     <div class="container">
