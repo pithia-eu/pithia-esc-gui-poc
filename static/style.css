@@ -14,7 +14,6 @@ section {
 }
 
 header .nav-link,
-.breadcrumb-item a,
 .accordion-button a,
 .card-menu a,
 .list-group-item > a {
@@ -301,13 +300,25 @@ header a.support-link {
 
 /* Breadcrumb */
 .breadcrumb-wrapper {
-    padding: 0.5em 0;
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .breadcrumb {
-    margin-bottom: 0;
     font-size: 0.875rem;
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+}
+
+.breadcrumb-item a:not(.breadcrumb-item a:hover, .breadcrumb-item a:focus) {
+    color: var(--bs-secondary);
+}
+
+.breadcrumb-item a:hover,
+.breadcrumb-item a:focus {
+    text-decoration: underline;
 }
 
 .breadcrumb-item::before {
@@ -1399,6 +1410,19 @@ ul.tree ul {
     .resource-detail-aside h2 {
         font-size: 1.25rem;
     }
+
+    .resource-detail-aside .resource-detail-aside-section:first-child {
+        padding-top: 0;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-wrapper {
+        margin-top: 2rem;
+    }
+    
+    .breadcrumb {
+        font-size: 0.875rem;
+    }
 }
 
 @media (min-width: 768px) {
@@ -1465,9 +1489,23 @@ ul.tree ul {
     }
 }
 
-/* Credit: Used this article as reference for dialog implementation:
-https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles */
+@media (max-width: 992px) {
+    /* Navbar */
+    .navbar .dropdown-menu {
+        background: transparent;
+        border: none;
+        font-size: 0.875rem;
+        padding-top: 0;
+    }
+
+    .navbar .dropdown-menu .dropdown-divider {
+        display: none;
+    }
+}
+
 @media (max-width: 768px) {
+    /* Credit: Used this article as reference for dialog implementation:
+    https://web.dev/articles/building/a-dialog-component#mobile_mega_dialog_styles */
     dialog {
         margin-block-end: 0;
         border-end-end-radius: 0;
