@@ -245,7 +245,6 @@ header a.support-link {
     min-width: fit-content;
 }
 
-header .user-dropdown .dropdown-toggle,
 header a.support-link {
     font-size: 0.875rem;
 }
@@ -1435,6 +1434,10 @@ ul.tree ul {
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
     }
+
+    header .user-dropdown .dropdown-toggle {
+        font-size: 0.875rem;
+    }
 }
 
 @media (min-width: 576px) {
@@ -1497,14 +1500,14 @@ ul.tree ul {
 
 @media (max-width: 992px) {
     /* Navbar */
-    .navbar .dropdown-menu {
+    .navbar .dropdown-menu:not(.user-dropdown .dropdown-menu) {
         background: transparent;
         border: none;
         font-size: 0.875rem;
         padding-top: 0;
     }
 
-    .navbar .dropdown-menu .dropdown-divider {
+    .navbar .dropdown-menu .dropdown-divider:not(.user-dropdown .dropdown-divider) {
         display: none;
     }
 }

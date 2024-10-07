@@ -8,6 +8,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse px-lg-0 px-2 pt-lg-0 pt-2" id="navbarNav">
+            <div class="d-md-none d-block py-3 mb-3">
+                {% include 'header/user_menu.html' %}
+            </div>
             <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4">
                 <li class="nav-item">
                     <div class="dropdown">
@@ -62,9 +65,8 @@
                 <a href="{% url 'resource_management:index' %}" class="link-plain-by-default">Manage Registrations</a>
             </div>
             {% endif %}
-            <div class="d-md-none d-flex align-items-center justify-content-between border-top pt-2 pb-2">
+            <div class="d-md-none d-block border-top pt-3 pb-4 mt-4">
                 {% include 'header/help_and_support_link.html' %}
-                {% include 'header/user_menu.html' %}
             </div>
         </div>
     </div>

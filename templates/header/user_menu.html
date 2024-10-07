@@ -1,5 +1,5 @@
 {% if request.session.is_logged_in %}
-<div class="dropdown user-dropdown">
+<div class="dropdown user-dropdown text-start">
     <a
         href="#"
         class="d-inline-block text-decoration-none dropdown-toggle"
@@ -12,7 +12,7 @@
         </svg>
         {{ request.session.user_given_name }}
     </a>
-    <div class="dropdown-menu dropdown-menu-end">
+    <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-start">
         {% if request.session.institution_for_login_session %}
         <div class="px-4 py-2">
             <small class="fw-bold" style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</small>
