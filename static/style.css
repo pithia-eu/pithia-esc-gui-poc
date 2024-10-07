@@ -250,6 +250,12 @@ header a.support-link {
     font-size: 0.875rem;
 }
 
+/* Navbar */
+.navbar .nav-item a.dropdown-toggle {
+    color: var(--pithia-blue);
+    text-decoration-color: var(--pithia-blue);
+}
+
 .dropdown-item:active img {
     filter: invert(100%) sepia(0%) saturate(7478%) hue-rotate(75deg) brightness(99%) contrast(106%);
 }
@@ -1421,7 +1427,7 @@ ul.tree ul {
     }
     
     .breadcrumb {
-        font-size: 0.875rem;
+        font-size: 1rem;
     }
 }
 
