@@ -4,7 +4,10 @@ from django.http import (
     FileResponse,
     HttpResponseNotFound,
 )
-from django.shortcuts import render
+from django.shortcuts import (
+    redirect,
+    render,
+)
 
 from help.services import (
     DataCollectionsHelpArticleContent,
@@ -37,6 +40,9 @@ def index(request):
         'create_institution_url': CREATION_URL_BASE,
         'help_content_dicts': help_content_dicts,
     })
+
+def data_provider_home(request):
+    return redirect('home')
 
 def resource_registration_user_guide(request):
     try:

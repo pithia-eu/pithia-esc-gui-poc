@@ -29,7 +29,7 @@ def institution_ownership_required(function):
         resource = ScientificMetadata.objects.get(pk=resource_id)
         if resource.institution_id != institution_id_for_login_session:
             messages.error(request, f'You must be a member of the institution that owns registration "{escape(resource_id)}" to perform this action.')
-            return redirect(reverse('resource_management:index'))
+            return redirect('resource_management:index')
         return function(request, resource_id, *args, **kwargs)
 
     return wrap

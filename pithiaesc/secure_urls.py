@@ -5,7 +5,7 @@ from browse.views import schemas
 from user_management import views as user_management_views
 
 urlpatterns = [
-    path('dashboard/', views.index, name='data_provider_home'),
+    path('dashboard/', views.data_provider_home, name='data_provider_home'),
     path('', include('update.urls')),
     path('', include('delete.urls')),
     path('manage/', include('resource_management.urls')),
