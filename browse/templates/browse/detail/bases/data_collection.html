@@ -9,7 +9,7 @@
 {% block pre_description_content %}
 {% if link_interaction_methods %}
 <section class="link-interaction-methods-section resource-detail-emphasised-section resource-detail-section">
-    <h2>Access this Data Collection</h2>
+    <h2 class="fs-3 mb-1">Access this Data Collection</h2>
     {% with sources=link_interaction_methods|wrap_in_list_if_dict %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}
@@ -18,7 +18,7 @@
 {% if api_interaction_methods %}
 <section class="api-interaction-methods-section resource-detail-emphasised-section resource-detail-section">
     <hgroup>
-        <h2>Access this Data Collection</h2>
+        <h2 class="fs-3">Access this Data Collection</h2>
         <p class="fs-6 mb-0">with the PITHIA e-Science Centre</p>
     </hgroup>
     {% for method in api_interaction_methods %}

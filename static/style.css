@@ -710,7 +710,8 @@ as Bootstrap styling. */
     font-size: 1.6rem;
 }
 
-.details-interaction-methods:not([open]) summary small {
+.online-resource-list li:has(> details:not([open])) .or-service-function,
+.online-resource-list li:has(> details:not([open])) > details > summary {
     color: var(--bs-secondary);
 }
 

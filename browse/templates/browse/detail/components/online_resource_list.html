@@ -3,7 +3,7 @@
     {% for source in sources|wrap_in_list_if_dict %}
     {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
     {% with online_resource=source.OnlineResource %}
-    <li class="list-group-item ps-0">
+    <li class="list-group-item py-4 ps-0">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}

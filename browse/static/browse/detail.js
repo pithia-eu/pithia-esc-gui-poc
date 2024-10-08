@@ -1,11 +1,14 @@
 const expandDescriptionButtons = document.querySelectorAll(".btn-expand-resource-description");
+const expandDescriptionButtonDefaultTexts = Array.from(expandDescriptionButtons).reduce((acc, btn) => {
+    acc[btn.dataset.target] = btn.textContent;
+    return acc;
+}, {});
 
 
 // Credit for overflow detection: https://stackoverflow.com/a/67455839.
 const isTextClamped = el => el.scrollHeight > el.clientHeight;
 
 function setupExpandDescriptionButton(expandDescriptionButton) {
-    const expandDescriptionButtonDefaultText = expandDescriptionButton.innerText;
     const descriptionWrapperElement = document.querySelector(`#${expandDescriptionButton.dataset.target}`);
     if (!descriptionWrapperElement) {
         return;
@@ -25,7 +28,7 @@ function setupExpandDescriptionButton(expandDescriptionButton) {
         if (expandDescriptionButton.classList.contains("expanded")) {
             expandDescriptionButton.classList.remove("expanded");
             descriptionWrapperElement.classList.remove("expanded");
-            expandDescriptionButton.innerText = expandDescriptionButtonDefaultText;
+            expandDescriptionButton.innerText = expandDescriptionButtonDefaultTexts[expandDescriptionButton.dataset.target];
             return;
         }
         expandDescriptionButton.classList.add("expanded");
