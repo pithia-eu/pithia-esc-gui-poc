@@ -4,11 +4,8 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<p class="lead mb-5">
-    Add, update and delete metadata. Select the type of metadata you would like to change below.
-</p>
-<div class="card-menu mb-3">
+<h1 class="mb-5">{{ title }}</h1>
+<div class="card-menu">
     <div class="card">
         <div class="card-body">
             <a href="{% url 'resource_management:data_collection_related_metadata_index' %}">
