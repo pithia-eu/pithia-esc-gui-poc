@@ -5,19 +5,29 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<ul class="list-group list-group-numbered">
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:catalogues' %}">Catalogues</a>
-        <span class="text-muted">{{ num_current_catalogues }}</span>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:catalogue_entries' %}">Catalogue Entries</a>
-        <span class="text-muted">{{ num_current_catalogue_entries }}</span>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'resource_management:catalogue_data_subsets' %}">Catalogue Data Subsets</a>
-        <span class="text-muted">{{ num_current_catalogue_data_subsets }}</span>
-    </li>
-</ul>
+<div class="col-xl-7 col-lg-9">
+    <h1 class="text-md-start text-center mb-4">{{ title }}</h1>
+    <p class="d-block page-info page-info-emphasised my-4">
+        Registering a catalogue involves registering <strong>
+        up to 3 types of metadata</strong>, registered in the
+        order presented below.
+        Information on what to include for each type can be
+        found in the
+        <a href="{% url 'resource_registration_user_guide' %}#page=21" target="_blank" class="link-underline-by-default">data resource registration guide</a>.
+    </p>
+    <ul class="list-group list-group-numbered">
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:catalogues' %}">Catalogues</a>
+            <span class="text-muted">{{ num_current_catalogues }}</span>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:catalogue_entries' %}">Catalogue Entries</a>
+            <span class="text-muted">{{ num_current_catalogue_entries }}</span>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'resource_management:catalogue_data_subsets' %}">Catalogue Data Subsets</a>
+            <span class="text-muted">{{ num_current_catalogue_data_subsets }}</span>
+        </li>
+    </ul>
+</div>
 {% endblock content %}
