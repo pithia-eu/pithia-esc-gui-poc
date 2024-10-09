@@ -1,8 +1,8 @@
-<div class="row gy-4">
+<div class="row row-gap-4">
     <div class="col-lg-7">
         <fieldset class="option-row">
-            <legend>
-                <h3 class="fs-5 text-muted">Observed Properties</h3>
+            <legend class="visually-hidden">
+                <h3>Observed Properties</h3>
             </legend>
             {% with ontology_component="observed-properties" search_input_col_width="col-lg-7" %}
             {% include "search/ontology_tree_container_template.html" %}
@@ -11,37 +11,37 @@
     </div>
     <div class="col-lg-5">
         <fieldset class="option-row">
-            <legend>
-                <h4 class="fs-5 text-muted">Filter observed properties by</h4>
+            <legend class="visually-hidden">
+                <h4>Filter observed properties by</h4>
             </legend>
             <div class="accordion" id="accordion-filters">
                 <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="heading-one">
+                    <legend class="accordion-header" id="heading-collapse-phenomenons">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-one" aria-expanded="true" aria-controls="collapse-one">
+                            data-bs-target="#collapse-phenomenons" aria-expanded="true" aria-controls="collapse-phenomenons">
                             Phenomenon
                         </button>
                     </legend>
-                    <div id="collapse-one" class="accordion-collapse collapse show" aria-labelledby="heading-one"
+                    <div id="collapse-phenomenons" class="accordion-collapse collapse show" aria-labelledby="heading-collapse-phenomenons"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="phenomenons" search_input_col_width="col-lg-12" %}
+                            {% with ontology_component="phenomenons" search_input_col_width="col-lg-12" input_group_extra_classes='input-group-sm' show_collapse_btns_extra_classes='btn-sm' %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
                     </div>
                 </fieldset>
                 <fieldset class="accordion-item">
-                    <legend class="accordion-header" id="heading-two">
+                    <legend class="accordion-header" id="heading-collapse-measurands">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse-two" aria-expanded="false" aria-controls="collapse-two">
+                            data-bs-target="#collapse-measurands" aria-expanded="false" aria-controls="collapse-measurands">
                             Measurand
                         </button>
                     </legend>
-                    <div id="collapse-two" class="accordion-collapse collapse" aria-labelledby="heading-two"
+                    <div id="collapse-measurands" class="accordion-collapse collapse" aria-labelledby="heading-collapse-measurands"
                         data-bs-parent="#accordion-filters">
                         <div class="accordion-body">
-                            {% with ontology_component="measurands" search_input_col_width="col-lg-12" %}
+                            {% with ontology_component="measurands" search_input_col_width="col-lg-12" input_group_extra_classes='input-group-sm' show_collapse_btns_extra_classes='btn-sm' %}
                             {% include "search/ontology_tree_container_template.html" %}
                             {% endwith %}
                         </div>
@@ -52,5 +52,5 @@
     </div>
 </div>
 <div class="d-flex flex-column align-items-lg-end my-3">
-    <button class="btn btn-light btn-clear-op-inputs" type="button">Clear Input Selection</button>
+    <button class="btn btn-outline-dark btn-clear-op-inputs" type="button">Clear Input Selection</button>
 </div>

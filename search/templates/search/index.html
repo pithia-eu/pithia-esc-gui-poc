@@ -17,19 +17,21 @@
 <form action="{% url 'search:index' %}" method="post" id="ontology-search-form">
     {% csrf_token %}
     <div class="row gy-4">
-        <div class="col-lg-8">
-            <p class="lead">Search for Data Collections using terms from the Space Physics Ontology.</p>
+        <div class="col-xl-7 col-lg-9">
+            <p class="page-info page-info-lg text-start">
+                A <a href="{% url 'ontology:index' %}" class="link-underline-by-default">vocabulary-based</a> search tool for data collections in the PITHIA e-Science Centre.
+            </p>
         </div>
         <div class="col-lg-12">
-            <h2 class="mb-3">Input Selection</h2>
-            <div class="accordion" id="accordionExample">
+            <h2 class="fs-5 fw-semibold mb-4">Input Selection</h2>
+            <div class="accordion" id="search-by-content-accordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-features-of-interest" aria-expanded="true" aria-controls="accordion-features-of-interest">
                             Features of Interest
                         </button>
                     </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div id="accordion-features-of-interest" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#search-by-content-accordion">
                         <div class="accordion-body">
                             {% include 'search/foi_form_section.html' %}
                         </div>
@@ -37,11 +39,11 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-comp-and-instr-types" aria-expanded="false" aria-controls="accordion-comp-and-instr-types">
                             Computation Types & Instrument Types
                         </button>
                     </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div id="accordion-comp-and-instr-types" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#search-by-content-accordion">
                         <div class="accordion-body">
                             {% include 'search/comp_type_and_instr_type_form_section.html' %}
                         </div>
@@ -49,11 +51,11 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-observed-properties" aria-expanded="false" aria-controls="collapse-observed-properties">
                             Observed Properties
                         </button>
                     </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div id="collapse-observed-properties" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#search-by-content-accordion">
                         <div class="accordion-body">
                             {% include 'search/op_form_section.html' %}
                         </div>
