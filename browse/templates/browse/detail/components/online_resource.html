@@ -1,63 +1,65 @@
 {% load project_tags %}
-<div class="d-inline-flex flex-column">
-    <h3 class="fs-5 mb-2">
-        <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover align-items-start link-plain-by-default" target="_blank" rel="noopener noreferrer">
-            {{ online_resource.name }}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
-            </svg>
-        </a>
-    </h3>
-    <small class="or-service-function">
-        {% if 'serviceFunction' in online_resource %}
-        {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' %}
-        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-        {% endwith %}
-        {% else %}
-        Linkage
-        {% endif %}
-    </small>
-</div>
-<details class="details-interaction-methods mt-4" name="details-collection-results" {% if forloop.counter == 1 or only_online_resource %}open{% endif %}>
-    <summary>
-        Description
-    </summary>
-    <div class="d-flex flex-column align-items-start row-gap-3 pt-2">
-        {% if 'description' in online_resource and online_resource.description %}
-        <div>
-            {% with online_resource_urlized=online_resource.description|urlize %}
-            {% with text_block_paragraphs=online_resource_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-            {% include 'browse/detail/components/expandable_text_block.html' %}
+<div class="d-flex flex-column row-gap-4">
+    <div class="d-flex flex-column">
+        <h3 class="fs-5 mb-2">
+            <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover align-items-start link-plain-by-default" target="_blank" rel="noopener noreferrer">
+                {{ online_resource.name }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+                </svg>
+            </a>
+        </h3>
+        <small class="fw-semibold or-service-function">
+            {% if 'serviceFunction' in online_resource %}
+            {% with value=online_resource.serviceFunction|get_key_value:'@xlink:href' %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
             {% endwith %}
-            {% endwith %}
-        </div>
-        {% endif %}
-        {% if 'protocol' in online_resource or 'dataFormat' in online_resource %}
-        <details>
-            <summary>
-                <small>Protocol & data formats</small>
-            </summary>
-            <dl class="mt-2">
-                {% if 'protocol' in online_resource %}
-                <div>
-                    <dt>Protocol</dt>
-                    <dd>{{ online_resource.protocol }}</dd>
-                </div>
-                {% endif %}
-                {% if 'dataFormat' in online_resource %}
-                <div class="mt-3">
-                    <dt>Data Formats</dt>
-                    {% for data_format in online_resource.dataFormat|wrap_in_list_if_dict %}
-                    <dd class="dd-list-item">
-                        {% with value=data_format|get_key_value:'@xlink:href' %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                        {% endwith %}
-                    </dd>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </dl>
-        </details>
-        {% endif %}
+            {% else %}
+            Linkage
+            {% endif %}
+        </small>
     </div>
-</details>
+    <details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter == 1 or only_online_resource %}open{% endif %}>
+        <summary class="fs-5">
+            Details
+        </summary>
+        <div class="d-flex flex-column row-gap-3 mt-3">
+            {% if 'description' in online_resource and online_resource.description %}
+            <div>
+                {% with online_resource_urlized=online_resource.description|urlize %}
+                {% with text_block_paragraphs=online_resource_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+                {% include 'browse/detail/components/expandable_text_block.html' %}
+                {% endwith %}
+                {% endwith %}
+            </div>
+            {% endif %}
+            {% if 'protocol' in online_resource or 'dataFormat' in online_resource %}
+            <details>
+                <summary>
+                    Protocol & Data Formats
+                </summary>
+                <dl class="d-flex flex-column row-gap-2 mt-2">
+                    {% if 'protocol' in online_resource %}
+                    <div>
+                        <dt>Protocol</dt>
+                        <dd>{{ online_resource.protocol }}</dd>
+                    </div>
+                    {% endif %}
+                    {% if 'dataFormat' in online_resource %}
+                    <div>
+                        <dt>Data Formats</dt>
+                        {% for data_format in online_resource.dataFormat|wrap_in_list_if_dict %}
+                        <dd class="dd-list-item">
+                            {% with value=data_format|get_key_value:'@xlink:href' %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </dl>
+            </details>
+            {% endif %}
+        </div>
+    </details>
+</div>
