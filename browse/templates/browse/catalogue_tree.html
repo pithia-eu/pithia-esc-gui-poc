@@ -1,0 +1,37 @@
+{% extends 'browse/resource_list_by_type.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block resource_list_outer %}
+{% for catalogue in catalogues %}
+<section class="pb-1 mt-4">
+    <h2 class="fs-3 mb-3">
+        <a href="{% url 'browse:catalogue_detail' catalogue.id %}" class="link-plain-by-default">
+            {{ catalogue.name }}
+        </a>
+    </h2>
+    {% if catalogue.description %}
+    <p>
+        {{ catalogue.description }}
+    </p>
+    {% endif %}
+    {% with entries=catalogue.entries %}
+    {% if not entries %}
+    <div class="card border text-secondary mt-4 mb-0">
+        <div class="card-body">No entries.</div>
+    </div>
+    {% else %}
+    <ul class="list-group tree-catalogue-entry pt-2 mb-0">
+        {% for catalogue_entry in catalogue.entries %}
+        <li class="list-group-item p-3">
+            {% include 'browse/catalogue_entry_list_item_content.html' %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</section>
+{% endfor %}
+{% endblock resource_list_outer %}

@@ -1,0 +1,35 @@
+{% if not catalogue_entry.data_subsets %}
+<a href="{% url 'browse:catalogue_entry_detail' catalogue_entry.id %}" class="link-plain-by-default">
+    {{ catalogue_entry.name }}
+</a>
+{% else %}
+<details>
+    <summary>
+        <div class="d-inline-flex flex-column">
+            <a href="{% url 'browse:catalogue_entry_detail' catalogue_entry.id %}" class="link-plain-by-default">
+                {{ catalogue_entry.name }}
+            </a>
+            {% if catalogue_entry.data_subsets %}
+            <small class="text-secondary">
+                {% if catalogue_entry.data_subsets|length == 1 %}
+                1 Data Subset
+                {% else %}
+                {{ catalogue_entry.data_subsets|length }} Data Subsets
+                {% endif %}
+            </small>
+            {% endif %}
+        </div>
+    </summary>
+    {% if catalogue_entry.data_subsets %}
+    <ul class="list-group list-group-flush mt-3">
+        {% for data_subset in catalogue_entry.data_subsets %}
+        <li class="list-group-item">
+            <a href="{% url 'browse:catalogue_data_subset_detail' data_subset.id %}" class="link-plain-by-default">
+                {{ data_subset.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</details>
+{% endif %}

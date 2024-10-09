@@ -1,4 +1,4 @@
-{% extends 'browse/detail/bases/base.html' %}
+{% extends 'browse/detail/bases/base_catalogue_related.html' %}
 {% load project_tags %}
 {% block top_section_extra_content %}
 <div class="pt-4">
@@ -9,9 +9,9 @@
 {% endblock top_section_extra_content %}
 {% block pre_description_content %}
 {% if resource.entries %}
-<section class="resource-detail-emphasised-section resource-detail-section">
-    <h2 class="fs-4 mb-4">Entries</h2>
-    <ul>
+<section class="resource-detail-section">
+    <h2>Entries</h2>
+    <ol class="mt-4">
         {% for entry in resource.entries %}
         <li>
             {% with value=entry.metadata_server_url %}
@@ -19,7 +19,7 @@
             {% endwith %}
         </li>
         {% endfor %}
-    </ul>
+    </ol>
 </section>
 {% endif %}
 {% endblock pre_description_content %}

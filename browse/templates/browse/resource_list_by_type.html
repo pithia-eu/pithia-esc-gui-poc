@@ -6,36 +6,37 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<div class="row flex-column gy-3">
+<div class="row gx-5 gy-3">
     <div class="col-xl-7 col-lg-9">
-        <h1 class="text-md-start text-center">{{ title }}</h1>
+        <div class="d-flex flex-column row-gap-4">
+            <div class="d-flex flex-column row-gap-3">
+                <h1 class="text-md-start text-center mb-0">{{ title }}</h1>
+                {% if description %}
+                <p style="font-size: 1.1rem;" class="mb-0">
+                    {{ description }}
+                </p>
+                {% endif %}
+            </div>
+            {% block aside_responsive %}{% endblock aside_responsive %}
+            {% block resource_list_outer %}
+            {% if not resources %}
+            <p class="text-secondary">{{ empty_resource_list_text }}</p>
+            {% else %}
+            {% block resource_list_inner %}
+            {% with resource_list=resources %}
+            <ul class="list-group mt-2">
+                {% for resource in resources %}
+                <li class="list-group-item">
+                    <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endwith %}
+            {% endblock resource_list_inner %}
+            {% endif %}
+            {% endblock resource_list_outer %}
+        </div>
     </div>
-    {% if description %}
-    <div class="col-xl-7 col-lg-9">
-        <p class="d-md-inline-block d-block text-secondary-emphasis bg-light rounded py-3 px-4" style="font-size: 1.1rem;">
-            {{ description }}
-        </p>
-    </div>
-    {% endif %}
     {% block aside %}{% endblock aside %}
-    <div class="col-xl-7 col-lg-9">
-        {% block resource_list_outer %}
-        {% if not resources %}
-        <p class="text-secondary">{{ empty_resource_list_text }}</p>
-        {% else %}
-        {% block resource_list_inner %}
-        {% with resource_list=resources %}
-        <ul class="list-group">
-            {% for resource in resources %}
-            <li class="list-group-item">
-                <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endwith %}
-        {% endblock resource_list_inner %}
-        {% endif %}
-        {% endblock resource_list_outer %}
-    </div>
 </div>
 {% endblock content %}

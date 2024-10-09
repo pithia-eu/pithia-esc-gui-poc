@@ -37,7 +37,6 @@ logger = logging.getLogger(__name__)
 
 _INDEX_PAGE_TITLE = 'All Scientific Metadata'
 _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Data Collection-related Metadata'
-_CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE = 'Catalogue-related Metadata'
 _XML_SCHEMAS_PAGE_TITLE = 'Metadata Models'
 
 # Create your views here.
@@ -45,7 +44,6 @@ def index(request):
     return render(request, 'browse/index.html', {
         'title': _INDEX_PAGE_TITLE,
         'data_collection_related_resource_types_page_title': _DATA_COLLECTION_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-        'catalogue_related_resource_types_page_title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
     })
 
 def data_collection_related_resource_types(request):
@@ -85,24 +83,16 @@ def data_collection_related_resource_types(request):
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
-def catalogue_related_resource_types(request):
+def catalogue_tree(request):
+    """Lists all catalogues, catalogue entries and data
+    subsets in a collapsible tree view.
     """
-    Acts as a centre point to all registration list pages
-    for each Catalogue-related registration (i.e., all
-    scientific metadata types from Catalogues to Catalogue
-    Data Subsets). Lists the links to these pages and the
-    total number of registrations for each scientific
-    metadata type.
-    """
-    num_current_catalogues = models.Catalogue.objects.count()
-    num_current_catalogue_entries = models.CatalogueEntry.objects.count()
-    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.count()
-    return render(request, 'browse/catalogue_related_resource_types.html', {
-        'title': _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE,
-        'num_current_catalogues': num_current_catalogues,
-        'num_current_catalogue_entries': num_current_catalogue_entries,
-        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+    catalogues = models.Catalogue.objects.all()
+    return render(request, 'browse/catalogue_tree.html', {
+        'title': models.Catalogue.type_plural_readable.title(),
+        'description': models.Catalogue.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
+        'catalogues': catalogues,
     })
 
 def schemas(request):
@@ -307,49 +297,6 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[OTHER_KEY].append(dc)
 
         return data_collections_by_type
-
-class CatalogueRelatedResourceListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
-
-    Maps Data Collection-related features (e.g., breadcrumbs)
-    to Catalogue-related features.
-    """
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
-        return context
-
-class CatalogueListView(CatalogueRelatedResourceListView):
-    """
-    A subclass of CatalogueRelatedResourceListView.
-
-    Lists the detail page links for each Catalogue
-    registration.
-    """
-    model = models.Catalogue
-    resource_detail_page_url_name = 'browse:catalogue_detail'
-
-class CatalogueEntryListView(CatalogueRelatedResourceListView):
-    """
-    A subclass of CatalogueRelatedResourceListView.
-
-    Lists the detail page links for each Catalogue
-    Entry registration.
-    """
-    model = models.CatalogueEntry
-    resource_detail_page_url_name = 'browse:catalogue_entry_detail'
-
-class CatalogueDataSubsetListView(CatalogueRelatedResourceListView):
-    """
-    A subclass of CatalogueRelatedResourceListView.
-
-    Lists the detail page links for each Catalogue
-    Data Subset registration.
-    """
-    model = models.CatalogueDataSubset
-    resource_detail_page_url_name = 'browse:catalogue_data_subset_detail'
 
 class WorkflowListView(ResourceListView):
     """
@@ -858,23 +805,7 @@ class DataCollectionDetailView(ResourceDetailView):
         
         return context
 
-class CatalogueRelatedResourceDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
-
-    Maps Data Collection-related features (e.g., breadcrumbs)
-    to Catalogue-related features.
-
-    This view is intended to be subclassed and to not
-    be called directly.
-    """
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_type_list_page_breadcrumb_text'] = _CATALOGUE_RELATED_RESOURCE_TYPES_PAGE_TITLE
-        context['resource_type_list_page_breadcrumb_url_name'] = 'browse:catalogue_related_resource_types'
-        return context
-
-class CatalogueDetailView(CatalogueRelatedResourceDetailView):
+class CatalogueDetailView(ResourceDetailView):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
@@ -882,7 +813,6 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
     a Catalogue registration.
     """
     model = models.Catalogue
-    resource_list_by_type_url_name = 'browse:list_catalogues'
     resource_download_url_name = 'utils:view_catalogue_as_xml'
     template_name = 'browse/detail/bases/catalogue.html'
 
@@ -900,7 +830,7 @@ class CatalogueDetailView(CatalogueRelatedResourceDetailView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
 
-class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
+class CatalogueEntryDetailView(ResourceDetailView):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
@@ -932,7 +862,7 @@ class CatalogueEntryDetailView(CatalogueRelatedResourceDetailView):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().get(request, *args, **kwargs)
 
-class CatalogueDataSubsetDetailView(CatalogueRelatedResourceDetailView):
+class CatalogueDataSubsetDetailView(ResourceDetailView):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
