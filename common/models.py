@@ -482,7 +482,7 @@ class AcquisitionCapabilities(ScientificMetadata):
     weight = 7
     type_readable = 'acquisition capabilities'
     type_plural_readable = 'acquisition capabilities'
-    type_description_readable = ''
+    type_description_readable = 'List of Process Capability descriptions for a particular Instrument in its particular mode of operation.'
     converted_xml_correction_function = correct_acquisition_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:acquisition_capability_set_detail'
     root_element_name = 'AcquisitionCapabilities'
@@ -529,7 +529,7 @@ class ComputationCapabilities(ScientificMetadata):
     weight = 9
     type_readable = 'computation capabilities'
     type_plural_readable = 'computation capabilities'
-    type_description_readable = ''
+    type_description_readable = 'List of Process Capability descriptions for a particular Computation component.'
     converted_xml_correction_function = correct_computation_capability_set_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:computation_capability_set_detail'
     root_element_name = 'ComputationCapabilities'
@@ -603,7 +603,7 @@ class DataCollection(ScientificMetadata):
     weight = 12
     type_readable = 'data collection'
     type_plural_readable = 'data collections'
-    type_description_readable = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data. Note: data collections do not include begin and end times, please see Catalogue.'
+    type_description_readable = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data.'
     converted_xml_correction_function = correct_data_collection_xml_converted_to_dict
     _browse_detail_page_url_name = 'browse:data_collection_detail'
     root_element_name = 'DataCollection'

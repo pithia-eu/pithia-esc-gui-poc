@@ -4,6 +4,9 @@
 {% block scripts %}
 <script src="{% static 'browse/data_collection_list.js' %}" defer></script>
 {% endblock scripts %}
+{% block extra_description_content %}
+Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-default">Catalogues</a>, data collections do not include begin and end times.
+{% endblock extra_description_content %}
 {% block aside %}
 <div class="d-xl-block d-none col-xl-5">
     <section class="d-flex flex-column pt-0">

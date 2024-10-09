@@ -12,8 +12,9 @@
             <div class="d-flex flex-column row-gap-4">
                 <h1 class="text-md-start text-center mb-0">{{ title }}</h1>
                 {% if description %}
-                <p style="font-size: 1.1rem;" class="mb-0">
+                <p class="page-info page-info-lg mb-0">
                     {{ description }}
+                    {% block extra_description_content %}{% endblock extra_description_content %}
                 </p>
                 {% endif %}
             </div>
