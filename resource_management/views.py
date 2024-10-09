@@ -20,7 +20,8 @@ def _create_manage_resource_page_title(resource_type_plural_readable):
 @login_session_institution_required
 def index(request):
     return render(request, 'resource_management/index.html', {
-        'title': _INDEX_PAGE_TITLE
+        'title': _INDEX_PAGE_TITLE,
+        'data_collection_related_index_page_title': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
     })
 
 @login_session_institution_required
