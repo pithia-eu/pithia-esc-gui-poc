@@ -9,7 +9,7 @@
 <div class="row gx-5 gy-3">
     <div class="col-xl-7 col-lg-9">
         <div class="d-flex flex-column row-gap-4">
-            <div class="d-flex flex-column row-gap-3">
+            <div class="d-flex flex-column row-gap-4">
                 <h1 class="text-md-start text-center mb-0">{{ title }}</h1>
                 {% if description %}
                 <p style="font-size: 1.1rem;" class="mb-0">
@@ -24,7 +24,7 @@
             {% else %}
             {% block resource_list_inner %}
             {% with resource_list=resources %}
-            <ul class="list-group mt-2">
+            <ul class="list-group mt-3">
                 {% for resource in resources %}
                 <li class="list-group-item">
                     <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
