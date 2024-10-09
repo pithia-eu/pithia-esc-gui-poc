@@ -5,31 +5,55 @@
 <script src="{% static 'browse/data_collection_list.js' %}" defer></script>
 {% endblock scripts %}
 {% block aside %}
-<div class="col-xl-7 col-lg-9">
-    <section>
-        <h2 class="fw-normal fs-3 mb-3">Data Collection Types</h2>
-        <ul class="w-auto bg-light text-secondary-emphasis rounded py-3">
+<div class="d-xl-block d-none col-xl-5">
+    <section class="d-flex flex-column pt-0">
+        <div class="mx-auto">
+            <h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
+            <ul style="min-width: 20rem;" class="bg-light text-secondary-emphasis list-unstyled rounded py-3 px-4 mb-0">
+                {% for key, value in resources.items %}
+                {% if value %}
+                <li class="my-1">
+                    {% with section_name=key.split|join:'-'|lower %}
+                    <a href="#{{ section_name }}-heading" class="link-plain-by-default">
+                        {{ key }}
+                    </a>
+                    {% endwith %}
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock aside %}
+{% block aside_responsive %}
+<div class="d-xl-none d-block col-xl-7 mt-4">
+    <section class="pb-0">
+        <h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
+        <ul class="bg-light text-secondary-emphasis list-unstyled rounded p-3 ps-4 mb-0">
             {% for key, value in resources.items %}
+            {% if value %}
             <li class="my-1">
                 {% with section_name=key.split|join:'-'|lower %}
-                <a href="#{{ section_name }}-heading">
-                    {% endwith %}
+                <a href="#{{ section_name }}-heading" class="link-plain-by-default">
                     {{ key }}
                 </a>
+                {% endwith %}
             </li>
+            {% endif %}
             {% endfor %}
         </ul>
     </section>
 </div>
-{% endblock aside %}
+{% endblock aside_responsive %}
 {% block resource_list_outer %}
 {% for key, value in resources.items %}
-<section class="my-4">
+<section class="pb-0 mt-4">
     {% if value %}
     <details open>
-        <summary class="summary-marker-custom data-collection-category" tabindex="-1">
+        <summary class="summary-marker-custom align-items-center data-collection-category" tabindex="-1">
             {% with section_name=key.split|join:'-'|lower %}
-            <h2 id="{{ section_name }}-heading" class="d-inline-block">
+            <h2 id="{{ section_name }}-heading" class="d-inline-block fs-3">
             {% endwith %}
                 {{ key }}
             </h2>
