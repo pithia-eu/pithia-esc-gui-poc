@@ -4,37 +4,41 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<p class="lead">
-    Interacting with a link below will open a schema in a new tab.
-</p>
-<ul class="list-group">
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/catalogue.xsd" target="_blank" rel="noopener noreferrer">Catalogue Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/collectionResults.xsd" target="_blank" rel="noopener noreferrer">Collection Results Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/dataCollection.xsd" target="_blank" rel="noopener noreferrer">Data Collection Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/featureOfInterest.xsd" target="_blank" rel="noopener noreferrer">Feature of Interest Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/pithia.xsd" target="_blank" rel="noopener noreferrer">PITHIA Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/procedure.xsd" target="_blank" rel="noopener noreferrer">Procedure Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/project.xsd" target="_blank" rel="noopener noreferrer">Project Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/utilities.xsd" target="_blank" rel="noopener noreferrer">Utilities Schema</a>
-    </li>
-    <li class="list-group-item">
-        <a href="https://metadata.pithia.eu/schemas/2.2/workflow.xsd" target="_blank" rel="noopener noreferrer">Workflow Schema</a>
-    </li>
-</ul>
+<div class="col-xl-7 col-lg-9">
+    <h1 class="text-md-start text-center">{{ title }}</h1>
+    <p class="page-info page-info-emphasised my-3">
+        The XML Schema Definitions (XSD) files which we use
+        to structure and validate PITHIA e-Science Centre
+        metadata are available to download below.
+    </p>
+    <ul class="list-group mt-1">
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/catalogue.xsd" target="_blank" rel="noopener noreferrer">Catalogue Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/collectionResults.xsd" target="_blank" rel="noopener noreferrer">Collection Results Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/dataCollection.xsd" target="_blank" rel="noopener noreferrer">Data Collection Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/featureOfInterest.xsd" target="_blank" rel="noopener noreferrer">Feature of Interest Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/pithia.xsd" target="_blank" rel="noopener noreferrer">PITHIA Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/procedure.xsd" target="_blank" rel="noopener noreferrer">Procedure Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/project.xsd" target="_blank" rel="noopener noreferrer">Project Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/utilities.xsd" target="_blank" rel="noopener noreferrer">Utilities Schema</a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://metadata.pithia.eu/schemas/2.2/workflow.xsd" target="_blank" rel="noopener noreferrer">Workflow Schema</a>
+        </li>
+    </ul>
+</div>
 {% endblock content %}
