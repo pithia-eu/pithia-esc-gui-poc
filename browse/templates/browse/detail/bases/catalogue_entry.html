@@ -31,11 +31,15 @@
 <section class="resource-detail-section">
     <h2>Data Subsets for This Entry</h2>
     <p class="text-secondary">
+        {% if resource.data_subsets|length == 1 %}
+        {{ resource.data_subsets|length }} Data Subset
+        {% else %}
         {{ resource.data_subsets|length }} Data Subsets
+        {% endif %}
     </p>
-    <ol class="list-group my-2">
+    <ol class="list-group list-group-flush my-2">
         {% for data_subset in resource.data_subsets %}
-        <li class="list-group-item">
+        <li class="list-group-item ps-0">
             {% with value=data_subset.metadata_server_url %}
             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
             {% endwith %}
