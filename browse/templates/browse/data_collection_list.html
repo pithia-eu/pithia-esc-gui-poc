@@ -7,6 +7,9 @@
 {% block extra_description_content %}
 Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-default">Catalogues</a>, data collections do not include begin and end times.
 {% endblock extra_description_content %}
+{% block resource_count %}
+{{ resource_count }} {{ type_plural_readable|title }}
+{% endblock resource_count %}
 {% block aside %}
 <div class="d-xl-block d-none col-xl-5">
     <section class="d-flex flex-column pt-0">
