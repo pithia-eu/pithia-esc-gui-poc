@@ -7,14 +7,18 @@
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse px-lg-0 px-2 pt-lg-0 pt-2" id="navbarNav">
-            <div class="d-md-none d-block py-3 mb-3">
-                {% include 'header/user_menu.html' %}
-            </div>
-            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4">
+        <div class="collapse navbar-collapse px-lg-0 px-2 py-lg-0 py-3" id="navbarNav">
+            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 w-100">
                 <li class="nav-item">
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Search Data Collections</a>
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="d-inline-flex align-items-baseline  column-gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style="transform: translateY(0.125rem);">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                                Search Data Collections
+                            </span>
+                        </a>
                         <ul class="dropdown-menu" data-bs-popper="static">
                             <li>
                                 {% url 'search:index' as search_url %}
@@ -59,14 +63,26 @@
                         Space Physics Ontology
                     </a>
                 </li>
+                {% if request.session.institution_for_login_session %}
+                <li class="nav-item ms-lg-auto ms-0 mt-lg-0">
+                    <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default">Manage Registrations</a>
+                </li>
+                {% endif %}
             </ul>
-            {% if request.session.institution_for_login_session %}
-            <div class="d-flex flex-column align-items-start pt-lg-0 pt-4 pb-lg-0 pb-3 px-lg-2 px-0 ms-auto">
-                <a href="{% url 'resource_management:index' %}" class="link-plain-by-default">Manage Registrations</a>
+            <div class="d-md-none d-block pt-4">
+                {% include 'header/user_menu.html' %}
             </div>
-            {% endif %}
-            <div class="d-md-none d-block border-top pt-3 pb-4 mt-4">
-                {% include 'header/help_and_support_link.html' %}
+            <div class="d-md-none d-block border-top pt-3 mt-4">
+                {% if request.session.is_logged_in %}
+                <div class="d-flex justify-content-between">
+                    {% include 'header/help_and_support_link.html' %}
+                    <a href="{% url 'logout' %}" class="link-plain-by-default logout-link">Logout</a>
+                </div>
+                {% else %}
+                <div class="text-md-start text-end">
+                    {% include 'header/help_and_support_link.html' %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

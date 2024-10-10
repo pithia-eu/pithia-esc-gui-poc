@@ -259,7 +259,8 @@ header a.support-link {
     min-width: fit-content;
 }
 
-header a.support-link {
+header a.support-link,
+header a.logout-link {
     font-size: 0.875rem;
 }
 
@@ -1475,6 +1476,10 @@ ul.tree ul {
     }
 
     header .user-dropdown .dropdown-toggle {
+        font-size: 0.875rem;
+    }
+
+    header .login-link {
         font-size: 0.875rem;
     }
 
