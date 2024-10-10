@@ -15,5 +15,6 @@ urlpatterns = [
     path('computation-wizard/', views.ComputationRegisterWithEditorFormView.as_view(), name='computation_with_editor'),
     path('process-wizard/', views.ProcessRegisterWithEditorFormView.as_view(), name='process_with_editor'),
     path('data-collection-wizard/', views.DataCollectionRegisterWithEditorFormView.as_view(), name='data_collection_with_editor'),
+    path('catalogue-wizard/', views.CatalogueRegisterWithEditorFormView.as_view(), name='catalogue_with_editor'),
     path('workflow-wizard/', views.WorkflowRegisterWithEditorFormView.as_view(), name='workflow_with_editor'),
 ]

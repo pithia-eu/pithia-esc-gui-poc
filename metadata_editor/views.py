@@ -20,6 +20,7 @@ from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
+    CatalogueEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
     DataCollectionEditor,
@@ -810,6 +811,32 @@ class DataCollectionEditorFormView(
         kwargs['service_function_choices'] = self.get_service_function_choices_for_form()
         kwargs['data_format_choices'] = self.get_data_format_choices_for_form()
         return kwargs
+
+
+class CatalogueEditorFormView(
+    OntologyCategoryChoicesViewMixin,
+    ResourceEditorFormView):
+    form_class = CatalogueEditorForm
+    template_name = 'metadata_editor/catalogue_editor.html'
+
+    model = models.Catalogue
+    metadata_editor_class = CatalogueEditor
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Catalogue.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+
+    def get_catalogue_category_choices_for_form(self):
+        return self.get_choices_from_ontology_category('catalogueCategory')
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['catalogue_category_choices'] = self.get_catalogue_category_choices_for_form()
+        return kwargs
+
 
 class WorkflowEditorFormView(
     DataCollectionSelectFormViewMixin,

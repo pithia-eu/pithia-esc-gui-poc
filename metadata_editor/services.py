@@ -493,6 +493,11 @@ class DataCollectionEditor(
         )
 
 
+class CatalogueEditor(BaseMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('Catalogue', xml_string)
+
+
 class WorkflowEditor(
         BaseMetadataEditor,
         XlinkHrefMetadataEditor):

@@ -411,6 +411,16 @@ class DataCollectionRegisterWithEditorFormView(
         return context
 
 
+class CatalogueRegisterWithEditorFormView(
+    CatalogueEditorFormView,
+    NewResourceRegisterWithEditorFormView):
+    form_class = CatalogueEditorRegistrationForm
+    success_url = reverse_lazy('register:catalogue_with_editor')
+
+    file_upload_registration_url = reverse_lazy('register:catalogue')
+    save_data_local_storage_key = 'catalogue_r_wizard_save_data'
+
+
 class WorkflowRegisterWithEditorFormView(
     WorkflowEditorFormView,
     NewResourceRegisterWithEditorFormView):

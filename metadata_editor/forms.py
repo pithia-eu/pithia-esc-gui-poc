@@ -589,6 +589,21 @@ class DataCollectionEditorForm(
     )
 
 
+class CatalogueEditorForm(BaseEditorForm):
+    def __init__(self, *args, catalogue_category_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['catalogue_category'].choices = catalogue_category_choices
+
+    catalogue_category = forms.ChoiceField(
+        label='Catalogue Category',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='A category of the catalogue from the ontology disctionary.'
+    )
+
+
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

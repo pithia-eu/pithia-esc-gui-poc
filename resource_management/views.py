@@ -262,6 +262,7 @@ class CatalogueManagementListView(ResourceManagementListView):
     resource_delete_page_url_name = 'delete:catalogue'
     resource_update_page_url_name = 'update:catalogue'
     resource_register_page_url_name = 'register:catalogue'
+    resource_register_with_editor_name = 'register:catalogue_with_editor'
     resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
