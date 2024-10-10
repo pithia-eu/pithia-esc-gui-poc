@@ -493,9 +493,18 @@ class DataCollectionEditor(
         )
 
 
-class CatalogueEditor(BaseMetadataEditor):
+class CatalogueEditor(
+    BaseMetadataEditor,
+    XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('Catalogue', xml_string)
+
+    def update_catalogue_category(self, catalogue_category_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'catalogueCategory',
+            self.get_as_xlink_href(catalogue_category_url)
+        )
 
 
 class WorkflowEditor(

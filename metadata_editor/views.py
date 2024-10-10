@@ -831,6 +831,7 @@ class CatalogueEditorFormView(
     def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_catalogue_category(form_cleaned_data.get('catalogue_category'))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
