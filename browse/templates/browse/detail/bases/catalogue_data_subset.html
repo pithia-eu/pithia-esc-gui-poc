@@ -35,16 +35,16 @@
 </section>
 {% endif %}
 {% endblock top_section_extra_content %}
-{% block pre_description_content %}
+{% block post_description_content %}
 {% if 'source' in resource.json %}
-<section class="resource-detail-emphasised-section resource-detail-section">
-    <h2 class="fs-5 fw-semibold mb-1">Access this Data Subset</h2>
+<section class="resource-detail-section">
+    <h2 class="mb-1">Access this Data Subset</h2>
     {% with sources=resource.json.source %}
     {% include 'browse/detail/components/online_resource_list.html' %}
     {% endwith %}
 </section>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_description_content %}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}

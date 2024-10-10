@@ -7,13 +7,16 @@
     {% endwith %}
 </div>
 {% endblock top_section_extra_content %}
-{% block pre_description_content %}
+{% block post_description_content %}
 {% if resource.entries %}
 <section class="resource-detail-section">
-    <h2>Entries</h2>
-    <ol class="mt-4">
+    <h2>Entries for This Catalogue</h2>
+    <p class="text-secondary">
+        {{ resource.entries|length }} Entries
+    </p>
+    <ol class="list-group my-2">
         {% for entry in resource.entries %}
-        <li>
+        <li class="list-group-item">
             {% with value=entry.metadata_server_url %}
             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
             {% endwith %}
@@ -22,7 +25,7 @@
     </ol>
 </section>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_description_content %}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}

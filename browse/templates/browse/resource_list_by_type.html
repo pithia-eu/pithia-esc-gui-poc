@@ -19,13 +19,20 @@
                 {% endif %}
             </div>
             {% block aside_responsive %}{% endblock aside_responsive %}
+            <p class="text-secondary mb-0">
+                {% if resources|length == 1 %}
+                {{ resources|length }} {{ type_readable|title }}
+                {% else %}
+                {{ resources|length }} {{ type_plural_readable|title }}
+                {% endif %}
+            </p>
             {% block resource_list_outer %}
             {% if not resources %}
             <p class="text-secondary">{{ empty_resource_list_text }}</p>
             {% else %}
             {% block resource_list_inner %}
             {% with resource_list=resources %}
-            <ul class="list-group mt-3">
+            <ul class="list-group">
                 {% for resource in resources %}
                 <li class="list-group-item">
                     <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>

@@ -5,8 +5,8 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block resource_list_outer %}
-{% for catalogue in catalogues %}
-<section class="pb-1 mt-4">
+{% for catalogue in resources %}
+<section class="pb-5 mt-0 {% if not forloop.last %}border-bottom{% endif %}">
     <h2 class="fs-3 mb-3">
         <a href="{% url 'browse:catalogue_detail' catalogue.id %}" class="link-plain-by-default">
             {{ catalogue.name }}

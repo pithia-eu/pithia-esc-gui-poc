@@ -1,5 +1,5 @@
 {% load project_tags %}
-<div class="d-flex flex-column row-gap-4">
+<div class="d-flex flex-column row-gap-3">
     <div class="d-flex flex-column">
         <h3 class="fs-5 mb-2">
             <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover align-items-start link-plain-by-default" target="_blank" rel="noopener noreferrer">
@@ -19,11 +19,11 @@
             {% endif %}
         </small>
     </div>
-    <details class="details-interaction-methods" name="details-collection-results" {% if forloop.counter == 1 or only_online_resource %}open{% endif %}>
+    <details class="details-interaction-methods" name="details-collection-results">
         <summary class="fs-5">
             Details
         </summary>
-        <div class="d-flex flex-column row-gap-3 mt-3">
+        <div class="d-flex flex-column row-gap-2 mt-3">
             {% if 'description' in online_resource and online_resource.description %}
             <div>
                 {% with online_resource_urlized=online_resource.description|urlize %}

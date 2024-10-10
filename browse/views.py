@@ -92,7 +92,9 @@ def catalogue_tree(request):
         'title': models.Catalogue.type_plural_readable.title(),
         'description': models.Catalogue.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'catalogues': catalogues,
+        'resources': catalogues,
+        'type_readable': models.Catalogue.type_readable,
+        'type_plural_readable': models.Catalogue.type_plural_readable,
     })
 
 def schemas(request):
@@ -124,6 +126,8 @@ class ResourceListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.model.type_plural_readable.title()
         context['description'] = self.model.type_description_readable
+        context['type_readable'] = self.model.type_readable
+        context['type_plural_readable'] = self.model.type_plural_readable
         context['empty_resource_list_text'] = f'No {self.model.type_plural_readable.lower()} were found.'
         context['resource_detail_page_url_name'] = self.resource_detail_page_url_name
         context['browse_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE

@@ -26,13 +26,16 @@
     {% endif %}
 </div>
 {% endblock top_section_extra_content %}
-{% block pre_description_content %}
+{% block post_description_content %}
 {% if resource.data_subsets %}
 <section class="resource-detail-section">
-    <h2>Data Subsets</h2>
-    <ol class="mt-4">
+    <h2>Data Subsets for This Entry</h2>
+    <p class="text-secondary">
+        {{ resource.data_subsets|length }} Data Subsets
+    </p>
+    <ol class="list-group my-2">
         {% for data_subset in resource.data_subsets %}
-        <li>
+        <li class="list-group-item">
             {% with value=data_subset.metadata_server_url %}
             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
             {% endwith %}
@@ -41,4 +44,4 @@
     </ol>
 </section>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_description_content %}
