@@ -301,6 +301,11 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[OTHER_KEY].append(dc)
 
         return data_collections_by_type
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resource_count'] = len(self.model.objects.all())
+        return context
 
 class WorkflowListView(ResourceListView):
     """
