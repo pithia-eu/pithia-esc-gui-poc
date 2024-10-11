@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
+    <h1 class="fs-2 mb-0">
+        {{ title }}
+    </h1>
+    {% if not members %}
+    No members were found for this institution.
+    {% else %}
+    <ul class="list-group">
+        {% for member in members %}
+        <li class="list-group-item">
+            <div class="d-inline-flex flex-wrap column-gap-3 w-100">
+                {{ member.name }}
+                {% if member.email %}
+                <a href="mailto:{{ member.email }}" class="link-plain-by-default ms-auto">
+                    <small>
+                        Send Email
+                    </small>
+                </a>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock content %}

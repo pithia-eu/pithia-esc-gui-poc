@@ -146,11 +146,14 @@ def get_members_by_institution_id(institution_id):
         # Gets the first institution if there is one,
         # else, returns None
         institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
-        member_ids = institution.get('members')
+        admin_ids = institution.get('admins', [])
+        member_ids = institution.get('members', [])
         for u in perun_data.get('users'):
             uid = u.get('edu_person_unique_id')
-            if uid in member_ids:
-                members.append(u)
+            if uid not in member_ids:
+                continue
+            u['is_admin'] = uid in admin_ids
+            members.append(u)
     except AttributeError:
         # Something is wrong here, as it means
         # that the institution cannot be found.

@@ -28,11 +28,13 @@ from functools import wraps
 
 from .services import (
     get_institution_id_for_login_session,
+    get_members_by_institution_id,
     get_institution_memberships_of_logged_in_user,
     JOIN_URL_BASE,
     set_institution_for_login_session,
 )
 
+from common.decorators import login_session_institution_required
 from common.forms import InstitutionForLoginSessionForm
 from pithiaesc.settings import BASE_DIR
 
@@ -43,9 +45,6 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
-# TODO: Uncomment these functions when token-based support
-# is added to Perun.
 
 def perun_login_required(function):
     @wraps(function)
@@ -148,16 +147,14 @@ def list_joinable_perun_organisations(request):
     })
 
 def list_joinable_perun_organisation_subgroups(request, institution_id):
-    # TODO: substitute institution_id with the institution
-    # display name in the JSON received from Perun.
-    institution_name = institution_id
-
+    # Institution names must be unique, so it also
+    # acts as the institution ID.
     return render(request, 'user_management/list_joinable_perun_organisation_subgroups.html', {
-        'title': f'Join {institution_name}',
+        'title': f'Join {institution_id}',
         'join_an_institution_breadcrumb_text': JOIN_AN_INSTITUTION_PAGE_TITLE,
         'join_an_institution_breadcrumb_url_name': 'list_joinable_perun_organisations',
         'institution_id': institution_id,
-        'institution_name': institution_name,
+        'institution_name': institution_id,
         'join_url_base': JOIN_URL_BASE
     })
 
@@ -253,3 +250,13 @@ def choose_institution_for_login_session(request):
             messages.error(request, 'The form submitted was invalid.')
 
     return HttpResponseRedirect(next_url)
+
+
+@login_session_institution_required
+def list_users_in_current_institution(request):
+    institution_id = get_institution_id_for_login_session(request.session)
+    members = sorted(get_members_by_institution_id(institution_id), key=lambda d: d['name'])
+    return render(request, 'user_management/list_institution_members.html', {
+        'title': f'{institution_id}',
+        'members': members,
+    })
