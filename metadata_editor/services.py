@@ -507,6 +507,28 @@ class CatalogueEditor(
         )
 
 
+class CatalogueEntryEditor(
+    BaseMetadataEditor,
+    XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('CatalogueEntry', xml_string)
+
+    def update_name(self, name):
+        if not name:
+            return
+        self.metadata_dict['entryName'] = name
+
+    def update_description(self, description):
+        self.metadata_dict['entryDescription'] = description
+
+    def update_catalogue_identifier(self, catalogue_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'catalogueIdentifier',
+            self.get_as_xlink_href(catalogue_url)
+        )
+
+
 class WorkflowEditor(
         BaseMetadataEditor,
         XlinkHrefMetadataEditor):
