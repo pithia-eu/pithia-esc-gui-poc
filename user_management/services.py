@@ -97,6 +97,7 @@ def get_highest_subgroup_of_each_institution_for_logged_in_user(eduperson_entitl
         
     return subgroups_by_institution
 
+
 # Login session management
 def delete_institution_for_login_session(session):
     session.pop('institution_for_login_session', None)
@@ -131,32 +132,102 @@ def remove_login_session_variables_and_redirect_user_to_logout_page(request):
     absolute_home_page_uri = re.sub(r'^http\b', 'https', request.build_absolute_uri(reverse("home")))
     return HttpResponseRedirect(f'/authorised/?{urlencode({"logout": absolute_home_page_uri})}')
 
+
 # Templates
-def get_members_by_institution_id(institution_id):
-    members = []
-    perun_data = None
+def _get_local_perun_data():
     try:
         with open(os.path.join(BASE_DIR, 'perun', 'ListOfOrganisations.json')) as organisation_list_file:
             perun_data = json.loads(organisation_list_file.read())
+        return perun_data
     except FileNotFoundError:
-        return members
+        pass
     
+    return None
+
+def _get_organisations_from_local_perun_data(perun_data):
     try:
-        institutions = perun_data.get('organizations')
-        # Gets the first institution if there is one,
-        # else, returns None
-        institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
-        admin_ids = institution.get('admins', [])
-        member_ids = institution.get('members', [])
-        for u in perun_data.get('users'):
-            uid = u.get('edu_person_unique_id')
-            if uid not in member_ids:
-                continue
-            u['is_admin'] = uid in admin_ids
-            members.append(u)
-    except AttributeError:
-        # Something is wrong here, as it means
-        # that the institution cannot be found.
+        return perun_data.get('organizations', [])
+    except AttributeError as err:
+        # The perun data may have changed format
+        # or has become corrupted.
+        logger.exception('Perun data may be corrupt or has changed from expected format.', err)
         pass
 
+    return []
+
+def _get_users_from_local_perun_data(perun_data):
+    try:
+        return perun_data.get('users', [])
+    except AttributeError as err:
+        # The perun data may have changed format
+        # or has become corrupted.
+        logger.exception('Perun data may be corrupt or has changed from expected format.', err)
+        pass
+
+    return []
+
+def _get_users_and_organisations_from_local_perun_data():
+    local_perun_data = _get_local_perun_data()
+    if not local_perun_data:
+        return None
+    
+    perun_organisations = _get_organisations_from_local_perun_data(local_perun_data)
+    if not perun_organisations:
+        return None
+
+    users = _get_users_from_local_perun_data(local_perun_data)
+    if not users:
+        return None
+
+    return {
+        'users': users,
+        'organisations': perun_organisations,
+    }
+
+def get_members_by_institution_id(institution_id):
+    local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
+    if not local_perun_users_and_organisations:
+        return []
+
+    users = local_perun_users_and_organisations.get('users')
+    institutions = local_perun_users_and_organisations.get('organisations')
+    members = []
+    # Gets the first institution if there is one,
+    # else, returns None
+    institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
+    try:
+        member_ids = institution.get('members', [])
+    except AttributeError as err:
+        logger.exception('Perun data may be corrupt or has changed from expected format.', err)
+        return []
+    for u in users:
+        uid = u.get('edu_person_unique_id')
+        if uid not in member_ids:
+            continue
+        members.append(u)
+
     return members
+
+def get_admins_by_institution_id(institution_id):
+    local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
+    if not local_perun_users_and_organisations:
+        return []
+
+    users = local_perun_users_and_organisations.get('users')
+    institutions = local_perun_users_and_organisations.get('organisations')
+    admins = []
+    # Gets the first institution if there is one,
+    # else, returns None
+    institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
+    try:
+        admin_ids = institution.get('admins', [])
+    except AttributeError as err:
+        logger.exception('Perun data may be corrupt or has changed from expected format.', err)
+        return []
+    for u in users:
+        uid = u.get('edu_person_unique_id')
+        if uid not in admin_ids:
+            continue
+        admins.append(u)
+
+    return admins

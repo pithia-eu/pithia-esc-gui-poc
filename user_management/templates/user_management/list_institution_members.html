@@ -5,28 +5,50 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
-    <h1 class="fs-2 mb-0">
+    <h1 class="fs-2">
         {{ title }}
     </h1>
-    {% if not members %}
-    No members were found for this institution.
-    {% else %}
-    <ul class="list-group">
-        {% for member in members %}
-        <li class="list-group-item">
-            <div class="d-inline-flex flex-wrap column-gap-3 w-100">
-                {{ member.name }}
-                {% if member.email %}
-                <a href="mailto:{{ member.email }}" class="link-plain-by-default ms-auto">
-                    <small>
-                        Send Email
-                    </small>
-                </a>
-                {% endif %}
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+    <section>
+        <h2 class="fs-4">Admins</h2>
+        {% if not admins %}
+        No admins were found for this institution.
+        {% else %}
+        <ul class="list-group">
+            {% for admin in admins %}
+            {% if admin.status == 'ACTIVE' %}
+            <li class="list-group-item">
+                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
+                    {{ admin.name }}
+                    {% if admin.email %}
+                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+    <section>
+        <h2 class="fs-4">Members</h2>
+        {% if not members %}
+        No members were found for this institution.
+        {% else %}
+        <ul class="list-group">
+            {% for member in members %}
+            {% if member.status == 'ACTIVE' %}
+            <li class="list-group-item">
+                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
+                    {{ member.name }}
+                    {% if member.email %}
+                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
 </div>
 {% endblock content %}

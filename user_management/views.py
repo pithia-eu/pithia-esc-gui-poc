@@ -27,9 +27,10 @@ from django.views.decorators.http import (
 from functools import wraps
 
 from .services import (
+    get_admins_by_institution_id,
     get_institution_id_for_login_session,
-    get_members_by_institution_id,
     get_institution_memberships_of_logged_in_user,
+    get_members_by_institution_id,
     JOIN_URL_BASE,
     set_institution_for_login_session,
 )
@@ -256,7 +257,9 @@ def choose_institution_for_login_session(request):
 def list_users_in_current_institution(request):
     institution_id = get_institution_id_for_login_session(request.session)
     members = sorted(get_members_by_institution_id(institution_id), key=lambda d: d['name'])
+    admins = sorted(get_admins_by_institution_id(institution_id), key=lambda d: d['name'])
     return render(request, 'user_management/list_institution_members.html', {
         'title': f'{institution_id}',
+        'admins': admins,
         'members': members,
     })
