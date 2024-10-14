@@ -1,6 +1,6 @@
 {% load project_tags %}
 <span class="metadata-server-url metadata-server-url-no-link {{ url_class }} {{ url_extra_classes }} loading" data-metadata-server-url="{{ value.strip }}">
-    <span class="{{ url_text_extra_classes }} metadata-server-url-text">
+    <span class="{{ url_text_extra_classes|default:'link-underline-by-default' }} metadata-server-url-text">
         {{ value|server_url_id }}
     </span>
 </span>
