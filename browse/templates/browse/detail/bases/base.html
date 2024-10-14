@@ -100,7 +100,7 @@
                                         <td>{{ key|safe }}</td>
                                         <td>
                                             {% if not value.strip %}
-                                            <i class="text-muted">Not used</i>
+                                            <i class="text-secondary">Not used</i>
                                             {% elif value in ontology_server_urls %}
                                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                             {% elif value in resource_server_urls %}

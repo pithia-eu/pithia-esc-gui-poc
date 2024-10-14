@@ -18,15 +18,15 @@
     <ul class="list-group list-group-numbered">
         <li class="list-group-item">
             <a href="{% url 'resource_management:catalogues' %}">Catalogues</a>
-            <span class="text-muted">{{ num_current_catalogues }}</span>
+            <span class="text-secondary">{{ num_current_catalogues }}</span>
         </li>
         <li class="list-group-item">
             <a href="{% url 'resource_management:catalogue_entries' %}">Catalogue Entries</a>
-            <span class="text-muted">{{ num_current_catalogue_entries }}</span>
+            <span class="text-secondary">{{ num_current_catalogue_entries }}</span>
         </li>
         <li class="list-group-item">
             <a href="{% url 'resource_management:catalogue_data_subsets' %}">Catalogue Data Subsets</a>
-            <span class="text-muted">{{ num_current_catalogue_data_subsets }}</span>
+            <span class="text-secondary">{{ num_current_catalogue_data_subsets }}</span>
         </li>
     </ul>
 </div>
