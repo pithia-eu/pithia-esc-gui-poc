@@ -345,6 +345,14 @@ header a.logout-link {
     content: none;
 }
 
+.dropdown-institution-member .input-group {
+    width: max-content;
+}
+
+.dropdown-institution-member .input-group input {
+    width: fit-content;
+}
+
 /* Breadcrumb */
 .breadcrumb-wrapper {
     margin-top: 1.5rem;

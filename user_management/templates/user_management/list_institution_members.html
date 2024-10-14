@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'user_management/list_institution_members.js' %}" defer></script>
+{% endblock scripts %}
 {% block content %}
 <div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
     <h1 class="fs-2">
@@ -14,12 +18,12 @@
         No admins were found for this institution.
         {% else %}
         <ul class="list-group">
-            {% for admin in admins %}
-            {% if admin.status == 'ACTIVE' %}
+            {% for user in admins %}
+            {% if user.status == 'ACTIVE' %}
             <li class="list-group-item">
                 <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
-                    {{ admin.name }}
-                    {% if admin.email %}
+                    {{ user.name }}
+                    {% if user.email %}
                     {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
                     {% endif %}
                 </div>
@@ -35,12 +39,12 @@
         No members were found for this institution.
         {% else %}
         <ul class="list-group">
-            {% for member in members %}
-            {% if member.status == 'ACTIVE' %}
+            {% for user in members %}
+            {% if user.status == 'ACTIVE' %}
             <li class="list-group-item">
                 <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
-                    {{ member.name }}
-                    {% if member.email %}
+                    {{ user.name }}
+                    {% if user.email %}
                     {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
                     {% endif %}
                 </div>
