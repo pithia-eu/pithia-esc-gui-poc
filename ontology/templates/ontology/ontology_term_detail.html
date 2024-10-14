@@ -7,7 +7,7 @@
 {% endblock breadcrumbs %}
 {% block content %}
 <h1>{{ resource_dictionary.prefLabel }}</h1>
-<span class="text-muted">Ontology IRI: <a href="{{ resource_ontology_url }}" target="_blank" rel="noopener noreferrer">{{ resource_ontology_url }}</a></span>
+<span class="text-secondary">Ontology IRI: <a href="{{ resource_ontology_url }}" target="_blank" rel="noopener noreferrer">{{ resource_ontology_url }}</a></span>
 <div class="row mt-3">
     <div class="col-lg-8">
         <div class="table-responsive">
@@ -49,7 +49,7 @@
                                 {% endfor %}
                             </ul>
                             {% elif resource_dictionary|get_key_value:p.strip|length == 0 %}
-                            <i class="text-muted">None</i>
+                            <i class="text-secondary">None</i>
                             {% else %}
                             {{ resource_dictionary|get_key_value:p|safe|urlize }}
                             {% endif %}

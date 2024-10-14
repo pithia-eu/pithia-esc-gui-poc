@@ -149,7 +149,7 @@ def reformat_and_clean_resource_copy_for_property_table(property_table_dict) -> 
         
         reformatted_key_path = ' > '.join(reformatted_key_sections).strip()
         if reformatted_key_path:
-            reformatted_key_path = f'<small class="text-muted fst-italic">(from {reformatted_key_path})</small>'
+            reformatted_key_path = f'<small class="text-secondary fst-italic">(from {reformatted_key_path})</small>'
         
         reformatted_key = f'{last_reformatted_key_section} {reformatted_key_path}'.strip()
         if reformatted_key != '':

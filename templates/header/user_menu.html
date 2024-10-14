@@ -2,13 +2,14 @@
 <div class="dropdown user-dropdown text-start">
     <a
         href="#"
-        class="d-inline-block text-decoration-none dropdown-toggle"
+        class="d-inline-block text-decoration-none dropdown-toggle pithia-blue-2"
         data-bs-toggle="dropdown"
         aria-expanded="false"
         role="button"
         data-bs-auto-close="outside">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle me-md-0 me-1" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
         </svg>
         {{ request.session.user_given_name }}
     </a>
@@ -86,7 +87,7 @@
     </div>
 </div>
 {% else %}
-<a href="{% url 'data_provider_home' %}" class="login-link link-plain-by-default" style="white-space: nowrap;">
+<a href="{% url 'data_provider_home' %}" class="login-link link-plain-by-default pithia-blue-2" style="white-space: nowrap;">
     Provider Login/Sign up
 </a>
 {% endif %}
