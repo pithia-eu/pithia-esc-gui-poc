@@ -218,10 +218,6 @@ p {
     fill: currentcolor;
 }
 
-.page-info {
-    text-align: center;
-}
-
 .page-info-lg {
     font-size: 1.1rem;
 }
@@ -1501,10 +1497,6 @@ ul.tree ul {
 
     header .login-link {
         font-size: 0.875rem;
-    }
-
-    .page-info {
-        text-align: start;
     }
     
     .page-info-emphasised {
