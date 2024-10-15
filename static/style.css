@@ -109,6 +109,7 @@ a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer
 
 h1 {
     overflow-wrap: break-word;
+    text-wrap: balance;
 }
 
 hgroup p {
