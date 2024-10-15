@@ -231,3 +231,28 @@ def get_admins_by_institution_id(institution_id):
         admins.append(u)
 
     return admins
+
+def get_members_without_admins_by_institution_id(institution_id):
+    local_perun_users_and_organisations = _get_users_and_organisations_from_local_perun_data()
+    if not local_perun_users_and_organisations:
+        return []
+
+    users = local_perun_users_and_organisations.get('users')
+    institutions = local_perun_users_and_organisations.get('organisations')
+    members = []
+    # Gets the first institution if there is one,
+    # else, returns None
+    institution = next(iter([i for i in institutions if i.get('name') == institution_id]), None)
+    try:
+        member_ids = institution.get('members', [])
+        admin_ids = institution.get('admins', [])
+    except AttributeError as err:
+        logger.exception('Perun data may be corrupt or has changed from expected format.', err)
+        return []
+    for u in users:
+        uid = u.get('edu_person_unique_id')
+        if uid not in member_ids or uid in admin_ids:
+            continue
+        members.append(u)
+
+    return members
