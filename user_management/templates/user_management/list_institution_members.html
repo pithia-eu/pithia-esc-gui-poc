@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'user_management/list_institution_members.js' %}" defer></script>
+{% endblock scripts %}
+{% block content %}
+<div class="col-xl-7 col-lg-9 d-flex flex-column row-gap-2">
+    <h1 class="fs-2">
+        {{ title }}
+    </h1>
+    <section>
+        <h2 class="fs-4">Admins</h2>
+        {% if not admins %}
+        No admins were found for this institution.
+        {% else %}
+        <ul class="list-group">
+            {% for user in admins %}
+            {% if user.status == 'ACTIVE' %}
+            <li class="list-group-item">
+                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
+                    {{ user.name }}
+                    {% if user.email %}
+                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+    <section>
+        <h2 class="fs-4">Members</h2>
+        {% if not members %}
+        No members were found for this institution.
+        {% else %}
+        <ul class="list-group">
+            {% for user in members %}
+            {% if user.status == 'ACTIVE' %}
+            <li class="list-group-item">
+                <div class="d-inline-flex align-items-sm-center align-items-baseline column-gap-3 w-100">
+                    {{ user.name }}
+                    {% if user.email %}
+                    {% include 'user_management/list_institution_members_dropdown_menu.html/' %}
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+</div>
+{% endblock content %}

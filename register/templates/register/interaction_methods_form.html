@@ -1,7 +1,7 @@
 <ul class="list-group">
     <li class="list-group-item">
         <div class="d-flex flex-column mb-0">
-            <span><b>Link to Data Collection <small class="text-muted">(added inside the XML Metadata File)</small></b></span>
+            <span><b>Link to Data Collection <small class="text-secondary">(added inside the XML Metadata File)</small></b></span>
             <span class="mt-1">
                 If a URL is put inside a <span class="font-monospace">&ltlinkage&gt</span> element, this will be provided as a direct link to the Data Collection.
             </span>
@@ -27,13 +27,13 @@
             {% endif %}
             {{ form.api_specification_url.label_tag }}
             {{ form.api_specification_url }}
-            <small class="text-muted status-validating-link d-none mt-1">Checking link...</small>
+            <small class="text-secondary status-validating-link d-none mt-1">Checking link...</small>
             <div class="mt-1 api-specification-url-status-validation d-none">
                 <ul class="list-group list-group-flush list-group-horizontal mb-0">
                     <li class="list-group-item border border-0 status-invalid-link d-none p-0">
                         <div class="d-flex flex-column">
                             <small class="status-text text-danger">Invalid link</small>
-                            <small class="text-muted status-details d-none mt-1">Details: <span class="status-details"></span></small>
+                            <small class="text-secondary status-details d-none mt-1">Details: <span class="status-details"></span></small>
                         </div>
                     </li>
                 </ul>

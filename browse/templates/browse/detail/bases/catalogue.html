@@ -12,11 +12,15 @@
 <section class="resource-detail-section">
     <h2>Entries for This Catalogue</h2>
     <p class="text-secondary">
+        {% if resource.entries|length == 1 %}
+        {{ resource.entries|length }} Entry
+        {% else %}
         {{ resource.entries|length }} Entries
+        {% endif %}
     </p>
-    <ol class="list-group my-2">
+    <ol class="list-group list-group-flush my-2">
         {% for entry in resource.entries %}
-        <li class="list-group-item">
+        <li class="list-group-item ps-0">
             {% with value=entry.metadata_server_url %}
             {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
             {% endwith %}

@@ -2,7 +2,7 @@
 <div class="d-flex flex-column row-gap-3">
     <div class="d-flex flex-column">
         <h3 class="fs-5 mb-2">
-            <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover align-items-start link-plain-by-default" target="_blank" rel="noopener noreferrer">
+            <a href="{{ online_resource.linkage|get_key_value:'gmd:URL' }}" class="icon-link icon-link-hover align-items-start link-underline-by-default" target="_blank" rel="noopener noreferrer">
                 {{ online_resource.name }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
@@ -23,7 +23,7 @@
         <summary class="fs-5">
             Details
         </summary>
-        <div class="d-flex flex-column row-gap-2 mt-3">
+        <div class="d-flex flex-column row-gap-3 mt-3">
             {% if 'description' in online_resource and online_resource.description %}
             <div>
                 {% with online_resource_urlized=online_resource.description|urlize %}

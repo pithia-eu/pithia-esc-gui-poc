@@ -25,7 +25,7 @@
 
         <!-- "Invalid" indicator -->
         {% if not node.prefLabel %}
-        <small class="text-muted fst-italic">(This ontology term may no longer be invalid.)</small>
+        <small class="text-secondary fst-italic">(This ontology term may no longer be invalid.)</small>
         {% endif %}
     </div>
     {% if node.definition %}
@@ -36,7 +36,7 @@
     </div>
     {% endif %}
     {% if node.prefLabel %}
-    <small class="text-muted text-break">
+    <small class="text-secondary text-break">
         Ontology IRI: <a href="{{ node.iri|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ node.iri|default:'' }}</a>
     </small>
     {% endif %}

@@ -27,12 +27,15 @@ from django.views.decorators.http import (
 from functools import wraps
 
 from .services import (
+    get_admins_by_institution_id,
     get_institution_id_for_login_session,
     get_institution_memberships_of_logged_in_user,
+    get_members_without_admins_by_institution_id,
     JOIN_URL_BASE,
     set_institution_for_login_session,
 )
 
+from common.decorators import login_session_institution_required
 from common.forms import InstitutionForLoginSessionForm
 from pithiaesc.settings import BASE_DIR
 
@@ -43,9 +46,6 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
-# TODO: Uncomment these functions when token-based support
-# is added to Perun.
 
 def perun_login_required(function):
     @wraps(function)
@@ -148,16 +148,14 @@ def list_joinable_perun_organisations(request):
     })
 
 def list_joinable_perun_organisation_subgroups(request, institution_id):
-    # TODO: substitute institution_id with the institution
-    # display name in the JSON received from Perun.
-    institution_name = institution_id
-
+    # Institution names must be unique, so it also
+    # acts as the institution ID.
     return render(request, 'user_management/list_joinable_perun_organisation_subgroups.html', {
-        'title': f'Join {institution_name}',
+        'title': f'Join {institution_id}',
         'join_an_institution_breadcrumb_text': JOIN_AN_INSTITUTION_PAGE_TITLE,
         'join_an_institution_breadcrumb_url_name': 'list_joinable_perun_organisations',
         'institution_id': institution_id,
-        'institution_name': institution_name,
+        'institution_name': institution_id,
         'join_url_base': JOIN_URL_BASE
     })
 
@@ -246,10 +244,22 @@ def choose_institution_for_login_session(request):
             success_msg = escape(f'Institution {changed_or_set} to {institution}.')
             messages.success(request, success_msg)
             if not is_institution_for_login_session_set:
-                user_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>'
+                user_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg>'
                 info_msg = f'You can switch to another institution from the {user_icon_svg} menu in the navigation bar.'
                 messages.info(request, info_msg)
         else:
             messages.error(request, 'The form submitted was invalid.')
 
     return HttpResponseRedirect(next_url)
+
+
+@login_session_institution_required
+def list_users_in_current_institution(request):
+    institution_id = get_institution_id_for_login_session(request.session)
+    members = sorted(get_members_without_admins_by_institution_id(institution_id), key=lambda d: d['name'])
+    admins = sorted(get_admins_by_institution_id(institution_id), key=lambda d: d['name'])
+    return render(request, 'user_management/list_institution_members.html', {
+        'title': f'{institution_id}',
+        'admins': admins,
+        'members': members,
+    })
