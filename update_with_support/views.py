@@ -6,6 +6,7 @@ from pyexpat import ExpatError
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
+    CatalogueFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
     DataCollectionFormFieldsToMetadataMapper,
@@ -192,6 +193,14 @@ class DataCollectionUpdateWithEditorFormView(
     model = models.DataCollection
     success_url_name = 'update:data_collection_with_editor'
     form_field_to_metadata_mapper_class = DataCollectionFormFieldsToMetadataMapper
+
+
+class CatalogueUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    CatalogueEditorFormView):
+    model = models.Catalogue
+    success_url_name = 'update:catalogue_with_editor'
+    form_field_to_metadata_mapper_class = CatalogueFormFieldsToMetadataMapper
 
 
 class WorkflowUpdateWithEditorFormView(

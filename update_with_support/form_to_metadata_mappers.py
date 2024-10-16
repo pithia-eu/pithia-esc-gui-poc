@@ -306,6 +306,15 @@ class DataCollectionFormFieldsToMetadataMapper(
         return mappings
 
 
+class CatalogueFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'catalogue_category': './/%s:catalogueCategory/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK)
+        })
+        return mappings
+
+
 class WorkflowFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()

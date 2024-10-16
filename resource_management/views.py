@@ -261,6 +261,7 @@ class CatalogueManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:catalogue'
     resource_update_page_url_name = 'update:catalogue'
+    resource_update_with_wizard_page_url_name = 'update:catalogue_with_editor'
     resource_register_page_url_name = 'register:catalogue'
     resource_register_with_editor_name = 'register:catalogue_with_editor'
     resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
