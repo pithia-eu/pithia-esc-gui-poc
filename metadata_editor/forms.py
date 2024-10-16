@@ -588,7 +588,7 @@ class CatalogueEntryEditorForm(
 
     catalogue_identifier = forms.ChoiceField(
         label='Catalogue',
-        required=False,
+        required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
