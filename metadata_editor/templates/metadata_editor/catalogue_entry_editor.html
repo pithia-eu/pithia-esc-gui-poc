@@ -1,0 +1,55 @@
+{% extends 'metadata_editor/components/base_editor.html' %}
+{% block form_content %}
+{% include 'metadata_editor/components/name_and_organisation_section.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/identifier.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/description.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/catalogue_entry/phenomenon_time.html' %}
+<hr class="my-5">
+<section id="catalogue-identifier-section">
+    <div class="row gy-3">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                {{ form.catalogue_identifier.label_tag }}
+            </h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            <p class="text-secondary">
+                {{ form.catalogue_identifier.help_text }}
+            </p>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {{ form.catalogue_identifier }}
+        </div>
+    </div>
+</section>
+{% endblock form_content %}
+{% block table_of_contents %}
+<li class="list-group-item">
+    <a href="#name-and-organisation-section">
+        Full Name and Organisation
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#identifier-section">
+        Identifier
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#description-section">
+        Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#phenomenon-time-section">
+        Phenomenon Time
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#catalogue-identifier-section">
+        Catalogue
+    </a>
+</li>
+{% endblock table_of_contents %}

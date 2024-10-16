@@ -3,6 +3,13 @@
         <div class="col-lg-12">
             <h2>{{ form.description.label_tag }}</h2>
         </div>
+        {% if form.description.help_text %}
+        <div class="col-xl-9 col-lg-12">
+            <p>
+                {{ form.description.help_text }}
+            </p>
+        </div>
+        {% endif %}
         <div class="col-xl-9 col-lg-12">
             {{ form.description }}
             {% for error in form.description.errors  %}

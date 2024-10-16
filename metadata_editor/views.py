@@ -21,6 +21,7 @@ from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     CatalogueEditor,
+    CatalogueEntryEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
     DataCollectionEditor,
@@ -836,6 +837,28 @@ class CatalogueEditorFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['catalogue_category_choices'] = self.get_catalogue_category_choices_for_form()
+        return kwargs
+
+
+class CatalogueEntryEditorFormView(
+    ResourceEditorFormView):
+    form_class = CatalogueEditorForm
+    template_name = 'metadata_editor/catalogue_entry_editor.html'
+
+    model = models.CatalogueEntry
+    metadata_editor_class = CatalogueEntryEditor
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueEntry.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEntryEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_catalogue_identifier(form_cleaned_data.get('catalogue_identifier'))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['catalogue_choices'] = self.get_resource_choices_with_model(models.Catalogue)
         return kwargs
 
 
