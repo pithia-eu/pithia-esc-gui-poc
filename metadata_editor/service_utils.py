@@ -18,6 +18,7 @@ from .editor_dataclasses import (
     RelatedPartyMetadataUpdate,
     SourceMetadataUpdate,
     StandardIdentifierMetadataUpdate,
+    TimePeriodMetadataUpdate,
     TimeSpanMetadataUpdate,
 )
 
@@ -927,6 +928,87 @@ class StatusMetadataEditor(BaseMetadataComponentEditor):
             self.metadata_dict,
             status_key
         )
+
+
+class TimePeriodMetadataEditor(BaseMetadataComponentEditor):
+    def _update_time_instant_property_type_element(
+        self,
+        time_prop_element,
+        time_instant_id,
+        time_position_value
+    ):
+        time_instant_key = '%s:TimeInstant' % NamespacePrefix.GML
+        time_position_key = '%s:timePosition' % NamespacePrefix.GML
+        time_prop_element.setdefault(time_instant_key, {})
+        time_instant = time_prop_element[time_instant_key]
+        # gml:TimeInstant id attribute
+        time_instant['@%s:id' % NamespacePrefix.GML] = time_instant_id
+        time_instant.setdefault(time_position_key, {})
+        time_position = time_instant[time_position_key]
+        # gml:timePosition text
+        if time_position_value:
+            time_position_value = str(time_position_value)
+        time_position['$'] = time_position_value
+
+    def update_time_period(self, update_data: TimePeriodMetadataUpdate, time_period_container_element_key: str):
+        # Time period container element
+        self.metadata_dict.setdefault(time_period_container_element_key, {})
+        time_period_container_element = self.metadata_dict[time_period_container_element_key]
+        # gml:TimePeriod container element
+        time_period_key = '%s:TimePeriod' % NamespacePrefix.GML
+        time_period_container_element.setdefault(time_period_key, {})
+        time_period = self.metadata_dict[time_period_container_element_key][time_period_key]
+        time_period['@%s:id' % NamespacePrefix.GML] = update_data.time_period_id
+
+        # Check for clashing gml:TimePeriod child elements -
+        # gml:beginPosition/endPosition and gml:begin/end cannot
+        # both exist in the same gml:TimePeriod element.
+        time_period.pop('%s:beginPosition' % NamespacePrefix.GML, None)
+        time_period.pop('%s:endPosition' % NamespacePrefix.GML, None)
+
+        # gml:TimePeriod gml:begin container element
+        time_period_begin_key = '%s:begin' % NamespacePrefix.GML
+        time_period.setdefault(time_period_begin_key, {})
+        time_period_begin = time_period[time_period_begin_key]
+        self._update_time_instant_property_type_element(
+            time_period_begin,
+            update_data.time_instant_begin_id,
+            update_data.time_instant_begin_position
+        )
+        self.remove_child_element_if_empty(
+            time_period,
+            time_period_begin_key
+        )
+
+        # gml:TimePeriod gml:end container element
+        time_period_end_key = '%s:end' % NamespacePrefix.GML
+        time_period.setdefault(time_period_end_key, {})
+        time_period_end = time_period[time_period_end_key]
+        self._update_time_instant_property_type_element(
+            time_period_end,
+            update_data.time_instant_end_id,
+            update_data.time_instant_end_position
+        )
+        self.remove_child_element_if_empty(
+            time_period,
+            time_period_end_key
+        )
+
+        time_period_copy = copy.deepcopy(time_period)
+        time_period_copy_no_optionals = {
+            key: value for key, value in time_period_copy.items()
+            if key == time_period_begin_key or key == time_period_end_key
+        }
+        # Remove "frame" attribute before checking timePeriod
+        # element as it affects whether the it is considered
+        # "empty" or not. If not added by the user xmlschema
+        # adds it in when parsing an existing XML document.
+        self.remove_xml_attributes_from_metadata_component(
+            time_period_copy_no_optionals,
+            disallowed_attrs=['@frame']
+        )
+        if _is_metadata_component_empty(time_period_copy_no_optionals):
+            time_period_container_element.pop(time_period_key)
 
 
 class TypeMetadataEditor(BaseMetadataComponentEditor):

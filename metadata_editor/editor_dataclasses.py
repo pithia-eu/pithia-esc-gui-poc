@@ -77,12 +77,20 @@ class LocationMetadataUpdate:
 
 
 @dataclass(kw_only=True)
-class OperationTimeMetadataUpdate:
+class TimePeriodMetadataUpdate:
     time_period_id: Optional[str] = None
     time_instant_begin_id: Optional[str] = None
     time_instant_begin_position: Optional[str] = None
     time_instant_end_id: Optional[str] = None
     time_instant_end_position: Optional[str] = None
+
+
+class OperationTimeMetadataUpdate(TimePeriodMetadataUpdate):
+    pass
+
+
+class PhenomenonTimeMetadataUpdate(TimePeriodMetadataUpdate):
+    pass
 
 
 @dataclass(kw_only=True)
