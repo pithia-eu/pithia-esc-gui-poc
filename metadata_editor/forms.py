@@ -161,43 +161,14 @@ class OperationEditorForm(
     CitationDocumentationEditorFormComponent,
     LocationEditorFormComponent,
     RelatedPartiesEditorFormComponent,
-    StatusEditorFormComponent
+    StatusEditorFormComponent,
+    TimePeriodEditorFormComponent
 ):
     def __init__(self, *args, platform_choices=(), child_operation_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['platforms'].help_text = 'The operated platform(s).'
         self.fields['platforms'].choices = platform_choices
         self.fields['child_operations'].choices = child_operation_choices
-
-    time_period_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_position = forms.DateField(
-        label='Time Position',
-        required=False,
-        widget=forms.DateInput()
-    )
-
-    time_instant_end_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_end_position = forms.DateField(
-        label='Time Position',
-        required=False,
-        widget=forms.DateInput()
-    )
 
     platforms = forms.MultipleChoiceField(
         label='Platforms',
@@ -601,6 +572,39 @@ class CatalogueEditorForm(BaseEditorForm):
             'class': 'form-select',
         }),
         help_text='A category of the catalogue from the ontology disctionary.'
+    )
+
+
+class CatalogueEntryEditorForm(
+    BaseEditorForm,
+    TimePeriodEditorFormComponent):
+    def __init__(self, *args, catalogue_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['catalogue_identifier'].choices = catalogue_choices
+        self.fields['description'].help_text = 'A free-text description of the catalogue entry contents.'
+        self.fields['time_period_id'].required = True
+        self.fields['time_instant_begin_id'].required = True
+        self.fields['time_instant_end_id'].required = True
+
+    catalogue_identifier = forms.ChoiceField(
+        label='Catalogue',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        }),
+        help_text='The catalogue that this entry belongs to.'
+    )
+
+    time_instant_begin_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
+    )
+
+    time_instant_end_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
     )
 
 

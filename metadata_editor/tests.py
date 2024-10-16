@@ -292,6 +292,9 @@ class OperationEditorTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/resources/2.2/operation/test/Operation_Test',
             'https://metadata.pithia.eu/resources/2.2/operation/test/Operation_Test_2',
         ])
+        # IDs for the time period and time instant elements
+        # are optional. They are required in the editors in
+        # case some details of the requirements were missed.
         operation_time = OperationTimeMetadataUpdate(
             time_period_id='tpi_id',
             time_instant_begin_id='tib_id',

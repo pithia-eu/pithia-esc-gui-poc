@@ -642,3 +642,35 @@ class SourceMetadataComponent(forms.Form):
         initial=dict,
         widget=forms.HiddenInput()
     )
+
+
+class TimePeriodMetadataComponent(forms.Form):
+    time_period_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_begin_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
+
+    time_instant_end_id = forms.CharField(
+        label='ID',
+        required=False,
+        widget=forms.TextInput()
+    )
+
+    time_instant_end_position = forms.DateField(
+        label='Time Position',
+        required=False,
+        widget=forms.DateInput()
+    )
