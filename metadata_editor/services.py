@@ -436,6 +436,7 @@ class CatalogueEditor(
 
 class CatalogueEntryEditor(
     BaseMetadataEditor,
+    TimePeriodMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('CatalogueEntry', xml_string)

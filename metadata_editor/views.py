@@ -9,6 +9,7 @@ from django.views.generic import FormView
 from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
+    PhenomenonTimeMetadataUpdate,
     StandardIdentifierMetadataUpdate,
 )
 from .forms import *
@@ -855,6 +856,14 @@ class CatalogueEntryEditorFormView(
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_catalogue_identifier(form_cleaned_data.get('catalogue_identifier'))
+        phenomenon_time_update = PhenomenonTimeMetadataUpdate(
+            time_period_id=form_cleaned_data.get('time_period_id'),
+            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
+            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
+            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
+            time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
+        )
+        metadata_editor.update_phenomenon_time(phenomenon_time_update)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
