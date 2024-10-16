@@ -689,7 +689,7 @@ class CatalogueEntry(ScientificMetadata):
     weight = 14
     type_readable = 'catalogue entry'
     type_plural_readable = 'catalogue entries'
-    type_description_readable = ''
+    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
 
@@ -732,7 +732,7 @@ class CatalogueDataSubset(ScientificMetadata):
     weight = 15
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
-    type_description_readable = ''
+    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
 
