@@ -38,7 +38,17 @@
     </div>
     <div class="col-xl-5 col-lg-6">
         {{ form.time_instant_begin_position.label_tag }}
-        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control" value="{{ form.time_instant_begin_position.value|default:'' }}">
+        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control {% if form.time_instant_begin_position.errors %}is-invalid{% endif %}" value="{{ form.time_instant_begin_position.value|default:'' }}" aria-describedby="{{ form.time_instant_begin_position.auto_id }}-invalid-feedback">
+        <div id="{{ form.time_instant_begin_position.auto_id }}-invalid-feedback" class="invalid-feedback">
+            {% if form.time_instant_begin_position.errors %}
+            <ul class="list-unstyled">
+                {% for error in form.time_instant_begin_position.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {{ error }}
+            {% endif %}
+        </div>
     </div>
 </div>
 <div class="row gy-2">
@@ -52,6 +62,15 @@
     </div>
     <div class="col-xl-5 col-lg-6">
         {{ form.time_instant_end_position.label_tag }}
-        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control" value="{{ form.time_instant_end_position.value|default:'' }}">
+        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control {% if form.time_instant_end_position.errors %}is-invalid{% endif %}" value="{{ form.time_instant_end_position.value|default:'' }}" aria-describedby="{{ form.time_instant_end_position.auto_id }}-invalid-feedback">
+        <div id="{{ form.time_instant_end_position.auto_id }}-invalid-feedback" class="invalid-feedback">
+            {% if form.time_instant_end_position.errors %}
+            <ul class="list-unstyled">
+                {% for error in form.time_instant_end_position.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
     </div>
 </div>

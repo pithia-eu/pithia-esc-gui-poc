@@ -72,6 +72,15 @@
                 <span class="required-marker">*</span>
                 <small>indicates a required field</small>
             </div>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             <form action="{{ success_url }}" method="POST" id="metadata-editor-form">
                 {% csrf_token %}
                 {% block form_content %}{% endblock form_content %}

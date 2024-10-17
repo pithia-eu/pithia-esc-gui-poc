@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django_countries import countries
 from phonenumber_field.formfields import PhoneNumberField
 
@@ -483,6 +484,14 @@ class TimePeriodEditorFormComponent(forms.Form):
         widget=forms.DateInput()
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        time_instant_begin_position = cleaned_data.get('time_instant_begin_position')
+        time_instant_end_position = cleaned_data.get('time_instant_end_position')
+        if time_instant_begin_position > time_instant_end_position:
+            self.add_error('time_instant_begin_position', ValidationError('The begin time cannot be later than the end time.'))
+        return self.cleaned_data
+
 
 class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
     def __init__(self, *args, platform_choices=(), capability_set_choices=(), **kwargs):
@@ -641,36 +650,4 @@ class SourceMetadataComponent(forms.Form):
         required=False,
         initial=dict,
         widget=forms.HiddenInput()
-    )
-
-
-class TimePeriodMetadataComponent(forms.Form):
-    time_period_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_begin_position = forms.DateField(
-        label='Time Position',
-        required=False,
-        widget=forms.DateInput()
-    )
-
-    time_instant_end_id = forms.CharField(
-        label='ID',
-        required=False,
-        widget=forms.TextInput()
-    )
-
-    time_instant_end_position = forms.DateField(
-        label='Time Position',
-        required=False,
-        widget=forms.DateInput()
     )

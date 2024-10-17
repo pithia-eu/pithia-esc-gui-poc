@@ -98,6 +98,27 @@ class BaseMetadataComponentEditor:
             element_list.append(new_element_value)
         self.pop_child_element_if_empty(element_list, element_list[element_index], element_index)
 
+    def remove_xml_attributes_from_metadata_component(self, metadata_component: dict, disallowed_attrs: list = []):
+        if isinstance(metadata_component, dict):
+            for key in disallowed_attrs:
+                if key not in metadata_component:
+                    continue
+                del metadata_component[key]
+            for dict_value in metadata_component.values():
+                self.remove_xml_attributes_from_metadata_component(dict_value, disallowed_attrs=disallowed_attrs)
+        elif isinstance(metadata_component, list):
+            for item in metadata_component:
+                self.remove_xml_attributes_from_metadata_component(item, disallowed_attrs=disallowed_attrs)
+
+    def remove_xmlschema_attributes_from_metadata_component(self, metadata_component: dict):
+        self.remove_xml_attributes_from_metadata_component(
+            metadata_component,
+            disallowed_attrs=[
+                '@owns',
+                '@%s:type' % NamespacePrefix.XLINK,
+            ]
+        )
+
 
 class BaseMetadataEditor(BaseMetadataComponentEditor):
     def __init__(self, root_element_name, xml_string: str = '') -> None:
@@ -148,27 +169,6 @@ class BaseMetadataEditor(BaseMetadataComponentEditor):
 
     def to_xml(self):
         return self._metadata_dict_to_xml(self.metadata_dict, self.root_element_name)
-
-    def remove_xml_attributes_from_metadata_component(self, metadata_component: dict, disallowed_attrs: list = []):
-        if isinstance(metadata_component, dict):
-            for key in disallowed_attrs:
-                if key not in metadata_component:
-                    continue
-                del metadata_component[key]
-            for dict_value in metadata_component.values():
-                self.remove_xml_attributes_from_metadata_component(dict_value, disallowed_attrs=disallowed_attrs)
-        elif isinstance(metadata_component, list):
-            for item in metadata_component:
-                self.remove_xml_attributes_from_metadata_component(item, disallowed_attrs=disallowed_attrs)
-
-    def remove_xmlschema_attributes_from_metadata_component(self, metadata_component: dict):
-        self.remove_xml_attributes_from_metadata_component(
-            metadata_component,
-            disallowed_attrs=[
-                '@owns',
-                '@%s:type' % NamespacePrefix.XLINK,
-            ]
-        )
 
     def update_pithia_identifier(self, update_data: PithiaIdentifierMetadataUpdate):
         if not any(asdict(update_data).values()):

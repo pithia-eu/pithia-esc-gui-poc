@@ -17,6 +17,9 @@ import {
 import {
     setupOperationTimeSection,
 } from "/static/metadata_editor/components/operation/operation_time_section.js";
+import {
+    setupTimePeriodElements,
+} from "/static/metadata_editor/components/time_period.js";
 
 let relatedPartiesTable;
 
@@ -38,5 +41,6 @@ window.addEventListener("load", () => {
     setupCitationSection();
     setupGeometryLocationSection();
     setupOperationTimeSection();
+    setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
     relatedPartiesTable = setupRelatedPartiesTable();
 });

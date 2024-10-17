@@ -1,4 +1,5 @@
 from django import forms
+
 from .form_components import *
 
 
@@ -91,6 +92,7 @@ class ProjectEditorForm(
         widget=forms.HiddenInput()
     )
 
+
 class PlatformEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
@@ -156,6 +158,7 @@ class PlatformEditorForm(
         widget=forms.HiddenInput()
     )
 
+
 class OperationEditorForm(
     BaseEditorForm,
     CitationDocumentationEditorFormComponent,
@@ -185,6 +188,7 @@ class OperationEditorForm(
             'class': 'form-select'
         })
     )
+
 
 class InstrumentEditorForm(
     BaseEditorForm,
@@ -256,6 +260,7 @@ class InstrumentEditorForm(
         initial=dict,
         widget=forms.HiddenInput()
     )
+
 
 class AcquisitionCapabilitiesEditorForm(
     BaseEditorForm,
