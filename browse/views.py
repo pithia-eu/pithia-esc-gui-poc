@@ -895,6 +895,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
     resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
     resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
     template_name = 'browse/detail/bases/catalogue_data_subset.html'
+    interaction_methods_by_type = {}
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}dataSubsetDescription').text
