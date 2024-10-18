@@ -917,30 +917,42 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
         )
         return cleaned_property_table_dict
 
-    def add_handle_data_to_context(self, context):
-        context['handles'] = self.handles
-        context['data_for_handles'] = []
-        if self.data_for_handles:
-            context['data_for_handles'] = [reformat_and_clean_resource_copy_for_property_table(data) for data in self.data_for_handles if data is not None]
-        return context
+    def get_context_handle_variables(self):
+        handle_context = {
+            'data_for_handles': [],
+        }
+        # Prepare to get handle data from the handle API.
+        try:
+            client, credentials = instantiate_client_and_load_credentials()
+        except BaseException as e:
+            logger.exception('An unexpected error occurred whilst instantiating the PyHandle client.')
+            # No point doing any further operations
+            # if cannot get data from API.
+            return handle_context
+        
+        # Get the handle name-URL mappings for the page URL.
+        handle_url_mappings = models.HandleURLMapping.objects.for_url(self.url_for_handle_url_mappings)
+        handles = [
+            handle_url_mapping.handle_name
+            for handle_url_mapping in handle_url_mappings
+        ]
+        # Get handle data from the handle API.
+        data_for_handles_unformatted = [
+            get_handle_record(handle, client)
+            for handle in handles
+        ]
+        handle_context.update({
+            'data_for_handles': [
+                reformat_and_clean_resource_copy_for_property_table(data)
+                for data in data_for_handles_unformatted
+                if data is not None
+            ],
+        })
+        return handle_context
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
-        self.handle = None
-        self.handle_data = None
-        self.handles = []
-
-        self.data_for_handles = []
-
-        try:
-            self.client, self.credentials = instantiate_client_and_load_credentials()
-        except BaseException as e:
-            logger.exception('An unexpected error occurred whilst instantiating the PyHandle client.')
-            return super().get(request, *args, **kwargs)
-
-        handle_url_mappings = models.HandleURLMapping.objects.for_url(request.get_full_path())
-        self.handles = [hum.handle_name for hum in handle_url_mappings]
-        self.data_for_handles = [get_handle_record(handle, self.client) for handle in self.handles]
+        self.url_for_handle_url_mappings = request.get_full_path()
 
         # Custom handling 404 handling - shows DOI information
         # on missing resource.
@@ -948,7 +960,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
             self.resource = self.model.objects.get(pk=self.resource_id)
         except models.CatalogueDataSubset.DoesNotExist:
             context = {}
-            context = self.add_handle_data_to_context(context)
+            context.update(self.get_context_handle_variables())
             return render(request, 'browse/detail_404.html', context)
         
         self.interaction_methods_by_type = self.get_online_resources_from_resource_by_type(self.resource)
@@ -957,7 +969,6 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = self.add_handle_data_to_context(context)
         context['interaction_methods_by_type'] = dict(sorted(self.interaction_methods_by_type.items()))
         context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         return context

@@ -361,7 +361,7 @@ header a.logout-link {
 }
 
 .breadcrumb {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -1539,6 +1539,10 @@ ul.tree ul {
     .breadcrumb-item + .breadcrumb-item::before {
         content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M3.4845 1.2345a.375.375 90 01.531 0l4.5 4.5a.375.375 90 010 .531l-4.5 4.5a.375.375 90 01-.531-.531L7.7197 6 3.4845 1.7655a.375.375 90 010-.531z"/></svg>') !important;
         padding-right: var(--bs-breadcrumb-item-padding-x);
+    }
+
+    .resource-detail-top-section-extra-content > dl > div {
+        max-width: 15rem;
     }
 }
 
