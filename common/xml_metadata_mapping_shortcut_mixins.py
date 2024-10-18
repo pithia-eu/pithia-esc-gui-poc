@@ -366,7 +366,7 @@ class PithiaOnlineResourceMetadataPropertiesMixin(BaseMetadataPropertiesShortcut
             'name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
             'protocol': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:protocol' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
             'description': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
-            'data_format': self._get_elements_with_xpath_query('.//%s:dataFormat/%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
+            'data_format': self._get_elements_with_xpath_query('.//%s:dataFormat/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
         } for o_res_elem in online_resource_elements]
 
 
