@@ -1,4 +1,5 @@
 import copy
+import itertools
 import json
 import logging
 import re
@@ -433,6 +434,19 @@ class ResourceDetailView(TemplateView):
         context['ontology_node_properties_mapping_url'] = reverse('browse:ontology_node_properties_mapping_url')
         return context
 
+class OnlineResourcesViewMixin:
+    def get_online_resources_from_resource_by_type(self, resource: models.DataCollection | models.CatalogueDataSubset):
+        interaction_methods_by_type = {}
+        # Link interaction methods
+        for online_resource in resource.properties.online_resources:
+            service_function = online_resource.get('service_function')
+            if not service_function:
+                service_function = 'unknown'
+            if service_function not in interaction_methods_by_type:
+                interaction_methods_by_type[service_function] = []
+            interaction_methods_by_type[service_function].append(online_resource)
+        return interaction_methods_by_type
+
 class OrganisationDetailView(ResourceDetailView):
     """
     A subclass of ResourceDetailView.
@@ -764,7 +778,7 @@ class ProcessDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['process_id']
         return super().get(request, *args, **kwargs)
 
-class DataCollectionDetailView(ResourceDetailView):
+class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """
     A subclass of ResourceDetailView.
 
@@ -775,8 +789,6 @@ class DataCollectionDetailView(ResourceDetailView):
     resource_list_by_type_url_name = 'browse:list_data_collections'
     resource_download_url_name = 'utils:view_data_collection_as_xml'
     template_name = 'browse/detail/bases/data_collection.html'
-    interaction_methods = []
-    link_interaction_methods = []
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table_dict = super().configure_resource_copy_for_property_table(property_table_dict)
@@ -799,17 +811,18 @@ class DataCollectionDetailView(ResourceDetailView):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
+        self.interaction_methods_by_type = self.get_online_resources_from_resource_by_type(self.resource)
         # API Interaction methods
-        self.api_interaction_methods = models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource)
-        # Link interaction methods
-        self.link_interaction_methods = self.resource.link_interaction_methods
+        api_interaction_methods = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
+        if api_interaction_methods:
+            self.interaction_methods_by_type['api'] = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
 
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['api_interaction_methods'] = list(self.api_interaction_methods)
-        context['link_interaction_methods'] = list(self.link_interaction_methods)
+        context['interaction_methods_by_type'] = dict(sorted(self.interaction_methods_by_type.items()))
+        context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         context['data_collection_id'] = self.resource_id
         
         return context
@@ -871,7 +884,7 @@ class CatalogueEntryDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['catalogue_entry_id']
         return super().get(request, *args, **kwargs)
 
-class CatalogueDataSubsetDetailView(ResourceDetailView):
+class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
@@ -915,6 +928,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView):
         self.handle = None
         self.handle_data = None
         self.handles = []
+
         self.data_for_handles = []
 
         try:
@@ -927,18 +941,24 @@ class CatalogueDataSubsetDetailView(ResourceDetailView):
         self.handles = [hum.handle_name for hum in handle_url_mappings]
         self.data_for_handles = [get_handle_record(handle, self.client) for handle in self.handles]
 
+        # Custom handling 404 handling - shows DOI information
+        # on missing resource.
         try:
             self.resource = self.model.objects.get(pk=self.resource_id)
         except models.CatalogueDataSubset.DoesNotExist:
             context = {}
             context = self.add_handle_data_to_context(context)
             return render(request, 'browse/detail_404.html', context)
+        
+        self.interaction_methods_by_type = self.get_online_resources_from_resource_by_type(self.resource)
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context = self.add_handle_data_to_context(context)
+        context['interaction_methods_by_type'] = dict(sorted(self.interaction_methods_by_type.items()))
+        context['num_interaction_methods'] = len(list(itertools.chain(*self.interaction_methods_by_type.values())))
         return context
 
 class WorkflowDetailView(ResourceDetailView):

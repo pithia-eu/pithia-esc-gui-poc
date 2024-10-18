@@ -1,0 +1,60 @@
+{% if num_interaction_methods %}
+<section class="resource-detail-section">
+    {% if num_interaction_methods > 1 %}
+    <div class="d-flex flex-column row-gap-2 mb-4">
+        <h2 class="mb-0">{{ section_heading|default:'How to Access This Data Collection' }}</h2>
+        <p class="text-dark-emphasis fw-semibold mb-0">
+            {{ num_interaction_methods }} Links
+        </p>
+    </div>
+    {% else %}
+    <h2>{{ section_heading|default:'How to Access This Data Collection' }}</h2>
+    {% endif %}
+    <div class="d-flex flex-column row-gap-4">
+        {% for type, interaction_methods in interaction_methods_by_type.items %}
+        {% if type == 'api' and interaction_methods %}
+        <section class="api-interaction-methods-section bg-light rounded p-4 my-2">
+            <hgroup class="mb-3">
+                <h3 class="fs-5 fw-semibold mb-0">API</h3>
+                <p class="fs-6 mb-0">(via the PITHIA e-Science Centre)</p>
+            </hgroup>
+            {% for method in interaction_methods %}
+            <div class="d-flex flex-column align-items-start row-gap-4 mt-4">
+                <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="btn btn-outline-dark icon-link icon-link-hover fs-5" target="_blank" rel="noopener noreferrer">
+                    Go to API
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
+                </a>
+                {% if 'description' in method.config and method.config.description|length > 0 %}
+                <dl>
+                    <dt class="fs-6">Description</dt>
+                    <dd class="mb-0">
+                        {{ method.config.description|urlize }}
+                    </dd>
+                </dl>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+        {% if not type == 'api' %}
+        <section class="link-interaction-methods-section bg-light rounded p-4 pb-0 my-2">
+            <h3 class="fs-5 fw-semibold mb-0">
+                {% if type == 'unknown' %}
+                Links
+                {% else %}
+                {% with value=type %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                {% endwith %}
+                {% endif %}
+            </h3>
+            {% with online_resources=interaction_methods %}
+            {% include 'browse/detail/components/online_resource_list.html' %}
+            {% endwith %}
+        </section>
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

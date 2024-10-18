@@ -8,6 +8,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaCoreMetadataPropertiesMixin,
     PithiaDescriptionMetadataPropertiesMixin,
     PithiaDocumentationMetadataPropertiesMixin,
+    PithiaOnlineResourceMetadataPropertiesMixin,
     PithiaOntologyUrlsMetadataPropertiesMixin,
     PithiaQualityAssessmentMetadataPropertiesMixin,
     PithiaRelatedPartiesMetadataPropertiesMixin,
@@ -228,6 +229,7 @@ class ProcessXmlMappingShortcuts(
 class DataCollectionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaOnlineResourceMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
@@ -247,6 +249,11 @@ class DataCollectionXmlMappingShortcuts(
     @property
     def sub_collections(self):
         return self._get_elements_with_xpath_query('.//%s:subCollection/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+    
+    @property
+    def online_resources(self):
+        collection_results_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:collectionResults' % self.PITHIA_NSPREFIX_XPATH))
+        return self._get_online_resources(collection_results_element)
 
 
 class CatalogueXmlMappingShortcuts(
@@ -277,6 +284,7 @@ class CatalogueDataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
+        PithiaOnlineResourceMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
@@ -287,6 +295,10 @@ class CatalogueDataSubsetXmlMappingShortcuts(
         if not result_time_element:
             return None
         return self._gml_time_period(result_time_element)
+    
+    @property
+    def online_resources(self):
+        return self._get_online_resources()
 
 
 class WorkflowXmlMappingShortcuts(

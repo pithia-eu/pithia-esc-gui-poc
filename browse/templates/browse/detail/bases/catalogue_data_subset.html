@@ -36,14 +36,9 @@
 {% endif %}
 {% endblock top_section_extra_content %}
 {% block post_description_content %}
-{% if 'source' in resource.json %}
-<section class="resource-detail-section">
-    <h2 class="mb-1">Access this Data Subset</h2>
-    {% with sources=resource.json.source %}
-    {% include 'browse/detail/components/online_resource_list.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% with section_heading='How to Access This Data Subset' %}
+{% include 'browse/detail/sections/interaction_methods_section.html' %}
+{% endwith %}
 {% endblock post_description_content %}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}

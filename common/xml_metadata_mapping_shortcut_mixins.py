@@ -353,13 +353,27 @@ class PithiaDocumentationMetadataPropertiesMixin(BaseMetadataPropertiesShortcutM
             'online_resource': online_resource,
             'other_documentation_details': other_documentation_details,
         }
+    
+
+class PithiaOnlineResourceMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_online_resources(self, parent_element=None):
+        if not parent_element:
+            parent_element = self.xml_parsed
+        online_resource_elements = self._get_elements_with_xpath_query('.//%s:source/%s:OnlineResource' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH), parent_element)
+        return [{
+            'service_function': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:serviceFunction/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
+            'linkage': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:linkage/%s:URL' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD), o_res_elem),
+            'name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
+            'protocol': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:protocol' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
+            'description': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
+            'data_format': self._get_elements_with_xpath_query('.//%s:dataFormat/%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
+        } for o_res_elem in online_resource_elements]
 
 
 class PithiaStatusMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def status(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:status/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
-
 
 
 class GmdContactInfoMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
