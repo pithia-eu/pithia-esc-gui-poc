@@ -93,6 +93,10 @@ class PhenomenonTimeMetadataUpdate(TimePeriodMetadataUpdate):
     pass
 
 
+class ResultTimeMetadataUpdate(TimePeriodMetadataUpdate):
+    pass
+
+
 @dataclass(kw_only=True)
 class RelatedPartyMetadataUpdate:
     role: Optional[str] = None

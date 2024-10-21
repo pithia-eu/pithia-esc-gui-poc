@@ -613,6 +613,44 @@ class CatalogueEntryEditorForm(
     )
 
 
+class CatalogueDataSubsetForm(
+    BaseEditorForm,
+    QualityAssessmentFormComponent,
+    TimePeriodEditorFormComponent):
+    def __init__(self, *args, data_collection_choices=(), catalogue_entry_choices=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_collection'].choices = data_collection_choices
+        self.fields['entry_identifier'].choices = catalogue_entry_choices
+
+    data_collection = forms.ChoiceField(
+        label='Subset of Data Collection',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    entry_identifier = forms.ChoiceField(
+        label='Catalogue Entry',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
+    time_instant_begin_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
+    )
+
+    time_instant_end_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
+    )
+
+
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

@@ -29,6 +29,7 @@ from .editor_dataclasses import (
     InputOutputMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
+    ResultTimeMetadataUpdate,
     SourceMetadataUpdate,
 )
 
@@ -352,7 +353,7 @@ class DataCollectionEditor(
         collection_results_key = 'collectionResults'
         self.metadata_dict.setdefault(collection_results_key, {})
         collection_results = self.metadata_dict[collection_results_key]
-        self.update_sources(collection_results, update_data)
+        self.update_sources(update_data, parent_element=collection_results)
         self.remove_child_element_if_empty(
             self.metadata_dict,
             collection_results_key
@@ -459,6 +460,43 @@ class CatalogueEntryEditor(
     def update_phenomenon_time(self, update_data: PhenomenonTimeMetadataUpdate):
         phenomenon_time_key = 'phenomenonTime'
         self.update_time_period(update_data, phenomenon_time_key)
+
+
+class CatalogueDataSubsetEditor(
+    BaseMetadataEditor,
+    DataLevelMetadataEditor,
+    QualityAssessmentMetadataEditor,
+    SourcePropertyTypeEditor,
+    TimePeriodMetadataEditor,
+    XlinkHrefMetadataEditor):
+    def __init__(self, xml_string: str = '') -> None:
+        super().__init__('DataSubset', xml_string)
+
+    def update_name(self, name):
+        if not name:
+            return
+        self.metadata_dict['dataSubsetName'] = name
+
+    def update_description(self, description):
+        self.metadata_dict['dataSubsetDescription'] = description
+
+    def update_entry_identifier(self, entry_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'entryIdentifier',
+            self.get_as_xlink_href(entry_url)
+        )
+
+    def update_data_collection(self, data_collection_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'dataCollection',
+            self.get_as_xlink_href(data_collection_url)
+        )
+
+    def update_result_time(self, update_data: ResultTimeMetadataUpdate):
+        result_time_key = 'resultTime'
+        self.update_time_period(update_data, result_time_key)
 
 
 class WorkflowEditor(

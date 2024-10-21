@@ -10,6 +10,7 @@ from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
+    ResultTimeMetadataUpdate,
     StandardIdentifierMetadataUpdate,
 )
 from .forms import *
@@ -22,6 +23,7 @@ from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     CatalogueEditor,
+    CatalogueDataSubsetEditor,
     CatalogueEntryEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
@@ -879,6 +881,47 @@ class CatalogueEntryEditorFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['catalogue_choices'] = self.get_resource_choices_with_model(models.Catalogue)
+        return kwargs
+
+
+class CatalogueDataSubsetEditorFormView(
+    CatalogueRelatedEditorFormViewMixin,
+    DataCollectionSelectFormViewMixin,
+    DataLevelSelectFormViewMixin,
+    QualityAssessmentSelectFormViewMixin,
+    ResourceEditorFormView):
+    form_class = CatalogueDataSubsetForm
+    template_name = ''
+
+    model = models.CatalogueDataSubset
+    metadata_editor_class = CatalogueDataSubsetEditor
+
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueDataSubsetEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        metadata_editor.update_description(form_cleaned_data.get('description'))
+        metadata_editor.update_entry_identifier(form_cleaned_data.get('entry_identifier'))
+        metadata_editor.update_data_collection(form_cleaned_data.get('data_collection'))
+        result_time_update = ResultTimeMetadataUpdate(
+            time_period_id=form_cleaned_data.get('time_period_id'),
+            time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
+            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+            time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
+            time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+        )
+        metadata_editor.update_result_time(result_time_update)
+        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        metadata_editor.update_quality_assessment(
+            form_cleaned_data.get('data_quality_flags'),
+            form_cleaned_data.get('metadata_quality_flags')
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()
+        kwargs['catalogue_entry_choices'] = self.get_resource_choices_with_model(models.CatalogueEntry)
         return kwargs
 
 
