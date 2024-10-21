@@ -7,6 +7,7 @@ from django.views.generic import View
 from django_countries import countries
 from rdflib.namespace._SKOS import SKOS
 from unidecode import unidecode
+from urllib.parse import quote
 
 from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
@@ -153,7 +154,7 @@ class ResourceChoicesViewMixin:
     def get_resource_choices_with_model(self, model):
         return (
             ('', ''),
-            *[(r.metadata_server_url, r.name) for r in self.get_resources_with_model_ordered_by_name(model)],
+            *[(quote(r.metadata_server_url, safe='/:?=&'), r.name) for r in self.get_resources_with_model_ordered_by_name(model)],
         )
 
     def get_resource_choices_with_multiple_models(self, optgroup_model_pairs):
