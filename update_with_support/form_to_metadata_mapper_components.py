@@ -399,6 +399,26 @@ class SourceFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
         return mappings
 
 
+class TimePeriodFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
+    def __init__(self, xml_string) -> None:
+        super().__init__(xml_string)
+        self._gml_id_xpath = '@%s:id' % NamespacePrefix.GML
+        self._time_instant_element_xpath = '%s:TimeInstant' % NamespacePrefix.GML
+        self._time_position_element_xpath = '%s:timePosition' % NamespacePrefix.GML
+        self._time_period_element_xpath = '%s:%s/%s:TimePeriod' % (self.DEFAULT_XPATH_NSPREFIX, self.time_period_container_element_name, NamespacePrefix.GML)
+
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'time_period_id': './/%s/%s' % (self._time_period_element_xpath, self._gml_id_xpath),
+            'time_instant_begin_id': './/%s/%s:begin/%s/%s' % (self._time_period_element_xpath, NamespacePrefix.GML, self._time_instant_element_xpath, self._gml_id_xpath),
+            'time_instant_begin_position': './/%s/%s:begin/%s/%s' % (self._time_period_element_xpath, NamespacePrefix.GML, self._time_instant_element_xpath, self._time_position_element_xpath),
+            'time_instant_end_id': './/%s/%s:end/%s/%s' % (self._time_period_element_xpath, NamespacePrefix.GML, self._time_instant_element_xpath, self._gml_id_xpath),
+            'time_instant_end_position': './/%s/%s:end/%s/%s' % (self._time_period_element_xpath, NamespacePrefix.GML, self._time_instant_element_xpath, self._time_position_element_xpath),
+        })
+        return mappings
+
+
 class TypeFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()

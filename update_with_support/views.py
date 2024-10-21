@@ -1,11 +1,13 @@
 from datetime import datetime
 from datetime import timezone
+from dateutil.parser import parse
 from django.shortcuts import render
 from pyexpat import ExpatError
 
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
+    CatalogueEntryFormFieldsToMetadataMapper,
     CatalogueFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
@@ -201,6 +203,22 @@ class CatalogueUpdateWithEditorFormView(
     model = models.Catalogue
     success_url_name = 'update:catalogue_with_editor'
     form_field_to_metadata_mapper_class = CatalogueFormFieldsToMetadataMapper
+
+
+class CatalogueEntryUpdateWithEditorFormView(
+    ResourceUpdateWithEditorFormView,
+    CatalogueEntryEditorFormView):
+    model = models.CatalogueEntry
+    success_url_name = 'update:catalogue_entry_with_editor'
+    form_field_to_metadata_mapper_class = CatalogueEntryFormFieldsToMetadataMapper
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
+            'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
+        })
+        return initial
 
 
 class WorkflowUpdateWithEditorFormView(
