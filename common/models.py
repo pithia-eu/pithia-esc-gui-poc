@@ -2,6 +2,7 @@ import logging
 from django.db import models
 from django.urls import reverse
 from lxml import etree
+from urllib.parse import quote
 
 from .constants import (
     PITHIA_METADATA_SERVER_URL_BASE,
@@ -142,7 +143,7 @@ class ScientificMetadata(models.Model):
 
     @property
     def metadata_server_url(self):
-        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
     
     @property
     def converted_xml_correction_function(self):
@@ -672,7 +673,7 @@ class Catalogue(ScientificMetadata):
 
     @property
     def metadata_server_url(self):
-        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}'
+        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.name}/{self.localid}', safe='/:?=&')
 
     @property
     def properties(self):
@@ -703,7 +704,10 @@ class CatalogueEntry(ScientificMetadata):
     
     @property
     def catalogue_url(self):
-        return self.json['catalogueIdentifier']['@xlink:href']
+        try:
+            return self.json['catalogueIdentifier']['@xlink:href']
+        except KeyError:
+            return ''
 
     @property
     def catalogue(self):
@@ -715,7 +719,10 @@ class CatalogueEntry(ScientificMetadata):
 
     @property
     def metadata_server_url(self):
-        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
+        try:
+            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}', safe='/:?=&')
+        except Catalogue.DoesNotExist:
+            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
     @property
     def properties(self):
