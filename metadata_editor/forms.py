@@ -593,7 +593,7 @@ class CatalogueEntryEditorForm(
 
     catalogue_identifier = forms.ChoiceField(
         label='Catalogue',
-        required=True,
+        required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
@@ -615,12 +615,16 @@ class CatalogueEntryEditorForm(
 
 class CatalogueDataSubsetForm(
     BaseEditorForm,
+    DataLevelFormComponent,
     QualityAssessmentFormComponent,
     TimePeriodEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), catalogue_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices
         self.fields['entry_identifier'].choices = catalogue_entry_choices
+        self.fields['time_period_id'].required = True
+        self.fields['time_instant_begin_id'].required = True
+        self.fields['time_instant_end_id'].required = True
 
     data_collection = forms.ChoiceField(
         label='Subset of Data Collection',

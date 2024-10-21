@@ -891,7 +891,7 @@ class CatalogueDataSubsetEditorFormView(
     QualityAssessmentSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = CatalogueDataSubsetForm
-    template_name = ''
+    template_name = 'metadata_editor/catalogue_data_subset_editor.html'
 
     model = models.CatalogueDataSubset
     metadata_editor_class = CatalogueDataSubsetEditor
@@ -918,10 +918,56 @@ class CatalogueDataSubsetEditorFormView(
             form_cleaned_data.get('metadata_quality_flags')
         )
 
+    def get_catalogue_entry_choices_for_form(self):
+        catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
+        uncatalogued_entries = []
+        entries_by_catalogue = {}
+        
+        for entry in catalogue_entries:
+            catalogue_id = entry.properties.catalogue_identifier.split('/')[-1]
+            if not catalogue_id:
+                uncatalogued_entries.append(entry)
+                continue
+            if catalogue_id not in entries_by_catalogue:
+                entries_by_catalogue.update({
+                    catalogue_id: [],
+                })
+            entries_by_catalogue[catalogue_id].append(entry)
+
+        choices_categorised = []
+        for catalogue_id, entries in entries_by_catalogue.items():
+            optgroup = catalogue_id
+            try:
+                catalogue = models.Catalogue.objects.get(pk=catalogue_id)
+                optgroup = f'{catalogue.name} ({catalogue_id})'
+            except models.Catalogue.DoesNotExist:
+                pass
+            choices_categorised.append(
+                (
+                    optgroup,
+                    list(
+                        (entry.metadata_server_url, entry.name)
+                        for entry in entries
+                    )
+                )
+            )
+        if uncatalogued_entries:
+            choices_categorised.append(('Unknown', list(
+                (entry.metadata_server_url, entry.name)
+                for entry in entries
+            )))
+        return (
+            ('', ''),
+            *choices_categorised,
+        )
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()
-        kwargs['catalogue_entry_choices'] = self.get_resource_choices_with_model(models.CatalogueEntry)
+        kwargs['catalogue_entry_choices'] = self.get_catalogue_entry_choices_for_form()
+        kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
+        kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
+        kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
         return kwargs
 
 

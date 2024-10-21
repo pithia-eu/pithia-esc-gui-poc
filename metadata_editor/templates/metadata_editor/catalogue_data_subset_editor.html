@@ -1,0 +1,71 @@
+{% extends 'metadata_editor/components/base_editor.html' %}
+{% block form_content %}
+{% include 'metadata_editor/components/name_and_organisation_section.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/identifier.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/description.html' %}
+<hr class="my-5">
+<section id="entry-and-data-collection-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Catalogue Entry & Data Collection
+            </h2>
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.entry_identifier %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <div class="col-xl-9 col-lg-12">
+            {% with field=form.data_collection %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<hr class="my-5">
+{% include 'metadata_editor/components/catalogue_data_subset/result_time.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/data_levels.html' %}
+<hr class="my-5">
+{% include 'metadata_editor/components/quality_assessment.html' %}
+{% endblock form_content %}
+{% block table_of_contents %}
+<li class="list-group-item">
+    <a href="#name-and-organisation-section">
+        Full Name and Organisation
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#identifier-section">
+        Identifier
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#description-section">
+        Description
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#entry-and-data-collection-section">
+        Catalogue Entry & Data Collection
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#result-time-section">
+        Result Time
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#data-levels-section">
+        Data Levels
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#quality-assessments-section">
+        Quality Assessment
+    </a>
+</li>
+{% endblock table_of_contents %}

@@ -275,6 +275,10 @@ class CatalogueEntryXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
+    def catalogue_identifier(self):
+        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:catalogueIdentifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+    @property
     def phenomenon_time(self):
         phenomenon_time_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:phenomenonTime' % self.PITHIA_NSPREFIX_XPATH))
         return self._gml_time_period(phenomenon_time_element)

@@ -431,6 +431,16 @@ class CatalogueEntryRegisterWithEditorFormView(
     save_data_local_storage_key = 'catalogue_entry_r_wizard_save_data'
 
 
+class CatalogueDataSubsetRegisterWithEditorFormView(
+    CatalogueDataSubsetEditorFormView,
+    NewResourceRegisterWithEditorFormView):
+    form_class = CatalogueDataSubsetEditorRegistrationForm
+    success_url = reverse_lazy('register:catalogue_data_subset_with_editor')
+
+    file_upload_registration_url = reverse_lazy('register:catalogue_data_subset')
+    save_data_local_storage_key = 'catalogue_data_subset_r_wizard_save_data'
+
+
 class WorkflowRegisterWithEditorFormView(
     WorkflowEditorFormView,
     NewResourceRegisterWithEditorFormView):

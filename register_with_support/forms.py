@@ -2,20 +2,21 @@ from django import forms
 
 from metadata_editor.form_components import OrganisationSelect
 from metadata_editor.forms import (
-    OrganisationEditorForm,
-    IndividualEditorForm,
-    ProjectEditorForm,
-    PlatformEditorForm,
-    OperationEditorForm,
-    InstrumentEditorForm,
     AcquisitionCapabilitiesEditorForm,
     AcquisitionEditorForm,
+    CatalogueEditorForm,
+    CatalogueDataSubsetForm,
+    CatalogueEntryEditorForm,
     ComputationCapabilitiesEditorForm,
     ComputationEditorForm,
-    ProcessEditorForm,
     DataCollectionEditorForm,
-    CatalogueEditorForm,
-    CatalogueEntryEditorForm,
+    IndividualEditorForm,
+    InstrumentEditorForm,
+    OperationEditorForm,
+    OrganisationEditorForm,
+    PlatformEditorForm,
+    ProcessEditorForm,
+    ProjectEditorForm,
     WorkflowEditorForm,
 )
 from register.forms import WorkflowOpenAPISpecificationForm
@@ -119,6 +120,10 @@ class CatalogueEditorRegistrationForm(EditorRegistrationForm, CatalogueEditorFor
 
 
 class CatalogueEntryEditorRegistrationForm(EditorRegistrationForm, CatalogueEntryEditorForm):
+    pass
+
+
+class CatalogueDataSubsetEditorRegistrationForm(EditorRegistrationForm, CatalogueDataSubsetForm):
     pass
 
 
