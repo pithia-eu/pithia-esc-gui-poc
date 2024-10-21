@@ -854,7 +854,7 @@ class CatalogueEditorFormView(
 class CatalogueEntryEditorFormView(
     CatalogueRelatedEditorFormViewMixin,
     ResourceEditorFormView):
-    form_class = CatalogueEditorForm
+    form_class = CatalogueEntryEditorForm
     template_name = 'metadata_editor/catalogue_entry_editor.html'
 
     model = models.CatalogueEntry
@@ -870,9 +870,9 @@ class CatalogueEntryEditorFormView(
         phenomenon_time_update = PhenomenonTimeMetadataUpdate(
             time_period_id=form_cleaned_data.get('time_period_id'),
             time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
-            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position'),
+            time_instant_begin_position=form_cleaned_data.get('time_instant_begin_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
             time_instant_end_id=form_cleaned_data.get('time_instant_end_id'),
-            time_instant_end_position=form_cleaned_data.get('time_instant_end_position')
+            time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
         )
         metadata_editor.update_phenomenon_time(phenomenon_time_update)
 
