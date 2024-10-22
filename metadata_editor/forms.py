@@ -622,6 +622,7 @@ class CatalogueDataSubsetForm(
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices
         self.fields['entry_identifier'].choices = catalogue_entry_choices
+        self.fields['description'].help_text = 'A free-text description of the data subset contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
         self.fields['time_instant_end_id'].required = True
@@ -631,7 +632,8 @@ class CatalogueDataSubsetForm(
         required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The PITHIA Data Collection that holds metadata for this subset.'
     )
 
     entry_identifier = forms.ChoiceField(
@@ -639,7 +641,8 @@ class CatalogueDataSubsetForm(
         required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',
-        })
+        }),
+        help_text='The catalogue entry that this data subset belongs to.'
     )
 
     time_instant_begin_position = forms.DateTimeField(
@@ -655,7 +658,7 @@ class CatalogueDataSubsetForm(
     )
 
     data_levels = forms.ChoiceField(
-        label='Data Levels',
+        label='Data Level',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
