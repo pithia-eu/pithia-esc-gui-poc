@@ -473,7 +473,7 @@ class DataCollectionEditorForm(
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
     RelatedPartiesEditorFormComponent,
-    SourceMetadataComponent):
+    SourceMetadataFormComponent):
     def __init__(
         self,
         *args,
@@ -617,6 +617,7 @@ class CatalogueDataSubsetForm(
     BaseEditorForm,
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
+    SourceMetadataFormComponent,
     TimePeriodEditorFormComponent):
     def __init__(self, *args, data_collection_choices=(), catalogue_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)

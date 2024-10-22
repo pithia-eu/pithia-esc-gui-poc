@@ -584,7 +584,7 @@ class CapabilityLinkEditorFormComponent(StandardIdentifierEditorFormComponent):
         widget=forms.HiddenInput()
     )
 
-class SourceMetadataComponent(forms.Form):
+class SourceMetadataFormComponent(forms.Form):
     def __init__(self, *args, data_format_choices=(), service_function_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['source_data_formats'].choices = data_format_choices
