@@ -627,6 +627,7 @@ class CatalogueDataSubsetForm(
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
         self.fields['time_instant_end_id'].required = True
+        self.fields['data_quality_flags'].required = True
 
     data_collection = forms.ChoiceField(
         label='Subset of Data Collection',

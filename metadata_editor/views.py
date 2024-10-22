@@ -791,7 +791,7 @@ class DataCollectionEditorFormView(
         context = super().get_context_data(**kwargs)
         context['related_parties_section_description'] = 'Individual or organisation related to composite process.'
         context['sources_tab_pane_content_template'] = render_to_string(
-            'metadata_editor/components/data_collection/sources_tab_pane_content_template.html',
+            'metadata_editor/components/sources_tab_pane_content_template.html',
             context=context
         )
         return context
@@ -912,11 +912,12 @@ class CatalogueDataSubsetEditorFormView(
             time_instant_end_position=form_cleaned_data.get('time_instant_end_position').replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
         )
         metadata_editor.update_result_time(result_time_update)
-        metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
+        metadata_editor.update_data_levels([form_cleaned_data.get('data_levels')])
         metadata_editor.update_quality_assessment(
             form_cleaned_data.get('data_quality_flags'),
             form_cleaned_data.get('metadata_quality_flags')
         )
+        metadata_editor.update_sources(map_sources_to_dataclasses(form_cleaned_data))
 
     def get_catalogue_entry_choices_for_form(self):
         catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
@@ -970,6 +971,20 @@ class CatalogueDataSubsetEditorFormView(
             *choices_categorised,
         )
 
+    def get_service_function_choices_for_form(self):
+        return self.get_choices_from_ontology_category('serviceFunction')
+
+    def get_data_format_choices_for_form(self):
+        return self.get_choices_from_ontology_category('resultDataFormat')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sources_tab_pane_content_template'] = render_to_string(
+            'metadata_editor/components/sources_tab_pane_content_template.html',
+            context=context
+        )
+        return context
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()
@@ -977,6 +992,9 @@ class CatalogueDataSubsetEditorFormView(
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()
+        # Sources
+        kwargs['service_function_choices'] = self.get_service_function_choices_for_form()
+        kwargs['data_format_choices'] = self.get_data_format_choices_for_form()
         return kwargs
 
 

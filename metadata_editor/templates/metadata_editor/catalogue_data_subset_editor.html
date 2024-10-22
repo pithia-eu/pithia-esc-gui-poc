@@ -1,4 +1,9 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
+{% load static %}
+{% block extra_scripts %}
+{{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+<script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
+{% endblock extra_scripts %}
 {% block form_content %}
 {% include 'metadata_editor/components/name_and_organisation_section.html' %}
 <hr class="my-5">
@@ -32,7 +37,9 @@
 <hr class="my-5">
 {% include 'metadata_editor/components/data_levels.html' %}
 <hr class="my-5">
+{% with quality_assessment_required=True %}
 {% include 'metadata_editor/components/quality_assessment.html' %}
+{% endwith %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
