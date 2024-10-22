@@ -920,42 +920,51 @@ class CatalogueDataSubsetEditorFormView(
 
     def get_catalogue_entry_choices_for_form(self):
         catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
-        uncatalogued_entries = []
-        entries_by_catalogue = {}
-        
+        UNKNOWN_KEY = 'ZZZ'
+        entries_by_catalogue = {
+            UNKNOWN_KEY: {
+                'name': UNKNOWN_KEY,
+                'entries': [],
+            }
+        }
+        # Sort catalogue entries by catalogue ID
         for entry in catalogue_entries:
             catalogue_id = entry.properties.catalogue_identifier.split('/')[-1]
             if not catalogue_id:
-                uncatalogued_entries.append(entry)
+                entries_by_catalogue[UNKNOWN_KEY]['entries'].append(entry)
                 continue
             if catalogue_id not in entries_by_catalogue:
-                entries_by_catalogue.update({
-                    catalogue_id: [],
-                })
-            entries_by_catalogue[catalogue_id].append(entry)
-
-        choices_categorised = []
-        for catalogue_id, entries in entries_by_catalogue.items():
-            optgroup = catalogue_id
+                entries_by_catalogue[catalogue_id] = {
+                    'name': catalogue_id,
+                    'entries': [],
+                }
+            entries_by_catalogue[catalogue_id]['entries'].append(entry)
+        # Map each catalogue ID to a name
+        for catalogue_id, optgroup_data in entries_by_catalogue.items():
             try:
                 catalogue = models.Catalogue.objects.get(pk=catalogue_id)
-                optgroup = f'{catalogue.name} ({catalogue_id})'
+                optgroup_data.update({
+                    'name': catalogue.name,
+                })
             except models.Catalogue.DoesNotExist:
                 pass
+        # Sort catalogues by name
+        entries_by_catalogue = dict(sorted(entries_by_catalogue.items(), key=lambda item: item[1]['name']))
+        # Create optgroups and options for select
+        choices_categorised = []
+        for catalogue_id, optgroup_data in entries_by_catalogue.items():
+            optgroup_name = optgroup_data.get('name')
+            if optgroup_name == UNKNOWN_KEY:
+                optgroup_name = 'Unknown'
             choices_categorised.append(
                 (
-                    optgroup,
+                    optgroup_name,
                     list(
                         (entry.metadata_server_url, entry.name)
-                        for entry in entries
+                        for entry in optgroup_data.get('entries')
                     )
                 )
             )
-        if uncatalogued_entries:
-            choices_categorised.append(('Unknown', list(
-                (entry.metadata_server_url, entry.name)
-                for entry in entries
-            )))
         return (
             ('', ''),
             *choices_categorised,
