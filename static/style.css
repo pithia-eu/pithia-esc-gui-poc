@@ -288,6 +288,10 @@ header a.logout-link {
     font-size: 0.875rem;
 }
 
+header .dropdown-menu {
+    z-index: 1021;
+}
+
 /* Navbar */
 .navbar a,
 .navbar a:hover,
