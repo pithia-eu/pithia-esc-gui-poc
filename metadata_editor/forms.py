@@ -654,6 +654,14 @@ class CatalogueDataSubsetForm(
         widget=forms.DateTimeInput()
     )
 
+    data_levels = forms.ChoiceField(
+        label='Data Levels',
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
+    )
+
 
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):
