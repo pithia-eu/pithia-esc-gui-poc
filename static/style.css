@@ -209,7 +209,7 @@ p {
     list-style: ' -  ';
 }
 
-.lead-sm {
+.fs-normal-lg {
     font-size: 1.1rem;
 }
 
@@ -286,6 +286,10 @@ header a.support-link {
 header a.support-link,
 header a.logout-link {
     font-size: 0.875rem;
+}
+
+header .dropdown-menu {
+    z-index: 1021;
 }
 
 /* Navbar */
@@ -598,15 +602,13 @@ dialog .btn-close {
 
 /* font-size and font-weight is intended to be the same
 as Bootstrap styling. */
-#responsible-parties-top-section,
-.resource-detail-small-top-section {
-    font-size: 0.875rem;
+#responsible-parties-top-section {
+    font-size: 0.925rem;
     padding-block: 1.5rem;
     border-top: 1px solid var(--bs-gray-300)
 }
 
-#responsible-parties-top-section dt h3,
-.resource-detail-small-top-section dt h3 {
+#responsible-parties-top-section dt h3 {
     font-size: 0.875rem;
     font-weight: 700;
 }
@@ -616,7 +618,8 @@ as Bootstrap styling. */
     border-top: 1px solid var(--bs-gray-300);
 }
 
-.resource-detail-section h2:first-child {
+.resource-detail-section h2:first-child,
+.resource-detail-aside h2:first-child {
     font-size: 1.5rem;
 }
 
@@ -660,11 +663,11 @@ as Bootstrap styling. */
 }
 
 #further-information-section h3 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
 }
 
 #further-information-section h4 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
 }
 
 .resource-detail-emphasised-section.resource-detail-section:first-of-type {
@@ -713,6 +716,7 @@ as Bootstrap styling. */
 .resource-detail-aside .resource-detail-aside-section {
     border-bottom: var(--bs-gray-300) solid 1px;
     padding-block: var(--resource-detail-aside-section-padding);
+    font-size: 1rem;
 }
 
 .resource-detail-aside .resource-detail-aside-section:last-child {
@@ -725,6 +729,10 @@ as Bootstrap styling. */
 
 .resource-detail-aside .resource-detail-aside-section > h2 {
     margin-bottom: 1rem;
+}
+
+#related-aside-section li {
+    list-style-type: disc;
 }
 
 .resource-detail-section-from-aside {
@@ -1489,12 +1497,17 @@ ul.tree ul {
         display: block;
     }
 
-    .resource-detail-aside h2 {
+    .resource-detail-aside-section h2:first-child {
         font-size: 1.25rem;
     }
 
     .resource-detail-aside .resource-detail-aside-section:first-child {
         padding-top: 0;
+    }
+
+    .resource-detail-aside .resource-detail-aside-section,
+    .resource-detail-aside #related-aside-section li {
+        font-size: 0.875rem;
     }
 
     /* Breadcrumb */

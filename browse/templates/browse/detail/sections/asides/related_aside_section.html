@@ -1,15 +1,15 @@
 {% load project_tags %}
 {% if related_registrations %}
-<section class="resource-detail-aside-section">
+<section id="related-aside-section" class="resource-detail-aside-section">
     <details>
         <summary class="summary-marker-custom">
             <h2 class="d-inline-block">Related</h2>
         </summary>
-        <div class="d-flex flex-column row-gap-5 pt-4">
+        <ul class="list-unstyled mb-0">
             {% for heading_text, resource_url_list in related_registrations.items %}
-            <div class="resource-detail-aside-subsection">
-                <h3 class="fs-6">{{ heading_text }}</h3>
-                <ul class="mb-0">
+            <li class="list-group-item px-0 py-3 {% if forloop.last %}pb-0{% endif %}">
+                <h3 class="fs-6 fw-semibold">{{ heading_text }}</h3>
+                <ul class="mt-3 mb-0">
                     {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
                     <li>
                         {% with value=resource_url %}
@@ -18,9 +18,9 @@
                     </li>
                     {% endfor %}
                 </ul>
-            </div>
+            </li>
             {% endfor %}
-        </div>
+        </ul>
     </details>
 </section>
 {% endif %}
