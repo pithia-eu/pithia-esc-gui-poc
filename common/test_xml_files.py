@@ -2253,6 +2253,119 @@ DATA_COLLECTION_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
+DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML = SimpleUploadedFile(
+    'DataCollection_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataCollection 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:om="http://www.opengis.net/om/2.0" >
+        <!--
+            First report some required elements from ISO standard for Observation
+        -->
+        <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+        <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+        <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test"/>
+        <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+        <om:featureOfInterest>
+            <FeatureOfInterest>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+            </FeatureOfInterest>
+        </om:featureOfInterest>
+        <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+        <!--
+            Now our Data Collection elements next
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataCollection_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-28T15:00:00Z</creationDate>
+                <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>DataCollection Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+        <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/> 
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <collectionResults>
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                    <name>Online Resource 1</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                    <name>Online Resource 2</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                    <name>Online Resource 3</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+                </OnlineResource>
+            </source>        
+        </collectionResults>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+        </qualityAssessment>
+        <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+    </DataCollection>
+    '''
+)
+
 
 # CATALOGUES
 CATALOGUE_METADATA_XML = SimpleUploadedFile(
@@ -2545,6 +2658,120 @@ CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML = SimpleUploadedFile(
                         https://ui.eidr.org/view/content?id=10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
                     <doi:uri returnType="application/xml">
                         https://doi.org/10.5240/B94E-F500-7164-57DB-82F5-6</doi:uri>
+                    <doi:type>EidrContentID</doi:type>
+                </doi:identifier>
+                <doi:structuralType>Digital</doi:structuralType>
+                <doi:mode>Visual</doi:mode>
+                <doi:character>Image</doi:character>
+                <doi:type>Dataset</doi:type>
+                <doi:principalAgent>
+                    <doi:name>
+                        <doi:value>Lowell GIRO Data Center</doi:value>
+                        <doi:type>Name</doi:type>
+                    </doi:name>
+                </doi:principalAgent>
+            </doi:referentCreation>
+        </doi>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2V" />
+        <qualityAssessment>
+            <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ3" />
+        </qualityAssessment>
+    </DataSubset>
+    '''
+)
+
+CATALOGUE_DATA_SUBSET_WITH_HANDLE_METADATA_XML = SimpleUploadedFile(
+    'DataSubset_Test-2023-01-01_DataCollectionTest.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataSubset
+        xmlns="https://metadata.pithia.eu/schemas/2.2"
+        xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:om="http://www.opengis.net/om/2.0"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:doi="http://www.doi.org/2010/DOISchema"
+        gml:id="es1">
+
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataSubset_Test-2023-01-01_DataCollectionTest</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-07-08T09:00:00Z</creationDate>
+                <lastModificationDate>2023-02-14T08:34:03Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <entryIdentifier
+            xlink:href="https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/CatalogueEntry_Test-2023-01-01" />
+        <dataSubsetName>Test</dataSubsetName>
+        <dataSubsetDescription>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua.
+        </dataSubsetDescription>
+        <dataCollection
+            xlink:href="https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test" />
+        <resultTime>
+            <gml:TimePeriod gml:id="tp2">
+                <gml:begin>
+                    <gml:TimeInstant gml:id="b2">
+                        <gml:timePosition>2022-01-14T00:00:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:begin>
+                <gml:end>
+                    <gml:TimeInstant gml:id="e2">
+                        <gml:timePosition>2022-01-16T00:00:00Z</gml:timePosition>
+                    </gml:TimeInstant>
+                </gml:end>
+            </gml:TimePeriod>
+        </resultTime>
+        <source>
+            <OnlineResource>
+                <!-- The function performed by the online resource is the landing page for the
+                collection
+            provider-->
+                <serviceFunction
+                    xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download" /> <!--
+            use the serviceFunction vocabulary -->
+                <linkage>
+                    <gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL>
+                </linkage>
+                <name>SAO Explorer for DIDBase ionograms</name>
+                <protocol>HTTPS</protocol>
+                <description>
+                    SAO Explorer is the main visualization and editing tool for ionogram and
+                    ionogram-derived
+                    data in DIDBase. URL points to the SAO Explorer download, installation and
+                    documentation
+                    page. IMPORTANT: ONce access to DIDBase is established, retrieval of the relevant
+                    data
+                    for this subset requires correct selection of (a) station name, (b) time interval
+                    (see
+                    resultTime above), and (c) the "Manual data only" checkbox.
+                </description>
+                <dataFormat
+                    xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html" />
+            </OnlineResource>
+        </source>
+        <doi>
+            <!-- Bogus data for testing only -->
+            <doi:referentDoiName>21.15112/DATASUBSET_TEST-2023-01-01_DATACOLLECTIONTEST</doi:referentDoiName>
+            <doi:primaryReferentType>Creation</doi:primaryReferentType>
+            <doi:registrationAgencyDoiName>10.1000/ra-5</doi:registrationAgencyDoiName>
+            <doi:issueDate>2015-01-07</doi:issueDate>
+            <doi:issueNumber>7</doi:issueNumber>
+            <doi:referentCreation>
+                <doi:name primaryLanguage="en">
+                    <doi:value>DIDBase Ionograms</doi:value>
+                    <doi:type>Title</doi:type>
+                </doi:name>
+                <doi:identifier>
+                    <doi:nonUriValue>21.15112/DATASUBSET_TEST-2023-01-01_DATACOLLECTIONTEST</doi:nonUriValue>
+                    <doi:uri returnType="text/html">
+                        https://ui.eidr.org/view/content?id=21.15112/DATASUBSET_TEST-2023-01-01_DATACOLLECTIONTEST</doi:uri>
+                    <doi:uri returnType="application/xml">
+                        https://doi.org/21.15112/DATASUBSET_TEST-2023-01-01_DATACOLLECTIONTEST</doi:uri>
                     <doi:type>EidrContentID</doi:type>
                 </doi:identifier>
                 <doi:structuralType>Digital</doi:structuralType>

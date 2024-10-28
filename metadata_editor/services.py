@@ -1,4 +1,4 @@
-import copy
+from lxml import etree
 
 from .service_utils import (
     _is_metadata_component_empty,
@@ -26,6 +26,7 @@ from .service_utils import (
 )
 from .editor_dataclasses import (
     CitationPropertyTypeMetadataUpdate,
+    DoiKernelMetadataUpdate,
     InputOutputMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
@@ -462,6 +463,20 @@ class CatalogueEntryEditor(
         self.update_time_period(update_data, phenomenon_time_key)
 
 
+class SimpleCatalogueDataSubsetEditor:
+    def __init__(self, xml_string: str) -> None:
+        self.xml_string = xml_string
+        self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
+
+    def to_xml(self):
+        return etree.tostring(self.xml_string_parsed, pretty_print=True).decode()
+
+    def update_referent_doi_name(self, referent_doi_name: str):
+        doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
+        referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
+        referent_doi_name_element.text = referent_doi_name
+
+
 class CatalogueDataSubsetEditor(
     BaseMetadataEditor,
     DataLevelMetadataEditor,
@@ -497,6 +512,43 @@ class CatalogueDataSubsetEditor(
     def update_result_time(self, update_data: ResultTimeMetadataUpdate):
         result_time_key = 'resultTime'
         self.update_time_period(update_data, result_time_key)
+
+    def update_doi_kernel_metadata(self, update_data: DoiKernelMetadataUpdate):
+        self.metadata_dict['doi'] = {
+            '%s:referentDoiName' % NamespacePrefix.DOI: update_data.referent_doi_name,
+            '%s:primaryReferentType' % NamespacePrefix.DOI: update_data.primary_referent_type,
+            '%s:registrationAgencyDoiName' % NamespacePrefix.DOI: update_data.registration_agency_doi_name,
+            # Already stored in the handle, can just retrieve it.
+            '%s:issueDate' % NamespacePrefix.DOI: update_data.doi_issue_date,
+            # issueNumber - Added manually to the handle, then incremented manually as well,
+            # each time the handle is updated.
+            '%s:issueNumber' % NamespacePrefix.DOI: update_data.doi_issue_number,
+            '%s:referentCreation' % NamespacePrefix.DOI: {
+                '%s:name' % NamespacePrefix.DOI: {
+                    '@primaryLanguage': update_data.rc_name_primary_language,
+                    '%s:value' % NamespacePrefix.DOI: update_data.rc_name_value,
+                    '%s:type' % NamespacePrefix.DOI: update_data.rc_name_type,
+                },
+                '%s:identifier' % NamespacePrefix.DOI: {
+                    '%s:nonUriValue' % NamespacePrefix.DOI: update_data.rc_identifier_non_uri_value,
+                    '%s:uri' % NamespacePrefix.DOI: {
+                        '@returnType': update_data.rc_identifier_uri_return_type,
+                        '$': update_data.rc_identifier_uri_value,
+                    },
+                    '%s:type' % NamespacePrefix.DOI: update_data.rc_identifier_type,
+                },
+                '%s:structuralType' % NamespacePrefix.DOI: update_data.rc_structural_type,
+                '%s:mode' % NamespacePrefix.DOI: update_data.rc_mode,
+                '%s:character' % NamespacePrefix.DOI: update_data.rc_character,
+                '%s:type' % NamespacePrefix.DOI: update_data.rc_type,
+                '%s:principalAgent' % NamespacePrefix.DOI: {
+                    '%s:name' % NamespacePrefix.DOI: {
+                        '%s:value' % NamespacePrefix.DOI: update_data.rc_principal_agent_name_value,
+                        '%s:type' % NamespacePrefix.DOI: update_data.rc_principal_agent_name_type,
+                    },
+                },
+            },
+        }
 
 
 class WorkflowEditor(

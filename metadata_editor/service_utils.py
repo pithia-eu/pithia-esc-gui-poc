@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class NamespacePrefix:
+    DOI = 'doi'
     GCO19115 = 'gco'
     GCO = 'gco'
     GMD = 'gmd'
@@ -41,6 +42,7 @@ class NamespacePrefix:
 
 
 class Namespace:
+    DOI = 'http://www.doi.org/2010/DOISchema'
     GCO19115 = 'http://standards.iso.org/iso/19115/-3/gco/1.0'
     GCO = 'http://www.isotc211.org/2005/gco'
     GMD = 'http://www.isotc211.org/2005/gmd'

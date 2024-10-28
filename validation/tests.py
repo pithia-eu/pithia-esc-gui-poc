@@ -532,6 +532,13 @@ class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
 
 
 class DoiValidationTestCase(SimpleTestCase):
+    def test_catalogue_data_subset_with_handle_fails(self):
+        """Data subset validation fails with a handle in the
+        DOI metadata kernel element.
+        """
+        xml_file = XMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_HANDLE_METADATA_XML)
+        MetadataFileXSDValidator.validate(xml_file)
+
     def test_contents_with_spoofed_doi(self):
         """
         DataSubsetXMLMetadataFile.contents returns an XML string with a DOI XMLSchema-

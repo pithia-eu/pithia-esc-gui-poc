@@ -32,11 +32,13 @@ from .services import (
     PlatformEditor,
     ProcessEditor,
     ProjectEditor,
+    SimpleCatalogueDataSubsetEditor,
     WorkflowEditor,
 )
 
 from common.test_xml_files import (
     ACQUISITION_METADATA_XML,
+    CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     OPERATION_METADATA_XML,
@@ -1008,6 +1010,33 @@ class DataCollectionEditorTestCase(SimpleTestCase):
         data_collection_editor = DataCollectionEditor(DATA_COLLECTION_METADATA_XML.read().decode())
         xml = data_collection_editor.to_xml()
         print('xml', xml)
+
+
+class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
+    def test_simple_catalogue_data_subset_editor_with_file(self):
+        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        original_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>',)
+        updated_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-updated-doi</doi:referentDoiName>',)
+        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read().decode()
+        self.assertIn(
+            original_referent_doi_name_element_string,
+            xml_string
+        )
+        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+            xml_string
+        )
+        simple_catalogue_data_subset_editor.update_referent_doi_name('10.1000/my-updated-doi')
+        updated_xml_string = simple_catalogue_data_subset_editor.to_xml()
+        print('updated_xml_string', updated_xml_string)
+        self.assertNotIn(
+            original_referent_doi_name_element_string,
+            updated_xml_string
+        )
+        self.assertIn(
+            updated_referent_doi_name_element_string,
+            updated_xml_string
+        )
+
 
 
 class WorkflowEditorTestCase(SimpleTestCase):

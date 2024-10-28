@@ -1,29 +1,14 @@
 import environ
-import os
 from django.test import (
     TestCase,
     tag
 )
-from pathlib import Path
 from pyhandle.handleclient import RESTHandleClient
 from pyhandle.clientcredentials import PIDClientCredentials
 
-from .handle_api import (
-    add_doi_metadata_kernel_to_handle,
-    create_and_register_handle_for_resource,
-    create_handle,
-    delete_handle,
-    generate_and_register_handle,
-    get_date_handle_was_issued_as_string,
-    get_handle_issue_number,
-    get_handle_raw,
-    get_handle_record,
-    get_handle_url,
-    get_handles_with_prefix,
-    get_time_handle_was_issued_as_string,
-    instantiate_client_and_load_credentials,
-    register_handle,
-    update_handle_url,
+from .services import (
+    HandleClient,
+    HandleRegistrationProcessForCatalogueDataSubset,
 )
 from .utils import register_doi_for_catalogue_data_subset
 from .xml_utils import (
@@ -43,14 +28,21 @@ from .xml_utils import (
 )
 
 from common.models import (
-    DataCollection,
     CatalogueDataSubset,
+    DataCollection,
+    Individual,
+    Organisation,
 )
-from common.test_xml_files import CATALOGUE_DATA_SUBSET_METADATA_XML
-from pithiaesc.settings import BASE_DIR
+from common.test_xml_files import (
+    CATALOGUE_DATA_SUBSET_METADATA_XML,
+    CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
+    DATA_COLLECTION_METADATA_XML,
+    DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML,
+    INDIVIDUAL_METADATA_XML,
+    ORGANISATION_METADATA_XML,
+)
 from utils.dict_helpers import flatten
 
-_XML_METADATA_FILE_DIR = os.path.join(BASE_DIR, 'common', 'test_files', 'xml_metadata_files')
 
 # For tests where ownership data is required
 SAMPLE_USER_ID        = 'johndoe@example.com'
@@ -61,442 +53,555 @@ env = environ.Env()
 # Create your tests here.
 @tag('manual')
 class PyHandleSetupTestCase(TestCase):
-    TEST_SUFFIX = 'MYTEST-HANDLE'
-    VALUE_ORIGINAL = 'https://www.example.com/1'
-    VALUE_AFTER = 'https://www.example.com/2'
-
-    def print_active_handles(self):
-        prefix = env('HANDLE_PREFIX')
-        return print('Current active handles: ', get_handles_with_prefix(prefix))
+    TEST_HANDLE_NAME_SUFFIX = 'MYTEST-HANDLE'
+    HANDLE_VALUE_ORIGINAL = 'https://www.example.com/1'
+    HANDLE_VALUE_AFTER = 'https://www.example.com/2'
 
     def setUp(self) -> None:
-        # Also acts as integration test
-        # for instantiate_client_and_load_credentials() function
-        self.client, self.credentials = instantiate_client_and_load_credentials()
+        # If HandleClient initialises then
+        # connection to Handle API was
+        # successful.
+        self.handle_client = HandleClient()
         return super().setUp()
     
     def tearDown(self) -> None:
+        if ((not hasattr(self, 'handle_name'))
+            or self.handle_name is None):
+            return super().tearDown()
+        self._print_active_handles()
         try:
-            if hasattr(self, 'handle') and self.handle is not None:
-                print('Tearing down test...')
-                print('Attemping to delete handle registered during test...')
-                delete_handle(self.handle, self.client)
-                print('Test tear down complete')
-        except BaseException as err:
+            print('Tearing down test...')
+            print('Attemping to delete handle registered during test...')
+            self.handle_client.delete_handle(self.handle_name)
+            print('Test tear down complete')
+        except Exception as err:
             print('Could not delete handle. Encountered error: ', err)
-        self.print_active_handles()
+        self._print_active_handles()
         return super().tearDown()
+
+    def _print_active_handles(self):
+        return print('Current active handles: ', self.handle_client.get_registered_handles())
     
     def _create_and_register_handle_for_test(self):
-        self.handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        register_handle(self.handle, self.VALUE_ORIGINAL, self.client)
+        self.handle_name = self.handle_client._create_handle_name_with_suffix(
+            self.TEST_HANDLE_NAME_SUFFIX
+        )
+        self.handle_client.register_handle(
+            self.handle_name,
+            self.HANDLE_VALUE_ORIGINAL
+        )
 
 
 @tag('manual')
 class PyHandleTestCase(PyHandleSetupTestCase):
-    @tag('fast', 'handles', 'instantiate_client_and_load_credentials')
-    def test_instantiate_client_and_load_credentials(self):
+    @tag('fast', 'handles', 'connection_to_handle_api')
+    def test_connection_to_handle_api(self):
+        """handle_client's "client" attribute has a type
+        of "RESTHandleClient" and the "credentials" has
+        a type of "PIDClientCredentials".
         """
-        instantiate_client_and_load_credentials() returns a tuple containing a client of type "RESTHandleClient "and credentials of type "PIDClientCredentials"
-        """
-        client, credentials = instantiate_client_and_load_credentials()
-
-        self.assertIsInstance(client, RESTHandleClient)
-        self.assertIsInstance(credentials, PIDClientCredentials)
-
-        print('Passed instantiate_client_and_load_credentials() test.')
+        self.assertIsInstance(self.handle_client.client, RESTHandleClient)
+        self.assertIsInstance(self.handle_client.credentials, PIDClientCredentials)
 
     @tag('fast', 'handles')
-    def test_create_handle(self):
+    def test_create_handle_name(self):
+        """handle_client._create_handle_name() returns a string
+        with a format of "{handle_prefix}/{handle_suffix}".
         """
-        create_handle() returns a string with format "{handle_prefix}/{handle_suffix}"
-        """
-        self.handle = create_handle(self.credentials, self.TEST_SUFFIX)
+        self.handle_name = self.handle_client._create_handle_name_with_suffix(self.TEST_HANDLE_NAME_SUFFIX)
 
-        self.assertIsInstance(self.handle, str)
-        self.assertEqual(self.handle, f'{self.credentials.get_prefix()}/{self.TEST_SUFFIX}')
-
-        print('Passed create_handle() test.')
+        self.assertIsInstance(self.handle_name, str)
+        self.assertEqual(self.handle_name, f'{self.handle_client.handle_prefix}/{self.TEST_HANDLE_NAME_SUFFIX}')
 
     @tag('fast', 'handles', 'register_handle')
     def test_register_handle(self):
+        """handle_client.register_handle() returns the name
+        of the handle that was registered and raises no
+        exceptions.
         """
-        register_handle() returns the handle data passed into it and raises no exceptions.
-        """
-        self.handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        register_result = register_handle(self.handle, self.VALUE_ORIGINAL, self.client)
+        self.handle_name = self.handle_client._create_handle_name_with_suffix(self.TEST_HANDLE_NAME_SUFFIX)
+        register_result = self.handle_client.register_handle(self.handle_name, self.HANDLE_VALUE_ORIGINAL)
 
-        self.assertEqual(register_result, self.handle)
-
-        print('Passed register_handle() test.')
+        self.assertEqual(register_result, self.handle_name)
 
     @tag('fast', 'handles', 'get_handle_record')
     def test_get_handle_record(self):
-        """
-        get_handle_record() returns the record for the handle data and raises no exceptions.
+        """handle_client.get_handle_record() returns the
+        record for the handle data and raises no exceptions.
         """
         self._create_and_register_handle_for_test()
 
-        handle_record = get_handle_record(self.handle, self.client)
+        handle_record = self.handle_client.get_handle_record(
+            self.handle_name
+        )
         print('handle_record', handle_record)
 
         self.assertIsInstance(handle_record, dict)
 
-        print('Passed get_handle_record() test.')
-
-    @tag('fast', 'handles', 'get_handle_url')
-    def test_get_handle_url(self):
-        """
-        get_handle_url() returns the URL for the handle and raises no exceptions.
+    @tag('fast', 'handles', 'get_data_subset_detail_page_url_from_handle')
+    def test_get_data_subset_detail_page_url_from_handle(self):
+        """handle_client.get_data_subset_detail_page_url_from_handle()
+        returns the URL assigned to the handle and raises no
+        exceptions.
         """
         self._create_and_register_handle_for_test()
 
-        handle_url = get_handle_url(self.handle, self.client)
+        handle_url = self.handle_client.get_data_subset_detail_page_url_from_handle(
+            self.handle_name
+        )
         print('handle_url', handle_url)
 
-        self.assertEqual(handle_url, self.VALUE_ORIGINAL)
+        self.assertEqual(handle_url, self.HANDLE_VALUE_ORIGINAL)
         self.assertIsInstance(handle_url, str)
-
-        print('Passed get_handle_url() test.')
 
     @tag('fast', 'handles', 'get_handle_raw')
     def test_get_handle_raw(self):
-        """
-        get_handle_raw() returns the handle without being formatted by the API.
+        """handle_client.get_handle_raw() returns the
+        handle without being formatted by the API.
         """
         self._create_and_register_handle_for_test()
-        handle_raw = get_handle_raw(self.handle)
+        handle_raw = self.handle_client.get_handle_raw(self.handle_name)
         print('handle_raw', handle_raw)
 
         self.assertIsInstance(handle_raw, dict)
 
-        print('Passed get_handle_raw() test.')
-
     @tag('fast', 'handles', 'get_time_handle_was_issued_as_string')
     def test_get_time_handle_was_issued_as_string(self):
-        """
-        get_time_handle_was_issued_as_string() returns the time the handle was issued in str format.
+        """handle_client.get_time_handle_was_issued_as_string()
+        returns the time the handle was issued in string format.
         """
         self._create_and_register_handle_for_test()
-        issue_time_string = get_time_handle_was_issued_as_string(self.handle)
+        issue_time_string = self.handle_client.get_time_handle_was_issued_as_string(
+            self.handle_name
+        )
         print('issue_time_string', issue_time_string)
 
         self.assertIsInstance(issue_time_string, str)
 
-        print('Passed get_time_handle_was_issued_as_string() test.')
-
     @tag('fast', 'handles', 'get_date_handle_was_issued_as_string')
     def test_get_date_handle_was_issued_as_string(self):
-        """
-        get_date_handle_was_issued_as_string() returns the date the handle was issued.
+        """handle_client.get_date_handle_was_issued_as_string()
+        returns the date the handle was issued.
         """
         self._create_and_register_handle_for_test()
-        issue_date_as_string = get_date_handle_was_issued_as_string(self.handle)
+        issue_date_as_string = self.handle_client.get_date_handle_was_issued_as_string(
+            self.handle_name
+        )
         print('issue_date_as_string', issue_date_as_string)
 
         self.assertIsInstance(issue_date_as_string, str)
 
-        print('Passed get_date_handle_was_issued_as_string() test.')
-
     @tag('fast', 'handles', 'delete_handle')
     def test_delete_handle(self):
-        """
-        delete_handle() returns the handle of the deleted record and raises no exceptions.
+        """handle_client.delete_handle() returns the handle
+        of the deleted record and raises no exceptions.
         """
         self._create_and_register_handle_for_test()
-        delete_result = delete_handle(self.handle, self.client)
+        delete_result = self.handle_client.delete_handle(self.handle_name)
 
-        self.assertEqual(self.handle, delete_result)
+        self.assertEqual(self.handle_name, delete_result)
 
-        print('Passed delete_handle() test.')
+        # Set handle_name to None so the test case
+        # tearDown() method doesn't try to delete
+        # the handle again.
+        self.handle_name = None
 
-        self.handle = None
-
-    @tag('fast', 'handles', 'update_handle_url')
-    def test_update_handle_url(self):
-        """
-        update_handle_url() raises no exception.
+    @tag('fast', 'handles', 'update_data_subset_detail_page_url_for_handle')
+    def test_update_data_subset_detail_page_url_for_handle(self):
+        """handle_client.update_data_subset_detail_page_url_for_handle()
+        updates the URL assigned to the handle and raises no exceptions.
         """
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         flat_doi_dict = flatten(doi_dict)
-        self.handle = create_handle(self.credentials, self.TEST_SUFFIX)
-        register_handle(self.handle, self.VALUE_ORIGINAL, self.client, initial_doi_dict_values=flat_doi_dict)
-        update_result = update_handle_url(self.handle, self.VALUE_AFTER, self.client)
-        handle_url = get_handle_url(self.handle, self.client)
-        handle_issue_number = get_handle_issue_number(self.handle, self.client)
+        self.handle_name = self.handle_client._create_handle_name_with_suffix(self.TEST_HANDLE_NAME_SUFFIX)
+        self.handle_client.register_handle(
+            self.handle_name,
+            self.HANDLE_VALUE_ORIGINAL,
+            initial_doi_dict_values=flat_doi_dict
+        )
+        update_result = self.handle_client.update_data_subset_detail_page_url_for_handle(
+            self.handle_name,
+            self.HANDLE_VALUE_AFTER
+        )
+        handle_url = self.handle_client.get_data_subset_detail_page_url_from_handle(
+            self.handle_name
+        )
+        handle_issue_number = self.handle_client.get_handle_issue_number(
+            self.handle_name
+        )
 
-        self.assertEqual(update_result, self.handle)
-        self.assertEqual(handle_url, self.VALUE_AFTER)
+        self.assertEqual(update_result, self.handle_name)
+        self.assertEqual(handle_url, self.HANDLE_VALUE_AFTER)
         self.assertEqual(int(handle_issue_number), 2)
 
         print('handle_url', handle_url)
         print('handle_issue_number', handle_issue_number)
-        print('Passed update_handle_url() test.')
 
     @tag('fast', 'get_handles_with_prefix')
     def test_get_handles_with_prefix(self):
+        """handle_client._get_handles_with_prefix() returns all
+        handles under a given prefix.
         """
-        get_handles_with_prefix() returns all handles under a given prefix.
-        """
-        prefix = env('HANDLE_PREFIX')
-        handles = get_handles_with_prefix(prefix)
+        handles = self.handle_client._get_handles_with_prefix(
+            self.handle_client.handle_prefix
+        )
         print('handles', handles)
+
+    @tag('fast', 'get_registered_handles')
+    def test_get_registered_handles(self):
+        """handle_client.get_registered_handles() returns all
+        registered handles.
+        """
+        registered_handles = self.handle_client.get_registered_handles()
+        print('register_handles', registered_handles)
 
     @tag('fast', 'add_doi_dict_to_handle')
     def test_add_doi_dict_to_handle(self):
+        """handle_client.add_doi_metadata_kernel_to_handle()
+        adds the DOI metadata kernel properties to a handle.
         """
-        add_doi_metadata_kernel_to_handle() adds the DOI metadata kernel properties to a handle.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-            self.catalogue_data_subset_id = catalogue_data_subset.pk
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
             catalogue_data_subset,
             doi_dict,
             data_collection_model=DataCollection
         )
-        self.handle, client, credentials = create_and_register_handle_for_resource(self.catalogue_data_subset_id)
-        add_handle_data_to_doi_metadata_kernel_dict(self.handle, doi_dict)
+        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
+            self.catalogue_data_subset_id
+        )
+        add_handle_data_to_doi_metadata_kernel_dict(
+            self.handle_name,
+            doi_dict
+        )
         flat_doi_dict = flatten(doi_dict, number_list_items=False)
-        add_doi_metadata_kernel_to_handle(self.handle, flat_doi_dict, self.client)
+        self.handle_client.add_doi_metadata_kernel_to_handle(
+            self.handle_name,
+            flat_doi_dict
+        )
 
-        print('Passed DOI dict configuration test.')
-
-    @tag('fast', 'generate_and_register_handle')
-    def test_generate_and_register_handle(self):
+    @tag('fast', 'create_and_register_handle_for_resource_url')
+    def test_create_and_register_handle_for_resource_url(self):
+        """handle_client.create_and_register_handle_for_resource_url()
+        registers a randomly-generated handle for a URL.
         """
-        generate_and_register_handle() returns a handle name
-        with a randomly generated suffix.
-        """
-        self.handle = generate_and_register_handle('https://www.example.com', self.credentials, self.client)
-
-        self.assertIsInstance(self.handle, str)
-
-        print('Passed generate and register handle test.')
+        self.handle_name = self.handle_client.create_and_register_handle_for_resource_url(
+            self.HANDLE_VALUE_ORIGINAL
+        )
+        print('self.handle_name', self.handle_name)
 
 
 @tag('manual')
 class DOIDictTestCase(PyHandleSetupTestCase):
     @tag('fast', 'doi_dict_configuration')
     def test_doi_configuration_process(self):
+        """Handle and data subset information are
+        added to a DOI metadata kernel (in dict
+        format).
         """
-        All properties in the DOI dict are set successfully.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-            self.catalogue_data_subset_id = catalogue_data_subset.pk
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
             catalogue_data_subset,
             doi_dict,
             data_collection_model=DataCollection
         )
-        self.handle, client, credentials = create_and_register_handle_for_resource(self.catalogue_data_subset_id)
-        add_handle_data_to_doi_metadata_kernel_dict(self.handle, doi_dict)
+        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
+            self.catalogue_data_subset_id
+        )
+        add_handle_data_to_doi_metadata_kernel_dict(
+            self.handle_name,
+            doi_dict
+        )
         print(doi_dict)
-
-        print('Passed DOI dict configuration test.')
 
     @tag('fast', 'flatten_doi_dict')
     def test_flatten_doi_dict(self):
+        """The DOI dict is flattened and nested keys use
+        dot notation.
         """
-        Nested dicts in the DOI dict use dot notation when flattened.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-            self.catalogue_data_subset_id = catalogue_data_subset.pk
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        self.catalogue_data_subset_id = catalogue_data_subset.pk
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         add_data_subset_data_to_doi_metadata_kernel_dict(
             catalogue_data_subset,
             doi_dict,
             data_collection_model=DataCollection
         )
-        self.handle, client, credentials = create_and_register_handle_for_resource(self.catalogue_data_subset_id)
-        add_handle_data_to_doi_metadata_kernel_dict(self.handle, doi_dict)
-        flat_doi_dict = flatten(doi_dict, number_list_items=False)
+        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
+            self.catalogue_data_subset_id
+        )
+        add_handle_data_to_doi_metadata_kernel_dict(
+            self.handle_name,
+            doi_dict
+        )
+        flat_doi_dict = flatten(
+            doi_dict,
+            number_list_items=False
+        )
         print('flat_doi_dict', flat_doi_dict)
-
-        print('Passed flatten DOI dict test.')
 
 
 @tag('manual')
 class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
     @tag('fast', 'register_handle_and_add_to_metadata')
     def test_register_handle_and_add_to_metadata(self):
+        """register_handle_and_add_to_metadata() raises
+        no exceptions.
         """
-        register_handle_and_add_to_metadata() raises no exceptions.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            xml_file_string = xml_file.read()
-            catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-            catalogue_data_subset_id = catalogue_data_subset.pk
-            self.handle, client, credentials = create_and_register_handle_for_resource(catalogue_data_subset_id)
-            print('xml_file', xml_file)
-            doi_dict = initialise_default_doi_kernel_metadata_dict()
-            add_doi_metadata_kernel_to_data_subset(
-                catalogue_data_subset_id,
-                doi_dict,
-                xml_file_string,
-                SAMPLE_USER_ID
-            )
-
-        print(f'Passed handle registration for {Path(xml_file.name).name}.')
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        catalogue_data_subset_xml_string = CATALOGUE_DATA_SUBSET_METADATA_XML.read()
+        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            catalogue_data_subset_xml_string,
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        catalogue_data_subset_id = catalogue_data_subset.pk
+        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
+            catalogue_data_subset_id
+        )
+        print('catalogue_data_subset_xml_string', catalogue_data_subset_xml_string)
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        add_doi_metadata_kernel_to_data_subset(
+            catalogue_data_subset_id,
+            doi_dict,
+            catalogue_data_subset_xml_string,
+            SAMPLE_USER_ID
+        )
 
     @tag('fast', 'add_doi_xml_string_to_metadata_xml_string')
     def test_add_doi_xml_string_to_metadata_xml_string(self):
-        """
-        add_doi_xml_string_to_metadata_xml_string() adds a filled out <doi> element to the XML string.
+        """add_doi_xml_string_to_metadata_xml_string() adds a
+        filled out <doi> element to an XML string.
         """
         self._create_and_register_handle_for_test()
         doi_dict = initialise_default_doi_kernel_metadata_dict()
         doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            xml_string = xml_file.read()
-            updated_xml_string = add_doi_xml_string_to_metadata_xml_string(xml_string, doi_xml_string)
-            print('updated_xml_string', updated_xml_string)
-
-        print(f'Passed new DOI element addition for {Path(xml_file.name).name}.')
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        updated_xml_string = add_doi_xml_string_to_metadata_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            doi_xml_string
+        )
+        print('updated_xml_string', updated_xml_string)
 
     @tag('fast', 'get_last_result_time_element')
     def test_get_last_result_time_element(self):
+        """Gets the last <resultTime> element in a
+        Data Subset XML string, to act as a marker on
+        where to insert a new DOI element.
         """
-        Gets the last <resultTime> element in a Data Subset XML string.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            xml_string = xml_file.read()
-            xml_string_parsed = parse_xml_string(xml_string)
-            last_result_time_element = get_last_result_time_element(xml_string_parsed)
-            print('last_result_time_element', last_result_time_element)
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string_parsed = parse_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        last_result_time_element = get_last_result_time_element(xml_string_parsed)
+        print('last_result_time_element', last_result_time_element)
 
     @tag('fast', 'get_last_source_element')
     def test_get_last_source_element(self):
+        """Gets the last <source> element in a Data
+        Subset XML string, to act as a marker on
+        where to insert a new DOI element.
         """
-        Gets the last <source> element in a Data Subset XML string.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            xml_string = xml_file.read()
-            xml_string_parsed = parse_xml_string(xml_string)
-            last_source_element = get_last_source_element(xml_string_parsed)
-            print('last_source_element', last_source_element)
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string_parsed = parse_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        last_source_element = get_last_source_element(xml_string_parsed)
+        print('last_source_element', last_source_element)
 
     @tag('fast', 'doi_element_is_not_present_in_xml_file', 'is_doi_element_present_in_xml_file')
     def test_doi_element_is_not_present_in_xml_file(self):
+        """is_doi_element_present_in_xml_file() does not find
+        a DOI element in the test XML file and returns False.
         """
-        is_doi_element_present_in_xml_file() returns False for the given XML file.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest.xml')) as xml_file:
-            result = is_doi_element_present_in_xml_file(xml_file)
-            print('result', result)
-
-            self.assertEqual(result, False)
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        result = is_doi_element_present_in_xml_file(CATALOGUE_DATA_SUBSET_METADATA_XML)
+        print('result', result)
+        self.assertEqual(result, False)
 
     @tag('fast', 'doi_element_is_present_in_xml_file', 'is_doi_element_present_in_xml_file')
     def test_doi_element_is_present_in_xml_file(self):
+        """is_doi_element_present_in_xml_file() finds a DOI
+        element in the test XML fiel and returns True.
         """
-        is_doi_element_present_in_xml_file() returns True for the given XML file.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
-            result = is_doi_element_present_in_xml_file(xml_file)
-            print('result', result)
-
-            self.assertEqual(result, True)
+        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        result = is_doi_element_present_in_xml_file(CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
+        print('result', result)
+        self.assertEqual(result, True)
 
 
 @tag('manual')
 class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
     @tag('fast', 'get_doi_xml_string_from_metadata_xml_string')
     def test_get_doi_xml_string_from_metadata_xml_string(self):
+        """Returns the first <doi> element from an XML string.
         """
-        Returns the first <doi> element from an XML string.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
-            xml_string = xml_file.read()
-            doi_element_string = get_doi_xml_string_from_metadata_xml_string(xml_string)
-            print('doi_element_string', doi_element_string)
+        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        doi_element_string = get_doi_xml_string_from_metadata_xml_string(
+            CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+        )
+        print('doi_element_string', doi_element_string)
 
-            self.assertIsInstance(doi_element_string, str)
-            self.assertEqual(doi_element_string[:4], '<doi')
-
-        print('Passed get_doi_xml_string_from_metadata_xml_string() test.')
+        self.assertIsInstance(doi_element_string, str)
+        self.assertEqual(doi_element_string[:4], '<doi')
 
     @tag('fast', 'remove_doi_element_from_metadata_xml_string')
     def test_remove_doi_element_from_metadata_xml_string(self):
+        """Removes all <doi> elements from an XML string.
         """
-        Removes all <doi> elements from an XML string.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
-            xml_string = xml_file.read()
-            updated_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
-            print('updated_xml_string', updated_xml_string)
-
-            self.assertIsInstance(updated_xml_string, str)
-            self.assertLess(len(updated_xml_string), len(xml_string))
-
-        print('Passed remove_doi_element_from_metadata_xml_string() test.')
+        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+        updated_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
+        print('updated_xml_string', updated_xml_string)
+        self.assertIsInstance(updated_xml_string, str)
+        self.assertLess(len(updated_xml_string), len(xml_string))
 
     @tag('fast', 'replace_doi_element_from_metadata_xml_string')
     def test_replace_doi_element_from_metadata_xml_string(self):
+        """Removes all <doi> elements from an XML string and
+        adds a <doi> element generated from a DOI dict.
         """
-        Replaces all <doi> elements with a new single DOI element.
-        """
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataSubset_Test-2023-01-01_DataCollectionTest_with_DOI.xml')) as xml_file:
-            xml_string = xml_file.read()
-            doiless_xml_string = remove_doi_element_from_metadata_xml_string(xml_string)
-            self._create_and_register_handle_for_test()
-            doi_dict = initialise_default_doi_kernel_metadata_dict()
-            doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
-            updated_xml_string = add_doi_xml_string_to_metadata_xml_string(doiless_xml_string, doi_xml_string)
-            print('updated_xml_string', updated_xml_string)
-
-        print('Passed replace_doi_element_from_metadata_xml_string() test.')
+        CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
+        xml_string = CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.read()
+        xml_string_without_doi_element = remove_doi_element_from_metadata_xml_string(
+            xml_string
+        )
+        self._create_and_register_handle_for_test()
+        doi_dict = initialise_default_doi_kernel_metadata_dict()
+        doi_element_xml_string = create_doi_xml_string_from_dict(doi_dict)
+        updated_xml_string = add_doi_xml_string_to_metadata_xml_string(
+            xml_string_without_doi_element,
+            doi_element_xml_string
+        )
+        print('updated_xml_string', updated_xml_string)
 
 
 @tag('manual')
 class PrincipalAgentTestCase(TestCase):
+    def _register_xml_file_for_test(self, xml_file, model):
+        xml_file.seek(0)
+        return model.objects.create_from_xml_string(
+            xml_file.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+
     @tag('fast', 'get_first_related_party_name_from_data_collection')
     def test_get_first_related_party_name_from_data_collection(self):
+        """get_first_related_party_name_from_data_collection()
+        returns the name of the organisation listed as the first
+        related party in the test data collection XML.
         """
-        Returns the name of the organisation (or individual if organisation is
-        not found) responsible for the data collection.
+        self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
+        data_collection = self._register_xml_file_for_test(
+            DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML,
+            DataCollection
+        )
+        principal_agent_name = get_first_related_party_name_from_data_collection(
+            data_collection
+        )
+        self.assertIsInstance(principal_agent_name, str)
+        self.assertEqual(principal_agent_name, 'Organisation Test')
+        print('principal_agent_name', principal_agent_name)
+
+    @tag('fast', 'get_first_related_party_name_from_data_collection')
+    def test_get_first_related_party_name_from_data_collection_returns_individual_org_name(self):
+        """get_first_related_party_name_from_data_collection()
+        gets the organisation name of the individual listed as
+        the first related party in the test data collection XML.
         """
-        data_collection = None
-        with open(os.path.join(_XML_METADATA_FILE_DIR, 'DataCollection_Test.xml')) as xml_file:
-            data_collection = DataCollection.objects.create_from_xml_string(xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-        principal_agent_name = get_first_related_party_name_from_data_collection(data_collection)
+        self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(INDIVIDUAL_METADATA_XML, Individual)
+        data_collection = self._register_xml_file_for_test(
+            DATA_COLLECTION_METADATA_XML,
+            DataCollection
+        )
+        principal_agent_name = get_first_related_party_name_from_data_collection(
+            data_collection
+        )
+        self.assertIsInstance(principal_agent_name, str)
+        self.assertEqual(principal_agent_name, 'Organisation Test')
+        print('principal_agent_name', principal_agent_name)
+
+    @tag('fast', 'get_first_related_party_name_from_data_collection')
+    def test_get_first_related_party_name_from_data_collection_returns_none(self):
+        """get_first_related_party_name_from_data_collection()
+        returns None as the organisation specified in the data
+        collection XML has not been registered.
+        """
+        data_collection = self._register_xml_file_for_test(
+            DATA_COLLECTION_METADATA_XML,
+            DataCollection
+        )
+        principal_agent_name = get_first_related_party_name_from_data_collection(
+            data_collection
+        )
+        self.assertIsNone(principal_agent_name)
         print('principal_agent_name', principal_agent_name)
 
 @tag('manual')
-class DOIUtilsTestCase(TestCase):
-    def print_active_handles(self):
-        prefix = env('HANDLE_PREFIX')
-        return print('Current active handles: ', get_handles_with_prefix(prefix))
-
-    def setUp(self) -> None:
-        self.client, self.credentials = instantiate_client_and_load_credentials()
-        self.catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        try:
-            if (hasattr(self, 'handle')
-                and self.handle is not None):
-                print('Tearing down test...')
-                print('Attemping to delete handle registered during test...')
-                delete_handle(self.handle, self.client)
-                print('Deleted handle')
-                print('Test tear down complete')
-        except:
-            print('Could not delete handle.')
-        self.print_active_handles()
-        return super().tearDown()
-
+class DOIUtilsTestCase(PyHandleSetupTestCase):
     @tag('fast', 'register_doi_for_catalogue_data_subset')
     def test_register_doi_for_catalogue_data_subset(self):
+        """A randomly-generated handle (acting as a DOI) is
+        registered for a data subset, and the necessary data
+        for both is added to each. A handle-to-URL mapping
+        is also created.
         """
-        Registers a new DOI. DOI info is shared between the DOI,
-        a specified data subset and handle URL mapping.
-        """
-        doi_registration_result = register_doi_for_catalogue_data_subset(self.catalogue_data_subset, SAMPLE_USER_ID)
-        self.handle = doi_registration_result.get('handle')
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        doi_registration_result = register_doi_for_catalogue_data_subset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        self.handle_name = doi_registration_result.get('handle')
         self.assertTrue('error' not in doi_registration_result)
+
+@tag('manual')
+class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestCase):
+    def setUp(self) -> None:
+        ORGANISATION_METADATA_XML.seek(0)
+        Organisation.objects.create_from_xml_string(
+            ORGANISATION_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        DATA_COLLECTION_METADATA_XML.seek(0)
+        DataCollection.objects.create_from_xml_string(
+            DATA_COLLECTION_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        self.catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
+            SAMPLE_INSTITUTION_ID,
+            SAMPLE_USER_ID
+        )
+        return super().setUp()
+
+    def test_process_creates_handle(self):
+        new_handle_registration_process = HandleRegistrationProcessForCatalogueDataSubset(
+            self.catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        self.handle_name = new_handle_registration_process.run()
+        self.assertIsInstance(self.handle_name, str)

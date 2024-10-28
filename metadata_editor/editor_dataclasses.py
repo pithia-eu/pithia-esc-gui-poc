@@ -62,6 +62,28 @@ class ContactInfoMetadataUpdate:
 
 
 @dataclass(kw_only=True)
+class DoiKernelMetadataUpdate:
+    referent_doi_name: Optional[str] = None
+    primary_referent_type: Optional[str] = None
+    registration_agency_doi_name: Optional[str] = None
+    doi_issue_date: Optional[str] = None
+    doi_issue_number: Optional[int] = None
+    rc_name_primary_language: Optional[str] = None
+    rc_name_value: Optional[str] = None
+    rc_name_type: Optional[str] = None
+    rc_identifier_non_uri_value: Optional[str] = None
+    rc_identifier_uri_return_type: Optional[str] = None
+    rc_identifier_uri_value: Optional[str] = None
+    rc_identifier_type: Optional[str] = None
+    rc_structural_type: Optional[str] = None
+    rc_mode: Optional[str] = None
+    rc_character: Optional[str] = None
+    rc_type: Optional[str] = None
+    rc_principal_agent_name_value: Optional[str] = None
+    rc_principal_agent_name_type: Optional[str] = None
+
+
+@dataclass(kw_only=True)
 class InputOutputMetadataUpdate:
     name: Optional[str] = None
     description: Optional[str] = None
