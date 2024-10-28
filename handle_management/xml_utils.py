@@ -86,9 +86,7 @@ def get_first_related_party_name_from_data_collection(
 def add_data_subset_data_to_doi_metadata_kernel_dict(
     data_subset,
     doi_dict: dict,
-    data_collection_model=DataCollection
-):
-    
+    data_collection_model=DataCollection):
     try:
         referenced_data_collection_url = data_subset.data_collection_url
     except KeyError:

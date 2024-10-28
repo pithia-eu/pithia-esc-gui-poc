@@ -71,12 +71,13 @@ def register_doi_for_catalogue_data_subset(catalogue_data_subset, owner_id):
         error_msg = 'An unexpected error occurred during DOI registration.'
         logger.exception(error_msg)
         result['error'] = error_msg
-        if handle != None:
-            try:
-                logger.info(f'Attempting to delete handle {handle} due to an error that occurred during DOI registration...')
-                delete_handle(handle, handle_api_client)
-                logger.info(f'Deleted handle {handle}.')
-            except BaseException as err:
-                logger.exception(f'Could not delete handle {handle} due to an error.')
+        if not handle:
+            return result
+        try:
+            logger.info(f'Attempting to delete handle {handle} due to an error that occurred during DOI registration...')
+            delete_handle(handle, handle_api_client)
+            logger.info(f'Deleted handle {handle}.')
+        except BaseException as err:
+            logger.exception(f'Could not delete handle {handle} due to an error.')
 
     return result
