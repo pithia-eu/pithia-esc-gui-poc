@@ -224,6 +224,8 @@ def get_last_source_element(data_subset_xml_string_parsed: ElementTree) -> Eleme
 def add_doi_xml_string_to_metadata_xml_string(metadata_xml_string: str, doi_xml_string: str) -> str:
     if isinstance(metadata_xml_string, str):
         metadata_xml_string = metadata_xml_string.encode('utf-8')
+    if isinstance(doi_xml_string, str):
+        doi_xml_string = doi_xml_string.encode('utf-8')
     # Use lxml to append a new filled in doi element
     parser = create_lxml_utf8_parser()
     root = etree.fromstring(metadata_xml_string, parser)
