@@ -87,6 +87,48 @@ class PithiaDescriptionMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMix
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:description' % self.PITHIA_NSPREFIX_XPATH)
 
 
+class PithiaDoiMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_referent_creation_properties(self):
+        referent_creation_element = self._get_first_element_from_list(
+            self._get_elements_with_xpath_query('.//%s:referentCreation' % NamespacePrefix.DOI, parent_element=self.parent_doi_element)
+        )
+        return {
+            'name': {
+                'primary_language': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name/@primaryLanguage' % NamespacePrefix.DOI, parent_element=referent_creation_element),
+                'value': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name/%s:value' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+                'type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name/%s:type' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+            },
+            'identifier': {
+                'non_uri_value': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:identifier/%s:nonUriValue' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+                'uri': {
+                    'return_type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:identifier/%s:uri/@returnType' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+                    'value': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:identifier/%s:uri' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+                },
+                'type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:identifier/%s:type' % (NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+            },
+            'structural_type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:structuralType' % NamespacePrefix.DOI, parent_element=referent_creation_element),
+            'mode': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:mode' % NamespacePrefix.DOI, parent_element=referent_creation_element),
+            'character': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:character' % NamespacePrefix.DOI, parent_element=referent_creation_element),
+            'type': self._get_first_element_value_or_blank_string_with_xpath_query('./%s:type' % NamespacePrefix.DOI, parent_element=referent_creation_element),
+            'principal_agent_name': {
+                'value': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:principalAgent/%s:name/%s:value' % (NamespacePrefix.DOI, NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+                'type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:principalAgent/%s:name/%s:type' % (NamespacePrefix.DOI, NamespacePrefix.DOI, NamespacePrefix.DOI), parent_element=referent_creation_element),
+            },
+        }
+
+    @property
+    def doi_kernel_metadata(self):
+        self.parent_doi_element = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:doi' % self.PITHIA_NSPREFIX_XPATH))
+        return {
+            'referent_doi_name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:referentDoiName' % NamespacePrefix.DOI, parent_element=self.parent_doi_element),
+            'primary_referent_type': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:primaryReferentType' % NamespacePrefix.DOI, parent_element=self.parent_doi_element),
+            'registration_agency_doi_name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:registrationAgencyDoiName' % NamespacePrefix.DOI, parent_element=self.parent_doi_element),
+            'doi_issue_date': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:issueDate' % NamespacePrefix.DOI, parent_element=self.parent_doi_element),
+            'doi_issue_number': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:issueNumber' % NamespacePrefix.DOI, parent_element=self.parent_doi_element),
+            'referent_creation': self._get_referent_creation_properties()
+        }
+
+
 class PithiaOntologyUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     @property
     def ontology_urls(self):
