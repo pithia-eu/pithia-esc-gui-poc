@@ -1,4 +1,10 @@
 {% extends 'update/file_upload.html' %}
+{% load static %}
+{% block page_specific_scripts %}
+{{ resource_id|json_script:"resource-id" }}
+<script src="{% static 'register/catalogue_data_subset_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock page_specific_scripts %}
 {% block doi_registration %}
 <div class="form-group">
     <h2 class="border-bottom fs-4">DOI</h2>

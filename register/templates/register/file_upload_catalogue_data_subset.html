@@ -1,5 +1,10 @@
 {% extends 'register/file_upload.html' %}
 {% load static %}
+{% block page_specific_scripts %}
+<script src="{% static 'register/catalogue_data_subset_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'register/register_form.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock page_specific_scripts %}
 {% block multiple_allowed %}{% endblock multiple_allowed %}
 {% block doi_registration %}
 <div class="form-group">
