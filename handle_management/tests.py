@@ -10,18 +10,12 @@ from .services import (
     HandleClient,
     HandleRegistrationProcessForCatalogueDataSubset,
 )
-from .utils import register_doi_for_catalogue_data_subset
 from .xml_utils import (
-    add_data_subset_data_to_doi_metadata_kernel_dict,
-    add_doi_metadata_kernel_to_data_subset,
     add_doi_xml_string_to_metadata_xml_string,
-    add_handle_data_to_doi_metadata_kernel_dict,
-    create_doi_xml_string_from_dict,
     get_doi_xml_string_from_metadata_xml_string,
     get_first_related_party_name_from_data_collection,
     get_last_source_element,
     get_last_result_time_element,
-    initialise_default_doi_kernel_metadata_dict,
     is_doi_element_present_in_xml_file,
     parse_xml_string,
     remove_doi_element_from_metadata_xml_string,
@@ -38,6 +32,7 @@ from common.test_xml_files import (
     CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML,
+    DOI_KERNEL_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     ORGANISATION_METADATA_XML,
 )
@@ -211,13 +206,12 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         """handle_client.update_data_subset_detail_page_url_for_handle()
         updates the URL assigned to the handle and raises no exceptions.
         """
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        flat_doi_dict = flatten(doi_dict)
-        self.handle_name = self.handle_client._create_handle_name_with_suffix(self.TEST_HANDLE_NAME_SUFFIX)
+        self.handle_name = self.handle_client._create_handle_name_with_suffix(
+            self.TEST_HANDLE_NAME_SUFFIX
+        )
         self.handle_client.register_handle(
             self.handle_name,
-            self.HANDLE_VALUE_ORIGINAL,
-            initial_doi_dict_values=flat_doi_dict
+            self.HANDLE_VALUE_ORIGINAL
         )
         update_result = self.handle_client.update_data_subset_detail_page_url_for_handle(
             self.handle_name,
@@ -255,10 +249,11 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         registered_handles = self.handle_client.get_registered_handles()
         print('register_handles', registered_handles)
 
-    @tag('fast', 'add_doi_dict_to_handle')
-    def test_add_doi_dict_to_handle(self):
+    @tag('fast', 'add_doi_kernel_metadata_to_handle')
+    def test_add_doi_kernel_metadata_to_handle(self):
         """handle_client.add_doi_metadata_kernel_to_handle()
-        adds the DOI metadata kernel properties to a handle.
+        adds the DOI kernel metadata as an XML string to a
+        handle.
         """
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
         catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
@@ -267,23 +262,13 @@ class PyHandleTestCase(PyHandleSetupTestCase):
             SAMPLE_USER_ID
         )
         self.catalogue_data_subset_id = catalogue_data_subset.pk
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
-            catalogue_data_subset,
-            doi_dict,
-            data_collection_model=DataCollection
-        )
         self.handle_name = self.handle_client.create_and_register_handle_for_resource(
             self.catalogue_data_subset_id
         )
-        add_handle_data_to_doi_metadata_kernel_dict(
+        DOI_KERNEL_METADATA_XML.seek(0)
+        self.handle_client.add_doi_kernel_metadata_to_handle(
             self.handle_name,
-            doi_dict
-        )
-        flat_doi_dict = flatten(doi_dict, number_list_items=False)
-        self.handle_client.add_doi_metadata_kernel_to_handle(
-            self.handle_name,
-            flat_doi_dict
+            DOI_KERNEL_METADATA_XML.read().decode()
         )
 
     @tag('fast', 'create_and_register_handle_for_resource_url')
@@ -298,106 +283,18 @@ class PyHandleTestCase(PyHandleSetupTestCase):
 
 
 @tag('manual')
-class DOIDictTestCase(PyHandleSetupTestCase):
-    @tag('fast', 'doi_dict_configuration')
-    def test_doi_configuration_process(self):
-        """Handle and data subset information are
-        added to a DOI metadata kernel (in dict
-        format).
-        """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
-            SAMPLE_INSTITUTION_ID,
-            SAMPLE_USER_ID
-        )
-        self.catalogue_data_subset_id = catalogue_data_subset.pk
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
-            catalogue_data_subset,
-            doi_dict,
-            data_collection_model=DataCollection
-        )
-        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
-            self.catalogue_data_subset_id
-        )
-        add_handle_data_to_doi_metadata_kernel_dict(
-            self.handle_name,
-            doi_dict
-        )
-        print(doi_dict)
-
-    @tag('fast', 'flatten_doi_dict')
-    def test_flatten_doi_dict(self):
-        """The DOI dict is flattened and nested keys use
-        dot notation.
-        """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
-            SAMPLE_INSTITUTION_ID,
-            SAMPLE_USER_ID
-        )
-        self.catalogue_data_subset_id = catalogue_data_subset.pk
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_data_subset_data_to_doi_metadata_kernel_dict(
-            catalogue_data_subset,
-            doi_dict,
-            data_collection_model=DataCollection
-        )
-        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
-            self.catalogue_data_subset_id
-        )
-        add_handle_data_to_doi_metadata_kernel_dict(
-            self.handle_name,
-            doi_dict
-        )
-        flat_doi_dict = flatten(
-            doi_dict,
-            number_list_items=False
-        )
-        print('flat_doi_dict', flat_doi_dict)
-
-
-@tag('manual')
-class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
-    @tag('fast', 'register_handle_and_add_to_metadata')
-    def test_register_handle_and_add_to_metadata(self):
-        """register_handle_and_add_to_metadata() raises
-        no exceptions.
-        """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        catalogue_data_subset_xml_string = CATALOGUE_DATA_SUBSET_METADATA_XML.read()
-        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
-            catalogue_data_subset_xml_string,
-            SAMPLE_INSTITUTION_ID,
-            SAMPLE_USER_ID
-        )
-        catalogue_data_subset_id = catalogue_data_subset.pk
-        self.handle_name = self.handle_client.create_and_register_handle_for_resource(
-            catalogue_data_subset_id
-        )
-        print('catalogue_data_subset_xml_string', catalogue_data_subset_xml_string)
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        add_doi_metadata_kernel_to_data_subset(
-            catalogue_data_subset_id,
-            doi_dict,
-            catalogue_data_subset_xml_string,
-            SAMPLE_USER_ID
-        )
-
+class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
     @tag('fast', 'add_doi_xml_string_to_metadata_xml_string')
     def test_add_doi_xml_string_to_metadata_xml_string(self):
         """add_doi_xml_string_to_metadata_xml_string() adds a
         filled out <doi> element to an XML string.
         """
         self._create_and_register_handle_for_test()
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        doi_xml_string = create_doi_xml_string_from_dict(doi_dict)
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        DOI_KERNEL_METADATA_XML.seek(0)
         updated_xml_string = add_doi_xml_string_to_metadata_xml_string(
             CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
-            doi_xml_string
+            DOI_KERNEL_METADATA_XML.read()
         )
         print('updated_xml_string', updated_xml_string)
 
@@ -443,9 +340,6 @@ class DOIXMLRegistrationTestCase(PyHandleSetupTestCase):
         print('result', result)
         self.assertEqual(result, True)
 
-
-@tag('manual')
-class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
     @tag('fast', 'get_doi_xml_string_from_metadata_xml_string')
     def test_get_doi_xml_string_from_metadata_xml_string(self):
         """Returns the first <doi> element from an XML string.
@@ -481,11 +375,10 @@ class DOIXMLUpdateTestCase(PyHandleSetupTestCase):
             xml_string
         )
         self._create_and_register_handle_for_test()
-        doi_dict = initialise_default_doi_kernel_metadata_dict()
-        doi_element_xml_string = create_doi_xml_string_from_dict(doi_dict)
+        DOI_KERNEL_METADATA_XML.seek(0)
         updated_xml_string = add_doi_xml_string_to_metadata_xml_string(
             xml_string_without_doi_element,
-            doi_element_xml_string
+            DOI_KERNEL_METADATA_XML.read()
         )
         print('updated_xml_string', updated_xml_string)
 
@@ -553,27 +446,6 @@ class PrincipalAgentTestCase(TestCase):
         self.assertIsNone(principal_agent_name)
         print('principal_agent_name', principal_agent_name)
 
-@tag('manual')
-class DOIUtilsTestCase(PyHandleSetupTestCase):
-    @tag('fast', 'register_doi_for_catalogue_data_subset')
-    def test_register_doi_for_catalogue_data_subset(self):
-        """A randomly-generated handle (acting as a DOI) is
-        registered for a data subset, and the necessary data
-        for both is added to each. A handle-to-URL mapping
-        is also created.
-        """
-        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
-            CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
-            SAMPLE_INSTITUTION_ID,
-            SAMPLE_USER_ID
-        )
-        doi_registration_result = register_doi_for_catalogue_data_subset(
-            catalogue_data_subset,
-            SAMPLE_USER_ID
-        )
-        self.handle_name = doi_registration_result.get('handle')
-        self.assertTrue('error' not in doi_registration_result)
 
 @tag('manual')
 class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestCase):
