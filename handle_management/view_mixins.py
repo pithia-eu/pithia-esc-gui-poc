@@ -49,7 +49,7 @@ class HandleRegistrationViewMixin:
         if not handle_name:
             messages.error(request, 'A DOI was not issued for this registration as an error occurred during the DOI registration process. Please try again later.')
             return None
-        messages.success(request, escape(f'A DOI with name "{handle_name}" has been registered for this data subset.'))
+        messages.success(request, escape(f'A DOI with name "{handle_name}" has been registered for this data subset. DOI kernel metadata has also been added to the metadata file.'))
         return handle_name
 
 
