@@ -16,7 +16,7 @@ from .forms import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from handle_management.utils import register_doi_for_catalogue_data_subset
+from handle_management.services import HandleRegistrationProcessForCatalogueDataSubset
 from handle_management.xml_utils import (
     is_doi_element_present_in_xml_file,
 )
@@ -313,23 +313,22 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
-    def register_doi(self, request, xml_file):
-        # POST RESOURCE REGISTRATION
-        # Get the DOI
-        # Update the actual "xml_file" variable by adding the DOI to the XML
-        # Perform an update on the resource
-        # Continue with registration as normal
+    def register_doi_if_requested(self, request, xml_file):
         if 'register_doi' not in request.POST:
             return
         if is_doi_element_present_in_xml_file(xml_file):
-            logger.exception('A new DOI was not issued for this registration as record of a pre-existing DOI was found in the submitted metadata file.')
-            messages.error(request, f'A new DOI was not issued for this registration as record of a pre-existing DOI was found in the submitted metadata file.')
+            err = 'A new DOI was not issued for this registration as record of a pre-existing DOI was found in the submitted metadata file.'
+            logger.exception(err)
+            messages.error(request, err)
             return
-        doi_registration_result = register_doi_for_catalogue_data_subset(self.new_registration, self.owner_id)
-        if 'error' in doi_registration_result:
-            messages.error(request, escape(doi_registration_result.get('error')))
+        handle_registration_process = HandleRegistrationProcessForCatalogueDataSubset(
+            self.new_registration,
+            self.owner_id
+        )
+        self.handle = handle_registration_process.run()
+        if not self.handle:
+            messages.error(request, 'A DOI was not issued for this registration as an error occurred during the DOI registration process. Please try again later.')
             return
-        self.handle = doi_registration_result.get('handle')
         messages.success(request, escape(f'A DOI with name "{self.handle}" has been registered for this data subset.'))
 
     def post(self, request, *args, **kwargs):
@@ -338,7 +337,7 @@ class CatalogueDataSubsetRegisterFormView(ResourceRegisterFormView):
         if form.is_valid():
             xml_file = request.FILES['files']
             self.run_registration_actions_safely(request, xml_file)
-            self.register_doi(request, xml_file)
+            self.register_doi_if_requested(request, xml_file)
         else:
             messages.error(request, 'The form submitted was not valid.')
         return redirect(self.success_url)

@@ -243,13 +243,18 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             return self.handle_name
         except Exception:
             logger.exception('An unexpected error occurred whilst registering a handle with a catalogue data subset.')
-            if not self.handle_client or not self.handle_name:
-                return None
+        
+        if not self.handle_client or not self.handle_name:
+            return None
 
         try:
+            logger.info(f'Attempting to delete handle {self.handle_name} after error occurred...')
             self.handle_client.delete_handle(self.handle_name)
+            logger.info(f'Deleted handle {self.handle_name}.')
         except Exception:
-            logger.exception('An unexpceted error occurred whilst trying to delete an incomplete catalogue data subset handle.')
+            logger.exception(f'An unexpected error occurred whilst trying to delete incomplete handle {self.handle_name}.')
+
+        return None
 
 
 class HandleClient:
