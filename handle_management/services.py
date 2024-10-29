@@ -301,11 +301,9 @@ class HandleClient:
     def register_handle(
             self,
             handle_name: str,
-            handle_value: str,
-            initial_doi_dict_values: dict = {}) -> str:
+            handle_value: str) -> str:
         logger.info(f'Registering handle {handle_name}')
-        flat_initial_doi_dict_values = flatten(initial_doi_dict_values, number_list_items=False)
-        register_result = self.client.register_handle(handle_name, handle_value, **flat_initial_doi_dict_values)
+        register_result = self.client.register_handle(handle_name, handle_value)
 
         if register_result == handle_name:
             logger.info('OK: Register handle successful.')
@@ -316,25 +314,18 @@ class HandleClient:
 
     def create_and_register_handle_for_resource_url(
             self,
-            resource_url: str,
-            initial_doi_dict_values: dict = {}) -> str:
-        flat_initial_doi_dict_values = flatten(
-            initial_doi_dict_values,
-            number_list_items=False
-        )
+            resource_url: str) -> str:
         # Registers a randomly-generated handle name
         # for the resource URL.
         new_handle_name = self.client.generate_and_register_handle(
             self.handle_prefix,
-            resource_url,
-            **flat_initial_doi_dict_values
+            resource_url
         )
         return new_handle_name
 
     def create_and_register_handle_for_resource(
             self,
-            resource_id: str,
-            initial_doi_dict_values: dict = {}) -> str:
+            resource_id: str) -> str:
         handle = self._create_handle_name_with_suffix(resource_id)
         resource_details_page_url = reverse_lazy(
             'browse:catalogue_data_subset_detail',
@@ -344,7 +335,7 @@ class HandleClient:
         )
         # Prefixes the domain name to the details page URL.
         resource_details_page_url_string = f'{os.environ["HANDLE_URL_PREFIX"]}{str(resource_details_page_url)}'
-        self.register_handle(handle, resource_details_page_url_string, initial_doi_dict_values=initial_doi_dict_values)
+        self.register_handle(handle, resource_details_page_url_string)
         return handle
 
     def delete_handle(self, handle_name: str):
