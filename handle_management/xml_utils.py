@@ -190,10 +190,24 @@ def parse_xml_string(xml_string: str):
     parser = create_lxml_utf8_parser()
     return etree.fromstring(xml_string, parser)
 
+def get_doi_xml_string_from_metadata_xml_string(xml_string):
+    if isinstance(xml_string, str):
+        xml_string = xml_string.encode('utf-8')
+    parser = create_lxml_utf8_parser()
+    root = etree.fromstring(xml_string, parser)
+    doi_element = root.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
+    if doi_element is None:
+        return None
+    doi_element_string = etree.tostring(doi_element, pretty_print=True)
+    doi_element_string = doi_element_string.decode('utf-8')
+    return doi_element_string
+
 def is_doi_element_present_in_xml_file(xml_file) -> bool:
     xml_file.seek(0)
-    xml_string_parsed = parse_xml_string(xml_file.read())
-    return xml_string_parsed.find('.//{https://metadata.pithia.eu/schemas/2.2}doi') != None
+    doi_element_in_xml_file_string = get_doi_xml_string_from_metadata_xml_string(
+        xml_file.read()
+    )
+    return doi_element_in_xml_file_string != None
 
 def get_last_result_time_element(data_subset_xml_string_parsed: ElementTree) -> Element:
     result_time_elements_found = data_subset_xml_string_parsed.findall('.//{https://metadata.pithia.eu/schemas/2.2}resultTime')
@@ -234,15 +248,3 @@ def remove_doi_element_from_metadata_xml_string(xml_string):
     updated_xml_string = etree.tostring(root, pretty_print=True)
     updated_xml_string = updated_xml_string.decode('utf-8')
     return updated_xml_string
-
-def get_doi_xml_string_from_metadata_xml_string(xml_string):
-    if isinstance(xml_string, str):
-        xml_string = xml_string.encode('utf-8')
-    parser = create_lxml_utf8_parser()
-    root = etree.fromstring(xml_string, parser)
-    doi_element = root.find('.//{https://metadata.pithia.eu/schemas/2.2}doi')
-    if doi_element is None:
-        return None
-    doi_element_string = etree.tostring(doi_element, pretty_print=True)
-    doi_element_string = doi_element_string.decode('utf-8')
-    return doi_element_string
