@@ -3,6 +3,7 @@ from django.test import (
     TestCase,
     tag
 )
+from lxml import etree
 from pyhandle.handleclient import RESTHandleClient
 from pyhandle.clientcredentials import PIDClientCredentials
 
@@ -17,7 +18,6 @@ from .xml_utils import (
     get_last_source_element,
     get_last_result_time_element,
     is_doi_element_present_in_xml_file,
-    parse_xml_string,
     remove_doi_element_from_metadata_xml_string,
 )
 
@@ -305,7 +305,7 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         where to insert a new DOI element.
         """
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        xml_string_parsed = parse_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        xml_string_parsed = etree.fromstring(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
         last_result_time_element = get_last_result_time_element(xml_string_parsed)
         print('last_result_time_element', last_result_time_element)
 
@@ -316,7 +316,7 @@ class DoiRegistrationAndReapplicationTestCase(PyHandleSetupTestCase):
         where to insert a new DOI element.
         """
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        xml_string_parsed = parse_xml_string(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
+        xml_string_parsed = etree.fromstring(CATALOGUE_DATA_SUBSET_METADATA_XML.read())
         last_source_element = get_last_source_element(xml_string_parsed)
         print('last_source_element', last_source_element)
 
