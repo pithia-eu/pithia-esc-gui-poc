@@ -395,6 +395,8 @@ class HandleClient:
             new_handle_value: str):
         # Increment current handle issue number
         issue_number = self.get_handle_issue_number(handle_name)
+        if not issue_number:
+            issue_number = 1
         new_issue_number = int(issue_number) + 1
         update_dict = {
             'URL': new_handle_value,
