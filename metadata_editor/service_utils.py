@@ -857,10 +857,8 @@ class ShortNameMetadataEditor(BaseMetadataComponentEditor):
 class SourcePropertyTypeEditor(
     BaseMetadataComponentEditor,
     XlinkHrefMetadataEditor):
-    def update_sources(self, sources: list[SourceMetadataUpdate], parent_element=None):
+    def _update_sources(self, parent_element: dict, sources: list[SourceMetadataUpdate]):
         sources_key = 'source'
-        if not parent_element:
-            parent_element = self.metadata_dict
         parent_element[sources_key] = []
         source_elements = parent_element[sources_key]
         for s in sources:

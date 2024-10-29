@@ -354,7 +354,7 @@ class DataCollectionEditor(
         collection_results_key = 'collectionResults'
         self.metadata_dict.setdefault(collection_results_key, {})
         collection_results = self.metadata_dict[collection_results_key]
-        self.update_sources(update_data, parent_element=collection_results)
+        self._update_sources(collection_results, update_data)
         self.remove_child_element_if_empty(
             self.metadata_dict,
             collection_results_key
@@ -512,6 +512,9 @@ class CatalogueDataSubsetEditor(
     def update_result_time(self, update_data: ResultTimeMetadataUpdate):
         result_time_key = 'resultTime'
         self.update_time_period(update_data, result_time_key)
+
+    def update_sources(self, update_data: list[SourceMetadataUpdate]):
+        self._update_sources(self.metadata_dict, update_data)
 
     def update_doi_kernel_metadata(self, update_data: DoiKernelMetadataUpdate):
         self.metadata_dict['doi'] = {
