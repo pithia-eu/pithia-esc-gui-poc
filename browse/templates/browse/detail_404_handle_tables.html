@@ -1,0 +1,93 @@
+<section>
+    <h4 class="fs-5">Resource Information</h4>
+    <div class="table-responsive">
+        <table class="table table-hover handle-table">
+            <tbody>
+                {% with dkm_rc=handle_data.doi_kernel_metadata.referent_creation %}
+                <tr>
+                    <th scope="row">
+                        <span class="d-inline-flex flex-column">
+                            {{ dkm_rc.name.type }}
+                            <small class="text-secondary">
+                                ({{ dkm_rc.name.primary_language }})
+                            </small>
+                        </span>
+                    </th>
+                    <td>{{ dkm_rc.name.value }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Non URI Identifier</th>
+                    <td>{{ dkm_rc.identifier.non_uri_value }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <span class="d-inline-flex flex-column">
+                            URI Identifier
+                            <small class="text-secondary">
+                                ({{ dkm_rc.identifier.uri.return_type }})
+                            </small>
+                        </span>
+                    </th>
+                    <td>
+                        <a href="{{ dkm_rc.identifier.uri.value }}" class="link-underline-by-default">{{ dkm_rc.identifier.uri.value }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Structural Type</th>
+                    <td>{{ dkm_rc.structural_type }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Mode</th>
+                    <td>{{ dkm_rc.mode }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Character</th>
+                    <td>{{ dkm_rc.character }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Type</th>
+                    <td>{{ dkm_rc.type }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Organisation</th>
+                    <td>{{ dkm_rc.principal_agent_name.value }}</td>
+                </tr>
+                {% endwith %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<section>
+    <details>
+        <summary class="summary-marker-custom summary-marker-custom-baseline">
+            <h4 class="d-inline-block fs-5 mb-0">Other DOI Kernel Metadata</h4>
+        </summary>
+        <div class="table-responsive">
+            <table class="table table-hover handle-table">
+                <tbody>
+                    {% with dkm=handle_data.doi_kernel_metadata %}
+                    <tr>
+                        <th scope="row">Referent DOI Name</th>
+                        <td>{{ dkm.referent_doi_name|urlize }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Primary Referent Type</th>
+                        <td>{{ dkm.primary_referent_type|urlize }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Registration Agency DOI Name</th>
+                        <td>{{ dkm.registration_agency_doi_name|urlize }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">DOI Issue Date</th>
+                        <td>{{ dkm.doi_issue_date|urlize }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">DOI Issue Number</th>
+                        <td>{{ dkm.doi_issue_number|urlize }}</td>
+                    </tr>
+                    {% endwith %}
+                </tbody>
+            </table>
+    </details>
+</section>

@@ -1,4 +1,5 @@
 class NamespacePrefix:
+    DOI = 'doi'
     GCO = 'gco'
     GCO19115 = 'gco'
     GMD = 'gmd'
@@ -10,6 +11,7 @@ class NamespacePrefix:
     XSI = 'xsi'
 
 class Namespace:
+    DOI = 'http://www.doi.org/2010/DOISchema'
     GCO = 'http://www.isotc211.org/2005/gco'
     GCO19115 = 'http://standards.iso.org/iso/19115/-3/gco/1.0'
     GMD = 'http://www.isotc211.org/2005/gmd'

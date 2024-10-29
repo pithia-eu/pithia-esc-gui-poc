@@ -4,33 +4,54 @@
 {% block breadcrumbs %}
 {% breadcrumb_item_active 'Not found' %}
 {% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'browse/detail_404.js' %}" type="module"></script>
+{% endblock scripts %}
 {% block extra_content %}
 {% if data_for_handles %}
 {% if data_for_handles|length == 1 %}
 <div class="row">
-    <div class="col-lg-9">
-        <p class="mb-5">
-            A handle associated with the deleted resource was found and is described in the table below.
+    <div class="col-xl-7 col-lg-9">
+        <p>
+            A handle associated with the deleted resource was found.
+            The DOI kernel metadata it contained is described below.
         </p>
-        {% with handle_data=data_for_handles.0 %}
-        {% include 'browse/detail_404_handle_table.html' %}
-        {% endwith %}
+        <a tabindex="0" id="handle-info-popover" class="link-underline-by-default" role="button" data-bs-title="What is a handle?">
+            <small>What is a handle?</small></a>
+        <section class="pt-4 mt-4">
+            <h2 class="fs-5 fw-semibold mb-3">
+                DOI Kernel Metadata found in Handle
+            </h2>
+            {% with handle_data=data_for_handles.0 %}
+            {% include 'browse/detail_404_handle_tables.html' %}
+            {% endwith %}
+        </section>
     </div>
 </div>
 {% elif data_for_handles|length > 1 %}
 <div class="row">
-    <div class="col-lg-9">
-        <p class="mb-5">
-            Multiple handles associated with the deleted resource were found and are described in the tables below.
+    <div class="col-xl-7 col-lg-9">
+        <p>
+            Multiple handles associated with the deleted resource were found.
+            Each handle record contains DOI kernel metadata, which are described
+            below.
         </p>
-        {% for handle_data in data_for_handles %}
-        <details {% if forloop.counter == 1 %}open{% endif %}>
-            <summary>
-                <h2 class="d-inline-block fs-5 {% if forloop.counter == 1 %}mb-3{% else %}my-3{% endif %}">Handle #{{ forloop.counter }}</h2>
-            </summary>
-            {% include 'browse/detail_404_handle_table.html' %}
-        </details>
-        {% endfor %}
+        <a tabindex="0" id="handle-info-popover" class="link-underline-by-default" role="button" data-bs-title="What is a handle?">
+            <small>What is a handle?</small></a>
+        <ul class="list-group list-group-flush mt-4">
+            {% for handle_data in data_for_handles %}
+            <li class="list-group-item ps-0 py-4">
+                <details>
+                    <summary class="summary-marker-custom">
+                        <h2 class="d-inline-block fs-5 mb-0">
+                            DOI Kernel Metadata found in Handle {{ forloop.counter }}
+                        </h2>
+                    </summary>
+                    {% include 'browse/detail_404_handle_tables.html' %}
+                </details>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endif %}

@@ -23,6 +23,7 @@ class BaseMetadataPropertiesShortcutMixin:
     def __init__(self, xml) -> None:
         self.xml_parsed = etree.fromstring(xml.encode('utf-8'))
         self.namespaces = {
+            NamespacePrefix.DOI: Namespace.DOI,
             NamespacePrefix.GCO: Namespace.GCO,
             NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.GML: Namespace.GML,

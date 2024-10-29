@@ -2824,6 +2824,44 @@ WORKFLOW_METADATA_XML = SimpleUploadedFile(
 )
 
 
+# DOI KERNEL METADATA
+DOI_KERNEL_METADATA_XML = SimpleUploadedFile(
+    'doi_kernel_metadata.xml',
+    b'''<?xml version='1.0' encoding='UTF-8'?>
+    <doi xmlns="https://metadata.pithia.eu/schemas/2.2" xmlns:doi="http://www.doi.org/2010/DOISchema">
+        <doi>
+            <doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>
+            <doi:primaryReferentType>Creation</doi:primaryReferentType>
+            <doi:registrationAgencyDoiName>10.000/000</doi:registrationAgencyDoiName>
+            <doi:issueDate>2024-10-28</doi:issueDate>
+            <doi:issueNumber>1</doi:issueNumber>
+            <doi:referentCreation>
+                <doi:name primaryLanguage="en">
+                    <doi:value>Referent Creation Name</doi:value>
+                    <doi:type>Name</doi:type>
+                </doi:name>
+                <doi:identifier>
+                    <doi:nonUriValue>10.1000/my-doi</doi:nonUriValue>
+                    <doi:uri returnType="text/html">https://doi.org/10.1000/my-doi</doi:uri>
+                    <doi:type>URI</doi:type>
+                </doi:identifier>
+                <doi:structuralType>Digital</doi:structuralType>
+                <doi:mode>Visual</doi:mode>
+                <doi:character>Language</doi:character>
+                <doi:type>Dataset</doi:type>
+                <doi:principalAgent>
+                    <doi:name>
+                        <doi:value>Unknown</doi:value>
+                        <doi:type>Name</doi:type>
+                    </doi:name>
+                </doi:principalAgent>
+            </doi:referentCreation>
+        </doi>
+    </doi>
+    '''
+)
+
+
 # URL Testing
 METADATA_AND_ONTOLOGY_URLS_XML = SimpleUploadedFile(
     'valid_and_invalid_urls.xml',

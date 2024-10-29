@@ -29,10 +29,8 @@ from .utils import (
 )
 
 from common import models
-from handle_management.handle_api import (
-    get_handle_record,
-    instantiate_client_and_load_credentials,
-)
+from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortcuts
+from handle_management.services import HandleClient
 
 logger = logging.getLogger(__name__)
 
@@ -923,7 +921,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
         }
         # Prepare to get handle data from the handle API.
         try:
-            client, credentials = instantiate_client_and_load_credentials()
+            handle_client = HandleClient()
         except BaseException as e:
             logger.exception('An unexpected error occurred whilst instantiating the PyHandle client.')
             # No point doing any further operations
@@ -932,18 +930,23 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
         
         # Get the handle name-URL mappings for the page URL.
         handle_url_mappings = models.HandleURLMapping.objects.for_url(self.url_for_handle_url_mappings)
-        handles = [
+        handle_names = [
             handle_url_mapping.handle_name
             for handle_url_mapping in handle_url_mappings
         ]
         # Get handle data from the handle API.
         data_for_handles_unformatted = [
-            get_handle_record(handle, client)
-            for handle in handles
+            handle_client.get_handle_record(handle_name)
+            for handle_name in handle_names
         ]
         handle_context.update({
             'data_for_handles': [
-                reformat_and_clean_resource_copy_for_property_table(data)
+                {
+                    'url': data.get('URL'),
+                    'doi_kernel_metadata': DoiKernelMetadataMappingShortcuts(
+                        data.get('DOI_KERNEL_METADATA')
+                    ).properties
+                }
                 for data in data_for_handles_unformatted
                 if data is not None
             ],
@@ -952,14 +955,14 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
 
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['catalogue_data_subset_id']
-        self.url_for_handle_url_mappings = request.get_full_path()
+        self.url_for_handle_url_mappings = request.build_absolute_uri()
 
         # Custom handling 404 handling - shows DOI information
         # on missing resource.
         try:
             self.resource = self.model.objects.get(pk=self.resource_id)
         except models.CatalogueDataSubset.DoesNotExist:
-            context = {}
+            context = {'title': 'Not Found'}
             context.update(self.get_context_handle_variables())
             return render(request, 'browse/detail_404.html', context)
         

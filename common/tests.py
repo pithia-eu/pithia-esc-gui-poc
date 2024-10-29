@@ -1,4 +1,7 @@
-from django.test import TestCase
+from django.test import (
+    SimpleTestCase,
+    TestCase,
+)
 
 from .models import (
     AcquisitionCapabilities,
@@ -38,11 +41,13 @@ from common.test_xml_files import (
     COMPUTATION_CAPABILITIES_4a_METADATA_XML,
     COMPUTATION_CAPABILITIES_FULL_METADATA_XML,
     COMPUTATION_CAPABILITIES_METADATA_XML,
+    DOI_KERNEL_METADATA_XML,
     INSTRUMENT_METADATA_XML,
     ORGANISATION_METADATA_XML,
     PLATFORM_WITH_CHILD_PLATFORMS_METADATA_XML,
     PROJECT_METADATA_XML,
 )
+from .xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortcuts
 
 
 # For tests where ownership data is required
@@ -521,3 +526,17 @@ class ModelPropertiesAttributeTestCase(TestCase):
         print('ontology_urls', ontology_urls)
         self.assertTrue(isinstance(ontology_urls, list))
         self.assertTrue(isinstance(ontology_urls[0], str))
+
+
+class DoiMetadataKernelXmlShortcutsTestCase(SimpleTestCase):
+    def test_doi_kernel_metadata_properties(self):
+        """The shortcuts return a dictionary of the
+        DOI kernel metadata.
+        """
+        xml_file = DOI_KERNEL_METADATA_XML
+        xml_file.seek(0)
+        xml_string = xml_file.read().decode()
+        doi_kernel_metadata = DoiKernelMetadataMappingShortcuts(xml_string)
+        doi_kernel_metadata_properties = doi_kernel_metadata.properties
+        print('doi_kernel_metadata_properties', doi_kernel_metadata_properties)
+        self.assertIsInstance(doi_kernel_metadata_properties, dict)

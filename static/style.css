@@ -156,11 +156,11 @@ summary.summary-marker-custom::before {
     margin: 0 1em 0 0;
 }
 
-details[open] summary.summary-marker-custom::before {
+details[open] > summary.summary-marker-custom::before {
     content: '▼';
 }
 
-details[open] summary.summary-marker-custom {
+details[open] > summary.summary-marker-custom {
     margin-bottom: 1rem;
 }
 
@@ -594,6 +594,10 @@ dialog .btn-close {
 .ontology-term-table td:first-child,
 .resource-property-table td:first-child {
     width: 20%;
+}
+
+.handle-table th:first-child {
+    width: 25%;
 }
 
 .resource-detail-top-section {
