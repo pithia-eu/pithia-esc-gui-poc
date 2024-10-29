@@ -162,7 +162,7 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             rc_name_type='Name',
             rc_identifier_non_uri_value=self.handle_name,
             rc_identifier_uri_return_type='text/html',
-            rc_identifier_uri_value=f'https://doi.org/{self.handle_name}',
+            rc_identifier_uri_value=f'https://hdl.handle.net/{self.handle_name}',
             rc_identifier_type='URI',
             rc_structural_type='Digital',
             rc_mode='Visual',
