@@ -3,35 +3,41 @@
 <section class="resource-detail-section">
     <h2 class="mb-4">Documentation</h2>
     <div class="d-inline-flex flex-column row-gap-1 mb-4">
-        <div class="fs-5">
+        <div>
+            {% if documentation.online_resource %}
+            <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
+                {% if documentation.title %}{{ documentation.title }}{% else %}<i>{{ documentation.online_resource }}</i>{% endif %}</a>
+            {% else %}
             {% if documentation.title %}
             {{ documentation.title }}
-            {% elif documentation.online_resource %}
-            {{ documentation.online_resource|urlize }}
             {% else %}
             <i class="text-secondary">Unnamed Documentation</i>
             {% endif %}
+            {% endif %}
         </div>
         {% if documentation.date %}
-        <span class="text-secondary">
+        <small class="text-secondary">
             {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
             Published on {{ documentation.date|date }}
             {% else %}
             {{ documentation.date|date }} ({{ documentation.date_type }})
             {% endif %}
-        </span>
+        </small>
         {% endif %}
     </div>
-    {% if documentation.online_resource and documentation.title or documentation.identifier or documentation.identifier or documentation.other_documentation_details %}
+    {% if documentation.online_resource or documentation.identifier or documentation.other_documentation_details %}
     <details>
         <summary>
             More details
         </summary>
         <dl class="d-flex flex-column row-gap-4 pt-4">
-            {% if documentation.title and documentation.online_resource %}
+            {% if documentation.online_resource %}
             <div>
                 <dt>Link to Documentation</dt>
-                <dd>{{ documentation.online_resource|urlize }}</dd>
+                <dd>
+                    <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
+                        {{ documentation.online_resource }}</a>
+                </dd>
             </div>
             {% endif %}
             {% if documentation.identifier %}
