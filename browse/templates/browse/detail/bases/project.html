@@ -57,10 +57,12 @@ Description
 </section>
 {% endif %}
 {% include 'browse/detail/sections/documentation_section.html' %}
+{% if resource.properties.keywords %}
 <section class="resource-detail-section">
     <h2>Keywords</h2>
     <p>
         {{ resource.properties.keywords|join:', ' }}
     </p>
 </section>
+{% endif %}
 {% endblock post_description_content %}
