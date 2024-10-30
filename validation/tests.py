@@ -2,6 +2,7 @@ from django.test import (
     SimpleTestCase,
     TestCase,
 )
+from xmlschema.validators.exceptions import XMLSchemaValidationError
 
 from .base_tests import *
 from .file_wrappers import (
@@ -537,11 +538,10 @@ class DoiValidationTestCase(SimpleTestCase):
         DOI metadata kernel element.
         """
         xml_file = XMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_HANDLE_METADATA_XML)
-        MetadataFileXSDValidator.validate(xml_file)
+        self.assertRaises(XMLSchemaValidationError, MetadataFileXSDValidator.validate, xml_file)
 
     def test_contents_with_spoofed_doi(self):
-        """
-        DataSubsetXMLMetadataFile.contents returns an XML string with a DOI XMLSchema-
+        """DataSubsetXMLMetadataFile.contents returns an XML string with a DOI XMLSchema-
         compliant element.
         """
         xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
@@ -549,8 +549,7 @@ class DoiValidationTestCase(SimpleTestCase):
 
     @tag('slow')
     def test_data_subset_xsd_validation(self):
-        """
-        XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
+        """XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
         a spoofed DOI element.
         """
         xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)
@@ -742,8 +741,7 @@ class InlineValidationTestCase(TestCase):
         self.assertEqual(len(results), 0)
 
     def test_inline_update_validation_returns_errors(self):
-        """
-        Returns a list of errors found whilst validating a XML file
+        """Returns a list of errors found whilst validating a XML file
         update.
         """
         register_organisation_for_test()
@@ -826,7 +824,7 @@ class AcquisitionCapabilitiesXSDValidationTestCase(SimpleTestCase):
             MetadataFileXSDValidator.validate(xml_file)
         except BaseException as err:
             print(err)
-        self.assertRaises(BaseException, MetadataFileXSDValidator.validate, xml_file)
+        self.assertRaises(XMLSchemaValidationError, MetadataFileXSDValidator.validate, xml_file)
 
     def test_acquisition_capabilities_with_multiple_imps_2_fails(self):
         xml_file = AcquisitionCapabilitiesXMLMetadataFile.from_file(test_xml_files.ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_2_METADATA_XML)
@@ -834,4 +832,4 @@ class AcquisitionCapabilitiesXSDValidationTestCase(SimpleTestCase):
             MetadataFileXSDValidator.validate(xml_file)
         except BaseException as err:
             print(err)
-        self.assertRaises(BaseException, MetadataFileXSDValidator.validate, xml_file)
+        self.assertRaises(XMLSchemaValidationError, MetadataFileXSDValidator.validate, xml_file)
