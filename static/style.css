@@ -817,6 +817,14 @@ as Bootstrap styling. */
     transform: translateY(0.25em);
 }
 
+#resource-detail-url-top-section .url-text-wrapper {
+    max-width: 16rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 0.925rem;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;

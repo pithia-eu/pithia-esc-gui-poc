@@ -1,9 +1,22 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block top_section_website %}
-{% with url_text='Platform Website' %}
-{% include 'browse/detail/components/top_section_extra_content/url.html' %}
-{% endwith %}
-{% endblock top_section_website %}
+{% block top_section_extra_content %}
+{% if resource.properties.gmd_url %}
+<div class="border-top pt-4 mt-4">
+    <dl class="mb-0">
+        {% if resource.properties.gmd_url %}
+        <div>
+            <dt>Website</dt>
+            <dd>
+                {% with url_custom_width='20rem' %}
+                {% include 'browse/detail/components/top_section_extra_content/url.html' %}
+                {% endwith %}
+            </dd>
+        </div>
+        {% endif %}
+    </dl>
+</div>
+{% endif %}
+{% endblock top_section_extra_content %}
 {% block post_description_content %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">

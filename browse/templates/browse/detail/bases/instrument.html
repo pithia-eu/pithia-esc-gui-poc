@@ -1,21 +1,26 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block top_section_website %}
-{% with url_text='Instrument Website' %}
-{% include 'browse/detail/components/top_section_extra_content/url.html' %}
-{% endwith %}
-{% endblock top_section_website %}
-{% block pre_description_content %}
-{% if resource.properties.instrument_version %}
-<section class="resource-detail-top-section">
-    <dl class="mb-0">
-        <div class="d-flex flex-column row-gap-2">
+{% block top_section_extra_content %}
+{% if resource.properties.gmd_url or resource.properties.instrument_version %}
+<div class="border-top pt-4 mt-4">
+    <dl class="d-flex flex-wrap column-gap-5 row-gap-4 mb-0">
+        {% if resource.properties.instrument_version %}
+        <div>
             <dt>Version</dt>
             <dd class="mb-0">{{ resource.properties.instrument_version }}</dd>
         </div>
+        {% endif %}
+        {% if resource.properties.gmd_url %}
+        <div>
+            <dt>Website</dt>
+            <dd>
+                {% include 'browse/detail/components/top_section_extra_content/url.html' %}
+            </dd>
+        </div>
+        {% endif %}
     </dl>
-</section>
+</div>
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock top_section_extra_content %}
 {% block post_description_content %}
 {% if resource.properties.operational_modes %}
 <section class="resource-detail-section">
@@ -24,7 +29,7 @@
         {% for operational_mode in resource.properties.operational_modes %}
         <li class="list-group-item py-2">
             <details id="{{ operational_mode.id }}" name="details-operational-modes" class="py-2" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
-                <summary class="summary-marker-custom">
+                <summary class="summary-marker-custom summary-marker-custom-baseline">
                     <div class="d-flex flex-column">
                         <h3 class="fs-5">{{ operational_mode.name }}</h3>
                         <small class="text-secondary">
