@@ -1570,10 +1570,6 @@ ul.tree ul {
         padding-right: var(--bs-breadcrumb-item-padding-x);
     }
 
-    .resource-detail-top-section-extra-content > dl {
-        align-items: center;
-    }
-
     .resource-detail-top-section-extra-content > dl > div:not(.resource-detail-top-section-extra-content > dl > div:first-child) {
         max-width: 15rem;
     }

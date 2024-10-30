@@ -2,7 +2,7 @@
 {% load project_tags %}
 {% block top_section_extra_content %}
 <div class="resource-detail-top-section-extra-content mt-4">
-    <dl class="d-flex flex-md-row flex-column column-gap-5 row-gap-4">
+    <dl class="d-flex flex-lg-row flex-column column-gap-5 row-gap-4">
         {% if resource.properties.result_time %}
         <div>
             <dt class="mb-1">Result Time</dt>
@@ -28,7 +28,7 @@
         </div>
         {% endif %}
         {% if resource.properties.catalogue_entry_urls %}
-        <div>
+        <div class="flex-shrink-0">
             <dt>From Catalogue Entry</dt>
             <dd>
                 {% with value=resource.properties.catalogue_entry_urls.0 %}
