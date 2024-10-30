@@ -6,42 +6,10 @@ from lxml.etree import (
 )
 from pyhandle.handleexceptions import *
 
-from common.models import (
-    Individual,
-    Organisation,
-)
 from metadata_editor.service_utils import Namespace
 
 
 logger = logging.getLogger(__name__)
-
-
-def get_first_related_party_name_from_data_collection(
-        data_collection,
-        organisation_model=Organisation,
-        individual_model=Individual
-    ):
-    try:
-        related_party_url = data_collection.first_related_party_url
-    except KeyError:
-        return None
-    
-    try:
-        return organisation_model.objects.get_by_metadata_server_url(related_party_url).name
-    except organisation_model.DoesNotExist:
-        pass
-    
-    try:
-        individual = individual_model.objects.get_by_metadata_server_url(related_party_url)
-    except individual_model.DoesNotExist:
-        return None
-    organisation_url = individual.organisation_url
-    
-    try:
-        return organisation_model.objects.get_by_metadata_server_url(organisation_url).name
-    except organisation_model.DoesNotExist:
-        pass
-    return None
 
 
 def _create_lxml_utf8_parser():

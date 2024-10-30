@@ -14,7 +14,6 @@ from .services import (
 from .xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_from_metadata_xml_string,
-    get_first_related_party_name_from_data_collection,
     get_last_source_element,
     get_last_result_time_element,
     is_doi_element_present_in_xml_file,
@@ -236,7 +235,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         print('handle_url', handle_url)
         print('handle_issue_number', handle_issue_number)
 
-    @tag('fast', 'get_handles_with_prefix')
+    @tag('fast', '_get_handles_with_prefix')
     def test_get_handles_with_prefix(self):
         """handle_client._get_handles_with_prefix() returns all
         handles under a given prefix.
@@ -256,7 +255,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
 
     @tag('fast', 'add_doi_kernel_metadata_to_handle')
     def test_add_doi_kernel_metadata_to_handle(self):
-        """handle_client.add_doi_metadata_kernel_to_handle()
+        """handle_client.add_doi_kernel_metadata_to_handle()
         adds the DOI kernel metadata as an XML string to a
         handle.
         """
