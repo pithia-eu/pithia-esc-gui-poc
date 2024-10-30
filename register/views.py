@@ -40,11 +40,8 @@ class ResourceRegisterFormView(FormView):
     form_class = UploadFileForm
     template_name = 'register/file_upload.html'
 
-    resource_id = None
     new_registration = None
     xml_file_string = None
-    handle = None
-    handle_api_client = None
     validation_url = ''
     post_url = ''
 
