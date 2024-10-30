@@ -298,6 +298,7 @@ ORGANISATION_UPDATED_METADATA_XML = SimpleUploadedFile(
     </Organisation>
     '''
 )
+
 ORGANISATION_2_METADATA_XML = SimpleUploadedFile(
     'Organisation_Test_2.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>
@@ -317,7 +318,7 @@ ORGANISATION_2_METADATA_XML = SimpleUploadedFile(
                 <lastModificationDate>2022-02-03T12:50:00Z</lastModificationDate>
             </PITHIA_Identifier>
         </identifier>
-        <name>Organisation Test</name>
+        <name>Organisation Test 2</name>
         <contactInfo>
             <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
                 <phone>
@@ -449,6 +450,53 @@ INDIVIDUAL_METADATA_XML = SimpleUploadedFile(
         </contactInfo>
         <positionName>Test, Test</positionName>
         <organisation xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"></organisation> <!-- link to the organisation that this individual has the position name -->
+    </Individual>
+    '''
+)
+
+INDIVIDUAL_2_METADATA_XML = SimpleUploadedFile(
+    'Individual_Test_2.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <Individual 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gco="http://www.isotc211.org/2005/gco" >
+    
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>Individual_Test_2</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-03T11:00:00Z</creationDate>
+                <lastModificationDate>2022-02-03T11:00:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>  
+        <name>Individual Test 2</name>
+        <contactInfo>
+            <CI_Contact xmlns="http://www.isotc211.org/2005/gmd">
+                <phone>
+                    <CI_Telephone><voice><gco:CharacterString>+1 000-000-0000</gco:CharacterString></voice> <!-- telephone -->
+                    </CI_Telephone>
+                </phone>           
+                <address>
+                    <CI_Address>                   
+                        <deliveryPoint><gco:CharacterString>123 Xyz St., Suite 123</gco:CharacterString></deliveryPoint> <!-- street name, number -->
+                        <city><gco:CharacterString>City</gco:CharacterString></city>
+                        <administrativeArea><gco:CharacterString>ZZ</gco:CharacterString></administrativeArea>
+                        <postalCode><gco:CharacterString>00000</gco:CharacterString></postalCode>
+                        <country><gco:CharacterString>Country</gco:CharacterString></country>
+                        <electronicMailAddress><gco:CharacterString>test@test.edu</gco:CharacterString></electronicMailAddress>
+                    </CI_Address>
+                </address>
+                <onlineResource><CI_OnlineResource><linkage><URL>http://test.test.edu</URL></linkage></CI_OnlineResource></onlineResource> 
+                <hoursOfService><gco:CharacterString>0:00am-0:00pm</gco:CharacterString></hoursOfService>
+                <contactInstructions><gco:CharacterString>Contact by email or phone</gco:CharacterString></contactInstructions> <!-- Supplemental instructions on how or when to contact the individual. -->
+            </CI_Contact>
+        </contactInfo>
+        <positionName>Test, Test</positionName>
+        <organisation xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2"></organisation> <!-- link to the organisation that this individual has the position name -->
     </Individual>
     '''
 )
@@ -2253,7 +2301,7 @@ DATA_COLLECTION_METADATA_XML = SimpleUploadedFile(
     '''
 )
 
-DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML = SimpleUploadedFile(
+DATA_COLLECTION_2_METADATA_XML = SimpleUploadedFile(
     'DataCollection_Test.xml',
     b'''<?xml version="1.0" encoding="UTF-8"?>
     <DataCollection 
@@ -2300,14 +2348,443 @@ DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML = SimpleUploadedFile(
         <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
         <relatedParty>
             <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <relatedParty>
+            <ResponsiblePartyInfo>
                 <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/> 
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test_2"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <collectionResults>
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                    <name>Online Resource 1</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                    <name>Online Resource 2</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                    <name>Online Resource 3</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+                </OnlineResource>
+            </source>        
+        </collectionResults>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+        </qualityAssessment>
+        <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+    </DataCollection>
+    '''
+)
+
+DATA_COLLECTION_WITH_NO_RELATED_PARTIES_METADATA_XML = SimpleUploadedFile(
+    'DataCollection_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataCollection 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:om="http://www.opengis.net/om/2.0" >
+        <!--
+            First report some required elements from ISO standard for Observation
+        -->
+        <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+        <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+        <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test"/>
+        <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+        <om:featureOfInterest>
+            <FeatureOfInterest>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+            </FeatureOfInterest>
+        </om:featureOfInterest>
+        <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+        <!--
+            Now our Data Collection elements next
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataCollection_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-28T15:00:00Z</creationDate>
+                <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>DataCollection Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+        <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
+        <collectionResults>
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                    <name>Online Resource 1</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                    <name>Online Resource 2</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                    <name>Online Resource 3</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+                </OnlineResource>
+            </source>        
+        </collectionResults>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+        </qualityAssessment>
+        <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+    </DataCollection>
+    '''
+)
+
+DATA_COLLECTION_WITH_PRINCIPAL_INVESTIGATOR_ONLY_METADATA_XML = SimpleUploadedFile(
+    'DataCollection_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataCollection 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:om="http://www.opengis.net/om/2.0" >
+        <!--
+            First report some required elements from ISO standard for Observation
+        -->
+        <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+        <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+        <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test"/>
+        <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+        <om:featureOfInterest>
+            <FeatureOfInterest>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+            </FeatureOfInterest>
+        </om:featureOfInterest>
+        <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+        <!--
+            Now our Data Collection elements next
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataCollection_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-28T15:00:00Z</creationDate>
+                <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>DataCollection Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+        <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PrincipalInvestigator"/> 
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <collectionResults>
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                    <name>Online Resource 1</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                    <name>Online Resource 2</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                    <name>Online Resource 3</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+                </OnlineResource>
+            </source>        
+        </collectionResults>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+        </qualityAssessment>
+        <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+    </DataCollection>
+    '''
+)
+
+DATA_COLLECTION_REFERENCING_INDIVIDUAL_2_METADATA_XML = SimpleUploadedFile(
+    'DataCollection_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataCollection 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:om="http://www.opengis.net/om/2.0" >
+        <!--
+            First report some required elements from ISO standard for Observation
+        -->
+        <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+        <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+        <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test"/>
+        <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+        <om:featureOfInterest>
+            <FeatureOfInterest>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+            </FeatureOfInterest>
+        </om:featureOfInterest>
+        <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+        <!--
+            Now our Data Collection elements next
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataCollection_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-28T15:00:00Z</creationDate>
+                <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>DataCollection Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+        <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PrincipalInvestigator"/> 
                 <party xlink:href="https://metadata.pithia.eu/resources/2.2/organisation/test/Organisation_Test"/>
             </ResponsiblePartyInfo>
         </relatedParty>
         <relatedParty>
             <ResponsiblePartyInfo>
-                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/> 
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test_2"/>
+            </ResponsiblePartyInfo>
+        </relatedParty>
+        <collectionResults>
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/</gmd:URL></linkage>
+                    <name>Online Resource 1</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://ulcar.uml.edu/SAO-X/</gmd:URL></linkage>
+                    <name>Online Resource 2</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-html"/>
+                </OnlineResource>
+            </source>        
+            <source>
+                <OnlineResource>
+                    <!-- The function performed by the online resource is the landing page for the collection provider-->
+                    <serviceFunction xlink:href="https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download"/> <!-- use the serviceFunction vocabulary -->
+                    <linkage><gmd:URL>https://giro.uml.edu/didbase/scaled.php</gmd:URL></linkage>
+                    <name>Online Resource 3</name>
+                    <protocol>HTTPS</protocol>
+                    <description>
+                        Duis aute irure dolor in reprehenderit in
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </description>
+                    <dataFormat xlink:href="https://metadata.pithia.eu/ontology/2.2/resultDataFormat/text-plain"/>
+                </OnlineResource>
+            </source>        
+        </collectionResults>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L0"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L1"/>
+        <dataLevel xlink:href="https://metadata.pithia.eu/ontology/2.2/dataLevel/L2A"/>
+        <qualityAssessment>
+        <dataQualityFlag xlink:href="https://metadata.pithia.eu/ontology/2.2/dataQualityFlag/DQ2"/>
+        </qualityAssessment>
+        <permission xlink:href="https://metadata.pithia.eu/ontology/2.2/licence/LGDC_SpaceDataPolicies"/>
+    </DataCollection>
+    '''
+)
+
+DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML = SimpleUploadedFile(
+    'DataCollection_Test.xml',
+    b'''<?xml version="1.0" encoding="UTF-8"?>
+    <DataCollection 
+        xmlns="https://metadata.pithia.eu/schemas/2.2" xsi:schemaLocation="https://metadata.pithia.eu/schemas/2.2 https://metadata.pithia.eu/schemas/2.2/pithia.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:om="http://www.opengis.net/om/2.0" >
+        <!--
+            First report some required elements from ISO standard for Observation
+        -->
+        <om:phenomenonTime/><!-- DO NOT USE, we report phenomenon time only in Catalogs -->
+        <om:resultTime/>    <!-- DO NOT USE, we report result time only in Catalogs -->
+        <om:procedure xlink:href="https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test"/>
+        <om:observedProperty/> <!-- DO NOT USE, we define all observed properties in the Procedure above -->
+        <om:featureOfInterest>
+            <FeatureOfInterest>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_F-Region_Bottomside"/>
+                <namedRegion xlink:href="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Ionosphere_E-Region"/>
+            </FeatureOfInterest>
+        </om:featureOfInterest>
+        <om:result/> <!-- DO NOT USE, we use the CollectionResults below to specify URLs to provider) -->
+        <!--
+            Now our Data Collection elements next
+        -->
+        <identifier>
+            <PITHIA_Identifier>
+                <localID>DataCollection_Test</localID>
+                <namespace>test</namespace>
+                <version>1</version>
+                <creationDate>2022-02-28T15:00:00Z</creationDate>
+                <lastModificationDate>2022-05-17T05:30:00Z</lastModificationDate>
+            </PITHIA_Identifier>
+        </identifier>
+        <name>DataCollection Test</name>
+        <description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </description>
+        <type xlink:href="https://metadata.pithia.eu/ontology/2.2/instrumentType/VerticalSounder"/>
+        <project xlink:href="https://metadata.pithia.eu/resources/2.2/project/test/Project_Test"/>
+        <relatedParty>
+            <ResponsiblePartyInfo>
+                <role xlink:href="https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact"/>
                 <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test"/>
+                <party xlink:href="https://metadata.pithia.eu/resources/2.2/individual/test/Individual_Test_2"/>
             </ResponsiblePartyInfo>
         </relatedParty>
         <collectionResults>

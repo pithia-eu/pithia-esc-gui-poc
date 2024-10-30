@@ -31,12 +31,17 @@ from common.test_xml_files import (
     CATALOGUE_DATA_SUBSET_METADATA_XML,
     CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
-    DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML,
+    DATA_COLLECTION_2_METADATA_XML,
+    DATA_COLLECTION_REFERENCING_INDIVIDUAL_2_METADATA_XML,
+    DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML,
+    DATA_COLLECTION_WITH_NO_RELATED_PARTIES_METADATA_XML,
+    DATA_COLLECTION_WITH_PRINCIPAL_INVESTIGATOR_ONLY_METADATA_XML,
     DOI_KERNEL_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
+    INDIVIDUAL_2_METADATA_XML,
     ORGANISATION_METADATA_XML,
+    ORGANISATION_2_METADATA_XML,
 )
-from utils.dict_helpers import flatten
 
 
 # For tests where ownership data is required
@@ -393,57 +398,159 @@ class PrincipalAgentTestCase(TestCase):
             SAMPLE_USER_ID
         )
 
-    @tag('fast', 'get_first_related_party_name_from_data_collection')
-    def test_get_first_related_party_name_from_data_collection(self):
-        """get_first_related_party_name_from_data_collection()
-        returns the name of the organisation listed as the first
-        related party in the test data collection XML.
+    @tag('fast', '_get_principal_agent_name_from_data_collection')
+    def test_get_principal_agent_name_from_data_collection(self):
+        """handle_reg_process._get_principal_agent_name_from_data_collection()
+        returns the name of the most relevant organisation listed in the test
+        data collection that the data subset is a part of.
         """
+        # This organisation is listed as a point of contact which is
+        # lower priority than a data provider.
         self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
-        data_collection = self._register_xml_file_for_test(
-            DATA_COLLECTION_WITH_ORG_AS_FIRST_RP_METADATA_XML,
+        self._register_xml_file_for_test(INDIVIDUAL_METADATA_XML, Individual)
+        # This organisation is listed as a data provider, which has
+        # the highest priority.
+        self._register_xml_file_for_test(ORGANISATION_2_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(
+            DATA_COLLECTION_2_METADATA_XML,
             DataCollection
         )
-        principal_agent_name = get_first_related_party_name_from_data_collection(
-            data_collection
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
         )
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
         self.assertIsInstance(principal_agent_name, str)
-        self.assertEqual(principal_agent_name, 'Organisation Test')
+        self.assertEqual(principal_agent_name, 'Organisation Test 2')
         print('principal_agent_name', principal_agent_name)
 
-    @tag('fast', 'get_first_related_party_name_from_data_collection')
-    def test_get_first_related_party_name_from_data_collection_returns_individual_org_name(self):
-        """get_first_related_party_name_from_data_collection()
-        gets the organisation name of the individual listed as
-        the first related party in the test data collection XML.
+    @tag('fast', '_get_organisation_responsible_for_data_collection')
+    def test_get_organisation_responsible_for_data_collection(self):
+        """handle_reg_process._get_organisation_responsible_for_data_collection()
+        prioritises the most relevant organisation for the data subset.
+        """
+        # This organisation has a role of principal investigator for the
+        # data subset.
+        self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
+        # This organisation has the role of data provider for the
+        # data subset, which is higher priority.
+        self._register_xml_file_for_test(ORGANISATION_2_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(INDIVIDUAL_2_METADATA_XML, Individual)
+        self._register_xml_file_for_test(
+            DATA_COLLECTION_REFERENCING_INDIVIDUAL_2_METADATA_XML,
+            DataCollection
+        )
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
+        )
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent = handle_reg_process._get_organisation_responsible_for_data_collection()
+        principal_agent_name = principal_agent.name
+        self.assertIsInstance(principal_agent_name, str)
+        self.assertEqual(principal_agent_name, 'Organisation Test 2')
+        print('principal_agent_name', principal_agent_name)
+
+    @tag('fast', '_get_organisation_for_related_party')
+    def test_get_organisation_for_related_party(self):
+        """handle_reg_process._get_organisation_for_related_party()
+        gets the first organisation responsible for a role.
+        """
+        self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(ORGANISATION_2_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(INDIVIDUAL_METADATA_XML, Individual)
+        self._register_xml_file_for_test(INDIVIDUAL_2_METADATA_XML, Individual)
+        data_collection = self._register_xml_file_for_test(
+            DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML,
+            DataCollection
+        )
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
+        )
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent = handle_reg_process._get_organisation_for_related_party(
+            data_collection.properties.related_parties,
+            role='https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact'
+        )
+        self.assertEqual(principal_agent.name, 'Organisation Test')
+        print('principal_agent.name', principal_agent.name)
+
+    @tag('fast', '_get_principal_agent_name_from_data_collection')
+    def test_principal_agent_is_found_with_less_common_related_party(self):
+        """A principal agent is found even if a data provider or
+        point of contact is not specified for the data subset.
         """
         self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
         self._register_xml_file_for_test(INDIVIDUAL_METADATA_XML, Individual)
-        data_collection = self._register_xml_file_for_test(
-            DATA_COLLECTION_METADATA_XML,
+        self._register_xml_file_for_test(
+            DATA_COLLECTION_WITH_PRINCIPAL_INVESTIGATOR_ONLY_METADATA_XML,
             DataCollection
         )
-        principal_agent_name = get_first_related_party_name_from_data_collection(
-            data_collection
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
         )
-        self.assertIsInstance(principal_agent_name, str)
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
         self.assertEqual(principal_agent_name, 'Organisation Test')
         print('principal_agent_name', principal_agent_name)
 
-    @tag('fast', 'get_first_related_party_name_from_data_collection')
-    def test_get_first_related_party_name_from_data_collection_returns_none(self):
-        """get_first_related_party_name_from_data_collection()
-        returns None as the organisation specified in the data
-        collection XML has not been registered.
+    @tag('fast', '_get_principal_agent_name_from_data_collection')
+    def test_principal_agent_name_returns_unknown(self):
+        """The principal agent name returns 'Unknown' if the
+        data subset has no related parties listed.
         """
-        data_collection = self._register_xml_file_for_test(
+        self._register_xml_file_for_test(ORGANISATION_METADATA_XML, Organisation)
+        self._register_xml_file_for_test(INDIVIDUAL_METADATA_XML, Individual)
+        self._register_xml_file_for_test(
+            DATA_COLLECTION_WITH_NO_RELATED_PARTIES_METADATA_XML,
+            DataCollection
+        )
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
+        )
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
+        self.assertEqual(principal_agent_name, 'Unknown')
+        print('principal_agent_name', principal_agent_name)
+
+    @tag('fast', '_get_principal_agent_name_from_data_collection')
+    def test_principal_agent_name_returns_unknown_2(self):
+        """The principal agent name returns 'Unknown' if the
+        data subset related parties are not registered.
+        """
+        self._register_xml_file_for_test(
             DATA_COLLECTION_METADATA_XML,
             DataCollection
         )
-        principal_agent_name = get_first_related_party_name_from_data_collection(
-            data_collection
+        catalogue_data_subset = self._register_xml_file_for_test(
+            CATALOGUE_DATA_SUBSET_METADATA_XML,
+            CatalogueDataSubset
         )
-        self.assertIsNone(principal_agent_name)
+        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+            catalogue_data_subset,
+            SAMPLE_USER_ID
+        )
+        principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
+        self.assertEqual(principal_agent_name, 'Unknown')
         print('principal_agent_name', principal_agent_name)
 
 
