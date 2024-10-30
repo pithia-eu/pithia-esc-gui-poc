@@ -1,37 +1,28 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% block top_section_extra_content %}
-<div class="d-flex flex-column column-gap-5 row-gap-3 pt-3">
+<div class="d-flex flex-wrap column-gap-5 row-gap-4 pt-4">
     {% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
     <section class="resource-detail-top-section border-top-0 pb-0">
         <dl class="mb-0">
-            <dt>
-                <h2 class="fs-6 mb-1" style="font-weight: 700;">
-                    Operation Time
-                </h2>
-            </dt>
+            <dt class="mb-1">Operation Time</dt>
             <dd class="mb-0">
-                <dl class="d-flex justify-content-start column-gap-4 mb-0">
-                    <div class="d-flex flex-column">
-                        <dt>Begin</dt>
-                        <dd>
-                            {% if resource.properties.operation_time.time_period.begin.time_position %}
-                            {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS, Y' }}
-                            {% else %}
-                            N/A
-                            {% endif %}
-                        </dd>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <dt>End</dt>
-                        <dd>
-                            {% if resource.properties.operation_time.time_period.end.time_position %}
-                            {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS, Y' }}
-                            {% else %}
-                            N/A
-                            {% endif %}
-                        </dd>
-                    </div>
-                </dl>
+                <div class="d-inline-flex column-gap-2 bg-light rounded py-2 px-3">
+                    <span>
+                        {% if resource.properties.operation_time.time_period.begin.time_position %}
+                        {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS, Y' }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </span>
+                    <span>-</span>
+                    <span>
+                        {% if resource.properties.operation_time.time_period.end.time_position %}
+                        {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS, Y' }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </span>
+                </div>
             </dd>
         </dl>
     </section>

@@ -5,18 +5,25 @@
     <dl class="d-flex flex-md-row flex-column column-gap-5 row-gap-4">
         {% if resource.properties.result_time %}
         <div>
-            <dt class="visually-hidden">Result Time</dt>
+            <dt class="mb-1">Result Time</dt>
             <dd>
-                <dl class="d-flex flex-md-column flex-row flex-wrap row-gap-md-3 row-gap-2 column-gap-5">
-                    <div>
-                        <dt>Result (Begin Time)</dt>
-                        <dd>{{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i e' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Result (End Time)</dt>
-                        <dd>{{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i e' }}</dd>
-                    </div>
-                </dl>
+                <div class="d-inline-flex align-items-center justify-content-center column-gap-2 bg-light rounded py-2 px-3">
+                    <span>
+                        {% if resource.properties.result_time.time_period.begin.time_position %}
+                        {{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i O' }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </span>
+                    <span>-</span>
+                    <span>
+                        {% if resource.properties.result_time.time_period.end.time_position %}
+                        {{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i O' }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </span>
+                </div>
             </dd>
         </div>
         {% endif %}

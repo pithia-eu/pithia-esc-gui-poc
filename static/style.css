@@ -825,6 +825,10 @@ as Bootstrap styling. */
     font-size: 0.925rem;
 }
 
+.resource-detail-top-section-extra-content > dl > div {
+    font-size: 0.925rem;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
@@ -1566,7 +1570,11 @@ ul.tree ul {
         padding-right: var(--bs-breadcrumb-item-padding-x);
     }
 
-    .resource-detail-top-section-extra-content > dl > div {
+    .resource-detail-top-section-extra-content > dl {
+        align-items: center;
+    }
+
+    .resource-detail-top-section-extra-content > dl > div:not(.resource-detail-top-section-extra-content > dl > div:first-child) {
         max-width: 15rem;
     }
 }
