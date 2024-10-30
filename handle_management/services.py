@@ -60,7 +60,11 @@ class HandleRegistrationProcessForCatalogueDataSubset:
         except KeyError:
             pass
 
-    def _get_organisation_for_related_party(self, related_parties, role: str = '', related_party_data: dict = None):
+    def _get_organisation_for_related_party(
+            self,
+            related_parties,
+            role: str = '',
+            related_party_data: dict = None):
         if role:
             related_party_data = next(
                 (
@@ -82,7 +86,7 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             except Individual.DoesNotExist:
                 pass
             except KeyError:
-                return None
+                continue
 
             try:
                 organisation = Organisation.objects.get_by_metadata_server_url(party_url)
