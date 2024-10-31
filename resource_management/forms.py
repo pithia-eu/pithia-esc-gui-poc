@@ -3,6 +3,9 @@ from django import forms
 from register.forms import UploadCatalogueDataSubsetFileForm
 
 
+_FILE_INPUT_LABEL = 'Updated Metadata File'
+
+
 class UploadUpdatedFileForm(forms.Form):
     required_css_class = 'required'
 
@@ -11,7 +14,7 @@ class UploadUpdatedFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Updated Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control'
@@ -26,7 +29,7 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Updated Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -34,7 +37,9 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     )
 
 class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['files'].label = _FILE_INPUT_LABEL
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     def __init__(self, *args, **kwargs):

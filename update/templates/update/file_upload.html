@@ -11,21 +11,10 @@
 {{ resource_id|json_script:"resource-id" }}
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
-{% block title %}
-<hgroup>
-    <h1 class="mb-0">{{ title_short }}</h1>
-    <p class="mb-0">{{ resource.name }}</p>
-</hgroup>
-{% endblock title %}
 {% block file_upload_limit_info_text %}
 Only one update file can be submitted
 at one time.
 {% endblock file_upload_limit_info_text %}
-{% block page_description %}
-Upload the updated file using the file input below.
-This will start the file validation process.
-Once the file has finished updating, use the submit button to complete the update process.
-{% endblock page_description %}
 {% block file_list %}
 {% include 'register/validation_template.html' %}
 {% endblock file_list %}
