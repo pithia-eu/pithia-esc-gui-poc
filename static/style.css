@@ -288,6 +288,14 @@ header .dropdown-menu {
     z-index: 1021;
 }
 
+header .user-dropdown .dropdown-toggle {
+    font-size: 0.875rem;
+}
+
+header .login-link {
+    font-size: 0.875rem;
+}
+
 /* Navbar */
 .navbar a,
 .navbar a:hover,
@@ -889,7 +897,7 @@ as Bootstrap styling. */
 }
 
 .file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
-    color: rgb(108, 117, 125);
+    color: var(--bs-secondary);
 }
 
 .file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
@@ -1530,14 +1538,6 @@ ul.tree ul {
 
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
-    }
-
-    header .user-dropdown .dropdown-toggle {
-        font-size: 0.875rem;
-    }
-
-    header .login-link {
-        font-size: 0.875rem;
     }
     
     .page-info-emphasised {
