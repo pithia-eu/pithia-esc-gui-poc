@@ -691,9 +691,32 @@ class WorkflowEditorForm(BaseEditorForm):
     )
 
     workflow_details = forms.URLField(
-        label='Link to Workflow Details',
-        required=True,
+        label='Workflow Details URL',
+        required=False,
         widget=forms.URLInput(attrs={
             'placeholder': 'https://',
+            'disabled': 'true',
+        }),
+        help_text='The link must point directly to the details file.'
+    )
+
+    workflow_details_file = forms.URLField(
+        label='Workflow Details File',
+        required=False,
+        widget=forms.FileInput(attrs={
+            'placeholder': 'https://',
+        }),
+        help_text='Accepted formats: PDF'
+    )
+
+    workflow_details_file_format = forms.ChoiceField(
+        label='Workflow Details Format',
+        required=True,
+        choices=(
+            ('file_upload', 'File Upload'),
+            ('link', 'Link to the Workflow Details File')
+        ),
+        widget=forms.RadioSelect(attrs={
+            'class': 'form-check-input',
         })
     )

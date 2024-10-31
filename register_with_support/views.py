@@ -474,3 +474,8 @@ class WorkflowRegisterWithEditorFormView(
         context = super().get_context_data(**kwargs)
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['initial'] = {'workflow_details_file_format': 'file_upload'}
+        return kwargs

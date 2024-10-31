@@ -100,17 +100,49 @@
 <section id="workflow-details-section">
     <div class="row gy-4">
         <div class="col-lg-12">
-            <h2 class="mb-0">
-                {{ form.workflow_details.label_tag }}
-            </h2>
+            <h2 class="mb-0">Workflow Details</h2>
         </div>
         <div class="col-xl-9 col-lg-12">
-            <p class="mb-0">
-                A link to the file with further details, including graph diagram of the flow. 
+            <p>
+                A file with further details, including a graph diagram of the flow.
+                Choose below whether to upload the file or to provide a link to it.
             </p>
         </div>
         <div class="col-xl-9 col-lg-12">
-            {{ form.workflow_details }}
+            <div class="d-flex flex-column row-gap-4">
+                {% for radio in form.workflow_details_file_format %}
+                <div class="d-flex flex-column row-gap-3">
+                    <div class="form-check">
+                        {{ radio.tag }}
+                        <label for="{{ radio.id_for_label }}" class="form-check-label">{{ radio.choice_label }}</label>
+                    </div>
+                    {% if forloop.counter0 == 0 %}
+                    <div class="pb-4">
+                        <div class="visually-hidden">
+                            {{ form.workflow_details_file.label_tag }}
+                        </div>
+                        {{ form.workflow_details_file }}
+                        {% if form.workflow_details_file.help_text %}
+                        <div class="form-text">{{ form.workflow_details_file.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="d-flex flex-column-reverse row-gap-1">
+                        <div class="visually-hidden">
+                            {{ form.workflow_details.label_tag }}
+                        </div>
+                        <div class="alert alert-light form-text mb-0">
+                            <ul class="mb-0 ps-3">
+                                <li>The workflow details file should be in PDF format.</li>
+                                <li>The link should point directly to the workflow details file.</li>
+                            </ul>
+                        </div>
+                        {{ form.workflow_details }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>
@@ -145,7 +177,7 @@
 {% endif %}
 <li class="list-group-item">
     <a href="#workflow-details-section">
-        Link to Workflow Details
+        Workflow Details
     </a>
 </li>
 {% endblock table_of_contents %}
