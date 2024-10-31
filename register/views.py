@@ -260,6 +260,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = f'Register a {self.model.type_readable.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
@@ -320,6 +321,7 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = f'Register a {self.model.type_readable.title()}'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
@@ -363,5 +365,6 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = f'Register a {self.model.type_readable.title()}'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context

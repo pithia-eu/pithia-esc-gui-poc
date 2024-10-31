@@ -17,7 +17,10 @@
     <p class="mb-0">{{ resource.name }}</p>
 </hgroup>
 {% endblock title %}
-{% block multiple_allowed %}{% endblock multiple_allowed %}
+{% block file_upload_limit_info_text %}
+Only one update file can be submitted
+at one time.
+{% endblock file_upload_limit_info_text %}
 {% block page_description %}
 Upload the updated file using the file input below.
 This will start the file validation process.

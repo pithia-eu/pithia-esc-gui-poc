@@ -1,6 +1,10 @@
 from django import forms
 
 
+_FILE_INPUT_MULTIPLE_LABEL = 'Metadata Files'
+_FILE_INPUT_LABEL = 'Metadata File'
+
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -29,7 +33,7 @@ class UploadFileForm(forms.Form):
         self.label_suffix = ''
 
     files = MultipleFileField(
-        label='Upload Your Metadata File(s)',
+        label=_FILE_INPUT_MULTIPLE_LABEL,
     )
 
 
@@ -41,7 +45,7 @@ class UploadDataCollectionFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -84,7 +88,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -125,7 +129,7 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',

@@ -5,7 +5,10 @@
 <script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'register/register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
-{% block multiple_allowed %}{% endblock multiple_allowed %}
+{% block file_upload_limit_info_text %}
+Only one catalogue data subset can be
+registered at one time.
+{% endblock file_upload_limit_info_text %}
 {% block doi_registration %}
 <div class="form-group">
     <h2 class="border-bottom fs-4">DOI</h2>

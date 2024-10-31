@@ -1,13 +1,17 @@
 <ul class="list-group">
-    <li class="list-group-item">
+    <li class="list-group-item py-3">
         <div class="d-flex flex-column mb-0">
-            <span><b>Link to Data Collection <small class="text-secondary">(added inside the XML Metadata File)</small></b></span>
-            <span class="mt-1">
-                If a URL is put inside a <span class="font-monospace">&ltlinkage&gt</span> element, this will be provided as a direct link to the Data Collection.
+            <span class="fw-bold">Link to the Data Collection</span>
+            <small class="text-secondary mb-2">Added inside the metadata file</small>
+            <span>
+                Links providing access to the Data Collection or to documentation instructing how to access it
+                can be added to the <span class="font-monospace text-secondary">&ltcollectionResults&gt</span>
+                in the metadata file as <span class="font-monospace text-secondary">&ltlinkage&gt</span>
+                elements.
             </span>
         </div>
     </li>
-    <li class="list-group-item">
+    <li class="list-group-item py-3">
         <div class="d-flex flex-column">
             <div class="form-check fw-bold">
                 {{ form.api_selected }}
