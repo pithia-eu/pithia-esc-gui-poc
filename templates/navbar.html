@@ -11,11 +11,11 @@
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse px-lg-0 px-2 py-lg-0 py-3" id="navbarNav">
-            <div class="d-md-none d-block py-3">
+        <div class="collapse navbar-collapse px-lg-0 px-2" id="navbarNav">
+            <div class="d-md-none d-block pt-4 pb-3">
                 {% include 'header/user_menu.html' %}
             </div>
-            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 w-100">
+            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 w-100 py-lg-0 py-md-3 py-0">
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,7 +76,7 @@
                 </li>
                 {% endif %}
             </ul>
-            <div class="d-md-none d-block border-top pt-3 mt-4">
+            <div class="d-md-none d-block border-top pb-3 pt-3 mt-3">
                 {% if request.session.is_logged_in %}
                 <div class="d-flex justify-content-between">
                     {% include 'header/help_and_support_link.html' %}
