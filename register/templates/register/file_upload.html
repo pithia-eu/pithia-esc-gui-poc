@@ -19,104 +19,109 @@
 {% endblock page_specific_scripts %}
 {% endblock scripts %}
 {% block content %}
-<div class="row flex-wrap justify-content-between gx-md-5 gy-5">
-    <div class="col-xl-7 col-lg-8 pb-5">
-        <div class="row">
-            <div class="col-lg-12">
-                {% block title %}
-                <h1>{{ title }}</h1>
-                {% endblock title %}
-                <div class="my-4">
-                    <span class="required-marker">*</span>
-                    <small>indicates a required field</small>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <form action="{{ post_url }}" method="post" enctype="multipart/form-data" id="file-upload-form">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <div class="row gy-5">
-                            <div class="col-lg-12">
-                                {% if form.files.errors %}
-                                <ul>
-                                    {% for error in form.files.errors %}
-                                    <li>{{ error|escape }}</li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                                <div class="file-upload-container">
-                                    <h2>{{ form.files.label_tag }}</h2>
-                                    {{ form.files }}
-                                    <div class="d-flex justify-content-between flex-wrap">
-                                        <small class="form-text">Supported file types: XML</small>
-                                        <small class="form-text">{% block multiple_allowed %}Multiple files allowed{% endblock multiple_allowed %}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="alert alert-light">
-                                    <small>
-                                        <details>
-                                            <summary>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
-                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                                                </svg>
-                                                Your metadata file will be sent to our servers to
-                                                validate that its structure and references are correct.
-                                                A valid file normally takes up to a couple of minutes to
-                                                pass through all the checks.
-                                            </summary>
-                                            <p class="mt-3">Our validation process involves:</p>
-                                            <ul>
-                                                <li>Syntax validation</li>
-                                                <li>UTF-8 encoding validation</li>
-                                                <li>XSD validation</li>
-                                                <li>Type validation</li>
-                                                <li>Local ID validation</li>
-                                                <li>Namespace validation</li>
-                                                <li>Validating references to other metadata</li>
-                                                <li>Validating references to Space Physics Ontology terms</li>
-                                            </ul>
-                                            <p class="mb-0">
-                                                We will also perform additional checks depending on if the
-                                                metadata is being newly registered or if it is for updating
-                                                an existing registration.
-                                            </p>
-                                        </details>
-                                    </small>
-                                </div>
-                                {% block file_list %}
-                                {% with file_list_title='Uploaded Files' %}
-                                {% include 'register/validation_template.html' %}
-                                {% endwith %}
-                                {% endblock file_list %}
-                            </div>
-                        </div>
-                    </div>
-                    {% block register_api_specification %}
-                    {% endblock register_api_specification %}
-                    {% block doi_registration %}
-                    {% endblock doi_registration %}
-                    <div class="d-flex flex-sm-row flex-column justify-content-sm-start justify-content-stretch">
-                        <button type="submit" class="btn btn-lg btn-outline-primary fw-bold py-3 px-4" disabled>
-                            {% block submit_button_text %}
-                            Register
-                            {% endblock submit_button_text %}
-                        </button>
-                    </div>
-                </form>
+<div class="row flex-md-row flex-column align-items-baseline justify-content-between gx-md-5 gy-5">
+    <div class="d-flex flex-column row-gap-4 col-xl-7 col-lg-8">
+        <div class="d-flex flex-column row-gap-3">
+            <h1 class="mb-0">{{ title }}</h1>
+            {% block post_main_heading_content %}
+            {% endblock post_main_heading_content %}
+            <div>
+                <span class="required-marker">*</span>
+                <small>indicates a required field</small>
             </div>
         </div>
+        <form id="file-upload-form" action="{{ post_url }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="d-flex flex-column row-gap-5">
+                <div>
+                    <div>
+                        {{ form.files.label_tag }}
+                        {% if form.files.errors %}
+                        <ul>
+                            {% for error in form.files.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ form.files }}
+                        <div class="form-text">
+                            Only XML files allowed
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="alert alert-light form-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-3" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                        </svg><span class="fw-semibold">File Upload & Validation Information</span>
+                        <ul class="ps-3 mt-2">
+                            <li>
+                                Metadata files must pass a validation process
+                                before they can be published in the e-Science
+                                Centre.
+                            </li>
+                            <li>
+                                {% block file_upload_limit_info_text %}
+                                Multiple files can be registered at once.
+                                {% endblock file_upload_limit_info_text %}
+                            </li>
+                        </ul>
+                        <details class="mt-2">
+                            <summary>
+                                How does validation work?
+                            </summary>
+                            <p class="mt-2">
+                                Metadata files will be sent to our servers for validation.
+                                Validation times can vary, but a metadata file will usually
+                                up to 20 seconds to a minute to finish validating (most of
+                                this is usually taken up by XSD validation).
+                            </p>
+                            <p class="mb-2">The validation process involves:</p>
+                            <ul>
+                                <li>Syntax validation</li>
+                                <li>UTF-8 encoding validation</li>
+                                <li>XSD validation</li>
+                                <li>Type validation</li>
+                                <li>Local ID validation</li>
+                                <li>Namespace validation</li>
+                                <li>Validating references to other metadata</li>
+                                <li>Validating references to Space Physics Ontology terms</li>
+                            </ul>
+                            <p class="mb-0">
+                                Additional checks will be performed additional checks
+                                depending on if metadata is being newly registered or
+                                is updated.
+                            </p>
+                        </details>
+                    </div>
+                    {% block file_list %}
+                    {% with file_list_title='Uploaded Files' %}
+                    {% include 'register/components/file_validation_status_form_section.html' %}
+                    {% endwith %}
+                    {% endblock file_list %}
+                </div>
+                {% block register_api_specification %}
+                {% endblock register_api_specification %}
+                {% block doi_registration %}
+                {% endblock doi_registration %}
+                <div class="d-flex flex-column block align-items-md-start align-items-stretch">
+                    <button type="submit" class="btn btn-lg btn-primary fw-semibold py-3 px-4" disabled>
+                        {% block submit_button_text %}
+                        Register
+                        {% endblock submit_button_text %}
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
     {% block sidemenu %}
     <div class="col-lg-3">
         <aside class="sidemenu">
-            <h2 class="fs-4 fw-normal">Shortcuts</h2>
+            <h2 class="fs-5">Registration Shortcuts</h2>
             <section>
-                <h2 class="text-secondary fw-normal fs-5">{{ data_collection_related_index_page_title }}</h2>
-                <hr class="my-2">
+                <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">{{ data_collection_related_index_page_title }}</h2>
                 <nav>
-                    <ul class="list-style-none ps-0">
+                    <ul class="list-unstyled ps-0">
                         <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisations</a></li>
                         <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individuals</a></li>
                         <li><a href="{% url 'register:project' %}" class="pithia-blue">Projects</a></li>
@@ -133,10 +138,9 @@
                 </nav>
             </section>
             <section>
-                <h2 class="text-secondary fw-normal fs-5">Catalogue-related Metadata</h2>
-                <hr class="my-2">
+                <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">Catalogue-related Metadata</h2>
                 <nav>
-                    <ul class="list-style-none ps-0">
+                    <ul class="list-unstyled ps-0">
                         <li><a href="{% url 'register:catalogue' %}" class="pithia-blue">Catalogues</a></li>
                         <li><a href="{% url 'register:catalogue_entry' %}" class="pithia-blue">Catalogue Entries</a></li>
                         <li><a href="{% url 'register:catalogue_data_subset' %}" class="pithia-blue">Catalogue Data Subsets</a></li>
@@ -144,10 +148,9 @@
                 </nav>
             </section>
             <section>
-                <h2 class="text-secondary fw-normal fs-5">Workflows</h2>
-                <hr class="my-2">
+                <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">Workflows</h2>
                 <nav>
-                    <ul class="list-style-none ps-0">
+                    <ul class="list-unstyled ps-0">
                         <li><a href="{% url 'register:workflow' %}" class="pithia-blue">Workflows</a></li>
                     </ul>
                 </nav>

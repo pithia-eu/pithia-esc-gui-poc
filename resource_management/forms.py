@@ -1,6 +1,12 @@
 from django import forms
 
-from register.forms import UploadCatalogueDataSubsetFileForm
+from register.forms import (
+    _API_DESCRIPTION_TEXTAREA_HELP_TEXT,
+    UploadCatalogueDataSubsetFileForm,
+)
+
+
+_FILE_INPUT_LABEL = 'Updated Metadata File'
 
 
 class UploadUpdatedFileForm(forms.Form):
@@ -11,7 +17,7 @@ class UploadUpdatedFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Updated Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control'
@@ -26,7 +32,7 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
         self.label_suffix = ''
 
     files = forms.FileField(
-        label='Upload Your Updated Metadata File',
+        label=_FILE_INPUT_LABEL,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/xml',
             'class': 'form-control',
@@ -34,7 +40,9 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     )
 
 class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['files'].label = _FILE_INPUT_LABEL
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -64,7 +72,8 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
 
 class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
@@ -88,5 +97,6 @@ class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )

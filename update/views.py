@@ -53,7 +53,7 @@ class ResourceUpdateFormView(FormView):
     resource_management_list_page_breadcrumb_url_name = ''
 
     # Class variables
-    template_name = 'update/file_upload.html'
+    template_name = 'update/file_upload_update.html'
     form_class = UploadUpdatedFileForm
     success_url = ''
     xml_file_string = None
@@ -152,7 +152,7 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     success_url = reverse_lazy('resource_management:operations')
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
-    template_name = 'update/file_upload_instrument.html'
+    template_name = 'update/file_upload_instrument_update.html'
     model = models.Instrument
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
@@ -266,12 +266,12 @@ def data_collection_interaction_methods(request, resource_id):
         form = UpdateDataCollectionInteractionMethodsForm(initial=form_data)
     except models.APIInteractionMethod.DoesNotExist:
         pass
-    return render(request, 'update/interaction_methods.html', {
+    return render(request, 'update/interaction_methods_update.html', {
         'data_collection': data_collection,
         'data_collection_id': data_collection.pk,
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
-        'title': 'Update Interaction Methods',
+        'title': f'Update Interaction Methods for {data_collection.name}',
         'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
         'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -312,7 +312,7 @@ class CatalogueDataSubsetUpdateFormView(
     HandleRegistrationViewMixin,
     ResourceUpdateFormView):
     model = models.CatalogueDataSubset
-    template_name = 'update/file_upload_catalogue_data_subset.html'
+    template_name = 'update/file_upload_catalogue_data_subset_update.html'
     form_class = UploadUpdatedCatalogueDataSubsetFileForm
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
@@ -352,7 +352,7 @@ class CatalogueDataSubsetUpdateFormView(
         return redirect(self.resource_update_page_url_name, resource_id=self.resource_id)
 
 class WorkflowUpdateFormView(ResourceUpdateFormView):
-    template_name = 'update/file_upload_workflow.html'
+    template_name = 'update/file_upload_workflow_update.html'
     model = models.Workflow
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
@@ -397,7 +397,7 @@ def workflow_openapi_specification_url(request, resource_id):
         )
     else:
         form = UpdateWorkflowOpenAPISpecificationURLForm()
-    return render(request, 'update/workflow_openapi_specification_url.html', {
+    return render(request, 'update/workflow_openapi_specification_url_update.html', {
         'title': 'Update Workflow OpenAPI Specification',
         'workflow': workflow,
         'form': form,

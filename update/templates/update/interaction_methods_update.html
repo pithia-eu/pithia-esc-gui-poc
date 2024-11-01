@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
+{% breadcrumb_item resource_management_category_list_page_breadcrumb_text resource_management_category_list_page_breadcrumb_url_name %}
+{% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}
+{% block scripts %}
+{{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
+{{ data_collection_id|json_script:"resource-id" }}
+<script src="{% static 'validation/api_specification_validation.js' %}" type="module" defer></script>
+<script src="{% static "update/update_interaction_methods.js" %}" type="module" defer></script>
+{% endblock scripts %}
+{% block content %}
+<div class="d-flex flex-column row-gap-4 col-xl-7 col-lg-9">
+    <h1>{{ title }}</h1>
+    <form id="interaction-methods-form" class="d-flex flex-column row-gap-4" action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
+        {% csrf_token %}
+        {% include 'register/components/interaction_method_choices_form_section.html' %}
+        <div class="d-flex flex-column align-items-md-start align-items-stretch">
+            <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3">
+                Update
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

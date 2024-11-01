@@ -213,10 +213,6 @@ p {
     font-size: 1.1rem;
 }
 
-.list-style-none {
-    list-style: none;
-}
-
 .sidemenu li a {
     text-decoration: none;
 }
@@ -290,6 +286,14 @@ header a.logout-link {
 
 header .dropdown-menu {
     z-index: 1021;
+}
+
+header .user-dropdown .dropdown-toggle {
+    font-size: 0.875rem;
+}
+
+header .login-link {
+    font-size: 0.875rem;
 }
 
 /* Navbar */
@@ -893,7 +897,7 @@ as Bootstrap styling. */
 }
 
 .file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
-    color: rgb(108, 117, 125);
+    color: var(--bs-secondary);
 }
 
 .file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
@@ -939,10 +943,6 @@ as Bootstrap styling. */
 .file-validation-status-list:empty::before {
     content: 'When you upload a file, its validation status will be displayed here.';
     color: gray;
-}
-
-.form-group {
-    padding: 2.5rem 0;
 }
 
 .file-upload-validation-msgs {
@@ -1492,15 +1492,6 @@ ul.tree ul {
 }
 
 @media (min-width: 992px) {
-    #interaction-methods-form .list-group-item,
-    .interaction-methods-form-container .list-group-item {
-        padding: 1.5rem;
-    }
-
-    .interaction-methods-form-container input {
-        max-width: 45ch;
-    }
-    
     .user-dropdown {
         text-align: end;
     }
@@ -1537,16 +1528,12 @@ ul.tree ul {
 }
 
 @media (min-width: 768px) {
+    input[name="api_specification_url"]:not(#workflow-openapi-spec-url-update-form input[name="api_specification_url"]) {
+        max-width: 45ch;
+    }
+
     .user-dropdown .dropdown-menu {
         min-width: 20rem;
-    }
-
-    header .user-dropdown .dropdown-toggle {
-        font-size: 0.875rem;
-    }
-
-    header .login-link {
-        font-size: 0.875rem;
     }
     
     .page-info-emphasised {

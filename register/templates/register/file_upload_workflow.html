@@ -11,38 +11,37 @@
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
-{% block multiple_allowed %}{% endblock multiple_allowed %}
+{% block file_upload_limit_info_text %}
+Only one workflow metadata file can be
+registered at a time.
+{% endblock file_upload_limit_info_text %}
 {% block register_api_specification %}
-<div class="form-group">
-    <h2 class="border-bottom fs-4">Add Your Workflow OpenAPI Specification</h2>
-    <div class="row gy-3">
-        <div class="col-lg-6">
-            <div class="d-flex flex-column mt-2">
-                {% if form.api_specification_url.errors %}
-                    <ul>
-                    {% for error in form.api_specification_url.errors %}
-                        <li>{{ error|escape }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-                {{ form.api_specification_url.label_tag }}
-                {{ form.api_specification_url }}
-                <small class="text-secondary status-validating-link d-none mt-1">Checking link...</small>
-                <div class="mt-1 api-specification-url-status-validation d-none">
-                    <ul class="list-group list-group-flush list-group-horizontal mb-0">
-                        <li class="list-group-item border border-0 status-invalid-link d-none p-0">
-                            <div class="d-flex flex-column">
-                                <small class="status-text text-danger">Invalid link</small>
-                                <small class="text-secondary status-details d-none mt-1">Details: <span class="status-details"></span></small>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+<div class="py-4">
+    <h2 class="fs-4 mb-2">Link a Workflow OpenAPI Specification</h2>
+    <div class="d-flex flex-column row-gap-4 bg-light rounded p-4">
+        <div class="d-flex flex-column mt-2">
+            {{ form.api_specification_url.label_tag }}
+            {{ form.api_specification_url }}
+            {% include 'register/components/open_api_specification_url_validation_subsection.html' %}
+            {% if form.api_specification_url.errors %}
+            <ul class="list-unstyled form-text text-danger mb-0">
+                {% for error in form.api_specification_url.errors %}
+                <li>{{ error|escape }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
-        <div class="col-lg-12">
+        <div>
             {{ form.api_description.label_tag }}
             {{ form.api_description }}
+            <div class="form-text">{{ form.api_description.help_text }}</div>
+            {% if form.api_description.errors %}
+            <ul class="list-unstyled form-text text-danger mb-0">
+                {% for error in form.api_description.errors %}
+                <li>{{ error|escape }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
 </div>
