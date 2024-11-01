@@ -17,17 +17,7 @@
             {% with field=form.api_specification_url %}
             {% include 'metadata_editor/components/form_field_template.html' %}
             {% endwith %}
-            <small class="text-secondary status-validating-link d-none mt-1">Checking link...</small>
-            <div class="mt-1 api-specification-url-status-validation d-none">
-                <ul class="list-group list-group-flush list-group-horizontal mb-0">
-                    <li class="list-group-item border border-0 status-invalid-link d-none p-0">
-                        <div class="d-flex flex-column">
-                            <small class="status-text text-danger">Invalid link</small>
-                            <small class="text-secondary status-details d-none mt-1">Details: <span class="status-details"></span></small>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            {% include 'register/components/open_api_specification_url_validation_subsection.html' %}
         </div>
         <div class="col-xl-9 col-lg-12">
             {% with field=form.api_description %}
