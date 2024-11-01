@@ -945,10 +945,6 @@ as Bootstrap styling. */
     color: gray;
 }
 
-.form-group {
-    padding: 2.5rem 0;
-}
-
 .file-upload-validation-msgs {
     row-gap: 1rem;
 }
