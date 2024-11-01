@@ -18,7 +18,7 @@
     <h1>{{ title }}</h1>
     <form id="interaction-methods-form" class="d-flex flex-column row-gap-4" action="{% url 'update:data_collection_interaction_methods' data_collection_id %}" method="POST">
         {% csrf_token %}
-        {% include 'register/interaction_method_choice_selection.html' %}
+        {% include 'register/components/interaction_method_choices_form_section.html' %}
         <div class="d-flex flex-column align-items-md-start align-items-stretch">
             <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3">
                 Update
