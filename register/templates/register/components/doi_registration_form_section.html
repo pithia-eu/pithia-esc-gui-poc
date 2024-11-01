@@ -1,0 +1,16 @@
+<div class="py-4">
+    <h2 class="border-bottom fs-4">DOI</h2>
+    <div class="form-check">
+        {{ form.register_doi }}
+        <label for="{{ form.register_doi.auto_id }}" class="form-check-label mb-0">
+            {{ form.register_doi.label }}
+        </label>
+    </div>
+    {% if form.register_doi.errors %}
+    <ul class="list-unstyled form-text text-danger mb-0">
+        {% for error in form.register_doi.errors %}
+        <li>{{ error|escape }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
