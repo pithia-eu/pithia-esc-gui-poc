@@ -13,9 +13,9 @@ can be registered at a time.
 {% block file_list %}
 {% include 'register/components/file_validation_status_form_section.html' %}
 {% endblock file_list %}
-{% block register_api_specification %}
-<div class="pt-4">
+{% block extra_content %}
+<div class="py-4">
     <h2 class="fs-4 mb-2" style="text-wrap: balance;">Add Interaction Methods</h2>
     {% include 'register/components/interaction_method_choices_form_section.html' %}
 </div>
-{% endblock register_api_specification %}
+{% endblock extra_content %}
