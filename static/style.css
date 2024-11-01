@@ -739,10 +739,6 @@ as Bootstrap styling. */
     margin-bottom: 1rem;
 }
 
-#related-aside-section li {
-    list-style-type: disc;
-}
-
 .resource-detail-section-from-aside {
     display: block;
 }
@@ -765,7 +761,7 @@ as Bootstrap styling. */
 .resource-description-wrapper {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 5;
     overflow: hidden;
 }
 
@@ -831,6 +827,12 @@ as Bootstrap styling. */
 
 .resource-detail-top-section-extra-content > dl > div {
     font-size: 0.925rem;
+}
+
+details[name="details-permissions"]:not([open]) summary > span::after {
+    content: 'Expand for details';
+    font-size: 0.875rem;
+    color: var(--bs-secondary);
 }
 
 /* Resource management list page */
