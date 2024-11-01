@@ -18,6 +18,17 @@ export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
     return submitButton.disabled = isSubmitButtonEnabled;
 }
 
+function setupWorkflowDetailsFileSection() {
+    const workflowDetailsFileUploadCheckbox = document.querySelector("input[name='is_details_file_upload_needed']");
+    const workflowDetailsFileUploadSection = document.querySelector("#details_file_section");
+    workflowDetailsFileUploadCheckbox.addEventListener("change", e => {
+        if (workflowDetailsFileUploadCheckbox.checked) {
+            return workflowDetailsFileUploadSection.classList.remove("d-none");
+        }
+        return workflowDetailsFileUploadSection.classList.add("d-none");
+    });
+}
+
 addMultipleEventListener(
     document,
     [
@@ -33,6 +44,7 @@ addMultipleEventListener(
 
 window.addEventListener("load", async () => {
     setSubmitButton(document.querySelector("#file-upload-form button[type='submit']"));
+    setupWorkflowDetailsFileSection();
     await validateOpenApiSpecificationUrl();
 });
 

@@ -138,3 +138,19 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
             'class': 'form-control',
         })
     )
+
+    is_details_file_upload_needed = forms.ChoiceField(
+        label='Upload a Workflow Details File',
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+        })
+    )
+
+    details_file = forms.FileField(
+        label='Workflow Details File',
+        widget=forms.ClearableFileInput(attrs={
+            'accept': 'application/pdf',
+            'class': 'form-control',
+        }),
+        help_text='Allowed formats: PDF'
+    )
