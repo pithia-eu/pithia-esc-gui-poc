@@ -100,10 +100,7 @@
                     {% endwith %}
                     {% endblock file_list %}
                 </div>
-                {% block register_api_specification %}
-                {% endblock register_api_specification %}
-                {% block doi_registration %}
-                {% endblock doi_registration %}
+                {% block extra_content %}{% endblock extra_content %}
                 <div class="d-flex flex-column block align-items-md-start align-items-stretch">
                     <button type="submit" class="btn btn-lg btn-primary fw-semibold py-3 px-4" disabled>
                         {% block submit_button_text %}

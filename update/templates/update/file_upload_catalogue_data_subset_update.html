@@ -5,6 +5,6 @@
 <script src="{% static 'register/catalogue_data_subset_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
-{% block doi_registration %}
+{% block extra_content %}
 {% include 'register/components/doi_registration_form_section.html' %}
-{% endblock doi_registration %}
+{% endblock extra_content %}
