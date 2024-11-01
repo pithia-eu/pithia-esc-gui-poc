@@ -1,6 +1,9 @@
 from django import forms
 
-from register.forms import UploadCatalogueDataSubsetFileForm
+from register.forms import (
+    _API_DESCRIPTION_TEXTAREA_HELP_TEXT,
+    UploadCatalogueDataSubsetFileForm,
+)
 
 
 _FILE_INPUT_LABEL = 'Updated Metadata File'
@@ -69,7 +72,8 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
 
 class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
@@ -93,5 +97,6 @@ class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )

@@ -3,6 +3,7 @@ from django import forms
 
 _FILE_INPUT_MULTIPLE_LABEL = 'Metadata Files'
 _FILE_INPUT_LABEL = 'Metadata File'
+_API_DESCRIPTION_TEXTAREA_HELP_TEXT = 'E.g. a brief description of what the API can do'
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -76,7 +77,8 @@ class UploadDataCollectionFileForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
 
 
@@ -120,7 +122,8 @@ class WorkflowOpenAPISpecificationForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-        })
+        }),
+        help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
 
 class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):

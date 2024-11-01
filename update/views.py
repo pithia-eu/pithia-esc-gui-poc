@@ -271,7 +271,7 @@ def data_collection_interaction_methods(request, resource_id):
         'data_collection_id': data_collection.pk,
         'form': form,
         'api_specification_validation_url': reverse_lazy('validation:api_specification_url'),
-        'title': 'Update Interaction Methods',
+        'title': f'Update Interaction Methods for {data_collection.name}',
         'resource_management_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resource_management_category_list_page_breadcrumb_url_name': 'resource_management:data_collection_related_metadata_index',
         'resource_management_category_list_page_breadcrumb_text': _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,

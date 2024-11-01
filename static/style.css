@@ -1532,7 +1532,7 @@ ul.tree ul {
 }
 
 @media (min-width: 768px) {
-    #file-upload-form input[name="api_specification_url"] {
+    input[name="api_specification_url"]:not(#workflow-openapi-spec-url-update-form input[name="api_specification_url"]) {
         max-width: 45ch;
     }
 
