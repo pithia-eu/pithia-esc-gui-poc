@@ -915,7 +915,10 @@ class DataCollectionEditorTestCase(SimpleTestCase):
         ])
         data_collection_editor.update_collection_results([
             SourceMetadataUpdate(
-                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download',
+                service_functions=[
+                    'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                    'https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download',
+                ],
                 linkage='https://www.example.com/',
                 name='Online Resource 1',
                 protocol='HTTPS',
@@ -927,7 +930,7 @@ class DataCollectionEditorTestCase(SimpleTestCase):
                 ]
             ),
             SourceMetadataUpdate(
-                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                service_functions=['https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly'],
                 linkage='https://www.example.com/2',
                 name='Online Resource 2',
                 protocol='FTP',
@@ -944,7 +947,10 @@ class DataCollectionEditorTestCase(SimpleTestCase):
                 protocol='FTP',
             ),
             SourceMetadataUpdate(
-                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                service_functions=[
+                    'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                    'https://metadata.pithia.eu/ontology/2.2/serviceFunction/Download',
+                ],
                 linkage='https://www.example.com/2',
                 description='Description of online resource 5.',
                 data_formats=[
@@ -953,7 +959,7 @@ class DataCollectionEditorTestCase(SimpleTestCase):
                 ]
             ),
             SourceMetadataUpdate(
-                service_function= 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly',
+                service_functions=['https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly'],
                 description='Description of online resource 6.',
                 data_formats=[
                     'https://metadata.pithia.eu/ontology/2.2/resultDataFormat/image-png',

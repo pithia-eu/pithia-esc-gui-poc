@@ -17,7 +17,7 @@ class SourcesTab extends DynamicEditorTab {
             "input[name='sources_extra_json']",
             "Online Resource"
         );
-        this.sourceServiceFunctionSelectSelector = "select[name='source_service_function']";
+        this.sourceServiceFunctionSelectSelector = "select[name='source_service_functions']";
         this.sourceLinkageInputSelector = "input[name='source_linkage']";
         this.sourceProtocolInputSelector = "input[name='source_protocol']";
         this.sourceNameInputSelector = "input[name='source_name']";
@@ -81,6 +81,7 @@ class SourcesTab extends DynamicEditorTab {
         const sourceTabPanes = this.tabContent.querySelectorAll(".tab-pane");
         sourceTabPanes.forEach(tabPane => {
             const serviceFunctionSelect = tabPane.querySelector(this.sourceServiceFunctionSelectSelector);
+            const serviceFunctionSelectedOptions = Array.from(serviceFunctionSelect.selectedOptions);
             const linkageInput = tabPane.querySelector(this.sourceLinkageInputSelector);
             const nameInput = tabPane.querySelector(this.sourceNameInputSelector);
             const protocolInput = tabPane.querySelector(this.sourceProtocolInputSelector);
@@ -88,7 +89,7 @@ class SourcesTab extends DynamicEditorTab {
             const dataFormatSelect = tabPane.querySelector(this.sourceDataFormatSelectSelector);
             const dataFormatSelectedOptions = Array.from(dataFormatSelect.selectedOptions);
             sources.push({
-                serviceFunction: serviceFunctionSelect.value,
+                serviceFunctions: serviceFunctionSelectedOptions.map(option => option.value),
                 linkage: linkageInput.value,
                 name: nameInput.value,
                 protocol: protocolInput.value,
@@ -113,7 +114,18 @@ class SourcesTab extends DynamicEditorTab {
             
             // Service function
             const serviceFunctionSelect = correspondingTabPane.querySelector(this.sourceServiceFunctionSelectSelector);
-            serviceFunctionSelect.value = source.serviceFunction;
+            serviceFunctionSelect.value = "";
+            if ("serviceFunctions" in source) {
+                source.serviceFunctions.forEach(serviceFunction => {
+                    const correspondingOption = serviceFunctionSelect.querySelector(`option[value="${serviceFunction}"]`);
+                    if (correspondingOption) {
+                        correspondingOption.selected = true;
+                    }
+                });
+            } else if ("serviceFunction" in source) {
+                // Backwards compatibility
+                serviceFunctionSelect.value = source.serviceFunction;
+            }
             
             // Linkage
             const linkageInput = correspondingTabPane.querySelector(this.sourceLinkageInputSelector);
