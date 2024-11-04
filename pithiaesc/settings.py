@@ -47,6 +47,7 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
     'browse.apps.BrowseConfig',
+    'datahub_management.apps.DatahubManagementConfig',
     'delete.apps.DeleteConfig',
     'handle_management.apps.HandleManagementConfig',
     'help.apps.HelpConfig',
