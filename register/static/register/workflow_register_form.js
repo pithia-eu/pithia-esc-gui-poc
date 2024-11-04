@@ -11,21 +11,41 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
+const workflowDetailsFileUploadCheckbox = document.querySelector("input[name='is_details_file_upload_needed']");
+const workflowDetailsFileUploadSection = document.querySelector("#details_file_section");
+const workflowDetailsFileInput = document.querySelector("input[name='details_file']");
 
 export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
-    let isSubmitButtonEnabled = !(isEachTrackedMetadataFileValid() && isApiSpecificationLinkValid);
+    if (workflowDetailsFileUploadCheckbox.checked) {
+        return submitButton.disabled = !(
+            isEachTrackedMetadataFileValid()
+            && isApiSpecificationLinkValid
+            && workflowDetailsFileInput.value
+        );
+    }
 
-    return submitButton.disabled = isSubmitButtonEnabled;
+    return submitButton.disabled = !(
+        isEachTrackedMetadataFileValid()
+        && isApiSpecificationLinkValid
+    );
+}
+
+function updateWorkflowDetailsFileSectionState() {
+    if (workflowDetailsFileUploadCheckbox.checked) {
+        workflowDetailsFileUploadSection.classList.remove("d-none");
+        return document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
+    }
+    workflowDetailsFileUploadSection.classList.add("d-none");
+    return document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
 }
 
 function setupWorkflowDetailsFileSection() {
-    const workflowDetailsFileUploadCheckbox = document.querySelector("input[name='is_details_file_upload_needed']");
-    const workflowDetailsFileUploadSection = document.querySelector("#details_file_section");
+    updateWorkflowDetailsFileSectionState();
     workflowDetailsFileUploadCheckbox.addEventListener("change", e => {
-        if (workflowDetailsFileUploadCheckbox.checked) {
-            return workflowDetailsFileUploadSection.classList.remove("d-none");
-        }
-        return workflowDetailsFileUploadSection.classList.add("d-none");
+        updateWorkflowDetailsFileSectionState();
+    });
+    workflowDetailsFileInput.addEventListener("input", e => {
+        document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
     });
 }
 
@@ -36,6 +56,7 @@ addMultipleEventListener(
         "trackedFileValidationStarted",
         "trackedFileValidationEnded",
         "apiInteractionMethodModified",
+        "workflowDetailsInputFileChanged",
     ],
     event => {
         enableSubmitButtonIfFormIsFilledOutCorrectly();
