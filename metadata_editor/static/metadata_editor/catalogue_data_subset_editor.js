@@ -12,14 +12,21 @@ import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
+let sourcesTab;
+
+
+function prepareFormForSubmission() {
+    sourcesTab.exportTabData();
+}
 
 editorForm.addEventListener("submit", async e => {
     e.preventDefault();
+    prepareFormForSubmission();
     await validateAndRegister();
 });
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    setupSourcesTab();
+    sourcesTab = setupSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
 });
