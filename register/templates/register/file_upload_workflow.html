@@ -16,19 +16,19 @@ Only one workflow metadata file can be
 registered at a time.
 {% endblock file_upload_limit_info_text %}
 {% block extra_file_options %}
-<div class="d-inline-flex flex-column row-gap-4 bg-light rounded py-3 px-4">
-    <div>
-        <div class="form-check">
-            {{ form.is_details_file_upload_needed }}
-            <label for="{{ form.is_details_file_upload_needed.id_for_label }}" class="mb-0" style="font-size: 0.875rem;">
-                {{ form.is_details_file_upload_needed.label }}
-            </label>
-        </div>
-        {% if form.is_details_file_upload_needed.help_text %}
-        <div class="form-text">{{ form.is_details_file_upload_needed.help_text }}</div>
-        {% endif %}
+<div>
+    <div class="form-check">
+        {{ form.is_details_file_upload_needed }}
+        <label for="{{ form.is_details_file_upload_needed.id_for_label }}" class="mb-0" style="font-size: 0.875rem;">
+            {{ form.is_details_file_upload_needed.label }}
+        </label>
     </div>
-    <div id="{{ form.details_file.name }}_section" class="d-none">
+    {% if form.is_details_file_upload_needed.help_text %}
+    <div class="form-text">{{ form.is_details_file_upload_needed.help_text }}</div>
+    {% endif %}
+</div>
+<div id="{{ form.details_file.name }}_section" class="d-inline-flex d-none flex-column align-items-md-start align-items-stretch row-gap-4 bg-light rounded py-3 px-4">
+    <div>
         {{ form.details_file.label_tag }}
         {{ form.details_file }}
         <div class="form-text">{{ form.details_file.help_text }}</div>
