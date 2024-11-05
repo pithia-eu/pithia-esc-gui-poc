@@ -36,7 +36,7 @@ Information about online sources.
     </element>
     <complexType name="OnlineResourceType">
         <sequence>
-            <element name="serviceFunction" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
+            <element name="serviceFunction" maxOccurs="unbounded" minOccurs="0" type="gml:ReferenceType">
                 <annotation>
                     <documentation>-- Definition -- 
 The function performed by the online resource. Values of the attribute &lt;i&gt;ServiceFunctionValue&lt;/i&gt; , e.g. download, are obtained from a controlled vocabulary. 
@@ -82,12 +82,7 @@ The format of the strored result accessible from the online resource. This prope
     </complexType>
     <complexType name="OnlineResourcePropertyType">
         <sequence>
-            <!-- 
-                Allowing missing OnlineResource is a controversial decision; 
-                this applies to PITHIA NRF where access to Data Collection may be arranged
-                using separate registrations independent from this description
-            -->
-            <element minOccurs="0" ref="pithia:OnlineResource"/>
+            <element ref="pithia:OnlineResource"/>
         </sequence>
         <attributeGroup ref="gml:OwnershipAttributeGroup"/>
     </complexType>

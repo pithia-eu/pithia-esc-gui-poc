@@ -588,12 +588,12 @@ class SourceMetadataFormComponent(forms.Form):
     def __init__(self, *args, data_format_choices=(), service_function_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['source_data_formats'].choices = data_format_choices
-        self.fields['source_service_function'].choices = service_function_choices
+        self.fields['source_service_functions'].choices = service_function_choices
 
-    source_service_function = forms.ChoiceField(
+    source_service_functions = forms.MultipleChoiceField(
         required=False,
         label='Service Function',
-        widget=forms.Select(attrs={
+        widget=forms.SelectMultiple(attrs={
             'class': 'form-select',
         }),
         help_text='The function performed by the online resource. E.g. Direct data download. Obtained from a controlled vocabulary.'

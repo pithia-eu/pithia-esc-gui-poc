@@ -127,7 +127,7 @@ class RelatedPartyMetadataUpdate:
 
 @dataclass(kw_only=True)
 class SourceMetadataUpdate:
-    service_function: Optional[str] = None
+    service_functions: Optional[list[str]] = field(default_factory=list)
     linkage: Optional[str] = None
     name: Optional[str] = None
     protocol: Optional[str] = None
