@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-from datahub.views import get_workflow_details_file
+from datahub_management.views import get_workflow_details_file
 
 app_name = 'browse'
 urlpatterns = [
