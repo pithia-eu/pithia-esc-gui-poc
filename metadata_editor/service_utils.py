@@ -862,9 +862,9 @@ class SourcePropertyTypeEditor(
         parent_element[sources_key] = []
         source_elements = parent_element[sources_key]
         for s in sources:
-            service_function, linkage, name, \
+            service_functions, linkage, name, \
             protocol, description, data_formats = attrgetter(
-                'service_function',
+                'service_functions',
                 'linkage',
                 'name',
                 'protocol',
@@ -881,7 +881,11 @@ class SourcePropertyTypeEditor(
             self.update_child_element_and_remove_if_empty(
                 online_resource,
                 'serviceFunction',
-                self.get_as_xlink_href(service_function)
+                [
+                    self.get_as_xlink_href(service_function)
+                    for service_function in service_functions
+                    if service_function.strip()
+                ]
             )
             self.update_child_element_and_remove_if_empty(
                 online_resource,
@@ -910,7 +914,8 @@ class SourcePropertyTypeEditor(
                 'dataFormat',
                 [
                     self.get_as_xlink_href(data_format)
-                    for data_format in data_formats if data_format.strip()
+                    for data_format in data_formats
+                    if data_format.strip()
                 ]
             )
             source_elements.append({
