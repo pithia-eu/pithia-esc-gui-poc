@@ -11,6 +11,7 @@
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
 {% block file_upload_limit_info_text %}
 Only one workflow metadata file can be
 registered at a time.
@@ -36,7 +37,7 @@ registered at a time.
 </div>
 {% endblock extra_file_options %}
 {% block extra_content %}
-<div class="py-4">
+<div>
     <h2 class="fs-4 mb-2">Link a Workflow OpenAPI Specification</h2>
     <div class="d-flex flex-column row-gap-4 bg-light rounded p-4">
         <div class="d-flex flex-column mt-2">

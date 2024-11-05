@@ -903,7 +903,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
-    color: #000;
+    color: var(--bs-body-color);
 }
 
 #file-upload-form h2 {
@@ -943,7 +943,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'When you upload a file, its validation status will be displayed here.';
+    content: 'When you upload a file, it will be sent to our servers for validation. Its validation results will appear here.';
     color: gray;
 }
 

@@ -33,7 +33,11 @@
         <form id="file-upload-form" action="{{ post_url }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="d-flex flex-column row-gap-5">
-                <div class="d-flex flex-column row-gap-3">
+                {% block pre_file_upload_extra_content %}{% endblock pre_file_upload_extra_content %}
+                <div class="d-flex flex-column row-gap-4">
+                    <h2 class="fs-4 pb-0 mb-0">
+                        {% block file_upload_heading_text %}Select a Metadata File/Files{% endblock file_upload_heading_text %}
+                    </h2>
                     <div>
                         {{ form.files.label_tag }}
                         {% if form.files.errors %}
@@ -48,62 +52,64 @@
                             Only XML files allowed
                         </div>
                     </div>
-                    {% block extra_file_options %}{% endblock extra_file_options %}
-                </div>
-                <div class="d-flex flex-column row-gap-2">
-                    {% block file_list %}
-                    {% with file_list_title='Uploaded Files' %}
-                    {% include 'register/components/file_validation_status_form_section.html' %}
-                    {% endwith %}
-                    {% endblock file_list %}
-                    <div class="alert alert-light form-text mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-3" viewBox="0 0 16 16">
-                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                        </svg><span class="fw-semibold">File Upload & Validation Information</span>
-                        <ul class="ps-3 mt-2">
-                            <li>
-                                Metadata files must pass a validation process
-                                before they can be published in the e-Science
-                                Centre.
-                            </li>
-                            <li>
-                                {% block file_upload_limit_info_text %}
-                                Multiple files can be registered at once.
-                                {% endblock file_upload_limit_info_text %}
-                            </li>
-                        </ul>
-                        <details class="mt-2">
-                            <summary>
-                                How does validation work?
-                            </summary>
-                            <p class="mt-2">
-                                Metadata files will be sent to our servers for validation.
-                                Validation times can vary, but a metadata file will usually
-                                up to 20 seconds to a minute to finish validating (most of
-                                this is usually taken up by XSD validation).
-                            </p>
-                            <p class="mb-2">The validation process involves:</p>
-                            <ul>
-                                <li>Syntax validation</li>
-                                <li>UTF-8 encoding validation</li>
-                                <li>XSD validation</li>
-                                <li>Type validation</li>
-                                <li>Local ID validation</li>
-                                <li>Namespace validation</li>
-                                <li>Validating references to other metadata</li>
-                                <li>Validating references to Space Physics Ontology terms</li>
-                            </ul>
-                            <p class="mb-0">
-                                Additional checks will be performed additional checks
-                                depending on if metadata is being newly registered or
-                                is updated.
-                            </p>
-                        </details>
+                    <div class="d-flex flex-column row-gap-3">
+                        <div class="bg-light rounded form-text p-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                            </svg><span class="fw-semibold">File Upload & Validation Information</span>
+                            <div class="d-flex flex-column row-gap-1 mt-3">
+                                <details>
+                                    <summary>How does validation work?</summary>
+                                    <div class="d-flex flex-column row-gap-2 mt-2">
+                                        <p class="mb-0">
+                                            {% block file_upload_limit_info_text %}
+                                            Multiple files can be registered at once.
+                                            {% endblock file_upload_limit_info_text %}
+                                        </p>
+                                        <p class="mb-0">
+                                            Metadata files must pass a validation process
+                                            before they can be published in the e-Science
+                                            Centre. The validation process is performed on
+                                            our servers.
+                                        </p>
+                                        <p class="mb-0">The validation process involves:</p>
+                                        <ul class="mb-0">
+                                            <li>Syntax validation</li>
+                                            <li>UTF-8 encoding validation</li>
+                                            <li>XSD validation</li>
+                                            <li>Type validation</li>
+                                            <li>Local ID validation</li>
+                                            <li>Namespace validation</li>
+                                            <li>Validating references to other metadata</li>
+                                            <li>Validating references to Space Physics Ontology terms</li>
+                                        </ul>
+                                        <p>
+                                            Additional checks will be performed depending on if metadata
+                                            is being updated or newly registered.
+                                        </p>
+                                    </div>
+                                </details>
+                                <details>
+                                    <summary>How long does validation take?</summary>
+                                    <p class="mt-2 mb-0">
+                                        Validation times can vary, but a metadata file will usually
+                                        take up to 20 seconds to a minute to finish validating (most
+                                        of this is usually taken up by XSD validation).
+                                    </p>
+                                </details>
+                            </div>
+                        </div>
+                        {% block file_list %}
+                        {% with file_list_title='Uploaded Files' %}
+                        {% include 'register/components/file_validation_status_form_section.html' %}
+                        {% endwith %}
+                        {% endblock file_list %}
                     </div>
                 </div>
+                {% block post_file_upload_extra_content %}{% endblock post_file_upload_extra_content %}
                 {% block extra_content %}{% endblock extra_content %}
                 <div class="d-flex flex-column block align-items-md-start align-items-stretch">
-                    <button type="submit" class="btn btn-lg btn-primary fw-semibold py-3 px-4" disabled>
+                    <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
                         {% block submit_button_text %}
                         Register
                         {% endblock submit_button_text %}

@@ -117,6 +117,7 @@ class ResourceRegisterFormView(FormView):
         self.owner_id = get_user_id_for_login_session(request.session)
         return super().dispatch(request, *args, **kwargs)
 
+
 class OrganisationRegisterFormView(ResourceRegisterFormView):
     model = models.Organisation
     success_url = reverse_lazy('register:organisation')
@@ -125,6 +126,7 @@ class OrganisationRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:organisation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
+
 
 class IndividualRegisterFormView(ResourceRegisterFormView):
     model = models.Individual
@@ -135,6 +137,7 @@ class IndividualRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
 
+
 class ProjectRegisterFormView(ResourceRegisterFormView):
     model = models.Project
     success_url = reverse_lazy('register:project')
@@ -143,6 +146,7 @@ class ProjectRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:project')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
+
 
 class PlatformRegisterFormView(ResourceRegisterFormView):
     model = models.Platform
@@ -153,6 +157,7 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
 
+
 class OperationRegisterFormView(ResourceRegisterFormView):
     model = models.Operation
     success_url = reverse_lazy('register:operation')
@@ -161,6 +166,7 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:operation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
+
 
 class InstrumentRegisterFormView(ResourceRegisterFormView):
     model = models.Instrument
@@ -171,6 +177,7 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
 
+
 class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.AcquisitionCapabilities
     success_url = reverse_lazy('register:acquisition_capability_set')
@@ -179,6 +186,7 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:acquisition_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
+
 
 class AcquisitionRegisterFormView(ResourceRegisterFormView):
     model = models.Acquisition
@@ -189,6 +197,7 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
 
+
 class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.ComputationCapabilities
     success_url = reverse_lazy('register:computation_capability_set')
@@ -197,6 +206,7 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:computation_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
+
 
 class ComputationRegisterFormView(ResourceRegisterFormView):
     model = models.Computation
@@ -207,6 +217,7 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
 
+
 class ProcessRegisterFormView(ResourceRegisterFormView):
     model = models.Process
     success_url = reverse_lazy('register:process')
@@ -215,6 +226,7 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     post_url = reverse_lazy('register:process')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
+
 
 class DataCollectionRegisterFormView(ResourceRegisterFormView):
     model = models.DataCollection
@@ -264,6 +276,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
+
 class CatalogueRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
     model = models.Catalogue
@@ -280,6 +293,7 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
+
 class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
     model = models.CatalogueEntry
@@ -295,6 +309,7 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
+
 
 class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceRegisterFormView):
     template_name='register/file_upload_catalogue_data_subset.html'
@@ -325,6 +340,7 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
+
 
 class WorkflowRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload_workflow.html'

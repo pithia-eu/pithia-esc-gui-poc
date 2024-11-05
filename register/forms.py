@@ -1,13 +1,14 @@
 from django import forms
 
 
-_FILE_INPUT_MULTIPLE_LABEL = 'Metadata Files'
+_FILE_INPUT_MULTIPLE_LABEL = 'Metadata File/Files'
 _FILE_INPUT_LABEL = 'Metadata File'
 _API_DESCRIPTION_TEXTAREA_HELP_TEXT = 'E.g. a brief description of what the API can do'
 
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
+
 
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
@@ -25,6 +26,7 @@ class MultipleFileField(forms.FileField):
         else:
             result = single_file_clean(data, initial)
         return result
+
 
 class UploadFileForm(forms.Form):
     required_css_class = 'required'
@@ -105,6 +107,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         })
     )
 
+
 class WorkflowOpenAPISpecificationForm(forms.Form):
     required_css_class = 'required'
 
@@ -125,6 +128,7 @@ class WorkflowOpenAPISpecificationForm(forms.Form):
         }),
         help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
+
 
 class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
     def __init__(self, *args, **kwargs):
