@@ -6,6 +6,7 @@
 <script src="{% static 'register/data_collection_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'validation/interaction_methods_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
+{% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
 {% block file_upload_limit_info_text %}
 Only one data collection metadata file
 can be registered at a time.
@@ -14,7 +15,7 @@ can be registered at a time.
 {% include 'register/components/file_validation_status_form_section.html' %}
 {% endblock file_list %}
 {% block extra_content %}
-<div class="py-4">
+<div>
     <h2 class="fs-4 mb-2" style="text-wrap: balance;">Add Interaction Methods</h2>
     {% include 'register/components/interaction_method_choices_form_section.html' %}
 </div>
