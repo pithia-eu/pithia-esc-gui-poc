@@ -475,15 +475,15 @@ class DataCollectionEditorForm(
     RelatedPartiesEditorFormComponent,
     SourceMetadataFormComponent):
     def __init__(
-        self,
-        *args,
-        type_choices=(),
-        project_choices=(),
-        sub_collection_choices=(),
-        feature_of_interest_choices=(),
-        permission_choices=(),
-        process_choices=(),
-        **kwargs):
+            self,
+            *args,
+            type_choices=(),
+            project_choices=(),
+            sub_collection_choices=(),
+            feature_of_interest_choices=(),
+            permission_choices=(),
+            process_choices=(),
+            **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['types'].choices = type_choices
         self.fields['projects'].choices = project_choices
@@ -491,6 +491,9 @@ class DataCollectionEditorForm(
         self.fields['features_of_interest'].choices = feature_of_interest_choices
         self.fields['permissions'].choices = permission_choices
         self.fields['process'].choices = process_choices
+        self.fields['source_linkage'].required = True
+        self.fields['source_name'].required = True
+        self.fields['source_protocol'].required = True
 
     types = forms.MultipleChoiceField(
         label='Types',

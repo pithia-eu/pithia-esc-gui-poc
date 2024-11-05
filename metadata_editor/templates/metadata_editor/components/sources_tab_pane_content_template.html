@@ -1,9 +1,9 @@
-<div class="row gy-3 pt-4">
+<div class="row {% if not custom_summary_text %}flex-row-reverse align-items-baseline{% endif %} gy-3 pt-4">
+    {% if custom_summary_text %}
     <div class="col-xl-9 col-lg-12">
-        {% with custom_summary_text='Adding information on an online resource is optional. If you would like to add this, the name, linkage and protocol for the online resource must be provided.' %}
         {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
-        {% endwith %}
     </div>
+    {% endif %}
     <div class="col-xl-3 col-lg-12 ms-xl-auto py-xl-0 pb-4">
         <div class="d-flex flex-column align-items-xl-end align-items-stretch">
             <button class="btn btn-outline-danger remove-source-button py-2" type="button" disabled>
@@ -16,34 +16,42 @@
             </button>
         </div>
     </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_service_functions %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
-    </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_linkage %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
-    </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_name %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
-    </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_protocol %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
-    </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_description %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
-    </div>
-    <div class="col-xl-9 col-lg-12">
-        {% with field=form.source_data_formats %}
-        {% include 'metadata_editor/components/form_field_template.html' %}
-        {% endwith %}
+    <div class="d-flex flex-column row-gap-3 col-xl-9 col-lg-12">
+        <!-- Service functions -->
+        <div>
+            {% with field=form.source_service_functions %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <!-- Linkage -->
+        <div>
+            {% with field=form.source_linkage %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <!-- Name -->
+        <div>
+            {% with field=form.source_name %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <!-- Protocol -->
+        <div>
+            {% with field=form.source_protocol %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <!-- Description -->
+        <div>
+            {% with field=form.source_description %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+        <!-- Data formats -->
+        <div>
+            {% with field=form.source_data_formats %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
     </div>
 </div>

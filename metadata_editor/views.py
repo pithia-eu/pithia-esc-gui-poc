@@ -980,7 +980,7 @@ class CatalogueDataSubsetEditorFormView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sources_tab_pane_content_template'] = render_to_string(
-            'metadata_editor/components/sources_tab_pane_content_template.html',
+            'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html',
             context=context
         )
         return context

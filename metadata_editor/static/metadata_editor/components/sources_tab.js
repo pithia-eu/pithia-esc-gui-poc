@@ -1,12 +1,9 @@
 import {
     DynamicEditorTab,
 } from "/static/metadata_editor/components/tab_utils.js";
-import {
-    checkAndSetRequiredAttributesForFieldsBySelectors,
-} from "/static/metadata_editor/components/conditional_required_fields.js";
 
 
-class SourcesTab extends DynamicEditorTab {
+export class SourcesTab extends DynamicEditorTab {
     constructor() {
         super(
             "#sources-tab",
@@ -25,27 +22,8 @@ class SourcesTab extends DynamicEditorTab {
         this.sourceDataFormatSelectSelector = "select[name='source_data_formats']";
     }
 
-    updateTabPaneConditionalRequiredFieldStates(tabPane) {
-        // Required fields
-        const requiredFieldSelectorsUnformatted = [
-            this.sourceLinkageInputSelector,
-            this.sourceNameInputSelector,
-            this.sourceProtocolInputSelector,
-        ];
-        
-        // Optional related fields that affect
-        // whether the required field attributes
-        // for conditional required fields are
-        // set.
-        const optionalFieldSelectorsUnformatted = [
-            this.sourceServiceFunctionSelectSelector,
-            this.sourceDescriptionTextareaSelector,
-            this.sourceDataFormatSelectSelector,
-        ];
-        checkAndSetRequiredAttributesForFieldsBySelectors(
-            requiredFieldSelectorsUnformatted.map(selector => `#${tabPane.id} ${selector}`).join(", "),
-            optionalFieldSelectorsUnformatted.map(selector => `#${tabPane.id} ${selector}`).join(", "),
-        );
+    tabPaneControlEventHandlerActions(tabPane) {
+        this.exportTabData();
     }
 
     setupTabPaneEventListeners(tabPane) {
@@ -56,22 +34,19 @@ class SourcesTab extends DynamicEditorTab {
     
         inputs.forEach(input => {
             input.addEventListener("input", () => {
-                this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-                this.exportTabData();
+                this.tabPaneControlEventHandlerActions(tabPane);
             });
         });
     
         selects.forEach(select => {
             select.addEventListener("change", () => {
-                this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-                this.exportTabData();
+                this.tabPaneControlEventHandlerActions(tabPane);
             });
         });
 
         textareas.forEach(textarea => {
             textarea.addEventListener("input", () => {
-                this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-                this.exportTabData();
+                this.tabPaneControlEventHandlerActions(tabPane);
             });
         });
     }
@@ -160,7 +135,6 @@ class SourcesTab extends DynamicEditorTab {
                     }));
                 });
             }
-            this.updateTabPaneConditionalRequiredFieldStates(correspondingTabPane);
         });
     }
 }

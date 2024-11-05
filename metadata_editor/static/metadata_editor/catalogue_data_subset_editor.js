@@ -3,8 +3,8 @@ import {
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
-    setupSourcesTab,
-} from "/static/metadata_editor/components/sources_tab.js";
+    setupCatalogueDataSubsetSourcesTab,
+} from "/static/metadata_editor/components/catalogue_data_subset/sources_tab.js";
 import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
@@ -27,6 +27,6 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    sourcesTab = setupSourcesTab();
+    sourcesTab = setupCatalogueDataSubsetSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
 });
