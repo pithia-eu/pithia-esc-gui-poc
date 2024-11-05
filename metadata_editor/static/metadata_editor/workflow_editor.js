@@ -21,7 +21,7 @@ const workflowDetailsRadioButtons = [
 
 
 function updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
-    const isFileUploadSelected = radioButtonValue == 'file_upload';
+    const isFileUploadSelected = radioButtonValue == workflowDetailsFileUploadRadioButton.value;
     if (isFileUploadSelected) {
         workflowDetailsFileUploadRadioButtonLabel.classList.add("required");
         workflowDetailsFileLinkRadioButtonLabel.classList.remove("required");
