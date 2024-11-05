@@ -143,15 +143,22 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
         })
     )
 
-    is_details_file_upload_needed = forms.ChoiceField(
-        label='Upload a Workflow Details File',
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input',
-        })
+    details_file_storage_method = forms.ChoiceField(
+        label='Are you able to to provide a link to your workflow details file?',
+        choices=(
+            ('external', 'I am able to provide a link.'),
+            ('datahub', 'I am not able to provide a link.'),
+        ),
+        widget=forms.RadioSelect(
+            attrs={
+                'class': 'form-check-input',
+            }
+        ),
+        initial='external'
     )
 
     details_file = forms.FileField(
-        label='Workflow Details File',
+        label='Select the Workflow Details File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/pdf',
             'class': 'form-control',

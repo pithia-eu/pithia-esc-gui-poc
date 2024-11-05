@@ -16,26 +16,36 @@
 Only one workflow metadata file can be
 registered at a time.
 {% endblock file_upload_limit_info_text %}
-{% block extra_file_options %}
-<div>
-    <div class="form-check">
-        {{ form.is_details_file_upload_needed }}
-        <label for="{{ form.is_details_file_upload_needed.id_for_label }}" class="mb-0" style="font-size: 0.875rem;">
-            {{ form.is_details_file_upload_needed.label }}
-        </label>
+{% block pre_file_upload_extra_content %}
+<div class="bg-light rounded p-4">
+    <p class="fw-semibold">{{ form.details_file_storage_method.label }}</p>
+    <p class="form-text">
+        If you are not able to provide one, you can upload your workflow
+        details file here and we will automatically generate a link for
+        it and add it to your metadata file. Workflow details files must
+        be in PDF format.
+    </p>
+    <div class="d-flex flex-column">
+        {% for radio in form.details_file_storage_method %}
+        <div class="form-check">
+            {{ radio.tag }}
+            <label for="{{ radio.id_for_label }}" class="form-check-label">
+                {{ radio.choice_label }}
+            </label>
+        </div>
+        {% endfor %}
+        <div id="details_file_upload_section" class="d-none pt-3">
+            <div>
+                <label for="{{ form.details_file.id_for_label }}">
+                    {{ form.details_file.label }}
+                </label>
+                {{ form.details_file }}
+                <div class="form-text">{{ form.details_file.help_text }}</div>
+            </div>
+        </div>
     </div>
-    {% if form.is_details_file_upload_needed.help_text %}
-    <div class="form-text">{{ form.is_details_file_upload_needed.help_text }}</div>
-    {% endif %}
 </div>
-<div id="{{ form.details_file.name }}_section" class="d-inline-flex d-none flex-column align-items-md-start align-items-stretch row-gap-4 bg-light rounded py-3 px-4">
-    <div>
-        {{ form.details_file.label_tag }}
-        {{ form.details_file }}
-        <div class="form-text">{{ form.details_file.help_text }}</div>
-    </div>
-</div>
-{% endblock extra_file_options %}
+{% endblock pre_file_upload_extra_content %}
 {% block extra_content %}
 <div>
     <h2 class="fs-4 mb-2">Link a Workflow OpenAPI Specification</h2>

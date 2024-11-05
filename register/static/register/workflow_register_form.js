@@ -11,12 +11,13 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
-const workflowDetailsFileUploadCheckbox = document.querySelector("input[name='is_details_file_upload_needed']");
-const workflowDetailsFileUploadSection = document.querySelector("#details_file_section");
+const workflowDetailsFileDataHubStorageMethodRadioButton = document.querySelector("input[name='details_file_storage_method'][value='datahub']");
+const workflowDetailsFileExternalStorageMethodRadioButton = document.querySelector("input[name='details_file_storage_method'][value='external']");
+const workflowDetailsFileUploadSection = document.querySelector("#details_file_upload_section");
 const workflowDetailsFileInput = document.querySelector("input[name='details_file']");
 
 export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
-    if (workflowDetailsFileUploadCheckbox.checked) {
+    if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
         return submitButton.disabled = !(
             isEachTrackedMetadataFileValid()
             && isApiSpecificationLinkValid
@@ -31,7 +32,7 @@ export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
 }
 
 function updateWorkflowDetailsFileSectionState() {
-    if (workflowDetailsFileUploadCheckbox.checked) {
+    if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
         workflowDetailsFileUploadSection.classList.remove("d-none");
         return document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
     }
@@ -41,7 +42,10 @@ function updateWorkflowDetailsFileSectionState() {
 
 function setupWorkflowDetailsFileSection() {
     updateWorkflowDetailsFileSectionState();
-    workflowDetailsFileUploadCheckbox.addEventListener("change", e => {
+    workflowDetailsFileDataHubStorageMethodRadioButton.addEventListener("input", e => {
+        updateWorkflowDetailsFileSectionState();
+    });
+    workflowDetailsFileExternalStorageMethodRadioButton.addEventListener("input", e => {
         updateWorkflowDetailsFileSectionState();
     });
     workflowDetailsFileInput.addEventListener("input", e => {
