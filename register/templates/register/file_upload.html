@@ -20,7 +20,7 @@
 {% endblock scripts %}
 {% block content %}
 <div class="row flex-md-row flex-column align-items-baseline justify-content-between gx-md-5 gy-5">
-    <div class="d-flex flex-column row-gap-4 col-xl-7 col-lg-8">
+    <div class="col-xl-7 col-lg-8">
         <div class="d-flex flex-column row-gap-3">
             <h1 class="mb-0">{{ title }}</h1>
             {% block post_main_heading_content %}
@@ -32,10 +32,10 @@
         </div>
         <form id="file-upload-form" action="{{ post_url }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="d-flex flex-column row-gap-5">
-                {% block pre_file_upload_extra_content %}{% endblock pre_file_upload_extra_content %}
-                <div class="d-flex flex-column row-gap-4 border-top pt-4">
-                    <h2 class="fs-5 fw-semibold pb-0 mb-0">
+            {% block pre_file_upload_extra_content %}{% endblock pre_file_upload_extra_content %}
+            <div class="d-flex flex-column row-gap-5 file-upload-registration-section">
+                <div class="d-flex flex-column row-gap-4">
+                    <h2 class="fs-4 fw-semibold pb-0 mb-0">
                         {% block file_upload_heading_text %}
                         Select a Metadata File/Files
                         {% endblock file_upload_heading_text %}
@@ -59,23 +59,22 @@
                     {% with file_list_title='Uploaded Files' %}
                     {% include 'register/components/file_validation_status_form_section.html' %}
                     {% endwith %}
-                    {% include 'register/components/file_upload_info_box.html' %}
                 </div>
-                {% block extra_content %}{% endblock extra_content %}
-                <div class="d-flex flex-column block align-items-md-start align-items-stretch">
-                    <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
-                        {% block submit_button_text %}
-                        Register
-                        {% endblock submit_button_text %}
-                    </button>
-                </div>
+            </div>
+            {% block extra_content %}{% endblock extra_content %}
+            <div class="d-flex flex-column align-items-stretch">
+                <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
+                    {% block submit_button_text %}
+                    Register
+                    {% endblock submit_button_text %}
+                </button>
             </div>
         </form>
     </div>
     {% block sidemenu %}
     <div class="col-lg-3">
         <aside class="sidemenu">
-            <h2 class="fs-5 mb-4">Registration Shortcuts</h2>
+            <h2 class="fs-5">File Registration Shortcuts</h2>
             <section>
                 <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">{{ data_collection_related_index_page_title }}</h2>
                 <nav>
