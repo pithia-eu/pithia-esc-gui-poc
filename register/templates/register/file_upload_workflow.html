@@ -30,15 +30,13 @@ registered at a time.
             provide a link within your metadata file.
         </p>
         <div class="d-flex flex-column">
-            {% for radio in form.details_file_storage_method %}
             <div class="form-check">
-                {{ radio.tag }}
-                <label for="{{ radio.id_for_label }}" class="form-check-label">
-                    {{ radio.choice_label }}
+                {{ form.is_details_file_input_used }}
+                <label for="{{ form.is_details_file_input_used.id_for_label }}" class="form-check-label mb-0">
+                    {{ form.is_details_file_input_used.label }}
                 </label>
             </div>
-            {% endfor %}
-            <div id="details_file_upload_section" class="d-none pt-3">
+            <div id="details_file_upload_section" class="pt-3">
                 <div>
                     <label for="{{ form.details_file.id_for_label }}">
                         {{ form.details_file.label }}

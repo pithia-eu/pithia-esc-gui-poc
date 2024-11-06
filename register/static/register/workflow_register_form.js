@@ -11,14 +11,13 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
-const workflowDetailsFileDataHubStorageMethodRadioButton = document.querySelector("input[name='details_file_storage_method'][value='datahub']");
-const workflowDetailsFileExternalStorageMethodRadioButton = document.querySelector("input[name='details_file_storage_method'][value='external']");
+const isWorkflowDetailsFileInputUsedCheckbox = document.querySelector("input[name='is_details_file_input_used']");
 const workflowDetailsFileUploadSection = document.querySelector("#details_file_upload_section");
 const workflowDetailsFileInput = document.querySelector("input[name='details_file']");
 const workflowDetailsFileInputLabel = document.querySelector(`label[for="${workflowDetailsFileInput.id}"]`);
 
 export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
-    if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
+    if (isWorkflowDetailsFileInputUsedCheckbox.checked) {
         return submitButton.disabled = !(
             isEachTrackedMetadataFileValid()
             && isApiSpecificationLinkValid
@@ -33,7 +32,7 @@ export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
 }
 
 function updateWorkflowDetailsFileSectionState() {
-    if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
+    if (isWorkflowDetailsFileInputUsedCheckbox.checked) {
         workflowDetailsFileUploadSection.classList.remove("d-none");
         workflowDetailsFileInput.required = true;
         workflowDetailsFileInputLabel.classList.add("required");
@@ -47,10 +46,7 @@ function updateWorkflowDetailsFileSectionState() {
 
 function setupWorkflowDetailsFileSection() {
     updateWorkflowDetailsFileSectionState();
-    workflowDetailsFileDataHubStorageMethodRadioButton.addEventListener("input", e => {
-        updateWorkflowDetailsFileSectionState();
-    });
-    workflowDetailsFileExternalStorageMethodRadioButton.addEventListener("input", e => {
+    isWorkflowDetailsFileInputUsedCheckbox.addEventListener("change", () => {
         updateWorkflowDetailsFileSectionState();
     });
     workflowDetailsFileInput.addEventListener("input", e => {

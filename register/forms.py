@@ -157,8 +157,18 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
         initial='datahub'
     )
 
+    is_details_file_input_used = forms.ChoiceField(
+        label='I will upload a details file now',
+        widget=forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input',
+            }
+        ),
+        initial=True
+    )
+
     details_file = forms.FileField(
-        label='Select the Workflow Details File',
+        label='Select Your Workflow Details File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/pdf',
             'class': 'form-control',
