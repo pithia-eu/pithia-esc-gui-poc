@@ -929,7 +929,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'When you upload a file, it will be sent to our servers for validation. Its validation results will appear here.';
+    content: 'When you upload a file, it will be sent to our servers for validation. Its validation status will appear here.';
     color: gray;
 }
 
@@ -969,12 +969,11 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 
 .file-upload-registration-section {
     border-top: var(--bs-gray-300) solid 1px;
-    padding-block: 2.5rem;
+    padding-block: var(--resource-registration-upload-section-padding);
 }
 
 .file-upload-registration-section:first-of-type {
-    margin-top: 1.75rem;
-    padding-top: 1.75rem;
+    margin-top: var(--resource-registration-upload-section-padding);
 }
 
 /* Metadata editor */
@@ -1791,4 +1790,5 @@ ul.tree ul {
     --resource-detail-top-section-padding: 1.5rem;
     --resource-detail-section-padding: 2rem;
     --resource-detail-aside-section-padding: 2rem;
+    --resource-registration-upload-section-padding: 2rem;
 }

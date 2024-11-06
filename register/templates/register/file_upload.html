@@ -55,14 +55,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column row-gap-2">
-                    {% with file_list_title='Uploaded Files' %}
-                    {% include 'register/components/file_validation_status_form_section.html' %}
-                    {% endwith %}
-                </div>
+                {% with file_list_title='Uploaded Files' %}
+                {% include 'register/components/file_validation_status_form_section.html' %}
+                {% endwith %}
             </div>
             {% block extra_content %}{% endblock extra_content %}
-            <div class="d-flex flex-column align-items-stretch">
+            <div class="d-flex flex-column align-items-md-start align-items-stretch">
                 <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
                     {% block submit_button_text %}
                     Register
