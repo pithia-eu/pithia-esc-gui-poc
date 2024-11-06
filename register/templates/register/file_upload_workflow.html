@@ -17,7 +17,7 @@ Only one workflow metadata file can be
 registered at a time.
 {% endblock file_upload_limit_info_text %}
 {% block pre_file_upload_extra_content %}
-<div class="bg-light rounded p-4">
+<div class="file-upload-registration-section bg-light rounded border-top-0 p-4 mb-5">
     <fieldset>
         <legend class="fs-6 fw-semibold">
             {{ form.details_file_storage_method.label }}
@@ -51,7 +51,7 @@ registered at a time.
 {% endblock pre_file_upload_extra_content %}
 {% block extra_content %}
 <div class="file-upload-registration-section">
-    <h2 class="fs-4 fw-semibold mb-2">Link a Workflow OpenAPI Specification</h2>
+    <h2 class="fs-4 fw-semibold mb-2">Add a Workflow OpenAPI Specification</h2>
     <div class="d-flex flex-column row-gap-4 bg-light rounded p-4">
         <div class="d-flex flex-column mt-2">
             {{ form.api_specification_url.label_tag }}
