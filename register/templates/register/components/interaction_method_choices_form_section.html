@@ -1,5 +1,5 @@
-<ul class="list-group list-group-flush rounded">
-    <li class="list-group-item bg-light p-4">
+<div class="d-flex flex-column row-gap-4">
+    <div class="bg-light rounded p-4">
         <div class="d-flex flex-column mb-0">
             <small class="text-secondary">Added inside the metadata file</small>
             <span class="fw-bold">Link to the Data Collection</span>
@@ -10,8 +10,8 @@
                 elements.
             </span>
         </div>
-    </li>
-    <li class="list-group-item bg-light p-4">
+    </div>
+    <div class="bg-light rounded p-4">
         <div class="d-flex flex-column">
             <div class="form-check fw-bold">
                 {{ form.api_selected }}
@@ -20,7 +20,10 @@
                 </label>
             </div>
             <span class="mt-2 mb-3">
-                A link to an OpenAPI specification (written in YAML or JSON) for interacting with the Data Collection can be provided below. A user interface will be generated from this specification and will be accessible from the details page of the Data Collection in the e-Science Centre.
+                A link to an OpenAPI specification (written in YAML or JSON) for interacting with
+                the Data Collection can be provided below. A user interface will be generated from
+                this specification and will be accessible from the details page of the Data Collection
+                in the e-Science Centre.
             </span>
         </div>
         <div class="d-flex flex-column row-gap-4">
@@ -51,5 +54,5 @@
                 </div>
             </div>
         </div>
-    </li>
-</ul>
+    </div>
+</div>
