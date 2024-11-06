@@ -84,7 +84,7 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register {self.model.type_plural_readable.title()}'
+        context['title'] = f'Register {self.model.type_readable.title()} Metadata Files'
         context['data_collection_related_index_page_title'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
         context['validation_url'] = self.validation_url
@@ -272,7 +272,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()}'
+        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
@@ -336,7 +336,7 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()}'
+        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
@@ -381,6 +381,6 @@ class WorkflowRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()}'
+        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
