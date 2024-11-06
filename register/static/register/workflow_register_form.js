@@ -15,6 +15,7 @@ const workflowDetailsFileDataHubStorageMethodRadioButton = document.querySelecto
 const workflowDetailsFileExternalStorageMethodRadioButton = document.querySelector("input[name='details_file_storage_method'][value='external']");
 const workflowDetailsFileUploadSection = document.querySelector("#details_file_upload_section");
 const workflowDetailsFileInput = document.querySelector("input[name='details_file']");
+const workflowDetailsFileInputLabel = document.querySelector(`label[for="${workflowDetailsFileInput.id}"]`);
 
 export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
     if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
@@ -34,9 +35,13 @@ export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
 function updateWorkflowDetailsFileSectionState() {
     if (workflowDetailsFileDataHubStorageMethodRadioButton.checked) {
         workflowDetailsFileUploadSection.classList.remove("d-none");
+        workflowDetailsFileInput.required = true;
+        workflowDetailsFileInputLabel.classList.add("required");
         return document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
     }
     workflowDetailsFileUploadSection.classList.add("d-none");
+    workflowDetailsFileInput.required = false;
+    workflowDetailsFileInputLabel.classList.remove("required");
     return document.dispatchEvent(new CustomEvent("workflowDetailsInputFileChanged"));
 }
 

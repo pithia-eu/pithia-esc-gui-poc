@@ -18,32 +18,37 @@ registered at a time.
 {% endblock file_upload_limit_info_text %}
 {% block pre_file_upload_extra_content %}
 <div class="bg-light rounded p-4">
-    <p class="fw-semibold">{{ form.details_file_storage_method.label }}</p>
-    <p class="form-text">
-        If you are not able to provide one, you can upload your workflow
-        details file here and we will automatically generate a link for
-        you and add it to your metadata file. Workflow details files must
-        be in PDF format.
-    </p>
-    <div class="d-flex flex-column">
-        {% for radio in form.details_file_storage_method %}
-        <div class="form-check">
-            {{ radio.tag }}
-            <label for="{{ radio.id_for_label }}" class="form-check-label">
-                {{ radio.choice_label }}
-            </label>
-        </div>
-        {% endfor %}
-        <div id="details_file_upload_section" class="d-none pt-3">
-            <div>
-                <label for="{{ form.details_file.id_for_label }}">
-                    {{ form.details_file.label }}
+    <fieldset>
+        <legend class="fs-6 fw-semibold">
+            {{ form.details_file_storage_method.label }}
+            <span class="text-secondary">(Optional)</span>
+        </legend>
+        <p class="form-text">
+            Please upload a PDF file that describes the details
+            of your workflow. Alternatively, if you have already
+            uploaded your file to an external server, you can just
+            provide a link within your metadata file.
+        </p>
+        <div class="d-flex flex-column">
+            {% for radio in form.details_file_storage_method %}
+            <div class="form-check">
+                {{ radio.tag }}
+                <label for="{{ radio.id_for_label }}" class="form-check-label">
+                    {{ radio.choice_label }}
                 </label>
-                {{ form.details_file }}
-                <div class="form-text">{{ form.details_file.help_text }}</div>
+            </div>
+            {% endfor %}
+            <div id="details_file_upload_section" class="d-none pt-3">
+                <div>
+                    <label for="{{ form.details_file.id_for_label }}">
+                        {{ form.details_file.label }}
+                    </label>
+                    {{ form.details_file }}
+                    <div class="form-text">{{ form.details_file.help_text }}</div>
+                </div>
             </div>
         </div>
-    </div>
+    </fieldset>
 </div>
 {% endblock pre_file_upload_extra_content %}
 {% block extra_content %}
