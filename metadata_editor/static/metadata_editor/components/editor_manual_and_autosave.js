@@ -21,7 +21,7 @@ function getAllWizardFields() {
 
 function getWizardTextFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input, input[type="radio"]),
+        input[id]:not(.table input, .tab-pane input, input[type="radio"], input[type="file"]),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
 }
@@ -144,20 +144,24 @@ function removePastWizardData() {
 
 function addFieldDataToForm(fieldData) {
     for (const fieldId in fieldData) {
-        const field = editorForm.querySelector(`#${fieldId}`);
-        if (!field) continue;
-        if (field.tagName.toLowerCase() === "select") {
-            for (const value of fieldData[fieldId]) {
-                const correspondingOption = field.querySelector(`option[value="${value}"]`);
-                if (!correspondingOption) continue;
-                correspondingOption.selected = true;
+        try {
+            const field = editorForm.querySelector(`#${fieldId}`);
+            if (!field) continue;
+            if (field.tagName.toLowerCase() === "select") {
+                for (const value of fieldData[fieldId]) {
+                    const correspondingOption = field.querySelector(`option[value="${value}"]`);
+                    if (!correspondingOption) continue;
+                    correspondingOption.selected = true;
+                }
+                window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                    detail: field.id,
+                }));
+                continue;
             }
-            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
-                detail: field.id,
-            }));
-            continue;
+            field.value = fieldData[fieldId];
+        } catch (error) {
+            console.error(error);
         }
-        field.value = fieldData[fieldId];
     }
 }
 
@@ -223,5 +227,7 @@ export function setupWizardManualAndAutoSave() {
     setupEventListeners();
     loadPastWizardData();
     addFieldDataToForm(wizardData.fieldData);
-    addRadioButtonDataToForm(wizardData.checkedRadioButtonIds);
+    if ('checkedRadioButtonIds' in wizardData) {
+        addRadioButtonDataToForm(wizardData.checkedRadioButtonIds);
+    }
 }
