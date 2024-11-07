@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 from datetime import timezone
 from django.contrib import messages
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import (
     IntegrityError,
     transaction,
@@ -11,7 +10,6 @@ from django.db import (
 from django.urls import reverse_lazy
 from django.utils.html import escape
 from pyexpat import ExpatError
-from xmlschema import XMLSchemaException
 
 from .forms import *
 from .metadata_builder.metadata_structures import *
@@ -20,89 +18,18 @@ from .metadata_builder.utils import *
 from common import models
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
-from validation.file_wrappers import XMLMetadataFile
-from validation.services import MetadataFileXSDValidator
 
 
 logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
 class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     submit_button_text = 'Validate and Register'
     editor_registration_setup_script_path = 'register_with_support/editor_registration_setup.js'
 
     def get_namespaces_by_organisation(self):
         return {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
-
-    def process_form(self, form_cleaned_data):
-        # Make copy of cleaned data
-        processed_form = form_cleaned_data
-        processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
-        processed_form['namespace'] = processed_form['namespace']
-        return processed_form
-
-    def convert_form_to_validated_xml(self, form):
-        result = {}
-        xml_string = None
-        xml_file = None
-        localid = None
-
-        try:
-            processed_form = self.process_form(form.cleaned_data)
-            metadata_editor = self.metadata_editor_class(processed_form)
-            xml_string = metadata_editor.xml
-            localid = processed_form['localid']
-            result['xml_string'] = xml_string
-            xml_file = SimpleUploadedFile(f'{localid}.xml', xml_string.encode('utf-8'))
-        except BaseException as err:
-            logger.exception('An unexpected error occurred during XML generation.')
-            messages.error(self.request, 'An unexpected error occurred during XML generation.')
-            result['error'] = err
-            return result
-
-        try:
-            MetadataFileXSDValidator.validate(XMLMetadataFile.from_file(xml_file))
-        except XMLSchemaException as err:
-            logger.exception('Generated XML failed schema validation.')
-            form_error_msg = f'''
-            This form was unable to be processed into schema-valid XML due to an error.
-            Please try submitting the form again, or if the issue persists,
-            <a href="{reverse_lazy('support')}" target="_blank">let our support team know</a>.
-            <br><br>
-            If this functionality is down, the <a href="{self.file_upload_registration_url}">file upload functionality</a>
-            may alternatively be used to register your metadata.
-            <br><br>
-            We apologise for any inconvenience caused.
-            <details>
-                <summary class="mt-4">
-                    <small>Validation feedback</small>
-                </summary>
-                <p class="mt-2 mb-0">
-                    <small style="white-space: pre-wrap;">{escape(err).strip()}</small>
-                </p>
-            </details>
-            '''
-            messages.error(self.request, form_error_msg)
-            result['error'] = err
-            return result
-        except BaseException as err:
-            logger.exception('An unexpected error occurred whilst running XSD validation on generated XML.')
-            form_error_msg = f'''
-            An unexpected error occurred whilst validating the generated XML against the schema.
-            Please try submitting the form again, or if the issue persists,
-            <a href="{reverse_lazy('support')}" target="_blank">let our support team know</a>.
-            <br><br>
-            If this functionality is down, the <a href="{self.file_upload_registration_url}">file upload functionality</a>
-            may alternatively be used to register your metadata.
-            <br><br>
-            We apologise for any inconvenience caused.
-            '''
-            messages.error(self.request, form_error_msg)
-            result['error'] = err
-        
-        return result
 
     def register_xml_string(self, xml_string):
         new_registration = self.model.objects.create_from_xml_string(
@@ -115,6 +42,46 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
 
     def run_registration_actions(self, request, xml_string):
         return self.register_xml_string(xml_string)
+
+    def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
+        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
+        namespace = self.namespace if hasattr(self, 'namespace') else form_cleaned_data.get('namespace')
+        last_modification_date = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+        pithia_identifier_update = PithiaIdentifierMetadataUpdate(
+            localid=f'{self.model.localid_base}_{form_cleaned_data.get("localid")}',
+            namespace=namespace,
+            version=form_cleaned_data.get('identifier_version'),
+            creation_date=last_modification_date,
+            last_modification_date=last_modification_date
+        )
+        metadata_editor.update_pithia_identifier(pithia_identifier_update)
+
+    def process_form(self, form_cleaned_data):
+        # Make copy of cleaned data
+        processed_form = form_cleaned_data
+        processed_form['localid'] = f'{self.model.localid_base}_{processed_form["localid"]}'
+        processed_form['namespace'] = processed_form['namespace']
+        return processed_form
+
+    def convert_form_to_validated_xml(self, form):
+        result = {}
+
+        try:
+            metadata_editor = self.metadata_editor_class()
+            self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
+            xml_string = metadata_editor.to_xml()
+            result['xml_string'] = xml_string
+        except ExpatError as err:
+            logger.exception('Expat error occurred during registration process.')
+            messages.error(self.request, 'An error occurred whilst parsing the XML.')
+            result['error'] = err
+            return result
+        except BaseException as err:
+            logger.exception('An unexpected error occurred during XML generation.')
+            messages.error(self.request, 'An unexpected error occurred during XML generation.')
+            result['error'] = err
+
+        return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -156,44 +123,9 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         return kwargs
 
 
-class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
-    def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
-        super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
-        namespace = self.namespace if hasattr(self, 'namespace') else form_cleaned_data.get('namespace')
-        last_modification_date = datetime.now(timezone.utc).replace(second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
-        pithia_identifier_update = PithiaIdentifierMetadataUpdate(
-            localid=f'{self.model.localid_base}_{form_cleaned_data.get("localid")}',
-            namespace=namespace,
-            version=form_cleaned_data.get('identifier_version'),
-            creation_date=last_modification_date,
-            last_modification_date=last_modification_date
-        )
-        metadata_editor.update_pithia_identifier(pithia_identifier_update)
-
-    def convert_form_to_validated_xml(self, form):
-        result = {}
-
-        try:
-            metadata_editor = self.metadata_editor_class()
-            self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
-            xml_string = metadata_editor.to_xml()
-            result['xml_string'] = xml_string
-        except ExpatError as err:
-            logger.exception('Expat error occurred during registration process.')
-            messages.error(self.request, 'An error occurred whilst parsing the XML.')
-            result['error'] = err
-            return result
-        except BaseException as err:
-            logger.exception('An unexpected error occurred during XML generation.')
-            messages.error(self.request, 'An unexpected error occurred during XML generation.')
-            result['error'] = err
-
-        return result
-
-
 class OrganisationRegisterWithEditorFormView(
     OrganisationEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = OrganisationEditorRegistrationForm
     success_url = reverse_lazy('register:organisation_with_editor')
 
@@ -213,7 +145,7 @@ class OrganisationRegisterWithEditorFormView(
 
 class IndividualRegisterWithEditorFormView(
     IndividualEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = IndividualEditorRegistrationForm
     success_url = reverse_lazy('register:individual_with_editor')
 
@@ -223,7 +155,7 @@ class IndividualRegisterWithEditorFormView(
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = ProjectEditorRegistrationForm
     success_url = reverse_lazy('register:project_with_editor')
 
@@ -234,7 +166,7 @@ class ProjectRegisterWithEditorFormView(
 
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = PlatformEditorRegistrationForm
     success_url = reverse_lazy('register:platform_with_editor')
 
@@ -244,7 +176,7 @@ class PlatformRegisterWithEditorFormView(
 
 class OperationRegisterWithEditorFormView(
     OperationEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = OperationEditorRegistrationForm
     success_url = reverse_lazy('register:operation_with_editor')
 
@@ -254,7 +186,7 @@ class OperationRegisterWithEditorFormView(
 
 class InstrumentRegisterWithEditorFormView(
     InstrumentEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = InstrumentEditorRegistrationForm
     success_url = reverse_lazy('register:instrument_with_editor')
 
@@ -273,7 +205,7 @@ class InstrumentRegisterWithEditorFormView(
 
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
     AcquisitionCapabilitiesEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = AcquisitionCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
 
@@ -294,7 +226,7 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
 
 class AcquisitionRegisterWithEditorFormView(
     AcquisitionEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = AcquisitionEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_with_editor')
 
@@ -309,7 +241,7 @@ class AcquisitionRegisterWithEditorFormView(
 
 class ComputationCapabilitiesRegisterWithEditorFormView(
     ComputationCapabilitiesEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = ComputationCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:computation_capability_set_with_editor')
 
@@ -331,7 +263,7 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
 
 class ComputationRegisterWithEditorFormView(
     ComputationEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = ComputationEditorRegistrationForm
     success_url = reverse_lazy('register:computation_with_editor')
 
@@ -348,7 +280,7 @@ class ComputationRegisterWithEditorFormView(
 
 class ProcessRegisterWithEditorFormView(
     ProcessEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = ProcessEditorRegistrationForm
     success_url = reverse_lazy('register:process_with_editor')
 
@@ -368,7 +300,7 @@ class ProcessRegisterWithEditorFormView(
 
 class DataCollectionRegisterWithEditorFormView(
     DataCollectionEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = DataCollectionEditorRegistrationForm
     success_url = reverse_lazy('register:data_collection_with_editor')
 
@@ -413,7 +345,7 @@ class DataCollectionRegisterWithEditorFormView(
 
 class CatalogueRegisterWithEditorFormView(
     CatalogueEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = CatalogueEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_with_editor')
 
@@ -423,7 +355,7 @@ class CatalogueRegisterWithEditorFormView(
 
 class CatalogueEntryRegisterWithEditorFormView(
     CatalogueEntryEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = CatalogueEntryEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_entry_with_editor')
 
@@ -433,7 +365,7 @@ class CatalogueEntryRegisterWithEditorFormView(
 
 class CatalogueDataSubsetRegisterWithEditorFormView(
     CatalogueDataSubsetEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = CatalogueDataSubsetEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_data_subset_with_editor')
 
@@ -443,7 +375,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
 class WorkflowRegisterWithEditorFormView(
     WorkflowEditorFormView,
-    NewResourceRegisterWithEditorFormView):
+    ResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm
     success_url = reverse_lazy('register:workflow_with_editor')
 
