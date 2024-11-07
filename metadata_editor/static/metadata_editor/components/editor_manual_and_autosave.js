@@ -13,7 +13,7 @@ let wizardData = {};
 // table and tab modules.
 function getAllWizardFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input),
+        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"]),
         select[id]:not(.table select, .tab-pane select),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
@@ -21,7 +21,7 @@ function getAllWizardFields() {
 
 function getWizardTextFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input),
+        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"]),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
 }
@@ -138,20 +138,24 @@ function removePastWizardData() {
 
 function addFieldDataToForm(fieldData) {
     for (const fieldId in fieldData) {
-        const field = editorForm.querySelector(`#${fieldId}`);
-        if (!field) continue;
-        if (field.tagName.toLowerCase() === "select") {
-            for (const value of fieldData[fieldId]) {
-                const correspondingOption = field.querySelector(`option[value="${value}"]`);
-                if (!correspondingOption) continue;
-                correspondingOption.selected = true;
+        try {
+            const field = editorForm.querySelector(`#${fieldId}`);
+            if (!field) continue;
+            if (field.tagName.toLowerCase() === "select") {
+                for (const value of fieldData[fieldId]) {
+                    const correspondingOption = field.querySelector(`option[value="${value}"]`);
+                    if (!correspondingOption) continue;
+                    correspondingOption.selected = true;
+                }
+                window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
+                    detail: field.id,
+                }));
+                continue;
             }
-            window.dispatchEvent(new CustomEvent("selectOptionsSetProgrammatically", {
-                detail: field.id,
-            }));
-            continue;
+            field.value = fieldData[fieldId];
+        } catch (error) {
+            console.error(error);
         }
-        field.value = fieldData[fieldId];
     }
 }
 
