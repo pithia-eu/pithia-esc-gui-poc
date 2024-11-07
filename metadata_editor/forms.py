@@ -703,10 +703,11 @@ class WorkflowEditorForm(BaseEditorForm):
         help_text='The link must point directly to the details file.'
     )
 
-    workflow_details_file = forms.URLField(
+    workflow_details_file = forms.FileField(
         label='Workflow Details File',
         required=False,
         widget=forms.FileInput(attrs={
+            'accept': 'application/pdf',
             'placeholder': 'https://',
         }),
         help_text='Accepted formats: PDF'
