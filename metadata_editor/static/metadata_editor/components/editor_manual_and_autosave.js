@@ -105,7 +105,6 @@ function saveWizardDataToLocalStorage() {
         });
 
         wizardDataCopy.checkedRadioButtonIds = Array.from(getWizardCheckedRadioButtons()).map(checkedRadioButton => checkedRadioButton.id);
-        console.log("wizardDataCopy.checkedRadioButtonIds", wizardDataCopy.checkedRadioButtonIds);
         wizardDataCopy.lastSaved = Date.now();
 
         wizardData = wizardDataCopy;
