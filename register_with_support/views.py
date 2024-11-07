@@ -477,5 +477,7 @@ class WorkflowRegisterWithEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['initial'] = {'workflow_details_file_format': 'file_upload'}
+        kwargs['initial'] = {
+            'workflow_details_file_storage_method': 'datahub'
+        }
         return kwargs

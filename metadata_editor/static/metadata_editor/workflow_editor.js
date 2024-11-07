@@ -6,37 +6,37 @@ import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
-const workflowDetailsFileUploadRadioButton = document.querySelector("input[name='workflow_details_file_format'][value='file_upload']");
-const workflowDetailsFileUploadRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsFileUploadRadioButton.id}']`);
+const workflowDetailsDataHubRadioButton = document.querySelector("input[name='workflow_details_file_storage_method'][value='datahub']");
+const workflowDetailsDataHubRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsDataHubRadioButton.id}']`);
 const workflowDetailsFileInput = document.querySelector("input[name='workflow_details_file']");
 
-const workflowDetailsFileLinkRadioButton = document.querySelector("input[name='workflow_details_file_format'][value='link']");
-const workflowDetailsFileLinkRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsFileLinkRadioButton.id}']`);
-const workflowDetailsFileLinkTextInput = document.querySelector("input[name='workflow_details']");
+const workflowDetailsFileExternalRadioButton = document.querySelector("input[name='workflow_details_file_storage_method'][value='external']");
+const workflowDetailsFileExternalRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsFileExternalRadioButton.id}']`);
+const workflowDetailsFileExternalTextInput = document.querySelector("input[name='workflow_details']");
 
 const workflowDetailsRadioButtons = [
-    workflowDetailsFileUploadRadioButton,
-    workflowDetailsFileLinkRadioButton
+    workflowDetailsDataHubRadioButton,
+    workflowDetailsFileExternalRadioButton
 ];
 
 
 function updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
-    const isFileUploadSelected = radioButtonValue == workflowDetailsFileUploadRadioButton.value;
+    const isFileUploadSelected = radioButtonValue == workflowDetailsDataHubRadioButton.value;
     if (isFileUploadSelected) {
-        workflowDetailsFileUploadRadioButtonLabel.classList.add("required");
-        workflowDetailsFileLinkRadioButtonLabel.classList.remove("required");
+        workflowDetailsDataHubRadioButtonLabel.classList.add("required");
+        workflowDetailsFileExternalRadioButtonLabel.classList.remove("required");
     } else {
-        workflowDetailsFileUploadRadioButtonLabel.classList.remove("required");
-        workflowDetailsFileLinkRadioButtonLabel.classList.add("required");
+        workflowDetailsDataHubRadioButtonLabel.classList.remove("required");
+        workflowDetailsFileExternalRadioButtonLabel.classList.add("required");
     }
     workflowDetailsFileInput.disabled = !isFileUploadSelected;
     workflowDetailsFileInput.required = isFileUploadSelected;
-    workflowDetailsFileLinkTextInput.disabled = isFileUploadSelected;
-    workflowDetailsFileLinkTextInput.required = !isFileUploadSelected;
+    workflowDetailsFileExternalTextInput.disabled = isFileUploadSelected;
+    workflowDetailsFileExternalTextInput.required = !isFileUploadSelected;
 }
 
 function setupWorkflowDetailsSection() {
-    const currentWorkflowDetailsSharingMethodChoice = document.querySelector("input[name='workflow_details_file_format']:checked").value;
+    const currentWorkflowDetailsSharingMethodChoice = document.querySelector("input[name='workflow_details_file_storage_method']:checked").value;
     updateWorkflowDetailsRelatedInputStates(currentWorkflowDetailsSharingMethodChoice);
     workflowDetailsRadioButtons.forEach(radioButton => {
         radioButton.addEventListener("change", e => {
