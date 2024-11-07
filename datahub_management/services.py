@@ -7,7 +7,7 @@ from pithiaesc.settings import BASE_DIR
 
 class WorkflowDataHubService:
     @classmethod
-    def _get_workflow_details_file_path(self, workflow_id):
+    def _get_workflow_details_file_path(cls, workflow_id):
         return os.path.join(BASE_DIR, 'datahub', 'workflow_details', f'{workflow_id}.pdf')
 
     @classmethod
