@@ -893,17 +893,12 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     word-break: break-word;
 }
 
-.metadata-file-for-reg-name {
-    font-size: 1.1rem;
-    font-style: italic;
-}
-
 .file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
     color: var(--bs-secondary);
 }
 
 .file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
-    color: #000;
+    color: var(--bs-body-color);
 }
 
 #file-upload-form h2 {
@@ -917,15 +912,6 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 
 #file-upload-form h2 > label {
     margin-bottom: 0;
-}
-
-.card-header img,
-.accordion-button img {
-    width: 1.5rem;
-}
-
-.accordion-button:not(.collapsed) img {
-    filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
 }
 
 .file-validation-status img {
@@ -943,12 +929,8 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'When you upload a file, its validation status will be displayed here.';
+    content: 'When you upload a file, it will be sent to our servers for validation. Its validation results will appear here.';
     color: gray;
-}
-
-.file-upload-validation-msgs {
-    row-gap: 1rem;
 }
 
 .details-validation .error-counter {
@@ -984,6 +966,26 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 .file-list-group-item .details-validation > ul > li ul {
     list-style-type: disc;
 }
+
+.file-upload-registration-section {
+    border-top: var(--bs-gray-300) solid 1px;
+    padding-block: 2.5rem;
+}
+
+.file-upload-registration-section:first-of-type {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+}
+
+.file-upload-registration-section.bg-light.rounded:first-of-type {
+    margin-top: 2.25rem;
+}
+
+.file-upload-registration-section.bg-light.rounded + .file-upload-registration-section {
+    border-top: 0;
+    padding-top: 0;
+}
+
 
 /* Metadata editor */
 label.required::after {
@@ -1224,6 +1226,15 @@ ul.tree ul {
 
 .select-all-checkbox-container {
     transition: opacity 500ms ease;
+}
+
+.card-header img,
+.accordion-button img {
+    width: 1.5rem;
+}
+
+.accordion-button:not(.collapsed) img {
+    filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
 }
 
 /* Ontology browser */

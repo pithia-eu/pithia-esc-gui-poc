@@ -5,6 +5,7 @@
 <script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'register/register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
+{% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
 {% block file_upload_limit_info_text %}
 Only one catalogue data subset can be
 registered at a time.

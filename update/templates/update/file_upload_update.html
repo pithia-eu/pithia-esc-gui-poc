@@ -11,13 +11,11 @@
 {{ resource_id|json_script:"resource-id" }}
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
+{% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
 {% block file_upload_limit_info_text %}
 Only one update file can be submitted
 at a time.
 {% endblock file_upload_limit_info_text %}
-{% block file_list %}
-{% include 'register/components/file_validation_status_form_section.html' %}
-{% endblock file_list %}
 {% block submit_button_text %}
 Update
 {% endblock submit_button_text %}

@@ -1,13 +1,14 @@
 from django import forms
 
 
-_FILE_INPUT_MULTIPLE_LABEL = 'Metadata Files'
+_FILE_INPUT_MULTIPLE_LABEL = 'Metadata File/Files'
 _FILE_INPUT_LABEL = 'Metadata File'
 _API_DESCRIPTION_TEXTAREA_HELP_TEXT = 'E.g. a brief description of what the API can do'
 
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
+
 
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
@@ -25,6 +26,7 @@ class MultipleFileField(forms.FileField):
         else:
             result = single_file_clean(data, initial)
         return result
+
 
 class UploadFileForm(forms.Form):
     required_css_class = 'required'
@@ -105,6 +107,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         })
     )
 
+
 class WorkflowOpenAPISpecificationForm(forms.Form):
     required_css_class = 'required'
 
@@ -126,6 +129,7 @@ class WorkflowOpenAPISpecificationForm(forms.Form):
         help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
 
+
 class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -139,15 +143,32 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
         })
     )
 
-    is_details_file_upload_needed = forms.ChoiceField(
-        label='Upload a Workflow Details File',
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input',
-        })
+    details_file_storage_method = forms.ChoiceField(
+        label='Upload your workflow details file here',
+        choices=(
+            ('datahub', 'I will upload a file now.'),
+            ('external', 'I will provide a link in the metadata file.'),
+        ),
+        widget=forms.RadioSelect(
+            attrs={
+                'class': 'form-check-input',
+            }
+        ),
+        initial='datahub'
+    )
+
+    is_details_file_input_used = forms.ChoiceField(
+        label='I will upload a details file now',
+        widget=forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input',
+            }
+        ),
+        initial=True
     )
 
     details_file = forms.FileField(
-        label='Workflow Details File',
+        label='Select Your Workflow Details File',
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/pdf',
             'class': 'form-control',

@@ -11,33 +11,47 @@
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
 {% block file_upload_limit_info_text %}
 Only one workflow metadata file can be
 registered at a time.
 {% endblock file_upload_limit_info_text %}
-{% block extra_file_options %}
-<div>
-    <div class="form-check">
-        {{ form.is_details_file_upload_needed }}
-        <label for="{{ form.is_details_file_upload_needed.id_for_label }}" class="mb-0" style="font-size: 0.875rem;">
-            {{ form.is_details_file_upload_needed.label }}
-        </label>
-    </div>
-    {% if form.is_details_file_upload_needed.help_text %}
-    <div class="form-text">{{ form.is_details_file_upload_needed.help_text }}</div>
-    {% endif %}
+{% block pre_file_upload_extra_content %}
+<div class="file-upload-registration-section bg-light rounded border-top-0 p-4 mb-5">
+    <fieldset>
+        <legend class="fs-6 fw-semibold">
+            {{ form.details_file_storage_method.label }}
+            <span class="text-secondary">(Optional)</span>
+        </legend>
+        <p class="form-text">
+            Please upload a PDF file that describes the details
+            of your workflow. Alternatively, if you have already
+            uploaded your file to an external server, you can just
+            provide a link within your metadata file.
+        </p>
+        <div class="d-flex flex-column">
+            <div class="form-check">
+                {{ form.is_details_file_input_used }}
+                <label for="{{ form.is_details_file_input_used.id_for_label }}" class="form-check-label mb-0">
+                    {{ form.is_details_file_input_used.label }}
+                </label>
+            </div>
+            <div id="details_file_upload_section" class="pt-3">
+                <div>
+                    <label for="{{ form.details_file.id_for_label }}">
+                        {{ form.details_file.label }}
+                    </label>
+                    {{ form.details_file }}
+                    <div class="form-text">{{ form.details_file.help_text }}</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
 </div>
-<div id="{{ form.details_file.name }}_section" class="d-inline-flex d-none flex-column align-items-md-start align-items-stretch row-gap-4 bg-light rounded py-3 px-4">
-    <div>
-        {{ form.details_file.label_tag }}
-        {{ form.details_file }}
-        <div class="form-text">{{ form.details_file.help_text }}</div>
-    </div>
-</div>
-{% endblock extra_file_options %}
+{% endblock pre_file_upload_extra_content %}
 {% block extra_content %}
-<div class="py-4">
-    <h2 class="fs-4 mb-2">Link a Workflow OpenAPI Specification</h2>
+<div class="file-upload-registration-section">
+    <h2 class="fs-4 fw-semibold mb-2">Add a Workflow OpenAPI Specification</h2>
     <div class="d-flex flex-column row-gap-4 bg-light rounded p-4">
         <div class="d-flex flex-column mt-2">
             {{ form.api_specification_url.label_tag }}
