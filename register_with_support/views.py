@@ -16,6 +16,7 @@ from .metadata_builder.metadata_structures import *
 from .metadata_builder.utils import *
 
 from common import models
+from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
 
@@ -374,6 +375,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
 
 class WorkflowRegisterWithEditorFormView(
+    WorkflowDataHubViewMixin,
     WorkflowEditorFormView,
     ResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm
@@ -398,7 +400,8 @@ class WorkflowRegisterWithEditorFormView(
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_string):
-        new_registration = self.register_xml_string(xml_string)
+        updated_xml_string = self.store_workflow_details_file_and_update_xml_file_string(xml_string)
+        new_registration = self.register_xml_string(updated_xml_string)
         self.register_workflow_api_interaction_method(request, new_registration)
         return new_registration
 
@@ -406,6 +409,12 @@ class WorkflowRegisterWithEditorFormView(
         context = super().get_context_data(**kwargs)
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
+
+    def form_valid(self, form):
+        if form.cleaned_data.get('workflow_details_file_storage_method') == 'datahub':
+            self.details_file = self.request.FILES['workflow_details_file']
+        return super().form_valid(form)
+    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

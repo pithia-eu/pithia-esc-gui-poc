@@ -81,7 +81,7 @@
                 </ul>
             </div>
             {% endif %}
-            <form action="{{ success_url }}" method="POST" id="metadata-editor-form">
+            <form action="{{ success_url }}" method="POST" id="metadata-editor-form" {% block extra_form_attrs %}{% endblock extra_form_attrs %}>
                 {% csrf_token %}
                 {% block form_content %}{% endblock form_content %}
                 <div class="d-flex flex-column mt-5">
