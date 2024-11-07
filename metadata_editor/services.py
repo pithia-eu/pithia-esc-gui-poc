@@ -463,7 +463,7 @@ class CatalogueEntryEditor(
         self.update_time_period(update_data, phenomenon_time_key)
 
 
-class SimpleCatalogueDataSubsetEditor:
+class SimpleMetadataEditor:
     def __init__(self, xml_string: str) -> None:
         self.xml_string = xml_string
         self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
@@ -471,10 +471,18 @@ class SimpleCatalogueDataSubsetEditor:
     def to_xml(self):
         return etree.tostring(self.xml_string_parsed, pretty_print=True).decode()
 
+
+class SimpleCatalogueDataSubsetEditor(SimpleMetadataEditor):
     def update_referent_doi_name(self, referent_doi_name: str):
         doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
         referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
         referent_doi_name_element.text = referent_doi_name
+
+
+class SimpleWorkflowEditor(SimpleMetadataEditor):
+    def update_workflow_details_url(self, workflow_details_url: str):
+        workflow_details_element = self.xml_string_parsed.find('{%s}workflowDetails' % Namespace.PITHIA)
+        workflow_details_element.set('{%s}href' % Namespace.XLINK, workflow_details_url)
 
 
 class CatalogueDataSubsetEditor(

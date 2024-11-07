@@ -143,21 +143,7 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
         })
     )
 
-    details_file_storage_method = forms.ChoiceField(
-        label='Upload your workflow details file here',
-        choices=(
-            ('datahub', 'I will upload a file now.'),
-            ('external', 'I will provide a link in the metadata file.'),
-        ),
-        widget=forms.RadioSelect(
-            attrs={
-                'class': 'form-check-input',
-            }
-        ),
-        initial='datahub'
-    )
-
-    is_details_file_input_used = forms.ChoiceField(
+    is_details_file_input_used = forms.BooleanField(
         label='I will upload a details file now',
         widget=forms.CheckboxInput(
             attrs={

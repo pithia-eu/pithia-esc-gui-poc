@@ -20,7 +20,7 @@ registered at a time.
 <div class="file-upload-registration-section bg-light rounded border-top-0 p-4 mb-5">
     <fieldset>
         <legend class="fs-6 fw-semibold">
-            {{ form.details_file_storage_method.label }}
+            Upload your workflow details file here
             <span class="text-secondary">(Optional)</span>
         </legend>
         <p class="form-text">
@@ -43,6 +43,13 @@ registered at a time.
                     </label>
                     {{ form.details_file }}
                     <div class="form-text">{{ form.details_file.help_text }}</div>
+                    {% if form.details_file.errors %}
+                    <ul class="list-unstyled text-danger">
+                        {% for error in form.details_file.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
