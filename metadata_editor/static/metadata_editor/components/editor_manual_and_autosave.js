@@ -13,7 +13,7 @@ let wizardData = {};
 // table and tab modules.
 function getAllWizardFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input),
+        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"]),
         select[id]:not(.table select, .tab-pane select),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
@@ -21,7 +21,7 @@ function getAllWizardFields() {
 
 function getWizardTextFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input, input[type="radio"], input[type="file"]),
+        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"], input[type="radio"], input[type="file"]),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
 }
