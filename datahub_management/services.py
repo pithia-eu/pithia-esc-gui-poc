@@ -1,8 +1,12 @@
+import logging
 import os
 import pathlib
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from pithiaesc.settings import BASE_DIR
+
+
+logger = logging.getLogger(__name__)
 
 
 class WorkflowDataHubService:
@@ -22,8 +26,12 @@ class WorkflowDataHubService:
     
     @classmethod
     def get_workflow_details_file(cls, workflow_id: str):
-        # Get the details file by the workflow ID.
-        return open(cls._get_workflow_details_file_path(workflow_id), 'rb')
+        try:
+            # Get the details file by the workflow ID.
+            return open(cls._get_workflow_details_file_path(workflow_id), 'rb')
+        except FileNotFoundError:
+            logger.exception(f'Workflow {workflow_id}\'s details file was not found.')
+        return None
 
     @classmethod
     def delete_workflow_details_file(cls, workflow_id: str):
