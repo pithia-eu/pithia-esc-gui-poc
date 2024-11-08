@@ -713,11 +713,11 @@ class WorkflowEditorForm(BaseEditorForm):
         help_text='Accepted formats: PDF'
     )
 
-    workflow_details_file_storage_method = forms.ChoiceField(
+    workflow_details_file_source = forms.ChoiceField(
         label='Workflow Details Format',
         required=True,
         choices=(
-            ('datahub', 'File Upload'),
+            ('file_upload', 'File Upload'),
             ('external', 'Link to the Workflow Details File')
         ),
         widget=forms.RadioSelect(attrs={

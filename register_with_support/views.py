@@ -411,7 +411,7 @@ class WorkflowRegisterWithEditorFormView(
         return context
 
     def form_valid(self, form):
-        if form.cleaned_data.get('workflow_details_file_storage_method') == 'datahub':
+        if form.cleaned_data.get('workflow_details_file_source') == 'file_upload':
             self.details_file = self.request.FILES['workflow_details_file']
         return super().form_valid(form)
     
@@ -419,6 +419,6 @@ class WorkflowRegisterWithEditorFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['initial'] = {
-            'workflow_details_file_storage_method': 'datahub'
+            'workflow_details_file_source': 'file_upload'
         }
         return kwargs

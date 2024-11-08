@@ -101,12 +101,13 @@
         </div>
         <div class="col-xl-9 col-lg-12">
             <div class="d-flex flex-column row-gap-4">
-                {% for radio in form.workflow_details_file_storage_method %}
+                {% for radio in form.workflow_details_file_source %}
                 <div class="d-flex flex-column row-gap-3">
                     <div class="form-check">
                         {{ radio.tag }}
                         <label for="{{ radio.id_for_label }}" class="form-check-label">{{ radio.choice_label }}</label>
                     </div>
+                    <!-- File upload -->
                     {% if forloop.counter0 == 0 %}
                     <div class="pb-4">
                         <div class="visually-hidden">
@@ -117,7 +118,8 @@
                         <div class="form-text">{{ form.workflow_details_file.help_text }}</div>
                         {% endif %}
                     </div>
-                    {% else %}
+                    {% elif forloop.counter0 == 1 %}
+                    <!-- External -->
                     <div class="d-flex flex-column-reverse row-gap-1">
                         <div class="visually-hidden">
                             {{ form.workflow_details.label_tag }}
