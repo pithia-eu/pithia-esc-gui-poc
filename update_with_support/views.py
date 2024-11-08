@@ -22,8 +22,10 @@ from .form_to_metadata_mappers import (
     WorkflowFormFieldsToMetadataMapper,
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
+from .forms import WorkflowEditorUpdateForm
 
 from common import models
+from datahub_management.services import WorkflowDataHubService
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.views import *
@@ -222,8 +224,33 @@ class CatalogueEntryUpdateWithEditorFormView(
 
 
 class WorkflowUpdateWithEditorFormView(
-    ResourceUpdateWithEditorFormView,
-    WorkflowEditorFormView):
+        ResourceUpdateWithEditorFormView,
+        WorkflowEditorFormView):
     model = models.Workflow
     success_url_name = 'update:workflow_with_editor'
+    form_class = WorkflowEditorUpdateForm
     form_field_to_metadata_mapper_class = WorkflowFormFieldsToMetadataMapper
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        workflow_details_file_source_existing_choice_index = self.get_index_of_workflow_details_file_source_choice('existing')
+        context['workflow_details_file_source_existing_choice_index'] = workflow_details_file_source_existing_choice_index
+        context['disabled_workflow_details_file_source_choice_indexes'] = []
+        if not self.stored_workflow_details_file:
+            context['disabled_workflow_details_file_source_choice_indexes'].append(
+                workflow_details_file_source_existing_choice_index
+            )
+        return context
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'workflow_details_file_source': 'external',
+        })
+        self.stored_workflow_details_file = WorkflowDataHubService.get_workflow_details_file(self.resource_id)
+        if not self.stored_workflow_details_file:
+            return initial
+        initial.update({
+            'workflow_details_file_source': 'existing',
+        })
+        return initial

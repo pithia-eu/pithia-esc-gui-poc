@@ -6,6 +6,8 @@ import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
+const workflowDetailsFileExistingRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='existing']");
+
 const workflowDetailsFileUploadRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='file_upload']");
 const workflowDetailsFileUploadRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsFileUploadRadioButton.id}']`);
 const workflowDetailsFileInput = document.querySelector("input[name='workflow_details_file']");
@@ -14,35 +16,57 @@ const workflowDetailsFileExternalRadioButton = document.querySelector("input[nam
 const workflowDetailsFileExternalRadioButtonLabel = document.querySelector(`label[for='${workflowDetailsFileExternalRadioButton.id}']`);
 const workflowDetailsFileExternalTextInput = document.querySelector("input[name='workflow_details']");
 
-const workflowDetailsRadioButtons = [
-    workflowDetailsFileUploadRadioButton,
-    workflowDetailsFileExternalRadioButton
-];
+const workflowDetailsFileSourceChoices = {}
 
+function setWorkflowDetailsFileSourceChoiceState(radioButtonValue, isEnabled) {
+    if ('relatedInput' in workflowDetailsFileSourceChoices[radioButtonValue]) {
+        workflowDetailsFileSourceChoices[radioButtonValue].relatedInput.disabled = !isEnabled;
+    }
+    if (!('radioButtonLabel' in workflowDetailsFileSourceChoices[radioButtonValue])) {
+        return;
+    }
+    if (isEnabled) {
+        return workflowDetailsFileSourceChoices[radioButtonValue].radioButtonLabel.classList.add('required');
+    }
+    return workflowDetailsFileSourceChoices[radioButtonValue].radioButtonLabel.classList.remove('required');
+}
 
 function updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
-    const isFileUploadSelected = radioButtonValue == workflowDetailsFileUploadRadioButton.value;
-    if (isFileUploadSelected) {
-        workflowDetailsFileUploadRadioButtonLabel.classList.add("required");
-        workflowDetailsFileExternalRadioButtonLabel.classList.remove("required");
-    } else {
-        workflowDetailsFileUploadRadioButtonLabel.classList.remove("required");
-        workflowDetailsFileExternalRadioButtonLabel.classList.add("required");
+    for (const key in workflowDetailsFileSourceChoices) {
+        if (key != radioButtonValue) {
+            setWorkflowDetailsFileSourceChoiceState(key, false);
+            continue;
+        }
+        setWorkflowDetailsFileSourceChoiceState(key, true);
     }
-    workflowDetailsFileInput.disabled = !isFileUploadSelected;
-    workflowDetailsFileInput.required = isFileUploadSelected;
-    workflowDetailsFileExternalTextInput.disabled = isFileUploadSelected;
-    workflowDetailsFileExternalTextInput.required = !isFileUploadSelected;
 }
 
 function setupWorkflowDetailsSection() {
+    // Group controls for each workflow details source choice
+    if (workflowDetailsFileExistingRadioButton) {
+        workflowDetailsFileSourceChoices[workflowDetailsFileExistingRadioButton.value] = {
+            radioButton: workflowDetailsFileExistingRadioButton,
+            radioButtonLabel: document.querySelector(`label[for='${workflowDetailsFileExistingRadioButton.id}']`),
+        }
+    }
+    
+    workflowDetailsFileSourceChoices[workflowDetailsFileUploadRadioButton.value] = {
+        radioButton: workflowDetailsFileUploadRadioButton,
+        radioButtonLabel: workflowDetailsFileUploadRadioButtonLabel,
+        relatedInput: workflowDetailsFileInput,
+    }
+    workflowDetailsFileSourceChoices[workflowDetailsFileExternalRadioButton.value] = {
+        radioButton: workflowDetailsFileExternalRadioButton,
+        radioButtonLabel: workflowDetailsFileExternalRadioButtonLabel,
+        relatedInput: workflowDetailsFileExternalTextInput,
+    }
     const currentWorkflowDetailsSourceChoice = document.querySelector("input[name='workflow_details_file_source']:checked").value;
     updateWorkflowDetailsRelatedInputStates(currentWorkflowDetailsSourceChoice);
-    workflowDetailsRadioButtons.forEach(radioButton => {
-        radioButton.addEventListener("change", e => {
+    for (const choice in workflowDetailsFileSourceChoices) {
+        workflowDetailsFileSourceChoices[choice].radioButton.addEventListener("change", e => {
             updateWorkflowDetailsRelatedInputStates(e.target.value);
         });
-    });
+    }
 }
 
 editorForm.addEventListener("submit", async e => {
