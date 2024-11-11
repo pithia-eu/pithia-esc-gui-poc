@@ -12,10 +12,6 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
-{% block file_upload_limit_info_text %}
-Only one workflow metadata file can be
-registered at a time.
-{% endblock file_upload_limit_info_text %}
 {% block pre_file_upload_extra_content %}
 <div class="file-upload-registration-section bg-light rounded border-top-0 p-4 mb-5">
     <fieldset>
@@ -56,6 +52,11 @@ registered at a time.
     </fieldset>
 </div>
 {% endblock pre_file_upload_extra_content %}
+{% block file_upload_registration_section_content %}
+{% with file_list_title='Validate Your Metadata File' %}
+{% include 'register/components/file_validation_status_form_section.html' %}
+{% endwith %}
+{% endblock file_upload_registration_section_content %}
 {% block extra_content %}
 <div class="file-upload-registration-section">
     <h2 class="fs-4 fw-semibold mb-2">Link the Workflow's OpenAPI Specification</h2>
