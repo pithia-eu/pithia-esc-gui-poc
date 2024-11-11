@@ -7,10 +7,11 @@
 <script src="{% static 'validation/interaction_methods_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
 {% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
-{% block file_upload_limit_info_text %}
-Only one data collection metadata file
-can be registered at a time.
-{% endblock file_upload_limit_info_text %}
+{% block file_upload_registration_section_content %}
+{% with file_list_title='Validate Your Metadata File' %}
+{% include 'register/components/file_validation_status_form_section.html' %}
+{% endwith %}
+{% endblock file_upload_registration_section_content %}
 {% block extra_content %}
 <div class="file-upload-registration-section">
     <h2 class="fs-4 fw-semibold mb-2" style="text-wrap: balance;">Add Interaction Methods</h2>

@@ -6,10 +6,11 @@
 <script src="{% static 'register/register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
 {% block file_upload_heading_text %}Select a Metadata File{% endblock file_upload_heading_text %}
-{% block file_upload_limit_info_text %}
-Only one catalogue data subset can be
-registered at a time.
-{% endblock file_upload_limit_info_text %}
+{% block file_upload_registration_section_content %}
+{% with file_list_title='Validate Your Metadata File' %}
+{% include 'register/components/file_validation_status_form_section.html' %}
+{% endwith %}
+{% endblock file_upload_registration_section_content %}
 {% block extra_content %}
 {% include 'register/components/doi_registration_form_section.html' %}
 {% endblock extra_content %}

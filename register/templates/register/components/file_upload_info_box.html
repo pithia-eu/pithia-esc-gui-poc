@@ -1,47 +1,67 @@
-<div class="bg-light rounded form-text p-4">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
-        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-    </svg><span class="fw-semibold">Validation Information</span>
-    <div class="d-flex flex-column align-items-start row-gap-1 mt-2">
-        <details>
-            <summary>How does validation work?</summary>
-            <div class="d-flex flex-column row-gap-2 mt-2">
-                <p class="mb-0">
-                    {% block file_upload_limit_info_text %}
-                    Multiple files can be registered at once.
-                    {% endblock file_upload_limit_info_text %}
+<details class="text-secondary">
+    <summary>
+        How long does validation take?
+    </summary>
+    <p class="mt-2">
+        Validation times may vary, but a metadata file will usually
+        take up to 20 seconds to a minute to finish validating (most
+        of this is usually taken up by XSD validation).
+    </p>
+    <ul class="list-unstyled form-text">
+        <li>
+            <details>
+                <summary>Why do I have to validate my metadata files?</summary>
+                <p class="mt-2">
+                    Metadata files are validated to ensure that
+                    the e-Science Centre will be able to display
+                    the contents of each file and that links to
+                    ontology terms and other metadata registrations
+                    will work.
                 </p>
-                <p class="mb-0">
-                    Metadata files must pass a validation process
-                    before they can be published in the e-Science
-                    Centre. The validation process is performed on
-                    our servers, and feedback is sent back to you
-                    as various checks are completed.
-                </p>
-                <p class="mb-0">The validation process involves:</p>
-                <ul class="mb-0">
-                    <li>Syntax validation</li>
-                    <li>UTF-8 encoding validation</li>
-                    <li>XSD validation</li>
-                    <li>Type validation</li>
-                    <li>Local ID validation</li>
-                    <li>Namespace validation</li>
-                    <li>Validating references to other metadata</li>
-                    <li>Validating references to Space Physics Ontology terms</li>
-                </ul>
-                <p>
-                    Additional checks will be performed depending on if metadata
-                    is being updated or newly registered.
-                </p>
-            </div>
-        </details>
-        <details>
-            <summary>How long does validation take?</summary>
-            <p class="mt-2 mb-0">
-                Validation times can vary, but a metadata file will usually
-                take up to 20 seconds to a minute to finish validating (most
-                of this is usually taken up by XSD validation).
-            </p>
-        </details>
-    </div>
-</div>
+            </details>
+        </li>
+        <li class="mt-2">
+            <details>
+                <summary>How does validation work?</summary>
+                <div class="d-flex flex-column row-gap-2 mt-2">
+                    <p class="mb-0">
+                        The validation process is performed on
+                        our servers, and feedback for each metadata
+                        file is sent back to you as various checks
+                        are completed.
+                    </p>
+                    <p class="mb-0">The validation process checks that each metadata file:</p>
+                    <ul class="mb-0">
+                        <li>Uses XML 1.0 syntax and UTF-8 encoding</li>
+                        <li>
+                            Shares the same typing for the current metadata file upload
+                            category (e.g. the metadata file has "Organisation" as the root
+                            element name, if you are registering it as/updating an organisation)
+                        </li>
+                        <li>
+                            Uses a valid local ID and namespace (see the 
+                            <a href="{% url 'resource_registration_user_guide' %}#page=6" target="_blank" class="link-underline-by-default">
+                            Data Resource Registration Guide</a> (Chapter 4.1.1 Local ID and
+                            Chapter 4.1.2 Choice of namespace) for details)
+                        </li>
+                        <li>Uses the local ID of the metadata file as the file name</li>
+                        <li>
+                            Adheres to the rules and constraints defined in the relevant XSD
+                            schemas (see the <a href="{% url 'schemas' %}" target="_blank" class="link-underline-by-default">
+                            PITHIA metadata models</a>)
+                        </li>
+                    </ul>
+                    <p class="mb-0">
+                        If URL references to other metadata registrations and/or Space Physics Ontology
+                        terms are made in the metadata file, validation will verify that the
+                        registrations/terms at those URLs are currently registered in the e-Science
+                        Centre/Space Physics Ontology.
+                    </p>
+                    <p class="mb-0">
+                        Additional checks will be performed depending on if you are registering or updating.
+                    </p>
+                </div>
+            </details>
+        </li>
+    </ul>
+</details>

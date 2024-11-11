@@ -33,7 +33,7 @@
         <form id="file-upload-form" action="{{ post_url }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% block pre_file_upload_extra_content %}{% endblock pre_file_upload_extra_content %}
-            <div class="d-flex flex-column row-gap-5 file-upload-registration-section">
+            <div class="file-upload-registration-section">
                 <div class="d-flex flex-column row-gap-4">
                     <h2 class="fs-4 fw-semibold pb-0 mb-0">
                         {% block file_upload_heading_text %}
@@ -55,12 +55,16 @@
                         </div>
                     </div>
                 </div>
-                {% with file_list_title='Uploaded Files' %}
+            </div>
+            <div class="file-upload-registration-section">
+                {% block file_upload_registration_section_content %}
+                {% with file_list_title='Validate Your Metadata File/Files' %}
                 {% include 'register/components/file_validation_status_form_section.html' %}
                 {% endwith %}
+                {% endblock file_upload_registration_section_content %}
             </div>
             {% block extra_content %}{% endblock extra_content %}
-            <div class="d-flex flex-column align-items-md-start align-items-stretch">
+            <div class="d-flex flex-column align-items-md-start align-items-stretch border-top-0 file-upload-registration-section">
                 <button type="submit" class="btn btn-lg btn-primary fw-semibold py-2 px-3" disabled>
                     {% block submit_button_text %}
                     Register
