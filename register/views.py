@@ -364,13 +364,13 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
         )
 
     def run_actions_on_registration_failure(self):
-        if not self.resource_id:
+        if not hasattr(self, 'resource_id'):
             return
         return self.delete_workflow_details_file()
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_file):
-        if not self.workflow_details_file:
+        if not hasattr(self, 'workflow_details_file'):
             new_registration = self.register_xml_file(xml_file)
             self.register_workflow_api_interaction_method(request, new_registration)
             return new_registration

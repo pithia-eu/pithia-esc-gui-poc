@@ -145,6 +145,7 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
 
     is_workflow_details_file_input_used = forms.BooleanField(
         label='I will upload a details file now',
+        required=False,
         widget=forms.CheckboxInput(
             attrs={
                 'class': 'form-check-input',
@@ -155,6 +156,7 @@ class UploadWorkflowFileForm(WorkflowOpenAPISpecificationForm):
 
     workflow_details_file = forms.FileField(
         label='Select Your Workflow Details File',
+        required=False,
         widget=forms.ClearableFileInput(attrs={
             'accept': 'application/pdf',
             'class': 'form-control',
