@@ -400,8 +400,9 @@ class WorkflowRegisterWithEditorFormView(
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_string):
-        updated_xml_string = self.store_workflow_details_file_and_update_xml_file_string(xml_string)
-        new_registration = self.register_xml_string(updated_xml_string)
+        if hasattr(self, 'workflow_details_file'):
+            xml_string = self.store_workflow_details_file_and_update_xml_file_string(xml_string)
+        new_registration = self.register_xml_string(xml_string)
         self.register_workflow_api_interaction_method(request, new_registration)
         return new_registration
 
