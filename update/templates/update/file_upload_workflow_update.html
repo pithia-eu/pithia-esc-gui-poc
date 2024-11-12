@@ -1,7 +1,65 @@
 {% extends 'update/file_upload_update.html' %}
+{% load static %}
 {% load project_tags %}
+{% block page_specific_scripts %}
+{{ resource_id|json_script:"resource-id" }}
+<script src="{% static 'update/workflow_update_form.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock page_specific_scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item resource_management_index_page_breadcrumb_text 'resource_management:index' %}
 {% breadcrumb_item resource_management_list_page_breadcrumb_text resource_management_list_page_breadcrumb_url_name %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block pre_file_upload_extra_content %}
+<fieldset class="file-upload-registration-section pb-0">
+    <legend>
+        <h2 class="fs-4 fw-semibold mb-0">Configure Workflow Details</h2>
+    </legend>
+    <div id="workflow-details-file-upload-section" class="bg-light rounded p-3">
+        <ul class="list-unstyled d-flex flex-column row-gap-4 mb-0">
+            {% for radio in form.workflow_details_file_source %}
+            {% if not forloop.counter0 in disabled_workflow_details_file_source_choice_indexes %}
+            <li>
+                <div class="form-check">
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}" class="form-check-label pb-0 mb-0">{{ radio.choice_label }}</label>
+                    {% if forloop.counter0 == workflow_details_file_source_existing_choice_index %}
+                    <!-- Existing file upload -->
+                    <div class="form-text">
+                        Continue using the details file that is currently
+                        in use and stored in the e-Science Centre. This
+                        will overwrite any workflow details file link in
+                        the metadata file.
+                    </div>
+                    {% elif forloop.counter0 == workflow_details_file_source_file_upload_choice_index %}
+                    <!-- File upload -->
+                    <div class="mt-2">
+                        <div class="visually-hidden">
+                            {{ form.workflow_details_file.label_tag }}
+                        </div>
+                        {{ form.workflow_details_file }}
+                        {% if form.workflow_details_file.help_text %}
+                        <div class="form-text">{{ form.workflow_details_file.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% elif forloop.counter0 == workflow_details_file_source_external_choice_index %}
+                    <!-- External -->
+                    <div class="d-flex flex-column-reverse row-gap-2">
+                        <div class="visually-hidden">
+                            {{ form.workflow_details.label_tag }}
+                        </div>
+                        <ul class="form-text ps-3 mb-0" style="list-style-type: disc;">
+                            <li>The workflow details file should be in PDF format.</li>
+                            <li>The link should point directly to the workflow details file.</li>
+                        </ul>
+                        {{ form.workflow_details }}
+                    </div>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</fieldset>
+{% endblock pre_file_upload_extra_content %}

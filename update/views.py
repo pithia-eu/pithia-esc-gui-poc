@@ -13,17 +13,22 @@ from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
 from common import models
-from common.decorators import login_session_institution_required, institution_ownership_required
+from common.decorators import (
+    login_session_institution_required,
+    institution_ownership_required
+)
+from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from handle_management.view_mixins import (
     HandleRegistrationViewMixin,
     HandleReapplicationViewMixin,
 )
 from resource_management.forms import (
+    UpdateDataCollectionInteractionMethodsForm,
+    UpdateWorkflowOpenAPISpecificationURLForm,
     UploadUpdatedCatalogueDataSubsetFileForm,
     UploadUpdatedDataCollectionFileForm,
     UploadUpdatedFileForm,
-    UpdateDataCollectionInteractionMethodsForm,
-    UpdateWorkflowOpenAPISpecificationURLForm,
+    UploadUpdatedWorkflowFileForm,
 )
 from resource_management.views import (
     _create_manage_resource_page_title,
@@ -38,6 +43,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
 
 @method_decorator(login_session_institution_required, name='dispatch')
 @method_decorator(institution_ownership_required, name='dispatch')
@@ -68,7 +74,8 @@ class ResourceUpdateFormView(FormView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Update {self.resource.name}'
         context['title_short'] = 'Update'
-        context['form'] = self.form_class
+        if 'form' not in kwargs:
+            context['form'] = self.get_form()
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
         context['validation_url'] = self.validation_url
@@ -84,32 +91,34 @@ class ResourceUpdateFormView(FormView):
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
-        xml_file = request.FILES['files']
-        if form.is_valid():
-            try:
-                if self.xml_file_string is None:
-                    xml_file.seek(0)
-                    self.xml_file_string = xml_file.read()
-                resource_id_temp = self.resource_id
-                self.model.objects.update_from_xml_string(
-                    resource_id_temp,
-                    self.xml_file_string,
-                    self.owner_id
-                )
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        xml_file = self.request.FILES['files']
+        try:
+            if self.xml_file_string is None:
+                xml_file.seek(0)
+                self.xml_file_string = xml_file.read()
+            resource_id_temp = self.resource_id
+            self.model.objects.update_from_xml_string(
+                resource_id_temp,
+                self.xml_file_string,
+                self.owner_id
+            )
 
-                messages.success(request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
-            except ExpatError as err:
-                logger.exception('Could not update a resource as there was an error parsing the update XML.')
-                messages.error(request, 'An error occurred whilst parsing the XML.')
-            except BaseException as err:
-                logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
-                messages.error(request, 'An unexpected error occurred.')
-        else:
-            messages.error(request, 'The form submitted was not valid.')
+            messages.success(self.request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+        except ExpatError as err:
+            logger.exception('Could not update a resource as there was an error parsing the update XML.')
+            messages.error(self.request, 'An error occurred whilst parsing the XML.')
+        except BaseException as err:
+            logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
+            messages.error(self.request, 'An unexpected error occurred.')
+        return response
 
-        return super().post(request, *args, **kwargs)
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(self.request, 'The form submitted was not valid.')
+        return response
+
 
 class OrganisationUpdateFormView(ResourceUpdateFormView):
     model = models.Organisation
@@ -119,6 +128,7 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
+
 class IndividualUpdateFormView(ResourceUpdateFormView):
     model = models.Individual
 
@@ -126,6 +136,7 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:individual'
     validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
+
 
 class ProjectUpdateFormView(ResourceUpdateFormView):
     model = models.Project
@@ -135,6 +146,7 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
+
 class PlatformUpdateFormView(ResourceUpdateFormView):
     model = models.Platform
 
@@ -143,6 +155,7 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
+
 class OperationUpdateFormView(ResourceUpdateFormView):
     model = models.Operation
 
@@ -150,6 +163,7 @@ class OperationUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:operation'
     validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
+
 
 class InstrumentUpdateFormView(ResourceUpdateFormView):
     template_name = 'update/file_upload_instrument_update.html'
@@ -165,6 +179,7 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
         context['inline_validation_url'] = reverse_lazy('validation:instrument_update')
         return context
 
+
 class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.AcquisitionCapabilities
 
@@ -172,6 +187,7 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:acquisition_capability_set'
     validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
+
 
 class AcquisitionUpdateFormView(ResourceUpdateFormView):
     model = models.Acquisition
@@ -181,6 +197,7 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
+
 class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     model = models.ComputationCapabilities
 
@@ -188,6 +205,7 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:computation_capability_set'
     validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
+
 
 class ComputationUpdateFormView(ResourceUpdateFormView):
     model = models.Computation
@@ -197,6 +215,7 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
     validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
+
 class ProcessUpdateFormView(ResourceUpdateFormView):
     model = models.Process
 
@@ -204,6 +223,7 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:process'
     validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
+
 
 class DataCollectionUpdateFormView(ResourceUpdateFormView):
     model = models.DataCollection
@@ -213,6 +233,7 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
     resource_update_page_url_name = 'update:data_collection'
     validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
+
 
 @login_session_institution_required
 @institution_ownership_required
@@ -279,6 +300,7 @@ def data_collection_interaction_methods(request, resource_id):
         'resource_management_list_page_breadcrumb_text': _create_manage_resource_page_title(models.DataCollection.type_plural_readable.title())
     })
 
+
 class CatalogueUpdateFormView(ResourceUpdateFormView):
     model = models.Catalogue
 
@@ -293,6 +315,7 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
 
+
 class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueEntry
 
@@ -306,6 +329,7 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
+
 
 class CatalogueDataSubsetUpdateFormView(
     HandleReapplicationViewMixin,
@@ -327,14 +351,11 @@ class CatalogueDataSubsetUpdateFormView(
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
-    
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
-        xml_file = request.FILES['files']
-        if not form.is_valid():
-            return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        xml_file = self.request.FILES['files']
         try:
-            self.handle_name = self.register_doi_if_requested(request, self.resource, xml_file)
+            self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file)
             # RE-INSERT PRE-EXISTING DOI KERNEL METADATA
             # Refresh self.resource if a DOI was added
             # so the new DOI kernel metadata is added to
@@ -344,21 +365,80 @@ class CatalogueDataSubsetUpdateFormView(
                 self.resource,
                 xml_file
             )
-            return super().post(request, *args, **kwargs)
+            return super().form_valid(form)
         except Exception:
             logger.exception(self.error_msg)
-            messages.error(request, self.error_msg)
+            messages.error(self.request, self.error_msg)
         
         return redirect(self.resource_update_page_url_name, resource_id=self.resource_id)
 
-class WorkflowUpdateFormView(ResourceUpdateFormView):
+
+class WorkflowUpdateFormView(ResourceUpdateFormView, WorkflowDataHubViewMixin):
     template_name = 'update/file_upload_workflow_update.html'
     model = models.Workflow
+    form_class = UploadUpdatedWorkflowFileForm
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     resource_update_page_url_name = 'update:workflow'
     validation_url = reverse_lazy('validation:workflow')
     success_url = reverse_lazy('resource_management:workflows')
+
+    error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
+    
+    def get_index_of_workflow_details_file_source_choice(self, choice_value: str):
+        try:
+            return [
+                choice[0]
+                for choice in self.form_class().fields.get('workflow_details_file_source').choices
+            ].index(choice_value)
+        except ValueError:
+            logger.exception(f'Workflow details source choice, "{choice_value}" does not exist!')
+        return None
+
+    def form_valid(self, form):
+        xml_file = self.request.FILES['files']
+        try:
+            workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+            # Do nothing for workflow_details_file_source == 'external'
+            if workflow_details_file_source == 'existing':
+                xml_file.seek(0)
+                self.xml_file_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
+            elif workflow_details_file_source == 'file_upload':
+                xml_file.seek(0)
+                self.xml_file_string = self.store_workflow_details_file_and_update_xml_file_string(xml_file.read().decode())
+            return super().form_valid(form)
+        except Exception:
+            logger.exception(self.error_msg)
+            messages.error(self.request, self.error_msg)
+        
+        return redirect(self.resource_update_page_url_name, resource_id=self.resource_id)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['workflow_details_file_source_file_upload_choice_index'] = self.get_index_of_workflow_details_file_source_choice('file_upload')
+        context['workflow_details_file_source_external_choice_index'] = self.get_index_of_workflow_details_file_source_choice('external')
+        workflow_details_file_source_existing_choice_index = self.get_index_of_workflow_details_file_source_choice('existing')
+        context['workflow_details_file_source_existing_choice_index'] = workflow_details_file_source_existing_choice_index
+        context['disabled_workflow_details_file_source_choice_indexes'] = []
+        if not self.stored_workflow_details_file:
+            context['disabled_workflow_details_file_source_choice_indexes'].append(
+                workflow_details_file_source_existing_choice_index
+            )
+        return context
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'workflow_details_file_source': 'external',
+        })
+        self.stored_workflow_details_file = self.get_workflow_details_file()
+        if not self.stored_workflow_details_file:
+            return initial
+        initial.update({
+            'workflow_details_file_source': 'existing',
+        })
+        return initial
+
 
 @login_session_institution_required
 @institution_ownership_required

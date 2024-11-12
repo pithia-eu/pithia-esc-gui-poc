@@ -414,7 +414,6 @@ class WorkflowRegisterWithEditorFormView(
         if form.cleaned_data.get('workflow_details_file_source') == 'file_upload':
             self.details_file = self.request.FILES['workflow_details_file']
         return super().form_valid(form)
-    
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
