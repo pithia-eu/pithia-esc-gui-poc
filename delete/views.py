@@ -1,5 +1,7 @@
 import logging
+import os
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -13,6 +15,7 @@ from common.decorators import (
     institution_ownership_required,
 )
 from common.models import ScientificMetadata
+from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title,
@@ -25,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
 
 @method_decorator(login_session_institution_required, name='dispatch')
 @method_decorator(institution_ownership_required, name='dispatch')
@@ -59,6 +63,12 @@ class ResourceDeleteView(TemplateView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:index'
     delete_resource_page_breadcrumb_url_name = ''
 
+    def run_delete_actions(self):
+        self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
+        self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
+        self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
+        ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Delete'
@@ -85,11 +95,7 @@ class ResourceDeleteView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         try:
-            self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
-            self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
-            self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
-            ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
-
+            self.run_delete_actions()
             messages.success(request, f'Successfully deleted {escape(self.resource_to_delete.name)}.')
         except BaseException as e:
             logger.exception('An error occurred during resource deletion.')
@@ -97,6 +103,7 @@ class ResourceDeleteView(TemplateView):
             return HttpResponseRedirect(self.redirect_url)
 
         return HttpResponseRedirect(self.redirect_url)
+
 
 class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
     """
@@ -140,6 +147,7 @@ class OrganisationDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     delete_resource_page_breadcrumb_url_name = 'delete:organisation'
 
+
 class IndividualDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Individual
@@ -150,6 +158,7 @@ class IndividualDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:individuals')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     delete_resource_page_breadcrumb_url_name = 'delete:individual'
+
 
 class ProjectDeleteView(ResourceDeleteView):
     """
@@ -162,6 +171,7 @@ class ProjectDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     delete_resource_page_breadcrumb_url_name = 'delete:project'
 
+
 class PlatformDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Platform
@@ -172,6 +182,7 @@ class PlatformDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:platforms')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     delete_resource_page_breadcrumb_url_name = 'delete:platform'
+
 
 class InstrumentDeleteView(ResourceDeleteView):
     """
@@ -184,6 +195,7 @@ class InstrumentDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     delete_resource_page_breadcrumb_url_name = 'delete:instrument'
 
+
 class OperationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Operation
@@ -194,6 +206,7 @@ class OperationDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:operations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     delete_resource_page_breadcrumb_url_name = 'delete:operation'
+
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -206,6 +219,7 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition_capability_set'
 
+
 class AcquisitionDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for an Acquisition
@@ -216,6 +230,7 @@ class AcquisitionDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:acquisitions')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     delete_resource_page_breadcrumb_url_name = 'delete:acquisition'
+
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     """
@@ -228,6 +243,7 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     delete_resource_page_breadcrumb_url_name = 'delete:computation_capability_set'
 
+
 class ComputationDeleteView(ResourceDeleteView):
     """
     The deletion confirmation page for a Computation
@@ -238,6 +254,7 @@ class ComputationDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:computations')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     delete_resource_page_breadcrumb_url_name = 'delete:computation'
+
 
 class ProcessDeleteView(ResourceDeleteView):
     """
@@ -267,6 +284,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
         context['linked_interaction_methods'] = list(self.resource_to_delete.interactionmethod_set.all())
         return context
 
+
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -277,6 +295,7 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:catalogues')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
+
 
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     """
@@ -289,6 +308,7 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
+
 class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     """
     The deletion confirmation page for a Catalogue
@@ -300,7 +320,8 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
 
-class WorkflowDeleteView(ResourceDeleteView):
+
+class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):
     """
     The deletion confirmation page for a Workflow.
     """
@@ -309,3 +330,11 @@ class WorkflowDeleteView(ResourceDeleteView):
     redirect_url = reverse_lazy('resource_management:workflows')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     delete_resource_page_breadcrumb_url_name = 'delete:workflow'
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def run_delete_actions(self):
+        super().run_delete_actions()
+        stored_workflow_details_file = self.get_workflow_details_file()
+        if not stored_workflow_details_file:
+            return
+        self.delete_workflow_details_file()
