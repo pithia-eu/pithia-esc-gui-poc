@@ -29,5 +29,5 @@ class WorkflowDataHubViewMixin:
         # Store/overwrite workflow details file
         wrapped_xml_file = XMLMetadataFile(xml_file_string, '')
         self.resource_id = wrapped_xml_file.localid
-        WorkflowDataHubService.store_or_overwrite_workflow_details_file(self.details_file, self.resource_id)
+        WorkflowDataHubService.store_or_overwrite_workflow_details_file(self.workflow_details_file, self.resource_id)
         return self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file_string)

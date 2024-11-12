@@ -370,7 +370,7 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_file):
-        if not self.details_file:
+        if not self.workflow_details_file:
             new_registration = self.register_xml_file(xml_file)
             self.register_workflow_api_interaction_method(request, new_registration)
             return new_registration
@@ -381,8 +381,8 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
         return new_registration
 
     def form_valid(self, form):
-        if form.cleaned_data['is_details_file_input_used']:
-            self.details_file = self.request.FILES['details_file']
+        if form.cleaned_data['is_workflow_details_file_input_used']:
+            self.workflow_details_file = self.request.FILES['workflow_details_file']
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

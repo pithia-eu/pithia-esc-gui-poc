@@ -404,7 +404,7 @@ class WorkflowUpdateFormView(ResourceUpdateFormView, WorkflowDataHubViewMixin):
                 xml_file.seek(0)
                 self.xml_file_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
             elif workflow_details_file_source == 'file_upload':
-                self.details_file = self.request.FILES['workflow_details_file']
+                self.workflow_details_file = self.request.FILES['workflow_details_file']
                 xml_file.seek(0)
                 self.xml_file_string = self.store_workflow_details_file_and_update_xml_file_string(xml_file.read().decode())
             return super().form_valid(form)
