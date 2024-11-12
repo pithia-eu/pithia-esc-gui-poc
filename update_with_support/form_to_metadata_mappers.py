@@ -73,6 +73,12 @@ class PlatformFormFieldsToMetadataMapper(
         mappings.update({
             'short_name': './/%s:shortName' % self.DEFAULT_XPATH_NSPREFIX,
             'url': './/%s:URL' % NamespacePrefix.GMD,
+        })
+        return mappings
+
+    def get_basic_multiple_choice_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_multiple_choice_form_field_to_xml_field_mappings()
+        mappings.update({
             'child_platforms': './/%s:childPlatform/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK)
         })
         return mappings
