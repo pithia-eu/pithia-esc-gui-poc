@@ -1,8 +1,6 @@
+from django.http import FileResponse
+from django.http import Http404
 from django.shortcuts import render
-from django.http import (
-    FileResponse,
-    HttpResponseNotFound,
-)
 from django.utils.html import escape
 
 from .services import WorkflowDataHubService
@@ -10,8 +8,7 @@ from .services import WorkflowDataHubService
 
 # Create your views here.
 def get_workflow_details_file(request, workflow_id):
-    try:
-        workflow_details_file = WorkflowDataHubService.get_workflow_details_file(workflow_id)
-        return FileResponse(workflow_details_file, content_type='application/pdf')
-    except IOError:
-        return HttpResponseNotFound(f'The details file for workflow with ID "<i>{escape(workflow_id)}</i>" was not found.')
+    workflow_details_file = WorkflowDataHubService.get_workflow_details_file(workflow_id)
+    if not workflow_details_file:
+        raise Http404(f'A details file for workflow with ID "<i>{escape(workflow_id)}</i>" was not found in the e-Science Centre.')
+    return FileResponse(workflow_details_file, content_type='application/pdf')
