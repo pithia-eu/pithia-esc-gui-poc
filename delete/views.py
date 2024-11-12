@@ -337,4 +337,7 @@ class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):
         stored_workflow_details_file = self.get_workflow_details_file()
         if not stored_workflow_details_file:
             return
-        self.delete_workflow_details_file()
+        try:
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file already deleted.')
