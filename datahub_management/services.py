@@ -36,4 +36,4 @@ class WorkflowDataHubService:
     @classmethod
     def delete_workflow_details_file(cls, workflow_id: str):
         workflow_details_file_to_remove = pathlib.Path(cls._get_workflow_details_file_path(workflow_id))
-        return workflow_details_file_to_remove.unlink()
+        return os.remove(workflow_details_file_to_remove)
