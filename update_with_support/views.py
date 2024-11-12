@@ -50,15 +50,19 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 
+    def run_extra_actions_before_update(self):
+        pass
+
     def form_valid(self, form):
         try:
             metadata_editor = self.metadata_editor_class(xml_string=self.resource.xml)
             self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
-            xml_string = metadata_editor.to_xml()
+            self.xml_string = metadata_editor.to_xml()
+            self.run_extra_actions_before_update()
             resource_id_temp = self.resource_id
             resource = self.model.objects.update_from_xml_string(
                 resource_id_temp,
-                xml_string,
+                self.xml_string,
                 self.owner_id
             )
 
@@ -230,6 +234,16 @@ class WorkflowUpdateWithEditorFormView(
     success_url_name = 'update:workflow_with_editor'
     form_class = WorkflowEditorUpdateForm
     form_field_to_metadata_mapper_class = WorkflowFormFieldsToMetadataMapper
+
+    def run_extra_actions_before_update(self):
+        super().run_extra_actions_before_update()
+        if hasattr(self, 'workflow_details_file'):
+            self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
+
+    def form_valid(self, form):
+        if form.cleaned_data.get('workflow_details_file_source') == 'file_upload':
+            self.workflow_details_file = self.request.FILES['workflow_details_file']
+        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

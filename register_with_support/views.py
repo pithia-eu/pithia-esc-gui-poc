@@ -16,7 +16,6 @@ from .metadata_builder.metadata_structures import *
 from .metadata_builder.utils import *
 
 from common import models
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
 
@@ -375,7 +374,6 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
 
 class WorkflowRegisterWithEditorFormView(
-    WorkflowDataHubViewMixin,
     WorkflowEditorFormView,
     ResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm

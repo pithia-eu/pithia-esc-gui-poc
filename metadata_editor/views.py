@@ -41,6 +41,7 @@ from .view_mixins import *
 
 from common import models
 from common.decorators import login_session_institution_required
+from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -1000,7 +1001,8 @@ class CatalogueDataSubsetEditorFormView(
 
 class WorkflowEditorFormView(
     DataCollectionSelectFormViewMixin,
-    ResourceEditorFormView):
+    ResourceEditorFormView,
+    WorkflowDataHubViewMixin):
     form_class = WorkflowEditorForm
     template_name = 'metadata_editor/workflow_editor.html'
 
