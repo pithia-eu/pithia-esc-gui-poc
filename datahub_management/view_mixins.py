@@ -11,7 +11,7 @@ class WorkflowDataHubViewMixin:
     def get_workflow_details_file(self):
         return WorkflowDataHubService.get_workflow_details_file(self.resource_id)
 
-    def _get_workflow_details_file_url(self):
+    def get_workflow_details_file_url(self):
         return f'{os.environ["HANDLE_URL_PREFIX"]}{reverse_lazy("browse:workflow_detail", kwargs={"workflow_id": self.resource_id})}details/'
 
     def delete_workflow_details_file(self):
@@ -20,7 +20,7 @@ class WorkflowDataHubViewMixin:
     def add_workflow_details_file_link_to_workflow_xml_file_string(self, xml_file_string):
         # Construct link to workflow details file
         # and put in the new workflow's XML.
-        workflow_details_url = self._get_workflow_details_file_url()
+        workflow_details_url = self.get_workflow_details_file_url()
         simple_workflow_editor = SimpleWorkflowEditor(xml_file_string)
         simple_workflow_editor.update_workflow_details_url(workflow_details_url)
         return simple_workflow_editor.to_xml()

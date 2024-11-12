@@ -27,6 +27,7 @@ from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsM
 from .forms import WorkflowEditorUpdateForm
 
 from common import models
+from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
 from datahub_management.services import WorkflowDataHubService
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.service_utils import BaseMetadataEditor
@@ -250,7 +251,17 @@ class WorkflowUpdateWithEditorFormView(
         updated_resource = super().update_resource()
         if not self.workflow_details_file_source == 'external':
             return updated_resource
-        self.delete_workflow_details_file()
+        # User may choose the external details file
+        # source by mistake, but still use the eSC
+        # details file URL. If this is true, do not
+        # delete the details file from DataHub.
+        updated_workflow_details_url = WorkflowXmlMappingShortcuts(self.xml_string).workflow_details_url
+        if updated_workflow_details_url == self.get_workflow_details_file_url():
+            return updated_resource
+        try:
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file was not found.')
         return updated_resource
 
     def form_valid(self, form):
