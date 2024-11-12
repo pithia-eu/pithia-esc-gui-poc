@@ -1,6 +1,8 @@
+import os
 from datetime import datetime
 from datetime import timezone
 from dateutil.parser import parse
+from django.db import transaction
 from django.shortcuts import render
 from pyexpat import ExpatError
 
@@ -53,25 +55,27 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     def run_extra_actions_before_update(self):
         pass
 
+    def update_resource(self):
+        return self.model.objects.update_from_xml_string(
+            self.resource_id,
+            self.xml_string,
+            self.owner_id
+        )
+
     def form_valid(self, form):
         try:
             metadata_editor = self.metadata_editor_class(xml_string=self.resource.xml)
             self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
             self.xml_string = metadata_editor.to_xml()
             self.run_extra_actions_before_update()
-            resource_id_temp = self.resource_id
-            resource = self.model.objects.update_from_xml_string(
-                resource_id_temp,
-                self.xml_string,
-                self.owner_id
-            )
+            updated_resource = self.update_resource()
 
-            messages.success(self.request, f'Successfully updated {escape(resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            messages.success(self.request, f'Successfully updated {escape(updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             self.success_url += '?reset=true'
         except ExpatError as err:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
-        except BaseException as err:
+        except Exception as err:
             logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
             messages.error(self.request, 'An unexpected error occurred.')
 
@@ -237,11 +241,21 @@ class WorkflowUpdateWithEditorFormView(
 
     def run_extra_actions_before_update(self):
         super().run_extra_actions_before_update()
-        if hasattr(self, 'workflow_details_file'):
-            self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
+        if not hasattr(self, 'workflow_details_file'):
+            return
+        self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def update_resource(self):
+        updated_resource = super().update_resource()
+        if not self.workflow_details_file_source == 'external':
+            return updated_resource
+        self.delete_workflow_details_file()
+        return updated_resource
 
     def form_valid(self, form):
-        if form.cleaned_data.get('workflow_details_file_source') == 'file_upload':
+        self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+        if self.workflow_details_file_source == 'file_upload':
             self.workflow_details_file = self.request.FILES['workflow_details_file']
         return super().form_valid(form)
     

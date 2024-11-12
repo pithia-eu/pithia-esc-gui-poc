@@ -1,6 +1,7 @@
 import logging
 import os
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import (
     get_object_or_404,
     render,
@@ -64,6 +65,13 @@ class ResourceUpdateFormView(FormView):
     success_url = ''
     xml_file_string = None
 
+    def update_resource(self):
+        return self.model.objects.update_from_xml_string(
+            self.resource_id,
+            self.xml_file_string,
+            self.owner_id
+        )
+
     def dispatch(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['resource_id']
         self.resource = self.model.objects.get(pk=self.resource_id)
@@ -98,12 +106,7 @@ class ResourceUpdateFormView(FormView):
             if self.xml_file_string is None:
                 xml_file.seek(0)
                 self.xml_file_string = xml_file.read()
-            resource_id_temp = self.resource_id
-            self.model.objects.update_from_xml_string(
-                resource_id_temp,
-                self.xml_file_string,
-                self.owner_id
-            )
+            self.update_resource()
 
             messages.success(self.request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
         except ExpatError as err:
@@ -395,15 +398,25 @@ class WorkflowUpdateFormView(ResourceUpdateFormView, WorkflowDataHubViewMixin):
             logger.exception(f'Workflow details source choice, "{choice_value}" does not exist!')
         return None
 
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def update_resource(self):
+        try:
+            updated_resource = super().update_resource()
+            if not self.workflow_details_file_source == 'external':
+                return updated_resource
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file was not found.')
+
     def form_valid(self, form):
         xml_file = self.request.FILES['files']
         try:
-            workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+            self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
             # Do nothing for workflow_details_file_source == 'external'
-            if workflow_details_file_source == 'existing':
+            if self.workflow_details_file_source == 'existing':
                 xml_file.seek(0)
                 self.xml_file_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
-            elif workflow_details_file_source == 'file_upload':
+            elif self.workflow_details_file_source == 'file_upload':
                 self.workflow_details_file = self.request.FILES['workflow_details_file']
                 xml_file.seek(0)
                 self.xml_file_string = self.store_workflow_details_file_and_update_xml_file_string(xml_file.read().decode())

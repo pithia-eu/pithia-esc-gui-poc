@@ -1017,9 +1017,9 @@ class WorkflowEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         data_collections = [form_cleaned_data.get('data_collection_1')] + form_cleaned_data.get('data_collection_2_and_others')
         metadata_editor.update_data_collections(data_collections)
-        if form_cleaned_data.get('workflow_details_file_source') == 'existing':
+        if self.workflow_details_file_source == 'existing':
             return
-        elif form_cleaned_data.get('workflow_details_file_source') == 'file_upload':
+        elif self.workflow_details_file_source == 'file_upload':
             metadata_editor.update_workflow_details('TEMP_WORKFLOW_DETAILS_URL')
             return
         metadata_editor.update_workflow_details(form_cleaned_data.get('workflow_details'))
