@@ -13,52 +13,52 @@
                 <summary>Why do I have to validate my metadata files?</summary>
                 <p class="mt-2">
                     Metadata files are validated to ensure that
-                    the e-Science Centre will be able to display
-                    the contents of each file and that links to
-                    ontology terms and other metadata registrations
-                    will work.
+                    the e-Science Centre will be able to process
+                    and display the contents of each file and that
+                    links to ontology terms and other metadata
+                    registrations will work as expected.
                 </p>
             </details>
         </li>
         <li class="mt-2">
             <details>
-                <summary>How does validation work?</summary>
+                <summary>What conditions are required to pass validation?</summary>
                 <div class="d-flex flex-column row-gap-2 mt-2">
                     <p class="mb-0">
-                        The validation process is performed on
-                        our servers, and feedback for each metadata
-                        file is sent back to you as various checks
-                        are completed.
+                        Metadata files must meet these
+                        conditions to pass validation:
                     </p>
-                    <p class="mb-0">The validation process checks that each metadata file:</p>
-                    <ul class="mb-0">
-                        <li>Uses XML 1.0 syntax and UTF-8 encoding</li>
+                    <ul class="mb-0" style="list-style-type: disc;">
+                        <li>The file uses valid XML syntax.</li>
+                        <li>The file uses UTF-8 encoding (and does not contain illegal characters).</li>
+                        <li>The file name is the same as the local ID.</li>
                         <li>
-                            Shares the same typing for the current metadata file upload
-                            category (e.g. the metadata file has "Organisation" as the root
-                            element name, if you are registering it as/updating an organisation)
+                            The file uses the correct type for the file upload category (e.g.
+                            the metadata file should have <span class="font-monospace">&lt;Organisation&gt;</span>
+                            as the root element, if an organisation is being registered/updated).
                         </li>
                         <li>
-                            Uses a valid local ID and namespace (see the 
-                            <a href="{% url 'resource_registration_user_guide' %}#page=6" target="_blank" class="link-underline-by-default">
-                            Data Resource Registration Guide</a> (Chapter 4.1.1 Local ID and
-                            Chapter 4.1.2 Choice of namespace) for details)
-                        </li>
-                        <li>Uses the local ID of the metadata file as the file name</li>
-                        <li>
-                            Adheres to the rules and constraints defined in the relevant XSD
+                            The file is structured according to the rules and constraints defined in the relevant XSD
                             schemas (see the <a href="{% url 'schemas' %}" target="_blank" class="link-underline-by-default">
-                            PITHIA metadata models</a>)
+                            PITHIA metadata models</a>).
+                        </li>
+                        <li>
+                            The file has a unique and appropriately formatted local ID (see Chapter 4.1.1 Local ID of the
+                            <a href="{% url 'resource_registration_user_guide' %}#page=6" target="_blank" class="link-underline-by-default">
+                            Data Resource Registration Guide</a> for further guidance).
+                        </li>
+                        <li>
+                            The file has an appropriately formatted namespace (Chapter 4.1.2 Choice of namespace of the Data Resource
+                            Registration Guide gives further guidance).
                         </li>
                     </ul>
                     <p class="mb-0">
-                        If URL references to other metadata registrations and/or Space Physics Ontology
-                        terms are made in the metadata file, validation will verify that the
-                        registrations/terms at those URLs are currently registered in the e-Science
-                        Centre/Space Physics Ontology.
+                        Any URL references to other metadata registrations and/or Space Physics Ontology
+                        terms in the metadata file are also checked to ensure they point to registrations/terms
+                        currently registered in the e-Science Centre/Space Physics Ontology.
                     </p>
                     <p class="mb-0">
-                        Additional checks will be performed depending on if you are registering or updating.
+                        Additional checks are performed depending on if you are registering or updating.
                     </p>
                 </div>
             </details>
