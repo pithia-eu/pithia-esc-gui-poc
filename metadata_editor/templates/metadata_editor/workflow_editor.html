@@ -128,16 +128,29 @@
                             {% elif forloop.counter0 == workflow_details_file_source_external_choice_index %}
                             <!-- External -->
                             <div class="d-flex flex-column-reverse row-gap-2 mt-3">
-                                <div class="visually-hidden">
-                                    {{ form.workflow_details.label_tag }}
-                                </div>
-                                <div class="alert alert-light form-text mb-0">
-                                    <ul class="mb-0 ps-3" style="list-style-type: disc;">
-                                        <li>The workflow details file should be in PDF format.</li>
-                                        <li>The link should point directly to the workflow details file.</li>
+                                <div class="d-flex flex-column row-gap-1 alert alert-light form-text mb-0">
+                                    <p class="mb-0">
+                                        Use this option if you would like to link to a workflow
+                                        details file outside the e-Science Centre. If choosing
+                                        this option, we recommend:
+                                    </p>
+                                    <ul class="ps-3" style="list-style-type: disc;">
+                                        <li>The workflow details file is in PDF format.</li>
+                                        <li>The link points directly to the workflow details file.</li>
                                     </ul>
+                                    {% if workflow_details_file_source_existing_choice_index not in disabled_workflow_details_file_source_choice_indexes %}
+                                    <p class="fw-semibold mb-0">
+                                        This will also delete the details file (for this
+                                        workflow) currently stored in the e-Science Centre.
+                                    </p>
+                                    {% endif %}
                                 </div>
-                                {{ form.workflow_details }}
+                                <div>
+                                    <div class="visually-hidden">
+                                        {{ form.workflow_details.label_tag }}
+                                    </div>
+                                    {{ form.workflow_details }}
+                                </div>
                             </div>
                             {% endif %}
                         </div>
