@@ -1,52 +1,67 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-4">
+    {% if num_interaction_methods == 1 %}
+    <ul class="d-flex flex-row column-gap-2 row-gap-2 list-unstyled mb-0">
+        {% for service_function_url in online_resource.service_functions %}
+        <li>
+            {% with value=service_function_url pill_type='secondary' extra_badge_classes='fs-6 fw-normal rounded-pill' %}
+            {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start link-underline-by-default fs-5" target="_blank" rel="noopener noreferrer" style="line-height: 1.2;">
         {{ online_resource.name }}
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
         </svg>
     </a>
+    {% if online_resource.description.strip %}
+    <div class="d-inline-flex flex-column align-items-start">
+        {% with description_urlized=online_resource.description|urlize type_id=type|server_url_id|lower %}
+        {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+        {% include 'browse/detail/components/expandable_text_block.html' %}
+        {% endwith %}
+        {% endwith %}
+    </div>
+    {% endif %}
+    {% if online_resource.protocol or online_resource.data_format %}
     <details class="details-interaction-methods" name="details-collection-results">
-        <summary class="fs-normal-lg">
-            Show details
+        <summary>
+            More details
         </summary>
-        <div class="d-flex flex-column row-gap-3 mt-3">
-            {% if online_resource.description.strip %}
+        <dl class="d-flex flex-column row-gap-2 mt-2">
+            {% if online_resource.protocol %}
             <div>
-                {% with description_urlized=online_resource.description|urlize type_id=type|server_url_id|lower %}
-                {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-                {% include 'browse/detail/components/expandable_text_block.html' %}
-                {% endwith %}
-                {% endwith %}
+                <dt>Protocol</dt>
+                <dd>{{ online_resource.protocol }}</dd>
             </div>
             {% endif %}
-            {% if online_resource.protocol or online_resource.data_format %}
-            <details>
-                <summary>
-                    Protocol & Data Formats
-                </summary>
-                <dl class="d-flex flex-column row-gap-2 mt-2">
-                    {% if online_resource.protocol %}
-                    <div>
-                        <dt>Protocol</dt>
-                        <dd>{{ online_resource.protocol }}</dd>
-                    </div>
-                    {% endif %}
-                    {% if online_resource.data_format %}
-                    <div>
-                        <dt>Data Formats</dt>
-                        {% for data_format in online_resource.data_format|wrap_in_list_if_dict %}
-                        <dd class="dd-list-item">
-                            {% with value=data_format %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </dl>
-            </details>
+            {% if online_resource.data_format %}
+            <div>
+                <dt>Data Formats</dt>
+                {% for data_format in online_resource.data_format|wrap_in_list_if_dict %}
+                <dd class="dd-list-item">
+                    {% with value=data_format %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% endwith %}
+                </dd>
+                {% endfor %}
+            </div>
             {% endif %}
-        </div>
+        </dl>
     </details>
+    {% endif %}
+    {% if num_interaction_methods > 1 %}
+    <ul class="d-flex flex-column row-gap-2 list-unstyled mb-0">
+        {% for service_function_url in online_resource.service_functions %}
+        <li>
+            {% with value=service_function_url pill_type='secondary' extra_badge_classes='fs-6 fw-normal rounded-pill' %}
+            {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </div>

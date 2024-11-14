@@ -16,6 +16,7 @@ from django.views.generic import (
     TemplateView,
 )
 from lxml import etree
+from openapi_spec_validator import validate_spec_url
 
 from .services import (
     get_properties_for_ontology_server_urls,
@@ -433,6 +434,35 @@ class ResourceDetailView(TemplateView):
         return context
 
 class OnlineResourcesViewMixin:
+    def categorise_online_resources_from_resource(self, resource: models.DataCollection | models.CatalogueDataSubset):
+        interaction_methods_by_type = {
+            'api_internal': [],
+            'api_external': [],
+            'online_resource': [],
+        }
+        for online_resource in resource.properties.online_resources:
+            service_functions = online_resource.get('service_functions')
+            is_openapi_a_service_function = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution' in service_functions
+            is_linkage_to_openapi_spec = True
+            try:
+                validate_spec_url(online_resource.linkage)
+            except Exception:
+                is_linkage_to_openapi_spec = False
+
+            if (is_openapi_a_service_function
+                and is_linkage_to_openapi_spec):
+                interaction_methods_by_type['api_internal'].append(online_resource)
+                continue
+            elif is_openapi_a_service_function:
+                interaction_methods_by_type['api_external'].append(online_resource)
+                continue
+            interaction_methods_by_type['online_resource'].append(online_resource)
+
+        # Remove empty categories
+        interaction_methods_by_type = {key: value for key, value in interaction_methods_by_type.items() if value}
+            
+        return interaction_methods_by_type
+
     def get_online_resources_from_resource_by_type(self, resource: models.DataCollection | models.CatalogueDataSubset):
         interaction_methods_by_type = {}
         # Link interaction methods
@@ -809,11 +839,11 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     def get(self, request, *args, **kwargs):
         self.resource_id = self.kwargs['data_collection_id']
         self.resource = get_object_or_404(self.model, pk=self.resource_id)
-        self.interaction_methods_by_type = self.get_online_resources_from_resource_by_type(self.resource)
-        # API Interaction methods
+        self.interaction_methods_by_type = self.categorise_online_resources_from_resource(self.resource)
+        # Legacy API Interaction methods
         api_interaction_methods = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
         if api_interaction_methods:
-            self.interaction_methods_by_type['api'] = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
+            self.interaction_methods_by_type['api_legacy'] = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
 
         return super().get(request, *args, **kwargs)
     
@@ -966,7 +996,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
             context.update(self.get_context_handle_variables())
             return render(request, 'browse/detail_404.html', context)
         
-        self.interaction_methods_by_type = self.get_online_resources_from_resource_by_type(self.resource)
+        self.interaction_methods_by_type = self.categorise_online_resources_from_resource(self.resource)
 
         return super().get(request, *args, **kwargs)
 
