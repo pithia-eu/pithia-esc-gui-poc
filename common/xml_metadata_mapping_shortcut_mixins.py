@@ -404,7 +404,7 @@ class PithiaOnlineResourceMetadataPropertiesMixin(BaseMetadataPropertiesShortcut
             parent_element = self.xml_parsed
         online_resource_elements = self._get_elements_with_xpath_query('.//%s:source/%s:OnlineResource' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH), parent_element)
         return [{
-            'service_function': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:serviceFunction/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
+            'service_functions': self._get_elements_with_xpath_query('.//%s:serviceFunction/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK), o_res_elem),
             'linkage': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:linkage/%s:URL' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.GMD), o_res_elem),
             'name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:name' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
             'protocol': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:protocol' % (self.PITHIA_NSPREFIX_XPATH), o_res_elem),
