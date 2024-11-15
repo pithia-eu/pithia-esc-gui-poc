@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class WorkflowDataHubService:
     @classmethod
     def _get_workflow_details_file_path(cls, workflow_id):
-        return os.path.join(BASE_DIR, 'datahub', 'workflow_details', f'{workflow_id}.pdf')
+        return os.path.join(BASE_DIR, os.path.normpath(os.environ['DATAHUB_DIRECTORY_PATH']), 'workflows', f'{workflow_id}.pdf')
 
     @classmethod
     def store_or_overwrite_workflow_details_file(cls, workflow_details_file: SimpleUploadedFile, workflow_id: str):
