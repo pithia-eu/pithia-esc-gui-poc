@@ -291,5 +291,6 @@ class WorkflowUpdateWithEditorFormView(
             return initial
         initial.update({
             'workflow_details_file_source': 'existing',
+            'workflow_details': '',
         })
         return initial
