@@ -1,7 +1,9 @@
 import logging
 import os
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.validators import URLValidator
 from django.db import (
     IntegrityError,
     transaction,
@@ -11,11 +13,13 @@ from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.views.generic import FormView
 from pyexpat import ExpatError
+from urllib.parse import urlparse
 
 from .forms import *
 
 from common import models
 from common.decorators import login_session_institution_required
+from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
 from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from handle_management.view_mixins import HandleRegistrationViewMixin
 from resource_management.views import (
@@ -383,6 +387,25 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
     def form_valid(self, form):
         if form.cleaned_data['is_workflow_details_file_input_used']:
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+        try:
+            xml_file = self.request.FILES.getlist('files')[0]
+            workflow_xml = WorkflowXmlMappingShortcuts(xml_file.read().decode())
+            validator = URLValidator()
+            workflow_details_url = workflow_xml.workflow_details_url
+            validator(workflow_details_url)
+            parsed_url = urlparse(workflow_xml.workflow_details_url)
+            if parsed_url.hostname == 'esc.pithia.eu':
+                messages.error(self.request, 'Please use the workflow details file input to register the details file with this workflow.')
+                return super().form_invalid(form)
+            xml_file.seek(0)
+        except ValidationError as err:
+            logger.exception(err)
+            messages.error(self.request, 'The workflow details file URL provided in the metadata file is invalid.')
+            return super().form_invalid(form)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred during registration.')
+            return super().form_invalid(form)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
