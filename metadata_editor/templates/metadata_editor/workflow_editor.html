@@ -89,10 +89,10 @@
 {% endif %}
 <hr class="my-5">
 <section id="workflow-details-section">
-    <div class="row gy-4">
-        <div class="col-lg-12">
-            <h2 class="mb-0">Workflow Details</h2>
-        </div>
+    <fieldset class="row gy-4">
+        <legend class="col-lg-12 mb-0">
+            <h2 class="d-inline-block required mb-0">Workflow Details</h2>
+        </legend>
         <div class="col-xl-9 col-lg-12">
             <p>
                 A file with further details, including a graph diagram of the flow.
@@ -160,7 +160,7 @@
                 {% endfor %}
             </ul>
         </div>
-    </div>
+    </fieldset>
 </section>
 {% endblock form_content %}
 {% block table_of_contents %}

@@ -982,6 +982,8 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 
 
 /* Metadata editor */
+legend.required::after,
+legend h2.required::after,
 label.required::after {
     content: ' *';
     color: red;
