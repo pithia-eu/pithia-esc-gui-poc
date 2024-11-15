@@ -24,6 +24,7 @@ class UploadUpdatedFileForm(forms.Form):
         })
     )
 
+
 class UploadUpdatedDataCollectionFileForm(forms.Form):
     required_css_class = 'required'
 
@@ -39,10 +40,37 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
         })
     )
 
+
 class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['files'].label = _FILE_INPUT_LABEL
+
+
+class UploadUpdatedWorkflowFileForm(UploadUpdatedFileForm):
+    workflow_details_file_source = forms.ChoiceField(
+        label='Workflow Details File Source',
+        required=True,
+        choices=(
+            ('existing', 'Keep Using the Same File'),
+            ('file_upload', 'Upload a New Workflow Details File'),
+            ('external', 'Use the Workflow Details File Link in the Metadata File'),
+        ),
+        widget=forms.RadioSelect(attrs={
+            'class': 'form-check-input',
+        })
+    )
+
+    workflow_details_file = forms.FileField(
+        label='Select Your Workflow Details File',
+        required=False,
+        widget=forms.ClearableFileInput(attrs={
+            'accept': 'application/pdf',
+            'class': 'form-control',
+        }),
+        help_text='Allowed formats: PDF'
+    )
+
 
 class UpdateDataCollectionInteractionMethodsForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -75,6 +103,7 @@ class UpdateDataCollectionInteractionMethodsForm(forms.Form):
         }),
         help_text=_API_DESCRIPTION_TEXTAREA_HELP_TEXT
     )
+
 
 class UpdateWorkflowOpenAPISpecificationURLForm(forms.Form):
     required_css_class = 'required'

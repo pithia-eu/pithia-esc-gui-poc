@@ -929,7 +929,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'When you upload a file, it will be sent to our servers for validation. Its validation status will appear here.';
+    content: 'When you upload a file, it will be sent to our servers for validation. Its validation progress will appear here.';
     color: gray;
 }
 
@@ -977,7 +977,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-upload-registration-section.bg-light.rounded:first-of-type {
-    margin-top: 2.25rem;
+    margin-block: calc(var(--resource-registration-upload-section-padding) + 0.25rem);
 }
 
 

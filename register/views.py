@@ -88,7 +88,7 @@ class ResourceRegisterFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register {self.model.type_readable.title()} Metadata Files'
+        context['title'] = f'Register {self.model.type_plural_readable.title()} via File Upload'
         context['data_collection_related_index_page_title'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
         context['validation_url'] = self.validation_url
@@ -272,7 +272,7 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
+        context['title'] = f'Register a {self.model.type_readable.title()} via File Upload'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context
 
@@ -332,7 +332,7 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
+        context['title'] = f'Register a {self.model.type_readable.title()} via File Upload'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
@@ -364,13 +364,13 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
         )
 
     def run_actions_on_registration_failure(self):
-        if not self.workflow_id:
+        if not hasattr(self, 'resource_id'):
             return
-        return self.delete_workflow_details_file(self.workflow_id)
+        return self.delete_workflow_details_file()
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_file):
-        if not self.details_file:
+        if not hasattr(self, 'workflow_details_file'):
             new_registration = self.register_xml_file(xml_file)
             self.register_workflow_api_interaction_method(request, new_registration)
             return new_registration
@@ -381,12 +381,12 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
         return new_registration
 
     def form_valid(self, form):
-        if form.cleaned_data['is_details_file_input_used']:
-            self.details_file = self.request.FILES['details_file']
+        if form.cleaned_data['is_workflow_details_file_input_used']:
+            self.workflow_details_file = self.request.FILES['workflow_details_file']
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Register a {self.model.type_readable.title()} Metadata File'
+        context['title'] = f'Register a {self.model.type_readable.title()} via File Upload'
         context['api_specification_validation_url'] = reverse_lazy('validation:api_specification_url')
         return context

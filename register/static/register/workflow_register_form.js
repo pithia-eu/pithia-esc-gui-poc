@@ -11,9 +11,9 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
-const isWorkflowDetailsFileInputUsedCheckbox = document.querySelector("input[name='is_details_file_input_used']");
-const workflowDetailsFileUploadSection = document.querySelector("#details_file_upload_section");
-const workflowDetailsFileInput = document.querySelector("input[name='details_file']");
+const isWorkflowDetailsFileInputUsedCheckbox = document.querySelector("input[name='is_workflow_details_file_input_used']");
+const workflowDetailsFileUploadSection = document.querySelector("#workflow_details_file_upload_section");
+const workflowDetailsFileInput = document.querySelector("input[name='workflow_details_file']");
 const workflowDetailsFileInputLabel = document.querySelector(`label[for="${workflowDetailsFileInput.id}"]`);
 
 export function enableSubmitButtonIfFormIsFilledOutCorrectly() {
