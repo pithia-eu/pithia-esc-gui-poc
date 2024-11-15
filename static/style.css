@@ -973,7 +973,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-upload-registration-section:first-of-type {
-    margin-top: var(--resource-registration-upload-section-padding);
+    border-top-width: 0;
 }
 
 .file-upload-registration-section.bg-light.rounded:first-of-type {
