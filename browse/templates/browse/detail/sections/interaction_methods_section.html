@@ -1,47 +1,34 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section pb-0">
     {% if num_interaction_methods > 1 %}
-    <div class="d-flex flex-column row-gap-2 mb-4">
+    <div class="d-flex flex-column row-gap-2">
         <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
-        <p class="text-dark-emphasis fw-semibold mb-0">
+        <p class="text-dark-emphasis fw-semibold mb-3">
             {{ num_interaction_methods }} Links
         </p>
     </div>
     {% else %}
     <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
     {% endif %}
-    <div class="d-flex flex-column row-gap-4">
+    <div class="d-flex flex-column row-gap-0">
         {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
-        {% if type == 'api_legacy' and interaction_methods_for_type %}
-        <section class="api-interaction-methods-section">
-            <h3 class="fs-5 fw-semibold">API Access</h3>
-            <ul class="list-unstyled">
-                {% for interaction_method_data in interaction_methods_for_type %}
-                <li class="border-top py-4">
-                    <div class="d-flex flex-column align-items-start row-gap-4">
-                        <a href="{% url 'present:interact_with_data_collection_through_api' data_collection_id %}" class="btn btn-outline-dark icon-link icon-link-hover fs-5" target="_blank" rel="noopener noreferrer">
-                            Go to API
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                            </svg>
-                        </a>
-                        {% if 'description' in interaction_method_data.config and interaction_method_data.config.description|length > 0 %}
-                        <dl>
-                            <dt class="fs-6">Description</dt>
-                            <dd class="mb-0">
-                                {{ interaction_method_data.config.description|urlize }}
-                            </dd>
-                        </dl>
-                        {% endif %}
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+        {% if type == 'api' %}
+        <section class="api-interaction-methods-section {% if interaction_methods_by_type.keys|length > 1 %}py-0{% else %}pb-0{% endif %}">
+            {% if interaction_methods_by_type.keys|length > 1 %}
+            <h3 class="fs-5 fw-semibold pt-4 pb-2">
+                API Access
+            </h3>
+            {% endif %}
+            <div>
+                {% with online_resources=interaction_methods_for_type %}
+                {% include 'browse/detail/components/online_resource_list.html' %}
+                {% endwith %}
+            </div>
         </section>
         {% elif type == 'online_resource' %}
-        <section class="link-interaction-methods-section pb-0">
-            {% if num_interaction_methods > 1 %}
-            <h3 class="fs-normal-lg fw-semibold">
+        <section class="link-interaction-methods-section {% if interaction_methods_by_type.keys|length > 1 %}py-0{% else %}pb-0{% endif %}">
+            {% if interaction_methods_by_type.keys|length > 1 %}
+            <h3 class="fs-5 fw-semibold pt-4 pb-2">
                 Online Resources
             </h3>
             {% endif %}

@@ -1,16 +1,5 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-4">
-    {% if num_interaction_methods == 1 %}
-    <ul class="d-flex flex-row column-gap-2 row-gap-2 list-unstyled mb-0">
-        {% for service_function_url in online_resource.service_functions %}
-        <li>
-            {% with value=service_function_url pill_type='secondary' extra_badge_classes='fs-6 fw-normal rounded-pill' %}
-            {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
     <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start link-underline-by-default fs-5" target="_blank" rel="noopener noreferrer" style="line-height: 1.2;">
         {{ online_resource.name }}
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
@@ -53,7 +42,7 @@
         </dl>
     </details>
     {% endif %}
-    {% if num_interaction_methods > 1 %}
+    {% if online_resource.service_functions %}
     <ul class="d-flex flex-column row-gap-2 list-unstyled mb-0">
         {% for service_function_url in online_resource.service_functions %}
         <li>

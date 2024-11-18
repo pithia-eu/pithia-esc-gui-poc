@@ -436,8 +436,7 @@ class ResourceDetailView(TemplateView):
 class OnlineResourcesViewMixin:
     def categorise_online_resources_from_resource(self, resource: models.DataCollection | models.CatalogueDataSubset):
         interaction_methods_by_type = {
-            'api_internal': [],
-            'api_external': [],
+            'api': [],
             'online_resource': [],
         }
         for online_resource in resource.properties.online_resources:
@@ -449,12 +448,13 @@ class OnlineResourcesViewMixin:
             except Exception:
                 is_linkage_to_openapi_spec = False
 
-            if (is_openapi_a_service_function
-                and is_linkage_to_openapi_spec):
-                interaction_methods_by_type['api_internal'].append(online_resource)
-                continue
-            elif is_openapi_a_service_function:
-                interaction_methods_by_type['api_external'].append(online_resource)
+            if is_linkage_to_openapi_spec:
+                online_resource.update({
+                    'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id})
+                })
+
+            if is_openapi_a_service_function:
+                interaction_methods_by_type['api'].append(online_resource)
                 continue
             interaction_methods_by_type['online_resource'].append(online_resource)
 
@@ -843,7 +843,14 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         # Legacy API Interaction methods
         api_interaction_methods = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
         if api_interaction_methods:
-            self.interaction_methods_by_type['api_legacy'] = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
+            self.interaction_methods_by_type['api'] = self.interaction_methods_by_type.get('api', []) + [{
+                'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution'],
+                'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id}),
+                'name': 'PITHIA e-Science Centre',
+                'protocol': '',
+                'description': api_int_method.config.get('description', ''),
+                'data_format': '',
+            } for api_int_method in api_interaction_methods]
 
         return super().get(request, *args, **kwargs)
     

@@ -1,8 +1,8 @@
 {% load project_tags %}
-<ul class="list-unstyled online-resource-list ps-0 mb-0">
+<ul class="list-unstyled online-resource-list ps-0 pb-0 mb-0">
     {% for online_resource in online_resources|wrap_in_list_if_dict %}
     {% with forloop_counter_str=forloop.counter|stringformat:'s' %}
-    <li class="{% if num_interaction_methods == 1 %}pb-4 pt-2{% else %}border-top p-4{% endif %} px-0">
+    <li class="{% if forloop.counter == 1 %}first-online-resource p-4{% else %}border-top p-4{% endif %} px-0">
         {% include 'browse/detail/components/online_resource.html' %}
     </li>
     {% endwith %}

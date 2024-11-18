@@ -835,6 +835,20 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     color: var(--bs-secondary);
 }
 
+.first-online-resource {
+    position: relative;
+}
+
+.first-online-resource::before {
+    content: '';
+    background: var(--bs-gray-400);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.5rem;
+    width: 2rem;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
