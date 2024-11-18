@@ -21,4 +21,4 @@ class WorkflowDetailsUrlValidationViewMixin:
         except Exception as err:
             logger.exception(err)
             return 'An unexpected error occurred during registration.'
-        return 'Please use the workflow details file input provided to register the details file with this workflow.'
+        return 'Please use the provided workflow details file input to register the details file with this workflow.'
