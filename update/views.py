@@ -39,6 +39,7 @@ from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
 )
 from user_management.services import get_user_id_for_login_session
+from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
 logger = logging.getLogger(__name__)
@@ -377,7 +378,10 @@ class CatalogueDataSubsetUpdateFormView(
         return redirect(self.resource_update_page_url_name, resource_id=self.resource_id)
 
 
-class WorkflowUpdateFormView(ResourceUpdateFormView, WorkflowDataHubViewMixin):
+class WorkflowUpdateFormView(
+        ResourceUpdateFormView,
+        WorkflowDataHubViewMixin,
+        WorkflowDetailsUrlValidationViewMixin):
     template_name = 'update/file_upload_workflow_update.html'
     model = models.Workflow
     form_class = UploadUpdatedWorkflowFileForm
@@ -421,10 +425,17 @@ class WorkflowUpdateFormView(ResourceUpdateFormView, WorkflowDataHubViewMixin):
         xml_file = self.request.FILES['files']
         try:
             self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
-            # Do nothing for workflow_details_file_source == 'external'
             if self.workflow_details_file_source == 'existing':
                 xml_file.seek(0)
                 self.xml_file_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
+            elif self.workflow_details_file_source == 'external':
+                xml_file.seek(0)
+                workflow_xml = WorkflowXmlMappingShortcuts(xml_file.read().decode())
+                workflow_details_url_error = self.check_workflow_details_url(workflow_xml.workflow_details_url)
+                if workflow_details_url_error:
+                    messages.error(self.request, workflow_details_url_error)
+                    return super().form_invalid(form)
+                xml_file.seek(0)
             elif self.workflow_details_file_source == 'file_upload':
                 self.workflow_details_file = self.request.FILES['workflow_details_file']
                 xml_file.seek(0)

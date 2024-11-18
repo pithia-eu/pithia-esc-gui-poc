@@ -1,9 +1,7 @@
 import logging
 import os
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.validators import URLValidator
 from django.db import (
     IntegrityError,
     transaction,
@@ -13,7 +11,6 @@ from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.views.generic import FormView
 from pyexpat import ExpatError
-from urllib.parse import urlparse
 
 from .forms import *
 
@@ -32,6 +29,7 @@ from user_management.services import (
     get_user_id_for_login_session,
     get_institution_id_for_login_session,
 )
+from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
 logger = logging.getLogger(__name__)
@@ -342,7 +340,10 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
         return context
 
 
-class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixin):
+class WorkflowRegisterFormView(
+        ResourceRegisterFormView,
+        WorkflowDataHubViewMixin,
+        WorkflowDetailsUrlValidationViewMixin):
     template_name = 'register/file_upload_workflow.html'
     model = models.Workflow
     success_url = reverse_lazy('register:workflow')
@@ -390,18 +391,11 @@ class WorkflowRegisterFormView(ResourceRegisterFormView, WorkflowDataHubViewMixi
         try:
             xml_file = self.request.FILES.getlist('files')[0]
             workflow_xml = WorkflowXmlMappingShortcuts(xml_file.read().decode())
-            validator = URLValidator()
-            workflow_details_url = workflow_xml.workflow_details_url
-            validator(workflow_details_url)
-            parsed_url = urlparse(workflow_xml.workflow_details_url)
-            if parsed_url.hostname == 'esc.pithia.eu':
-                messages.error(self.request, 'Please use the workflow details file input to register the details file with this workflow.')
+            workflow_details_url_error = self.check_workflow_details_url(workflow_xml.workflow_details_url)
+            if workflow_details_url_error:
+                messages.error(self.request, workflow_details_url_error)
                 return super().form_invalid(form)
             xml_file.seek(0)
-        except ValidationError as err:
-            logger.exception(err)
-            messages.error(self.request, 'The workflow details file URL provided in the metadata file is invalid.')
-            return super().form_invalid(form)
         except Exception as err:
             logger.exception(err)
             messages.error(self.request, 'An unexpected error occurred during registration.')

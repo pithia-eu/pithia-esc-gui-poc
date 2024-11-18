@@ -18,6 +18,7 @@ from .metadata_builder.utils import *
 from common import models
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
+from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
 logger = logging.getLogger(__name__)
@@ -374,8 +375,9 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
 
 class WorkflowRegisterWithEditorFormView(
-    WorkflowEditorFormView,
-    ResourceRegisterWithEditorFormView):
+        WorkflowDetailsUrlValidationViewMixin,
+        WorkflowEditorFormView,
+        ResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm
     success_url = reverse_lazy('register:workflow_with_editor')
 
@@ -410,8 +412,17 @@ class WorkflowRegisterWithEditorFormView(
         return context
 
     def form_valid(self, form):
-        if form.cleaned_data.get('workflow_details_file_source') == 'file_upload':
+        self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+        if self.workflow_details_file_source == 'file_upload':
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+        if not self.workflow_details_file_source == 'external':
+            return super().form_valid(form)
+        workflow_details_file_url = form.cleaned_data.get('workflow_details')
+        workflow_details_url_error = self.check_workflow_details_url(workflow_details_file_url)
+        if workflow_details_url_error:
+            messages.error(self.request, workflow_details_url_error)
+            form.add_error('workflow_details', workflow_details_url_error)
+            return super().form_invalid(form)
         return super().form_valid(form)
 
     def get_form_kwargs(self):

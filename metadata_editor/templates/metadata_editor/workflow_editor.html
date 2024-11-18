@@ -150,6 +150,9 @@
                                         {{ form.workflow_details.label_tag }}
                                     </div>
                                     {{ form.workflow_details }}
+                                    {% for error in form.workflow_details.errors %}
+                                    <div class="form-text text-danger">{{ error }}</div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             {% endif %}

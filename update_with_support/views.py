@@ -32,6 +32,7 @@ from datahub_management.services import WorkflowDataHubService
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.views import *
+from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
 # Create your views here.
@@ -234,6 +235,7 @@ class CatalogueEntryUpdateWithEditorFormView(
 
 class WorkflowUpdateWithEditorFormView(
         ResourceUpdateWithEditorFormView,
+        WorkflowDetailsUrlValidationViewMixin,
         WorkflowEditorFormView):
     model = models.Workflow
     success_url_name = 'update:workflow_with_editor'
@@ -268,6 +270,14 @@ class WorkflowUpdateWithEditorFormView(
         self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
         if self.workflow_details_file_source == 'file_upload':
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+        if not form.cleaned_data.get('workflow_details_file_source') == 'external':
+            return super().form_valid(form)
+        workflow_details_file_url = form.cleaned_data.get('workflow_details')
+        workflow_details_url_error = self.check_workflow_details_url(workflow_details_file_url)
+        if workflow_details_url_error:
+            messages.error(self.request, workflow_details_url_error)
+            form.add_error('workflow_details', workflow_details_url_error)
+            return super().form_invalid(form)
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
