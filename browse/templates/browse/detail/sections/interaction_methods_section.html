@@ -23,7 +23,7 @@
     {% elif type == 'online_resource' %}
     <section class="interaction-methods-subsection">
         <h3 class="fs-normal-lg fw-semibold">
-            Online Resources
+            Online Resource{% if interaction_methods_for_type|length > 1 %}s{% endif %}
         </h3>
         <div>
             {% with online_resources=interaction_methods_for_type %}
