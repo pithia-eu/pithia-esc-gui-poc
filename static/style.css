@@ -835,11 +835,32 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     color: var(--bs-secondary);
 }
 
-.first-online-resource {
+.interaction-methods-subsection {
+    padding-top: 1rem;
+    padding-bottom: 0;
+}
+
+.interaction-methods-subsection + .interaction-methods-subsection {
+    padding-top: 1rem;
+}
+
+.interaction-methods-subsection:first-of-type h3 {
+    padding-top: 0.75rem;
+}
+
+.interaction-methods-subsection h3 {
+    padding-bottom: 0.5rem;
+}
+
+.online-resource-list > li {
+    padding-block: 1.5rem;
+}
+
+.online-resource-list > li:first-of-type {
     position: relative;
 }
 
-.first-online-resource::before {
+.online-resource-list > li:first-of-type::before {
     content: '';
     background: var(--bs-gray-400);
     position: absolute;
@@ -847,6 +868,10 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     left: 0;
     height: 0.5rem;
     width: 2rem;
+}
+
+.online-resource-list > li:not(li:first-of-type) {
+    border-top: 1px solid var(--bs-gray-300);
 }
 
 /* Resource management list page */

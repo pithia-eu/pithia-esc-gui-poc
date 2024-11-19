@@ -1,45 +1,37 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section pb-0">
-    {% if num_interaction_methods > 1 %}
     <div class="d-flex flex-column row-gap-2">
         <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
-        <p class="text-dark-emphasis fw-semibold mb-3">
+        {% if num_interaction_methods > 1 %}
+        <p class="text-dark-emphasis fw-semibold">
             {{ num_interaction_methods }} Links
         </p>
-    </div>
-    {% else %}
-    <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
-    {% endif %}
-    <div class="d-flex flex-column row-gap-0">
-        {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
-        {% if type == 'api' %}
-        <section class="api-interaction-methods-section {% if interaction_methods_by_type.keys|length > 1 %}py-0{% else %}pb-0{% endif %}">
-            {% if interaction_methods_by_type.keys|length > 1 %}
-            <h3 class="fs-5 fw-semibold pt-4 pb-2">
-                API Access
-            </h3>
-            {% endif %}
-            <div>
-                {% with online_resources=interaction_methods_for_type %}
-                {% include 'browse/detail/components/online_resource_list.html' %}
-                {% endwith %}
-            </div>
-        </section>
-        {% elif type == 'online_resource' %}
-        <section class="link-interaction-methods-section {% if interaction_methods_by_type.keys|length > 1 %}py-0{% else %}pb-0{% endif %}">
-            {% if interaction_methods_by_type.keys|length > 1 %}
-            <h3 class="fs-5 fw-semibold pt-4 pb-2">
-                Online Resources
-            </h3>
-            {% endif %}
-            <div>
-                {% with online_resources=interaction_methods_for_type %}
-                {% include 'browse/detail/components/online_resource_list.html' %}
-                {% endwith %}
-            </div>
-        </section>
         {% endif %}
-        {% endfor %}
     </div>
+    {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
+    {% if type == 'api' %}
+    <section class="interaction-methods-subsection">
+        <h3 class="fs-normal-lg fw-semibold">
+            API Access
+        </h3>
+        <div>
+            {% with online_resources=interaction_methods_for_type %}
+            {% include 'browse/detail/components/online_resource_list.html' %}
+            {% endwith %}
+        </div>
+    </section>
+    {% elif type == 'online_resource' %}
+    <section class="interaction-methods-subsection">
+        <h3 class="fs-normal-lg fw-semibold">
+            Online Resources
+        </h3>
+        <div>
+            {% with online_resources=interaction_methods_for_type %}
+            {% include 'browse/detail/components/online_resource_list.html' %}
+            {% endwith %}
+        </div>
+    </section>
+    {% endif %}
+    {% endfor %}
 </section>
 {% endif %}
