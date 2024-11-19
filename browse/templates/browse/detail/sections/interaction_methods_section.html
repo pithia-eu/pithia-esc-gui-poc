@@ -1,5 +1,5 @@
 {% if num_interaction_methods %}
-<section class="resource-detail-section pb-0">
+<section class="resource-detail-section">
     <div class="d-flex flex-column row-gap-2">
         <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
         {% if num_interaction_methods > 1 %}
@@ -11,7 +11,7 @@
     {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
     {% if type == 'api' %}
     <section class="interaction-methods-subsection">
-        <h3 class="fs-normal-lg fw-semibold">
+        <h3 class="fs-5 fw-semibold">
             API Access
         </h3>
         <div>
@@ -22,7 +22,7 @@
     </section>
     {% elif type == 'online_resource' %}
     <section class="interaction-methods-subsection">
-        <h3 class="fs-normal-lg fw-semibold">
+        <h3 class="fs-5 fw-semibold">
             Online Resource{% if interaction_methods_for_type|length > 1 %}s{% endif %}
         </h3>
         <div>
