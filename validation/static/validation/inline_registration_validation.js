@@ -126,7 +126,7 @@ export class NewMetadataValidationStatusUIController extends MetadataValidationS
     }
 }
 
-async function startNewRegistrationValidationProcess() {
+export async function startNewRegistrationValidationProcess() {
     const files = Array.from(fileInput.files);
     const validator = new NewMetadataFileValidator();
 
@@ -136,15 +136,3 @@ async function startNewRegistrationValidationProcess() {
 
     return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
-
-fileInput.addEventListener("change", async event => {
-    await startNewRegistrationValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startNewRegistrationValidationProcess();
-    }
-});

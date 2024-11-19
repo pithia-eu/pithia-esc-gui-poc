@@ -1,6 +1,9 @@
 {% extends 'register/file_upload.html' %}
 {% load static %}
 {% load project_tags %}
+{% block validation_setup_script %}
+<script src="{% static 'validation/setup/inline_workflow_registration_validation_setup.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock validation_setup_script %}
 {% block page_specific_scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
 <script src="{% static 'register/workflow_register_form.js' %}?{% now 'U' %}" type="module"></script>

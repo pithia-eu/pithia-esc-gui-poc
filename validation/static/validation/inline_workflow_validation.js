@@ -1,20 +1,23 @@
 import {
-    MetadataFile,
-    MetadataFileValidator,
-    MetadataValidationStatusUIController,
     startValidationProcess,
 } from "/static/validation/inline_metadata_file_validation.js";
-const fileInput = document.querySelector("#id_files");
+import {
+    NewMetadataFile,
+    NewMetadataFileValidator,
+    NewMetadataValidationStatusUIController,
+} from "/static/validation/inline_registration_validation.js";
+import {
+    MetadataFileUpdate,
+    MetadataFileUpdateValidator,
+    MetadataUpdateValidationStatusUIController,
+} from "/static/validation/inline_update_validation.js";
 
-class WorkflowMetadataFile extends MetadataFile {
+
+const fileInput = document.querySelector("#id_files");
+const WorkflowMetadataFile = Base => class extends Base {
     constructor(xmlFileString, xmlFileName) {
         super(xmlFileString, xmlFileName);
         this.workflowDetailsUrlWarnings = undefined;
-    }
-
-    static async fromFile(xmlFile) {
-        const xmlFileString = await xmlFile.text();
-        return new WorkflowMetadataFile(xmlFileString, xmlFile.name);
     }
 
     get isWorkflowDetailsUrlValidationComplete() {
@@ -33,8 +36,7 @@ class WorkflowMetadataFile extends MetadataFile {
         this.workflowDetailsUrlWarnings = results.workflowDetailsUrlWarnings;
     }
 }
-
-class WorkflowMetadataFileValidator extends MetadataFileValidator {
+const WorkflowMetadataFileValidator = Base => class extends Base {
     validateWorkflowDetailsUrl(xmlDoc) {
         const workflowDetails = xmlDoc.querySelector("workflowDetails");
         const errors = [];
@@ -70,8 +72,7 @@ class WorkflowMetadataFileValidator extends MetadataFileValidator {
         return validationResults;
     }
 }
-
-class WorkflowMetadataValidationStatusUIController extends MetadataValidationStatusUIController {
+const WorkflowMetadataValidationStatusUIController = Base => class extends Base {
     #addWorkflowValidationStatusListItemForMetadataFile(metadataFile) {
         const statusList = document.querySelector(`.file-list-group-item-${metadataFile.id} .details-validation ul`);
         statusList.append(this.htmlToElement(`
@@ -105,8 +106,7 @@ class WorkflowMetadataValidationStatusUIController extends MetadataValidationSta
     }
 
     addMetadataFileToValidationStatusList(metadataFile) {
-        // super.addMetadataFileToValidationStatusList(metadataFile);
-        this.addGenericListItemForMetadataFile(metadataFile);
+        super.addMetadataFileToValidationStatusList(metadataFile);
         this.#addWorkflowValidationStatusListItemForMetadataFile(metadataFile);
     }
 
@@ -120,7 +120,6 @@ class WorkflowMetadataValidationStatusUIController extends MetadataValidationSta
         const wvSelector = `.wv-list-group-item`;
 
         // Workflow details URL validation results
-        console.log("workflowDetailsUrlWarnings", metadataFile.workflowDetailsUrlWarnings);
         if (!metadataFile.isWorkflowDetailsUrlValidationComplete) {
             this.#addWarningValidationResultsForFile(
                 "Some problems were found with the workflow details file link. These are only applicable if you are not uploading/have not uploaded your workflow details file to the e-Science Centre.",
@@ -144,13 +143,39 @@ class WorkflowMetadataValidationStatusUIController extends MetadataValidationSta
     }
 }
 
-export async function startWorkflowMetadataFileValidationProcess() {
+class NewWorkflowMetadataFile extends WorkflowMetadataFile(NewMetadataFile) {}
+class NewWorkflowMetadataFileValidator extends WorkflowMetadataFileValidator(NewMetadataFileValidator) {}
+class NewWorkflowMetadataValidationStatusUIController extends WorkflowMetadataValidationStatusUIController(NewMetadataValidationStatusUIController) {}
+
+export async function startNewWorkflowMetadataFileValidationProcess() {
     const files = Array.from(fileInput.files);
-    const validator = new WorkflowMetadataFileValidator();
+    const validator = new NewWorkflowMetadataFileValidator();
 
     const metadataFileListElem = document.querySelector(".file-validation-status-list");
-    const validationStatusUIController = new WorkflowMetadataValidationStatusUIController(metadataFileListElem, fileInput);
-    const newMetadataFileObjectFn = WorkflowMetadataFile.fromFile;
+    const validationStatusUIController = new NewWorkflowMetadataValidationStatusUIController(metadataFileListElem, fileInput);
+    const newMetadataFileObjectFn = async xmlFile => {
+        const xmlFileString = await xmlFile.text();
+        return new NewWorkflowMetadataFile(xmlFileString, xmlFile.name);
+    };
 
     return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
+
+class WorkflowUpdateMetadataFile extends WorkflowMetadataFile(MetadataFileUpdate) {}
+class WorkflowUpdateMetadataFileValidator extends WorkflowMetadataFileValidator(MetadataFileUpdateValidator) {}
+class WorkflowUpdateMetadataValidationStatusUIController extends WorkflowMetadataValidationStatusUIController(MetadataUpdateValidationStatusUIController) {}
+
+export async function startWorkflowMetadataFileUpdateValidationProcess() {
+    const files = Array.from(fileInput.files);
+    const validator = new WorkflowUpdateMetadataFileValidator();
+
+    const metadataFileListElem = document.querySelector(".file-validation-status-list");
+    const validationStatusUIController = new WorkflowUpdateMetadataValidationStatusUIController(metadataFileListElem, fileInput);
+    const newMetadataFileObjectFn = async xmlFile => {
+        const xmlFileString = await xmlFile.text();
+        return new WorkflowUpdateMetadataFile(xmlFileString, xmlFile.name);
+    };
+
+    return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
+}
+

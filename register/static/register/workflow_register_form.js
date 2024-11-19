@@ -9,11 +9,7 @@ import {
     addMultipleEventListener,
     isEachTrackedMetadataFileValid,
 } from "/static/validation/inline_metadata_file_validation.js";
-import {
-    startWorkflowMetadataFileValidationProcess,
-} from "/static/validation/inline_workflow_validation.js";
 
-const fileInput = document.querySelector("#id_files");
 const submitButton = document.querySelector("#file-upload-form button[type=submit]");
 const isWorkflowDetailsFileInputUsedCheckbox = document.querySelector("input[name='is_workflow_details_file_input_used']");
 const workflowDetailsFileUploadSection = document.querySelector("#workflow_details_file_upload_section");
@@ -76,18 +72,6 @@ window.addEventListener("load", async () => {
     setSubmitButton(document.querySelector("#file-upload-form button[type='submit']"));
     setupWorkflowDetailsFileSection();
     await validateOpenApiSpecificationUrl();
-});
-
-fileInput.addEventListener("change", async event => {
-    await startWorkflowMetadataFileValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startWorkflowMetadataFileValidationProcess();
-    }
 });
 
 apiSpecificationUrlInput.addEventListener("input", async () => {
