@@ -881,9 +881,9 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     max-width: 100%;
 }
 
-.online-resource-list .service-function-list .metadata-server-url-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
+.online-resource-list .service-function-list .badge {
+    white-space: wrap;
+    text-align: left;
 }
 
 /* Resource management list page */
@@ -1650,6 +1650,10 @@ ul.tree ul {
 
     .catalogue-category-badge {
         font-size: 1rem;
+    }
+
+    .online-resource-list .service-function-list .badge {
+        border-radius: var(--bs-border-radius-pill) !important;
     }
 }
 
