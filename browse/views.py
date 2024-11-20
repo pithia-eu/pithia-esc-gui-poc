@@ -5,6 +5,7 @@ import logging
 import re
 from dateutil.parser import parse
 from django.http import JsonResponse
+from django.utils.http import urlencode
 from django.views.decorators.http import require_POST
 from django.shortcuts import (
     get_object_or_404,
@@ -450,7 +451,7 @@ class OnlineResourcesViewMixin:
 
             if is_linkage_to_openapi_spec:
                 online_resource.update({
-                    'linkage': f"{reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id})}?name={online_resource.get('name')}"
+                    'linkage': f"{reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id})}?{urlencode({'name': online_resource.get('name', '')})}"
                 })
 
             if is_openapi_a_service_function:
