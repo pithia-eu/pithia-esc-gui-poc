@@ -43,7 +43,7 @@
     </details>
     {% endif %}
     {% if online_resource.service_functions %}
-    <ul class="d-flex flex-wrap column-gap-2 row-gap-2 list-unstyled mb-0">
+    <ul class="d-flex flex-wrap column-gap-2 row-gap-2 list-unstyled service-function-list mb-0">
         {% for service_function_url in online_resource.service_functions %}
         <li>
             {% if service_function_url == 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution' %}

@@ -875,6 +875,17 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     margin-top: 1.5rem;
 }
 
+.online-resource-list .service-function-list,
+.online-resource-list .service-function-list li,
+.online-resource-list .service-function-list .metadata-server-url-text {
+    max-width: 100%;
+}
+
+.online-resource-list .service-function-list .metadata-server-url-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
