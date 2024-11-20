@@ -8,30 +8,32 @@
         </p>
         {% endif %}
     </div>
-    {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
-    {% if type == 'api' %}
-    <section class="interaction-methods-subsection">
-        <h3 class="fs-5 fw-semibold">
-            API Access
-        </h3>
-        <div>
-            {% with online_resources=interaction_methods_for_type %}
-            {% include 'browse/detail/components/online_resource_list.html' %}
-            {% endwith %}
-        </div>
-    </section>
-    {% elif type == 'online_resource' %}
-    <section class="interaction-methods-subsection">
-        <h3 class="fs-5 fw-semibold">
-            Online Resource{% if interaction_methods_for_type|length > 1 %}s{% endif %}
-        </h3>
-        <div>
-            {% with online_resources=interaction_methods_for_type %}
-            {% include 'browse/detail/components/online_resource_list.html' %}
-            {% endwith %}
-        </div>
-    </section>
-    {% endif %}
-    {% endfor %}
+    <div class="d-flex flex-column row-gap-3">
+        {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
+        {% if type == 'api' %}
+        <section class="interaction-methods-subsection">
+            <h3 class="fs-5 fw-semibold">
+                API Access
+            </h3>
+            <div>
+                {% with online_resources=interaction_methods_for_type pill_type='dark' %}
+                {% include 'browse/detail/components/online_resource_list.html' %}
+                {% endwith %}
+            </div>
+        </section>
+        {% elif type == 'online_resource' %}
+        <section class="interaction-methods-subsection">
+            <h3 class="fs-5 fw-semibold">
+                Online Resource Access
+            </h3>
+            <div>
+                {% with online_resources=interaction_methods_for_type %}
+                {% include 'browse/detail/components/online_resource_list.html' %}
+                {% endwith %}
+            </div>
+        </section>
+        {% endif %}
+        {% endfor %}
+    </div>
 </section>
 {% endif %}
