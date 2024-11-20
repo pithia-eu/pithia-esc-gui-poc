@@ -4,6 +4,7 @@ from django.utils.html import urlize
 from operator import itemgetter
 from typing import Union
 
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE
 from common.models import (
     Instrument,
     ScientificMetadata,
@@ -73,10 +74,18 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
     for ontology_server_url in ontology_server_urls:
         converted_url = ontology_server_url
         converted_url_text = ontology_server_url
+        if SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE not in ontology_server_url:
+            converted_ontology_server_urls.append({
+                'original_server_url': ontology_server_url,
+                'converted_url': converted_url,
+                'converted_url_text': 'Unknown',
+            })
+            continue
         try:
-            converted_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
             ontology_term_id = ontology_server_url.split('/')[-1]
+            converted_url_text = ontology_term_id
             ontology_term_category = ontology_server_url.split('/')[-2]
+            converted_url = create_ontology_term_detail_url_from_ontology_term_server_url(ontology_server_url)
             # If the graph for the ontology term has already been fetched,
             # get the stored version of it to improve page loading times
             graph_for_ontology_term = None
@@ -86,8 +95,6 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
                 graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
                 ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
             converted_url_text = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
-            if not converted_url_text:
-                converted_url_text = ontology_term_id
         except Exception as err:
             logger.exception(err)
         converted_ontology_server_urls.append({
