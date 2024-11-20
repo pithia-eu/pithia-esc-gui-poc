@@ -1110,8 +1110,8 @@ label.required::after {
     overflow-x: scroll;
 }
 
-.xml-file-download-btn img {
-    height: 1.1rem;
+.xml-file-download-btn {
+    min-width: fit-content;
 }
 
 /* Search page */
