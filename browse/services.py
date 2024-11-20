@@ -94,7 +94,9 @@ def map_ontology_server_urls_to_browse_urls(ontology_server_urls: list) -> list:
             else:
                 graph_for_ontology_term = get_graph_of_pithia_ontology_component(ontology_term_category)
                 ontology_term_category_graphs[ontology_term_category] = graph_for_ontology_term
-            converted_url_text = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
+            pref_label = get_pref_label_from_ontology_node_iri(ontology_server_url, g=graph_for_ontology_term)
+            if pref_label:
+                converted_url_text = pref_label
         except Exception as err:
             logger.exception(err)
         converted_ontology_server_urls.append({
