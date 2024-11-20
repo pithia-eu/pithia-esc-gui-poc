@@ -4,9 +4,9 @@ from lxml import etree
 
 from . import view_mixins
 
-from common import models
 
 # Create your views here.
+
 
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
@@ -44,96 +44,84 @@ class OrganisationXmlDownloadFromBrowsingView(
         view_mixins.OrganisationXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Organisation
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
+    pass
 
 
 class IndividualXmlDownloadFromBrowsingView(
         view_mixins.IndividualXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Individual
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
+    pass
 
 
 class ProjectXmlDownloadFromBrowsingView(
         view_mixins.ProjectXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Project
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+    pass
 
 
 class PlatformXmlDownloadFromBrowsingView(
         view_mixins.PlatformXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Platform
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
+    pass
 
 
 class OperationXmlDownloadFromBrowsingView(
         view_mixins.OperationXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Operation
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+    pass
 
 
 class InstrumentXmlDownloadFromBrowsingView(
         view_mixins.InstrumentXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Instrument
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
+    pass
 
 
 class AcquisitionCapabilitiesXmlDownloadFromBrowsingView(
         view_mixins.AcquisitionCapabilitiesXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.AcquisitionCapabilities
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+    pass
 
 
 class AcquisitionXmlDownloadFromBrowsingView(
         view_mixins.AcquisitionXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Acquisition
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
+    pass
 
 
 class ComputationCapabilitiesXmlDownloadFromBrowsingView(
         view_mixins.ComputationCapabilitiesXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.ComputationCapabilities
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
+    pass
 
 
 class ComputationXmlDownloadFromBrowsingView(
         view_mixins.ComputationXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Computation
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
+    pass
 
 
 class ProcessXmlDownloadFromBrowsingView(
         view_mixins.ProcessXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.Process
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+    pass
 
 
 class DataCollectionXmlDownloadFromBrowsingView(
         view_mixins.DataCollectionXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
-    model = models.DataCollection
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
+    pass
 
 
 class CatalogueXmlDownloadFromBrowsingView(
@@ -141,8 +129,6 @@ class CatalogueXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
-    model = models.Catalogue
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
 
 class CatalogueEntryXmlDownloadFromBrowsingView(
@@ -150,8 +136,6 @@ class CatalogueEntryXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
-    model = models.CatalogueEntry
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
 
 
 class CatalogueDataSubsetXmlDownloadFromBrowsingView(
@@ -159,8 +143,6 @@ class CatalogueDataSubsetXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
-    model = models.CatalogueDataSubset
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
 
 
 class WorkflowXmlDownloadFromBrowsingView(
@@ -168,5 +150,3 @@ class WorkflowXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
-    model = models.Workflow
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
