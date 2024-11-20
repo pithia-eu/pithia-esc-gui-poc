@@ -7,6 +7,9 @@
 <h1>{{ title }}</h1>
 <ul class="list-group">
     <li class="list-group-item">
+        <a href="{% url 'ontology:ontology_category_terms_list' 'annotationType' %}">Annotation Type</a>
+    </li>
+    <li class="list-group-item">
         <a href="{% url 'ontology:ontology_category_terms_list' 'catalogueCategory' %}">Catalogue Category</a>
     </li>
     <li class="list-group-item">

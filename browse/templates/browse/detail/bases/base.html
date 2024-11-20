@@ -18,8 +18,8 @@
 {% endblock breadcrumbs %}
 {% block content %}
 {% csrf_token %}
-<div class="row align-items-lg-baseline gx-md-5">
-    <div class="col-lg-9">
+<div class="row align-items-lg-baseline justify-content-between gx-md-5">
+    <div class="col-xl-7 col-lg-8">
         <div class="resource-detail-top-section">
             <div class="d-flex flex-column align-items-start row-gap-1 mb-3">
                 <h1 class="text-break mb-0">{{ resource.name }}</h1>
@@ -146,7 +146,7 @@
             </details>
         </section>
     </div>
-    <aside class="col-lg-3 resource-detail-aside">
+    <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
         {% block aside_extra_content %}{% endblock aside_extra_content %}
         {% include 'browse/detail/sections/asides/related_aside_section.html' %}
         <section class="resource-detail-aside-section">
