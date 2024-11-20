@@ -30,8 +30,18 @@ class BulkOntologyUrlMappingTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/PointOfContact',
             'https://metadata.pithia.eu/ontology/2.2/test/test',
         ]
+        # Real ontology server URLs
         converted_ontology_server_urls = map_ontology_server_urls_to_browse_urls(ontology_server_urls)
-        self.assertTrue(any(mapping['original_server_url'] == mapping['converted_url_text'] for mapping in converted_ontology_server_urls))
+        real_ontology_url_mappings = converted_ontology_server_urls[:-1]
+        for mapping in real_ontology_url_mappings:
+            real_ontology_url = mapping.get('original_server_url')
+            real_ontology_url_id = real_ontology_url.split('/')[-1]
+            self.assertNotEqual(real_ontology_url_id, mapping.get('converted_url_text'))
+        # Fake ontology server URL
+        fake_ontology_url_mapping = converted_ontology_server_urls[-1]
+        fake_ontology_url = fake_ontology_url_mapping.get('original_server_url')
+        fake_ontology_url_id = fake_ontology_url.split('/')[-1]
+        self.assertEqual(fake_ontology_url_id, fake_ontology_url_mapping.get('converted_url_text'))
 
 
 class BulkMetadataUrlMappingTestCase(TestCase):
