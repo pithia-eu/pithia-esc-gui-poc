@@ -765,14 +765,16 @@ class DataCollectionEditorFormView(
         return self.get_choices_from_ontology_category('licence')
 
     def get_type_choices_for_form(self):
+        annotation_type_choices = list(self.get_choices_from_ontology_category('annotationType'))
         instrument_type_choices = list(self.get_instrument_type_choices_for_form())
         instrument_type_choices.pop(0)
         computation_type_choices = list(self.get_computation_type_choices_for_form())
         computation_type_choices.pop(0)
         return (
             ('', ''),
-            ('Instrument Types', instrument_type_choices),
+            ('Annotation Types', annotation_type_choices),
             ('Computation Types', computation_type_choices),
+            ('Instrument Types', instrument_type_choices),
         )
 
     def get_project_choices_for_form(self):
