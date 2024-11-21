@@ -915,7 +915,8 @@ class CatalogueDataSubsetEditorFormView(
         metadata_editor.update_data_levels([form_cleaned_data.get('data_levels')])
         metadata_editor.update_quality_assessment(
             form_cleaned_data.get('data_quality_flags'),
-            form_cleaned_data.get('metadata_quality_flags')
+            form_cleaned_data.get('metadata_quality_flags'),
+            is_max_occurs_unbounded=False
         )
         metadata_editor.update_sources(map_sources_to_dataclasses(form_cleaned_data))
 

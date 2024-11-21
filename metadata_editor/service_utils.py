@@ -787,13 +787,18 @@ class QualityAssessmentMetadataEditor(BaseMetadataComponentEditor):
     def update_quality_assessment(
             self,
             data_quality_flag_urls: list,
-            metadata_quality_flag_urls: list =[]):
+            metadata_quality_flag_urls: list = [],
+            is_max_occurs_unbounded: bool = True):
         quality_assessment_key = 'qualityAssessment'
-        self.metadata_dict.setdefault(quality_assessment_key, [])
-        quality_assessments = self.metadata_dict[quality_assessment_key]
-        if not quality_assessments:
-            quality_assessments.append({})
-        quality_assessment = quality_assessments[0]
+        if is_max_occurs_unbounded:
+            self.metadata_dict.setdefault(quality_assessment_key, [])
+            quality_assessments = self.metadata_dict[quality_assessment_key]
+            if not quality_assessments:
+                quality_assessments.append({})
+            quality_assessment = quality_assessments[0]
+        else:
+            self.metadata_dict.setdefault(quality_assessment_key, {})
+            quality_assessment = self.metadata_dict[quality_assessment_key]
         # Data/Metadata quality flags
         self._update_data_quality_flags(quality_assessment, data_quality_flag_urls)
         self._update_metadata_quality_flags(quality_assessment, metadata_quality_flag_urls)

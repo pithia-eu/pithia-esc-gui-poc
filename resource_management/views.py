@@ -285,6 +285,7 @@ class CatalogueDataSubsetManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:catalogue_data_subset'
     resource_update_page_url_name = 'update:catalogue_data_subset'
+    resource_update_with_wizard_page_url_name = 'update:catalogue_data_subset_with_editor'
     resource_register_page_url_name = 'register:catalogue_data_subset'
     resource_register_with_editor_name = 'register:catalogue_data_subset_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_catalogue_data_subset_as_xml_with_editing'

@@ -366,9 +366,9 @@ class RelatedPartyFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin
 
 
 class SourceFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
-    def _map_sources_to_form(self):
+    def _map_sources_to_form(self, online_resource_elements_xpath: str = None):
         sources = []
-        online_resource_elements = self.xml_string_parsed.xpath('.//%s:collectionResults/%s:source/%s:OnlineResource' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        online_resource_elements = self.xml_string_parsed.xpath(online_resource_elements_xpath, namespaces=self.namespaces)
         for e in online_resource_elements:
             service_functions = e.xpath('.//%s:serviceFunction/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
             linkages = e.xpath('.//%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD), namespaces=self.namespaces)

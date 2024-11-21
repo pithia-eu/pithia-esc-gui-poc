@@ -286,6 +286,9 @@ class DataCollectionFormFieldsToMetadataMapper(
         RelatedPartyFormFieldsToMetadataMixin,
         SourceFormFieldsToMetadataMixin,
         BaseMetadataFormFieldsToMetadataMixin):
+    def _map_sources_to_form(self, online_resource_elements_xpath: str = None):
+        return super()._map_sources_to_form('.//%s:collectionResults/%s:source/%s:OnlineResource' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX))
+
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({
@@ -315,8 +318,8 @@ class CatalogueFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin)
 
 
 class CatalogueEntryFormFieldsToMetadataMapper(
-    TimePeriodFormFieldsToMetadataMixin,
-    BaseMetadataFormFieldsToMetadataMixin):
+        TimePeriodFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
     time_period_container_element_name = 'phenomenonTime'
 
     def get_basic_form_field_to_xml_field_mappings(self):
@@ -325,6 +328,28 @@ class CatalogueEntryFormFieldsToMetadataMapper(
             'name': './/%s:entryName' % self.DEFAULT_XPATH_NSPREFIX,
             'description': './/%s:entryDescription' % self.DEFAULT_XPATH_NSPREFIX,
             'catalogue_identifier': './/%s:catalogueIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+        })
+        return mappings
+
+
+class CatalogueDataSubsetFormFieldsToMetadataMapper(
+        QualityAssessmentFormFieldsToMetadataMixin,
+        SourceFormFieldsToMetadataMixin,
+        TimePeriodFormFieldsToMetadataMixin,
+        BaseMetadataFormFieldsToMetadataMixin):
+    time_period_container_element_name = 'resultTime'
+
+    def _map_sources_to_form(self, online_resource_elements_xpath: str = None):
+        return super()._map_sources_to_form('.//%s:source/%s:OnlineResource' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX))
+
+    def get_basic_form_field_to_xml_field_mappings(self):
+        mappings = super().get_basic_form_field_to_xml_field_mappings()
+        mappings.update({
+            'data_collection': './/%s:dataCollection/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'data_levels': './/%s:dataLevel/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'description': './/%s:dataSubsetDescription' % self.DEFAULT_XPATH_NSPREFIX,
+            'entry_identifier': './/%s:entryIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'name': './/%s:dataSubsetName' % self.DEFAULT_XPATH_NSPREFIX,
         })
         return mappings
 

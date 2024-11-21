@@ -17,5 +17,6 @@ urlpatterns = [
     path('data-collection/<resource_id>/update-with-wizard/', views.DataCollectionUpdateWithEditorFormView.as_view(), name='data_collection_with_editor'),
     path('catalogue/<resource_id>/update-with-wizard/', views.CatalogueUpdateWithEditorFormView.as_view(), name='catalogue_with_editor'),
     path('catalogue-entry/<resource_id>/update-with-wizard/', views.CatalogueEntryUpdateWithEditorFormView.as_view(), name='catalogue_entry_with_editor'),
+    path('catalogue-data-subset/<resource_id>/update-with-wizard/', views.CatalogueDataSubsetUpdateWithEditorFormView.as_view(), name='catalogue_data_subset_with_editor'),
     path('workflow/<resource_id>/update-with-wizard/', views.WorkflowUpdateWithEditorFormView.as_view(), name='workflow_with_editor'),
 ]
