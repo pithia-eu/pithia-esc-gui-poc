@@ -1,10 +1,11 @@
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, tag
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .services import WorkflowDataHubService
 
 
 # Create your tests here.
+@tag('manual')
 class WorkflowDataHubServiceTestCase(SimpleTestCase):
     def setUp(self) -> None:
         return super().setUp()
