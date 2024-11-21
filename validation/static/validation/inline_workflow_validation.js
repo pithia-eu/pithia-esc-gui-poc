@@ -122,7 +122,7 @@ const WorkflowMetadataValidationStatusUIController = Base => class extends Base 
         // Workflow details URL validation results
         if (!metadataFile.isWorkflowDetailsUrlValidationComplete) {
             this.#addWarningValidationResultsForFile(
-                "Some problems were found with the workflow details file link. These are only applicable if you are not uploading/have not uploaded your workflow details file to the e-Science Centre.",
+                "Some problems were found with the workflow details file link. If you are planning on using the e-Science Centre to store your workflow details file, please ignore this warning.",
                 metadataFile.workflowDetailsUrlWarnings,
                 `${fileListGroupItemSelector} ${wvSelector}`
             );
