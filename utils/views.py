@@ -2,15 +2,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from lxml import etree
 
-from common import models
-from resource_management.views import (
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
-    _create_manage_resource_page_title,
-    _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _INDEX_PAGE_TITLE,
-)
+from . import view_mixins
+
 
 # Create your views here.
+
 
 class ResourceXmlDownloadView(TemplateView):
     resource_id = ''
@@ -37,111 +33,120 @@ class ResourceXmlDownloadView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'{self.resource.name} XML'
+        context['title'] = f'{self.resource.name} | XML'
         context['resource_name'] = self.resource.name
         context['resource_localid'] = self.resource.localid
         context['xml'] = self.xml
-        context['resource_management_index_page_breadcrumb_text'] = _INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_text'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
-        context['resource_management_list_page_breadcrumb_text'] = _create_manage_resource_page_title(self.model.type_plural_readable.title())
-        context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
         return context
 
-class OrganisationXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Organisation
 
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
+class OrganisationXmlDownloadFromBrowsingView(
+        view_mixins.OrganisationXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class IndividualXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Individual
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
 
-class ProjectXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Project
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
+class IndividualXmlDownloadFromBrowsingView(
+        view_mixins.IndividualXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class PlatformXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Platform
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
 
-class OperationXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Operation
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
+class ProjectXmlDownloadFromBrowsingView(
+        view_mixins.ProjectXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class InstrumentXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Instrument
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
 
-class AcquisitionCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
-    model = models.AcquisitionCapabilities
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
+class PlatformXmlDownloadFromBrowsingView(
+        view_mixins.PlatformXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class AcquisitionXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Acquisition
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
 
-class ComputationCapabilitiesXmlDownloadView(ResourceXmlDownloadView):
-    model = models.ComputationCapabilities
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
+class OperationXmlDownloadFromBrowsingView(
+        view_mixins.OperationXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class ComputationXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Computation
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
 
-class ProcessXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Process
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
+class InstrumentXmlDownloadFromBrowsingView(
+        view_mixins.InstrumentXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-class DataCollectionXmlDownloadView(ResourceXmlDownloadView):
-    model = models.DataCollection
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
 
-class CatalogueXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Catalogue
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+class AcquisitionCapabilitiesXmlDownloadFromBrowsingView(
+        view_mixins.AcquisitionCapabilitiesXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
-        return context
 
-class CatalogueEntryXmlDownloadView(ResourceXmlDownloadView):
-    model = models.CatalogueEntry
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+class AcquisitionXmlDownloadFromBrowsingView(
+        view_mixins.AcquisitionXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
-        return context
 
-class CatalogueDataSubsetXmlDownloadView(ResourceXmlDownloadView):
-    model = models.CatalogueDataSubset
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+class ComputationCapabilitiesXmlDownloadFromBrowsingView(
+        view_mixins.ComputationCapabilitiesXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
-        return context
 
-class WorkflowXmlDownloadView(ResourceXmlDownloadView):
-    model = models.Workflow
-    
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
+class ComputationXmlDownloadFromBrowsingView(
+        view_mixins.ComputationXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
+
+
+class ProcessXmlDownloadFromBrowsingView(
+        view_mixins.ProcessXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
+
+
+class DataCollectionXmlDownloadFromBrowsingView(
+        view_mixins.DataCollectionXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    pass
+
+
+class CatalogueXmlDownloadFromBrowsingView(
+        view_mixins.CatalogueXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+
+
+class CatalogueEntryXmlDownloadFromBrowsingView(
+        view_mixins.CatalogueEntryXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+
+
+class CatalogueDataSubsetXmlDownloadFromBrowsingView(
+        view_mixins.CatalogueDataSubsetXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+
+
+class WorkflowXmlDownloadFromBrowsingView(
+        view_mixins.WorkflowXmlDownloadViewMixin,
+        view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
+        ResourceXmlDownloadView):
+    template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'

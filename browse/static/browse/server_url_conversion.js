@@ -38,7 +38,7 @@ export class ServerURLConverter {
         const anchorContainerElements = document.querySelectorAll(`.${this.serverUrlElementClassSelector}[data-metadata-server-url="${originalServerUrl}"]`);
         for (const e of anchorContainerElements) {
             const metadataUrlTextElement = e.querySelector(".metadata-server-url-text");
-            metadataUrlTextElement.innerText = convertedUrlText;
+            metadataUrlTextElement.textContent = convertedUrlText;
             metadataUrlTextElement.href = convertedUrl;
             this.showElementWithConvertedUrlInPage(e);
         }

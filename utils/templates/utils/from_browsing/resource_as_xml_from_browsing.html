@@ -1,0 +1,9 @@
+{% extends 'utils/resource_as_xml_base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
+{% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
+{% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
+{% breadcrumb_item resource_name|default:resource_localid detail_page_url_name resource_localid %}
+{% breadcrumb_item_active title %}
+{% endblock breadcrumbs %}

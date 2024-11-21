@@ -27,7 +27,7 @@
                 Online Resource Access
             </h3>
             <div>
-                {% with online_resources=interaction_methods_for_type %}
+                {% with online_resources=interaction_methods_for_type pill_type='none bg-dark-subtle text-dark' %}
                 {% include 'browse/detail/components/online_resource_list.html' %}
                 {% endwith %}
             </div>

@@ -123,7 +123,7 @@ class OrganisationManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:organisation_with_editor'
     resource_register_page_url_name = 'register:organisation'
     resource_register_with_editor_name = 'register:organisation_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_organisation_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_organisation_as_xml_with_editing'
 
 class IndividualManagementListView(ResourceManagementListView):
     model = models.Individual
@@ -133,7 +133,7 @@ class IndividualManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:individual_with_editor'
     resource_register_page_url_name = 'register:individual'
     resource_register_with_editor_name = 'register:individual_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_individual_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_individual_as_xml_with_editing'
 
 class ProjectManagementListView(ResourceManagementListView):
     model = models.Project
@@ -143,7 +143,7 @@ class ProjectManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:project_with_editor'
     resource_register_page_url_name = 'register:project'
     resource_register_with_editor_name = 'register:project_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_project_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_project_as_xml_with_editing'
 
 class PlatformManagementListView(ResourceManagementListView):
     model = models.Platform
@@ -154,7 +154,7 @@ class PlatformManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:platform_with_editor'
     resource_register_page_url_name = 'register:platform'
     resource_register_with_editor_name = 'register:platform_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_platform_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_platform_as_xml_with_editing'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -178,7 +178,7 @@ class OperationManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:operation_with_editor'
     resource_register_page_url_name = 'register:operation'
     resource_register_with_editor_name = 'register:operation_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_operation_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_operation_as_xml_with_editing'
 
 class InstrumentManagementListView(ResourceManagementListView):
     model = models.Instrument
@@ -188,7 +188,7 @@ class InstrumentManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:instrument_with_editor'
     resource_register_page_url_name = 'register:instrument'
     resource_register_with_editor_name = 'register:instrument_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_instrument_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_instrument_as_xml_with_editing'
 
 class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     model = models.AcquisitionCapabilities
@@ -198,7 +198,7 @@ class AcquisitionCapabilitiesManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:acquisition_capability_set_with_editor'
     resource_register_page_url_name = 'register:acquisition_capability_set'
     resource_register_with_editor_name = 'register:acquisition_capability_set_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_acquisition_capability_set_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_acquisition_capability_set_as_xml_with_editing'
 
 class AcquisitionManagementListView(ResourceManagementListView):
     model = models.Acquisition
@@ -208,7 +208,7 @@ class AcquisitionManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:acquisition_with_editor'
     resource_register_page_url_name = 'register:acquisition'
     resource_register_with_editor_name = 'register:acquisition_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_acquisition_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_acquisition_as_xml_with_editing'
 
 class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     model = models.ComputationCapabilities
@@ -218,7 +218,7 @@ class ComputationCapabilitiesManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:computation_capability_set_with_editor'
     resource_register_page_url_name = 'register:computation_capability_set'
     resource_register_with_editor_name = 'register:computation_capability_set_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_computation_capability_set_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_computation_capability_set_as_xml_with_editing'
 
 class ComputationManagementListView(ResourceManagementListView):
     model = models.Computation
@@ -228,7 +228,7 @@ class ComputationManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:computation_with_editor'
     resource_register_page_url_name = 'register:computation'
     resource_register_with_editor_name = 'register:computation_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_computation_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_computation_as_xml_with_editing'
 
 class ProcessManagementListView(ResourceManagementListView):
     model = models.Process
@@ -238,7 +238,7 @@ class ProcessManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:process_with_editor'
     resource_register_page_url_name = 'register:process'
     resource_register_with_editor_name = 'register:process_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_process_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_process_as_xml_with_editing'
 
 class DataCollectionManagementListView(ResourceManagementListView):
     template_name = 'resource_management/data_collection_management_list_outer.html'
@@ -249,7 +249,7 @@ class DataCollectionManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:data_collection_with_editor'
     resource_register_page_url_name = 'register:data_collection'
     resource_register_with_editor_name = 'register:data_collection_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_data_collection_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_data_collection_as_xml_with_editing'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -264,7 +264,7 @@ class CatalogueManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:catalogue_with_editor'
     resource_register_page_url_name = 'register:catalogue'
     resource_register_with_editor_name = 'register:catalogue_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_catalogue_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
@@ -276,7 +276,7 @@ class CatalogueEntryManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:catalogue_entry_with_editor'
     resource_register_page_url_name = 'register:catalogue_entry'
     resource_register_with_editor_name = 'register:catalogue_entry_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_catalogue_entry_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_entry_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
@@ -287,7 +287,7 @@ class CatalogueDataSubsetManagementListView(ResourceManagementListView):
     resource_update_page_url_name = 'update:catalogue_data_subset'
     resource_register_page_url_name = 'register:catalogue_data_subset'
     resource_register_with_editor_name = 'register:catalogue_data_subset_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_catalogue_data_subset_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_data_subset_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
@@ -300,4 +300,4 @@ class WorkflowManagementListView(ResourceManagementListView):
     resource_update_with_wizard_page_url_name = 'update:workflow_with_editor'
     resource_register_page_url_name = 'register:workflow'
     resource_register_with_editor_name = 'register:workflow_with_editor'
-    resource_xml_download_page_url_name = 'utils:view_workflow_as_xml'
+    resource_xml_download_page_url_name = 'utils_secure:view_workflow_as_xml_with_editing'
