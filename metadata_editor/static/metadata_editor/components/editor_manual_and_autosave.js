@@ -21,13 +21,17 @@ function getAllWizardFields() {
 
 function getWizardTextFields() {
     return editorForm.querySelectorAll(`
-        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"]),
+        input[id]:not(.table input, .tab-pane input, .ts-control input[role="combobox"], input[type="radio"], input[type="file"]),
         textarea[id]:not(.table textarea, .tab-pane textarea)
     `);
 }
 
-function getWizardChoiceFields() {
+function getWizardSelectFields() {
     return editorForm.querySelectorAll(`select[id]:not(.table select, .tab-pane select)`);
+}
+
+function getWizardCheckedRadioButtons() {
+    return editorForm.querySelectorAll('input[id][type="radio"]:not(.table input[type="radio"], .tab-pane input[type="radio"]):checked');
 }
 
 function updateSaveStatus(status) {
@@ -95,10 +99,12 @@ function saveWizardDataToLocalStorage() {
             wizardDataCopy.fieldData[textField.id] = textField.value;
         });
 
-        const choiceFields = getWizardChoiceFields();
-        choiceFields.forEach(choiceField => {
-            wizardDataCopy.fieldData[choiceField.id] = Array.from(choiceField.selectedOptions).map(option => option.value);
+        const selectFields = getWizardSelectFields();
+        selectFields.forEach(selectField => {
+            wizardDataCopy.fieldData[selectField.id] = Array.from(selectField.selectedOptions).map(option => option.value);
         });
+
+        wizardDataCopy.checkedRadioButtonIds = Array.from(getWizardCheckedRadioButtons()).map(checkedRadioButton => checkedRadioButton.id);
         wizardDataCopy.lastSaved = Date.now();
 
         wizardData = wizardDataCopy;
@@ -159,6 +165,14 @@ function addFieldDataToForm(fieldData) {
     }
 }
 
+function addRadioButtonDataToForm(checkedRadioButtonIds) {
+    for (const radioButtonId of checkedRadioButtonIds) {
+        const radioButton = editorForm.querySelector(`#${radioButtonId}`);
+        if (!radioButton) continue;
+        radioButton.checked = true;
+    }
+}
+
 function setupResetButtonEventListeners() {
     resetButtons.forEach(resetButton => {
         resetButton.addEventListener("click", () => {
@@ -213,4 +227,7 @@ export function setupWizardManualAndAutoSave() {
     setupEventListeners();
     loadPastWizardData();
     addFieldDataToForm(wizardData.fieldData);
+    if ('checkedRadioButtonIds' in wizardData) {
+        addRadioButtonDataToForm(wizardData.checkedRadioButtonIds);
+    }
 }

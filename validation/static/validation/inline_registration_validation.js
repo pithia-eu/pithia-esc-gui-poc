@@ -6,7 +6,7 @@ import {
 } from "/static/validation/inline_metadata_file_validation.js";
 const fileInput = document.querySelector("#id_files");
 
-class NewMetadataFile extends MetadataFile {
+export class NewMetadataFile extends MetadataFile {
     constructor(xmlFileString, xmlFileName) {
         super(xmlFileString, xmlFileName);
         this.newRegistrationErrors = undefined;
@@ -47,7 +47,7 @@ class NewMetadataFile extends MetadataFile {
     }
 }
 
-class NewMetadataFileValidator extends MetadataFileValidator {
+export class NewMetadataFileValidator extends MetadataFileValidator {
     async serverValidationFetchRequest(metadataFile) {
         const validationUrl = JSON.parse(document.getElementById("inline-validation-url").textContent);
 
@@ -82,7 +82,7 @@ class NewMetadataFileValidator extends MetadataFileValidator {
     }
 }
 
-class NewMetadataValidationStatusUIController extends MetadataValidationStatusUIController {
+export class NewMetadataValidationStatusUIController extends MetadataValidationStatusUIController {
     #addRegistrationValidationStatusListItemForMetadataFile(metadataFile) {
         const statusList = document.querySelector(`.file-list-group-item-${metadataFile.id} .details-validation ul`);
         statusList.append(this.htmlToElement(`
@@ -126,7 +126,7 @@ class NewMetadataValidationStatusUIController extends MetadataValidationStatusUI
     }
 }
 
-async function startNewRegistrationValidationProcess() {
+export async function startNewRegistrationValidationProcess() {
     const files = Array.from(fileInput.files);
     const validator = new NewMetadataFileValidator();
 
@@ -136,15 +136,3 @@ async function startNewRegistrationValidationProcess() {
 
     return startValidationProcess(files, validator, validationStatusUIController, newMetadataFileObjectFn);
 }
-
-fileInput.addEventListener("change", async event => {
-    await startNewRegistrationValidationProcess();
-});
-
-window.addEventListener("load", async event => {
-    if (fileInput.value !== "") {
-        // In case files have been entered into the file input
-        // and the user refreshes the page.
-        await startNewRegistrationValidationProcess();
-    }
-});

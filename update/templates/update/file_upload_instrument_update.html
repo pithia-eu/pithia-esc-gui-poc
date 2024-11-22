@@ -1,7 +1,9 @@
 {% extends 'update/file_upload_update.html' %}
 {% load static %}
+{% block validation_setup_script %}
+<script src="{% static 'validation/setup/inline_instrument_update_validation_setup.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock validation_setup_script %}
 {% block page_specific_scripts %}
 {{ resource_id|json_script:"resource-id" }}
-<script src="{% static 'validation/inline_instrument_update_validation.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'update/instrument_update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}

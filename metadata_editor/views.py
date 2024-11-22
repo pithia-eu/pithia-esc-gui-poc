@@ -41,6 +41,7 @@ from .view_mixins import *
 
 from common import models
 from common.decorators import login_session_institution_required
+from datahub_management.view_mixins import WorkflowDataHubViewMixin
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -1003,7 +1004,8 @@ class CatalogueDataSubsetEditorFormView(
 
 class WorkflowEditorFormView(
     DataCollectionSelectFormViewMixin,
-    ResourceEditorFormView):
+    ResourceEditorFormView,
+    WorkflowDataHubViewMixin):
     form_class = WorkflowEditorForm
     template_name = 'metadata_editor/workflow_editor.html'
 
@@ -1018,7 +1020,28 @@ class WorkflowEditorFormView(
         metadata_editor.update_description(form_cleaned_data.get('description'))
         data_collections = [form_cleaned_data.get('data_collection_1')] + form_cleaned_data.get('data_collection_2_and_others')
         metadata_editor.update_data_collections(data_collections)
+        if self.workflow_details_file_source == 'existing':
+            return
+        elif self.workflow_details_file_source == 'file_upload':
+            metadata_editor.update_workflow_details('TEMP_WORKFLOW_DETAILS_URL')
+            return
         metadata_editor.update_workflow_details(form_cleaned_data.get('workflow_details'))
+    
+    def get_index_of_workflow_details_file_source_choice(self, choice_value: str):
+        try:
+            return [
+                choice[0]
+                for choice in self.form_class().fields.get('workflow_details_file_source').choices
+            ].index(choice_value)
+        except ValueError:
+            logger.exception(f'Workflow details source choice, "{choice_value}" does not exist!')
+        return None
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['workflow_details_file_source_file_upload_choice_index'] = self.get_index_of_workflow_details_file_source_choice('file_upload')
+        context['workflow_details_file_source_external_choice_index'] = self.get_index_of_workflow_details_file_source_choice('external')
+        return context
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
