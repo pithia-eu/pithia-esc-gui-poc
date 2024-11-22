@@ -1,20 +1,30 @@
-<div class="row row-gap-4">
-    <div class="col-lg-6">
+<div class="row gx-lg-5 row-gap-4">
+    <div class="col-xl-4 col-lg-6">
         <fieldset class="option-row">
             <legend>
                 <h3>Computation Types</h3>
             </legend>
-            {% with ontology_component="computation-types" search_input_col_width="col-lg-7" %}
+            {% with ontology_component="computation-types" search_input_col_width="col-lg-12" %}
             {% include "search/ontology_tree_container_template.html" %}
             {% endwith %}
         </fieldset>
     </div>
-    <div class="col-lg-6">
+    <div class="col-xl-4 col-lg-6">
         <fieldset class="option-row">
             <legend>
                 <h3>Instrument Types</h3>
             </legend>
-            {% with ontology_component="instrument-types" search_input_col_width="col-lg-7" %}
+            {% with ontology_component="instrument-types" search_input_col_width="col-lg-12" %}
+            {% include "search/ontology_tree_container_template.html" %}
+            {% endwith %}
+        </fieldset>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <fieldset class="option-row">
+            <legend>
+                <h3>Annotation Types</h3>
+            </legend>
+            {% with ontology_component="annotation-types" search_input_col_width="col-lg-12" %}
             {% include "search/ontology_tree_container_template.html" %}
             {% endwith %}
         </fieldset>

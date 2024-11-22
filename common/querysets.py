@@ -385,14 +385,6 @@ class ProcessQuerySet(ScientificMetadataQuerySet, AbstractProcessDatabaseQueries
         return referencing_acquisition_url | referencing_computation_url
 
 class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionDatabaseQueries):
-    def referencing_computation_type_urls(self, computation_type_urls: list):
-        if not computation_type_urls:
-            return self.none()
-        query = Q()
-        for url in computation_type_urls:
-            query |= Q(**{'json__type__contains': [{'@xlink:href': url}]})
-        return self.filter(query)
-
     def referencing_feature_of_interest_urls(self, feature_of_interest_urls: list):
         if not feature_of_interest_urls:
             return self.none()
@@ -400,12 +392,28 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         for url in feature_of_interest_urls:
             query |= Q(**{'json__om:featureOfInterest__FeatureOfInterest__namedRegion__contains': [{'@xlink:href': url}]})
         return self.filter(query)
+
+    def referencing_computation_type_urls(self, computation_type_urls: list):
+        if not computation_type_urls:
+            return self.none()
+        query = Q()
+        for url in computation_type_urls:
+            query |= Q(**{'json__type__contains': [{'@xlink:href': url}]})
+        return self.filter(query)
     
     def referencing_instrument_type_urls(self, instrument_type_urls: list):
         if not instrument_type_urls:
             return self.none()
         query = Q()
         for url in instrument_type_urls:
+            query |= Q(**{'json__type__contains': [{'@xlink:href': url}]})
+        return self.filter(query)
+
+    def referencing_annotation_type_urls(self, annotation_type_urls: list):
+        if not annotation_type_urls:
+            return self.none()
+        query = Q()
+        for url in annotation_type_urls:
             query |= Q(**{'json__type__contains': [{'@xlink:href': url}]})
         return self.filter(query)
     
@@ -434,6 +442,9 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         return self.referencing_computation_type_urls(computation_type_urls) \
             | self.referencing_process_urls(process_urls)
 
+    def for_search_by_annotation_type_urls(self, annotation_type_urls: list):
+        return self.referencing_annotation_type_urls(annotation_type_urls)
+
     def for_search_by_observed_property_urls(self, feature_of_interest_urls: list, process_urls: list):
         # Features of interest can be derived from observed properties.
         return self.referencing_feature_of_interest_urls(feature_of_interest_urls) \
@@ -443,6 +454,7 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         self,
         data_collections_found_by_instrument_type,
         data_collections_found_by_computation_type,
+        data_collections_found_by_annotation_type,
         data_collections_found_by_observed_property
     ):
         search_results = self.all()
@@ -450,6 +462,8 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
             search_results &= data_collections_found_by_instrument_type
         if data_collections_found_by_computation_type:
             search_results &= data_collections_found_by_computation_type
+        if data_collections_found_by_annotation_type:
+            search_results &= data_collections_found_by_annotation_type
         if data_collections_found_by_observed_property:
             search_results &= data_collections_found_by_observed_property
         return search_results
