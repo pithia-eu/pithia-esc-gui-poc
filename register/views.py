@@ -388,6 +388,9 @@ class WorkflowRegisterFormView(
     def form_valid(self, form):
         if form.cleaned_data['is_workflow_details_file_input_used']:
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+            # Skip validating workflow details file in XML
+            # as will be overwritten anyway.
+            return super().form_valid(form)
         try:
             xml_file = self.request.FILES.getlist('files')[0]
             workflow_xml = WorkflowXmlMappingShortcuts(xml_file.read().decode())
