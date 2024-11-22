@@ -1,6 +1,8 @@
+import os
 from datetime import datetime
 from datetime import timezone
 from dateutil.parser import parse
+from django.db import transaction
 from django.shortcuts import render
 from pyexpat import ExpatError
 
@@ -23,11 +25,15 @@ from .form_to_metadata_mappers import (
     WorkflowFormFieldsToMetadataMapper,
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
+from .forms import WorkflowEditorUpdateForm
 
 from common import models
+from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
+from datahub_management.services import WorkflowDataHubService
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.views import *
+from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
 # Create your views here.
@@ -49,24 +55,30 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         )
         metadata_editor.update_pithia_identifier(pithia_identifier_update)
 
+    def run_extra_actions_before_update(self):
+        pass
+
+    def update_resource(self):
+        return self.model.objects.update_from_xml_string(
+            self.resource_id,
+            self.xml_string,
+            self.owner_id
+        )
+
     def form_valid(self, form):
         try:
             metadata_editor = self.metadata_editor_class(xml_string=self.resource.xml)
             self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
-            xml_string = metadata_editor.to_xml()
-            resource_id_temp = self.resource_id
-            resource = self.model.objects.update_from_xml_string(
-                resource_id_temp,
-                xml_string,
-                self.owner_id
-            )
+            self.xml_string = metadata_editor.to_xml()
+            self.run_extra_actions_before_update()
+            updated_resource = self.update_resource()
 
-            messages.success(self.request, f'Successfully updated {escape(resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            messages.success(self.request, f'Successfully updated {escape(updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             self.success_url += '?reset=true'
         except ExpatError as err:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
-        except BaseException as err:
+        except Exception as err:
             logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
             messages.error(self.request, 'An unexpected error occurred.')
 
@@ -239,8 +251,73 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
 
 
 class WorkflowUpdateWithEditorFormView(
-    ResourceUpdateWithEditorFormView,
-    WorkflowEditorFormView):
+        ResourceUpdateWithEditorFormView,
+        WorkflowDetailsUrlValidationViewMixin,
+        WorkflowEditorFormView):
     model = models.Workflow
     success_url_name = 'update:workflow_with_editor'
+    form_class = WorkflowEditorUpdateForm
     form_field_to_metadata_mapper_class = WorkflowFormFieldsToMetadataMapper
+
+    def run_extra_actions_before_update(self):
+        super().run_extra_actions_before_update()
+        if not hasattr(self, 'workflow_details_file'):
+            return
+        self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def update_resource(self):
+        updated_resource = super().update_resource()
+        if not self.workflow_details_file_source == 'external':
+            return updated_resource
+        # User may choose the external details file
+        # source by mistake, but still use the eSC
+        # details file URL. If this is true, do not
+        # delete the details file from DataHub.
+        updated_workflow_details_url = WorkflowXmlMappingShortcuts(self.xml_string).workflow_details_url
+        if updated_workflow_details_url == self.get_workflow_details_file_url():
+            return updated_resource
+        try:
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file was not found.')
+        return updated_resource
+
+    def form_valid(self, form):
+        self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+        if self.workflow_details_file_source == 'file_upload':
+            self.workflow_details_file = self.request.FILES['workflow_details_file']
+        if not form.cleaned_data.get('workflow_details_file_source') == 'external':
+            return super().form_valid(form)
+        workflow_details_file_url = form.cleaned_data.get('workflow_details')
+        workflow_details_url_error = self.check_workflow_details_url(workflow_details_file_url)
+        if workflow_details_url_error:
+            messages.error(self.request, workflow_details_url_error)
+            form.add_error('workflow_details', workflow_details_url_error)
+            return super().form_invalid(form)
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        workflow_details_file_source_existing_choice_index = self.get_index_of_workflow_details_file_source_choice('existing')
+        context['workflow_details_file_source_existing_choice_index'] = workflow_details_file_source_existing_choice_index
+        context['disabled_workflow_details_file_source_choice_indexes'] = []
+        if not self.stored_workflow_details_file:
+            context['disabled_workflow_details_file_source_choice_indexes'].append(
+                workflow_details_file_source_existing_choice_index
+            )
+        return context
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({
+            'workflow_details_file_source': 'external',
+        })
+        self.stored_workflow_details_file = WorkflowDataHubService.get_workflow_details_file(self.resource_id)
+        if not self.stored_workflow_details_file:
+            return initial
+        initial.update({
+            'workflow_details_file_source': 'existing',
+            'workflow_details': '',
+        })
+        return initial

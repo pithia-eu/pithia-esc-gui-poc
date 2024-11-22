@@ -7,6 +7,9 @@
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% load static %}
+{% block validation_setup_script %}
+<script src="{% static 'validation/setup/inline_update_validation_default_setup.js' %}?{% now 'U' %}" type="module" defer></script>
+{% endblock validation_setup_script %}
 {% block page_specific_scripts %}
 {{ resource_id|json_script:"resource-id" }}
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>

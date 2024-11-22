@@ -2,7 +2,6 @@
 {% load static %}
 {% block page_specific_scripts %}
 {{ api_specification_validation_url|json_script:'api-specification-validation-url' }}
-<script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'register/data_collection_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'validation/interaction_methods_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
