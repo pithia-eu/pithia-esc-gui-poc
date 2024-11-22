@@ -443,18 +443,16 @@ class OnlineResourcesViewMixin:
         for online_resource in resource.properties.online_resources:
             service_functions = online_resource.get('service_functions')
             is_openapi_a_service_function = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution' in service_functions
-            is_linkage_to_openapi_spec = True
-            try:
-                validate_spec_url(online_resource.get('linkage'))
-            except Exception:
-                is_linkage_to_openapi_spec = False
-
-            if is_linkage_to_openapi_spec:
-                online_resource.update({
-                    'linkage': f"{reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id})}?{urlencode({'name': online_resource.get('name', '')})}"
-                })
 
             if is_openapi_a_service_function:
+                try:
+                    validate_spec_url(online_resource.get('linkage'))
+                    online_resource.update({
+                        'linkage': f"{reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id})}?{urlencode({'name': online_resource.get('name', '')})}"
+                    })
+                except Exception:
+                    pass
+
                 interaction_methods_by_type['api'].append(online_resource)
                 continue
             interaction_methods_by_type['online_resource'].append(online_resource)
