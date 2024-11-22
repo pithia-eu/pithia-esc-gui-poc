@@ -9,6 +9,7 @@ from .services import (
     find_matching_data_collections,
     get_data_collections_for_search,
     get_parents_of_registered_ontology_terms,
+    get_registered_annotation_types,
     get_registered_computation_types,
     get_registered_features_of_interest,
     get_registered_instrument_types,
@@ -20,6 +21,7 @@ from .services import (
 )
 
 from common.constants import (
+    ANNOTATION_TYPE_URL_BASE,
     COMPUTATION_TYPE_URL_BASE,
     FEATURE_OF_INTEREST_URL_BASE,
     INSTRUMENT_TYPE_URL_BASE,
@@ -51,6 +53,7 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     
     registered_ontology_terms = []
     parents_of_registered_ontology_terms = []
+
     if ontology_component.lower() == 'observedproperty':
         registered_ontology_terms = get_registered_observed_properties()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
@@ -60,6 +63,12 @@ def get_tree_form_for_ontology_component(request, ontology_component):
             'registered_ontology_terms': registered_ontology_terms,
             'parents_of_registered_ontology_terms': parents_of_registered_ontology_terms,
         })
+    elif ontology_component.lower() == 'annotationtype':
+        registered_ontology_terms = get_registered_annotation_types()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+    elif ontology_component.lower() == 'computationtype':
+        registered_ontology_terms = get_registered_computation_types()
+        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
     elif ontology_component.lower() == 'featureofinterest':
         try:
             registered_observed_property_ids = get_registered_observed_properties()
@@ -70,20 +79,17 @@ def get_tree_form_for_ontology_component(request, ontology_component):
     elif ontology_component.lower() == 'instrumenttype':
         registered_ontology_terms = get_registered_instrument_types()
         parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
-    elif ontology_component.lower() == 'computationtype':
-        registered_ontology_terms = get_registered_computation_types()
-        parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
-    elif ontology_component.lower() == 'phenomenon':
-        try:
-            registered_observed_property_ids = get_registered_observed_properties()
-            registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
-            parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
-        except FileNotFoundError:
-            return HttpResponseServerError(terms_load_error_msg)
     elif ontology_component.lower() == 'measurand':
         try:
             registered_observed_property_ids = get_registered_observed_properties()
             registered_ontology_terms = get_registered_measurands(registered_observed_property_ids)
+            parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
+        except FileNotFoundError:
+            return HttpResponseServerError(terms_load_error_msg)
+    elif ontology_component.lower() == 'phenomenon':
+        try:
+            registered_observed_property_ids = get_registered_observed_properties()
+            registered_ontology_terms = get_registered_phenomenons(registered_observed_property_ids)
             parents_of_registered_ontology_terms = get_parents_of_registered_ontology_terms(registered_ontology_terms, ontology_component, [])
         except FileNotFoundError:
             return HttpResponseServerError(terms_load_error_msg)
@@ -102,6 +108,8 @@ def index(request):
         request.session['computation_types'] = computation_types
         instrument_types = request.POST.getlist('instrumentType')
         request.session['instrument_types'] = instrument_types
+        annotation_types = request.POST.getlist('annotationType')
+        request.session['annotation_types'] = annotation_types
         observed_properties = request.POST.getlist('observedProperty')
         request.session['observed_properties'] = observed_properties
         return HttpResponseRedirect(reverse('search:results'))
@@ -111,14 +119,16 @@ def index(request):
 
 def results(request):
     observed_property_urls = [f'{OBSERVED_PROPERTY_URL_BASE}/{op_localid}' for op_localid in request.session.get('observed_properties', [])]
-    instrument_type_urls = [f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
     computation_type_urls = [f'{COMPUTATION_TYPE_URL_BASE}/{computation_type_localid}' for computation_type_localid in request.session.get('computation_types', [])]
+    instrument_type_urls = [f'{INSTRUMENT_TYPE_URL_BASE}/{instrument_type_localid}' for instrument_type_localid in request.session.get('instrument_types', [])]
+    annotation_type_urls = [f'{ANNOTATION_TYPE_URL_BASE}/{annotation_type_localid}' for annotation_type_localid in request.session.get('annotation_types', [])]
     feature_of_interest_urls = [f'{FEATURE_OF_INTEREST_URL_BASE}/{feature_of_interest_localid}' for feature_of_interest_localid in request.session.get('features_of_interest', [])]
     
     data_collections = get_data_collections_for_search(
         feature_of_interest_urls=feature_of_interest_urls,
         instrument_type_urls=instrument_type_urls,
         computation_type_urls=computation_type_urls,
+        annotation_type_urls=annotation_type_urls,
         observed_property_urls=observed_property_urls
     )
 

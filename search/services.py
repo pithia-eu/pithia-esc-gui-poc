@@ -1,6 +1,7 @@
 import re
 
 from common.constants import (
+    ANNOTATION_TYPE_URL_BASE,
     COMPUTATION_TYPE_URL_BASE,
     INSTRUMENT_TYPE_URL_BASE,
 )
@@ -27,6 +28,7 @@ def get_data_collections_for_search(
     feature_of_interest_urls: list = [],
     instrument_type_urls: list = [],
     computation_type_urls: list = [],
+    annotation_type_urls: list = [],
     observed_property_urls: list = [],
 ):
     if len(feature_of_interest_urls) > 0:
@@ -39,6 +41,7 @@ def get_data_collections_for_search(
 
 
     # Search by instrument type
+    # fbit = found by instrument type
     # Instruments
     instruments_found_by_instrument_type = Instrument.objects.for_search_by_instrument_type_urls(instrument_type_urls)
     ifbit_urls = [i.metadata_server_url for i in instruments_found_by_instrument_type]
@@ -60,6 +63,7 @@ def get_data_collections_for_search(
 
 
     # Search by computation type
+    # fbct = found by computation type
     # Computation Capabilities
     computation_capabilities_found_by_computation_type = ComputationCapabilities.objects.for_search_by_computation_type_urls(computation_type_urls)
     ccfbct_urls = [cc.metadata_server_url for cc in computation_capabilities_found_by_computation_type]
@@ -75,8 +79,16 @@ def get_data_collections_for_search(
     # Data Collections
     data_collections_found_by_computation_type = DataCollection.objects.for_search_by_computation_type_urls(computation_type_urls, pfbct_urls)
 
+    
+    # Search by annotation type
+    # Annotation types should only be found
+    # in Data Collections - not in any capabilities.
+    # Data Collections
+    data_collections_found_by_annotation_type = DataCollection.objects.for_search_by_annotation_type_urls(annotation_type_urls)
+
 
     # Search by observed property
+    # fbop = found by observed property
     # Acquisition Capabilities
     acquisition_capabilities_found_by_observed_property = AcquisitionCapabilities.objects.for_search_by_observed_property_urls(observed_property_urls)
     acfbop_urls = [ac.metadata_server_url for ac in acquisition_capabilities_found_by_observed_property]
@@ -105,6 +117,7 @@ def get_data_collections_for_search(
     data_collections = DataCollection.objects.for_final_search_step(
         data_collections_found_by_instrument_type,
         data_collections_found_by_computation_type,
+        data_collections_found_by_annotation_type,
         data_collections_found_by_observed_property
     )
 
@@ -224,6 +237,10 @@ def get_distinct_computation_type_urls_from_data_collections(data_collections):
     model_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{COMPUTATION_TYPE_URL_BASE}', url)]
     return list(set(model_urls))
 
+def get_distinct_annotation_type_urls_from_data_collections(data_collections):
+    distinct_urls = [url for dc in data_collections for url in dc.type_urls if re.match(f'^{ANNOTATION_TYPE_URL_BASE}', url)]
+    return list(set(distinct_urls))
+
 def extract_localid_from_xlink_href(xlinkhref):
     return xlinkhref.split('/')[-1]
 
@@ -271,6 +288,13 @@ def get_registered_computation_types():
     # Join the two lists
     all_registered_computation_types = list(set(types_from_computation_capability_sets + types_from_data_collections))
     return all_registered_computation_types
+
+def get_registered_annotation_types():
+    # Get Annotation Type URLs from all Data Collections
+    data_collections = DataCollection.objects.all()
+    annotation_type_urls_from_data_collections = get_distinct_annotation_type_urls_from_data_collections(data_collections)
+    all_registered_annotation_types = list(map(extract_localid_from_xlink_href, annotation_type_urls_from_data_collections))
+    return all_registered_annotation_types
 
 def get_registered_phenomenons(registered_observed_property_ids):
     phenomenon_ids = []
