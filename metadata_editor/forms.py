@@ -670,6 +670,14 @@ class CatalogueDataSubsetForm(
         })
     )
 
+    register_doi = forms.BooleanField(
+        label='Generate a DOI for this Data Subset',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        })
+    )
+
 
 class WorkflowEditorForm(BaseEditorForm):
     def __init__(self, *args, data_collection_choices=(), **kwargs):

@@ -360,7 +360,7 @@ class CatalogueDataSubsetUpdateFormView(
     def form_valid(self, form):
         xml_file = self.request.FILES['files']
         try:
-            self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file)
+            self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file=xml_file)
             # RE-INSERT PRE-EXISTING DOI KERNEL METADATA
             # Refresh self.resource if a DOI was added
             # so the new DOI kernel metadata is added to

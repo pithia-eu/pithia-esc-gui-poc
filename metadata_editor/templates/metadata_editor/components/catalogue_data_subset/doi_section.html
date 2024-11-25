@@ -1,0 +1,18 @@
+<section id="doi-section" class="d-inline-flex flex-column row-gap-3">
+    <h2 class="fs-4 fw-semibold mb-0">DOI</h2>
+    <div class="d-inline-flex bg-light rounded p-3 pe-4">
+        <div class="form-check">
+            {{ form.register_doi }}
+            <label for="{{ form.register_doi.auto_id }}" class="form-check-label mb-0">
+                {{ form.register_doi.label }}
+            </label>
+        </div>
+    </div>
+    {% if form.register_doi.errors %}
+    <ul class="list-unstyled form-text text-danger mb-0">
+        {% for error in form.register_doi.errors %}
+        <li>{{ error|escape }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>

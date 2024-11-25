@@ -16,6 +16,7 @@ from .metadata_builder.metadata_structures import *
 from .metadata_builder.utils import *
 
 from common import models
+from handle_management.view_mixins import HandleRegistrationViewMixin
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
@@ -32,17 +33,17 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
     def get_namespaces_by_organisation(self):
         return {o.metadata_server_url: clean_localid_or_namespace(o.short_name) for o in models.Organisation.objects.all()}
 
-    def register_xml_string(self, xml_string):
+    def register_xml_string(self):
         new_registration = self.model.objects.create_from_xml_string(
-            xml_string,
+            self.xml_string,
             self.institution_id,
             self.owner_id,
         )
         self.success_url += '?reset=true'
         return new_registration
 
-    def run_registration_actions(self, request, xml_string):
-        return self.register_xml_string(xml_string)
+    def run_registration_actions(self, request):
+        return self.register_xml_string()
 
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -99,9 +100,9 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             return self.render_to_response(self.get_context_data(form=form))
 
         try:
-            xml_string = xml_result['xml_string']
+            self.xml_string = xml_result['xml_string']
             registration_name = form.cleaned_data.get('name', '')
-            self.run_registration_actions(self.request, xml_string)
+            self.resource = self.run_registration_actions(self.request)
             messages.success(self.request, f'Successfully registered {escape(registration_name)}.')
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
@@ -333,8 +334,8 @@ class DataCollectionRegisterWithEditorFormView(
             logger.exception('An unexpected error occurred during API interaction method registration.')
             messages.error(request, 'An unexpected error occurred during API interaction method registration.')
     
-    def run_registration_actions(self, request, xml_string):
-        new_registration = self.register_xml_string(xml_string)
+    def run_registration_actions(self, request):
+        new_registration = self.register_xml_string()
         self.register_api_interaction_method(request, new_registration)
         return new_registration
 
@@ -365,13 +366,19 @@ class CatalogueEntryRegisterWithEditorFormView(
 
 
 class CatalogueDataSubsetRegisterWithEditorFormView(
-    CatalogueDataSubsetEditorFormView,
-    ResourceRegisterWithEditorFormView):
+        CatalogueDataSubsetEditorFormView,
+        HandleRegistrationViewMixin,
+        ResourceRegisterWithEditorFormView):
     form_class = CatalogueDataSubsetEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_data_subset_with_editor')
 
     file_upload_registration_url = reverse_lazy('register:catalogue_data_subset')
     save_data_local_storage_key = 'catalogue_data_subset_r_wizard_save_data'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
+        return response
 
 
 class WorkflowRegisterWithEditorFormView(
@@ -399,10 +406,10 @@ class WorkflowRegisterWithEditorFormView(
         )
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
-    def run_registration_actions(self, request, xml_string):
+    def run_registration_actions(self, request):
         if hasattr(self, 'workflow_details_file'):
-            xml_string = self.store_workflow_details_file_and_update_xml_file_string(xml_string)
-        new_registration = self.register_xml_string(xml_string)
+            self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
+        new_registration = self.register_xml_string()
         self.register_workflow_api_interaction_method(request, new_registration)
         return new_registration
 
@@ -413,10 +420,13 @@ class WorkflowRegisterWithEditorFormView(
 
     def form_valid(self, form):
         self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
+
         if self.workflow_details_file_source == 'file_upload':
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+
         if not self.workflow_details_file_source == 'external':
             return super().form_valid(form)
+
         workflow_details_file_url = form.cleaned_data.get('workflow_details')
         workflow_details_url_error = self.check_workflow_details_url(workflow_details_file_url)
         if workflow_details_url_error:

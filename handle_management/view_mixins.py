@@ -20,11 +20,18 @@ class HandleRegistrationViewMixin:
     DOI_ALREADY_ISSUED_MESSAGE = 'A new DOI was not issued as a record of a pre-existing DOI was found for this resource.'
     DOI_FOUND_IN_SUBMITTED_FILE_MESSAGE = 'A new DOI was not issued as record of a pre-existing DOI was found in the submitted metadata file.'
 
-    def register_doi_if_requested(self, request, resource: ScientificMetadata, xml_file):
+    def register_doi_if_requested(self, request, resource: ScientificMetadata, xml_file=None, xml_file_string: str = None):
         if 'register_doi' not in request.POST:
             return None
-        xml_file.seek(0)
-        doi_kernel_metadata_from_xml_file = get_doi_xml_string_from_metadata_xml_string(xml_file.read())
+        if xml_file:
+            xml_file.seek(0)
+            xml_file_string = xml_file.read()
+        elif xml_file_string:
+            xml_file_string.encode('utf-8')
+        else:
+            messages.error(request, 'A DOI was not issued for this registration as an error occurred during the DOI registration process. Please try again later.')
+            return None
+        doi_kernel_metadata_from_xml_file = get_doi_xml_string_from_metadata_xml_string(xml_file_string)
         doi_kernel_metadata_from_resource = get_doi_xml_string_from_metadata_xml_string(resource.xml)
         if doi_kernel_metadata_from_resource:
             # Do not issue a new DOI if the resource XML contains

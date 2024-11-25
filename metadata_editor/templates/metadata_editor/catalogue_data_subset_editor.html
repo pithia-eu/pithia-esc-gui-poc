@@ -40,6 +40,8 @@
 {% with quality_assessment_required=True %}
 {% include 'metadata_editor/components/quality_assessment.html' %}
 {% endwith %}
+<hr class="my-5">
+{% include 'metadata_editor/components/catalogue_data_subset/doi_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">
@@ -80,6 +82,11 @@
 <li class="list-group-item">
     <a href="#quality-assessments-section">
         Quality Assessment
+    </a>
+</li>
+<li class="list-group-item">
+    <a href="#doi-section">
+        DOI
     </a>
 </li>
 {% endblock table_of_contents %}

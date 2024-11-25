@@ -329,7 +329,7 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
         response = super().form_valid(form)
         xml_file = self.xml_files[0]
         xml_file.seek(0)
-        self.register_doi_if_requested(self.request, self.new_registration, xml_file)
+        self.register_doi_if_requested(self.request, self.new_registration, xml_file=xml_file)
         return response
 
     def get_context_data(self, **kwargs):
