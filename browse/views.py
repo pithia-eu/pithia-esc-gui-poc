@@ -943,6 +943,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
                 'dataLevel',
                 'dataSubsetName',
                 'dataSubsetDescription',
+                'doi',
                 'entryIdentifier',
                 'qualityAssessment',
                 'resultTime',

@@ -47,6 +47,16 @@
             </dd>
         </div>
         {% endif %}
+        {% if resource.properties.doi_kernel_metadata.referent_doi_name %}
+        <div>
+            <dt>DOI</dt>
+            <dd>
+                {% with doi_url='https://doi.org/'|add:resource.properties.doi_kernel_metadata.referent_doi_name %}
+                {{ doi_url }}
+                {% endwith %}
+            </dd>
+        </div>
+        {% endif %}
     </dl>
 </div>
 {% endblock top_section_extra_content %}
