@@ -63,17 +63,17 @@ a.link-plain-by-default {
     text-decoration: none;
 }
 
-a.link-plain-by-default:hover,
-a.link-plain-by-default:focus {
+.link-plain-by-default:hover,
+.link-plain-by-default:focus {
     text-decoration: underline;
 }
 
-a.link-underline-by-default {
+.link-underline-by-default {
     text-decoration: underline;
 }
 
-a.link-underline-by-default:hover,
-a.link-underline-by-default:focus {
+.link-underline-by-default:hover,
+.link-underline-by-default:focus {
     text-decoration: none;
 }
 
