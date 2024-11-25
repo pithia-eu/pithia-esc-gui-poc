@@ -769,7 +769,10 @@ class CatalogueDataSubset(ScientificMetadata):
 
     @property
     def metadata_server_url(self):
-        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
+        try:
+            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
+        except Catalogue.DoesNotExist:
+            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
 
     @property
     def properties(self):
