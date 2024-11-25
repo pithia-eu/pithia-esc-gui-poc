@@ -1,13 +1,12 @@
 import logging
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from lxml import etree
 from urllib.parse import quote
 
 from .constants import (
-    PITHIA_METADATA_SERVER_URL_BASE,
     PITHIA_METADATA_SERVER_HTTPS_URL_BASE,
-    SPACE_PHYSICS_ONTOLOGY_SERVER_URL_BASE,
 )
 from .converted_xml_correction_functions import *
 from .managers import *
@@ -771,8 +770,11 @@ class CatalogueDataSubset(ScientificMetadata):
     def metadata_server_url(self):
         try:
             return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
-        except Catalogue.DoesNotExist:
-            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+        except ObjectDoesNotExist:
+            pass
+        except AttributeError:
+            pass
+        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
 
     @property
     def properties(self):

@@ -71,7 +71,7 @@ class ResourceDeleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Delete'
+        context['title'] = f'Delete {self.resource_to_delete.name}'
         context['resource_id'] = self.resource_id
         context['resource_to_delete'] = self.resource_to_delete
         context['other_resources_to_delete'] = self.other_resources_to_delete
@@ -322,9 +322,9 @@ class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
 
 
 class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):
+    """The deletion confirmation page for a Workflow.
     """
-    The deletion confirmation page for a Workflow.
-    """
+    template_name = 'delete/confirm_delete_workflow.html'
     model = models.Workflow
 
     redirect_url = reverse_lazy('resource_management:workflows')
@@ -341,3 +341,8 @@ class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):
             self.delete_workflow_details_file()
         except FileNotFoundError:
             logger.exception('Workflow details file already deleted.')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stored_workflow_details_file'] = self.get_workflow_details_file()
+        return context

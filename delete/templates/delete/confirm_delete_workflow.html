@@ -2,9 +2,10 @@
 {% load project_tags %}
 {% load static %}
 {% block extra_information %}
-{% if linked_interaction_methods|length > 0 %}
+{% if stored_workflow_details_file %}
 <p class="alert alert-warning mb-0">
-    Interaction methods associated with this data collection will be deleted.
+    The workflow details file stored in the e-Science Centre
+    will also be deleted.
 </p>
 {% endif %}
 {% endblock extra_information %}
