@@ -199,12 +199,12 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             None: Namespace.PITHIA,
             NamespacePrefix.DOI: Namespace.DOI,
         })
-        doi_element_reduced_namespaces.append(doi_element)
+        for child in doi_element:
+            doi_element_reduced_namespaces.append(child)
         etree.indent(doi_element_reduced_namespaces, space='\t')
         return etree.tostring(
             doi_element_reduced_namespaces,
-            xml_declaration=True,
-            encoding='UTF-8'
+            doctype='<?xml version="1.0" encoding="UTF-8"?>'
         ).decode()
     
     def _update_catalogue_data_subset_with_doi_kernel_metadata_in_database(self):
