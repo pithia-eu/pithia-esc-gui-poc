@@ -61,13 +61,16 @@ class HandleRegistrationViewMixin:
 
 
 class HandleReapplicationViewMixin:
-    def reinsert_pre_existing_doi_kernel_metadata_into_updated_xml_file_if_needed(self, resource, xml_file):
+    def reinsert_pre_existing_doi_kernel_metadata_into_updated_xml_file_if_needed(self, resource, xml_file=None, xml_file_string: str = None):
         # Any DOI kernel metadata already stored on a resource
         # in the eSC is considered official, so any DOI passed
         # in the updated submitted XML file is overwritten.
         pre_existing_doi_xml_string = get_doi_xml_string_from_metadata_xml_string(resource.xml)
-        xml_file.seek(0)
-        xml_file_string = xml_file.read()
+        if xml_file:
+            xml_file.seek(0)
+            xml_file_string = xml_file.read()
+        elif xml_file_string:
+            xml_file_string.encode('utf-8')
         if not pre_existing_doi_xml_string:
             return xml_file_string
         xml_file_string = remove_doi_element_from_metadata_xml_string(xml_file_string)

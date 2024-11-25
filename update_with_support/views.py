@@ -28,10 +28,18 @@ from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsM
 from .forms import WorkflowEditorUpdateForm
 
 from common import models
-from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
+from common.xml_metadata_mapping_shortcuts import (
+    CatalogueDataSubsetXmlMappingShortcuts,
+    WorkflowXmlMappingShortcuts,
+)
 from datahub_management.services import WorkflowDataHubService
+from handle_management.view_mixins import (
+    HandleReapplicationViewMixin,
+    HandleRegistrationViewMixin,
+)
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.service_utils import BaseMetadataEditor
+from metadata_editor.services import SimpleCatalogueDataSubsetEditor
 from metadata_editor.views import *
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
@@ -43,6 +51,8 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     form_field_to_metadata_mapper_class: EditorFormFieldsToMetadataUtilsMixin = None
     success_url = ''
     success_url_name = ''
+
+    error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
 
     submit_button_text = 'Validate and Update'
 
@@ -67,20 +77,22 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
 
     def form_valid(self, form):
         try:
-            metadata_editor = self.metadata_editor_class(xml_string=self.resource.xml)
+            if not hasattr(self, 'current_resource_xml'):
+                self.current_resource_xml = self.resource.xml
+            metadata_editor = self.metadata_editor_class(xml_string=self.current_resource_xml)
             self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
             self.xml_string = metadata_editor.to_xml()
             self.run_extra_actions_before_update()
-            updated_resource = self.update_resource()
+            self.updated_resource = self.update_resource()
 
-            messages.success(self.request, f'Successfully updated {escape(updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            messages.success(self.request, f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
             self.success_url += '?reset=true'
         except ExpatError as err:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             messages.error(self.request, 'An error occurred whilst parsing the XML.')
         except Exception as err:
             logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
-            messages.error(self.request, 'An unexpected error occurred.')
+            messages.error(self.request, self.error_msg)
 
         return super().form_valid(form)
     
@@ -235,11 +247,53 @@ class CatalogueEntryUpdateWithEditorFormView(
 
 
 class CatalogueDataSubsetUpdateWithEditorFormView(
-    ResourceUpdateWithEditorFormView,
-    CatalogueDataSubsetEditorFormView):
+        HandleReapplicationViewMixin,
+        HandleRegistrationViewMixin,
+        ResourceUpdateWithEditorFormView,
+        CatalogueDataSubsetEditorFormView):
     model = models.CatalogueDataSubset
     success_url_name = 'update:catalogue_data_subset_with_editor'
     form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
+
+    def run_extra_actions_before_update(self):
+        if not self.current_doi_name:
+            return super().run_extra_actions_before_update()
+        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
+        # Replace temp DOI name used to pass
+        # XSD validation with real DOI name.
+        simple_catalogue_data_subset_editor.update_referent_doi_name(self.current_doi_name)
+        self.xml_string = simple_catalogue_data_subset_editor.to_xml()
+        return super().run_extra_actions_before_update()
+
+    def form_valid(self, form):
+        self.current_resource_xml = self.resource.xml
+        try:
+            xml_shortcuts = CatalogueDataSubsetXmlMappingShortcuts(self.current_resource_xml)
+            self.current_doi_name = xml_shortcuts.doi_kernel_metadata.get('referent_doi_name')
+            temp_doi_name = '10.000/000'
+            simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.current_resource_xml)
+            simple_catalogue_data_subset_editor.update_referent_doi_name(temp_doi_name)
+            self.current_resource_xml = simple_catalogue_data_subset_editor.to_xml()
+        except Exception as err:
+            logger.exception(err)
+
+        response = super().form_valid(form)
+
+        try:
+            self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
+            # RE-INSERT PRE-EXISTING DOI KERNEL METADATA
+            # Refresh self.resource if a DOI was added
+            # so the new DOI kernel metadata is added to
+            # the submitted XML file.
+            self.resource = self.model.objects.get(pk=self.resource_id)
+            self.xml_string = self.reinsert_pre_existing_doi_kernel_metadata_into_updated_xml_file_if_needed(
+                self.updated_resource,
+                xml_file_string=self.xml_string
+            )
+        except Exception:
+            logger.exception(self.error_msg)
+            messages.error(self.request, 'An unexpected error occurred whilst handling the DOI request.')
+        return response
 
     def get_initial(self):
         initial = super().get_initial()
@@ -287,8 +341,10 @@ class WorkflowUpdateWithEditorFormView(
         self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
         if self.workflow_details_file_source == 'file_upload':
             self.workflow_details_file = self.request.FILES['workflow_details_file']
+
         if not form.cleaned_data.get('workflow_details_file_source') == 'external':
             return super().form_valid(form)
+
         workflow_details_file_url = form.cleaned_data.get('workflow_details')
         workflow_details_url_error = self.check_workflow_details_url(workflow_details_file_url)
         if workflow_details_url_error:
