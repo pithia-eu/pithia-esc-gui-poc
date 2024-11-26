@@ -442,7 +442,7 @@ class OnlineResourcesViewMixin:
         }
         for online_resource in resource.properties.online_resources:
             service_functions = online_resource.get('service_functions')
-            is_openapi_a_service_function = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution' in service_functions
+            is_openapi_a_service_function = 'https://metadata.pithia.eu/ontology/2.2/serviceFunction/OpenAPI' in service_functions
 
             if is_openapi_a_service_function:
                 try:
@@ -843,7 +843,7 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         api_interaction_methods = list(models.APIInteractionMethod.objects.filter(scientific_metadata=self.resource))
         if api_interaction_methods:
             self.interaction_methods_by_type['api'] = self.interaction_methods_by_type.get('api', []) + [{
-                'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/ApplicationExecution'],
+                'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/OpenAPI'],
                 'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id}),
                 'name': 'PITHIA e-Science Centre Access',
                 'protocol': '',
