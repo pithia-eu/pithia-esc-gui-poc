@@ -4,6 +4,7 @@
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
+{% block search %}{% endblock search %}
 {% block resource_list_outer %}
 {% for catalogue in resources %}
 <section class="pb-5 mt-0 {% if not forloop.last %}border-bottom{% endif %}">
