@@ -1,21 +1,26 @@
 {% extends 'browse/resource_list_by_type.html' %}
 {% load static %}
 {% load project_tags %}
-{% block scripts %}
+{% block extra_scripts %}
 <script src="{% static 'browse/data_collection_list.js' %}" defer></script>
-{% endblock scripts %}
+<script src="{% static 'browse/resource_filter_by_name_data_collection.js' %}" type="module"></script>
+{% endblock extra_scripts %}
 {% block extra_description_content %}
 Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-default">Catalogues</a>, data collections do not include begin and end times.
 {% endblock extra_description_content %}
 {% block resource_count %}
-{{ resource_count }} {{ type_plural_readable|title }}
+{% if resource_count == 1 %}
+{{ resource_count }} {{ type_readable }}
+{% else %}
+{{ resource_count }} {{ type_plural_readable }}
+{% endif %}
 {% endblock resource_count %}
 {% block aside %}
 <div class="d-xl-block d-none col-xl-5">
     <section class="d-flex flex-column pt-0">
         <div class="mx-auto">
             <h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
-            <ul style="min-width: 20rem;" class="bg-light text-secondary-emphasis list-unstyled rounded py-3 px-4 mb-0">
+            <ul style="min-width: 20rem;" class="list-unstyled bg-light text-secondary-emphasis rounded py-3 px-4 mb-0">
                 {% for key, value in resources.items %}
                 {% if value %}
                 <li class="my-1">
@@ -53,22 +58,25 @@ Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-defa
 </div>
 {% endblock aside_responsive %}
 {% block resource_list_outer %}
+<section class="d-none section-search-results pb-0">
+    <h2 class="visually-hidden">Search Results</h2>
+    <ul class="list-group"></ul>
+</section>
 {% for key, value in resources.items %}
-<section class="pb-0 mt-4">
+<section class="section-data-collection-list pb-0 mt-4">
     {% if value %}
+    {% with section_name=key.split|join:'-'|lower %}
     <details open>
         <summary class="summary-marker-custom align-items-center data-collection-category" tabindex="-1">
-            {% with section_name=key.split|join:'-'|lower %}
             <h2 id="{{ section_name }}-heading" class="d-inline-block fs-3">
-            {% endwith %}
                 {{ key }}
             </h2>
         </summary>
         <div class="list-group-container off-bottom mt-3">
             <div class="list-group-scroll-container default-view">
-                <ul class="list-group">
+                <ul id="list-{{ section_name }}" class="list-group list-group-searchable">
                     {% for dc in value %}
-                    <li class="list-group-item">
+                    <li id="li_{{ dc.pk }}" class="list-group-item">
                         <a href="{{ dc.get_absolute_url }}">{{ dc.name|default:dc.localid }}</a>
                     </li>
                     {% endfor %}
@@ -86,6 +94,7 @@ Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-defa
             {% endif %}
         </a>
     </div>
+    {% endwith %}
     {% elif not value and not key|lower == 'other' %}
     {% with section_name=key.split|join:'-'|lower %}
     <h2 id="{{ section_name }}-heading">
