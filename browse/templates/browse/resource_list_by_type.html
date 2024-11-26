@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+{{ type_readable|json_script:'type-readable' }}
+{{ type_plural_readable|json_script:'type-plural-readable' }}
+{% block extra_scripts %}
+<script src="{% static 'browse/resource_filter_by_name_default.js' %}" type="module"></script>
+{% endblock extra_scripts %}
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item resource_type_list_page_breadcrumb_text resource_type_list_page_breadcrumb_url_name %}
@@ -19,24 +27,25 @@
                 {% endif %}
             </div>
             {% block aside_responsive %}{% endblock aside_responsive %}
-            <p class="text-dark-emphasis mb-0">
+            <p id="resource-list-count" class="text-dark-emphasis mb-0">
                 {% block resource_count %}
                 {% if resources|length == 1 %}
-                {{ resources|length }} {{ type_readable|title }}
+                {{ resources|length }} {{ type_readable }}
                 {% else %}
-                {{ resources|length }} {{ type_plural_readable|title }}
+                {{ resources|length }} {{ type_plural_readable }}
                 {% endif %}
                 {% endblock resource_count %}
             </p>
+            <input id="resource-name-search" type="text" class="form-control" placeholder="Search by name...">
             {% block resource_list_outer %}
             {% if not resources %}
             <p class="text-secondary">{{ empty_resource_list_text }}</p>
             {% else %}
             {% block resource_list_inner %}
             {% with resource_list=resources %}
-            <ul class="list-group">
+            <ul class="list-group list-group-searchable">
                 {% for resource in resources %}
-                <li class="list-group-item">
+                <li id="li_{{ resource.pk }}" class="list-group-item">
                     <a href="{{ resource.get_absolute_url }}">{{ resource.name|default:resource.localid }}</a>
                 </li>
                 {% endfor %}
