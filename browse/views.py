@@ -681,7 +681,9 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
                 'capabilities',
                 'dataLevel',
                 'documentation',
+                'inputDescription',
                 'instrumentModePair',
+                'outputDescription',
                 'qualityAssessment',
             ]
         )
@@ -738,6 +740,8 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
                 'childComputation',
                 'dataLevel',
                 'documentation',
+                'processingInput',
+                'processingOutput',
                 'qualityAssessment',
                 'type',
                 'version',

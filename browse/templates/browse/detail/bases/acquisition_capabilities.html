@@ -28,5 +28,15 @@
     {% endwith %}
 </section>
 {% endif %}
+{% if resource.properties.input_descriptions %}
+{% with io_section_heading_text='Input Parameters' io_data=resource.properties.input_descriptions io_name='input parameter' %}
+{% include 'browse/detail/sections/input_output_section.html' %}
+{% endwith %}
+{% endif %}
+{% if resource.properties.output_descriptions %}
+{% with io_section_heading_text='Output Parameters' io_data=resource.properties.output_descriptions io_name='output parameter' %}
+{% include 'browse/detail/sections/input_output_section.html' %}
+{% endwith %}
+{% endif %}
 {% include 'browse/detail/sections/documentation_section.html' %}
 {% endblock post_description_content %}

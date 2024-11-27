@@ -28,7 +28,12 @@
 {% endif %}
 {% include 'browse/detail/sections/capabilities_section.html' %}
 {% if resource.properties.processing_inputs %}
-{% with io_section_heading_text='Processing Inputs' io_data=resource.properties.processing_inputs io_name='processing input' %}
+{% with io_section_heading_text='Processing Input Parameters' io_data=resource.properties.processing_inputs io_name='input parameter' %}
+{% include 'browse/detail/sections/input_output_section.html' %}
+{% endwith %}
+{% endif %}
+{% if resource.properties.processing_outputs %}
+{% with io_section_heading_text='Processing Output Parameters' io_data=resource.properties.processing_outputs io_name='output parameter' %}
 {% include 'browse/detail/sections/input_output_section.html' %}
 {% endwith %}
 {% endif %}
