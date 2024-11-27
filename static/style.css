@@ -889,6 +889,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 .online-resource-list .service-function-list .badge {
     white-space: wrap;
     text-align: left;
+    line-height: 1.2;
 }
 
 /* Resource management list page */
