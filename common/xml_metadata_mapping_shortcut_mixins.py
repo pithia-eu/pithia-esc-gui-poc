@@ -405,8 +405,8 @@ class PithiaInputOutputMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMix
         input_output_container_elements = self._get_elements_with_xpath_query('.//%s:%s' % (self.PITHIA_NSPREFIX_XPATH, input_output_container_element_name))
         input_outputs = []
         for io_container_element in input_output_container_elements:
-            io_name = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:InputOutput/%s:name' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH), parent_element=io_container_element)
-            io_description = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), parent_element=io_container_element)
+            io_name = self._get_first_element_value_or_blank_string_with_xpath_query('./%s:InputOutput/%s:name' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH), parent_element=io_container_element)
+            io_description = self._get_first_element_value_or_blank_string_with_xpath_query('./%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), parent_element=io_container_element)
             if not io_description:
                 continue
             input_outputs.append({
