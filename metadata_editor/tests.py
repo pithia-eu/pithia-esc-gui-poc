@@ -484,7 +484,12 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
             'https://metadata.pithia.eu/ontology/2.2/dataLevel/L4',
         ]
         acquisition_capabilities_editor.update_data_levels(data_levels)
-        acquisition_capabilities_editor.update_first_input_description('Input description name', 'Input description')
+        acquisition_capabilities_editor.update_input_descriptions([
+            InputOutputMetadataUpdate(
+                name='Input description name',
+                description='Input description'
+            )
+        ])
         capabilities = [
             ProcessCapabilityMetadataUpdate(
                 name='Process Capability 1',
@@ -539,7 +544,12 @@ class AcquisitionCapabilitiesEditorTestCase(SimpleTestCase):
     def test_acquisition_capabilities_editor_with_blank_input_description(self):
         acquisition_capabilities_editor = AcquisitionCapabilitiesEditor()
         self._add_basic_data_with_editor(acquisition_capabilities_editor)
-        acquisition_capabilities_editor.update_first_input_description('Input parameter name', '')
+        acquisition_capabilities_editor.update_input_descriptions([
+            InputOutputMetadataUpdate(
+                name='Input parameter name',
+                description=''
+            )
+        ])
         xml = acquisition_capabilities_editor.to_xml()
         print('xml', xml)
         parsed_xml = etree.fromstring(xml.encode('utf-8'))
