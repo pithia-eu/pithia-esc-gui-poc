@@ -7,6 +7,7 @@ from .form_to_metadata_mapper_components import (
     ContactInfoFormFieldsToMetadataMixin,
     DataLevelFormFieldsToMetadataMixin,
     DocumentationFormFieldsToMetadataMixin,
+    InputOutputFormFieldsToMetadataMixin,
     LocationFormFieldsToMetadataMixin,
     QualityAssessmentFormFieldsToMetadataMixin,
     RelatedPartyFormFieldsToMetadataMixin,
@@ -166,6 +167,7 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
         CapabilitiesFormFieldsToMetadataMixin,
         DataLevelFormFieldsToMetadataMixin,
         DocumentationFormFieldsToMetadataMixin,
+        InputOutputFormFieldsToMetadataMixin,
         QualityAssessmentFormFieldsToMetadataMixin,
         RelatedPartyFormFieldsToMetadataMixin,
         BaseMetadataFormFieldsToMetadataMixin):
@@ -186,6 +188,14 @@ class AcquisitionCapabilitiesFormFieldsToMetadataMapper(
             'input_description': './/%s:inputDescription/%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX),
         })
         return mappings
+
+    def get_initial_values_with_custom_mappings(self):
+        initial_values = super().get_initial_values_with_custom_mappings()
+        input_descriptions = self._map_input_outputs_to_form('inputDescription')
+        initial_values.update({
+            'input_descriptions_json': input_descriptions,
+        })
+        return initial_values
         
 
 class AcquisitionFormFieldsToMetadataMapper(
@@ -198,6 +208,7 @@ class ComputationCapabilitiesFormFieldsToMetadataMapper(
         CapabilitiesFormFieldsToMetadataMixin,
         DataLevelFormFieldsToMetadataMixin,
         DocumentationFormFieldsToMetadataMixin,
+        InputOutputFormFieldsToMetadataMixin,
         QualityAssessmentFormFieldsToMetadataMixin,
         RelatedPartyFormFieldsToMetadataMixin,
         BaseMetadataFormFieldsToMetadataMixin):
@@ -229,29 +240,9 @@ class ComputationCapabilitiesFormFieldsToMetadataMapper(
         })
         return mappings
 
-    def _map_processing_inputs_to_form(self):
-        processing_inputs = []
-        processing_input_elements = self.xml_string_parsed.xpath('.//%s:processingInput/%s:InputOutput' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
-        for e in processing_input_elements:
-            name = self._get_element_text_or_blank_string(
-                self._get_first_element_from_list(
-                    e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
-                )
-            )
-            description = self._get_element_text_or_blank_string(
-                self._get_first_element_from_list(
-                    e.xpath('.//%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), namespaces=self.namespaces)
-                )
-            )
-            processing_inputs.append({
-                'name': name,
-                'description': description,
-            })
-        return processing_inputs
-
     def get_initial_values_with_custom_mappings(self):
         initial_values = super().get_initial_values_with_custom_mappings()
-        processing_inputs = self._map_processing_inputs_to_form()
+        processing_inputs = self._map_input_outputs_to_form('processingInput')
         initial_values.update({
             'processing_inputs_json': processing_inputs,
         })

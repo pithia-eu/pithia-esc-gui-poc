@@ -287,6 +287,28 @@ class DocumentationFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixi
         return mappings
 
 
+class InputOutputFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
+    def _map_input_outputs_to_form(self, input_outputs_container_element_name):
+        input_outputs = []
+        input_outputs_container_elements = self.xml_string_parsed.xpath('.//%s:%s/%s:InputOutput' % (self.DEFAULT_XPATH_NSPREFIX, input_outputs_container_element_name, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        for e in input_outputs_container_elements:
+            name = self._get_element_text_or_blank_string(
+                self._get_first_element_from_list(
+                    e.xpath('.//%s:name' % self.DEFAULT_XPATH_NSPREFIX, namespaces=self.namespaces)
+                )
+            )
+            description = self._get_element_text_or_blank_string(
+                self._get_first_element_from_list(
+                    e.xpath('.//%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), namespaces=self.namespaces)
+                )
+            )
+            input_outputs.append({
+                'name': name,
+                'description': description,
+            })
+        return input_outputs
+
+
 class LocationFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
     def __init__(self, xml_string) -> None:
         super().__init__(xml_string)
