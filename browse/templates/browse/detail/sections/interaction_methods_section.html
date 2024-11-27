@@ -16,7 +16,7 @@
                 API Access
             </h3>
             <div>
-                {% with online_resources=interaction_methods_for_type pill_type='dark' %}
+                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' %}
                 {% include 'browse/detail/components/online_resource_list.html' %}
                 {% endwith %}
             </div>
