@@ -9,6 +9,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaDescriptionMetadataPropertiesMixin,
     PithiaDoiMetadataPropertiesMixin,
     PithiaDocumentationMetadataPropertiesMixin,
+    PithiaInputOutputMetadataPropertiesMixin,
     PithiaOnlineResourceMetadataPropertiesMixin,
     PithiaOntologyUrlsMetadataPropertiesMixin,
     PithiaQualityAssessmentMetadataPropertiesMixin,
@@ -153,6 +154,7 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
+        PithiaInputOutputMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
@@ -171,6 +173,14 @@ class AcquisitionCapabilitiesXmlMappingShortcuts(
             'mode': mode,
         }
 
+    @property
+    def input_descriptions(self):
+        return self._get_input_outputs('inputDescription')
+
+    @property
+    def output_descriptions(self):
+        return self._get_input_outputs('outputDescription')
+
 
 class AcquisitionXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
@@ -188,6 +198,7 @@ class ComputationCapabilitiesXmlMappingShortcuts(
         PithiaCapabilitiesMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaDocumentationMetadataPropertiesMixin,
+        PithiaInputOutputMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaQualityAssessmentMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
@@ -199,6 +210,14 @@ class ComputationCapabilitiesXmlMappingShortcuts(
     @property
     def child_computations(self):
         return self._get_elements_with_xpath_query('.//%s:childComputation/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
+
+    @property
+    def processing_inputs(self):
+        return self._get_input_outputs('processingInput')
+
+    @property
+    def processing_outputs(self):
+        return self._get_input_outputs('processingOutput')
 
 
 class ComputationXmlMappingShortcuts(

@@ -19,12 +19,14 @@ logger = logging.getLogger(__name__)
 
 class BaseMetadataPropertiesShortcutMixin:
     PITHIA_NSPREFIX_XPATH = 'pithia'
+    GCO19115_NSPREFIX = 'gco19115'
 
     def __init__(self, xml) -> None:
         self.xml_parsed = etree.fromstring(xml.encode('utf-8'))
         self.namespaces = {
             NamespacePrefix.DOI: Namespace.DOI,
             NamespacePrefix.GCO: Namespace.GCO,
+            self.GCO19115_NSPREFIX: Namespace.GCO19115,
             NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.MRL: Namespace.MRL,
@@ -396,7 +398,16 @@ class PithiaDocumentationMetadataPropertiesMixin(BaseMetadataPropertiesShortcutM
             'online_resource': online_resource,
             'other_documentation_details': other_documentation_details,
         }
-    
+
+
+class PithiaInputOutputMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
+    def _get_input_outputs(self, input_output_container_element_name: str):
+        input_output_container_elements = self._get_elements_with_xpath_query('.//%s:%s' % (self.PITHIA_NSPREFIX_XPATH, input_output_container_element_name))
+        return [{
+            'name': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:InputOutput/%s:name' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH), parent_element=element),
+            'description': self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:InputOutput/%s:description/%s:LE_Source/%s:description/%s:CharacterString' % (self.PITHIA_NSPREFIX_XPATH, self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.MRL, NamespacePrefix.MRL, self.GCO19115_NSPREFIX), parent_element=element),
+        } for element in input_output_container_elements]
+
 
 class PithiaOnlineResourceMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMixin):
     def _get_online_resources(self, parent_element=None):

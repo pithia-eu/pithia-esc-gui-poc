@@ -27,6 +27,11 @@
 </section>
 {% endif %}
 {% include 'browse/detail/sections/capabilities_section.html' %}
+{% if resource.properties.processing_inputs %}
+{% with io_section_heading_text='Processing Inputs' io_data=resource.properties.processing_inputs io_name='processing input' %}
+{% include 'browse/detail/sections/input_output_section.html' %}
+{% endwith %}
+{% endif %}
 {% include 'browse/detail/sections/data_levels_section.html' %}
 {% include 'browse/detail/sections/quality_assessment_section.html' %}
 {% include 'browse/detail/sections/documentation_section.html' %}
