@@ -25,7 +25,6 @@ import {
 } from "/static/metadata_editor/components/computation_capabilities/processing_inputs_table.js";
 
 let relatedPartiesTable;
-let processingInputsTable;
 
 const softwareReferenceSection = document.querySelector("#software-reference-section");
 const softwareReferenceSectionRequiredFields = [

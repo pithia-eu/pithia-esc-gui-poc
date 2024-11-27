@@ -306,19 +306,17 @@ class AcquisitionCapabilitiesEditorForm(
         })
     )
 
-    # output_name = forms.CharField(
-    #     label='Name',
-    #     required=False,
-    #     widget=forms.TextInput()
-    # )
+    input_descriptions_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
 
-    # output_description = forms.CharField(
-    #     label='Description',
-    #     required=False,
-    #     widget=forms.Textarea(attrs={
-    #         'rows': '5',
-    #     })
-    # )
+    input_descriptions_extra_json = forms.JSONField(
+        required=False,
+        initial=dict,
+        widget=forms.HiddenInput()
+    )
 
 
 class AcquisitionEditorForm(

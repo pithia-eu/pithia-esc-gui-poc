@@ -15,6 +15,7 @@ from .editor_dataclasses import (
 )
 from .forms import *
 from .form_utils import (
+    map_input_descriptions_to_dataclasses,
     map_processing_inputs_to_dataclasses,
     map_sources_to_dataclasses,
 )
@@ -380,10 +381,7 @@ class AcquisitionCapabilitiesEditorFormView(
             form_cleaned_data.get('metadata_quality_flags')
         )
         metadata_editor.update_data_levels(form_cleaned_data.get('data_levels'))
-        metadata_editor.update_first_input_description(
-            form_cleaned_data.get('input_name'),
-            form_cleaned_data.get('input_description')
-        )
+        metadata_editor.update_input_descriptions(map_input_descriptions_to_dataclasses(form_cleaned_data))
         metadata_editor.update_instrument_mode_pair(
             form_cleaned_data.get('instrument_mode_pair_instrument'),
             form_cleaned_data.get('instrument_mode_pair_mode')
@@ -434,6 +432,10 @@ class AcquisitionCapabilitiesEditorFormView(
         context['related_parties_section_description'] = 'Individual or organisation related to acquisition.'
         context['capabilities_tab_content_template'] = render_to_string(
             'metadata_editor/components/capabilities_tab_content_template.html',
+            context=context
+        )
+        context['input_description_row_content_template'] = render_to_string(
+            'metadata_editor/components/acquisition_capabilities/input_description_row_content_template.html',
             context=context
         )
         return context

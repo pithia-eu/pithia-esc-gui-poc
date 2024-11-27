@@ -198,6 +198,7 @@ class AcquisitionCapabilitiesEditor(
     CapabilitiesMetadataEditor,
     DataLevelMetadataEditor,
     DocumentationMetadataEditor,
+    InputOutputTypeMetadataEditor,
     QualityAssessmentMetadataEditor,
     RelatedPartiesMetadataEditor,
     XlinkHrefMetadataEditor):
@@ -211,30 +212,8 @@ class AcquisitionCapabilitiesEditor(
             self.GCO19115_NSPREFIX: Namespace.GCO19115
         })
 
-    def update_first_input_description(self, name: str, description: str):
-        input_description_key = 'inputDescription'
-        self.metadata_dict.setdefault(input_description_key, [])
-        input_descriptions = self.metadata_dict[input_description_key]
-        if not input_descriptions:
-            input_descriptions.append({})
-        input_descriptions[0] = {
-            'InputOutput': {
-                'name': name,
-                'description': {
-                    '%s:LE_Source' % NamespacePrefix.MRL: {
-                        '%s:description' % NamespacePrefix.MRL: {
-                            '%s:CharacterString' % self.GCO19115_NSPREFIX: description
-                        }
-                    }
-                },
-            }
-        }
-        if not description:
-            input_descriptions.pop(0)
-        self.remove_child_element_if_empty(
-            self.metadata_dict,
-            input_description_key
-        )
+    def update_input_descriptions(self, update_data: list[InputOutputMetadataUpdate]):
+        self._update_input_outputs('inputDescription', update_data)
 
     def update_instrument_mode_pair(self, instrument: str, mode: str):
         self.update_child_element_and_remove_if_empty(

@@ -18,11 +18,11 @@ import {
     setupRelatedPartiesTable,
 } from "/static/metadata_editor/components/related_parties_table.js";
 import {
-    setupInputOutputSection,
-} from "/static/metadata_editor/components/acquisition_capabilities/input_output_section.js";
-import {
     setupInstrumentModePairSection,
 } from "/static/metadata_editor/components/acquisition_capabilities/instrument_mode_pair_section.js";
+import {
+    setupInputDescriptionsTable,
+} from "/static/metadata_editor/components/acquisition_capabilities/input_descriptions_table.js";
 
 let relatedPartiesTable;
 
@@ -41,8 +41,8 @@ window.addEventListener("load", async () => {
     setupWizardManualAndAutoSave();
     setupCitationSection();
     relatedPartiesTable = setupRelatedPartiesTable();
+    setupInputDescriptionsTable();
     setupCapabilitiesTab();
     setupInstrumentModePairSection();
     setupQualityAssessmentSection();
-    setupInputOutputSection();
 });

@@ -67,6 +67,15 @@ def map_capability_links_to_dataclasses(form_cleaned_data):
         )
     for cap_link in form_cleaned_data.get('capability_links_json')]
 
+# Input descriptions
+def map_input_descriptions_to_dataclasses(form_cleaned_data):
+    return [
+        InputOutputMetadataUpdate(
+            name=input_description.get('name'),
+            description=input_description.get('description')
+        )
+    for input_description in form_cleaned_data.get('input_descriptions_json')]
+
 # Processing inputs
 def map_processing_inputs_to_dataclasses(form_cleaned_data):
     return [
