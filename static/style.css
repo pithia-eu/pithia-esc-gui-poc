@@ -1693,6 +1693,10 @@ ul.tree ul {
     .navbar .dropdown-menu .dropdown-divider:not(.user-dropdown .dropdown-divider) {
         display: none;
     }
+
+    .resource-detail-aside {
+        border-left-width: 0 !important;
+    }
 }
 
 @media (max-width: 768px) {
