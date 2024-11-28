@@ -46,7 +46,7 @@
     <ul class="d-flex flex-wrap column-gap-2 row-gap-2 list-unstyled service-function-list mb-0">
         {% for service_function_url in online_resource.service_functions %}
         <li>
-            {% with value=service_function_url pill_type=pill_type|default:'secondary' extra_badge_classes='fs-6 fw-normal' %}
+            {% with value=service_function_url pill_type=pill_type|default:'secondary' extra_badge_classes='fs-6 fw-semibold' %}
             {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
             {% endwith %}
         </li>

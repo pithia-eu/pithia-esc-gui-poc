@@ -1664,10 +1664,6 @@ ul.tree ul {
     .catalogue-category-badge {
         font-size: 1rem;
     }
-
-    .online-resource-list .service-function-list .badge {
-        border-radius: var(--bs-border-radius-pill) !important;
-    }
 }
 
 @media (min-width: 450px) {
