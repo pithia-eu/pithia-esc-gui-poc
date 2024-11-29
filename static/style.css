@@ -861,16 +861,6 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     position: relative;
 }
 
-.interaction-methods-subsection h3::before {
-    content: '';
-    background: var(--bs-gray-400);
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 0.5rem;
-    width: 2rem;
-}
-
 .online-resource-list > li:not(li:first-of-type) {
     margin-top: 1.5rem;
 }
