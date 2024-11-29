@@ -36,6 +36,8 @@ logger = logging.getLogger(__name__)
 
 # Create your models here.
 class ScientificMetadata(models.Model):
+    weight = 0
+
     ORGANISATION = 'organisation'
     INDIVIDUAL = 'individual'
     PROJECT = 'project'
@@ -158,8 +160,8 @@ class ScientificMetadata(models.Model):
     
     @property
     def _immediate_metadata_dependents(self) -> list:
-        scientific_metadata_model_subclasses = ScientificMetadata.__subclasses__()
-        scientific_metadata_models_in_range = scientific_metadata_model_subclasses[scientific_metadata_model_subclasses.index(self.__class__):]
+        scientific_metadata_model_subclasses_sorted = sorted(list(ScientificMetadata.__subclasses__()), key=lambda subclass: subclass.weight)
+        scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[self.weight:]
         potential_dependents = []
         immediate_dependents = []
         for m in scientific_metadata_models_in_range:
