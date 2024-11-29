@@ -1,11 +1,44 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-3">
-    <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start link-underline-by-default fs-5" target="_blank" rel="noopener noreferrer" style="line-height: 1.2;">
-        {{ online_resource.name }}
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
-        </svg>
-    </a>
+    <div class="d-flex flex-column row-gap-2">
+        <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start link-underline-by-default fs-5" target="_blank" rel="noopener noreferrer" style="line-height: 1.2;">
+            {{ online_resource.name }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+            </svg>
+        </a>
+        {% with service_functions=online_resource.service_functions %}
+        {% if service_functions %}
+        {% if service_functions|length == 1 %}
+        <div class="text-secondary">
+            {% with value=service_functions.0 %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+            {% endwith %}
+        </div>
+        {% else %}
+        <details class="text-secondary">
+            <summary>
+                {% with value=service_functions.0 %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                {% endwith %} and 
+                {% with num_remaining_service_functions=service_functions|length|add:-1 %}
+                {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
+                {% endwith %}
+            </summary>
+            <ul style="list-style-type: disc;">
+                {% for service_function_url in service_functions %}
+                <li>
+                    {% with value=service_function_url %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
+        {% endif %}
+        {% endif %}
+        {% endwith %}
+    </div>
     {% if online_resource.description.strip %}
     <div class="d-inline-flex flex-column align-items-start">
         {% with description_urlized=online_resource.description|urlize type_id=type|server_url_id|lower %}
@@ -39,18 +72,19 @@
                 {% endfor %}
             </div>
             {% endif %}
+            {% if online_resource.service_functions %}
+            <div>
+                <dt>Service Functions</dt>
+                {% for service_function_url in online_resource.service_functions %}
+                <dd class="dd-list-item">
+                    {% with value=service_function_url %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% endwith %}
+                </dd>
+                {% endfor %}
+            </div>
+            {% endif %}
         </dl>
     </details>
-    {% endif %}
-    {% if online_resource.service_functions %}
-    <ul class="d-flex flex-wrap column-gap-2 row-gap-2 list-unstyled service-function-list mb-0">
-        {% for service_function_url in online_resource.service_functions %}
-        <li>
-            {% with value=service_function_url pill_type=pill_type|default:'secondary' extra_badge_classes='fs-6 fw-semibold' %}
-            {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
     {% endif %}
 </div>
