@@ -854,7 +854,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .interaction-methods-subsection h3 {
-    padding-top: 1.5rem;
+    padding-top: 0.75rem;
 }
 
 .interaction-methods-subsection h3 {
