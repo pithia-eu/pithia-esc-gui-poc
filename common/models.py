@@ -325,7 +325,7 @@ class HandleURLMapping(models.Model):
 class Organisation(ScientificMetadata):
     type_in_metadata_server_url = 'organisation'
     localid_base = 'Organisation'
-    weight = 1
+    weight = 0
     type_readable = 'organisation'
     type_plural_readable = 'organisations'
     type_description_readable = 'Data Provider/Owner organisation.'
@@ -348,7 +348,7 @@ class Organisation(ScientificMetadata):
 class Individual(ScientificMetadata):
     type_in_metadata_server_url = 'individual'
     localid_base = 'Individual'
-    weight = 2
+    weight = 1
     type_readable = 'individual'
     type_plural_readable = 'individuals'
     type_description_readable = 'An individual, acting in a particular role and associated with an Organisation.'
@@ -375,7 +375,7 @@ class Individual(ScientificMetadata):
 class Project(ScientificMetadata):
     type_in_metadata_server_url = 'project'
     localid_base = 'Project'
-    weight = 3
+    weight = 2
     type_readable = 'project'
     type_plural_readable = 'projects'
     type_description_readable = 'An identifiable activity designed to accomplish a set of objectives.'
@@ -399,7 +399,7 @@ class Project(ScientificMetadata):
 class Platform(ScientificMetadata):
     type_in_metadata_server_url = 'platform'
     localid_base = 'Platform'
-    weight = 4
+    weight = 3
     type_readable = 'platform'
     type_plural_readable = 'platforms'
     type_description_readable = 'An identifiable object that brings the acquisition instrument(s) to the appropriate environment (e.g., satellite, ground observatory).'
@@ -419,7 +419,7 @@ class Platform(ScientificMetadata):
 class Operation(ScientificMetadata):
     type_in_metadata_server_url = 'operation'
     localid_base = 'Operation'
-    weight = 5
+    weight = 4
     type_readable = 'operation'
     type_plural_readable = 'operations'
     type_description_readable = 'Description of how a platform operates in order to support data acquisition by the instrument.'
@@ -439,7 +439,7 @@ class Operation(ScientificMetadata):
 class Instrument(ScientificMetadata):
     type_in_metadata_server_url = 'instrument'
     localid_base = 'Instrument'
-    weight = 6
+    weight = 5
     type_readable = 'instrument'
     type_plural_readable = 'instruments'
     type_description_readable = 'An object responsible for interacting with the Feature of Interest in order to acquire Observed Property values.'
@@ -481,7 +481,7 @@ class Instrument(ScientificMetadata):
 class AcquisitionCapabilities(ScientificMetadata):
     type_in_metadata_server_url = 'acquisitionCapabilities'
     localid_base = 'AcquisitionCapabilities'
-    weight = 7
+    weight = 6
     type_readable = 'acquisition capabilities'
     type_plural_readable = 'acquisition capabilities'
     type_description_readable = 'List of Process Capability descriptions for a particular Instrument in its particular mode of operation.'
@@ -508,7 +508,7 @@ class AcquisitionCapabilities(ScientificMetadata):
 class Acquisition(ScientificMetadata):
     type_in_metadata_server_url = 'acquisition'
     localid_base = 'Acquisition'
-    weight = 8
+    weight = 7
     type_readable = 'acquisition'
     type_plural_readable = 'acquisitions'
     type_description_readable = 'Interaction of the Instrument with the Feature of Interest to obtain its Observed Properties.'
@@ -528,7 +528,7 @@ class Acquisition(ScientificMetadata):
 class ComputationCapabilities(ScientificMetadata):
     type_in_metadata_server_url = 'computationCapabilities'
     localid_base = 'ComputationCapabilities'
-    weight = 9
+    weight = 8
     type_readable = 'computation capabilities'
     type_plural_readable = 'computation capabilities'
     type_description_readable = 'List of Process Capability descriptions for a particular Computation component.'
@@ -562,7 +562,7 @@ class ComputationCapabilities(ScientificMetadata):
 class Computation(ScientificMetadata):
     type_in_metadata_server_url = 'computation'
     localid_base = 'Computation'
-    weight = 10
+    weight = 9
     type_readable = 'computation'
     type_plural_readable = 'computations'
     type_description_readable = 'Numerical calculation without interacting with the Feature of Interest; characterised by its numerical input and output.'
@@ -582,7 +582,7 @@ class Computation(ScientificMetadata):
 class Process(ScientificMetadata):
     type_in_metadata_server_url = 'process'
     localid_base = 'CompositeProcess'
-    weight = 11
+    weight = 10
     type_readable = 'process'
     type_plural_readable = 'processes'
     type_description_readable = 'A designated procedure used to assign a number, term, or other symbols to a Phenomenon generating the Result; consists of Acquisitions and Computations.'
@@ -602,7 +602,7 @@ class Process(ScientificMetadata):
 class DataCollection(ScientificMetadata):
     type_in_metadata_server_url = 'collection'
     localid_base = 'DataCollection'
-    weight = 12
+    weight = 11
     type_readable = 'data collection'
     type_plural_readable = 'data collections'
     type_description_readable = 'Top-level definition of a collection of the model or measurement data, with CollectionResults pointing to its URL(s) for accessing the data.'
@@ -661,7 +661,7 @@ class DataCollection(ScientificMetadata):
 class Catalogue(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'Catalogue'
-    weight = 13
+    weight = 12
     type_readable = 'catalogue'
     type_plural_readable = 'catalogues'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
@@ -688,7 +688,7 @@ class Catalogue(ScientificMetadata):
 class CatalogueEntry(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'CatalogueEntry'
-    weight = 14
+    weight = 13
     type_readable = 'catalogue entry'
     type_plural_readable = 'catalogue entries'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
@@ -737,7 +737,7 @@ class CatalogueEntry(ScientificMetadata):
 class CatalogueDataSubset(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'DataSubset'
-    weight = 15
+    weight = 14
     type_readable = 'catalogue data subset'
     type_plural_readable = 'catalogue data subsets'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
@@ -790,7 +790,7 @@ class CatalogueDataSubset(ScientificMetadata):
 class Workflow(ScientificMetadata):
     type_in_metadata_server_url = 'workflow'
     localid_base = 'Workflow'
-    weight = 16
+    weight = 15
     type_readable = 'workflow'
     type_plural_readable = 'workflows'
     type_description_readable = '''A workflow is a combination of different interconnected data collections executed repeatedly in an 
