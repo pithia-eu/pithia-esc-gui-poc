@@ -9,33 +9,35 @@
         </a>
         {% with service_functions=online_resource.service_functions %}
         {% if service_functions %}
-        {% if service_functions|length == 1 %}
-        <div class="text-secondary">
-            {% with value=service_functions.0 %}
-            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-            {% endwith %}
-        </div>
-        {% else %}
-        <details class="text-secondary">
-            <summary>
+        <div class="fw-semibold text-secondary">
+            {% if service_functions|length == 1 %}
+            <div>
                 {% with value=service_functions.0 %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                {% endwith %} and 
-                {% with num_remaining_service_functions=service_functions|length|add:-1 %}
-                {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
                 {% endwith %}
-            </summary>
-            <ul style="list-style-type: disc;">
-                {% for service_function_url in service_functions %}
-                <li>
-                    {% with value=service_function_url %}
+            </div>
+            {% else %}
+            <details>
+                <summary>
+                    {% with value=service_functions.0 %}
                     {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                    {% endwith %} and
+                    {% with num_remaining_service_functions=service_functions|length|add:-1 %}
+                    {{ num_remaining_service_functions }} other service function{% if num_remaining_service_functions > 1 %}s{% endif %}
                     {% endwith %}
-                </li>
-                {% endfor %}
-            </ul>
-        </details>
-        {% endif %}
+                </summary>
+                <ul style="list-style-type: disc;">
+                    {% for service_function_url in service_functions %}
+                    <li>
+                        {% with value=service_function_url %}
+                        {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                        {% endwith %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% endif %}
+        </div>
         {% endif %}
         {% endwith %}
     </div>
@@ -51,7 +53,7 @@
     {% if online_resource.protocol or online_resource.data_format %}
     <details class="details-interaction-methods" name="details-collection-results">
         <summary>
-            More details
+            Show details
         </summary>
         <dl class="d-flex flex-column row-gap-2 my-2">
             {% if online_resource.protocol %}
