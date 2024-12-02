@@ -7,7 +7,7 @@
             <div class="d-flex flex-column row-gap-4">
                 {% block position_name_section %}{% endblock position_name_section %}
                 {% if resource.properties.online_resource.strip or resource.properties.email_address or resource.properties.phone %}
-                <section class="d-flex flex-column align-items-start row-gap-1 py-0">
+                <section class="d-flex flex-column align-items-start row-gap-2 py-0">
                     <h2 class="fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
                     {% if resource.properties.online_resource.strip %}
                     <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default mb-auto" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
