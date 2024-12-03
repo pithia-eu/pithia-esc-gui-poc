@@ -29,6 +29,12 @@
             {% include 'metadata_editor/components/form_field_template.html' %}
             {% endwith %}
         </div>
+        <!-- File -->
+        <div>
+            {% with field=form.source_file %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
         <!-- Name -->
         <div>
             {% with field=form.source_name %}

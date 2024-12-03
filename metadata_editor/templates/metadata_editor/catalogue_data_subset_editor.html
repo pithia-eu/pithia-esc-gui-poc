@@ -4,6 +4,7 @@
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 <script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
+{% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}
 {% block form_content %}
 {% include 'metadata_editor/components/name_and_organisation_section.html' %}
 <hr class="my-5">

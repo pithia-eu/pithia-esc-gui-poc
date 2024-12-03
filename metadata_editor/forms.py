@@ -672,8 +672,18 @@ class CatalogueDataSubsetForm(
         label='Generate a DOI for this Data Subset',
         required=False,
         widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
+            'class': 'form-check-input',
         })
+    )
+
+    is_file_uploaded_for_each_online_resource = forms.BooleanField(
+        label='Upload files for online resources',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+            'role': 'switch',
+        }),
+        initial=True
     )
 
 

@@ -608,6 +608,15 @@ class SourceMetadataFormComponent(forms.Form):
         help_text='A location (address) for online access using a Uniform Resource Locator/Uniform Resource Identifier address.'
     )
 
+    source_file = forms.FileField(
+        required=False,
+        label='File',
+        widget=forms.FileInput(attrs={
+            'accept': 'application/xml',
+            'class': 'form-control',
+        })
+    )
+
     source_name = forms.CharField(
         required=False,
         label='Name',
