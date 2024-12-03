@@ -17,7 +17,7 @@ class DataHubService:
 
     @classmethod
     def _get_file_extension(cls, file_path: str):
-        file_name, file_extension = os.path.splitext(file_path)
+        file_path_and_name, file_extension = os.path.splitext(file_path)
         return file_extension
 
     @classmethod
@@ -33,7 +33,7 @@ class DataHubService:
         try:
             # Get the details file by the workflow ID.
             return open(file_path, 'rb')
-        except FileNotFoundError:
+        except (FileNotFoundError, TypeError) as err:
             logger.exception(f'Could not find a file in DataHub with path: {file_path}.')
         return None
 
@@ -82,11 +82,13 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             cls,
             catalogue_data_subset_id: str,
             resource_name_with_no_extension: str):
-        catalogue_data_subset_resource_file_names = pathlib.Path(cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id)).glob(f'{resource_name_with_no_extension}.*')
-        file_name = None
-        for rfn in catalogue_data_subset_resource_file_names:
-            file_name = rfn
-        return file_name
+        catalogue_data_subset_resource_file_paths = pathlib.Path(
+            cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id)
+        ).glob(f'{resource_name_with_no_extension}.*')
+        file_path = None
+        for cds_resource_file_path in catalogue_data_subset_resource_file_paths:
+            file_path = cds_resource_file_path
+        return file_path
 
     @classmethod
     def store_or_overwrite_catalogue_data_subset_resource_file(
@@ -125,16 +127,20 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             current_file_name
         )
         old_file_extension = cls._get_file_extension(old_file_path)
-        catalogue_data_subset_directory = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id)
+        catalogue_data_subset_directory = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(
+            catalogue_data_subset_id
+        )
         new_file_path = os.path.join(catalogue_data_subset_directory, f'{new_file_name}{old_file_extension}')
         return os.rename(old_file_path, new_file_path)
 
     @classmethod
     def get_files_for_catalogue_data_subset(cls, catalogue_data_subset_id: str):
-        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id)
+        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(
+            catalogue_data_subset_id
+        )
         directory_items = os.listdir(catalogue_data_subset_directory_path)
         files = [
-            f
+            cls._get_file_from_datahub(os.path.join(catalogue_data_subset_directory_path, f))
             for f in directory_items
             if os.path.isfile(os.path.join(catalogue_data_subset_directory_path, f))
         ]
@@ -142,10 +148,11 @@ class CatalogueDataSubsetDataHubService(DataHubService):
 
     @classmethod
     def delete_catalogue_data_subset_resource_file(cls, catalogue_data_subset_id: str, file_name_with_no_extension: str):
-        return cls._delete_file_from_datahub(
-            cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id),
+        file_path = cls._get_catalogue_data_subset_resource_file_path_from_name_with_no_extension(
+            catalogue_data_subset_id,
             file_name_with_no_extension
         )
+        return cls._delete_file_from_datahub(file_path)
 
     @classmethod
     def delete_catalogue_data_subset_directory(cls, catalogue_data_subset_id: str):
