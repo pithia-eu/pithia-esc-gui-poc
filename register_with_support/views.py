@@ -377,6 +377,8 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        if not hasattr(self, 'resource'):
+            return response
         self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
         return response
 
