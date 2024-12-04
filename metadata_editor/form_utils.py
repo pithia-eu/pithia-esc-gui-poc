@@ -95,11 +95,11 @@ def map_related_parties_to_dataclasses(form_cleaned_data):
     for rp in form_cleaned_data.get('related_parties_json')]
 
 # Sources
-def map_sources_to_dataclasses(form_cleaned_data):
+def map_sources_to_dataclasses(form_cleaned_data, is_using_linkages: bool = True):
     return [
         SourceMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
-            linkage=s.get('linkage'),
+            linkage=s.get('linkage') if is_using_linkages else 'TEMP_LINKAGE_URL',
             name=s.get('name'),
             protocol=s.get('protocol'),
             description=s.get('description'),
