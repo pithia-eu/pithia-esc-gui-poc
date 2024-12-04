@@ -39,6 +39,7 @@ from .services import (
 from common.test_xml_files import (
     ACQUISITION_METADATA_XML,
     CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML,
+    CATALOGUE_DATA_SUBSET_METADATA_XML,
     DATA_COLLECTION_METADATA_XML,
     INDIVIDUAL_METADATA_XML,
     OPERATION_METADATA_XML,
@@ -1053,6 +1054,29 @@ class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
             updated_xml_string
         )
 
+    def test_update_online_resource_url(self):
+        """The linkage of an OnlineResource element is
+        updated with a provided URL.
+        """
+        CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
+        xml_string = CATALOGUE_DATA_SUBSET_METADATA_XML.read().decode()
+        online_resource_url = 'https://www.example.com/'
+        self.assertNotIn(
+            online_resource_url,
+            xml_string
+        )
+        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+            xml_string
+        )
+        simple_catalogue_data_subset_editor.update_online_resource_url(
+            'SAO Explorer for DIDBase ionograms',
+            'https://www.example.com/'
+        )
+        updated_xml_string = simple_catalogue_data_subset_editor.to_xml()
+        self.assertIn(
+            online_resource_url,
+            updated_xml_string
+        )
 
 
 class WorkflowEditorTestCase(SimpleTestCase):
