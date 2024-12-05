@@ -2,6 +2,7 @@ import json
 import logging
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    CatalogueDataSubsetSourceMetadataUpdate,
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
@@ -95,14 +96,27 @@ def map_related_parties_to_dataclasses(form_cleaned_data):
     for rp in form_cleaned_data.get('related_parties_json')]
 
 # Sources
-def map_sources_to_dataclasses(form_cleaned_data, is_using_linkages: bool = True):
+def map_sources_to_dataclasses(form_cleaned_data):
     return [
         SourceMetadataUpdate(
+            service_functions=s.get('serviceFunctions', []),
+            linkage=s.get('linkage'),
+            name=s.get('name'),
+            protocol=s.get('protocol'),
+            description=s.get('description'),
+            data_formats=s.get('dataFormats', [])
+        )
+    for s in form_cleaned_data.get('sources_json')]
+
+def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_using_linkages: bool = True):
+    return [
+        CatalogueDataSubsetSourceMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
             linkage=s.get('linkage') if is_using_linkages else 'TEMP_LINKAGE_URL',
             name=s.get('name'),
             protocol=s.get('protocol'),
             description=s.get('description'),
-            data_formats=s.get('dataFormats', [])
+            data_formats=s.get('dataFormats', []),
+            file_input_name=s.get('fileInputName')
         )
     for s in form_cleaned_data.get('sources_json')]

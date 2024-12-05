@@ -15,6 +15,7 @@ from .editor_dataclasses import (
 )
 from .forms import *
 from .form_utils import (
+    map_catalogue_data_subset_sources_to_dataclasses,
     map_input_descriptions_to_dataclasses,
     map_processing_inputs_to_dataclasses,
     map_sources_to_dataclasses,
@@ -42,7 +43,10 @@ from .view_mixins import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
+from datahub_management.view_mixins import (
+    CatalogueDataSubsetDataHubViewMixin,
+    WorkflowDataHubViewMixin,
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -890,6 +894,7 @@ class CatalogueEntryEditorFormView(
 
 
 class CatalogueDataSubsetEditorFormView(
+    CatalogueDataSubsetDataHubViewMixin,
     CatalogueRelatedEditorFormViewMixin,
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
@@ -923,7 +928,12 @@ class CatalogueDataSubsetEditorFormView(
             form_cleaned_data.get('metadata_quality_flags'),
             is_max_occurs_unbounded=False
         )
-        metadata_editor.update_sources(map_sources_to_dataclasses(form_cleaned_data))
+        self.valid_sources = metadata_editor.update_sources(
+            map_catalogue_data_subset_sources_to_dataclasses(
+                form_cleaned_data,
+                is_using_linkages=form_cleaned_data.get('is_file_uploaded_for_each_online_resource')
+            )
+        )
 
     def get_catalogue_entry_choices_for_form(self):
         catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
@@ -982,7 +992,11 @@ class CatalogueDataSubsetEditorFormView(
 
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
-    
+
+    def form_valid(self, form):
+        self.source_files = self.request.FILES
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sources_tab_pane_content_template'] = render_to_string(

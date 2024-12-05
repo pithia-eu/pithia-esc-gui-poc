@@ -134,6 +134,10 @@ class SourceMetadataUpdate:
     description: Optional[str] = None
     data_formats: Optional[list[str]] = field(default_factory=list)
 
+@dataclass(kw_only=True)
+class CatalogueDataSubsetSourceMetadataUpdate(SourceMetadataUpdate):
+    file_input_name: Optional[str] = None
+
 
 @dataclass(kw_only=True)
 class StandardIdentifierMetadataUpdate:

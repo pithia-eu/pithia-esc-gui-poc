@@ -479,7 +479,7 @@ class CatalogueDataSubsetEditor(
         self.update_time_period(update_data, result_time_key)
 
     def update_sources(self, update_data: list[SourceMetadataUpdate]):
-        self._update_sources(self.metadata_dict, update_data)
+        return self._update_sources(self.metadata_dict, update_data)
 
     def update_doi_kernel_metadata(self, update_data: DoiKernelMetadataUpdate):
         self.metadata_dict['doi'] = {

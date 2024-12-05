@@ -866,6 +866,7 @@ class SourcePropertyTypeEditor(
         sources_key = 'source'
         parent_element[sources_key] = []
         source_elements = parent_element[sources_key]
+        valid_sources = []
         for s in sources:
             service_functions, linkage, name, \
             protocol, description, data_formats = attrgetter(
@@ -882,6 +883,7 @@ class SourcePropertyTypeEditor(
             )
             if is_any_required_property_empty:
                 continue
+            valid_sources.append(s)
             online_resource = {}
             self.update_child_element_and_remove_if_empty(
                 online_resource,
@@ -930,6 +932,7 @@ class SourcePropertyTypeEditor(
             parent_element,
             sources_key
         )
+        return valid_sources
 
 
 class StatusMetadataEditor(BaseMetadataComponentEditor):
