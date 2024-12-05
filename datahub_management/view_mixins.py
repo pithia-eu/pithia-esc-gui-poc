@@ -37,6 +37,9 @@ class WorkflowDataHubViewMixin:
 
 
 class CatalogueDataSubsetDataHubViewMixin:
+    def is_catalogue_data_subset_directory_created(self):
+        return CatalogueDataSubsetDataHubService.is_catalogue_data_subset_directory_created(self.resource_id)
+
     def get_online_resource_file_for_catalogue_data_subset(self, online_resource_name):
         return CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
             self.resource_id,

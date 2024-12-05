@@ -69,8 +69,10 @@ class WorkflowDataHubService(DataHubService):
 
 class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
-    def _get_catalogue_data_subset_directory_path_and_create_if_not_exists(cls, catalogue_data_subset_id):
+    def _get_catalogue_data_subset_directory_path(cls, catalogue_data_subset_id, create_if_not_exists: bool = True):
         catalogue_data_subset_path = os.path.join(cls._get_datahub_directory_path(), 'catalogues', catalogue_data_subset_id)
+        if not create_if_not_exists:
+            return catalogue_data_subset_path
         # Create a directory for the catalogue
         # data subset if it does not exist. An
         # error should be raised if the parent
@@ -84,7 +86,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             catalogue_data_subset_id: str,
             resource_name_with_no_extension: str):
         catalogue_data_subset_resource_file_paths = pathlib.Path(
-            cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id)
+            cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id)
         ).glob(f'{resource_name_with_no_extension}.*')
         file_path = None
         for cds_resource_file_path in catalogue_data_subset_resource_file_paths:
@@ -100,11 +102,15 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         file_extension = cls._get_file_extension(file.name)
         return cls._store_or_overwrite_file_in_datahub(
             os.path.join(
-                cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id),
+                cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id),
                 f'{new_file_name}{file_extension}'
             ),
             file
         )
+
+    @classmethod
+    def is_catalogue_data_subset_directory_created(cls, catalogue_data_subset_id):
+        return os.path.isdir(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False))
     
     @classmethod
     def get_catalogue_data_subset_file(cls, catalogue_data_subset_id: str, file_name_with_no_extension: str):
@@ -128,7 +134,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             current_file_name
         )
         old_file_extension = cls._get_file_extension(old_file_path)
-        catalogue_data_subset_directory = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(
+        catalogue_data_subset_directory = cls._get_catalogue_data_subset_directory_path(
             catalogue_data_subset_id
         )
         new_file_path = os.path.join(catalogue_data_subset_directory, f'{new_file_name}{old_file_extension}')
@@ -136,7 +142,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
 
     @classmethod
     def get_files_for_catalogue_data_subset(cls, catalogue_data_subset_id: str):
-        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(
+        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path(
             catalogue_data_subset_id
         )
         directory_items = os.listdir(catalogue_data_subset_directory_path)
@@ -158,6 +164,6 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
     def delete_catalogue_data_subset_directory(cls, catalogue_data_subset_id: str):
         try:
-            return shutil.rmtree(cls._get_catalogue_data_subset_directory_path_and_create_if_not_exists(catalogue_data_subset_id))
+            return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False))
         except OSError as err:
             logger.exception(err)
