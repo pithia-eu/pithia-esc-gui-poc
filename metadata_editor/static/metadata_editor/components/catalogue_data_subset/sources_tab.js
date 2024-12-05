@@ -30,9 +30,22 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
         );
     }
 
+    createTabPane(newTabIdPrefix) {
+        const newTabPane = super.createTabPane(newTabIdPrefix);
+        const sourceFileInput = newTabPane.querySelector("input[name='source_file']");
+        sourceFileInput.setAttribute("name", `${sourceFileInput.name}_${this.nextTabNumber}`);
+        return newTabPane;
+    }
+
     tabPaneControlEventHandlerActions(tabPane) {
         super.tabPaneControlEventHandlerActions(tabPane);
         this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+    }
+
+    getTabPaneData(tabPane) {
+        const tabPaneData = super.getTabPaneData(tabPane);
+        tabPaneData.fileInputName = tabPane.querySelector("input[type='file']").name;
+        return tabPaneData;
     }
 
     loadPreviousTabData() {

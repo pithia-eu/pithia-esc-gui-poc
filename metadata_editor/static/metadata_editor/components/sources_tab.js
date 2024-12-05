@@ -51,26 +51,31 @@ export class SourcesTab extends DynamicEditorTab {
         });
     }
 
+    getTabPaneData(tabPane) {
+        const serviceFunctionSelect = tabPane.querySelector(this.sourceServiceFunctionSelectSelector);
+        const serviceFunctionSelectedOptions = Array.from(serviceFunctionSelect.selectedOptions);
+        const linkageInput = tabPane.querySelector(this.sourceLinkageInputSelector);
+        const nameInput = tabPane.querySelector(this.sourceNameInputSelector);
+        const protocolInput = tabPane.querySelector(this.sourceProtocolInputSelector);
+        const descriptionTextarea = tabPane.querySelector(this.sourceDescriptionTextareaSelector);
+        const dataFormatSelect = tabPane.querySelector(this.sourceDataFormatSelectSelector);
+        const dataFormatSelectedOptions = Array.from(dataFormatSelect.selectedOptions);
+        return {
+            serviceFunctions: serviceFunctionSelectedOptions.map(option => option.value),
+            linkage: linkageInput.value,
+            name: nameInput.value,
+            protocol: protocolInput.value,
+            description: descriptionTextarea.value,
+            dataFormats: dataFormatSelectedOptions.map(option => option.value),
+        };
+    }
+
     getTabDataAsJson() {
         const sources = [];
         const sourceTabPanes = this.tabContent.querySelectorAll(".tab-pane");
         sourceTabPanes.forEach(tabPane => {
-            const serviceFunctionSelect = tabPane.querySelector(this.sourceServiceFunctionSelectSelector);
-            const serviceFunctionSelectedOptions = Array.from(serviceFunctionSelect.selectedOptions);
-            const linkageInput = tabPane.querySelector(this.sourceLinkageInputSelector);
-            const nameInput = tabPane.querySelector(this.sourceNameInputSelector);
-            const protocolInput = tabPane.querySelector(this.sourceProtocolInputSelector);
-            const descriptionTextarea = tabPane.querySelector(this.sourceDescriptionTextareaSelector);
-            const dataFormatSelect = tabPane.querySelector(this.sourceDataFormatSelectSelector);
-            const dataFormatSelectedOptions = Array.from(dataFormatSelect.selectedOptions);
-            sources.push({
-                serviceFunctions: serviceFunctionSelectedOptions.map(option => option.value),
-                linkage: linkageInput.value,
-                name: nameInput.value,
-                protocol: protocolInput.value,
-                description: descriptionTextarea.value,
-                dataFormats: dataFormatSelectedOptions.map(option => option.value),
-            });
+            const tabPaneData = this.getTabPaneData(tabPane);
+            sources.push(tabPaneData);
         });
         return sources;
     }
