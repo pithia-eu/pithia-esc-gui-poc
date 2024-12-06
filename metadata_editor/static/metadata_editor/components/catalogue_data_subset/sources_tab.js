@@ -57,14 +57,18 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
     loadPreviousTabPaneData(source, correspondingTabPane) {
         super.loadPreviousTabPaneData(source, correspondingTabPane);
         // File
+        const dataHubFileFieldset = correspondingTabPane.querySelector(".datahub-file-fieldset");
+        const dataHubFileDefault = correspondingTabPane.querySelector(".datahub-file-default");
         if (!source.isSourceFileInDataHub) {
+            dataHubFileFieldset.remove();
             return;
         }
-        const existingDataHubFileCheckbox = correspondingTabPane.querySelector("input[name='is_existing_datahub_file_used']");
-        if (!existingDataHubFileCheckbox) {
+        if (!dataHubFileFieldset) {
             return;
         }
-        existingDataHubFileCheckbox.checked = source.isSourceFileInDataHub;
+        dataHubFileDefault.remove();
+        const existingDataHubFileCheckbox = dataHubFileFieldset.querySelector("input[name='is_existing_datahub_file_used']");
+        existingDataHubFileCheckbox.checked = source.isExistingDataHubFileUsed;
     }
 
     loadPreviousTabData() {

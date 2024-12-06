@@ -11,8 +11,8 @@
 <!-- File -->
 <div>
     {% if form.is_existing_datahub_file_used %}
-    <fieldset>
-        <legend>File</legend>
+    <fieldset class="datahub-file-fieldset">
+        <legend class="fs-6">File</legend>
         <div class="form-check">
             {{ form.is_existing_datahub_file_used }}
             <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
@@ -25,12 +25,11 @@
             {% endwith %}
         </div>
     </fieldset>
-    {% else %}
-    <div>
+    {% endif %}
+    <div class="datahub-file-default">
         {% with field=form.source_file %}
         {% include 'metadata_editor/components/form_field_template.html' %}
         {% endwith %}
     </div>
-    {% endif %}
 </div>
 {% endblock source_file %}

@@ -340,6 +340,7 @@ class CatalogueDataSubsetFormFieldsToMetadataMapper(
         )
         source.update({
             'isSourceFileInDataHub': source_file_in_datahub is not None,
+            'isExistingDataHubFileUsed': source_file_in_datahub is not None,
         })
         return source
 
