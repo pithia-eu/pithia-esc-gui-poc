@@ -25,7 +25,10 @@ from .form_to_metadata_mappers import (
     WorkflowFormFieldsToMetadataMapper,
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
-from .forms import WorkflowEditorUpdateForm
+from .forms import (
+    CatalogueDataSubsetEditorUpdateForm,
+    WorkflowEditorUpdateForm,
+)
 
 from common import models
 from common.xml_metadata_mapping_shortcuts import (
@@ -253,6 +256,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         CatalogueDataSubsetEditorFormView):
     model = models.CatalogueDataSubset
     success_url_name = 'update:catalogue_data_subset_with_editor'
+    form_class = CatalogueDataSubsetEditorUpdateForm
     form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
 
     def run_extra_actions_before_update(self):

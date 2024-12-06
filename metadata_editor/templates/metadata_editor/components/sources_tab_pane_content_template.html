@@ -1,9 +1,5 @@
-<div class="row {% if not custom_summary_text %}flex-row-reverse align-items-baseline{% endif %} gy-3 pt-4">
-    {% if custom_summary_text %}
-    <div class="col-xl-9 col-lg-12">
-        {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
-    </div>
-    {% endif %}
+<div class="row {% block extra_row_classes %}flex-row-reverse align-items-start{% endblock extra_row_classes %} row-gap-3 pt-4">
+    {% block custom_summary_text %}{% endblock custom_summary_text %}
     <div class="col-xl-3 col-lg-12 ms-xl-auto py-xl-0 pb-4">
         <div class="d-flex flex-column align-items-xl-end align-items-stretch">
             <button class="btn btn-outline-danger remove-source-button py-2" type="button" disabled>
@@ -29,12 +25,7 @@
             {% include 'metadata_editor/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <!-- File -->
-        <div>
-            {% with field=form.source_file %}
-            {% include 'metadata_editor/components/form_field_template.html' %}
-            {% endwith %}
-        </div>
+        {% block source_file %}{% endblock source_file %}
         <!-- Name -->
         <div>
             {% with field=form.source_name %}

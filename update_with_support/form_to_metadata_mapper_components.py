@@ -388,28 +388,32 @@ class RelatedPartyFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin
 
 
 class SourceFormFieldsToMetadataMixin(EditorFormFieldsToMetadataUtilsMixin):
+    def _map_source_to_form(self, online_resource_element):
+        service_functions = online_resource_element.xpath('.//%s:serviceFunction/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+        linkages = online_resource_element.xpath('.//%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD), namespaces=self.namespaces)
+        linkage = self._get_element_text_or_blank_string(self._get_first_element_from_list(linkages))
+        names = online_resource_element.xpath('.//%s:name' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        name = self._get_element_text_or_blank_string(self._get_first_element_from_list(names))
+        protocols = online_resource_element.xpath('.//%s:protocol' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        protocol = self._get_element_text_or_blank_string(self._get_first_element_from_list(protocols))
+        descriptions = online_resource_element.xpath('.//%s:description' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
+        description = self._get_element_text_or_blank_string(self._get_first_element_from_list(descriptions))
+        data_formats = online_resource_element.xpath('.//%s:dataFormat/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
+        return {
+            'serviceFunctions': service_functions,
+            'linkage': linkage,
+            'name': name,
+            'protocol': protocol,
+            'description': description,
+            'dataFormats': data_formats,
+        }
+    
     def _map_sources_to_form(self, online_resource_elements_xpath: str = None):
         sources = []
         online_resource_elements = self.xml_string_parsed.xpath(online_resource_elements_xpath, namespaces=self.namespaces)
         for e in online_resource_elements:
-            service_functions = e.xpath('.//%s:serviceFunction/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            linkages = e.xpath('.//%s:linkage/%s:URL' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.GMD), namespaces=self.namespaces)
-            linkage = self._get_element_text_or_blank_string(self._get_first_element_from_list(linkages))
-            names = e.xpath('.//%s:name' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
-            name = self._get_element_text_or_blank_string(self._get_first_element_from_list(names))
-            protocols = e.xpath('.//%s:protocol' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
-            protocol = self._get_element_text_or_blank_string(self._get_first_element_from_list(protocols))
-            descriptions = e.xpath('.//%s:description' % (self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)
-            description = self._get_element_text_or_blank_string(self._get_first_element_from_list(descriptions))
-            data_formats = e.xpath('.//%s:dataFormat/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK), namespaces=self.namespaces)
-            sources.append({
-                'serviceFunctions': service_functions,
-                'linkage': linkage,
-                'name': name,
-                'protocol': protocol,
-                'description': description,
-                'dataFormats': data_formats,
-            })
+            source = self._map_source_to_form(e)
+            sources.append(source)
         return sources
 
     def get_initial_values_with_custom_mappings(self):
