@@ -254,6 +254,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         HandleRegistrationViewMixin,
         ResourceUpdateWithEditorFormView,
         CatalogueDataSubsetEditorFormView):
+    template_name = 'update_with_support/catalogue_data_subset_update_editor.html'
     model = models.CatalogueDataSubset
     success_url_name = 'update:catalogue_data_subset_with_editor'
     form_class = CatalogueDataSubsetEditorUpdateForm

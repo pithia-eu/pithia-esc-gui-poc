@@ -2,11 +2,11 @@ import {
     checkAndSetRequiredAttributesForFieldsBySelectors,
 } from "/static/metadata_editor/components/conditional_required_fields.js";
 import {
-    SourcesTab,
-} from "/static/metadata_editor/components/sources_tab.js";
+    CatalogueDataSubsetSourcesTab,
+} from "/static/metadata_editor/components/catalogue_data_subset/catalogue_data_subset_sources_tab.js";
 
 
-class CatalogueDataSubsetSourcesTab extends SourcesTab {
+class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab {
     setFileUploadDisplayState(isDisplayed, fileInputArea) {
         if (isDisplayed) {
             return fileInputArea.classList.remove("d-none");
@@ -37,13 +37,6 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
         );
     }
 
-    createTabPane(newTabIdPrefix) {
-        const newTabPane = super.createTabPane(newTabIdPrefix);
-        const sourceFileInput = newTabPane.querySelector("input[name='source_file']");
-        sourceFileInput.setAttribute("name", `${sourceFileInput.name}_${this.nextTabNumber}`);
-        return newTabPane;
-    }
-
     tabPaneControlEventHandlerActions(tabPane) {
         super.tabPaneControlEventHandlerActions(tabPane);
         this.updateTabPaneConditionalRequiredFieldStates(tabPane);
@@ -51,7 +44,6 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
 
     getTabPaneData(tabPane) {
         const tabPaneData = super.getTabPaneData(tabPane);
-        tabPaneData.fileInputName = tabPane.querySelector("input[type='file']").name;
         const existingDataHubFileCheckbox = tabPane.querySelector("input[name='is_existing_datahub_file_used']");
         if (!existingDataHubFileCheckbox) {
             tabPaneData.isExistingDataHubFileUsed = false;
@@ -77,7 +69,7 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
             dataHubFileDefault.remove();
 
             // Update file input element label
-            const fileUploadArea = correspondingTabPane.querySelector(".new-source-file-option");
+            const fileUploadArea = correspondingTabPane.querySelector(".source-file-wrapper");
             const fileUploadElement = fileUploadArea.querySelector("input[type='file']");
             const fileUploadLabel = fileUploadArea.querySelector(`label[for='${fileUploadElement.id}']`);
             fileUploadLabel.textContent = "Upload a New File";
@@ -96,18 +88,10 @@ class CatalogueDataSubsetSourcesTab extends SourcesTab {
         // only allow uploading a new file.
         sourceFileOptionsFieldset.remove();
     }
-
-    loadPreviousTabData() {
-        super.loadPreviousTabData();
-        const tabPanes = this.tabContent.querySelectorAll(".tab-pane");
-        tabPanes.forEach(tabPane => {
-            this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-        });
-    }
 }
 
-export function setupCatalogueDataSubsetSourcesTab() {
-    const sourcesTab = new CatalogueDataSubsetSourcesTab();
+export function setupCatalogueDataSubsetUpdateSourcesTab() {
+    const sourcesTab = new CatalogueDataSubsetUpdateSourcesTab();
     sourcesTab.setup();
     return sourcesTab;
 }

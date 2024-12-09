@@ -4,7 +4,7 @@ import {
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCatalogueDataSubsetSourcesTab,
-} from "/static/metadata_editor/components/catalogue_data_subset/sources_tab.js";
+} from "/static/metadata_editor/components/catalogue_data_subset/catalogue_data_subset_sources_tab.js";
 import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
@@ -14,41 +14,6 @@ import {
 
 let sourcesTab;
 
-
-function addDataHubStatusesToSourcesData() {
-    let dataHubUsageStatuses = [];
-    try {
-        // JSON.parse twice as the sources JSON
-        // was JSONified again when added to HTML
-        // using json_script Django filter.
-        const sourcesDefault = JSON.parse(JSON.parse(document.querySelector("#sources-default").textContent));
-        dataHubUsageStatuses = sourcesDefault.reduce((accumulator, source) => {
-            if (!("isSourceFileInDataHub" in source)) {
-                accumulator[source.name] = false;
-                return accumulator;
-            }
-            accumulator[source.name] = source.isSourceFileInDataHub;
-            return accumulator;
-        }, {});
-    } catch (error) {
-        // Sources JSON element is null
-        // or not JSON-parsable.
-        console.error(error);
-    }
-
-    // Add DataHub usage statuses
-    const sourcesJsonElement = editorForm.querySelector("input[name='sources_json']");
-    const sourcesData = JSON.parse(sourcesJsonElement.value);
-    for (const sourceName in dataHubUsageStatuses) {
-        const sourceIndex = sourcesData.findIndex(source => source.name === sourceName);
-        if (sourceIndex === -1) {
-            continue;
-        }
-        const dataHubUsageStatusForSource = dataHubUsageStatuses[sourceName];
-        sourcesData[sourceIndex].isSourceFileInDataHub = dataHubUsageStatusForSource;
-    }
-    sourcesJsonElement.value = JSON.stringify(sourcesData);
-}
 
 function prepareFormForSubmission() {
     sourcesTab.exportTabData();
@@ -62,7 +27,6 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    addDataHubStatusesToSourcesData();
 
     sourcesTab = setupCatalogueDataSubsetSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
