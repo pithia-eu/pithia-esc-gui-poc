@@ -260,6 +260,9 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     form_class = CatalogueDataSubsetEditorUpdateForm
     form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
 
+    def get_sources_tab_pane_content_template_path(self):
+        return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
+
     def run_extra_actions_before_update(self):
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()

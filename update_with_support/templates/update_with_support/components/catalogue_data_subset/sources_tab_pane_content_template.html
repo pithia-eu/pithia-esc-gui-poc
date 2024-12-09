@@ -1,0 +1,28 @@
+{% extends 'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html' %}
+{% block extra_row_classes %}{% endblock extra_row_classes %}
+{% block custom_summary_text %}
+{% with custom_summary_text='Adding information on an online resource is optional. If you would like to add this, the name, linkage and protocol for the online resource must be provided.' %}
+<div class="col-xl-9 col-lg-12">
+    {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+</div>
+{% endwith %}
+{% endblock custom_summary_text %}
+{% block source_file %}
+<!-- File -->
+<fieldset class="source-file-options-fieldset">
+    <legend class="fs-6">File</legend>
+    <div class="d-flex flex-column row-gap-2">
+        <div class="form-check existing-datahub-file-checkbox-wrapper">
+            {{ form.is_existing_datahub_file_used }}
+            <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
+                {{ form.is_existing_datahub_file_used.label }}
+            </label>
+        </div>
+        <div class="source-file-wrapper">
+            {% with field=form.source_file %}
+            {% include 'metadata_editor/components/form_field_template.html' %}
+            {% endwith %}
+        </div>
+    </div>
+</fieldset>
+{% endblock source_file %}

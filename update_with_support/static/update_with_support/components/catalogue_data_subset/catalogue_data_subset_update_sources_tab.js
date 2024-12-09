@@ -57,17 +57,12 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
         super.loadPreviousTabPaneData(source, correspondingTabPane);
         // File
         const sourceFileOptionsFieldset = correspondingTabPane.querySelector(".source-file-options-fieldset");
-        if (!sourceFileOptionsFieldset) {
-            return;
-        }
-
+        const useExistingSourceFileCheckboxWrapper = sourceFileOptionsFieldset.querySelector(".existing-datahub-file-checkbox-wrapper");
+        const useExistingSourceFileCheckbox = useExistingSourceFileCheckboxWrapper.querySelector("input[type='checkbox']");
         // If a source file is in DataHub,
         // provide options to continue using
         // the file or to upload a new file.
         if (source.isSourceFileInDataHub) {
-            const dataHubFileDefault = correspondingTabPane.querySelector(".datahub-file-default");
-            dataHubFileDefault.remove();
-
             // Update file input element label
             const fileUploadArea = correspondingTabPane.querySelector(".source-file-wrapper");
             const fileUploadElement = fileUploadArea.querySelector("input[type='file']");
@@ -75,7 +70,6 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
             fileUploadLabel.textContent = "Upload a New File";
 
             // Set existing file usage checkbox
-            const useExistingSourceFileCheckbox = sourceFileOptionsFieldset.querySelector("input[name='is_existing_datahub_file_used']");
             useExistingSourceFileCheckbox.checked = source.isExistingDataHubFileUsed;
             useExistingSourceFileCheckbox.addEventListener("change", () => {
                 this.setFileUploadDisplayState(!useExistingSourceFileCheckbox.checked, fileUploadArea);
@@ -86,7 +80,8 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
 
         // If a source file is not in DataHub,
         // only allow uploading a new file.
-        sourceFileOptionsFieldset.remove();
+        sourceFileOptionsFieldset.querySelector("legend").classList.add("visually-hidden");
+        useExistingSourceFileCheckboxWrapper.remove();
     }
 }
 

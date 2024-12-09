@@ -908,6 +908,15 @@ class CatalogueDataSubsetEditorFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    
+    def get_sources_tab_pane_content_template_path(self):
+        return 'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html'
+
+    def get_sources_tab_pane_content_template(self, context):
+        return render_to_string(
+            self.get_sources_tab_pane_content_template_path(),
+            context=context
+        )
 
     def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueDataSubsetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -999,10 +1008,8 @@ class CatalogueDataSubsetEditorFormView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sources_tab_pane_content_template'] = render_to_string(
-            'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html',
-            context=context
-        )
+        context['sources_tab_pane_content_template_path'] = self.get_sources_tab_pane_content_template_path()
+        context['sources_tab_pane_content_template'] = self.get_sources_tab_pane_content_template(context)
         return context
 
     def get_form_kwargs(self):
