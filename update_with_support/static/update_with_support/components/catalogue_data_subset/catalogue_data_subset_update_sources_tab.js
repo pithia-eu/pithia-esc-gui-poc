@@ -64,7 +64,7 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
         // the file or to upload a new file.
         if (source.isSourceFileInDataHub) {
             // Update file input element label
-            const fileUploadArea = correspondingTabPane.querySelector(".source-file-wrapper");
+            const fileUploadArea = correspondingTabPane.querySelector(".source-file-option");
             const fileUploadElement = fileUploadArea.querySelector("input[type='file']");
             const fileUploadLabel = fileUploadArea.querySelector(`label[for='${fileUploadElement.id}']`);
             fileUploadLabel.textContent = "Upload a New File";

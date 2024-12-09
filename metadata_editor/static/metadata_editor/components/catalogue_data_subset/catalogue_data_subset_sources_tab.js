@@ -7,9 +7,49 @@ import {
 
 
 export class CatalogueDataSubsetSourcesTab extends SourcesTab {
+    constructor() {
+        super();
+        this.sourceLinkageInputWrapperSelector = ".source-linkage-wrapper";
+        this.sourceFileInputSelector = "input[type='file']";
+        this.sourceFileInputWrapperSelector = ".source-file-wrapper";
+    }
+
+    enableSourceFileSharingMethod(inputWrapperSelector) {
+        const inputWrappersInTab = this.tabContent.querySelectorAll(inputWrapperSelector);
+        for (const inputWrapper of inputWrappersInTab) {
+            const inputsInWrapper = inputWrapper.querySelectorAll("input");
+            for (const input of inputsInWrapper) {
+                input.disabled = true;
+            }
+            inputWrapper.classList.add("d-none");
+        }
+    }
+
+    disableSourceFileSharingMethod(inputWrapperSelector) {
+        const inputWrappersInTab = this.tabContent.querySelectorAll(inputWrapperSelector);
+        for (const inputWrapper of inputWrappersInTab) {
+            const inputsInWrapper = inputWrapper.querySelectorAll("input");
+            for (const input of inputsInWrapper) {
+                input.disabled = false;
+            }
+            inputWrapper.classList.remove("d-none");
+        }
+    }
+    
+    setSourceFileSharingMethodToLinkage() {
+        this.enableSourceFileSharingMethod(this.sourceLinkageInputWrapperSelector);
+        this.disableSourceFileSharingMethod(this.sourceFileInputWrapperSelector);
+    }
+    
+    setSourceFileSharingMethodToFileUpload() {
+        this.enableSourceFileSharingMethod(this.sourceFileInputWrapperSelector);
+        this.disableSourceFileSharingMethod(this.sourceLinkageInputWrapperSelector);
+    }
+
     updateTabPaneConditionalRequiredFieldStates(tabPane) {
         // Required fields
         const requiredFieldSelectorsUnformatted = [
+            this.sourceFileInputSelector,
             this.sourceLinkageInputSelector,
             this.sourceNameInputSelector,
             this.sourceProtocolInputSelector,

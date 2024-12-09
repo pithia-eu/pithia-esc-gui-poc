@@ -12,6 +12,7 @@ import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
+const sourcesSharingMethodCheckbox = editorForm.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
 let sourcesTab;
 
 
@@ -66,4 +67,11 @@ window.addEventListener("load", () => {
 
     sourcesTab = setupCatalogueDataSubsetUpdateSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
+});
+
+sourcesSharingMethodCheckbox.addEventListener("change", () => {
+    if (sourcesSharingMethodCheckbox.checked) {
+        return sourcesTab.setSourceFileSharingMethodToLinkage();
+    }
+    return sourcesTab.setSourceFileSharingMethodToFileUpload();
 });

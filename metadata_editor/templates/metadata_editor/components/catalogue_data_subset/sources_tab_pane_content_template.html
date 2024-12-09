@@ -9,7 +9,7 @@
 {% endblock custom_summary_text %}
 {% block source_file %}
 <!-- File -->
-<div>
+<div class="source-file-wrapper">
     {% with field=form.source_file %}
     {% include 'metadata_editor/components/form_field_template.html' %}
     {% endwith %}
