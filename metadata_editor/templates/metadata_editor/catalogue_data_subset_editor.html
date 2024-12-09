@@ -2,6 +2,7 @@
 {% load static %}
 {% block extra_scripts %}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+{{ form.sources_json.value|json_script:'sources-default' }}
 <script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}

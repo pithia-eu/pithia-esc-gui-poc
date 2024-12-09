@@ -11,18 +11,20 @@
 <!-- File -->
 <div>
     {% if form.is_existing_datahub_file_used %}
-    <fieldset class="datahub-file-fieldset">
+    <fieldset class="source-file-options-fieldset">
         <legend class="fs-6">File</legend>
-        <div class="form-check">
-            {{ form.is_existing_datahub_file_used }}
-            <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
-                {{ form.is_existing_datahub_file_used.label }}
-            </label>
-        </div>
-        <div>
-            {% with field=form.source_file %}
-            {% include 'metadata_editor/components/form_field_template.html' %}
-            {% endwith %}
+        <div class="d-flex flex-column row-gap-2">
+            <div class="form-check">
+                {{ form.is_existing_datahub_file_used }}
+                <label for="{{ form.is_existing_datahub_file_used.id_for_label }}" class="form-check-label mb-0">
+                    {{ form.is_existing_datahub_file_used.label }}
+                </label>
+            </div>
+            <div class="new-source-file-option">
+                {% with field=form.source_file %}
+                {% include 'metadata_editor/components/form_field_template.html' %}
+                {% endwith %}
+            </div>
         </div>
     </fieldset>
     {% endif %}

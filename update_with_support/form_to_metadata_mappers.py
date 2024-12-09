@@ -338,6 +338,10 @@ class CatalogueDataSubsetFormFieldsToMetadataMapper(
             catalogue_data_subset_id,
             source.get('name')
         )
+        if source_file_in_datahub:
+            source.update({
+                'linkage': '',
+            })
         source.update({
             'isSourceFileInDataHub': source_file_in_datahub is not None,
             'isExistingDataHubFileUsed': source_file_in_datahub is not None,

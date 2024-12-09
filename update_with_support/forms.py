@@ -7,9 +7,6 @@ from metadata_editor.forms import (
 
 
 class CatalogueDataSubsetEditorUpdateForm(CatalogueDataSubsetForm):
-    def __init__(self, *args, data_collection_choices=..., catalogue_entry_choices=..., **kwargs):
-        super().__init__(*args, data_collection_choices=data_collection_choices, catalogue_entry_choices=catalogue_entry_choices, **kwargs)
-    
     is_existing_datahub_file_used = forms.BooleanField(
         label='Continue using the same file for this source',
         required=False,
