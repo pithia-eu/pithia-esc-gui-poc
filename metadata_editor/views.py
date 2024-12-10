@@ -1002,8 +1002,25 @@ class CatalogueDataSubsetEditorFormView(
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
 
+    def check_source_names(self, form):
+        source_names = [source.get('name', '') for source in form.cleaned_data.get('sources_json')]
+        source_names_normalised = set(source_name.lower().strip() for source_name in source_names)
+        return len(source_names) == len(source_names_normalised)
+
     def form_valid(self, form):
         self.source_files = self.request.FILES
+        is_each_source_name_unique = True
+        try:
+            is_each_source_name_unique = self.check_source_names(form)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred.')
+            return self.form_invalid(form)
+
+        if not is_each_source_name_unique:
+            form.add_error(None, 'Online resource names must be unique.')
+            messages.error(self.request, 'Online resource names must be unique.')
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
