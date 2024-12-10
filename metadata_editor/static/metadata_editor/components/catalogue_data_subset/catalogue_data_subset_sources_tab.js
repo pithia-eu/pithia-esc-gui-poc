@@ -99,11 +99,64 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         });
     }
 
+    resetSourceNameErrors() {
+        const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
+        sourceNameInputs.forEach(input => input.classList.remove("is-invalid"));
+        const errorLists = this.tabContent.querySelectorAll(".source-name-wrapper .field-error-list");
+        for (const errorList of errorLists) {
+            errorList.replaceChildren();
+        }
+    }
+
+    addErrorToFieldErrorList(errorText, errorList) {
+        const liElement = document.createElement("LI");
+        liElement.className = "form-text text-danger";
+        liElement.textContent = errorText;
+        errorList.append(liElement);
+    }
+
+    checkSourceNamesAreUnique() {
+        const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
+        const inputsBySourceName = Array.from(sourceNameInputs).reduce((accumulator, input) => {
+            const sourceNameTrimmed = input.value.trim().toLowerCase();
+            if (!(sourceNameTrimmed in accumulator)) {
+                accumulator[sourceNameTrimmed] = [];
+            }
+            accumulator[sourceNameTrimmed].push(input);
+            return accumulator;
+        }, {});
+        
+        for (const sourceName in inputsBySourceName) {
+            const inputs = inputsBySourceName[sourceName];
+            if (inputs.length === 1) {
+                continue;
+            }
+            inputs.forEach(input => {
+                input.classList.add("is-invalid");
+                const errorText = `"${input.value.trim()}" is already in use with another online resource (case is ignored). Please choose another name.`;
+                const closestErrorList = input.closest("div").querySelector("ul.field-error-list");
+                this.addErrorToFieldErrorList(
+                    errorText,
+                    closestErrorList
+                );
+            });
+        }
+    }
+
+    setupSourceNameCheckForTabPane(newTabPane) {
+        const currentSourceNameInput = newTabPane.querySelector("input[name='source_name']");
+        currentSourceNameInput.addEventListener("input", () => {
+            this.resetSourceNameErrors();
+            this.checkSourceNamesAreUnique();
+        });
+    }
+
     createTabPane(newTabIdPrefix) {
         const newTabPane = super.createTabPane(newTabIdPrefix);
         const sourceFileInput = newTabPane.querySelector("input[name='source_file']");
         sourceFileInput.setAttribute("name", `${sourceFileInput.name}_${this.nextTabNumber}`);
         this.applySourceFileSharingMethodChoiceToTabPane(newTabPane);
+        this.setupSourceNameCheckForTabPane(newTabPane);
         return newTabPane;
     }
 
@@ -121,6 +174,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
     loadPreviousTabData() {
         super.loadPreviousTabData();
         this.updateAllTabPaneConditionalRequiredFieldStates();
+        this.checkSourceNamesAreUnique();
     }
 }
 
