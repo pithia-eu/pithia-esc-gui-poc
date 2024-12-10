@@ -108,11 +108,11 @@ def map_sources_to_dataclasses(form_cleaned_data):
         )
     for s in form_cleaned_data.get('sources_json')]
 
-def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_using_linkages: bool = True):
+def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
     return [
         CatalogueDataSubsetSourceMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
-            linkage=s.get('linkage') if is_using_linkages else 'TEMP_LINKAGE_URL',
+            linkage='TEMP_LINKAGE_URL' if is_file_uploaded_for_each_online_resource else s.get('linkage'),
             name=s.get('name'),
             protocol=s.get('protocol'),
             description=s.get('description'),

@@ -940,7 +940,7 @@ class CatalogueDataSubsetEditorFormView(
         self.valid_sources = metadata_editor.update_sources(
             map_catalogue_data_subset_sources_to_dataclasses(
                 form_cleaned_data,
-                is_using_linkages=form_cleaned_data.get('is_file_uploaded_for_each_online_resource')
+                is_file_uploaded_for_each_online_resource=form_cleaned_data.get('is_file_uploaded_for_each_online_resource')
             )
         )
 
