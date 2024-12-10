@@ -19,13 +19,16 @@
             {% include 'metadata_editor/components/form_field_template.html' %}
             {% endwith %}
         </div>
-        <!-- Linkage -->
-        <div class="source-linkage-wrapper">
-            {% with field=form.source_linkage %}
-            {% include 'metadata_editor/components/form_field_template.html' %}
-            {% endwith %}
+        <div class="bg-light rounded p-4">
+            <!-- Linkage -->
+            <div class="source-linkage-wrapper">
+                {% with field=form.source_linkage %}
+                {% include 'metadata_editor/components/form_field_template.html' %}
+                {% endwith %}
+            </div>
+            <!-- File -->
+            {% block source_file %}{% endblock source_file %}
         </div>
-        {% block source_file %}{% endblock source_file %}
         <!-- Name -->
         <div>
             {% with field=form.source_name %}

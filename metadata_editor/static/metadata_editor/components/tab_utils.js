@@ -206,7 +206,7 @@ export class DynamicEditorTab {
         return newTabPane;
     }
 
-    createTabOnClickActions() {
+    createTabOnClickActions(newTabPane) {
         this.incrementNumberOfNewTabs();
         this.exportExtraTabData();
     }

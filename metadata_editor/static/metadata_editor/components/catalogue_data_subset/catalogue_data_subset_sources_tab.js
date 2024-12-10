@@ -12,10 +12,25 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         this.sourceLinkageInputWrapperSelector = ".source-linkage-wrapper";
         this.sourceFileInputSelector = "input[type='file']";
         this.sourceFileInputWrapperSelector = ".source-file-wrapper";
+        this.enabledSourceFileSharingMethodInputSelector = this.sourceFileInputSelector;
+        this.enabledSourceFileSharingMethodInputWrapperSelector = this.sourceFileInputWrapperSelector;
+        this.disabledSourceFileSharingMethodInputSelector = this.sourceLinkageInputSelector;
+        this.disabledSourceFileSharingMethodInputWrapperSelector = this.sourceLinkageInputWrapperSelector;
     }
 
-    enableSourceFileSharingMethod(inputWrapperSelector) {
-        const inputWrappersInTab = this.tabContent.querySelectorAll(inputWrapperSelector);
+    enableSourceFileSharingMethodForTabPane(tabPane, inputWrapperSelector) {
+        const inputWrappersInTab = tabPane.querySelectorAll(inputWrapperSelector);
+        for (const inputWrapper of inputWrappersInTab) {
+            const inputsInWrapper = inputWrapper.querySelectorAll("input");
+            for (const input of inputsInWrapper) {
+                input.disabled = false;
+            }
+            inputWrapper.classList.remove("d-none");
+        }
+    }
+
+    disableSourceFileSharingMethodForTabPane(tabPane, inputWrapperSelector) {
+        const inputWrappersInTab = tabPane.querySelectorAll(inputWrapperSelector);
         for (const inputWrapper of inputWrappersInTab) {
             const inputsInWrapper = inputWrapper.querySelectorAll("input");
             for (const input of inputsInWrapper) {
@@ -25,32 +40,38 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         }
     }
 
-    disableSourceFileSharingMethod(inputWrapperSelector) {
-        const inputWrappersInTab = this.tabContent.querySelectorAll(inputWrapperSelector);
-        for (const inputWrapper of inputWrappersInTab) {
-            const inputsInWrapper = inputWrapper.querySelectorAll("input");
-            for (const input of inputsInWrapper) {
-                input.disabled = false;
-            }
-            inputWrapper.classList.remove("d-none");
+    applySourceFileSharingMethodChoiceToTabPane(tabPane) {
+        this.enableSourceFileSharingMethodForTabPane(tabPane, this.enabledSourceFileSharingMethodInputWrapperSelector);
+        this.disableSourceFileSharingMethodForTabPane(tabPane, this.disabledSourceFileSharingMethodInputWrapperSelector);
+    }
+
+    applySourceFileSharingMethodChoiceToAllTabPanes() {
+        const tabPanes = this.tabContent.querySelectorAll(".tab-pane");
+        for (const tabPane of tabPanes) {
+            this.applySourceFileSharingMethodChoiceToTabPane(tabPane);
         }
     }
-    
+
     setSourceFileSharingMethodToLinkage() {
-        this.enableSourceFileSharingMethod(this.sourceLinkageInputWrapperSelector);
-        this.disableSourceFileSharingMethod(this.sourceFileInputWrapperSelector);
+        this.enabledSourceFileSharingMethodInputSelector = this.sourceLinkageInputSelector;
+        this.enabledSourceFileSharingMethodInputWrapperSelector = this.sourceLinkageInputWrapperSelector;
+        this.disabledSourceFileSharingMethodInputSelector = this.sourceFileInputSelector;
+        this.disabledSourceFileSharingMethodInputWrapperSelector = this.sourceFileInputWrapperSelector;
+        this.applySourceFileSharingMethodChoiceToAllTabPanes();
     }
     
     setSourceFileSharingMethodToFileUpload() {
-        this.enableSourceFileSharingMethod(this.sourceFileInputWrapperSelector);
-        this.disableSourceFileSharingMethod(this.sourceLinkageInputWrapperSelector);
+        this.enabledSourceFileSharingMethodInputSelector = this.sourceFileInputSelector;
+        this.enabledSourceFileSharingMethodInputWrapperSelector = this.sourceFileInputWrapperSelector;
+        this.disabledSourceFileSharingMethodInputSelector = this.sourceLinkageInputSelector;
+        this.disabledSourceFileSharingMethodInputWrapperSelector = this.sourceLinkageInputWrapperSelector;
+        this.applySourceFileSharingMethodChoiceToAllTabPanes();
     }
 
     updateTabPaneConditionalRequiredFieldStates(tabPane) {
         // Required fields
         const requiredFieldSelectorsUnformatted = [
-            this.sourceFileInputSelector,
-            this.sourceLinkageInputSelector,
+            this.enabledSourceFileSharingMethodInputSelector,
             this.sourceNameInputSelector,
             this.sourceProtocolInputSelector,
         ];
@@ -60,6 +81,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         // for conditional required fields are
         // set.
         const optionalFieldSelectorsUnformatted = [
+            this.disabledSourceFileSharingMethodInputSelector,
             this.sourceServiceFunctionSelectSelector,
             this.sourceDescriptionTextareaSelector,
             this.sourceDataFormatSelectSelector,
@@ -70,10 +92,18 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         );
     }
 
+    updateAllTabPaneConditionalRequiredFieldStates() {
+        const tabPanes = this.tabContent.querySelectorAll(".tab-pane");
+        tabPanes.forEach(tabPane => {
+            this.updateTabPaneConditionalRequiredFieldStates(tabPane);
+        });
+    }
+
     createTabPane(newTabIdPrefix) {
         const newTabPane = super.createTabPane(newTabIdPrefix);
         const sourceFileInput = newTabPane.querySelector("input[name='source_file']");
         sourceFileInput.setAttribute("name", `${sourceFileInput.name}_${this.nextTabNumber}`);
+        this.applySourceFileSharingMethodChoiceToTabPane(newTabPane);
         return newTabPane;
     }
 
@@ -90,10 +120,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
 
     loadPreviousTabData() {
         super.loadPreviousTabData();
-        const tabPanes = this.tabContent.querySelectorAll(".tab-pane");
-        tabPanes.forEach(tabPane => {
-            this.updateTabPaneConditionalRequiredFieldStates(tabPane);
-        });
+        this.updateAllTabPaneConditionalRequiredFieldStates();
     }
 }
 

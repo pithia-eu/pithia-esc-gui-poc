@@ -6,13 +6,15 @@ import {
     setupCatalogueDataSubsetUpdateSourcesTab,
 } from "/static/update_with_support/components/catalogue_data_subset/catalogue_data_subset_update_sources_tab.js";
 import {
+    setupSourceFileSharingMethodSwitching,
+} from "/static/metadata_editor/components/catalogue_data_subset/source_file_sharing_method_switching.js";
+import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
 
-const sourcesSharingMethodCheckbox = editorForm.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
 let sourcesTab;
 
 
@@ -67,11 +69,5 @@ window.addEventListener("load", () => {
 
     sourcesTab = setupCatalogueDataSubsetUpdateSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
-});
-
-sourcesSharingMethodCheckbox.addEventListener("change", () => {
-    if (sourcesSharingMethodCheckbox.checked) {
-        return sourcesTab.setSourceFileSharingMethodToLinkage();
-    }
-    return sourcesTab.setSourceFileSharingMethodToFileUpload();
+    setupSourceFileSharingMethodSwitching(sourcesTab);
 });
