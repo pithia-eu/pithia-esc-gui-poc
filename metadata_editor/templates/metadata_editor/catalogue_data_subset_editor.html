@@ -42,11 +42,14 @@
             </h2>
         </div>
         <div class="col-lg-12">
-            <div class="form-check form-switch">
-                {{ form.is_file_uploaded_for_each_online_resource }}
-                <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
-                    {{ form.is_file_uploaded_for_each_online_resource.label }}
-                </label>
+            <div class="d-flex column-gap-2">
+                <span>Links</span>
+                <div class="form-check form-switch">
+                    {{ form.is_file_uploaded_for_each_online_resource }}
+                    <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
+                        {{ form.is_file_uploaded_for_each_online_resource.label }}
+                    </label>
+                </div>
             </div>
         </div>
         <div class="col-lg-12">
