@@ -601,7 +601,7 @@ class SourceMetadataFormComponent(forms.Form):
 
     source_linkage = forms.URLField(
         required=False,
-        label='Linkage',
+        label='Link to Online Resource',
         widget=forms.URLInput(attrs={
             'placeholder': 'https://',
         }),
