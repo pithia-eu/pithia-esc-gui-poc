@@ -382,6 +382,9 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
     def run_registration_actions(self, request):
         wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
         self.resource_id = wrapped_xml_file.localid
+        if not self.is_file_uploaded_for_each_online_resource:
+            new_registration = self.register_xml_string()
+            return new_registration
         if not hasattr(self, 'valid_sources'):
             new_registration = self.register_xml_string()
             return new_registration
@@ -408,7 +411,10 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
         return super().run_actions_on_registration_failure()
 
     def form_valid(self, form):
+        self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         response = super().form_valid(form)
+        # If statement is in case self.resource
+        # has not been set for some reason.
         if not hasattr(self, 'resource'):
             return response
         self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
