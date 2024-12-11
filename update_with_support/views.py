@@ -41,6 +41,7 @@ from handle_management.view_mixins import (
     HandleRegistrationViewMixin,
 )
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
+from metadata_editor.form_utils import map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.services import SimpleCatalogueDataSubsetEditor
 from metadata_editor.views import *
@@ -257,13 +258,24 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     template_name = 'update_with_support/catalogue_data_subset_update_editor.html'
     model = models.CatalogueDataSubset
     success_url_name = 'update:catalogue_data_subset_with_editor'
+    
     form_class = CatalogueDataSubsetEditorUpdateForm
     form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
 
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
 
+    def _process_online_resource_file_choices(self, online_resource):
+        if online_resource.is_existing_datahub_file_used:
+            self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+                online_resource.name,
+                self.xml_string
+            )
+            return
+        return super()._process_online_resource_file_choices(online_resource)
+
     def run_extra_actions_before_update(self):
+        self._process_online_resources()
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()
         simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
@@ -273,8 +285,23 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         self.xml_string = simple_catalogue_data_subset_editor.to_xml()
         return super().run_extra_actions_before_update()
 
+    def map_sources_to_dataclasses(
+            self,
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource):
+        return map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses(
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
+        )
+
     def form_valid(self, form):
+        self.source_files = self.request.FILES
+        if not self.check_source_names(form):
+            form.add_error('sources_json', 'Online resource names must be unique.')
+            return self.form_invalid(form)
+
         self.current_resource_xml = self.resource.xml
+        self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         try:
             xml_shortcuts = CatalogueDataSubsetXmlMappingShortcuts(self.current_resource_xml)
             self.current_doi_name = xml_shortcuts.doi_kernel_metadata.get('referent_doi_name')
@@ -309,6 +336,10 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
             'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
             'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
         })
+        if not self.get_online_resource_files_for_catalogue_data_subset():
+            initial.update({
+                'is_file_uploaded_for_each_online_resource': False,
+            })
         return initial
 
 

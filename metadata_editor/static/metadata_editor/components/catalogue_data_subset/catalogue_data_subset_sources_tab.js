@@ -127,6 +127,9 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         }, {});
         
         for (const sourceName in inputsBySourceName) {
+            if (!sourceName) {
+                continue;
+            }
             const inputs = inputsBySourceName[sourceName];
             if (inputs.length === 1) {
                 continue;
@@ -171,9 +174,13 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         return tabPaneData;
     }
 
+    loadPreviousTabPaneData(source, correspondingTabPane) {
+        super.loadPreviousTabPaneData(source, correspondingTabPane);
+        this.updateTabPaneConditionalRequiredFieldStates(correspondingTabPane);
+    }
+
     loadPreviousTabData() {
         super.loadPreviousTabData();
-        this.updateAllTabPaneConditionalRequiredFieldStates();
         this.checkSourceNamesAreUnique();
     }
 }

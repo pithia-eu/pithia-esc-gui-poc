@@ -918,6 +918,15 @@ class CatalogueDataSubsetEditorFormView(
             context=context
         )
 
+    def map_sources_to_dataclasses(
+            self,
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource):
+        return map_catalogue_data_subset_sources_to_dataclasses(
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
+        )
+
     def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueDataSubsetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
@@ -938,7 +947,7 @@ class CatalogueDataSubsetEditorFormView(
             is_max_occurs_unbounded=False
         )
         self.valid_sources = metadata_editor.update_sources(
-            map_catalogue_data_subset_sources_to_dataclasses(
+            self.map_sources_to_dataclasses(
                 form_cleaned_data,
                 is_file_uploaded_for_each_online_resource=form_cleaned_data.get('is_file_uploaded_for_each_online_resource')
             )
@@ -1002,25 +1011,52 @@ class CatalogueDataSubsetEditorFormView(
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
 
-    def check_source_names(self, form):
-        source_names = [source.get('name', '') for source in form.cleaned_data.get('sources_json')]
-        source_names_normalised = set(source_name.lower().strip() for source_name in source_names)
-        return len(source_names) == len(source_names_normalised)
+    def _process_online_resource_file_choices(self, online_resource):
+        online_resource_file = self.source_files.get(online_resource.file_input_name)
+        self.xml_string = self.store_online_resource_file_and_update_catalogue_data_subset_xml_file_string(
+            online_resource_file,
+            online_resource.name,
+            self.xml_string
+        )
 
-    def form_valid(self, form):
-        self.source_files = self.request.FILES
-        is_each_source_name_unique = True
+    def _process_online_resources(self):
+        if not self.is_file_uploaded_for_each_online_resource:
+            # If using linkages, remove any files
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        if not hasattr(self, 'valid_sources'):
+            # If self.valid_sources not set, remove
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        if not self.valid_sources:
+            # If self.valid_sources is empty, remove
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        # Store each valid source file and
+        # update XML string.
+        for source in self.valid_sources:
+            self._process_online_resource_file_choices(source)
+        return None
+
+    def check_source_names(self, form):
         try:
-            is_each_source_name_unique = self.check_source_names(form)
+            source_names = [
+                source.get('name', '')
+                for source in form.cleaned_data.get('sources_json')
+                if source.get('name', '')
+            ]
+            source_names_normalised = set(
+                source_name.lower().strip()
+                for source_name in source_names
+            )
+            return len(source_names) == len(source_names_normalised)
         except Exception as err:
             logger.exception(err)
             messages.error(self.request, 'An unexpected error occurred.')
-            return self.form_invalid(form)
-
-        if not is_each_source_name_unique:
-            form.add_error('sources_json', 'Online resource names must be unique.')
-            return self.form_invalid(form)
-        return super().form_valid(form)
+            return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

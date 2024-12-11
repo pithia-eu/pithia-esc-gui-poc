@@ -382,24 +382,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
     def run_registration_actions(self, request):
         wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
         self.resource_id = wrapped_xml_file.localid
-        if not self.is_file_uploaded_for_each_online_resource:
-            new_registration = self.register_xml_string()
-            return new_registration
-        if not hasattr(self, 'valid_sources'):
-            new_registration = self.register_xml_string()
-            return new_registration
-        if not self.valid_sources:
-            new_registration = self.register_xml_string()
-            return new_registration
-        # Store each valid source file and
-        # update XML string.
-        for source in self.valid_sources:
-            online_resource_file = self.source_files.get(source.file_input_name)
-            self.xml_string = self.store_online_resource_file_and_update_catalogue_data_subset_xml_file_string(
-                online_resource_file,
-                source.name,
-                self.xml_string
-            )
+        self._process_online_resources()
         new_registration = self.register_xml_string()
         return new_registration
 
@@ -411,6 +394,11 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
         return super().run_actions_on_registration_failure()
 
     def form_valid(self, form):
+        self.source_files = self.request.FILES
+        if not self.check_source_names(form):
+            form.add_error('sources_json', 'Online resource names must be unique.')
+            return self.form_invalid(form)
+        
         self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         response = super().form_valid(form)
         # If statement is in case self.resource
