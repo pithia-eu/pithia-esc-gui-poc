@@ -41,6 +41,17 @@
                 Online Resources
             </h2>
         </div>
+        {% if form.sources_json.errors %}
+        <div class="col-lg-12">
+            <div class="alert alert-danger">
+                <ul class="list-unstyled mb-0">
+                    {% for error in form.sources_json.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
         <div class="col-lg-12">
             <div class="d-flex column-gap-2">
                 <span>Links</span>
