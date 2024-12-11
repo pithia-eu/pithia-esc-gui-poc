@@ -1018,8 +1018,7 @@ class CatalogueDataSubsetEditorFormView(
             return self.form_invalid(form)
 
         if not is_each_source_name_unique:
-            form.add_error(None, 'Online resource names must be unique.')
-            messages.error(self.request, 'Online resource names must be unique.')
+            form.add_error('sources_json', 'Online resource names must be unique.')
             return self.form_invalid(form)
         return super().form_valid(form)
 
