@@ -4,16 +4,16 @@ import {
 
 
 class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab {
-    setFileUploadDisplayState(isDisplayed, isRequiredAttributeUpdated, fileInputArea) {
-        const fileInput = fileInputArea.querySelector("input[type='file']");
+    setFileUploadDisplayState(isDisplayed, isRequiredAttributeUpdated, fileInputWrapper) {
+        const fileInput = fileInputWrapper.querySelector("input[type='file']");
         // Enable/disable file input
         fileInput.disabled = !isDisplayed;
 
         // Show/hide file input
         if (isDisplayed) {
-            fileInputArea.classList.remove("d-none");
+            fileInputWrapper.classList.remove("d-none");
         } else {
-            fileInputArea.classList.add("d-none");
+            fileInputWrapper.classList.add("d-none");
         }
 
         if (!isRequiredAttributeUpdated) {
@@ -31,18 +31,21 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
 
     configureFileInputsIfExistingDataHubFileForTabPane(tabPane) {
         const useExistingSourceFileCheckbox = tabPane.querySelector("input[name='is_existing_datahub_file_used']");
-        const fileUploadArea = tabPane.querySelector(".source-file-option");
+        const fileInputWrapper = tabPane.querySelector(".source-file-option");
         if (!useExistingSourceFileCheckbox) {
-            return this.setFileUploadDisplayState(true, false, fileUploadArea);
+            return this.setFileUploadDisplayState(true, false, fileInputWrapper);
         }
-        this.setFileUploadDisplayState(!useExistingSourceFileCheckbox.checked, !useExistingSourceFileCheckbox.checked, fileUploadArea);
+        this.setFileUploadDisplayState(!useExistingSourceFileCheckbox.checked, !useExistingSourceFileCheckbox.checked, fileInputWrapper);
     }
 
     disableExtraDataHubConfigurationOptionsForTabPane(tabPane) {
         const sourceFileOptionsFieldset = tabPane.querySelector(".source-file-options-fieldset");
+        // Hide file option fieldset, but keep legend accessible.
         sourceFileOptionsFieldset.querySelector("legend").classList.add("visually-hidden");
-        const useExistingSourceFileCheckboxWrapper = tabPane.querySelector(".existing-datahub-file-checkbox-wrapper");
-        useExistingSourceFileCheckboxWrapper.remove();
+        // Remove extra datahub management features as they
+        // shouldn't be needed.
+        const dataHubManagementElementsWrapper = tabPane.querySelector(".existing-datahub-file-checkbox-wrapper");
+        dataHubManagementElementsWrapper.remove();
     }
 
     updateTabPaneConditionalRequiredFieldStates(tabPane) {
@@ -62,11 +65,15 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
 
     getTabPaneData(tabPane) {
         const tabPaneData = super.getTabPaneData(tabPane);
-        const existingDataHubFileCheckbox = tabPane.querySelector("input[name='is_existing_datahub_file_used']");
-        if (!existingDataHubFileCheckbox) {
+        const dataHubManagementElementsWrapper = tabPane.querySelector(".existing-datahub-file-checkbox-wrapper");
+        if (!dataHubManagementElementsWrapper) {
+            tabPaneData.isSourceFileInDataHub = false;
             tabPaneData.isExistingDataHubFileUsed = false;
             return tabPaneData;
         }
+        const sourceFileInDataHubInput = tabPane.querySelector("input[name='source_is_file_in_datahub']");
+        const existingDataHubFileCheckbox = tabPane.querySelector("input[name='is_existing_datahub_file_used']");
+        tabPaneData.isSourceFileInDataHub = sourceFileInDataHubInput.checked;
         tabPaneData.isExistingDataHubFileUsed = existingDataHubFileCheckbox.checked;
         return tabPaneData;
     }
@@ -77,14 +84,12 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
         // If a source file is in DataHub,
         // provide options to continue using
         // the file or to upload a new file.
-        console.log("source", source);
-        console.log("source.isSourceFileInDataHub", source.isSourceFileInDataHub);
         if (source.isSourceFileInDataHub) {
             // Update file input element label
-            const fileUploadArea = correspondingTabPane.querySelector(".source-file-option");
-            const fileUploadElement = fileUploadArea.querySelector("input[type='file']");
-            const fileUploadLabel = fileUploadArea.querySelector(`label[for='${fileUploadElement.id}']`);
-            fileUploadLabel.textContent = "Upload a New File";
+            const fileInputWrapper = correspondingTabPane.querySelector(".source-file-option");
+            const fileInputElement = fileInputWrapper.querySelector("input[type='file']");
+            const fileInputLabel = fileInputWrapper.querySelector(`label[for='${fileInputElement.id}']`);
+            fileInputLabel.textContent = "Upload a New File";
             
             // Set existing file usage checkbox
             const useExistingSourceFileCheckbox = correspondingTabPane.querySelector("input[name='is_existing_datahub_file_used']");

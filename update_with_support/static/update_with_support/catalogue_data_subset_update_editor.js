@@ -65,7 +65,7 @@ editorForm.addEventListener("submit", async e => {
 
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
-    addDataHubStatusesToSourcesData();
+    // addDataHubStatusesToSourcesData();
 
     sourcesTab = setupCatalogueDataSubsetUpdateSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");

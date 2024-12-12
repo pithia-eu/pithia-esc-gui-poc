@@ -15,6 +15,14 @@ class CatalogueDataSubsetEditorUpdateForm(CatalogueDataSubsetForm):
         }),
         initial=True
     )
+    
+    source_is_file_in_datahub = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'd-none',
+        }),
+        initial=True,
+    )
 
 
 class WorkflowEditorUpdateForm(WorkflowEditorForm):
