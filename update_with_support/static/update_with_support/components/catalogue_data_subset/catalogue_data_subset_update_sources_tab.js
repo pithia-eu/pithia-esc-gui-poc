@@ -4,15 +4,25 @@ import {
 
 
 class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab {
-    setFileUploadDisplayState(isDisplayed, isRequired, fileInputArea) {
+    setFileUploadDisplayState(isDisplayed, isRequiredAttributeUpdated, fileInputArea) {
         const fileInput = fileInputArea.querySelector("input[type='file']");
+        // Enable/disable file input
+        fileInput.disabled = !isDisplayed;
+
+        // Show/hide file input
         if (isDisplayed) {
             fileInputArea.classList.remove("d-none");
         } else {
             fileInputArea.classList.add("d-none");
         }
 
-        if (isRequired) {
+        if (!isRequiredAttributeUpdated) {
+            return;
+        }
+
+        // Update file input required attribute
+        // if needed.
+        if (isDisplayed) {
             fileInput.required = true;
         } else {
             fileInput.removeAttribute("required");
@@ -67,6 +77,8 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
         // If a source file is in DataHub,
         // provide options to continue using
         // the file or to upload a new file.
+        console.log("source", source);
+        console.log("source.isSourceFileInDataHub", source.isSourceFileInDataHub);
         if (source.isSourceFileInDataHub) {
             // Update file input element label
             const fileUploadArea = correspondingTabPane.querySelector(".source-file-option");
