@@ -4,6 +4,9 @@ import {
 import {
     SourcesTab,
 } from "/static/metadata_editor/components/sources_tab.js";
+import {
+    checkIfEscUrl,
+} from "/static/metadata_editor/components/url_format_checker.js";
 
 
 export class CatalogueDataSubsetSourcesTab extends SourcesTab {
@@ -99,13 +102,8 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         });
     }
 
-    resetSourceNameErrors() {
-        const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
-        sourceNameInputs.forEach(input => input.classList.remove("is-invalid"));
-        const errorLists = this.tabContent.querySelectorAll(".source-name-wrapper .field-error-list");
-        for (const errorList of errorLists) {
-            errorList.replaceChildren();
-        }
+    resetFieldErrorList(errorListElement) {
+        errorListElement.replaceChildren();
     }
 
     addErrorToFieldErrorList(errorText, errorList) {
@@ -113,6 +111,22 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         liElement.className = "form-text text-danger";
         liElement.textContent = errorText;
         errorList.append(liElement);
+    }
+
+    addLoadingTextToFieldErrorList(loadingText, errorList) {
+        const liElement = document.createElement("LI");
+        liElement.className = "form-text";
+        liElement.textContent = loadingText;
+        errorList.append(liElement);
+    }
+
+    resetSourceNameErrors() {
+        const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
+        sourceNameInputs.forEach(input => input.classList.remove("is-invalid"));
+        const errorLists = this.tabContent.querySelectorAll(".source-name-wrapper .field-error-list");
+        for (const errorList of errorLists) {
+            this.resetFieldErrorList(errorList);
+        }
     }
 
     checkSourceNamesAreUnique() {
@@ -146,6 +160,52 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         }
     }
 
+    checkLinkageUrlIsValid(linkageUrl) {
+        const linkageOrFileCheckbox = document.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
+        const linkageOrFileCheckboxLabel = document.querySelector(`label[for="${linkageOrFileCheckbox.id}"]`);
+        try {
+            const isLinkageUrlInternal = checkIfEscUrl(linkageUrl);
+            if (isLinkageUrlInternal) {
+                return {
+                    valid: false,
+                    error: `Please use the file upload functionality (enabled by toggling the "${linkageOrFileCheckboxLabel.textContent.trim()}" switch) to add a file to this online resource.`,
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            return {
+                valid: false,
+                error: "Please enter a URL",
+            };
+        }
+        return {
+            valid: true,
+        };
+    }
+
+    checkLinkageUrlIsValidAndDisplayErrors(linkageInput) {
+        const linkageUrl = linkageInput.value;
+        const closestErrorList = linkageInput.closest("div").querySelector("ul.field-error-list");
+        linkageInput.classList.remove("is-invalid");
+        this.resetFieldErrorList(closestErrorList);
+        if (!linkageUrl.trim()) {
+            return;
+        }
+        const {
+            valid,
+            error
+        } = this.checkLinkageUrlIsValid(linkageUrl);
+        if (valid) {
+            return;
+        }
+        linkageInput.classList.add("is-invalid");
+        this.resetFieldErrorList(closestErrorList);
+        this.addErrorToFieldErrorList(
+            error,
+            closestErrorList
+        );
+    }
+
     setupSourceNameCheckForTabPane(newTabPane) {
         const currentSourceNameInput = newTabPane.querySelector("input[name='source_name']");
         currentSourceNameInput.addEventListener("input", () => {
@@ -154,12 +214,33 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         });
     }
 
+    setupLinkageCheckForTabPane(newTabPane) {
+        const linkageInput = newTabPane.querySelector("input[name='source_linkage']");
+        const closestErrorList = linkageInput.closest("div").querySelector("ul.field-error-list");
+        let linkageInputTimeout;
+        this.checkLinkageUrlIsValidAndDisplayErrors(linkageInput);
+        linkageInput.addEventListener("input", () => {
+            if (linkageInputTimeout) {
+                window.clearTimeout(linkageInputTimeout);
+            }
+            linkageInputTimeout = window.setTimeout(() => {
+                this.checkLinkageUrlIsValidAndDisplayErrors(linkageInput);
+            }, 500);
+            this.resetFieldErrorList(closestErrorList);
+            this.addLoadingTextToFieldErrorList("Checking link...", closestErrorList);
+        });
+    }
+
+    setupTabPaneEventListeners(tabPane) {
+        this.setupSourceNameCheckForTabPane(tabPane);
+        this.setupLinkageCheckForTabPane(tabPane);
+    }
+
     createTabPane(newTabIdPrefix) {
         const newTabPane = super.createTabPane(newTabIdPrefix);
         const sourceFileInput = newTabPane.querySelector("input[name='source_file']");
         sourceFileInput.setAttribute("name", `${sourceFileInput.name}_${this.nextTabNumber}`);
         this.applySourceFileSharingMethodChoiceToTabPane(newTabPane);
-        this.setupSourceNameCheckForTabPane(newTabPane);
         return newTabPane;
     }
 

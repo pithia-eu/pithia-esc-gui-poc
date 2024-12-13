@@ -5,6 +5,9 @@ import {
 import {
     setupWizardManualAndAutoSave,
 } from "/static/metadata_editor/components/editor_manual_and_autosave.js";
+import {
+    checkIfEscUrl,
+} from "/static/metadata_editor/components/url_format_checker.js";
 
 const workflowDetailsFileExistingRadioButton = document.querySelector("input[name='workflow_details_file_source'][value='existing']");
 
@@ -38,12 +41,12 @@ function updateWorkflowDetailsRelatedInputStates(radioButtonValue) {
 
 function validateWorkflowDetailsUrl() {
     try {
-        const workflowDetailsUrl = new URL(workflowDetailsFileExternalTextInput.value);
-        if (workflowDetailsUrl.hostname == 'esc.pithia.eu') {
+        const isWorkflowDetailsUrlInternal = checkIfEscUrl(workflowDetailsFileExternalTextInput.value);
+        if (isWorkflowDetailsUrlInternal) {
             return {
                 valid: false,
                 error: "Please use the provided workflow details file input to register the details file with this workflow.",
-            };
+            }
         }
     } catch (error) {
         console.error(error);
