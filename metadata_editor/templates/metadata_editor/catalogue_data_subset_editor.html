@@ -52,15 +52,19 @@
             </div>
         </div>
         {% endif %}
-        <div class="col-lg-12">
-            <div class="d-flex column-gap-2">
-                <span>Links</span>
+        <div class="col-xl-8 col-lg-12 col-md-8">
+            <div class="d-flex flex-column">
                 <div class="form-check form-switch">
                     {{ form.is_file_uploaded_for_each_online_resource }}
                     <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
                         {{ form.is_file_uploaded_for_each_online_resource.label }}
                     </label>
                 </div>
+                <p class="form-text">
+                    Toggle whether you would like these online
+                    resources to link to files uploaded to the
+                    e-Science Centre, or to external webpages.
+                </p>
             </div>
         </div>
         <div class="col-lg-12">
