@@ -133,5 +133,6 @@ def map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasse
             data_formats=s.get('dataFormats', []),
             file_input_name=s.get('fileInputName'),
             is_existing_datahub_file_used=s.get('isExistingDataHubFileUsed'),
+            datahub_file_name=s.get('dataHubFileName'),
         )
     for s in form_cleaned_data.get('sources_json')]

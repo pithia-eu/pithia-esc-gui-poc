@@ -40,7 +40,10 @@ from handle_management.view_mixins import (
     HandleReapplicationViewMixin,
     HandleRegistrationViewMixin,
 )
-from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
+from metadata_editor.editor_dataclasses import (
+    CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate,
+    PithiaIdentifierMetadataUpdate,
+)
 from metadata_editor.form_utils import map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.services import SimpleCatalogueDataSubsetEditor
@@ -265,8 +268,12 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
 
-    def _process_online_resource_file_choices(self, online_resource):
+    def _process_online_resource_file_choices(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if online_resource.is_existing_datahub_file_used:
+            self.rename_online_resource_file(
+                online_resource.datahub_file_name,
+                online_resource.name
+            )
             self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
                 online_resource.name,
                 self.xml_string

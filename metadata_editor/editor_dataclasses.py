@@ -141,6 +141,7 @@ class CatalogueDataSubsetSourceMetadataUpdate(SourceMetadataUpdate):
 @dataclass(kw_only=True)
 class CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(CatalogueDataSubsetSourceMetadataUpdate):
     is_existing_datahub_file_used: Optional[bool] = False
+    datahub_file_name: Optional[str] = None
 
 
 @dataclass(kw_only=True)

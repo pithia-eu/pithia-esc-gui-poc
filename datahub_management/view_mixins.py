@@ -1,4 +1,5 @@
 import os
+import pathlib
 from django.urls import reverse_lazy
 
 from .services import (
@@ -89,4 +90,15 @@ class CatalogueDataSubsetDataHubViewMixin:
         return self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
             online_resource_name,
             xml_file_string
+        )
+
+    def rename_online_resource_file(
+            self,
+            current_file_name: str,
+            new_file_name_no_extension: str):
+        current_file_name_no_extension = pathlib.Path(current_file_name).stem
+        return CatalogueDataSubsetDataHubService.rename_catalogue_data_subset_resource_file(
+            self.resource_id,
+            current_file_name_no_extension,
+            new_file_name_no_extension
         )
