@@ -3,6 +3,7 @@ import os
 import pathlib
 import shutil
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.text import slugify
 
 from pithiaesc.settings import BASE_DIR
 
@@ -87,7 +88,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             resource_name_with_no_extension: str):
         catalogue_data_subset_resource_file_paths = pathlib.Path(
             cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id)
-        ).glob(f'{resource_name_with_no_extension}.*')
+        ).glob(f'{slugify(resource_name_with_no_extension)}.*')
         file_path = None
         for cds_resource_file_path in catalogue_data_subset_resource_file_paths:
             file_path = cds_resource_file_path
@@ -103,7 +104,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         return cls._store_or_overwrite_file_in_datahub(
             os.path.join(
                 cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id),
-                f'{new_file_name}{file_extension}'
+                f'{slugify(new_file_name)}{file_extension}'
             ),
             file
         )
