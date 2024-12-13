@@ -232,6 +232,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
     }
 
     setupTabPaneEventListeners(tabPane) {
+        super.setupTabPaneEventListeners(tabPane);
         this.setupSourceNameCheckForTabPane(tabPane);
         this.setupLinkageCheckForTabPane(tabPane);
     }
