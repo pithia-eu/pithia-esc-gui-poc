@@ -15,13 +15,10 @@ class CatalogueDataSubsetEditorUpdateForm(CatalogueDataSubsetForm):
         }),
         initial=True
     )
-    
-    source_is_file_in_datahub = forms.BooleanField(
+
+    source_datahub_file_name = forms.CharField(
         required=False,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'd-none',
-        }),
-        initial=True,
+        widget=forms.HiddenInput()
     )
 
 

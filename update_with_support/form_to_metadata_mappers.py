@@ -1,4 +1,5 @@
 import logging
+import os
 
 from .form_to_metadata_mapper_components import (
     BaseMetadataFormFieldsToMetadataMixin,
@@ -338,13 +339,15 @@ class CatalogueDataSubsetFormFieldsToMetadataMapper(
             catalogue_data_subset_id,
             source.get('name')
         )
-        if source_file_in_datahub:
-            source.update({
-                'linkage': '',
-            })
         source.update({
-            'isSourceFileInDataHub': source_file_in_datahub is not None,
+            'dataHubFileName': '',
             'isExistingDataHubFileUsed': source_file_in_datahub is not None,
+        })
+        if not source_file_in_datahub:
+            return source
+        source.update({
+            'dataHubFileName': os.path.basename(source_file_in_datahub.name),
+            'linkage': '',
         })
         return source
 
