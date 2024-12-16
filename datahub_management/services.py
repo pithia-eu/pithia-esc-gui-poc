@@ -4,6 +4,7 @@ import pathlib
 import shutil
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.text import slugify
+from typing import List
 
 from pithiaesc.settings import BASE_DIR
 
@@ -148,9 +149,9 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         )
         directory_items = os.listdir(catalogue_data_subset_directory_path)
         files = [
-            cls._get_file_from_datahub(os.path.join(catalogue_data_subset_directory_path, f))
-            for f in directory_items
-            if os.path.isfile(os.path.join(catalogue_data_subset_directory_path, f))
+            cls._get_file_from_datahub(os.path.join(catalogue_data_subset_directory_path, file_name))
+            for file_name in directory_items
+            if os.path.isfile(os.path.join(catalogue_data_subset_directory_path, file_name))
         ]
         return files
 
@@ -168,3 +169,18 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False))
         except OSError as err:
             logger.exception(err)
+
+    @classmethod
+    def delete_unused_catalogue_data_subset_resource_files(cls, catalogue_data_subset_id: str, names_of_used_files: List[str]):
+        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path(
+            catalogue_data_subset_id
+        )
+        directory_items = os.listdir(catalogue_data_subset_directory_path)
+        for file_name in directory_items:
+            if file_name in names_of_used_files:
+                continue
+            file_name_no_extension = pathlib.Path(file_name).stem
+            cls.delete_catalogue_data_subset_resource_file(
+                catalogue_data_subset_id,
+                file_name_no_extension
+            )

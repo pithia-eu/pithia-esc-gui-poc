@@ -1,6 +1,7 @@
 import os
 import pathlib
 from django.urls import reverse_lazy
+from typing import List
 
 from .services import (
     CatalogueDataSubsetDataHubService,
@@ -101,4 +102,10 @@ class CatalogueDataSubsetDataHubViewMixin:
             self.resource_id,
             current_file_name_no_extension,
             new_file_name_no_extension
+        )
+
+    def delete_unused_online_resource_files(self, names_of_used_files: List[str]):
+        return CatalogueDataSubsetDataHubService.delete_unused_catalogue_data_subset_resource_files(
+            self.resource_id,
+            names_of_used_files
         )

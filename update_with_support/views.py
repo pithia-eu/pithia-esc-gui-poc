@@ -268,20 +268,31 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
 
+    def _delete_unused_online_resource_files(self):
+        names_of_used_online_resource_files = [
+            source.datahub_file_name
+            for source in self.valid_sources
+            if source.datahub_file_name.strip()
+        ]
+        return self.delete_unused_online_resource_files(names_of_used_online_resource_files)
+
     def _process_online_resource_file_choices(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
-        if online_resource.is_existing_datahub_file_used:
-            self.rename_online_resource_file(
-                online_resource.datahub_file_name,
-                online_resource.name
-            )
-            self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
-                online_resource.name,
-                self.xml_string
-            )
-            return
-        return super()._process_online_resource_file_choices(online_resource)
+        if not online_resource.is_existing_datahub_file_used:
+            # If not using an existing file in DataHub
+            # use the newly uploaded file.
+            return super()._process_online_resource_file_choices(online_resource)
+        self.rename_online_resource_file(
+            online_resource.datahub_file_name,
+            online_resource.name
+        )
+        self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+            online_resource.name,
+            self.xml_string
+        )
+        return
 
     def run_extra_actions_before_update(self):
+        self._delete_unused_online_resource_files()
         self._process_online_resources()
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()
