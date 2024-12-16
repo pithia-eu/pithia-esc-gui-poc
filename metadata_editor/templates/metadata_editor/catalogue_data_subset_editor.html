@@ -60,8 +60,15 @@
                         {{ form.is_file_uploaded_for_each_online_resource.label }}
                     </label>
                 </div>
-                <p class="form-text">
+                <p class="form-text mb-0">
                     {{ form.is_file_uploaded_for_each_online_resource.help_text }}
+                </p>
+                <p class="form-text">
+                    <strong>
+                        Note: Files uploaded to the wizard are not saved in the
+                        browser like other wizard data, and will not be loaded
+                        back in if you leave and re-open the wizard.
+                    </strong>
                 </p>
             </div>
         </div>
