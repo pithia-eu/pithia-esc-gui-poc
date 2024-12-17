@@ -3,6 +3,8 @@
 {% if field.help_text %}
 <div class="form-text">{{ field.help_text }}</div>
 {% endif %}
-{% for error in field.errors %}
-<div class="form-text text-danger">{{ error }}</div>
-{% endfor %}
+<ul class="d-flex-inline row-gap-1 list-unstyled field-error-list mb-0">
+    {% for error in field.errors %}
+    <li class="form-text text-danger">{{ error }}</li>
+    {% endfor %}
+</ul>

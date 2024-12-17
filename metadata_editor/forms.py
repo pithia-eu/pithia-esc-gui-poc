@@ -672,8 +672,19 @@ class CatalogueDataSubsetForm(
         label='Generate a DOI for this Data Subset',
         required=False,
         widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
+            'class': 'form-check-input',
         })
+    )
+
+    is_file_uploaded_for_each_online_resource = forms.BooleanField(
+        label='Upload Files for Each Online Resource',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+            'role': 'switch',
+        }),
+        help_text='Toggle whether you would like these online resources to link to files uploaded to the e-Science Centre, or to external webpages.',
+        initial=True
     )
 
 

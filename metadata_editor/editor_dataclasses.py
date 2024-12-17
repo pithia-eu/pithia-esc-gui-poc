@@ -134,6 +134,15 @@ class SourceMetadataUpdate:
     description: Optional[str] = None
     data_formats: Optional[list[str]] = field(default_factory=list)
 
+@dataclass(kw_only=True)
+class CatalogueDataSubsetSourceMetadataUpdate(SourceMetadataUpdate):
+    file_input_name: Optional[str] = None
+
+@dataclass(kw_only=True)
+class CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(CatalogueDataSubsetSourceMetadataUpdate):
+    is_existing_datahub_file_used: Optional[bool] = False
+    datahub_file_name: Optional[str] = None
+
 
 @dataclass(kw_only=True)
 class StandardIdentifierMetadataUpdate:

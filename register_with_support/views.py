@@ -19,6 +19,7 @@ from common import models
 from handle_management.view_mixins import HandleRegistrationViewMixin
 from metadata_editor.editor_dataclasses import PithiaIdentifierMetadataUpdate
 from metadata_editor.views import *
+from validation.file_wrappers import XMLMetadataFile
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
@@ -44,6 +45,9 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
 
     def run_registration_actions(self, request):
         return self.register_xml_string()
+
+    def run_actions_on_registration_failure(self):
+        pass
 
     def add_form_data_to_metadata_editor(self, metadata_editor: BaseMetadataEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -104,20 +108,19 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             registration_name = form.cleaned_data.get('name', '')
             self.resource = self.run_registration_actions(self.request)
             messages.success(self.request, f'Successfully registered {escape(registration_name)}.')
+            return super().form_valid(form)
         except ExpatError as err:
             logger.exception('Expat error occurred during registration process.')
             messages.error(self.request, f'There was a problem during XML generation. Please report this error to our support team.')
-            return self.render_to_response(self.get_context_data(form=form))
         except IntegrityError as err:
             logger.exception('The local ID submitted is already in use.')
             messages.error(self.request, 'The local ID submitted is already in use.')
-            return self.render_to_response(self.get_context_data(form=form))
         except BaseException as err:
             logger.exception('An unexpected error occurred during registration.')
             messages.error(self.request, 'An unexpected error occurred during registration.')
-            return self.render_to_response(self.get_context_data(form=form))
+        self.run_actions_on_registration_failure()
+        return self.render_to_response(self.get_context_data(form=form))
         
-        return super().form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -375,8 +378,31 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
     file_upload_registration_url = reverse_lazy('register:catalogue_data_subset')
     save_data_local_storage_key = 'catalogue_data_subset_r_wizard_save_data'
 
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def run_registration_actions(self, request):
+        wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
+        self.resource_id = wrapped_xml_file.localid
+        self._process_online_resources()
+        new_registration = self.register_xml_string()
+        return new_registration
+
+    def run_actions_on_registration_failure(self):
+        try:
+            self.delete_catalogue_data_subset_directory()
+        except FileNotFoundError:
+            logger.exception(f'A DataHub directory for Catalogue Data Subset {self.resource_id} was not found.')
+        return super().run_actions_on_registration_failure()
+
     def form_valid(self, form):
+        self.source_files = self.request.FILES
+        if not self.check_source_names(form):
+            form.add_error('sources_json', 'Online resource names must be unique.')
+            return self.form_invalid(form)
+        
+        self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         response = super().form_valid(form)
+        # If statement is in case self.resource
+        # has not been set for some reason.
         if not hasattr(self, 'resource'):
             return response
         self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
@@ -409,11 +435,20 @@ class WorkflowRegisterWithEditorFormView(
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request):
+        wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
+        self.resource_id = wrapped_xml_file.localid
         if hasattr(self, 'workflow_details_file'):
             self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(self.xml_string)
         new_registration = self.register_xml_string()
         self.register_workflow_api_interaction_method(request, new_registration)
         return new_registration
+
+    def run_actions_on_registration_failure(self):
+        try:
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file already deleted.')
+        return super().run_actions_on_registration_failure()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

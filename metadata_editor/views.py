@@ -15,6 +15,7 @@ from .editor_dataclasses import (
 )
 from .forms import *
 from .form_utils import (
+    map_catalogue_data_subset_sources_to_dataclasses,
     map_input_descriptions_to_dataclasses,
     map_processing_inputs_to_dataclasses,
     map_sources_to_dataclasses,
@@ -42,7 +43,10 @@ from .view_mixins import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
+from datahub_management.view_mixins import (
+    CatalogueDataSubsetDataHubViewMixin,
+    WorkflowDataHubViewMixin,
+)
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -890,6 +894,7 @@ class CatalogueEntryEditorFormView(
 
 
 class CatalogueDataSubsetEditorFormView(
+    CatalogueDataSubsetDataHubViewMixin,
     CatalogueRelatedEditorFormViewMixin,
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
@@ -903,6 +908,24 @@ class CatalogueDataSubsetEditorFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    
+    def get_sources_tab_pane_content_template_path(self):
+        return 'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html'
+
+    def get_sources_tab_pane_content_template(self, context):
+        return render_to_string(
+            self.get_sources_tab_pane_content_template_path(),
+            context=context
+        )
+
+    def map_sources_to_dataclasses(
+            self,
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource):
+        return map_catalogue_data_subset_sources_to_dataclasses(
+            form_cleaned_data,
+            is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
+        )
 
     def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueDataSubsetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -923,7 +946,12 @@ class CatalogueDataSubsetEditorFormView(
             form_cleaned_data.get('metadata_quality_flags'),
             is_max_occurs_unbounded=False
         )
-        metadata_editor.update_sources(map_sources_to_dataclasses(form_cleaned_data))
+        self.valid_sources = metadata_editor.update_sources(
+            self.map_sources_to_dataclasses(
+                form_cleaned_data,
+                is_file_uploaded_for_each_online_resource=form_cleaned_data.get('is_file_uploaded_for_each_online_resource')
+            )
+        )
 
     def get_catalogue_entry_choices_for_form(self):
         catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
@@ -982,13 +1010,58 @@ class CatalogueDataSubsetEditorFormView(
 
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
-    
+
+    def _process_online_resource_file_choices(self, online_resource):
+        online_resource_file = self.source_files.get(online_resource.file_input_name)
+        self.xml_string = self.store_online_resource_file_and_update_catalogue_data_subset_xml_file_string(
+            online_resource_file,
+            online_resource.name,
+            self.xml_string
+        )
+
+    def _process_online_resources(self):
+        if not self.is_file_uploaded_for_each_online_resource:
+            # If using linkages, remove any files
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        if not hasattr(self, 'valid_sources'):
+            # If self.valid_sources not set, remove
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        if not self.valid_sources:
+            # If self.valid_sources is empty, remove
+            # the catalogue data subset directory
+            # as it shouldn't be needed anymore.
+            return self.delete_catalogue_data_subset_directory()
+        # Store each valid source file and
+        # update XML string.
+        for source in self.valid_sources:
+            self._process_online_resource_file_choices(source)
+        return None
+
+    def check_source_names(self, form):
+        try:
+            source_names = [
+                source.get('name', '')
+                for source in form.cleaned_data.get('sources_json')
+                if source.get('name', '')
+            ]
+            source_names_normalised = set(
+                source_name.lower().strip()
+                for source_name in source_names
+            )
+            return len(source_names) == len(source_names_normalised)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred.')
+            return False
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sources_tab_pane_content_template'] = render_to_string(
-            'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html',
-            context=context
-        )
+        context['sources_tab_pane_content_template_path'] = self.get_sources_tab_pane_content_template_path()
+        context['sources_tab_pane_content_template'] = self.get_sources_tab_pane_content_template(context)
         return context
 
     def get_form_kwargs(self):

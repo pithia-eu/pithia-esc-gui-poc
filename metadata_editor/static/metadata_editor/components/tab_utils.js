@@ -189,9 +189,15 @@ export class DynamicEditorTab {
     
         this.disableFirstRemoveTabAndTabPaneButtonIfOnlyOneTab();
     
+        const tabPaneControls = Array.from(newTabPane.querySelectorAll("input, textarea, select"));
         const selects = Array.from(newTabPane.querySelectorAll("select:not([multiple])"));
         const multipleChoiceSelects = Array.from(newTabPane.querySelectorAll("select[multiple]"));
 
+        if (tabPaneControls.length > 0) {
+            tabPaneControls.forEach(control => {
+                control.value = "";
+            });
+        }
         if (selects.length > 0) {
             window.dispatchEvent(new CustomEvent("newSelectsAdded", {
                 detail: selects.map(select => select.id),
@@ -206,7 +212,7 @@ export class DynamicEditorTab {
         return newTabPane;
     }
 
-    createTabOnClickActions() {
+    createTabOnClickActions(newTabPane) {
         this.incrementNumberOfNewTabs();
         this.exportExtraTabData();
     }

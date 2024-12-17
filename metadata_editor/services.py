@@ -442,28 +442,6 @@ class CatalogueEntryEditor(
         self.update_time_period(update_data, phenomenon_time_key)
 
 
-class SimpleMetadataEditor:
-    def __init__(self, xml_string: str) -> None:
-        self.xml_string = xml_string
-        self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
-
-    def to_xml(self):
-        return etree.tostring(self.xml_string_parsed, pretty_print=True).decode()
-
-
-class SimpleCatalogueDataSubsetEditor(SimpleMetadataEditor):
-    def update_referent_doi_name(self, referent_doi_name: str):
-        doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
-        referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
-        referent_doi_name_element.text = referent_doi_name
-
-
-class SimpleWorkflowEditor(SimpleMetadataEditor):
-    def update_workflow_details_url(self, workflow_details_url: str):
-        workflow_details_element = self.xml_string_parsed.find('{%s}workflowDetails' % Namespace.PITHIA)
-        workflow_details_element.set('{%s}href' % Namespace.XLINK, workflow_details_url)
-
-
 class CatalogueDataSubsetEditor(
     BaseMetadataEditor,
     DataLevelMetadataEditor,
@@ -501,7 +479,7 @@ class CatalogueDataSubsetEditor(
         self.update_time_period(update_data, result_time_key)
 
     def update_sources(self, update_data: list[SourceMetadataUpdate]):
-        self._update_sources(self.metadata_dict, update_data)
+        return self._update_sources(self.metadata_dict, update_data)
 
     def update_doi_kernel_metadata(self, update_data: DoiKernelMetadataUpdate):
         self.metadata_dict['doi'] = {
@@ -563,3 +541,48 @@ class WorkflowEditor(
             'workflowDetails',
             self.get_as_xlink_href(url)
         )
+
+
+class SimpleMetadataEditor:
+    def __init__(self, xml_string: str) -> None:
+        self.xml_string = xml_string
+        self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
+        self.PITHIA_NS_PREFIX = 'PITHIA'
+        self.namespaces = {
+            self.PITHIA_NS_PREFIX: Namespace.PITHIA,
+            NamespacePrefix.GMD: Namespace.GMD,
+        }
+
+    def to_xml(self):
+        return etree.tostring(self.xml_string_parsed, pretty_print=True).decode()
+
+
+class SimpleCatalogueDataSubsetEditor(SimpleMetadataEditor):
+    def update_online_resource_url(self, online_resource_name: str, online_resource_url: str):
+        corresponding_linkage_elements = self.xml_string_parsed.xpath(
+            './/%s:source/%s:OnlineResource[%s:name[contains(text(), "%s")]]/%s:linkage/%s:URL'
+            % (
+                self.PITHIA_NS_PREFIX,
+                self.PITHIA_NS_PREFIX,
+                self.PITHIA_NS_PREFIX,
+                online_resource_name,
+                self.PITHIA_NS_PREFIX,
+                NamespacePrefix.GMD,
+            ),
+            namespaces=self.namespaces
+        )
+        corresponding_linkage_element = next(iter(corresponding_linkage_elements), None)
+        if corresponding_linkage_element is None:
+            return
+        corresponding_linkage_element.text = online_resource_url
+
+    def update_referent_doi_name(self, referent_doi_name: str):
+        doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
+        referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
+        referent_doi_name_element.text = referent_doi_name
+
+
+class SimpleWorkflowEditor(SimpleMetadataEditor):
+    def update_workflow_details_url(self, workflow_details_url: str):
+        workflow_details_element = self.xml_string_parsed.find('{%s}workflowDetails' % Namespace.PITHIA)
+        workflow_details_element.set('{%s}href' % Namespace.XLINK, workflow_details_url)

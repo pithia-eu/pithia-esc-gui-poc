@@ -601,11 +601,20 @@ class SourceMetadataFormComponent(forms.Form):
 
     source_linkage = forms.URLField(
         required=False,
-        label='Linkage',
+        label='Link to Online Resource',
         widget=forms.URLInput(attrs={
             'placeholder': 'https://',
         }),
         help_text='A location (address) for online access using a Uniform Resource Locator/Uniform Resource Identifier address.'
+    )
+
+    source_file = forms.FileField(
+        required=False,
+        label='File',
+        widget=forms.FileInput(attrs={
+            'accept': 'application/xml',
+            'class': 'form-control',
+        })
     )
 
     source_name = forms.CharField(

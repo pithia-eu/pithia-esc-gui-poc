@@ -1,3 +1,17 @@
+{% extends 'metadata_editor/components/sources_tab_pane_content_template.html' %}
+{% block extra_row_classes %}{% endblock extra_row_classes %}
+{% block custom_summary_text %}
 {% with custom_summary_text='Adding information on an online resource is optional. If you would like to add this, the name, linkage and protocol for the online resource must be provided.' %}
-{% include 'metadata_editor/components/sources_tab_pane_content_template.html' %}
+<div class="col-xl-9 col-lg-12">
+    {% include 'metadata_editor/components/conditional_required_field_info_template.html' %}
+</div>
 {% endwith %}
+{% endblock custom_summary_text %}
+{% block source_file %}
+<!-- File -->
+<div class="source-file-wrapper">
+    {% with field=form.source_file %}
+    {% include 'metadata_editor/components/form_field_template.html' %}
+    {% endwith %}
+</div>
+{% endblock source_file %}

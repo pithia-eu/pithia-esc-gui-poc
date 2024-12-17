@@ -2,6 +2,8 @@ import json
 import logging
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
+    CatalogueDataSubsetSourceMetadataUpdate,
+    CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate,
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
@@ -104,5 +106,33 @@ def map_sources_to_dataclasses(form_cleaned_data):
             protocol=s.get('protocol'),
             description=s.get('description'),
             data_formats=s.get('dataFormats', [])
+        )
+    for s in form_cleaned_data.get('sources_json')]
+
+def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
+    return [
+        CatalogueDataSubsetSourceMetadataUpdate(
+            service_functions=s.get('serviceFunctions', []),
+            linkage='TEMP_LINKAGE_URL' if is_file_uploaded_for_each_online_resource else s.get('linkage'),
+            name=s.get('name'),
+            protocol=s.get('protocol'),
+            description=s.get('description'),
+            data_formats=s.get('dataFormats', []),
+            file_input_name=s.get('fileInputName')
+        )
+    for s in form_cleaned_data.get('sources_json')]
+
+def map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
+    return [
+        CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(
+            service_functions=s.get('serviceFunctions', []),
+            linkage='TEMP_LINKAGE_URL' if is_file_uploaded_for_each_online_resource else s.get('linkage'),
+            name=s.get('name'),
+            protocol=s.get('protocol'),
+            description=s.get('description'),
+            data_formats=s.get('dataFormats', []),
+            file_input_name=s.get('fileInputName'),
+            is_existing_datahub_file_used=s.get('isExistingDataHubFileUsed'),
+            datahub_file_name=s.get('dataHubFileName'),
         )
     for s in form_cleaned_data.get('sources_json')]

@@ -1,0 +1,11 @@
+{% extends 'delete/confirm_delete_resource.html' %}
+{% load project_tags %}
+{% load static %}
+{% block extra_information %}
+{% if is_datahub_used %}
+<p class="alert alert-warning mb-0">
+    The online resource files stored in the e-Science Centre
+    will also be deleted.
+</p>
+{% endif %}
+{% endblock extra_information %}

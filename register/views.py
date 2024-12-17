@@ -29,6 +29,7 @@ from user_management.services import (
     get_user_id_for_login_session,
     get_institution_id_for_login_session,
 )
+from validation.file_wrappers import XMLMetadataFile
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
 
@@ -371,10 +372,17 @@ class WorkflowRegisterFormView(
     def run_actions_on_registration_failure(self):
         if not hasattr(self, 'resource_id'):
             return
-        return self.delete_workflow_details_file()
+        try:
+            self.delete_workflow_details_file()
+        except FileNotFoundError:
+            logger.exception('Workflow details file already deleted.')
+        return super().run_actions_on_registration_failure()
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request, xml_file):
+        wrapped_xml_file = XMLMetadataFile.from_file(xml_file)
+        self.resource_id = wrapped_xml_file.localid
+        xml_file.seek(0)
         if not hasattr(self, 'workflow_details_file'):
             new_registration = self.register_xml_file(xml_file)
             self.register_workflow_api_interaction_method(request, new_registration)

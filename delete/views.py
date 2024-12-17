@@ -15,7 +15,10 @@ from common.decorators import (
     institution_ownership_required,
 )
 from common.models import ScientificMetadata
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
+from datahub_management.view_mixins import (
+    CatalogueDataSubsetDataHubViewMixin,
+    WorkflowDataHubViewMixin,
+)
 from resource_management.views import (
     _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title,
@@ -120,20 +123,6 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
         return context
-
-    def post(self, request, *args, **kwargs):
-        self.resource_to_delete = get_object_or_404(self.model, pk=self.resource_id)
-
-        try:
-            self.other_resources_to_delete = self.resource_to_delete.metadata_dependents
-            self.all_resources_to_delete = [self.resource_to_delete] + self.other_resources_to_delete
-            self.all_resource_urls_to_delete = list(set([resource.metadata_server_url for resource in self.all_resources_to_delete]))
-            ScientificMetadata.objects.delete_by_metadata_server_urls(self.all_resource_urls_to_delete)
-            messages.success(request, f'Successfully deleted {escape(self.resource_to_delete.name)}.')
-        except BaseException as e:
-            logger.exception(e)
-            messages.error(request, 'An error occurred during resource deletion.')
-        return HttpResponseRedirect(self.redirect_url)
 
 
 class OrganisationDeleteView(ResourceDeleteView):
@@ -309,16 +298,31 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
 
 
-class CatalogueDataSubsetDeleteView(CatalogueRelatedResourceDeleteView):
-    """
-    The deletion confirmation page for a Catalogue
+class CatalogueDataSubsetDeleteView(
+        CatalogueDataSubsetDataHubViewMixin,
+        CatalogueRelatedResourceDeleteView):
+    """The deletion confirmation page for a Catalogue
     Data Subset registration.
     """
+    template_name = 'delete/confirm_delete_catalogue_data_subset.html'
     model = models.CatalogueDataSubset
 
     redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def run_delete_actions(self):
+        super().run_delete_actions()
+        try:
+            self.delete_catalogue_data_subset_directory()
+        except FileNotFoundError:
+            logger.exception(f'The directory for Catalogue Data Subset {self.resource_id} has already been deleted.')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_datahub_used'] = self.is_catalogue_data_subset_directory_created()
+        return context
 
 
 class WorkflowDeleteView(ResourceDeleteView, WorkflowDataHubViewMixin):

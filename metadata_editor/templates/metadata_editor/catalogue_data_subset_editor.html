@@ -4,6 +4,7 @@
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 <script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
+{% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}
 {% block form_content %}
 {% include 'metadata_editor/components/name_and_organisation_section.html' %}
 <hr class="my-5">
@@ -33,7 +34,65 @@
 <hr class="my-5">
 {% include 'metadata_editor/components/catalogue_data_subset/result_time.html' %}
 <hr class="my-5">
-{% include 'metadata_editor/components/catalogue_data_subset/sources_section.html' %}
+<section id="sources-section">
+    <div class="row gy-4">
+        <div class="col-lg-12">
+            <h2 class="mb-0">
+                Online Resources
+            </h2>
+        </div>
+        {% if form.sources_json.errors %}
+        <div class="col-lg-12">
+            <div class="alert alert-danger">
+                <ul class="list-unstyled mb-0">
+                    {% for error in form.sources_json.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-xl-8 col-lg-12 col-md-8">
+            <div class="d-flex flex-column">
+                <div class="form-check form-switch">
+                    {{ form.is_file_uploaded_for_each_online_resource }}
+                    <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
+                        {{ form.is_file_uploaded_for_each_online_resource.label }}
+                    </label>
+                </div>
+                <p class="form-text mb-0">
+                    {{ form.is_file_uploaded_for_each_online_resource.help_text }}
+                </p>
+                <p class="form-text">
+                    <strong>
+                        Note: Files uploaded to the wizard are not saved in the
+                        browser like other wizard data, and will not be loaded
+                        back in if you leave and re-open the wizard.
+                    </strong>
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs" id="sources-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="s1-tab" data-bs-toggle="tab" data-bs-target="#s1-tab-pane" type="button" role="tab" aria-controls="s1-tab-pane" aria-selected="true">Online Resource 1</button>
+                </li>
+                <li class="nav-item create-tab" role="presentation">
+                    <button class="nav-link" type="button">
+                        + Add Online Resource
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="sources-tab-content">
+                <div class="tab-pane fade show active" id="s1-tab-pane" role="tabpanel" aria-labelledby="s1-tab" tabindex="0">
+                    {% include sources_tab_pane_content_template_path %}
+                </div>
+            </div>
+            {{ form.sources_json }}
+            {{ form.sources_extra_json }}
+        </div>
+    </div>
+</section>
 <hr class="my-5">
 {% include 'metadata_editor/components/data_levels.html' %}
 <hr class="my-5">
