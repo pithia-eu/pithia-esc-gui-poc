@@ -88,7 +88,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             catalogue_data_subset_id: str,
             resource_name_with_no_extension: str):
         catalogue_data_subset_resource_file_paths = pathlib.Path(
-            cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id)
+            cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False)
         ).glob(f'{slugify(resource_name_with_no_extension)}.*')
         file_path = None
         for cds_resource_file_path in catalogue_data_subset_resource_file_paths:
