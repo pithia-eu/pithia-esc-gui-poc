@@ -612,7 +612,6 @@ class SourceMetadataFormComponent(forms.Form):
         required=False,
         label='File',
         widget=forms.FileInput(attrs={
-            'accept': 'application/xml',
             'class': 'form-control',
         })
     )
