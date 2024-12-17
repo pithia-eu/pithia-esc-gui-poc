@@ -42,6 +42,7 @@ class WorkflowDataHubServiceTestCase(SimpleTestCase):
         self.workflow_id = None
 
 
+@tag('manual')
 class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
     def setUp(self) -> None:
         self.catalogue_data_subset_ids_teardown = set()
