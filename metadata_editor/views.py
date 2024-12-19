@@ -1019,36 +1019,6 @@ class CatalogueDataSubsetEditorFormView(
     def get_data_format_choices_for_form(self):
         return self.get_choices_from_ontology_category('resultDataFormat')
 
-    def _process_online_resource_file_choices(self, online_resource):
-        online_resource_file = self.source_files.get(online_resource.file_input_name)
-        self.xml_string = self.store_online_resource_file_and_update_catalogue_data_subset_xml_file_string(
-            online_resource_file,
-            online_resource.name,
-            self.xml_string
-        )
-
-    def _process_online_resources(self):
-        if not self.is_file_uploaded_for_each_online_resource:
-            # If using linkages, remove any files
-            # the catalogue data subset directory
-            # as it shouldn't be needed anymore.
-            return self.delete_catalogue_data_subset_directory()
-        if not hasattr(self, 'valid_sources'):
-            # If self.valid_sources not set, remove
-            # the catalogue data subset directory
-            # as it shouldn't be needed anymore.
-            return self.delete_catalogue_data_subset_directory()
-        if not self.valid_sources:
-            # If self.valid_sources is empty, remove
-            # the catalogue data subset directory
-            # as it shouldn't be needed anymore.
-            return self.delete_catalogue_data_subset_directory()
-        # Store each valid source file and
-        # update XML string.
-        for source in self.valid_sources:
-            self._process_online_resource_file_choices(source)
-        return None
-
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceMetadataUpdate):
         return self.source_files.get(online_resource.file_input_name)
 

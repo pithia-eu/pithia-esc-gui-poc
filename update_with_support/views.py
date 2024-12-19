@@ -280,21 +280,6 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         ]
         return self.delete_unused_online_resource_files(names_of_used_online_resource_files)
 
-    def _process_online_resource_file_choices(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
-        if not online_resource.is_existing_datahub_file_used:
-            # If not using an existing file in DataHub
-            # use the newly uploaded file.
-            return super()._process_online_resource_file_choices(online_resource)
-        self.rename_online_resource_file(
-            online_resource.datahub_file_name,
-            online_resource.name
-        )
-        self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
-            online_resource.name,
-            self.xml_string
-        )
-        return
-
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
