@@ -346,7 +346,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def form_valid(self, form):
         self.source_files = self.request.FILES
         if not self.check_source_names(form):
-            form.add_error('sources_json', 'Online resource names must be unique.')
+            form.add_error('sources_json', self.SIMILAR_SOURCE_NAMES_ERROR)
             return self.form_invalid(form)
 
         self.current_resource_xml = self.resource.xml

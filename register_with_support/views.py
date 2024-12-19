@@ -402,7 +402,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
     def form_valid(self, form):
         self.source_files = self.request.FILES
         if not self.check_source_names(form):
-            form.add_error('sources_json', 'Online resource names must be unique.')
+            form.add_error('sources_json', self.SIMILAR_SOURCE_NAMES_ERROR)
             return self.form_invalid(form)
         
         self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')

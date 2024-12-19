@@ -914,6 +914,8 @@ class CatalogueDataSubsetEditorFormView(
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+
+    SIMILAR_SOURCE_NAMES_ERROR = 'Some online resource names are too similar to each other. Please update the names highlighted below.'
     
     def get_sources_tab_pane_content_template_path(self):
         return 'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html'
@@ -1098,7 +1100,7 @@ class CatalogueDataSubsetEditorFormView(
                 if source.get('name', '')
             ]
             source_names_normalised = set(
-                source_name.lower().strip()
+                slugify(source_name)
                 for source_name in source_names
             )
             return len(source_names) == len(source_names_normalised)
