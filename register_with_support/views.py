@@ -386,6 +386,10 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
             self.resource_id = wrapped_xml_file.localid
             self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
             new_registration = self.register_xml_string()
+            self.copy_temporary_directory_to_datahub(
+                temp_dirname,
+                self.get_catalogue_data_subset_datahub_directory_path()
+            )
             return new_registration
 
     def run_actions_on_registration_failure(self):

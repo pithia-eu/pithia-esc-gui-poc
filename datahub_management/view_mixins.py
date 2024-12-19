@@ -42,10 +42,16 @@ class CatalogueDataSubsetDataHubViewMixin:
     def is_catalogue_data_subset_directory_created(self):
         return CatalogueDataSubsetDataHubService.is_catalogue_data_subset_directory_created(self.resource_id)
 
-    def get_online_resource_file_for_catalogue_data_subset(self, online_resource_name):
+    def get_catalogue_data_subset_datahub_directory_path(self):
+        return CatalogueDataSubsetDataHubService._get_catalogue_data_subset_directory_path(
+            self.resource_id,
+            create_if_not_exists=False
+        )
+
+    def get_online_resource_file_for_catalogue_data_subset_by_file_name(self, file_name_no_extension: str):
         return CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
             self.resource_id,
-            online_resource_name
+            file_name_no_extension
         )
 
     def get_online_resource_files_for_catalogue_data_subset(self):

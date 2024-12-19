@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -8,6 +9,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.html import escape
 from django.utils.text import slugify
 from django.views.generic import FormView
+from pathlib import Path
 
 from .editor_dataclasses import (
     CatalogueDataSubsetSourceMetadataUpdate,
@@ -1069,7 +1071,7 @@ class CatalogueDataSubsetEditorFormView(
             online_resource_name = online_resource.name
             # Add links to each online resource source
             # file in the XML.
-            self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+            self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
                 online_resource_name,
                 self.xml_string
             )
@@ -1077,6 +1079,16 @@ class CatalogueDataSubsetEditorFormView(
             # Add the source files to a temporary directory,
             # preparing them to move all at once to DataHub.
             self.configure_and_add_source_file_to_temporary_directory(online_resource, temporary_directory_path)
+
+    # Credit: https://stackoverflow.com/a/60430804
+    def copy_temporary_directory_to_datahub(self, temporary_directory_path: str, datahub_directory_path: str):
+        destination = Path(datahub_directory_path)
+        if destination.exists():
+            if destination.is_dir():
+                shutil.rmtree(destination)
+            else:
+                destination.unlink()
+        shutil.move(temporary_directory_path, destination)
 
     def check_source_names(self, form):
         try:

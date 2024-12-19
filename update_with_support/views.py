@@ -298,7 +298,10 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
-        return self.get_online_resource_file_for_catalogue_data_subset(online_resource.name)
+        file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
+        return self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+            file_name_with_no_extension
+        )
 
     def run_extra_actions_before_update(self):
         if not self.current_doi_name:
@@ -325,6 +328,10 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         with tempfile.TemporaryDirectory() as temp_dirname:
             self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
             updated_resource = super().update_resource()
+            self.copy_temporary_directory_to_datahub(
+                temp_dirname,
+                self.get_catalogue_data_subset_datahub_directory_path()
+            )
         return updated_resource
 
     def map_sources_to_dataclasses(
