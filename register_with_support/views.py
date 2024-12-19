@@ -1,5 +1,6 @@
 import logging
 import os
+import tempfile
 from datetime import datetime
 from datetime import timezone
 from django.contrib import messages
@@ -380,11 +381,12 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request):
-        wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
-        self.resource_id = wrapped_xml_file.localid
-        self._process_online_resources()
-        new_registration = self.register_xml_string()
-        return new_registration
+        with tempfile.TemporaryDirectory() as temp_dirname:
+            wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
+            self.resource_id = wrapped_xml_file.localid
+            self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
+            new_registration = self.register_xml_string()
+            return new_registration
 
     def run_actions_on_registration_failure(self):
         try:

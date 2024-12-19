@@ -1,9 +1,13 @@
 import os
+import tempfile
+import shutil
 from datetime import datetime
 from datetime import timezone
 from dateutil.parser import parse
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.shortcuts import render
+from io import BufferedReader
 from pyexpat import ExpatError
 
 from .form_to_metadata_mappers import (
@@ -291,9 +295,12 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         )
         return
 
+    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
+        if not online_resource.is_existing_datahub_file_used:
+            return super()._get_file_for_online_resource(online_resource)
+        return self.get_online_resource_file_for_catalogue_data_subset(online_resource.name)
+
     def run_extra_actions_before_update(self):
-        self._delete_unused_online_resource_files()
-        self._process_online_resources()
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()
         simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
@@ -302,6 +309,23 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         simple_catalogue_data_subset_editor.update_referent_doi_name(self.current_doi_name)
         self.xml_string = simple_catalogue_data_subset_editor.to_xml()
         return super().run_extra_actions_before_update()
+
+    def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile|BufferedReader, source_file_write_path: str):
+        try:
+            return super().add_source_file_to_temporary_directory(
+                source_file,
+                source_file_write_path
+            )
+        except AttributeError as err:
+            logger.exception(err)
+        return shutil.copyfile(source_file.name, source_file_write_path)
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def update_resource(self):
+        with tempfile.TemporaryDirectory() as temp_dirname:
+            self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
+            updated_resource = super().update_resource()
+        return updated_resource
 
     def map_sources_to_dataclasses(
             self,

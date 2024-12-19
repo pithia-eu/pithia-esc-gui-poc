@@ -1,12 +1,16 @@
 import logging
+import os
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.html import escape
+from django.utils.text import slugify
 from django.views.generic import FormView
 
 from .editor_dataclasses import (
+    CatalogueDataSubsetSourceMetadataUpdate,
     CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
@@ -1040,6 +1044,39 @@ class CatalogueDataSubsetEditorFormView(
         for source in self.valid_sources:
             self._process_online_resource_file_choices(source)
         return None
+
+    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceMetadataUpdate):
+        return self.source_files.get(online_resource.file_input_name)
+
+    def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile, source_file_write_path: str):
+        with open(source_file_write_path, 'wb+') as destination:
+            for chunk in source_file.chunks():
+                destination.write(chunk)
+
+    def configure_and_add_source_file_to_temporary_directory(self, online_resource: CatalogueDataSubsetSourceMetadataUpdate, temporary_directory_path: str):
+        file_for_online_resource = self._get_file_for_online_resource(online_resource)
+        file_name_with_no_extension, file_extension = os.path.splitext(file_for_online_resource.name)
+        slugified_online_resource_name = slugify(online_resource.name)
+        slugified_file_name = f'{slugified_online_resource_name}{file_extension}'
+        file_for_online_resource_path = os.path.join(temporary_directory_path, slugified_file_name)
+        self.add_source_file_to_temporary_directory(
+            file_for_online_resource,
+            file_for_online_resource_path
+        )
+
+    def configure_and_add_source_files_to_temporary_directory(self, temporary_directory_path: str):
+        for online_resource in self.valid_sources:
+            online_resource_name = online_resource.name
+            # Add links to each online resource source
+            # file in the XML.
+            self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+                online_resource_name,
+                self.xml_string
+            )
+
+            # Add the source files to a temporary directory,
+            # preparing them to move all at once to DataHub.
+            self.configure_and_add_source_file_to_temporary_directory(online_resource, temporary_directory_path)
 
     def check_source_names(self, form):
         try:
