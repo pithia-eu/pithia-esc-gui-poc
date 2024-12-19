@@ -2,6 +2,7 @@
 {% load static %}
 {% block extra_scripts %}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}
@@ -65,9 +66,9 @@
                 </p>
                 <p class="form-text">
                     <strong>
-                        Note: Files uploaded to the wizard are not saved in the
-                        browser like other wizard data, and will not be loaded
-                        back in if you leave and re-open the wizard.
+                        Important Note: Files added to the wizard are not saved
+                        in the browser like other wizard data, and will not be
+                        loaded back in if you leave and re-enter the wizard.
                     </strong>
                 </p>
             </div>

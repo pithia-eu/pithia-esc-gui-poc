@@ -131,8 +131,8 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
 
     checkSourceNamesAreUnique() {
         const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
-        const inputsBySourceName = Array.from(sourceNameInputs).reduce((accumulator, input) => {
-            const sourceNameTrimmed = input.value.trim().toLowerCase();
+        const inputsByNormalisedSourceName = Array.from(sourceNameInputs).reduce((accumulator, input) => {
+            const sourceNameTrimmed = _.kebabCase(input.value);
             if (!(sourceNameTrimmed in accumulator)) {
                 accumulator[sourceNameTrimmed] = [];
             }
@@ -140,17 +140,26 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
             return accumulator;
         }, {});
         
-        for (const sourceName in inputsBySourceName) {
+        for (const sourceName in inputsByNormalisedSourceName) {
             if (!sourceName) {
                 continue;
             }
-            const inputs = inputsBySourceName[sourceName];
+            const inputs = inputsByNormalisedSourceName[sourceName];
             if (inputs.length === 1) {
                 continue;
             }
             inputs.forEach(input => {
+                const similarNames = inputs
+                                    .filter(inputWithSimilarName => input.id !== inputWithSimilarName.id)
+                                    .map(inputWithSimilarName => inputWithSimilarName.value.trim());
+                let similarNamesString = `"${similarNames[0]}"`;
+                if (similarNames.length > 2) {
+                    similarNamesString += ` and ${similarNames.length - 1} other names`;
+                } else if (similarNames.length === 2) {
+                    similarNamesString += ` and ${similarNames.length - 1} other name`;
+                }
                 input.classList.add("is-invalid");
-                const errorText = `"${input.value.trim()}" is already in use with another online resource (case is ignored). Please choose another name.`;
+                const errorText = `"${input.value.trim()}" is too similar to other online resource names (${similarNamesString}). Please enter a different name.`;
                 const closestErrorList = input.closest("div").querySelector("ul.field-error-list");
                 this.addErrorToFieldErrorList(
                     errorText,
