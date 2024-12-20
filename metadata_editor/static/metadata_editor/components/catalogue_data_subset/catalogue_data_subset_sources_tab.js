@@ -7,6 +7,9 @@ import {
 import {
     checkIfEscUrl,
 } from "/static/metadata_editor/components/url_format_checker.js";
+import {
+    checkForSimilarSourceNames,
+} from "/static/validation/catalogue_data_subset_validation.js";
 
 
 export class CatalogueDataSubsetSourcesTab extends SourcesTab {
@@ -131,35 +134,24 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
 
     checkSourceNamesAreUnique() {
         const sourceNameInputs = this.tabContent.querySelectorAll("input[name='source_name']");
-        const inputsByNormalisedSourceName = Array.from(sourceNameInputs).reduce((accumulator, input) => {
-            const sourceNameTrimmed = _.kebabCase(input.value);
-            if (!(sourceNameTrimmed in accumulator)) {
-                accumulator[sourceNameTrimmed] = [];
-            }
-            accumulator[sourceNameTrimmed].push(input);
-            return accumulator;
-        }, {});
+        const sourceNames = Array.from(sourceNameInputs).map(sourceNameInput => sourceNameInput.value);
+        const sourceNamesGroupedByNormalised = checkForSimilarSourceNames(sourceNames);
         
-        for (const sourceName in inputsByNormalisedSourceName) {
+        for (const sourceName in sourceNamesGroupedByNormalised) {
             if (!sourceName) {
                 continue;
             }
-            const inputs = inputsByNormalisedSourceName[sourceName];
-            if (inputs.length === 1) {
+            const unnormalisedVersionsOfSourceNames = sourceNamesGroupedByNormalised[sourceName];
+            if (unnormalisedVersionsOfSourceNames.length <= 1) {
                 continue;
             }
+            const inputs = Array.from(this.tabContent.querySelectorAll("input[name='source_name']")).filter(input => {
+                return unnormalisedVersionsOfSourceNames.includes(input.value);
+            });
             inputs.forEach(input => {
-                const similarNames = inputs
-                                    .filter(inputWithSimilarName => input.id !== inputWithSimilarName.id)
-                                    .map(inputWithSimilarName => inputWithSimilarName.value.trim());
-                let similarNamesString = `"${similarNames[0]}"`;
-                if (similarNames.length > 2) {
-                    similarNamesString += ` and ${similarNames.length - 1} other names`;
-                } else if (similarNames.length === 2) {
-                    similarNamesString += ` and ${similarNames.length - 1} other name`;
-                }
+                const inputsWithSimilarNames = inputs.filter(inputWithSimilarName => input.id !== inputWithSimilarName.id);
                 input.classList.add("is-invalid");
-                const errorText = `"${input.value.trim()}" is too similar to other online resource names (${similarNamesString}). Please enter a different name.`;
+                const errorText = `"${input.value.trim()}" is too similar to the names of ${inputsWithSimilarNames.length} other online resource${inputsWithSimilarNames.length === 1 ? '' : 's'}. Please enter a different name.`;
                 const closestErrorList = input.closest("div").querySelector("ul.field-error-list");
                 this.addErrorToFieldErrorList(
                     errorText,
