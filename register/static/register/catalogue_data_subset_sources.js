@@ -31,6 +31,7 @@ function updateElementsWithDuplicatedIdsForOnlineResourceFileListItem(elementsWi
 }
 
 function updateFileInputAndLabelForOnlineResource(fileInput, fileInputLabel, onlineResourceName) {
+    fileInput.name = fileInput.name + "__" + onlineResourceName;
     fileInputLabel.textContent = `File for ${onlineResourceName}`;
 }
 
