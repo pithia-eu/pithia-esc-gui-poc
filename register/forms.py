@@ -99,6 +99,13 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         })
     )
 
+    additional_online_resource_file = forms.FileField(
+        label='Online Resource File',
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+        })
+    )
+
     register_doi = forms.BooleanField(
         label='Generate a DOI for this Data Subset',
         required=False,

@@ -1,3 +1,11 @@
+import {
+    clearOnlineResourceList,
+    loadOnlineResourceFiles,
+} from "/static/register/catalogue_data_subset_sources.js";
+
+const metadataFileInput = document.querySelector("input[name='files']");
+
+
 function setupFormSubmitButtonSpinner() {
     const form = document.querySelector("#file-upload-form");
     const formSubmitButton = form.querySelector("button[type='submit']");
@@ -14,6 +22,24 @@ function setupFormSubmitButtonSpinner() {
     });
 }
 
-window.addEventListener("load", () => {
+async function loadOnlineResourcesFromMetadataFile() {
+    if (!metadataFileInput.files.length) {
+        return clearOnlineResourceList();
+    }
+    const metadataFile = metadataFileInput.files[0];
+    const xmlFileString = await metadataFile.text();
+    loadOnlineResourceFiles(xmlFileString);
+}
+
+metadataFileInput.addEventListener("change", async () => {
+    await loadOnlineResourcesFromMetadataFile();
+});
+
+document.addEventListener("trackedFilesChanged", async () => {
+    await loadOnlineResourcesFromMetadataFile();
+});
+
+window.addEventListener("load", async () => {
     setupFormSubmitButtonSpinner();
+    await loadOnlineResourcesFromMetadataFile();
 });

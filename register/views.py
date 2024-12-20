@@ -6,6 +6,7 @@ from django.db import (
     IntegrityError,
     transaction,
 )
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
@@ -107,6 +108,10 @@ class ResourceRegisterFormView(FormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
+        context['source_file_list_item_template'] = render_to_string(
+            'register/components/source_file_list_item_template.html',
+            context=context
+        )
         return context
 
     def form_valid(self, form):
