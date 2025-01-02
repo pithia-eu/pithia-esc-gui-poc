@@ -13,8 +13,14 @@
 {% endwith %}
 {% endblock file_upload_registration_section_content %}
 {% block extra_content %}
-<div class="file-upload-registration-section">
+<div class="d-flex flex-column row-gap-3 file-upload-registration-section">
     <h2 class="fs-4 fw-semibold mb-0">Add Online Resource Files</h2>
+    <div class="form-check form-switch">
+        {{ form.is_file_uploaded_for_each_online_resource }}
+        <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
+            {{ form.is_file_uploaded_for_each_online_resource.label }}
+        </label>
+    </div>
     <ul class="list-group online-resource-files-list"></ul>
 </div>
 {% include 'register/components/doi_registration_form_section.html' %}

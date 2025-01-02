@@ -114,6 +114,17 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
         })
     )
 
+    is_file_uploaded_for_each_online_resource = forms.BooleanField(
+        label='Upload Files for Each Online Resource',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+            'role': 'switch',
+        }),
+        help_text='Toggle whether you would like these online resources to link to files uploaded to the e-Science Centre, or to external webpages.',
+        initial=True
+    )
+
 
 class WorkflowOpenAPISpecificationForm(forms.Form):
     required_css_class = 'required'
