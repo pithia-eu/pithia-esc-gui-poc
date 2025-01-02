@@ -21,7 +21,9 @@
             {{ form.is_file_uploaded_for_each_online_resource.label }}
         </label>
     </div>
-    <ul class="list-group online-resource-files-list"></ul>
+    <div class="online-resource-files-list-wrapper">
+        <ul class="list-group online-resource-files-list"></ul>
+    </div>
 </div>
 {% include 'register/components/doi_registration_form_section.html' %}
 {% endblock extra_content %}

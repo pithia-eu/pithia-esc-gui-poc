@@ -1,5 +1,8 @@
+const onlineResourceFileListWrapper = document.querySelector(".online-resource-files-list-wrapper");
 const onlineResourceFileList = document.querySelector(".online-resource-files-list");
 const sourceFileListItemTemplate = JSON.parse(document.querySelector("#source-file-list-item-template").textContent);
+
+const onlineResourceFileInputSwitch = document.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
 
 const emptyOnlineResourceFileListItem = document.createElement("LI");
 emptyOnlineResourceFileListItem.className = "list-group-item list-group-item-light";
@@ -35,8 +38,19 @@ function updateFileInputAndLabelForOnlineResource(fileInput, fileInputLabel, onl
     fileInputLabel.textContent = `File for ${onlineResourceName}`;
 }
 
+function toggleOnlineResourceListVisibility(isVisible) {
+    if (isVisible) {
+        return onlineResourceFileListWrapper.classList.remove("disabled");
+    }
+    onlineResourceFileListWrapper.classList.add("disabled");
+}
+
 export function clearOnlineResourceList() {
     onlineResourceFileList.replaceChildren();
+}
+
+export function setupOnlineResourceFilesListToggle() {
+    toggleOnlineResourceListVisibility(onlineResourceFileInputSwitch.checked);
 }
 
 export function loadOnlineResourceFiles(metadataFileXmlString) {
@@ -77,6 +91,11 @@ export function loadOnlineResourceFiles(metadataFileXmlString) {
         onlineResourceFileListItems.push(onlineResourceFileListItem);
     }
     onlineResourceFileList.replaceChildren(...onlineResourceFileListItems);
+
     const onlineResourceFilesInputs = Array.from(document.querySelectorAll("input[name='additional_online_resource_file']"));
     const onlineResourceFiles = onlineResourceFilesInputs.map(input => input.value);
 }
+
+onlineResourceFileInputSwitch.addEventListener("change", () => {
+    toggleOnlineResourceListVisibility(onlineResourceFileInputSwitch.checked);
+});

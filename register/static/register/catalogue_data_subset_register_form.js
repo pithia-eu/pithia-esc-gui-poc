@@ -1,6 +1,7 @@
 import {
     clearOnlineResourceList,
     loadOnlineResourceFiles,
+    setupOnlineResourceFilesListToggle,
 } from "/static/register/catalogue_data_subset_sources.js";
 
 const metadataFileInput = document.querySelector("input[name='files']");
@@ -41,5 +42,6 @@ document.addEventListener("trackedFilesChanged", async () => {
 
 window.addEventListener("load", async () => {
     setupFormSubmitButtonSpinner();
+    setupOnlineResourceFilesListToggle();
     await loadOnlineResourcesFromMetadataFile();
 });
