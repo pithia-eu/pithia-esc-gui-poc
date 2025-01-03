@@ -1,6 +1,7 @@
 {% extends 'register/file_upload.html' %}
 {% load static %}
 {% block page_specific_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 {{ source_file_list_item_template|json_script:'source-file-list-item-template' }}
 <script src="{% static 'register/catalogue_data_subset_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
@@ -21,7 +22,19 @@
             {{ form.is_file_uploaded_for_each_online_resource.label }}
         </label>
     </div>
-    <div class="online-resource-files-list-wrapper">
+    <div class="d-flex flex-column row-gap-3 online-resource-files-list-wrapper">
+        <div class="d-none d-flex align-items-center column-gap-3 alert alert-danger online-resource-similar-names-error mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill flex-shrink-0" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+            </svg>
+            <p class="mb-0">
+                Some online resource names in the metadata file are
+                too similar to one another. To enable file uploads
+                for these online resources, please remove the
+                similarities between the names highlighted below
+                in the metadata file and re-upload the changes.
+            </p>
+        </div>
         <ul class="list-group online-resource-files-list"></ul>
     </div>
 </div>

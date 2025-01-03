@@ -1,3 +1,7 @@
+import {
+    checkForSimilarSourceNames,
+} from "/static/validation/catalogue_data_subset_validation.js";
+
 const onlineResourceFileListWrapper = document.querySelector(".online-resource-files-list-wrapper");
 const onlineResourceFileList = document.querySelector(".online-resource-files-list");
 const sourceFileListItemTemplate = JSON.parse(document.querySelector("#source-file-list-item-template").textContent);
@@ -45,7 +49,7 @@ function toggleOnlineResourceListVisibility(isVisible) {
     onlineResourceFileListWrapper.classList.add("disabled");
 }
 
-export function clearOnlineResourceList() {
+function clearOnlineResourceList() {
     onlineResourceFileList.replaceChildren();
 }
 
@@ -53,7 +57,60 @@ export function setupOnlineResourceFilesListToggle() {
     toggleOnlineResourceListVisibility(onlineResourceFileInputSwitch.checked);
 }
 
+function toggleSimilarSourceNamesError(isErrorVisible) {
+    const errorElement = document.querySelector(".online-resource-similar-names-error");
+    if (isErrorVisible) {
+        return errorElement.classList.remove("d-none");
+    }
+    return errorElement.classList.add("d-none")
+
+}
+
+export function resetOnlineResourceList() {
+    toggleSimilarSourceNamesError(false);
+    clearOnlineResourceList();
+}
+
+function disableOnlineResourceListFileInputs() {
+    const fileInputs = onlineResourceFileList.querySelectorAll("input[type='file']");
+    for (const fileInput of fileInputs) {
+        fileInput.disabled = true;
+    }
+}
+
+function checkSourceNamesAreUnique(sourceNames) {
+    const sourceNamesGroupedByNormalised = checkForSimilarSourceNames(sourceNames);
+    let similarSourceNamesFound = false;
+    for (const sourceName in sourceNamesGroupedByNormalised) {
+        if (!sourceName) {
+            continue;
+        }
+        const unnormalisedVersionsOfSourceNames = sourceNamesGroupedByNormalised[sourceName];
+        if (unnormalisedVersionsOfSourceNames.length <= 1) {
+            continue;
+        }
+        similarSourceNamesFound = true;
+        const sourceFileListItems = Array.from(document.querySelectorAll(".online-resource-files-list li")).filter(listItem => {
+            const sourceNameInListItem = listItem.querySelector(".source-name").textContent;
+            return unnormalisedVersionsOfSourceNames.includes(sourceNameInListItem);
+        });
+        sourceFileListItems.forEach(listItem => {
+            const otherListItems = sourceFileListItems.filter(sourceFileListItem => sourceFileListItem !== listItem);
+            listItem.querySelector(".error-similar-source-name .error-text").textContent = `This online resource's name is too similar to the name${otherListItems.length === 1 ? '' : 's'} of ${otherListItems.length} other online resource${otherListItems.length === 1 ? '' : 's'}.`;
+            listItem.classList.add("source-name-is-invalid");
+        });
+    }
+    if (similarSourceNamesFound) {
+        toggleSimilarSourceNamesError(true);
+        disableOnlineResourceListFileInputs(true);
+    }
+}
+
 export function loadOnlineResourceFiles(metadataFileXmlString) {
+    // Reset any errors before proceeding
+    // with rest of setup
+    toggleSimilarSourceNamesError(false);
+
     const parser = new DOMParser();
     const metadataDoc = parser.parseFromString(metadataFileXmlString, "application/xml");
     const onlineResources = metadataDoc.querySelectorAll(":scope > source > OnlineResource");
@@ -91,6 +148,10 @@ export function loadOnlineResourceFiles(metadataFileXmlString) {
         onlineResourceFileListItems.push(onlineResourceFileListItem);
     }
     onlineResourceFileList.replaceChildren(...onlineResourceFileListItems);
+    
+    // Check each online resource name is
+    // unique.
+    checkSourceNamesAreUnique(Array.from(onlineResources).map(onlineResource => onlineResource.querySelector("name").textContent));
 
     const onlineResourceFilesInputs = Array.from(document.querySelectorAll("input[name='additional_online_resource_file']"));
     const onlineResourceFiles = onlineResourceFilesInputs.map(input => input.value);

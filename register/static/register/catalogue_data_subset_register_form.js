@@ -1,6 +1,6 @@
 import {
-    clearOnlineResourceList,
     loadOnlineResourceFiles,
+    resetOnlineResourceList,
     setupOnlineResourceFilesListToggle,
 } from "/static/register/catalogue_data_subset_sources.js";
 
@@ -25,7 +25,7 @@ function setupFormSubmitButtonSpinner() {
 
 async function loadOnlineResourcesFromMetadataFile() {
     if (!metadataFileInput.files.length) {
-        return clearOnlineResourceList();
+        return resetOnlineResourceList();
     }
     const metadataFile = metadataFileInput.files[0];
     const xmlFileString = await metadataFile.text();

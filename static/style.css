@@ -1035,7 +1035,12 @@ details[name="details-permissions"]:not([open]) summary > span::after {
     color: var(--bs-secondary-emphasis);
 }
 
+.online-resource-files-list-wrapper.disabled .online-resource-similar-names-error,
 .online-resource-files-list-wrapper.disabled .online-resource-files-list {
+    display: none !important;
+}
+
+.online-resource-files-list li:not(.source-name-is-invalid) .error-similar-source-name {
     display: none;
 }
 
