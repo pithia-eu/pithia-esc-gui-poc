@@ -62,12 +62,6 @@ class CatalogueDataSubsetDataHubViewMixin:
     def get_online_resource_file_url_for_catalogue_data_subset(self, online_resource_name):
         return f'{os.environ["HANDLE_URL_PREFIX"]}{reverse_lazy("browse:catalogue_data_subset_online_resource_file", kwargs={"catalogue_data_subset_id": self.resource_id, "online_resource_name": online_resource_name})}'
 
-    def delete_online_resource_file_for_catalogue_data_subset(self, online_resource_name):
-        return CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_resource_file(
-            self.resource_id,
-            online_resource_name
-        )
-
     def delete_catalogue_data_subset_directory(self):
         return CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_directory(self.resource_id)
 
@@ -82,36 +76,3 @@ class CatalogueDataSubsetDataHubViewMixin:
         simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(xml_file_string)
         simple_catalogue_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
         return simple_catalogue_data_subset_editor.to_xml()
-
-    def store_online_resource_file_and_update_catalogue_data_subset_xml_file_string(
-            self,
-            online_resource_file,
-            online_resource_name,
-            xml_file_string):
-        # Store/overwrite online resource file
-        CatalogueDataSubsetDataHubService.store_or_overwrite_catalogue_data_subset_resource_file(
-            online_resource_file,
-            online_resource_name,
-            self.resource_id
-        )
-        return self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
-            online_resource_name,
-            xml_file_string
-        )
-
-    def rename_online_resource_file(
-            self,
-            current_file_name: str,
-            new_file_name_no_extension: str):
-        current_file_name_no_extension = pathlib.Path(current_file_name).stem
-        return CatalogueDataSubsetDataHubService.rename_catalogue_data_subset_resource_file(
-            self.resource_id,
-            current_file_name_no_extension,
-            new_file_name_no_extension
-        )
-
-    def delete_unused_online_resource_files(self, names_of_used_files: List[str]):
-        return CatalogueDataSubsetDataHubService.delete_unused_catalogue_data_subset_resource_files(
-            self.resource_id,
-            names_of_used_files
-        )

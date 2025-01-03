@@ -272,14 +272,6 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
 
-    def _delete_unused_online_resource_files(self):
-        names_of_used_online_resource_files = [
-            source.datahub_file_name
-            for source in self.valid_sources
-            if source.datahub_file_name.strip()
-        ]
-        return self.delete_unused_online_resource_files(names_of_used_online_resource_files)
-
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
