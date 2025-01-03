@@ -1,7 +1,9 @@
 import os
-import pathlib
+import shutil
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse_lazy
-from typing import List
+from django.utils.text import slugify
+from pathlib import Path
 
 from .services import (
     CatalogueDataSubsetDataHubService,
@@ -76,3 +78,54 @@ class CatalogueDataSubsetDataHubViewMixin:
         simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(xml_file_string)
         simple_catalogue_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
         return simple_catalogue_data_subset_editor.to_xml()
+    
+    def _get_file_for_online_resource_from_form(self, online_resource_file_input_name: str):
+        return self.source_files.get(online_resource_file_input_name)
+
+    def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile, source_file_write_path: str):
+        with open(source_file_write_path, 'wb+') as destination:
+            for chunk in source_file.chunks():
+                destination.write(chunk)
+
+    def configure_and_add_source_file_to_temporary_directory(
+            self,
+            online_resource_name: str,
+            file_for_online_resource: InMemoryUploadedFile,
+            temporary_directory_path: str):
+        file_name_with_no_extension, file_extension = os.path.splitext(file_for_online_resource.name)
+        slugified_online_resource_name = slugify(online_resource_name)
+        slugified_file_name = f'{slugified_online_resource_name}{file_extension}'
+        file_for_online_resource_path = os.path.join(temporary_directory_path, slugified_file_name)
+        self.add_source_file_to_temporary_directory(
+            file_for_online_resource,
+            file_for_online_resource_path
+        )
+
+    def configure_and_add_source_files_to_temporary_directory(self, temporary_directory_path: str):
+        for online_resource in self.valid_sources:
+            online_resource_name = online_resource.name
+            # Add links to each online resource source
+            # file in the XML.
+            self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+                online_resource_name,
+                self.xml_string
+            )
+
+            # Add the source files to a temporary directory,
+            # preparing them to move all at once to DataHub.
+            file_for_online_resource = self._get_file_for_online_resource_from_form(online_resource.file_input_name)
+            self.configure_and_add_source_file_to_temporary_directory(
+                online_resource_name,
+                file_for_online_resource,
+                temporary_directory_path
+            )
+
+    # Credit: https://stackoverflow.com/a/60430804
+    def copy_temporary_directory_to_datahub(self, temporary_directory_path: str, datahub_directory_path: str):
+        destination = Path(datahub_directory_path)
+        if destination.exists():
+            if destination.is_dir():
+                shutil.rmtree(destination)
+            else:
+                destination.unlink()
+        shutil.move(temporary_directory_path, destination)
