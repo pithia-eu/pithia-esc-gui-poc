@@ -9,6 +9,7 @@ from django.db import (
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.text import slugify
 from django.utils.html import escape
 from django.views.generic import FormView
 from pyexpat import ExpatError
@@ -17,8 +18,14 @@ from .forms import *
 
 from common import models
 from common.decorators import login_session_institution_required
-from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
+from common.xml_metadata_mapping_shortcuts import (
+    CatalogueDataSubsetXmlMappingShortcuts,
+    WorkflowXmlMappingShortcuts,
+)
+from datahub_management.view_mixins import (
+    CatalogueDataSubsetDataHubViewMixin,
+    WorkflowDataHubViewMixin,
+)
 from handle_management.view_mixins import HandleRegistrationViewMixin
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
@@ -319,7 +326,10 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
         return context
 
 
-class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceRegisterFormView):
+class CatalogueDataSubsetRegisterFormView(
+        CatalogueDataSubsetDataHubViewMixin,
+        HandleRegistrationViewMixin,
+        ResourceRegisterFormView):
     template_name='register/file_upload_catalogue_data_subset.html'
     model = models.CatalogueDataSubset
     success_url = reverse_lazy('register:catalogue_data_subset')
@@ -331,7 +341,32 @@ class CatalogueDataSubsetRegisterFormView(HandleRegistrationViewMixin, ResourceR
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
+    SIMILAR_SOURCE_NAMES_ERROR = 'Some online resource names in the metadata file are too similar to one another. Please update the metadata file to resolve these issues, then re-upload it.'
+
+    def check_source_names(self, form):
+        try:
+            xml_file = self.request.FILES.getlist('files')[0]
+            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(xml_file.read().decode())
+            source_names = [
+                source.get('name', '')
+                for source in catalogue_data_subset_shortcutted.online_resources
+                if source.get('name', '')
+            ]
+            source_names_normalised = set(
+                slugify(source_name)
+                for source_name in source_names
+            )
+            return len(source_names) == len(source_names_normalised)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred.')
+            return False
+
     def form_valid(self, form):
+        self.source_files = self.request.FILES
+        if not self.check_source_names(form):
+            messages.error(self.request, self.SIMILAR_SOURCE_NAMES_ERROR)
+            return self.form_invalid(form)
         response = super().form_valid(form)
         xml_file = self.xml_files[0]
         xml_file.seek(0)
