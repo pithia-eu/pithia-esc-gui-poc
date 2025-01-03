@@ -101,6 +101,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
 
     additional_online_resource_file = forms.FileField(
         label='Online Resource File',
+        required=False,
         widget=forms.ClearableFileInput(attrs={
             'class': 'form-control',
         })
