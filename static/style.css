@@ -971,7 +971,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .file-validation-status-list:empty::before {
-    content: 'When you upload a file, it will be sent to our servers for validation. Its validation progress will appear here.';
+    content: 'When you select a file, it will be sent to our servers for validation. Its validation progress will appear here.';
     color: gray;
 }
 
@@ -1031,7 +1031,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .online-resource-files-list-wrapper.disabled::before {
-    content: 'Links to online resources will be taken from the uploaded metadata file.';
+    content: 'Links to online resources will be taken from the selected metadata file.';
     color: var(--bs-secondary-emphasis);
 }
 
@@ -1051,7 +1051,7 @@ details[name="details-permissions"]:not([open]) summary > span::after {
 }
 
 .online-resource-files-list:empty::before {
-    content: 'When you upload a metadata file, a list of its online resources will appear here.';
+    content: 'When you select a metadata file, a list of its online resources will appear here.';
     color: var(--bs-secondary);
 }
 
