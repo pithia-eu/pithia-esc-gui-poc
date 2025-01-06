@@ -1,0 +1,20 @@
+{% extends 'register/components/source_file_list_item_template.html' %}
+{% block extra_content %}
+<div>
+    <div class="d-inline-flex">
+        <div class="form-check">
+            {{ form.is_existing_datahub_file_used }}
+            <label for="{{ form.is_existing_datahub_file_used.auto_id }}" class="form-check-label mb-0">
+                {{ form.is_existing_datahub_file_used.label }}
+            </label>
+        </div>
+    </div>
+    {% if form.is_existing_datahub_file_used.errors %}
+    <ul class="list-unstyled form-text text-danger mb-0">
+        {% for error in form.is_existing_datahub_file_used.errors %}
+        <li>{{ error|escape }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock extra_content %}

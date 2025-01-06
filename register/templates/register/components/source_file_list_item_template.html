@@ -1,6 +1,7 @@
 <li class="list-group-item list-group-item-light py-3">
     <div class="d-flex flex-column row-gap-3 list-item-content">
         <div class="fw-bold source-name"></div>
+        {% block extra_content %}{% endblock extra_content %}
         <div>
             {{ form.online_resource_file.label_tag }}
             {{ form.online_resource_file }}

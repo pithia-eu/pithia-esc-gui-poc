@@ -46,6 +46,15 @@ class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm
         super().__init__(*args, **kwargs)
         self.fields['files'].label = _FILE_INPUT_LABEL
 
+    is_existing_datahub_file_used = forms.BooleanField(
+        label='Continue using the same file for this source',
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+        }),
+        initial=True
+    )
+
 
 class UploadUpdatedWorkflowFileForm(UploadUpdatedFileForm):
     workflow_details_file_source = forms.ChoiceField(

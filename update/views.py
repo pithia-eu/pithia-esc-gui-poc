@@ -7,6 +7,7 @@ from django.shortcuts import (
     render,
     redirect,
 )
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
@@ -355,6 +356,10 @@ class CatalogueDataSubsetUpdateFormView(
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['source_file_list_item_template'] = render_to_string(
+            'update/source_file_update_list_item_template.html',
+            context=context
+        )
         return context
 
     def form_valid(self, form):

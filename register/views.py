@@ -117,10 +117,6 @@ class ResourceRegisterFormView(FormView):
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:data_collection_related_metadata_index'
         context['resource_management_list_page_breadcrumb_text'] = self.resource_management_list_page_breadcrumb_text
         context['resource_management_list_page_breadcrumb_url_name'] = self.resource_management_list_page_breadcrumb_url_name
-        context['source_file_list_item_template'] = render_to_string(
-            'register/components/source_file_list_item_template.html',
-            context=context
-        )
         return context
 
     def form_valid(self, form):
@@ -431,6 +427,10 @@ class CatalogueDataSubsetRegisterFormView(
         context['title'] = f'Register a {self.model.type_readable.title()} via File Upload'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['source_file_list_item_template'] = render_to_string(
+            'register/components/source_file_list_item_template.html',
+            context=context
+        )
         return context
 
 

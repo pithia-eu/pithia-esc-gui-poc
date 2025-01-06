@@ -1,6 +1,8 @@
 {% extends 'update/file_upload_update.html' %}
 {% load static %}
 {% block page_specific_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+{{ source_file_list_item_template|json_script:'source-file-list-item-template' }}
 {{ resource_id|json_script:"resource-id" }}
 <script src="{% static 'register/catalogue_data_subset_register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
