@@ -1,0 +1,24 @@
+<div class="d-flex flex-column row-gap-3 file-upload-registration-section">
+    <h2 class="fs-4 fw-semibold mb-0">Select Online Resource Files</h2>
+    <div class="form-check form-switch">
+        {{ form.is_file_uploaded_for_each_online_resource }}
+        <label class="form-check-label" for="{{ form.is_file_uploaded_for_each_online_resource.id_for_label }}">
+            {{ form.is_file_uploaded_for_each_online_resource.label }}
+        </label>
+    </div>
+    <div class="d-flex flex-column row-gap-3 online-resource-files-list-wrapper">
+        <div class="d-none d-flex align-items-center column-gap-3 alert alert-danger online-resource-similar-names-error mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill flex-shrink-0" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+            </svg>
+            <p class="mb-0">
+                Some online resource names in the metadata file are
+                too similar to one another. To enable file uploads
+                for these online resources, please remove the
+                similarities between the names highlighted below
+                (in the metadata file).
+            </p>
+        </div>
+        <ul class="list-group online-resource-files-list"></ul>
+    </div>
+</div>
