@@ -1,5 +1,6 @@
 import logging
 import os
+import tempfile
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import (
@@ -22,6 +23,7 @@ from common.xml_metadata_mapping_shortcuts import (
     CatalogueDataSubsetXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
+from datahub_management.dataclasses import CatalogueDataSubsetOnlineResource
 from datahub_management.view_mixins import (
     CatalogueDataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
@@ -345,8 +347,8 @@ class CatalogueDataSubsetRegisterFormView(
 
     def check_source_names(self, form):
         try:
-            xml_file = self.request.FILES.getlist('files')[0]
-            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(xml_file.read().decode())
+            self.temp_xml_file = self.request.FILES.getlist('files')[0]
+            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.temp_xml_file.read().decode())
             source_names = [
                 source.get('name', '')
                 for source in catalogue_data_subset_shortcutted.online_resources
@@ -362,12 +364,63 @@ class CatalogueDataSubsetRegisterFormView(
             messages.error(self.request, 'An unexpected error occurred.')
             return False
 
+    def register_xml_file(self, xml_file):
+        # This method is overridden to use
+        # self.xml_string (instead of xml_file.read())
+        # as self.xml_string keeps track of
+        # whether external URLs or DataHub
+        # URLs are used or not.
+        return self.model.objects.create_from_xml_string(
+            self.xml_string,
+            self.institution_id,
+            self.owner_id,
+        )
+
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def run_registration_actions(self, request, xml_file):
+        if not self.is_file_uploaded_for_each_online_resource:
+            xml_file.seek(0)
+            return self.register_xml_file(xml_file)
+
+        with tempfile.TemporaryDirectory() as temp_dirname:
+            wrapped_xml_file = XMLMetadataFile.from_file(xml_file)
+            self.resource_id = wrapped_xml_file.localid
+            self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
+            xml_file.seek(0)
+            new_registration = self.register_xml_file(xml_file)
+            self.copy_temporary_directory_to_datahub(
+                temp_dirname,
+                self.get_catalogue_data_subset_datahub_directory_path()
+            )
+            return new_registration
+
     def form_valid(self, form):
+        # Run before registering the data subset
+        self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         self.source_files = self.request.FILES
         if not self.check_source_names(form):
             messages.error(self.request, self.SIMILAR_SOURCE_NAMES_ERROR)
             return self.form_invalid(form)
+
+        try:
+            self.temp_xml_file.seek(0)
+            self.xml_string = self.temp_xml_file.read().decode()
+            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            self.valid_sources = [
+                CatalogueDataSubsetOnlineResource(
+                    name=online_resource.get('name'),
+                    file_input_name=f'online_resource_file__{online_resource.get("name")}'
+                )
+                for online_resource in catalogue_data_subset_shortcutted.online_resources
+            ]
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred during metadata registration.')
+            return self.form_invalid(form)
+
         response = super().form_valid(form)
+
+        # Run after registering the data subset
         xml_file = self.xml_files[0]
         xml_file.seek(0)
         self.register_doi_if_requested(self.request, self.new_registration, xml_file=xml_file)
