@@ -43,6 +43,10 @@ function updateFileInputAndLabelForOnlineResource(fileInput, fileInputLabel, onl
 }
 
 function toggleOnlineResourceListVisibility(isVisible) {
+    const inputs = onlineResourceFileListWrapper.querySelectorAll("input");
+    for (const input of inputs) {
+        input.disabled = !isVisible;
+    }
     if (isVisible) {
         return onlineResourceFileListWrapper.classList.remove("disabled");
     }
@@ -138,7 +142,9 @@ export function loadOnlineResourceFiles(metadataFileXmlString) {
 
         // Update file inputs and labels
         const onlineResourceFileInput = onlineResourceFileListItem.querySelector("input[type='file']");
+        onlineResourceFileInput.required = true;
         const onlineResourceFileInputLabel = onlineResourceFileListItem.querySelector(`label[for="${onlineResourceFileInput.id}"]`);
+        onlineResourceFileInputLabel.classList.add("required");
         updateFileInputAndLabelForOnlineResource(
             onlineResourceFileInput,
             onlineResourceFileInputLabel,
@@ -153,7 +159,7 @@ export function loadOnlineResourceFiles(metadataFileXmlString) {
     // unique.
     checkSourceNamesAreUnique(Array.from(onlineResources).map(onlineResource => onlineResource.querySelector("name").textContent));
 
-    const onlineResourceFilesInputs = Array.from(document.querySelectorAll("input[name='additional_online_resource_file']"));
+    const onlineResourceFilesInputs = Array.from(document.querySelectorAll("input[name='online_resource_file']"));
     const onlineResourceFiles = onlineResourceFilesInputs.map(input => input.value);
 }
 
