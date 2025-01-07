@@ -1,10 +1,10 @@
 import {
-    loadOnlineResourceFiles,
-    resetOnlineResourceList,
-    setupOnlineResourceFilesListToggle,
+    CatalogueDataSubsetOnlineResourceList,
 } from "/static/register/catalogue_data_subset_sources.js";
 
+const onlineResourceFileInputSwitch = document.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
 const metadataFileInput = document.querySelector("input[name='files']");
+let onlineResourceList;
 
 
 function setupFormSubmitButtonSpinner() {
@@ -25,12 +25,16 @@ function setupFormSubmitButtonSpinner() {
 
 async function loadOnlineResourcesFromMetadataFile() {
     if (!metadataFileInput.files.length) {
-        return resetOnlineResourceList();
+        return onlineResourceList.reset();
     }
     const metadataFile = metadataFileInput.files[0];
     const xmlFileString = await metadataFile.text();
-    loadOnlineResourceFiles(xmlFileString);
+    onlineResourceList.load(xmlFileString);
 }
+
+onlineResourceFileInputSwitch.addEventListener("change", () => {
+    onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
+});
 
 metadataFileInput.addEventListener("change", async () => {
     await loadOnlineResourcesFromMetadataFile();
@@ -42,6 +46,7 @@ document.addEventListener("trackedFilesChanged", async () => {
 
 window.addEventListener("load", async () => {
     setupFormSubmitButtonSpinner();
-    setupOnlineResourceFilesListToggle();
+    onlineResourceList = new CatalogueDataSubsetOnlineResourceList();
+    onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
     await loadOnlineResourcesFromMetadataFile();
 });
