@@ -5,11 +5,13 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from pathlib import Path
 
+from .dataclasses import CatalogueDataSubsetOnlineResource
 from .services import (
     CatalogueDataSubsetDataHubService,
     WorkflowDataHubService,
 )
 
+from metadata_editor.editor_dataclasses import CatalogueDataSubsetSourceMetadataUpdate
 from metadata_editor.services import (
     SimpleCatalogueDataSubsetEditor,
     SimpleWorkflowEditor,
@@ -79,8 +81,8 @@ class CatalogueDataSubsetDataHubViewMixin:
         simple_catalogue_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
         return simple_catalogue_data_subset_editor.to_xml()
     
-    def _get_file_for_online_resource_from_form(self, online_resource_file_input_name: str):
-        return self.source_files.get(online_resource_file_input_name)
+    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResource|CatalogueDataSubsetSourceMetadataUpdate):
+        return self.source_files.get(online_resource.file_input_name)
 
     def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile, source_file_write_path: str):
         with open(source_file_write_path, 'wb+') as destination:
@@ -113,7 +115,7 @@ class CatalogueDataSubsetDataHubViewMixin:
 
             # Add the source files to a temporary directory,
             # preparing them to move all at once to DataHub.
-            file_for_online_resource = self._get_file_for_online_resource_from_form(online_resource.file_input_name)
+            file_for_online_resource = self._get_file_for_online_resource(online_resource)
             self.configure_and_add_source_file_to_temporary_directory(
                 online_resource_name,
                 file_for_online_resource,
