@@ -39,6 +39,7 @@ from common.xml_metadata_mapping_shortcuts import (
     CatalogueDataSubsetXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
+from datahub_management.dataclasses import CatalogueDataSubsetOnlineResourceUpdate
 from datahub_management.services import WorkflowDataHubService
 from handle_management.view_mixins import (
     HandleReapplicationViewMixin,
@@ -272,7 +273,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
 
-    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
+    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResourceUpdate|CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
         file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
