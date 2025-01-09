@@ -29,6 +29,7 @@ from datahub_management.view_mixins import (
     WorkflowDataHubViewMixin,
 )
 from handle_management.view_mixins import HandleRegistrationViewMixin
+from resource_management.view_mixins import CatalogueDataSubsetResourceManagementViewMixin
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -326,6 +327,7 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
 
 class CatalogueDataSubsetRegisterFormView(
         CatalogueDataSubsetDataHubViewMixin,
+        CatalogueDataSubsetResourceManagementViewMixin,
         HandleRegistrationViewMixin,
         ResourceRegisterFormView):
     template_name='register/file_upload_catalogue_data_subset.html'
@@ -338,27 +340,6 @@ class CatalogueDataSubsetRegisterFormView(
     post_url = reverse_lazy('register:catalogue_data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
-
-    SIMILAR_SOURCE_NAMES_ERROR = 'Some online resource names in the metadata file are too similar to one another. Please update the metadata file to resolve these issues, then re-upload it.'
-
-    def check_source_names(self, form):
-        try:
-            self.temp_xml_file = self.request.FILES.getlist('files')[0]
-            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.temp_xml_file.read().decode())
-            source_names = [
-                source.get('name', '')
-                for source in catalogue_data_subset_shortcutted.online_resources
-                if source.get('name', '')
-            ]
-            source_names_normalised = set(
-                slugify(source_name)
-                for source_name in source_names
-            )
-            return len(source_names) == len(source_names_normalised)
-        except Exception as err:
-            logger.exception(err)
-            messages.error(self.request, 'An unexpected error occurred.')
-            return False
 
     def register_xml_file(self, xml_file):
         # This method is overridden to use
@@ -394,8 +375,14 @@ class CatalogueDataSubsetRegisterFormView(
         # Run before registering the data subset
         self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         self.source_files = self.request.FILES
-        if not self.check_source_names(form):
-            messages.error(self.request, self.SIMILAR_SOURCE_NAMES_ERROR)
+
+        try:
+            if not self.check_source_names(form):
+                messages.error(self.request, self.SIMILAR_SOURCE_NAMES_ERROR)
+                return self.form_invalid(form)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred.')
             return self.form_invalid(form)
 
         try:
