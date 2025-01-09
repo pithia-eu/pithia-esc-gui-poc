@@ -1,10 +1,5 @@
-import {
-    CatalogueDataSubsetOnlineResourceList,
-} from "/static/register/catalogue_data_subset_sources.js";
-
 const onlineResourceFileInputSwitch = document.querySelector("input[name='is_file_uploaded_for_each_online_resource']");
 const metadataFileInput = document.querySelector("input[name='files']");
-let onlineResourceList;
 
 
 function setupFormSubmitButtonSpinner() {
@@ -23,7 +18,7 @@ function setupFormSubmitButtonSpinner() {
     });
 }
 
-async function loadOnlineResourcesFromMetadataFile() {
+async function loadOnlineResourcesFromMetadataFile(onlineResourceList) {
     if (!metadataFileInput.files.length) {
         return onlineResourceList.reset();
     }
@@ -32,21 +27,22 @@ async function loadOnlineResourcesFromMetadataFile() {
     onlineResourceList.load(xmlFileString);
 }
 
-onlineResourceFileInputSwitch.addEventListener("change", () => {
-    onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
-});
+export async function setupOnlineResourceListAndLoadFiles(onlineResourceList) {
+    loadOnlineResourcesFromMetadataFile(onlineResourceList);
 
-metadataFileInput.addEventListener("change", async () => {
-    await loadOnlineResourcesFromMetadataFile();
-});
-
-document.addEventListener("trackedFilesChanged", async () => {
-    await loadOnlineResourcesFromMetadataFile();
-});
+    onlineResourceFileInputSwitch.addEventListener("change", () => {
+        onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
+    });
+    
+    metadataFileInput.addEventListener("change", async () => {
+        await loadOnlineResourcesFromMetadataFile(onlineResourceList);
+    });
+    
+    document.addEventListener("trackedFilesChanged", async () => {
+        await loadOnlineResourcesFromMetadataFile(onlineResourceList);
+    });
+}
 
 window.addEventListener("load", async () => {
     setupFormSubmitButtonSpinner();
-    onlineResourceList = new CatalogueDataSubsetOnlineResourceList();
-    onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
-    await loadOnlineResourcesFromMetadataFile();
 });
