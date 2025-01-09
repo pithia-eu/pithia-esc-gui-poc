@@ -40,6 +40,33 @@ export class CatalogueDataSubsetOnlineResourceList {
         fileInput.name = fileInput.name + "__" + onlineResourceName;
         fileInputLabel.textContent = `File for ${onlineResourceName}`;
     }
+
+    createListItem(onlineResource) {
+        const onlineResourceFileListItem = document.createRange().createContextualFragment(sourceFileListItemTemplate);
+        
+        const onlineResourceName = onlineResource.querySelector("name").textContent;
+        // Set online source name
+        const listItemSourceName = onlineResourceFileListItem.querySelector(".source-name");
+        listItemSourceName.textContent = onlineResourceName;
+
+        // Update any element IDs to be unique,
+        // and update any corresponding labels.
+        const elementsWithIds = onlineResourceFileListItem.querySelectorAll("[id]");
+        this.updateElementsWithDuplicatedIdsForOnlineResourceFileListItem(elementsWithIds, onlineResourceFileListItem);
+
+        // Update file inputs and labels
+        const onlineResourceFileInput = onlineResourceFileListItem.querySelector("input[type='file']");
+        onlineResourceFileInput.required = true;
+        const onlineResourceFileInputLabel = onlineResourceFileListItem.querySelector(`label[for="${onlineResourceFileInput.id}"]`);
+        onlineResourceFileInputLabel.classList.add("required");
+        this.updateFileInputAndLabelForOnlineResource(
+            onlineResourceFileInput,
+            onlineResourceFileInputLabel,
+            onlineResourceName
+        );
+        
+        return onlineResourceFileListItem;
+    }
     
     toggleSimilarSourceNamesError(isErrorVisible) {
         const errorElement = document.querySelector(".online-resource-similar-names-error");
@@ -70,10 +97,10 @@ export class CatalogueDataSubsetOnlineResourceList {
         this.clear();
     }
     
-    disableFileInputs() {
-        const fileInputs = onlineResourceFileList.querySelectorAll("input[type='file']");
-        for (const fileInput of fileInputs) {
-            fileInput.disabled = true;
+    disableInputs() {
+        const inputs = onlineResourceFileList.querySelectorAll("input");
+        for (const input of inputs) {
+            input.disabled = true;
         }
     }
     
@@ -101,7 +128,7 @@ export class CatalogueDataSubsetOnlineResourceList {
         }
         if (similarSourceNamesFound) {
             this.toggleSimilarSourceNamesError(true);
-            this.disableFileInputs(true);
+            this.disableInputs(true);
         }
     }
     
@@ -123,28 +150,7 @@ export class CatalogueDataSubsetOnlineResourceList {
         // to upload a file for each resource.
         const onlineResourceFileListItems = [];
         for (const onlineResource of onlineResources) {
-            const onlineResourceFileListItem = document.createRange().createContextualFragment(sourceFileListItemTemplate);
-            const onlineResourceName = onlineResource.querySelector("name").textContent;
-            
-            // Set online source name
-            const listItemSourceName = onlineResourceFileListItem.querySelector(".source-name");
-            listItemSourceName.textContent = onlineResourceName;
-    
-            // Update any element IDs to be unique,
-            // and update any corresponding labels.
-            const elementsWithIds = onlineResourceFileListItem.querySelectorAll("[id]");
-            this.updateElementsWithDuplicatedIdsForOnlineResourceFileListItem(elementsWithIds, onlineResourceFileListItem);
-    
-            // Update file inputs and labels
-            const onlineResourceFileInput = onlineResourceFileListItem.querySelector("input[type='file']");
-            onlineResourceFileInput.required = true;
-            const onlineResourceFileInputLabel = onlineResourceFileListItem.querySelector(`label[for="${onlineResourceFileInput.id}"]`);
-            onlineResourceFileInputLabel.classList.add("required");
-            this.updateFileInputAndLabelForOnlineResource(
-                onlineResourceFileInput,
-                onlineResourceFileInputLabel,
-                onlineResourceName
-            );
+            const onlineResourceFileListItem = this.createListItem(onlineResource);
     
             onlineResourceFileListItems.push(onlineResourceFileListItem);
         }
