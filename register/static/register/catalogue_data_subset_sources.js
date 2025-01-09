@@ -67,6 +67,10 @@ export class CatalogueDataSubsetOnlineResourceList {
         
         return onlineResourceFileListItem;
     }
+
+    setupListItem(onlineResourceFileListItem) {
+        // Implemented in child classes
+    }
     
     toggleSimilarSourceNamesError(isErrorVisible) {
         const errorElement = document.querySelector(".online-resource-similar-names-error");
@@ -148,13 +152,12 @@ export class CatalogueDataSubsetOnlineResourceList {
         // Load a list of the data subset's
         // online resources to allow the user
         // to upload a file for each resource.
-        const onlineResourceFileListItems = [];
+        onlineResourceFileList.replaceChildren();
         for (const onlineResource of onlineResources) {
-            const onlineResourceFileListItem = this.createListItem(onlineResource);
-    
-            onlineResourceFileListItems.push(onlineResourceFileListItem);
+            const onlineResourceFileListItemDocumentFragment = this.createListItem(onlineResource);
+            const onlineResourceFileListItem = onlineResourceFileList.appendChild(onlineResourceFileListItemDocumentFragment.firstElementChild);
+            this.setupListItem(onlineResourceFileListItem, onlineResource);
         }
-        onlineResourceFileList.replaceChildren(...onlineResourceFileListItems);
         
         // Check each online resource name is
         // unique.
