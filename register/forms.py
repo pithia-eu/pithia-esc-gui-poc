@@ -116,7 +116,7 @@ class UploadCatalogueDataSubsetFileForm(forms.Form):
     )
 
     is_file_uploaded_for_each_online_resource = forms.BooleanField(
-        label='Use Files for Each Online Resource',
+        label='Upload Files for Each Online Resource',
         required=False,
         widget=forms.CheckboxInput(attrs={
             'class': 'form-check-input',
