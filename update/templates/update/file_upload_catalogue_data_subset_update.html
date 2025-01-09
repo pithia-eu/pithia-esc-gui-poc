@@ -9,6 +9,7 @@
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
 {% block extra_content %}
+{{ form.online_resource_datahub_file_usage }}
 {% include 'register/components/online_resource_files_section.html' %}
 {% include 'register/components/doi_registration_form_section.html' %}
 {% endblock extra_content %}

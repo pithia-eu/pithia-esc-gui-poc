@@ -5,8 +5,8 @@ const namesOfOnlineResourcesWithDataHubFiles = JSON.parse(document.querySelector
 
 
 export class CatalogueDataSubsetOnlineResourceUpdateList extends CatalogueDataSubsetOnlineResourceList {
-    updateDataHubCheckboxForOnlineResource(existingDataHubFileCheckbox, onlineResourceName) {
-        existingDataHubFileCheckbox.name = existingDataHubFileCheckbox.name + "__" + onlineResourceName;
+    mapDataHubCheckboxToOnlineResource(existingDataHubFileCheckbox, onlineResourceName) {
+        existingDataHubFileCheckbox.dataset.onlineResourceName = onlineResourceName;
     }
 
     createListItem(onlineResource) {
@@ -35,7 +35,7 @@ export class CatalogueDataSubsetOnlineResourceUpdateList extends CatalogueDataSu
             return;
         }
         const existingDataHubFileCheckbox = existingDataHubFileCheckboxWrapper.querySelector("input[type='checkbox']");
-        this.updateDataHubCheckboxForOnlineResource(existingDataHubFileCheckbox, onlineResourceName);
+        this.mapDataHubCheckboxToOnlineResource(existingDataHubFileCheckbox, onlineResourceName);
         existingDataHubFileCheckbox.addEventListener("change", () => {
             const fileInputWrapper = onlineResourceFileListItem.querySelector(".file-input-wrapper");
             const fileInput = onlineResourceFileListItem.querySelector("input[type='file']");

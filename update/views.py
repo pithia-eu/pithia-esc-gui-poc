@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
+from django.utils.text import slugify
 from django.views.generic.edit import FormView
 from pyexpat import ExpatError
 
@@ -19,8 +20,15 @@ from common.decorators import (
     login_session_institution_required,
     institution_ownership_required
 )
-from common.xml_metadata_mapping_shortcuts import WorkflowXmlMappingShortcuts
-from datahub_management.view_mixins import WorkflowDataHubViewMixin
+from common.xml_metadata_mapping_shortcuts import (
+    CatalogueDataSubsetXmlMappingShortcuts,
+    WorkflowXmlMappingShortcuts,
+)
+from datahub_management.dataclasses import CatalogueDataSubsetOnlineResourceUpdate
+from datahub_management.view_mixins import (
+    CatalogueDataSubsetDataHubViewMixin,
+    WorkflowDataHubViewMixin,
+)
 from handle_management.view_mixins import (
     HandleRegistrationViewMixin,
     HandleReapplicationViewMixin,
@@ -33,6 +41,7 @@ from resource_management.forms import (
     UploadUpdatedFileForm,
     UploadUpdatedWorkflowFileForm,
 )
+from resource_management.view_mixins import CatalogueDataSubsetResourceManagementViewMixin
 from resource_management.views import (
     _create_manage_resource_page_title,
     _INDEX_PAGE_TITLE,
@@ -338,9 +347,11 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
 
 
 class CatalogueDataSubsetUpdateFormView(
-    HandleReapplicationViewMixin,
-    HandleRegistrationViewMixin,
-    ResourceUpdateFormView):
+        CatalogueDataSubsetDataHubViewMixin,
+        CatalogueDataSubsetResourceManagementViewMixin,
+        HandleReapplicationViewMixin,
+        HandleRegistrationViewMixin,
+        ResourceUpdateFormView):
     model = models.CatalogueDataSubset
     template_name = 'update/file_upload_catalogue_data_subset_update.html'
     form_class = UploadUpdatedCatalogueDataSubsetFileForm
@@ -352,10 +363,38 @@ class CatalogueDataSubsetUpdateFormView(
 
     error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
 
+    def get_names_of_online_resources_with_files(self):
+        # Get list of online resources from resource
+        catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.resource.xml)
+        online_resources = catalogue_data_subset_shortcutted.online_resources
+
+        names_of_online_resources_with_files = []
+        for online_resource in online_resources:
+            online_resource_name = online_resource.get('name')
+            # Find files for each slugified online resource
+            # name and store in a dictionary to pass to
+            # template context later
+            online_resource_file = self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+                online_resource_name
+            )
+            if not online_resource_file:
+                continue
+            names_of_online_resources_with_files.append(online_resource_name)
+        return names_of_online_resources_with_files
+
+    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResourceUpdate):
+        if not online_resource.is_existing_datahub_file_used:
+            return super()._get_file_for_online_resource(online_resource)
+        file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
+        return self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+            file_name_with_no_extension
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['names_of_online_resources_with_files'] = self.get_names_of_online_resources_with_files()
         context['source_file_list_item_template'] = render_to_string(
             'update/source_file_update_list_item_template.html',
             context=context
@@ -364,6 +403,35 @@ class CatalogueDataSubsetUpdateFormView(
 
     def form_valid(self, form):
         xml_file = self.request.FILES['files']
+        
+        try:
+            if not self.check_source_names(form):
+                messages.error(self.request, self.SIMILAR_SOURCE_NAMES_ERROR)
+                return self.form_invalid(form)
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred.')
+            return super().form_invalid(form)
+
+        try:
+            self.temp_xml_file.seek(0)
+            self.xml_string = self.temp_xml_file.read().decode()
+            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            datahub_file_usage_for_each_source = form.cleaned_data.get('online_resource_datahub_file_usage')
+            self.valid_sources = [
+                CatalogueDataSubsetOnlineResourceUpdate(
+                    name=online_resource.get('name'),
+                    file_input_name=f'online_resource_file__{online_resource.get("name")}',
+                    datahub_file_name=slugify(online_resource.get('name')),
+                    is_existing_datahub_file_used=datahub_file_usage_for_each_source.get(online_resource.get('name'), False)
+                )
+                for online_resource in catalogue_data_subset_shortcutted.online_resources
+            ]
+        except Exception as err:
+            logger.exception(err)
+            messages.error(self.request, 'An unexpected error occurred during metadata registration.')
+            return self.form_invalid(form)
+
         try:
             self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file=xml_file)
             # RE-INSERT PRE-EXISTING DOI KERNEL METADATA

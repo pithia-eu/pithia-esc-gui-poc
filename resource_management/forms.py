@@ -55,6 +55,12 @@ class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm
         initial=True
     )
 
+    online_resource_datahub_file_usage = forms.JSONField(
+        required=True,
+        widget=forms.HiddenInput(),
+        initial=dict()
+    )
+
 
 class UploadUpdatedWorkflowFileForm(UploadUpdatedFileForm):
     workflow_details_file_source = forms.ChoiceField(
