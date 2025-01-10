@@ -9,21 +9,17 @@ const sourceFileListItemTemplate = JSON.parse(document.querySelector("#source-fi
 const emptyOnlineResourceFileListItem = document.createElement("LI");
 emptyOnlineResourceFileListItem.className = "list-group-item list-group-item-light";
 emptyOnlineResourceFileListItem.textContent = "This Catalogue Data Subset has no online resources.";
-const UNIX_TIMESTAMP_LENGTH = Date.now().toString().length;
 
 
 export class CatalogueDataSubsetOnlineResourceList {
-    addTimestampToElementId(elementId) {
-        const isTimestampAddedAlready = Number.isInteger(Number.parseInt(elementId.slice(-UNIX_TIMESTAMP_LENGTH)));
-        if (isTimestampAddedAlready) {
-            return `${elementId.slice(0, -UNIX_TIMESTAMP_LENGTH)}${Date.now()}`
-        }
-        return `${elementId}${Date.now()}`;
+    addRandomNumberToElementId(elementId) {
+        const randomString = Math.random().toString().substr(2, 5)
+        return `${elementId}${randomString}`;
     }
     
     updateElementsWithDuplicatedIdsForOnlineResourceFileListItem(elementsWithDuplicatedIds, onlineResourceFileListItem) {
         for (const element of elementsWithDuplicatedIds) {
-            const newId = this.addTimestampToElementId(element.id);
+            const newId = this.addRandomNumberToElementId(element.id);
             const correspondingLabels = onlineResourceFileListItem.querySelectorAll(`label[for="${element.id}"]`);
             const correspondingAriaDescBys = onlineResourceFileListItem.querySelectorAll(`[aria-describedby="${element.id}"]`);
             element.id = newId;
