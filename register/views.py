@@ -10,7 +10,6 @@ from django.db import (
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.text import slugify
 from django.utils.html import escape
 from django.views.generic import FormView
 from pyexpat import ExpatError
