@@ -546,7 +546,10 @@ class WorkflowEditor(
 class SimpleMetadataEditor:
     def __init__(self, xml_string: str) -> None:
         self.xml_string = xml_string
-        self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
+        try:
+            self.xml_string_parsed = etree.fromstring(self.xml_string.encode('utf-8'))
+        except AttributeError:
+            self.xml_string_parsed = etree.fromstring(self.xml_string)
         self.PITHIA_NS_PREFIX = 'PITHIA'
         self.namespaces = {
             self.PITHIA_NS_PREFIX: Namespace.PITHIA,

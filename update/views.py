@@ -84,7 +84,7 @@ class ResourceUpdateFormView(FormView):
     def update_resource(self):
         return self.model.objects.update_from_xml_string(
             self.resource_id,
-            self.xml_file_string,
+            self.xml_string,
             self.owner_id
         )
 
@@ -119,9 +119,9 @@ class ResourceUpdateFormView(FormView):
         response = super().form_valid(form)
         xml_file = self.request.FILES['files']
         try:
-            if self.xml_file_string is None:
+            if self.xml_string is None:
                 xml_file.seek(0)
-                self.xml_file_string = xml_file.read()
+                self.xml_string = xml_file.read()
             self.update_resource()
 
             messages.success(self.request, f'Successfully updated {escape(xml_file.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
@@ -469,7 +469,7 @@ class CatalogueDataSubsetUpdateFormView(
             # so the new DOI kernel metadata is added to
             # the submitted XML file.
             self.resource = self.model.objects.get(pk=self.resource_id)
-            self.xml_file_string = self.reinsert_pre_existing_doi_kernel_metadata_into_updated_xml_file_if_needed(
+            self.xml_string = self.reinsert_pre_existing_doi_kernel_metadata_into_updated_xml_file_if_needed(
                 self.resource,
                 xml_file
             )
@@ -515,7 +515,7 @@ class WorkflowUpdateFormView(
         # source by mistake, but still use the eSC
         # details file URL. If this is true, do not
         # delete the details file from DataHub.
-        updated_workflow_details_url = WorkflowXmlMappingShortcuts(self.xml_file_string.decode()).workflow_details_url
+        updated_workflow_details_url = WorkflowXmlMappingShortcuts(self.xml_string.decode()).workflow_details_url
         if updated_workflow_details_url == self.get_workflow_details_file_url():
             return updated_resource
         try:
@@ -530,7 +530,7 @@ class WorkflowUpdateFormView(
             self.workflow_details_file_source = form.cleaned_data.get('workflow_details_file_source')
             if self.workflow_details_file_source == 'existing':
                 xml_file.seek(0)
-                self.xml_file_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
+                self.xml_string = self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file.read().decode())
             elif self.workflow_details_file_source == 'external':
                 xml_file.seek(0)
                 workflow_xml = WorkflowXmlMappingShortcuts(xml_file.read().decode())
@@ -542,7 +542,7 @@ class WorkflowUpdateFormView(
             elif self.workflow_details_file_source == 'file_upload':
                 self.workflow_details_file = self.request.FILES['workflow_details_file']
                 xml_file.seek(0)
-                self.xml_file_string = self.store_workflow_details_file_and_update_xml_file_string(xml_file.read().decode())
+                self.xml_string = self.store_workflow_details_file_and_update_xml_file_string(xml_file.read().decode())
             return super().form_valid(form)
         except Exception:
             logger.exception(self.error_msg)
