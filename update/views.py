@@ -1,6 +1,9 @@
 import logging
 import os
+import shutil
+import tempfile
 from django.contrib import messages
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.shortcuts import (
     get_object_or_404,
@@ -13,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.utils.html import escape
 from django.utils.text import slugify
 from django.views.generic.edit import FormView
+from io import BufferedReader
 from pyexpat import ExpatError
 
 from common import models
@@ -363,6 +367,30 @@ class CatalogueDataSubsetUpdateFormView(
 
     error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
 
+    @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
+    def update_resource(self):
+        if not self.is_file_uploaded_for_each_online_resource:
+            return super().update_resource()
+
+        with tempfile.TemporaryDirectory() as temp_dirname:
+            self.configure_and_add_source_files_to_temporary_directory(temp_dirname)
+            updated_resource = super().update_resource()
+            self.copy_temporary_directory_to_datahub(
+                temp_dirname,
+                self.get_catalogue_data_subset_datahub_directory_path()
+            )
+            return updated_resource
+
+    def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile|BufferedReader, source_file_write_path: str):
+        try:
+            return super().add_source_file_to_temporary_directory(
+                source_file,
+                source_file_write_path
+            )
+        except AttributeError as err:
+            logger.exception(err)
+        return shutil.copyfile(source_file.name, source_file_write_path)
+
     def get_names_of_online_resources_with_files(self):
         # Get list of online resources from resource
         catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.resource.xml)
@@ -402,6 +430,8 @@ class CatalogueDataSubsetUpdateFormView(
         return context
 
     def form_valid(self, form):
+        self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
+        self.source_files = self.request.FILES
         xml_file = self.request.FILES['files']
         
         try:
