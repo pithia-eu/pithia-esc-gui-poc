@@ -56,7 +56,7 @@ class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm
     )
 
     online_resource_datahub_file_usage = forms.JSONField(
-        required=True,
+        required=False,
         widget=forms.HiddenInput(),
         initial=dict()
     )
