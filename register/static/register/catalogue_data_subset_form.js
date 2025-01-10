@@ -28,7 +28,8 @@ async function loadOnlineResourcesFromMetadataFile(onlineResourceList) {
 }
 
 export async function setupOnlineResourceListAndLoadFiles(onlineResourceList) {
-    loadOnlineResourcesFromMetadataFile(onlineResourceList);
+    await loadOnlineResourcesFromMetadataFile(onlineResourceList);
+    onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
 
     onlineResourceFileInputSwitch.addEventListener("change", () => {
         onlineResourceList.toggleVisibility(onlineResourceFileInputSwitch.checked);
