@@ -381,6 +381,9 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request):
+        if not self.is_file_uploaded_for_each_online_resource:
+            return self.register_xml_string()
+
         with tempfile.TemporaryDirectory() as temp_dirname:
             wrapped_xml_file = XMLMetadataFile(self.xml_string, '')
             self.resource_id = wrapped_xml_file.localid
