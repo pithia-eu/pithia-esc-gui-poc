@@ -7,7 +7,7 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
     setFileUploadDisplayState(isDisplayed, isRequiredAttributeUpdated, fileInputWrapper) {
         const fileInput = fileInputWrapper.querySelector("input[type='file']");
         // Enable/disable file input
-        fileInput.disabled = !isDisplayed;
+        fileInput.disabled = !isDisplayed || !this.isUsingDataHub;
 
         // Show/hide file input
         if (isDisplayed) {
@@ -101,7 +101,7 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
             useExistingSourceFileCheckbox.addEventListener("change", () => {
                 this.configureFileInputsIfExistingDataHubFileForTabPane(correspondingTabPane);
             });
-            return this.configureFileInputsIfExistingDataHubFileForTabPane(correspondingTabPane);            
+            return this.configureFileInputsIfExistingDataHubFileForTabPane(correspondingTabPane);
         }
 
         // If a source file is not in DataHub,

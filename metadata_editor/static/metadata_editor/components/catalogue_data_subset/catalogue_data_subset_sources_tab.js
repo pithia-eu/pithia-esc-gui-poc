@@ -29,7 +29,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         for (const inputWrapper of inputWrappersInTab) {
             const inputsInWrapper = inputWrapper.querySelectorAll("input");
             for (const input of inputsInWrapper) {
-                input.disabled = false;
+                input.removeAttribute("disabled");
             }
             inputWrapper.classList.remove("d-none");
         }
@@ -40,7 +40,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
         for (const inputWrapper of inputWrappersInTab) {
             const inputsInWrapper = inputWrapper.querySelectorAll("input");
             for (const input of inputsInWrapper) {
-                input.disabled = true;
+                input.setAttribute("disabled", "true");
             }
             inputWrapper.classList.add("d-none");
         }
@@ -59,6 +59,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
     }
 
     setSourceFileSharingMethodToLinkage() {
+        this.isUsingDataHub = false;
         this.enabledSourceFileSharingMethodInputSelector = this.sourceLinkageInputSelector;
         this.enabledSourceFileSharingMethodInputWrapperSelector = this.sourceLinkageInputWrapperSelector;
         this.disabledSourceFileSharingMethodInputSelector = this.sourceFileInputSelector;
@@ -67,6 +68,7 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
     }
     
     setSourceFileSharingMethodToFileUpload() {
+        this.isUsingDataHub = true;
         this.enabledSourceFileSharingMethodInputSelector = this.sourceFileInputSelector;
         this.enabledSourceFileSharingMethodInputWrapperSelector = this.sourceFileInputWrapperSelector;
         this.disabledSourceFileSharingMethodInputSelector = this.sourceLinkageInputSelector;
