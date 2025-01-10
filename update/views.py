@@ -370,6 +370,10 @@ class CatalogueDataSubsetUpdateFormView(
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def update_resource(self):
         if not self.is_file_uploaded_for_each_online_resource:
+            try:
+                self.delete_catalogue_data_subset_directory()
+            except FileNotFoundError:
+                logger.exception(f'The directory for Catalogue Data Subset {self.resource_id} has already been deleted.')
             return super().update_resource()
 
         with tempfile.TemporaryDirectory() as temp_dirname:
