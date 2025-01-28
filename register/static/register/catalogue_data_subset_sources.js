@@ -13,7 +13,7 @@ emptyOnlineResourceFileListItem.textContent = "This Catalogue Data Subset has no
 
 export class CatalogueDataSubsetOnlineResourceList {
     addRandomNumberToElementId(elementId) {
-        const randomString = Math.random().toString().substr(2, 5)
+        const randomString = Math.random().toString().substring(2, 7)
         return `${elementId}${randomString}`;
     }
     
