@@ -317,6 +317,13 @@ header .login-link {
     text-decoration-color: var(--bs-dark-emphasis);
 }
 
+.navbar .nav-item a.dropdown-toggle span:hover,
+.navbar .nav-item a.dropdown-toggle span:focus,
+.navbar .nav-item a.dropdown-toggle:hover,
+.navbar .nav-item a.dropdown-toggle:focus {
+    text-decoration: underline;
+}
+
 .user-dropdown {
     text-align: center;
 }
