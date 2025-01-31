@@ -307,7 +307,8 @@ header .login-link {
 .navbar a:focus,
 .navbar a:active,
 .navbar .nav-item .nav-link,
-.navbar .dropdown-menu .dropdown-item {
+.navbar .dropdown-menu .dropdown-item,
+.user-dropdown .dropdown-menu a {
     color: var(--bs-dark-emphasis);
     text-decoration-color: var(--bs-dark-emphasis);
 }
