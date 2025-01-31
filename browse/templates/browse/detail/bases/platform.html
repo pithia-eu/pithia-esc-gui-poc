@@ -1,16 +1,32 @@
 {% extends 'browse/detail/bases/base.html' %}
 {% block top_section_extra_content %}
-{% if resource.properties.gmd_url %}
-<div class="border-top pt-4 mt-4">
+{% if resource.properties.gmd_url or resource.properties.standard_identifiers %}
+<div class="resource-detail-top-section-extra-content border-top mt-4">
     <dl class="mb-0">
         {% if resource.properties.gmd_url %}
-        <div>
+        <div class="pt-4">
             <dt>Website</dt>
             <dd>
                 {% with url_custom_width='20rem' %}
                 {% include 'browse/detail/components/top_section_extra_content/url.html' %}
                 {% endwith %}
             </dd>
+        </div>
+        {% endif %}
+        {% if resource.properties.standard_identifiers %}
+        <div class="pt-4">
+            <dt class="mb-2">
+                {% if resource.properties.standard_identifiers|length == 1 %}
+                Standard Identifier
+                {% else %}
+                Standard Identifiers
+                {% endif %}
+            </dt>
+            {% for standard_identifier in resource.properties.standard_identifiers %}
+            <dd>
+                {{ standard_identifier.value }} <span class="text-secondary">({{ standard_identifier.authority }})</span>
+            </dd>
+            {% endfor %}
         </div>
         {% endif %}
     </dl>

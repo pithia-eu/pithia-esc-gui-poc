@@ -591,6 +591,7 @@ class PlatformDetailView(ResourceDetailView):
                 'documentation',
                 'location',
                 'shortName',
+                'standardIdentifier',
                 'type',
                 'URL',
             ]

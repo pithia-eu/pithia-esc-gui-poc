@@ -16,6 +16,7 @@ from .xml_metadata_mapping_shortcut_mixins import (
     PithiaRelatedPartiesMetadataPropertiesMixin,
     PithiaResourceUrlsMetadataPropertiesMixin,
     PithiaShortNameMetadataPropertiesMixin,
+    PithiaStandardIdentifiersMetadataPropertiesMixin,
     PithiaStatusMetadataPropertiesMixin,
 )
 
@@ -78,7 +79,8 @@ class PlatformXmlMappingShortcuts(
         PithiaDocumentationMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,
         PithiaRelatedPartiesMetadataPropertiesMixin,
-        PithiaResourceUrlsMetadataPropertiesMixin):
+        PithiaResourceUrlsMetadataPropertiesMixin,
+        PithiaStandardIdentifiersMetadataPropertiesMixin):
     @property
     def location(self):
         gml_point = self._get_first_element_from_list(self._get_elements_with_xpath_query('.//%s:geometryLocation' % (self.PITHIA_NSPREFIX_XPATH)))
