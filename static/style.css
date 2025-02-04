@@ -842,31 +842,30 @@ as Bootstrap styling. */
     font-size: 0.925rem;
 }
 
-details[name="details-permissions"]:not([open]) summary > span::after {
-    content: 'Expand for details';
+details[name="details-permissions"] summary > span::after {
     font-size: 0.875rem;
     color: var(--bs-secondary);
 }
 
+details[name="details-permissions"]:not([open]) summary > span::after {
+    content: 'Expand for details';
+}
+
+details[name="details-permissions"][open] summary > span::after {
+    content: 'Hide details';
+}
+
 .interaction-methods-subsection {
-    padding-top: 1rem;
-    padding-bottom: 0;
+    padding-block: 0;
+    padding-top: 1.25rem;
 }
 
 .interaction-methods-subsection + .interaction-methods-subsection {
-    padding-top: 1rem;
+    padding-top: 2rem;
 }
 
 .online-resource-list > li {
     padding-block: 1.5rem;
-}
-
-.interaction-methods-subsection h3 {
-    padding-top: 0.75rem;
-}
-
-.interaction-methods-subsection h3 {
-    position: relative;
 }
 
 .online-resource-list > li:not(li:first-of-type) {
