@@ -1029,7 +1029,7 @@ details[name="details-permissions"][open] summary > span::after {
     border-top-width: 0;
 }
 
-.file-upload-registration-section.bg-light.rounded:first-of-type {
+.file-upload-registration-section.bg-body-tertiary.rounded:first-of-type {
     margin-block: calc(var(--resource-registration-upload-section-padding) + 0.25rem);
 }
 

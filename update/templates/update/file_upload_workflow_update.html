@@ -18,7 +18,7 @@
     <legend>
         <h2 class="fs-4 fw-semibold required mb-0">Configure Workflow Details</h2>
     </legend>
-    <div id="workflow-details-file-upload-section" class="bg-light rounded p-3">
+    <div id="workflow-details-file-upload-section" class="bg-body-tertiary rounded p-3">
         <ul class="list-unstyled d-flex flex-column row-gap-4 mb-0">
             {% for radio in form.workflow_details_file_source %}
             {% if not forloop.counter0 in disabled_workflow_details_file_source_choice_indexes %}
