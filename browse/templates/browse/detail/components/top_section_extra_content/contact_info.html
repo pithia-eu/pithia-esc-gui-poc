@@ -8,27 +8,29 @@
                 {% block position_name_section %}{% endblock position_name_section %}
                 {% if resource.properties.online_resource.strip or resource.properties.email_address or resource.properties.phone %}
                 <section class="d-flex flex-column align-items-start row-gap-2 py-0">
-                    <h2 class="fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
+                    <h2 class="fw-semibold fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
                     {% if resource.properties.online_resource.strip %}
-                    <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default mb-auto" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                    <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default mb-auto">
                         {{ resource.properties.online_resource }}
                     </a>
                     {% endif %}
-                    {% if resource.properties.email_address %}
-                    <a href="mailto:{{ resource.properties.email_address }}" class="link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                        Send email
-                    </a>
-                    {% endif %}
-                    {% if resource.properties.phone %}
-                    <a href="tel:{{ resource.properties.phone }}" class="link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-                        {{ resource.properties.phone }}
-                    </a>
-                    {% endif %}
+                    <div class="d-flex flex-column row-gap-1">
+                        {% if resource.properties.email_address %}
+                        <a href="mailto:{{ resource.properties.email_address }}" class="link-underline-by-default">
+                            Send email
+                        </a>
+                        {% endif %}
+                        {% if resource.properties.phone %}
+                        <a href="tel:{{ resource.properties.phone }}" class="link-underline-by-default">
+                            {{ resource.properties.phone }}
+                        </a>
+                        {% endif %}
+                    </div>
                 </section>
                 {% endif %}
                 {% if resource.properties.hours_of_service %}
                 <section class="d-flex flex-column row-gap-1 py-0">
-                    <h2 class="fs-6 mb-0">Hours of Service</h2>
+                    <h2 class="fw-semibold fs-6 mb-0">Hours of Service</h2>
                     <p class="mb-0">{{ resource.properties.hours_of_service }}</p>
                 </section>
                 {% endif %}
@@ -38,7 +40,7 @@
         {% if resource.properties.address %}
         <div class="col-lg-6">
             <section class="d-flex flex-column row-gap-1 py-0">
-                <h2 class="fs-6 mb-0">Location</h2>
+                <h2 class="fw-semibold fs-6 mb-0">Location</h2>
                 <div>
                     {% if resource.properties.delivery_point %}
                     <p class="mb-0">{{ resource.properties.delivery_point }}</p>
