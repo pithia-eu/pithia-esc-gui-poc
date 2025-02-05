@@ -24,9 +24,9 @@ header .nav-link,
     text-decoration: none;
 }
 
-a:not(.btn, .header-logo-link, footer a),
-a:hover:not(.btn, .header-logo-link, footer a),
-a:focus:not(.btn, .header-logo-link, footer a) {
+a:not(.btn, .badge, .header-logo-link, footer a),
+a:hover:not(.btn, .badge, .header-logo-link, footer a),
+a:focus:not(.btn, .badge, .header-logo-link, footer a) {
     color: var(--pithia-blue);
     text-decoration-color: var(--pithia-blue);
 }
@@ -239,7 +239,7 @@ p {
 
 .page-info-emphasised {
     color: var(--bs-secondary-emphasis);
-    background-color: var(--bs-light);
+    background-color: var(--bs-light-bg-subtle);
     padding-block: 1rem;
     padding-inline: 1.5rem;
     border-radius: var(--bs-border-radius);
@@ -882,6 +882,10 @@ details[name="details-permissions"][open] summary > span::after {
     white-space: wrap;
     text-align: left;
     line-height: 1.2;
+}
+
+.type-badge-list .badge {
+    background-color: var(--bs-dark);
 }
 
 /* Resource management list page */
@@ -1887,6 +1891,10 @@ ul.tree ul {
 }
 
 @media (prefers-color-scheme: dark) {
+    .type-badge-list .badge {
+        background-color: var(--bs-light-bg-subtle);
+    }
+
     :root {
         --pithia-blue: #33AEE4;
     }

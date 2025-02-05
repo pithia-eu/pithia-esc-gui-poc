@@ -1,12 +1,12 @@
 {% load project_tags %}
 {% if 'type' in resource.json %}
-<div class="d-flex flex-wrap column-gap-2 fs-5">
+<ul class="d-flex flex-wrap column-gap-2 list-unstyled type-badge-list fs-5 mb-0">
     {% for type in resource.json.type|wrap_in_list_if_dict %}
-    <div>
-        {% with value=type|get_key_value:'@xlink:href' pill_type='dark' %}
+    <li>
+        {% with value=type|get_key_value:'@xlink:href' pill_type='none' %}
         {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
         {% endwith %}
-    </div>
+    </li>
     {% endfor %}
-</div>
+</ul>
 {% endif %}
