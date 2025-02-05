@@ -1886,6 +1886,8 @@ ul.tree ul {
     --resource-registration-upload-section-padding: 2rem;
 }
 
-[data-bs-theme="dark"] {
-    --pithia-blue: #33AEE4;
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pithia-blue: #33AEE4;
+    }
 }
