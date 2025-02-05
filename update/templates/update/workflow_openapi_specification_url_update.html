@@ -24,7 +24,7 @@
             </span>
         </small>
     </div>
-    <form id="workflow-openapi-spec-url-update-form" class="d-flex flex-column row-gap-4 bg-light rounded p-4" action="{% url 'update:workflow_openapi_specification_url' workflow.id %}" method="POST">
+    <form id="workflow-openapi-spec-url-update-form" class="d-flex flex-column row-gap-4 bg-body-tertiary rounded p-4" action="{% url 'update:workflow_openapi_specification_url' workflow.id %}" method="POST">
         {% csrf_token %}
         <div>
             {{ form.api_specification_url.label_tag }}
