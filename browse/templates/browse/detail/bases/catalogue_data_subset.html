@@ -7,7 +7,7 @@
         <div>
             <dt class="mb-1">Result Time</dt>
             <dd>
-                <div class="d-inline-flex align-items-center justify-content-center column-gap-2 bg-light rounded py-2 px-3">
+                <div class="d-inline-flex align-items-center justify-content-center column-gap-2 bg-body-tertiary rounded py-2 px-3">
                     <span>
                         {% if resource.properties.result_time.time_period.begin.time_position %}
                         {{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i O' }}

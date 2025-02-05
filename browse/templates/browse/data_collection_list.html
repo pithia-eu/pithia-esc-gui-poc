@@ -20,7 +20,7 @@ Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-defa
     <section class="d-flex flex-column pt-0">
         <div class="mx-auto">
             <h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
-            <ul style="min-width: 20rem;" class="list-unstyled bg-light text-secondary-emphasis rounded py-3 px-4 mb-0">
+            <ul style="min-width: 20rem;" class="list-unstyled bg-body-tertiary text-secondary-emphasis rounded py-3 px-4 mb-0">
                 {% for key, value in resources.items %}
                 {% if value %}
                 <li class="my-1">
@@ -41,7 +41,7 @@ Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-defa
 <div class="d-xl-none d-block col-xl-7 mt-4">
     <section class="pb-0">
         <h2 class="fw-semibold fs-5 mb-3">In This Page</h2>
-        <ul class="bg-light text-secondary-emphasis list-unstyled rounded p-3 ps-4 mb-0">
+        <ul class="bg-body-tertiary text-secondary-emphasis list-unstyled rounded p-3 ps-4 mb-0">
             {% for key, value in resources.items %}
             {% if value %}
             <li class="my-1">

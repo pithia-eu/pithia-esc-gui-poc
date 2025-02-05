@@ -119,24 +119,24 @@
                     {% endif %}
                     <section id="metadata-information-section">
                         <div class="table-responsive rounded">
-                            <table class="table table-borderless table-light resource-key-details mb-0 p-3">
+                            <table class="table table-borderless resource-key-details mb-0 p-3">
                                 <caption class="caption-top pt-lg-0 fs-4">Metadata Information</caption>
                                 <tbody>
                                     <tr>
-                                        <td><b>Editor</b></td>
-                                        <td>{{ resource.institution_id|default:'Unknown' }}</td>
+                                        <td class="bg-body-tertiary"><b>Editor</b></td>
+                                        <td class="bg-body-tertiary">{{ resource.institution_id|default:'Unknown' }}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Version</b></td>
-                                        <td>{{ resource.identifier.PITHIA_Identifier.version }}</td>
+                                        <td class="bg-body-tertiary"><b>Version</b></td>
+                                        <td class="bg-body-tertiary">{{ resource.identifier.PITHIA_Identifier.version }}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Created</b></td>
-                                        <td>{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                        <td class="bg-body-tertiary"><b>Created</b></td>
+                                        <td class="bg-body-tertiary">{{ scientific_metadata_creation_date_parsed|date:'l jS N Y, H:i' }}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Last Modified</b></td>
-                                        <td>{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
+                                        <td class="bg-body-tertiary"><b>Last Modified</b></td>
+                                        <td class="bg-body-tertiary">{{ scientific_metadata_last_modification_date_parsed|date:'l jS N Y, H:i' }}</td>
                                     </tr>
                                 </tbody>
                             </table>
