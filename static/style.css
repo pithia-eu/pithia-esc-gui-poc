@@ -492,8 +492,8 @@ header .login-link {
 }
 
 .btn-card-help-dialog-tooltip {
-    --bs-tooltip-bg: white;
-    --bs-tooltip-color: var(--bs-gray-800);
+    --bs-tooltip-bg: var(--bs-light-bg-subtle);
+    --bs-tooltip-color: var(--bs-light-emphasis);
 }
 
 /* When quick help button is not in card menu */
@@ -699,12 +699,12 @@ as Bootstrap styling. */
     border: none;
     padding: 1.5rem;
     border-radius: var(--bs-border-radius);
-    background-color: var(--bs-light);
+    background-color: var(--bs-light-bg-subtle);
 }
 
 .resource-detail-emphasised-section details,
 .resource-detail-emphasised-section li {
-    background-color: var(--bs-light);
+    background-color: var(--bs-light-bg-subtle);
 }
 
 .resource-detail-emphasised-section + .resource-detail-section {
@@ -1533,9 +1533,8 @@ ul.tree ul {
 
 /* Bootstrap tooltips */
 .custom-tooltip {
-    --bs-tooltip-bg: var(--bs-light);
-    --bs-tooltip-color: var(--bs-light-text-emphasis);
-  
+    --bs-tooltip-bg: var(--bs-light-bg-subtle);
+    --bs-tooltip-color: var(--bs-light-emphasis);
 }
 
 
