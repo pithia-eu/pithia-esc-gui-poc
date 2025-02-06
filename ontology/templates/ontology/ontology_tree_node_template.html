@@ -25,18 +25,18 @@
 
         <!-- "Invalid" indicator -->
         {% if not node.prefLabel %}
-        <small class="text-secondary fst-italic">(This ontology term may no longer be invalid.)</small>
+        <small class="text-body-secondary fst-italic">(This ontology term may no longer be invalid.)</small>
         {% endif %}
     </div>
     {% if node.definition %}
-    <div class="ontology-term-description text-secondary mb-3">
+    <div class="ontology-term-description text-body-secondary mb-3">
         {% autoescape off %}
         {{ node.definition|default:'' }}
         {% endautoescape %}
     </div>
     {% endif %}
     {% if node.prefLabel %}
-    <small class="text-secondary text-break">
+    <small class="text-body-secondary text-break">
         Ontology IRI: <a href="{{ node.iri|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ node.iri|default:'' }}</a>
     </small>
     {% endif %}
