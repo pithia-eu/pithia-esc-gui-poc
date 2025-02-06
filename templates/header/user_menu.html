@@ -17,7 +17,7 @@
         {% if request.session.institution_for_login_session %}
         <div class="px-4 py-2">
             <small class="fw-bold" style="white-space: pre-wrap;">{{ request.session.institution_for_login_session }}</small>
-            <div class="text-secondary" style="white-space: pre-wrap;">{% if request.session.subgroup_for_login_session == 'admins' %}Admin{% else %}Member{% endif %}</div>
+            <div class="text-body-secondary" style="white-space: pre-wrap;">{% if request.session.subgroup_for_login_session == 'admins' %}Admin{% else %}Member{% endif %}</div>
         </div>
         <hr class="dropdown-divider">
         {% endif %}

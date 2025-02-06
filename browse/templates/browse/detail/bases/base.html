@@ -24,13 +24,13 @@
             <div class="d-flex flex-column align-items-start row-gap-1 mb-3">
                 <h1 class="text-break mb-0">{{ resource.name }}</h1>
                 {% if 'shortName' in resource.json and resource.json.shortName %}
-                <span class="text-secondary">({{ resource.json.shortName }})</span>
+                <span class="text-body-secondary">({{ resource.json.shortName }})</span>
                 {% endif %}
                 {% block pre_last_modified_date_content %}{% endblock pre_last_modified_date_content %}
             </div>
             <div class="d-flex flex-column row-gap-4">
                 {% include 'browse/detail/components/type_badges.html' %}
-                <p class="text-secondary mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+                <p class="text-body-secondary mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
                 {% block top_section_website %}{% endblock top_section_website %}
             </div>
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
@@ -100,7 +100,7 @@
                                         <td>{{ key|safe }}</td>
                                         <td>
                                             {% if not value.strip %}
-                                            <i class="text-secondary">Not used</i>
+                                            <i class="text-body-secondary">Not used</i>
                                             {% elif value in ontology_server_urls %}
                                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                                             {% elif value in resource_server_urls %}
@@ -150,7 +150,7 @@
         {% block aside_extra_content %}{% endblock aside_extra_content %}
         {% include 'browse/detail/sections/asides/related_aside_section.html' %}
         <section class="resource-detail-aside-section">
-            <h2 class="fs-6 text-secondary">
+            <h2 class="fs-6 text-body-secondary">
                 Page Suggestions & Support
             </h2>
             <ul class="list-unstyled">

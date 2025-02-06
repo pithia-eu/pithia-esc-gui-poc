@@ -470,13 +470,13 @@ export class MetadataValidationStatusUIController {
                             <div class="d-inline-flex flex-column row-gap-2">
                                 <div class="d-inline-flex align-items-center column-gap-2">
                                     <span class="main-validation-status">
-                                        <span class="text-secondary">
+                                        <span class="text-body-secondary">
                                             <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>Validating
                                         </span>
                                     </span>
-                                    <small class="text-secondary total-time-validated">
+                                    <small class="text-body-secondary total-time-validated">
                                         (<span class="time-value">-</span>)
                                     </small>
                                 </div>
@@ -494,56 +494,56 @@ export class MetadataValidationStatusUIController {
                         </summary>
                         <ul class="list-unstyled mt-2">
                             <li class="sv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating syntax
                                 </div>
                             </li>
                             <li class="tev-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating UTF-8 encoding
                                 </div>
                             </li>
                             <li class="renv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating type
                                 </div>
                             </li>
                             <li class="liv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating local ID
                                 </div>
                             </li>
                             <li class="nsv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating namespace
                                 </div>
                             </li>
                             <li class="mrv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating references to other metadata
                                 </div>
                             </li>
                             <li class="orv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating references to ontology references
                                 </div>
                             </li>
                             <li class="xv-list-group-item py-2">
-                                <div class="text-secondary">
+                                <div class="text-body-secondary">
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>Validating XSD

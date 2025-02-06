@@ -20,11 +20,11 @@
     {% endif %}
     {% with entries=catalogue.entries %}
     {% if not entries %}
-    <div class="card border text-secondary mt-4 mb-0">
+    <div class="card border text-body-secondary mt-4 mb-0">
         <div class="card-body">No entries.</div>
     </div>
     {% else %}
-    <p class="text-secondary mb-3">
+    <p class="text-body-secondary mb-3">
         {% if entries|length == 1 %}
         {{ entries|length }} Entry
         {% else %}

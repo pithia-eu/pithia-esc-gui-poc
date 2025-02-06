@@ -77,7 +77,7 @@ const WorkflowMetadataValidationStatusUIController = Base => class extends Base 
         const statusList = document.querySelector(`.file-list-group-item-${metadataFile.id} .details-validation ul`);
         statusList.append(this.htmlToElement(`
             <li class="wv-list-group-item py-2">
-                <div class="text-secondary">
+                <div class="text-body-secondary">
                     <div class="spinner-grow spinner-grow-sm me-2" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>Validating link to workflow details file
