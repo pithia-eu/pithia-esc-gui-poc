@@ -32,7 +32,7 @@ class EditorRegistrationForm(forms.Form):
         label='Local ID',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control text-secondary-emphasis bg-body-secondary',
+            'class': 'form-control text-body-secondary-emphasis bg-body-secondary',
             'readonly': True,
         }),
         help_text='''The local ID is automatically generated from the full name you give this registration.
@@ -44,7 +44,7 @@ class EditorRegistrationForm(forms.Form):
         label='Namespace',
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control text-secondary-emphasis bg-body-secondary',
+            'class': 'form-control text-body-secondary-emphasis bg-body-secondary',
             'readonly': True,
         }),
         help_text=f'This is automatically generated with the short name of the organisation associated with this registration.'
