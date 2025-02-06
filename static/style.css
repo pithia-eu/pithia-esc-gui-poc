@@ -983,7 +983,7 @@ details[name="details-permissions"][open] summary > span::after {
 
 .file-validation-status-list:empty::before {
     content: 'When you select a file, it will be sent to our servers for validation. Its validation progress will appear here.';
-    color: gray;
+    color: var(--bs-body-secondary);
 }
 
 .details-validation .error-counter {
@@ -1056,14 +1056,14 @@ details[name="details-permissions"][open] summary > span::after {
 }
 
 .online-resource-files-list:empty {
-    border: grey 1px dashed;
+    border: var(--bs-secondary-color) 1px dashed;
     padding: 1rem;
     border-radius: var(--bs-border-radius);
 }
 
 .online-resource-files-list:empty::before {
     content: 'When you select a metadata file, a list of its online resources will appear here.';
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
 }
 
 
