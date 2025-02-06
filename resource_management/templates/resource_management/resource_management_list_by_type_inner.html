@@ -14,7 +14,7 @@
             <tr>
                 <td headers="name">
                     <div>{{ resource.name|default:resource.localid }}</div>
-                    <small class="text-secondary">{{ resource.localid }}, {{ resource.namespace }}</small>
+                    <small class="text-body-secondary">{{ resource.localid }}, {{ resource.namespace }}</small>
                 </td>
                 <td headers="updated-by">
                     {{ institution_members_by_id|get_key_value:resource.owner_id|default:'Unknown' }}
