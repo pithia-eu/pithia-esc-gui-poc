@@ -2,7 +2,11 @@
     <div class="container">
         <a class="d-md-none d-flex align-items-center navbar-brand header-logo-link" href="/">
             {% load static %}
-            <img src="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo">
+            <picture>
+                <source srcset="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" media="(prefers-color-scheme: light)" />
+                <source srcset="{% static "pithia-logo-dark.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo" media="(prefers-color-scheme: dark)" />
+                <img src="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo">
+            </picture>
             <div class="d-inline-flex flex-column align-items-start text-decoration-none fs-4">
                 <span class="fs-6 fw-semibold lh-sm pithia-blue-2">PITHIA</span>
                 <span class="fs-5 lh-sm">eSC</span>
