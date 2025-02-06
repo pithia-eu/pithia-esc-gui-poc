@@ -35,7 +35,7 @@ from ontology.utils import (
 _INDEX_PAGE_TITLE = 'Search Data Collections by Content'
 
 def get_tree_form_for_ontology_component(request, ontology_component):
-    terms_load_error_msg = '<span class="text-secondary">The form could not be loaded due to a server error.</span>'
+    terms_load_error_msg = '<span class="text-body-secondary">The form could not be loaded due to a server error.</span>'
 
     instrument_types_grouped_by_observed_property = {}
     computation_types_grouped_by_observed_property = {}

@@ -289,7 +289,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
     //     if (enabledCheckboxes.length > 0) {
     //         const firstCheckboxLabel = detailsNode.querySelector('label');
     //         let span = document.createElement('span');
-    //         span.className = 'text-secondary';
+    //         span.className = 'text-body-secondary';
     //         span.innerHTML = ` ${enabledCheckboxes.length}`;
     //         firstCheckboxLabel.after(span);
     //     }
