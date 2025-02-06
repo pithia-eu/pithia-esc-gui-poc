@@ -120,7 +120,7 @@ h1 {
 hgroup p {
     max-width: 45ch;
     font-size: 1.75rem !important;
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
 }
 
 .btn-transparent {
@@ -671,7 +671,7 @@ as Bootstrap styling. */
 
 .online-resource-list li > div:has(> details:not([open])) .or-service-function,
 .online-resource-list li > div:has(> details:not([open])) > details > summary {
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
 }
 
 #further-information-section {
@@ -844,7 +844,7 @@ as Bootstrap styling. */
 
 details[name="details-permissions"] summary > span::after {
     font-size: 0.875rem;
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
 }
 
 details[name="details-permissions"]:not([open]) summary > span::after {
@@ -944,14 +944,6 @@ details[name="details-permissions"][open] summary > span::after {
     display: flex;
     flex-direction: column;
     word-break: break-word;
-}
-
-.file-validation-status-list-section:has(ul:empty) .file-validation-status-list-heading {
-    color: var(--bs-secondary);
-}
-
-.file-validation-status-list-section:has(ul:not(:empty)) .file-validation-status-list-heading {
-    color: var(--bs-body-color);
 }
 
 #file-upload-form h2 {
@@ -1161,13 +1153,12 @@ label.required::after {
     font-size: 1rem;
     font-weight: 600;
     margin-top: 0.25rem;
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
 }
 
 #search-by-content-accordion legend h4 {
     font-size: 0.875rem;
-    /* font-weight: 600; */
-    color: var(--bs-secondary);
+    color: var(--bs-secondary-color);
     margin-top: 0.15rem;
 }
 
@@ -1790,7 +1781,7 @@ ul.tree ul {
         left: 0;
         right: 0;
         top: 0;
-        box-shadow: 0 -3em 3em -1em white inset;
+        box-shadow: 0 -3em 3em -1em var(--bs-body-bg) inset;
         pointer-events: none;
         transition: all 0.2s ease-out;
     }
