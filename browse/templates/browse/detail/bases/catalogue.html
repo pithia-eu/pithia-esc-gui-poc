@@ -1,8 +1,8 @@
 {% extends 'browse/detail/bases/base_catalogue_related.html' %}
 {% load project_tags %}
 {% block top_section_extra_content %}
-<div class="pt-4">
-    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='catalogue-category-badge' %}
+<div class="type-badge-list pt-4">
+    {% with value=resource.properties.catalogue_category pill_type='none' extra_badge_classes='catalogue-category-badge' %}
     {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
     {% endwith %}
 </div>
@@ -10,8 +10,8 @@
 {% block post_description_content %}
 {% if resource.entries %}
 <section class="resource-detail-section">
-    <h2>Entries for This Catalogue</h2>
-    <p class="text-secondary">
+    <h2 class="mb-2">Entries for This Catalogue</h2>
+    <p class="text-body-secondary">
         {% if resource.entries|length == 1 %}
         {{ resource.entries|length }} Entry
         {% else %}

@@ -41,7 +41,7 @@
             {% endblock search %}
             {% block resource_list_outer %}
             {% if not resources %}
-            <p class="text-secondary">{{ empty_resource_list_text }}</p>
+            <p class="text-body-secondary">{{ empty_resource_list_text }}</p>
             {% else %}
             {% block resource_list_inner %}
             {% with resource_list=resources %}

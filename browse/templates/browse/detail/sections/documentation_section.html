@@ -11,12 +11,12 @@
             {% if documentation.title %}
             {{ documentation.title }}
             {% else %}
-            <i class="text-secondary">Unnamed Documentation</i>
+            <i class="text-body-secondary">Unnamed Documentation</i>
             {% endif %}
             {% endif %}
         </div>
         {% if documentation.date %}
-        <small class="text-secondary">
+        <small class="text-body-secondary">
             {% if documentation.date_type|cut:' '|lower == 'publicationdate' %}
             Published on {{ documentation.date|date }}
             {% else %}

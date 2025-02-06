@@ -15,7 +15,7 @@
                         <h3 class="fw-normal fs-6">
                             Capability Link {{ forloop.counter }}
                         </h3>
-                        <small class="d-flex flex-column text-secondary">
+                        <small class="d-flex flex-column text-body-secondary">
                             {% if cap_link.platforms %}
                             {% with value=cap_link.platforms.0 %}
                             {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
@@ -54,7 +54,7 @@
                         <dt>Standard Platform Identifiers</dt>
                         {% for si in cap_link.standard_identifiers %}
                         <dd class="dd-list-item">
-                            {{ si.value }} <span class="text-secondary">({{ si.authority }})</span>
+                            {{ si.value }} <span class="text-body-secondary">({{ si.authority }})</span>
                         </dd>
                         {% endfor %}
                     </div>

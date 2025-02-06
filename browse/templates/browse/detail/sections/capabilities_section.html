@@ -9,7 +9,7 @@
                     <div class="d-flex flex-column">
                         <h3 class="fs-5">{{ cap.name }}</h3>
                         {% if cap.observed_property %}
-                        <small class="text-secondary">
+                        <small class="text-body-secondary">
                             {% with value=cap.observed_property %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                             {% endwith %}

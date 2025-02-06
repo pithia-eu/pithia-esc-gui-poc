@@ -30,7 +30,7 @@
             </div>
             <div class="d-flex flex-column row-gap-4">
                 {% include 'browse/detail/components/type_badges.html' %}
-                <p class="text-body-secondary mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+                <p class="text-secondary-emphasis mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
                 {% block top_section_website %}{% endblock top_section_website %}
             </div>
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
