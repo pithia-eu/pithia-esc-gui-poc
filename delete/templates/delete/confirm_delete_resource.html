@@ -29,7 +29,7 @@
             </p>
             <ul class="list-group mb-0">
                 {% for r in other_resources_to_delete %}
-                <li class="list-group-item list-group-item-light">{{ r.name|default:r.localid }} <small class="text-secondary">({{ r.type_readable|title }})</small></li>
+                <li class="list-group-item list-group-item-light">{{ r.name|default:r.localid }} <small class="text-body-secondary">({{ r.type_readable|title }})</small></li>
                 {% endfor %}
             </ul>
         </div>
