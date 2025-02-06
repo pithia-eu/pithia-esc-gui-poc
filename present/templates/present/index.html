@@ -26,8 +26,10 @@
 {% block content %}
 <div class="row align-items-start justify-content-between gy-4 mb-3">
     <div class="col-lg-8">
-        <h1>{{ title }}</h1>
-        <span class="text-secondary">{{ scientific_metadata.name }}</span>
+        <hgroup>
+            <h1 class="text-body-secondary fs-3 mb-0">API Access</h1>
+            <p class="text-body fs-1">{{ scientific_metadata.name }}</p>
+        </hgroup>
     </div>
     {% if developer %}
     <div class="col-lg-2">
