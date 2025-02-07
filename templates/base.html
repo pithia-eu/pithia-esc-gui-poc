@@ -39,7 +39,8 @@
         /* To prevent Firefox FOUC, this must be here */
         let FF_FOUC_FIX;
     </script>
-    <script src="{% static 'utils/esc_colour_scheme.js' %}"></script>
+    <script src="{% static 'utils/bs_theme_updater.js' %}"></script>
+    <script src="{% static 'utils/bs_component_colour_schemes_updater.js' %}" defer></script>
 </head>
 <body>
     {% include 'header/header.html' %}

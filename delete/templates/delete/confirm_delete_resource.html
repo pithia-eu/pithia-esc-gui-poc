@@ -33,7 +33,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <a href="{% url resource_management_list_page_breadcrumb_url_name %}" class="btn btn-light me-2">Go Back</a>
+        <a href="{% url resource_management_list_page_breadcrumb_url_name %}" class="btn btn-light btn-light-togglable me-2">Go Back</a>
         {% else %}
         <form id="delete-form" action="{% url delete_resource_page_breadcrumb_url_name resource_id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="d-flex flex-row justify-content-xl-start justify-content-lg-start">
-                        <a href="{% url resource_management_list_page_breadcrumb_url_name %}" class="btn btn-light me-2">Go Back</a>
+                        <a href="{% url resource_management_list_page_breadcrumb_url_name %}" class="btn btn-light btn-light-togglable me-2">Go Back</a>
                         <button type="submit" class="btn btn-outline-danger">Delete this metadata</button>
                     </div>
                 </div>

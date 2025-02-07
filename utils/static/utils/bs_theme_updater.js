@@ -1,6 +1,7 @@
 const htmlElement = document.querySelector("html");
 
-function switchToDarkMode(isDarkMode) {
+
+function switchBootstrapTheme(isDarkMode) {
     if (isDarkMode) {
         return htmlElement.setAttribute("data-bs-theme", "dark");
     }
@@ -8,9 +9,9 @@ function switchToDarkMode(isDarkMode) {
 }
 
 if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    switchToDarkMode(true);
+    switchBootstrapTheme(true);
 }
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    switchToDarkMode(event.matches);
+    switchBootstrapTheme(event.matches);
 });
