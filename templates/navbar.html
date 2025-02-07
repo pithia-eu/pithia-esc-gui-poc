@@ -2,6 +2,7 @@
     <div class="container">
         <a class="d-md-none d-flex align-items-center navbar-brand header-logo-link" href="/">
             {% load static %}
+            {% include 'header/logo.html' %}
             <picture>
                 <source srcset="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" media="(prefers-color-scheme: light)" />
                 <source srcset="{% static "pithia-logo-dark.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo" media="(prefers-color-scheme: dark)" />

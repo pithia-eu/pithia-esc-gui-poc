@@ -1,0 +1,6 @@
+{% load static %}
+<picture>
+    <source srcset="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" media="(prefers-color-scheme: light)" />
+    <source srcset="{% static "pithia-logo-dark.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo" media="(prefers-color-scheme: dark)" />
+    <img src="{% static "pithia-logo.png" %}" alt="PITHIA e-Science Centre Logo" class="header-logo">
+</picture>
