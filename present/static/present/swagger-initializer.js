@@ -7,6 +7,7 @@ window.onload = function() {
     dom_id: '#swagger-ui',
     deepLinking: true,
     filter: true,
+    layout: "StandaloneLayout",
     presets: [
       SwaggerUIBundle.presets.apis,
       SwaggerUIStandalonePreset
@@ -14,7 +15,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-    layout: "StandaloneLayout"
+    tryItOutEnabled: true,
   });
 
   //</editor-fold>
