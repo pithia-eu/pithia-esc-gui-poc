@@ -1903,6 +1903,16 @@ ul.tree ul {
         background-color: var(--bs-light-bg-subtle);
     }
 
+    /* Tom Select */
+    .ts-control,
+    .ts-dropdown-content {
+        color: var(--bs-body-color);
+    }
+
+    .ts-control input::placeholder {
+        color: var(--bs-secondary-color);
+    }
+
     :root {
         --pithia-blue: #33AEE4;
         --pithia-blue-2: #3B9FD6;
