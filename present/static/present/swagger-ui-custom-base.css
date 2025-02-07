@@ -64,7 +64,7 @@ UI description in a rounded light background box. */
     padding-bottom: 1rem !important;
     margin-bottom: 2rem;
     border-radius: var(--bs-border-radius);
-    background-color: var(--bs-light);
+    background-color: var(--bs-tertiary-bg);
 }
 
 /* Removes the left padding of the endpoint
@@ -86,14 +86,6 @@ background colour, PUT has an orange background colour). */
 .swagger-ui .opblock {
     background: white !important;
     border: none !important;
-}
-
-/* Removes any HTTP method theming related to the bottom border
-(e.g., GET has a blue bottom border colour, PUT has an orange
-bottom border colour). */
-.swagger-ui .opblock .opblock-summary {
-    border-color: #eee !important;
-    border-bottom: 1px solid #eee !important;
 }
 
 /* Overrules the responses table display: none rule. */
@@ -140,5 +132,63 @@ full width of the screen on smaller screen sizes */
 
     .parameter__name.required {
         display: block;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    /* Removes any HTTP method theming related to the bottom border
+    (e.g., GET has a blue bottom border colour, PUT has an orange
+    bottom border colour). */
+    .swagger-ui .opblock .opblock-summary {
+        border-color: #eee !important;
+        border-bottom: 1px solid #eee !important;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .swagger-ui .loading-container {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .swagger-ui .operation-tag-content,
+    .swagger-ui .opblock .opblock-section-header,
+    .swagger-ui .opblock .opblock-body,
+    .swagger-ui .opblock .opblock-summary {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .swagger-ui .opblock .opblock-summary {
+        border-color: var(--bs-tertiary-color) !important;
+        border-bottom: 1px solid var(--bs-tertiary-color) !important;
+    }
+
+    .swagger-ui .opblock-tag-section .opblock-tag {
+        background-color: var(--bs-tertiary-bg);
+    }
+    
+    .swagger-ui .opblock-tag-section.is-open .opblock-tag {
+        background-color: var(--bs-secondary-bg);
+    }
+    
+    .swagger-ui .filter .operation-filter-input {
+        border-color: var(--bs-border-color);
+    }
+    
+    .swagger-ui .models {
+        background-color: var(--bs-body-bg);
+    }
+    
+    .swagger-ui .models button div,
+    .swagger-ui .models button span {
+        background-color: var(--bs-body-bg);
+        color: var(--bs-secondary-color) !important;
+    }
+    
+    .swagger-ui .models .json-schema-2020-12__title {
+        color: var(--bs-secondary-color) !important;
+    }
+
+    .swagger-ui .models svg {
+        filter: invert(85%) sepia(7%) saturate(422%) hue-rotate(188deg) brightness(87%) contrast(90%);
     }
 }
