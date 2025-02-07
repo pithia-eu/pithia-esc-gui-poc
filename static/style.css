@@ -1388,8 +1388,8 @@ ul.tree ul {
     background-image:
         linear-gradient(
             90deg,
-            transparent, 
-            #fff, 
+            transparent,
+            var(--bs-body-bg),
             transparent
         ),
         var(--line-skeleton),
@@ -1831,7 +1831,7 @@ ul.tree ul {
     --card-y-padding: 8px;
     --card-x-padding: 8px;
     --card-skeleton: linear-gradient(transparent var(--card-height), transparent 0);
-    --skeleton-colour: #ddd;
+    --skeleton-colour: var(--bs-dark-bg-subtle);
 
     --line-height: 12px;
     --line-spacing: 15px;
@@ -1906,5 +1906,6 @@ ul.tree ul {
     :root {
         --pithia-blue: #33AEE4;
         --pithia-blue-2: #3B9FD6;
+        --skeleton-colour: var(--bs-secondary-color);
     }
 }
