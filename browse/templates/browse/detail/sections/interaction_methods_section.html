@@ -1,11 +1,9 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section">
-    <div class="d-flex flex-column row-gap-2">
-        <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
-    </div>
+    <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
     <div class="d-flex flex-column">
         {% if num_interaction_methods > 1 %}
-        <p class="text-dark-emphasis fw-semibold mt-1 mb-2">
+        <p class="interaction-methods-counter text-dark-emphasis fw-semibold mt-1 mb-0">
             {{ num_interaction_methods }} Links
         </p>
         {% endif %}

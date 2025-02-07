@@ -857,7 +857,15 @@ details[name="details-permissions"][open] summary > span::after {
 
 .interaction-methods-subsection {
     padding-block: 0;
-    padding-top: 1.25rem;
+    padding-top: 1rem;
+}
+
+.interaction-methods-subsection h3 {
+    color: var(--bs-dark-text-emphasis);
+}
+
+.interaction-methods-counter + .interaction-methods-subsection {
+    padding-top: 2rem;
 }
 
 .interaction-methods-subsection + .interaction-methods-subsection {
