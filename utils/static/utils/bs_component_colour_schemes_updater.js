@@ -1,7 +1,6 @@
 /**
- * 
- * @param {*} isDarkMode 
- * @returns 
+ * @module bs_component_colour_schemes_updater.js
+ * @description Updates Bootstrap components that do not support dark mode yet.
  */
 
 
