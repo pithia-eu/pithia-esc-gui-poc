@@ -1,8 +1,15 @@
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+)
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from lxml import etree
 
 from . import view_mixins
+
+from common.models import ScientificMetadata
 
 
 # Create your views here.
@@ -150,3 +157,16 @@ class WorkflowXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+
+
+def download_xml_file(request):
+    resource_id = request.GET.get('localid')
+    if not resource_id:
+        return HttpResponseBadRequest('No local ID was provided.')
+    try:
+        resource = ScientificMetadata.objects.get(pk=resource_id)
+        response = HttpResponse(resource.xml, content_type='application/xml')
+        response['Content-Disposition'] = f'filename="{resource_id}"'
+        return response
+    except ScientificMetadata.DoesNotExist:
+        raise Http404
