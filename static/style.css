@@ -98,6 +98,10 @@ a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)
     text-indent: 1em; /* the width of the icon */
 }
 
+.metadata-server-url.loading a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
+    display: none;
+}
+
 a[href^="http"].btn-primary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 a[href^="http"].btn-secondary:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after {
     filter: invert(98%) sepia(2%) saturate(10%) hue-rotate(41deg) brightness(103%) contrast(105%);
