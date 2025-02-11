@@ -749,6 +749,7 @@ as Bootstrap styling. */
 }
 
 .resource-detail-aside .resource-detail-aside-section > h2 {
+    font-weight: 600;
     margin-bottom: 1rem;
 }
 
@@ -912,6 +913,14 @@ section .keyword-list li::after {
 
 section .keyword-list li:last-child:after {
     content: '';
+}
+
+.responsive-resource-detail-section {
+    display: block;
+}
+
+.responsive-resource-detail-aside-section {
+    display: none;
 }
 
 
@@ -1632,6 +1641,14 @@ ul.tree ul {
     #further-information-section .resource-detail-section.d-lg-none:first-child + .resource-detail-section {
         border-top: none;
         padding-top: var(--resource-detail-section-padding);
+    }
+
+    .responsive-resource-detail-section {
+        display: none;
+    }
+    
+    .responsive-resource-detail-aside-section {
+        display: block;
     }
 
     /* Breadcrumb */

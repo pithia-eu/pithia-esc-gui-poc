@@ -1,4 +1,6 @@
 {% extends 'browse/detail/bases/base.html' %}
+
+{# Appears before the last modified date #}
 {% block pre_last_modified_date_content %}
 {% if resource.properties.status %}
 <section class="fs-5 pt-2 pb-1">
@@ -8,6 +10,8 @@
 </section>
 {% endif %}
 {% endblock pre_last_modified_date_content %}
+
+{# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
@@ -43,32 +47,24 @@ Description
 {% endif %}
 {% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
+
+{# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
-<section class="resource-detail-section d-lg-none d-block">
+<section class="resource-detail-section responsive-resource-detail-section">
     <h3>Keywords</h3>
     {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
 {% endif %}
 {% endblock further_information_extra_sections %}
+
+{# Appears in the aside section #}
 {% block aside_extra_content %}
-{% if resource.properties.gmd_url %}
-<section class="d-lg-block d-none resource-detail-aside-section">
-    <h2 class="fw-semibold">Website</h2>
-    {% include 'browse/detail/components/top_section_extra_content/url.html' %}
-</section>
-{% endif %}
-{% if resource.properties.documentation %}
-{% with documentation=resource.properties.documentation %}
-<section class="d-lg-block d-none resource-detail-aside-section">
-    <h2 class="fw-semibold">Documentation</h2>
-    {% include 'browse/detail/components/documentation_section_content.html' %}
-</section>
-{% endwith %}
-{% endif %}
+{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
+{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% if resource.properties.keywords %}
-<section class="d-lg-block d-none resource-detail-aside-section">
-    <h2 class="fw-semibold">Keywords</h2>
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Keywords</h2>
     {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
 {% endif %}
