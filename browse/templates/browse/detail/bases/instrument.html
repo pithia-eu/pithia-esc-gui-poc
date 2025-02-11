@@ -2,10 +2,12 @@
 
 {# Appears before the description #}
 {% block pre_description_content %}
+{% if resource.properties.instrument_version %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Version</h2>
     <p>{{ resource.properties.instrument_version }}</p>
 </section>
+{% endif %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% endblock pre_description_content %}
 
