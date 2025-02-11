@@ -1,29 +1,15 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block top_section_extra_content %}
-{% if resource.properties.status or resource.properties.gmd_url %}
-<dl class="d-flex flex-wrap column-gap-5 row-gap-4 pt-4 mb-0">
-    {% if resource.properties.status %}
-    <div>
-        <dt>Status</dt>
-        <dd class="mb-0">
-            {% with value=resource.properties.status %}
-            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-            {% endwith %}
-        </dd>
-    </div>
-    {% endif %}
-    {% if resource.properties.gmd_url %}
-    <div>
-        <dt>Website</dt>
-        <dd>
-            {% include 'browse/detail/components/top_section_extra_content/url.html' %}
-        </dd>
-    </div>
-    {% endif %}
-</dl>
+{% block pre_last_modified_date_content %}
+{% if resource.properties.status %}
+<section class="fs-5 pt-2 pb-1">
+    {% with value=resource.properties.status pill_type='secondary' %}
+    {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
+    {% endwith %}
+</section>
 {% endif %}
-{% endblock top_section_extra_content %}
+{% endblock pre_last_modified_date_content %}
 {% block pre_description_content %}
+{% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
     <h2>Abstract</h2>
@@ -55,13 +41,35 @@ Description
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/documentation_section.html' %}
+{% include 'browse/detail/sections/responsive/documentation_section.html' %}
+{% endblock post_description_content %}
+{% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
-<section class="resource-detail-section">
-    <h2>Keywords</h2>
-    <p>
-        {{ resource.properties.keywords|join:', ' }}
-    </p>
+<section class="resource-detail-section d-lg-none d-block">
+    <h3>Keywords</h3>
+    {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
 {% endif %}
-{% endblock post_description_content %}
+{% endblock further_information_extra_sections %}
+{% block aside_extra_content %}
+{% if resource.properties.gmd_url %}
+<section class="d-lg-block d-none resource-detail-aside-section">
+    <h2 class="fw-semibold">Website</h2>
+    {% include 'browse/detail/components/top_section_extra_content/url.html' %}
+</section>
+{% endif %}
+{% if resource.properties.documentation %}
+{% with documentation=resource.properties.documentation %}
+<section class="d-lg-block d-none resource-detail-aside-section">
+    <h2 class="fw-semibold">Documentation</h2>
+    {% include 'browse/detail/components/documentation_section_content.html' %}
+</section>
+{% endwith %}
+{% endif %}
+{% if resource.properties.keywords %}
+<section class="d-lg-block d-none resource-detail-aside-section">
+    <h2 class="fw-semibold">Keywords</h2>
+    {% include 'browse/detail/components/project/keyword_inline_list.html' %}
+</section>
+{% endif %}
+{% endblock aside_extra_content %}

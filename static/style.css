@@ -629,8 +629,8 @@ dialog .btn-close {
 as Bootstrap styling. */
 #responsible-parties-top-section {
     font-size: 0.925rem;
-    padding-block: 1.5rem;
-    border-top: 1px solid var(--bs-gray-300)
+    padding-top: 0;
+    padding-bottom: 1.5rem;
 }
 
 #responsible-parties-top-section dt h3 {
@@ -676,10 +676,6 @@ as Bootstrap styling. */
 .online-resource-list li > div:has(> details:not([open])) .or-service-function,
 .online-resource-list li > div:has(> details:not([open])) > details > summary {
     color: var(--bs-secondary-color);
-}
-
-#further-information-section {
-    border-bottom: 1px solid var(--bs-gray-300);
 }
 
 #further-information-section .resource-detail-section:first-child {
@@ -899,6 +895,25 @@ details[name="details-permissions"][open] summary > span::after {
 .type-badge-list .badge {
     background-color: var(--bs-dark);
 }
+
+section .keyword-list {
+    display: inline;
+    padding-inline-start: 0;
+    list-style: none;
+}
+
+section .keyword-list li {
+    display: inline;
+}
+
+section .keyword-list li::after {
+    content: ', ';
+}
+
+section .keyword-list li:last-child:after {
+    content: '';
+}
+
 
 /* Resource management list page */
 .resource-management-table td:first-child {
@@ -1612,6 +1627,11 @@ ul.tree ul {
     .resource-detail-aside .resource-detail-aside-section,
     .resource-detail-aside #related-aside-section li {
         font-size: 0.875rem;
+    }
+
+    #further-information-section .resource-detail-section.d-lg-none:first-child + .resource-detail-section {
+        border-top: none;
+        padding-top: var(--resource-detail-section-padding);
     }
 
     /* Breadcrumb */

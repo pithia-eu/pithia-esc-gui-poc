@@ -1,10 +1,11 @@
 {% if resource.properties.gmd_url.strip %}
-<address class="d-flex align-items-baseline column-gap-2">
-    <a href="{{ resource.properties.gmd_url }}" id="resource-detail-url-top-section" class="icon-link icon-link-hover link-underline-by-default">
-        <span class="url-text-wrapper" {% if url_custom_width %}style="max-width: {{ url_custom_width }};"{% endif %}>{{ resource.properties.gmd_url }}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-        </svg>
+<address class="d-flex align-items-center column-gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg flex-shrink-0 fs-5" viewBox="0 0 16 16" style="transform: translateY(0.125rem);">
+        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+        <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+    </svg>
+    <a href="{{ resource.properties.gmd_url }}" id="resource-detail-url-top-section" class="link-underline-by-default text-truncate">
+        <span class="url-text-wrapper">{{ resource.properties.gmd_url }}</span>
     </a>
 </address>
 {% endif %}

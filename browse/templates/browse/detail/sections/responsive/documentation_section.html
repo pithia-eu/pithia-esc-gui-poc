@@ -1,0 +1,8 @@
+{% if resource.properties.documentation %}
+{% with documentation=resource.properties.documentation %}
+<section class="resource-detail-section d-lg-none d-block">
+    <h2>Documentation</h2>
+    {% include 'browse/detail/components/documentation_section_content.html' %}
+</section>
+{% endwith %}
+{% endif %}
