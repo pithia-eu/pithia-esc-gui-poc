@@ -46,13 +46,15 @@
                         {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                         {% endwith %}
                     </dt>
-                    {% for p in rp.parties %}
-                    <dd class="mb-0">
-                        {% with value=p url_text_extra_classes='link-plain-by-default' %}
-                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                        {% endwith %}
-                    </dd>
-                    {% endfor %}
+                    <div class="d-flex flex-column row-gap-1">
+                        {% for p in rp.parties %}
+                        <dd class="mb-0">
+                            {% with value=p url_text_extra_classes='link-plain-by-default' %}
+                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endfor %}
             </dl>
@@ -154,7 +156,7 @@
                 <ul class="list-group list-group-flush mb-0">
                     {% for heading_text, resource_url_list in related_registrations.items %}
                     <li class="list-group-item px-0 py-4 {% if forloop.last %}pb-0{% endif %}">
-                        <h3 class="fs-6 fw-semibold mb-0">{{ heading_text }}</h3>
+                        <h3 class="fs-5 fw-semibold">{{ heading_text }}</h3>
                         <ul class="list-group list-group-flush mt-2 mb-0">
                             {% for resource_url in resource_url_list|wrap_in_list_if_dict %}
                             <li class="list-group-item py-3 {% if forloop.last %}pb-0{% endif %}">
