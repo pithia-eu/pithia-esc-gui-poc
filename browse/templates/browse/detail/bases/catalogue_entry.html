@@ -42,27 +42,24 @@
 </div>
 {% endblock top_section_extra_content %}
 
-{# Appears after the description #}
-{% block post_description_content %}
+{# Appears before the description #}
+{% block pre_description_content %}
 {% if resource.data_subsets %}
 <section class="resource-detail-section">
-    <h2>Data Subsets for This Entry</h2>
-    <p class="text-body-secondary">
-        {% if resource.data_subsets|length == 1 %}
-        {{ resource.data_subsets|length }} Data Subset
-        {% else %}
-        {{ resource.data_subsets|length }} Data Subsets
-        {% endif %}
-    </p>
-    <ol class="list-group list-group-flush my-2">
-        {% for data_subset in resource.data_subsets %}
-        <li class="list-group-item ps-0">
-            {% with value=data_subset.metadata_server_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ol>
+    <details>
+        <summary>
+            <h2 class="d-inline fs-6">Data Subsets <span class="text-body-secondary">({{ resource.data_subsets|length }})</span></h2>
+        </summary>
+        <ol class="list-group list-group-flush my-2">
+            {% for data_subset in resource.data_subsets %}
+            <li class="list-group-item ps-0">
+                {% with value=data_subset.metadata_server_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ol>
+    </details>
 </section>
 {% endif %}
-{% endblock post_description_content %}
+{% endblock pre_description_content %}

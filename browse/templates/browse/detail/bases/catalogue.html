@@ -1,5 +1,7 @@
 {% extends 'browse/detail/bases/base_catalogue_related.html' %}
 {% load project_tags %}
+
+{# Appears after the last modified date, before the description #}
 {% block top_section_extra_content %}
 <div class="type-badge-list pt-4">
     {% with value=resource.properties.catalogue_category pill_type='none' extra_badge_classes='catalogue-category-badge' %}
@@ -7,29 +9,30 @@
     {% endwith %}
 </div>
 {% endblock top_section_extra_content %}
-{% block post_description_content %}
+
+{# Appears before the description #}
+{% block pre_description_content %}
 {% if resource.entries %}
 <section class="resource-detail-section">
-    <h2 class="mb-2">Entries for This Catalogue</h2>
-    <p class="text-body-secondary">
-        {% if resource.entries|length == 1 %}
-        {{ resource.entries|length }} Entry
-        {% else %}
-        {{ resource.entries|length }} Entries
-        {% endif %}
-    </p>
-    <ol class="list-group list-group-flush my-2">
-        {% for entry in resource.entries %}
-        <li class="list-group-item ps-0">
-            {% with value=entry.metadata_server_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ol>
+    <details>
+        <summary>
+            <h2 class="d-inline fs-6">Entries <span class="text-body-secondary">({{ resource.entries|length }})</span></h2>
+        </summary>
+        <ol class="list-group list-group-flush my-2">
+            {% for entry in resource.entries %}
+            <li class="list-group-item ps-0">
+                {% with value=entry.metadata_server_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ol>
+    </details>
 </section>
 {% endif %}
-{% endblock post_description_content %}
+{% endblock pre_description_content %}
+
+{# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
