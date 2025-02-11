@@ -1,0 +1,7 @@
+{% for standard_identifier in resource.properties.standard_identifiers %}
+<ul class="list-unstyled">
+    <li>
+        {{ standard_identifier.value }} <span class="text-body-secondary">({{ standard_identifier.authority }})</span>
+    </li>
+</ul>
+{% endfor %}

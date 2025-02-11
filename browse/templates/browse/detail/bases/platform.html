@@ -1,72 +1,28 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Appears after the last modified date, before the related parties #}
-{% block top_section_extra_content %}
-{% if resource.properties.standard_identifiers %}
-<div class="resource-detail-top-section-extra-content border-top mt-4">
-    <dl class="mb-0">
-        {% if resource.properties.standard_identifiers %}
-        <div class="pt-4">
-            <dt class="mb-2">
-                {% if resource.properties.standard_identifiers|length == 1 %}
-                Standard Identifier
-                {% else %}
-                Standard Identifiers
-                {% endif %}
-            </dt>
-            {% for standard_identifier in resource.properties.standard_identifiers %}
-            <dd>
-                {{ standard_identifier.value }} <span class="text-body-secondary">({{ standard_identifier.authority }})</span>
-            </dd>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </dl>
-</div>
-{% endif %}
-{% endblock top_section_extra_content %}
-
 {# Appears before the description #}
 {% block pre_description_content %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-section resource-detail-section">
+    <h2>
+        {% if resource.properties.standard_identifiers|length == 1 %}
+        Standard Identifier
+        {% else %}
+        Standard Identifiers
+        {% endif %}
+    </h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
+{% endif %}
 {% endblock pre_description_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.location %}
-<section class="resource-detail-section">
+<section class="responsive-resource-detail-section resource-detail-section">
     <h2>Location</h2>
-    <dl class="d-flex flex-column row-gap-4">
-        {% if resource.properties.location.name %}
-        <div>
-            <dt class="fs-5 fw-medium">Name</dt>
-            <dd>{{ resource.properties.location.name }}</dd>
-        </div>
-        {% endif %}
-        <div>
-            <dt class="fs-5 fw-medium">Point</dt>
-            <dd>
-                <dl>
-                    <div class="mb-3">
-                        <dt>ID</dt>
-                        <dd>{{ resource.properties.location.point.id }}</dd>
-                    </div>
-                    <div class="mb-3">
-                        <dt>SRS Name</dt>
-                        <dd>
-                            {% with value=resource.properties.location.point.srs_name %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                    </div>
-                    <div>
-                        <dt>Position</dt>
-                        <dd>{{ resource.properties.location.point.pos }}</dd>
-                    </div>
-                </dl>
-            </dd>
-        </div>
-    </dl>
+    {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
 {% endif %}
 {% if resource.properties.child_platforms %}
@@ -89,5 +45,23 @@
 {# Appears in the aside section #}
 {% block aside_extra_content %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>
+        {% if resource.properties.standard_identifiers|length == 1 %}
+        Standard Identifier
+        {% else %}
+        Standard Identifiers
+        {% endif %}
+    </h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
+{% endif %}
+{% if resource.properties.location %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Location</h2>
+    {% include 'browse/detail/components/platform/location_section_content.html' %}
+</section>
+{% endif %}
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% endblock aside_extra_content %}
