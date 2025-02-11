@@ -1,0 +1,17 @@
+<div class="d-inline-flex column-gap-2">
+    <span>
+        {% if resource.properties.operation_time.time_period.begin.time_position %}
+        {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS, Y' }}
+        {% else %}
+        N/A
+        {% endif %}
+    </span>
+    <span>-</span>
+    <span>
+        {% if resource.properties.operation_time.time_period.end.time_position %}
+        {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS, Y' }}
+        {% else %}
+        N/A
+        {% endif %}
+    </span>
+</div>

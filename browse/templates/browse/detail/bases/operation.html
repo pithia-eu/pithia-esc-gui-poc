@@ -1,48 +1,23 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Appears after the last modified date, before the related parties #}
-{% block top_section_extra_content %}
-<div class="d-flex flex-wrap column-gap-5 row-gap-3 pt-3">
-    {% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
-    <section class="resource-detail-top-section border-top-0 pb-0">
-        <dl class="mb-0">
-            <dt class="mb-1">Operation Time</dt>
-            <dd class="mb-0">
-                <div class="d-inline-flex column-gap-2">
-                    <span>
-                        {% if resource.properties.operation_time.time_period.begin.time_position %}
-                        {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS, Y' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                    <span>-</span>
-                    <span>
-                        {% if resource.properties.operation_time.time_period.end.time_position %}
-                        {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS, Y' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                </div>
-            </dd>
-        </dl>
-    </section>
-    {% endif %}
-    {% if resource.properties.status %}
-    <section class="resource-detail-top-section border-top-0 flex-shrink-0 pb-0">
-        <dl class="mb-0">
-            <dt class="mb-1">Status</dt>
-            <dd class="mb-0">
-                {% with value=resource.properties.status %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                {% endwith %}
-            </dd>
-        </dl>
-    </section>
-    {% endif %}
-</div>
-{% endblock top_section_extra_content %}
+{# Appears before the last modified date #}
+{% block pre_last_modified_date_content %}
+{% if resource.properties.status %}
+<section class="fs-5 pt-2 pb-1">
+    {% with value=resource.properties.status pill_type='secondary' %}
+    {% include 'browse/placeholders/ontology_server_url_pill_placeholder_no_link.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% endblock pre_last_modified_date_content %}
+
+{# Appears before the description #}
+{% block pre_description_content %}
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Operation Time</h2>
+    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
+</section>
+{% endblock pre_description_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
@@ -65,5 +40,9 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Operation Time</h2>
+    {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
+</section>
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% endblock aside_extra_content %}
