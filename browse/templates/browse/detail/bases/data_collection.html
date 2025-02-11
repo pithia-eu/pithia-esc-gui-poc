@@ -5,11 +5,16 @@
 {{ ontology_node_properties_mapping_url|json_script:'ontology-node-properties-mapping-url' }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{% static 'browse/data_collection_permissions_loader.js' %}" type="module"></script>
+<script src="{% static 'browse/data_collection.js' %}" defer></script>
 {% endblock extra_scripts %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% include 'browse/detail/sections/interaction_methods_section.html' %}
 {% include 'browse/detail/sections/permissions_section.html' %}
 {% endblock post_description_content %}
+
+{# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% if resource.properties.procedure %}
 <section class="resource-detail-section">
@@ -58,3 +63,29 @@
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
 {% endblock further_information_extra_sections %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+{% if resource.permission_urls %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Permissions</h2>
+    <ul class="d-flex flex-column row-gap-2 list-unstyled">
+        {% for permission_url in resource.permission_urls %}
+        {% with value=permission_url|get_key_value:'@xlink:href' %}
+        <li>
+            <div class="d-flex align-items-baseline column-gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16" style="transform: translateY(0.125rem);">
+                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                    <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+                </svg>
+                <a href="#permission_{{ value|server_url_id|lower }}" class="link-underline-by-default">
+                    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+                </a>
+            </div>
+        </li>
+        {% endwith %}
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock aside_extra_content %}

@@ -1,12 +1,12 @@
 {% load project_tags %}
 {% if resource.permission_urls %}
-<section class="resource-detail-section">
+<section id="permissions-section" class="resource-detail-section">
     <h2 class="mb-0">Permissions</h2>
     <ul class="list-group list-group-flush">
         {% for p in resource.permission_urls %}
         {% with value=p|get_key_value:'@xlink:href' %}
         <li class="list-group-item py-3 ps-0" data-metadata-server-url={{ value }}>
-            <details name="details-permissions">
+            <details id="permission_{{ value|server_url_id|lower }}" name="details-permissions">
                 <summary class="summary-marker-custom align-items-baseline">
                     <span class="d-inline-flex flex-column">
                         <span class="d-inline-block fs-base-2">

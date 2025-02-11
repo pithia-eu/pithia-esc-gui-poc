@@ -60,26 +60,26 @@ a:not(.btn, .nav-link):focus,
 }
 
 a.link-plain-by-default {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 a.link-plain-by-default:hover,
 a.link-plain-by-default:focus,
 .btn-link.link-plain-by-default:hover,
 .btn-link.link-plain-by-default:focus {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 a.link-underline-by-default,
 .btn-link.link-underline-by-default {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 a.link-underline-by-default:hover,
 a.link-underline-by-default:focus,
 .btn-link.link-underline-by-default:hover,
 .btn-link.link-underline-by-default:focus {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
@@ -763,6 +763,7 @@ as Bootstrap styling. */
 
 .resource-detail-aside .metadata-server-url {
     display: inline-block;
+    text-decoration: inherit;
     overflow-wrap: break-word;
     max-width: 100%;
     vertical-align: top;
@@ -849,11 +850,11 @@ details[name="details-permissions"] summary > span::after {
 }
 
 details[name="details-permissions"]:not([open]) summary > span::after {
-    content: 'Expand for details';
+    content: 'Show full description';
 }
 
 details[name="details-permissions"][open] summary > span::after {
-    content: 'Hide details';
+    content: 'Hide full description';
 }
 
 .interaction-methods-subsection {
@@ -1160,7 +1161,12 @@ label.required::after {
 }
 
 .metadata-server-url.loading {
+    text-decoration: none;
     cursor: wait;
+}
+
+.metadata-server-url {
+    text-decoration: inherit;
 }
 
 .metadata-server-url.loading .metadata-server-url-text {
