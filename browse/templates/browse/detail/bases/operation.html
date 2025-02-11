@@ -1,4 +1,6 @@
 {% extends 'browse/detail/bases/base.html' %}
+
+{# Appears after the last modified date, before the related parties #}
 {% block top_section_extra_content %}
 <div class="d-flex flex-wrap column-gap-5 row-gap-3 pt-3">
     {% if resource.properties.operation_time.time_period.begin.time_position or resource.properties.operation_time.time_period.end.time_position %}
@@ -41,6 +43,8 @@
     {% endif %}
 </div>
 {% endblock top_section_extra_content %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.platforms %}
 <section class="resource-detail-section">
@@ -56,5 +60,10 @@
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/documentation_section.html' %}
+{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
+{% endblock aside_extra_content %}

@@ -1,26 +1,15 @@
 {% extends 'browse/detail/bases/base.html' %}
-{% block top_section_extra_content %}
-{% if resource.properties.gmd_url or resource.properties.instrument_version %}
-<div class="border-top pt-4 mt-4">
-    <dl class="d-flex flex-wrap column-gap-5 row-gap-4 mb-0">
-        {% if resource.properties.instrument_version %}
-        <div>
-            <dt>Version</dt>
-            <dd class="mb-0">{{ resource.properties.instrument_version }}</dd>
-        </div>
-        {% endif %}
-        {% if resource.properties.gmd_url %}
-        <div>
-            <dt>Website</dt>
-            <dd>
-                {% include 'browse/detail/components/top_section_extra_content/url.html' %}
-            </dd>
-        </div>
-        {% endif %}
-    </dl>
-</div>
-{% endif %}
-{% endblock top_section_extra_content %}
+
+{# Appears before the description #}
+{% block pre_description_content %}
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Version</h2>
+    <p>{{ resource.properties.instrument_version }}</p>
+</section>
+{% include 'browse/detail/sections/responsive/website_section.html' %}
+{% endblock pre_description_content %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.operational_modes %}
 <section class="resource-detail-section">
@@ -61,5 +50,17 @@
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/documentation_section.html' %}
+{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+{% if resource.properties.instrument_version %}
+<section class="resource-detail-aside-section">
+    <h2>Version</h2>
+    <p>{{ resource.properties.instrument_version }}</p>
+</section>
+{% endif %}
+{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
+{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
+{% endblock aside_extra_content %}

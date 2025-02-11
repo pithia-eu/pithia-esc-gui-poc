@@ -1,18 +1,10 @@
 {% extends 'browse/detail/bases/base.html' %}
+
+{# Appears after the last modified date, before the related parties #}
 {% block top_section_extra_content %}
-{% if resource.properties.gmd_url or resource.properties.standard_identifiers %}
+{% if resource.properties.standard_identifiers %}
 <div class="resource-detail-top-section-extra-content border-top mt-4">
     <dl class="mb-0">
-        {% if resource.properties.gmd_url %}
-        <div class="pt-4">
-            <dt>Website</dt>
-            <dd>
-                {% with url_custom_width='20rem' %}
-                {% include 'browse/detail/components/top_section_extra_content/url.html' %}
-                {% endwith %}
-            </dd>
-        </div>
-        {% endif %}
         {% if resource.properties.standard_identifiers %}
         <div class="pt-4">
             <dt class="mb-2">
@@ -33,6 +25,13 @@
 </div>
 {% endif %}
 {% endblock top_section_extra_content %}
+
+{# Appears before the description #}
+{% block pre_description_content %}
+{% include 'browse/detail/sections/responsive/website_section.html' %}
+{% endblock pre_description_content %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.location %}
 <section class="resource-detail-section">
@@ -84,5 +83,11 @@
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/documentation_section.html' %}
+{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
+{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
+{% endblock aside_extra_content %}
