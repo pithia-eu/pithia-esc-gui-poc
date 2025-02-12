@@ -2,19 +2,25 @@
 
 {# Appears before the description #}
 {% block pre_description_content %}
-{% include 'browse/detail/sections/responsive/website_section.html' %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-section resource-detail-section">
-    <h2>
-        {% if resource.properties.standard_identifiers|length == 1 %}
-        Standard Identifier
-        {% else %}
-        Standard Identifiers
-        {% endif %}
-    </h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
+{% if resource.properties.child_platforms %}
+<section class="resource-detail-section">
+    <details>
+        <summary class="summary-marker-custom">
+            <h2 class="fs-6">Child Platforms <span class="text-body-secondary">({{ resource.properties.child_platforms|length }})</span></h2>
+        </summary>
+        <ul class="list-group list-group-flush">
+            {% for platform_url in resource.properties.child_platforms %}
+            <li class="list-group-item px-0">
+                {% with value=platform_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+</section>
 {% endif %}
+{% include 'browse/detail/sections/responsive/website_section.html' %}
 {% endblock pre_description_content %}
 
 {# Appears after the description #}
@@ -25,19 +31,11 @@
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
 {% endif %}
-{% if resource.properties.child_platforms %}
-<section class="resource-detail-section">
-    <h2>Child Platforms</h2>
-    <ul>
-        {% for platform_url in resource.properties.child_platforms %}
-        <li>
-            {% with value=platform_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-section resource-detail-section">
+    <h2>Standard Identifiers</h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
 {% endif %}
 {% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
@@ -45,23 +43,17 @@
 {# Appears in the aside section #}
 {% block aside_extra_content %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>
-        {% if resource.properties.standard_identifiers|length == 1 %}
-        Standard Identifier
-        {% else %}
-        Standard Identifiers
-        {% endif %}
-    </h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
-{% endif %}
 {% if resource.properties.location %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Location</h2>
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
+{% endif %}
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Standard Identifiers</h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
 {% endif %}
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% endblock aside_extra_content %}
