@@ -1,4 +1,5 @@
 {% extends 'browse/detail/bases/base.html' %}
+{% load project_tags %}
 
 {# Appears before the description #}
 {% block pre_description_content %}
@@ -18,20 +19,25 @@
     <h2>Operational Modes</h2>
     <ul class="list-group list-group-flush">
         {% for operational_mode in resource.properties.operational_modes %}
-        <li class="list-group-item py-2">
-            <details id="{{ operational_mode.id }}" name="details-operational-modes" class="py-2" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
+        <li class="list-group-item ps-0">
+            <details id="{{ operational_mode.id }}" name="details-operational-modes" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
-                    <div class="d-flex flex-column">
-                        <h3 class="fs-5">{{ operational_mode.name }}</h3>
+                    <div>
+                        <h3 class="fw-semibold fs-6">{{ operational_mode.name }}</h3>
                         <small class="text-body-secondary">
                             {{ operational_mode.id }}
                         </small>
                     </div>
                 </summary>
-                <dl>
-                    <dt>Description</dt>
-                    <dd>{{ operational_mode.description }}</dd>
-                </dl>
+                <div class="{% if forloop.last %}pb-0{% else %}pb-4{% endif %}">
+                    {% with forloop_counter_str=forloop.counter|stringformat:'s' op_mode_description_paragraphs=operational_mode.description|wrap_in_list_if_dict %}
+                    {% with text_block_id='op-mode-description-'|add:forloop_counter_str text_block_paragraphs=op_mode_description_paragraphs %}
+                    {% with expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+                    {% include 'browse/detail/components/expandable_text_block.html' %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                </div>
             </details>
         </li>
         {% endfor %}
