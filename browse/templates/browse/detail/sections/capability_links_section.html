@@ -8,11 +8,11 @@
     </div>
     <ul class="list-group list-group-flush">
         {% for cap_link in resource.properties.capability_links %}
-        <li class="list-group-item px-0 {% if forloop.last %}pt-4{% else %}py-4{% endif %}">
+        <li class="list-group-item px-0 {% if forloop.first %}pb-3{% else %}py-3{% endif %}">
             <details name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
-                    <div class="d-flex flex-column">
-                        <h3 class="fw-normal fs-6">
+                    <div>
+                        <h3 class="fw-semibold fs-base-2 mb-1">
                             Capability Link {{ forloop.counter }}
                         </h3>
                         <small class="d-flex flex-column text-body-secondary">
@@ -81,19 +81,21 @@
                     {% endif %}
                     {% if cap_link.time_spans %}
                     <div>
-                        <dt class="pb-2">Time Spans</dt>
-                        <dd class="dd-list-item">
-                            <dl>
+                        <dt>Time Spans</dt>
+                        <dd>
+                            <dl class="list-group list-group-numbered list-group-flush">
                                 {% for time_span in cap_link.time_spans %}
-                                <dt class="pt-2 pb-2">Time Span {{ forloop.counter }}</dt>
-                                <dd>
-                                    <dl>
-                                        <dt>Begin Position</dt>
-                                        <dd>{{ time_span.begin_position }}</dd>
-                                        <dt>End Position (Indeterminate)</dt>
-                                        <dd>{{ time_span.end_position }}</dd>
-                                    </dl>
-                                </dd>
+                                <div class="d-inline-flex list-group-item px-0 py-3 {% if forloop.first %}pt-2{% endif %}">
+                                    <dt class="visually-hidden">Time Span {{ forloop.counter }}</dt>
+                                    <dd class="ps-2">
+                                        <dl>
+                                            <dt>Begin Position</dt>
+                                            <dd>{{ time_span.begin_position }}</dd>
+                                            <dt>End Position (Indeterminate)</dt>
+                                            <dd>{{ time_span.end_position }}</dd>
+                                        </dl>
+                                    </dd>
+                                </div>
                                 {% endfor %}
                             </dl>
                         </dd>

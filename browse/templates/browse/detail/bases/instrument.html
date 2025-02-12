@@ -19,11 +19,11 @@
     <h2>Operational Modes</h2>
     <ul class="list-group list-group-flush">
         {% for operational_mode in resource.properties.operational_modes %}
-        <li class="list-group-item ps-0">
+        <li class="list-group-item px-0">
             <details id="{{ operational_mode.id }}" name="details-operational-modes" {% if 'operational_mode_id' not in request.GET and forloop.counter == 1 or request.GET.operational_mode_id == operational_mode.id %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
                     <div>
-                        <h3 class="fw-semibold fs-6">{{ operational_mode.name }}</h3>
+                        <h3 class="fw-semibold fs-base-2">{{ operational_mode.name }}</h3>
                         <small class="text-body-secondary">
                             {{ operational_mode.id }}
                         </small>

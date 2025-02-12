@@ -3,11 +3,11 @@
     <h2>Capabilities</h2>
     <ul class="list-group list-group-flush">
         {% for cap in resource.properties.capabilities %}
-        <li class="list-group-item">
-            <details name="details-capabilities" class="py-2" {% if forloop.counter == 1 %}open{% endif %}>
+        <li class="list-group-item px-0 {% if forloop.first %}pb-3{% else %}py-3{% endif %}">
+            <details name="details-capabilities" {% if forloop.counter == 1 %}open{% endif %}>
                 <summary class="summary-marker-custom summary-marker-custom-baseline">
-                    <div class="d-flex flex-column">
-                        <h3 class="fs-5">{{ cap.name }}</h3>
+                    <div>
+                        <h3 class="fw-semibold fs-base-2">{{ cap.name }}</h3>
                         {% if cap.observed_property %}
                         <small class="text-body-secondary">
                             {% with value=cap.observed_property %}
@@ -17,9 +17,9 @@
                         {% endif %}
                     </div>
                 </summary>
-                <dl>
+                <dl class="d-flex flex-column row-gap-4 pb-4">
                     {% if cap.observed_property %}
-                    <div class="py-2">
+                    <div>
                         <dt>Observed Property</dt>
                         <dd>
                             {% with value=cap.observed_property %}
@@ -29,7 +29,7 @@
                     </div>
                     {% endif %}
                     {% if cap.dimensionality_instance %}
-                    <div class="py-2">
+                    <div>
                         <dt>Dimensionality Instance</dt>
                         <dd>
                             {% with value=cap.dimensionality_instance %}
@@ -39,7 +39,7 @@
                     </div>
                     {% endif %}
                     {% if cap.dimensionality_timeline %}
-                    <div class="py-2">
+                    <div>
                         <dt>Dimensionality Timeline</dt>
                         <dd>
                             {% with value=cap.dimensionality_timeline %}
@@ -49,7 +49,7 @@
                     </div>
                     {% endif %}
                     {% if cap.cadence %}
-                    <div class="py-2">
+                    <div>
                         <dt>Cadence</dt>
                         <dd>
                             Every
@@ -62,7 +62,7 @@
                     </div>
                     {% endif %}
                     {% if cap.vector_representations %}
-                    <div class="py-2">
+                    <div>
                         <dt>Vector Representation</dt>
                         {% for vector_representation in cap.vector_representations %}
                         <dd class="dd-list-item">
@@ -74,7 +74,7 @@
                     </div>
                     {% endif %}
                     {% if cap.coordinate_system %}
-                    <div class="py-2">
+                    <div>
                         <dt>Co-ordinate System</dt>
                         <dd>
                             {% with value=cap.coordinate_system %}
@@ -84,7 +84,7 @@
                     </div>
                     {% endif %}
                     {% if cap.units %}
-                    <div class="py-2">
+                    <div>
                         <dt>Units</dt>
                         <dd>
                             {% with value=cap.units %}
@@ -94,7 +94,7 @@
                     </div>
                     {% endif %}
                     {% if cap.qualifiers %}
-                    <div class="py-2">
+                    <div>
                         <dt>Qualifiers</dt>
                         {% for qualifier in cap.qualifiers %}
                         <dd class="dd-list-item">
