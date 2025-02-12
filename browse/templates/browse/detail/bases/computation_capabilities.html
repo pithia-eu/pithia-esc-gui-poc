@@ -1,14 +1,11 @@
 {% extends 'browse/detail/bases/base.html' %}
+
 {# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.properties.computation_version %}
-<section class="resource-detail-top-section pt-1">
-    <dl class="mb-0">
-        <div class="d-flex flex-column row-gap-2">
-            <dt>Version</dt>
-            <dd class="mb-0">{{ resource.properties.computation_version }}</dd>
-        </div>
-    </dl>
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Version</h2>
+    <p>{{ resource.properties.computation_version }}</p>
 </section>
 {% endif %}
 {% endblock pre_description_content %}
@@ -47,5 +44,11 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content %}
+{% if resource.properties.computation_version %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Version</h2>
+    <p>{{ resource.properties.computation_version }}</p>
+</section>
+{% endif %}
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% endblock aside_extra_content %}
