@@ -1139,6 +1139,7 @@ label.required::after {
     border-radius: var(--bs-border-radius);
     opacity: 1;
     box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
     overflow-wrap: break-word;
     word-break: break-word;
     transition: opacity 0.5s ease
