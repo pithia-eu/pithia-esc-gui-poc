@@ -173,6 +173,10 @@ details[open] > summary.summary-marker-custom {
     margin-bottom: 1rem;
 }
 
+details[open] > summary.summary-marker-custom-highlight {
+    background-color: var(--bs-tertiary-bg);
+}
+
 summary.summary-marker-custom h2,
 summary.summary-marker-custom h3 {
     margin-bottom: 0;
