@@ -60,26 +60,26 @@ a:not(.btn, .nav-link):focus,
 }
 
 a.link-plain-by-default {
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 a.link-plain-by-default:hover,
 a.link-plain-by-default:focus,
 .btn-link.link-plain-by-default:hover,
 .btn-link.link-plain-by-default:focus {
-    text-decoration: underline !important;
+    text-decoration: underline;
 }
 
 a.link-underline-by-default,
 .btn-link.link-underline-by-default {
-    text-decoration: underline !important;
+    text-decoration: underline;
 }
 
 a.link-underline-by-default:hover,
 a.link-underline-by-default:focus,
 .btn-link.link-underline-by-default:hover,
 .btn-link.link-underline-by-default:focus {
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
