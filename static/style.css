@@ -1952,6 +1952,7 @@ ul.tree ul {
 
     /* Tom Select */
     .ts-control,
+    .ts-control input,
     .ts-dropdown-content {
         color: var(--bs-body-color);
     }
