@@ -155,18 +155,3 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False))
         except OSError as err:
             logger.exception(err)
-
-    @classmethod
-    def delete_unused_catalogue_data_subset_resource_files(cls, catalogue_data_subset_id: str, names_of_used_files: List[str]):
-        catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path(
-            catalogue_data_subset_id
-        )
-        directory_items = os.listdir(catalogue_data_subset_directory_path)
-        for file_name in directory_items:
-            if file_name in names_of_used_files:
-                continue
-            file_name_no_extension = pathlib.Path(file_name).stem
-            cls.delete_catalogue_data_subset_resource_file(
-                catalogue_data_subset_id,
-                file_name_no_extension
-            )
