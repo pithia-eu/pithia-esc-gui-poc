@@ -1,114 +1,129 @@
 {% if resource.properties.capabilities %}
 <section class="resource-detail-section">
-    <h2>Capabilities</h2>
-    <ul class="list-group list-group-flush">
-        {% for cap in resource.properties.capabilities %}
-        <li class="list-group-item p-0">
-            <details name="details-capabilities" {% if forloop.counter == 1 %}open{% endif %}>
-                <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-highlight p-3 mb-0">
-                    <div>
-                        <h3 class="fw-semibold fs-base-2">{{ cap.name }}</h3>
-                        {% if cap.observed_property %}
-                        <small class="text-body-secondary">
-                            {% with value=cap.observed_property %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-                            {% endwith %}
-                        </small>
-                        {% endif %}
-                    </div>
-                </summary>
-                <dl class="d-flex flex-column row-gap-4 pt-3 pb-4">
-                    {% if cap.observed_property %}
-                    <div>
-                        <dt>Observed Property</dt>
-                        <dd>
+    <details open>
+        <summary class="summary-marker-custom">
+            <h2>
+                Capabilities
+                <span class="fw-normal text-body-secondary">({{ resource.properties.capabilities|length }})</span>
+            </h2>
+        </summary>
+        <div class="table-responsive position-relative table-capabilities-wrapper border rounded">
+            <table class="table table-bordered table-striped table-capabilities">
+                <thead class="position-sticky">
+                    <tr>
+                        <th class="position-sticky">Name</th>
+                        <th class="position-sticky">Observed Property</th>
+                        <th class="position-sticky">Dimensionality Timeline</th>
+                        <th class="position-sticky">Dimensionality Instance</th>
+                        <th class="position-sticky">Cadence</th>
+                        <th class="position-sticky">Co-ordinate System</th>
+                        <th class="position-sticky">Vector Representation</th>
+                        <th class="position-sticky">Units</th>
+                        <th class="position-sticky">Qualifiers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cap in resource.properties.capabilities %}
+                    <tr>
+                        <td class="position-sticky fst-italic">
+                            {% if cap.name %}
+                            {{ cap.name }}
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.observed_property %}
                             {% with value=cap.observed_property %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.dimensionality_instance %}
-                    <div>
-                        <dt>Dimensionality Instance</dt>
-                        <dd>
-                            {% with value=cap.dimensionality_instance %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.dimensionality_timeline %}
-                    <div>
-                        <dt>Dimensionality Timeline</dt>
-                        <dd>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.dimensionality_timeline %}
                             {% with value=cap.dimensionality_timeline %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.cadence %}
-                    <div>
-                        <dt>Cadence</dt>
-                        <dd>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.dimensionality_instance %}
+                            {% with value=cap.dimensionality_instance %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.cadence %}
                             Every
                             {% if cap.cadence == '1' %}
                             {{ cap.cadence_units|default:'N/A' }}
                             {% else %}
-                            {{ cap.cadence|default:'N/A' }} {{ cap.cadence_units|default:'unknown units' }}s
+                            {{ cap.cadence|default:'N/A' }} {{ cap.cadence_units|default:'unknown unit' }}s
                             {% endif %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.vector_representations %}
-                    <div>
-                        <dt>Vector Representation</dt>
-                        {% for vector_representation in cap.vector_representations %}
-                        <dd class="dd-list-item">
-                            {% with value=vector_representation %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if cap.coordinate_system %}
-                    <div>
-                        <dt>Co-ordinate System</dt>
-                        <dd>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.coordinate_system %}
                             {% with value=cap.coordinate_system %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.units %}
-                    <div>
-                        <dt>Units</dt>
-                        <dd>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.vector_representation %}
+                            <ul>
+                                {% for vector_representation in cap.vector_representations %}
+                                <li>
+                                    {% with value=vector_representation %}
+                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                    {% endwith %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-nowrap">
+                            {% if cap.units %}
                             {% with value=cap.units %}
                             {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
                             {% endwith %}
-                        </dd>
-                    </div>
-                    {% endif %}
-                    {% if cap.qualifiers %}
-                    <div>
-                        <dt>Qualifiers</dt>
-                        {% for qualifier in cap.qualifiers %}
-                        <dd class="dd-list-item">
-                            {% with value=qualifier %}
-                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </dl>
-            </details>
-        </li>
-        {% endfor %}
-    </ul>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if cap.qualifiers %}
+                            <ul class="d-flex flex-column row-gap-2 list-unstyled">
+                                {% for qualifier in cap.qualifiers %}
+                                <li>
+                                    {% with value=qualifier %}
+                                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                                    {% endwith %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <span class="text-body-secondary">Not set</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </details>
 </section>
 {% endif %}
