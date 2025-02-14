@@ -928,39 +928,6 @@ section .keyword-list li:last-child:after {
     display: none;
 }
 
-.table-capabilities-wrapper {
-    max-height: 30rem;
-}
-
-.table-capabilities thead {
-    top: 0;
-    z-index: 2;
-}
-
-.table-capabilities thead tr {
-    border-top-width: 0;
-}
-
-.table-capabilities thead th,
-.table-capabilities tbody td {
-    min-width: 10rem;
-    max-width: 100%;
-}
-
-.table-capabilities thead th:first-child,
-.table-capabilities tbody td:first-child {
-    left: 0;
-    border-left-width: 0;
-}
-
-.table-capabilities thead th:first-child {
-    z-index: 3;
-}
-
-.table-capabilities tbody td:first-child {
-    z-index: 1;
-}
-
 
 /* Resource management list page */
 .resource-management-table td:first-child {
