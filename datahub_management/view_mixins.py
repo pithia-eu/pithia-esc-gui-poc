@@ -125,9 +125,11 @@ class CatalogueDataSubsetDataHubViewMixin:
     # Credit: https://stackoverflow.com/a/60430804
     def copy_temporary_directory_to_datahub(self, temporary_directory_path: str, datahub_directory_path: str):
         destination = Path(datahub_directory_path)
-        if destination.exists():
-            if destination.is_dir():
-                shutil.rmtree(destination)
-            else:
-                destination.unlink()
-        shutil.move(temporary_directory_path, destination)
+        if not destination.exists():
+            return shutil.move(temporary_directory_path, destination)
+
+        if destination.is_dir():
+            shutil.rmtree(destination)
+        else:
+            destination.unlink()
+        return shutil.move(temporary_directory_path, destination)

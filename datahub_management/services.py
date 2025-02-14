@@ -15,7 +15,10 @@ logger = logging.getLogger(__name__)
 class DataHubService:
     @classmethod
     def _get_datahub_directory_path(cls):
-        return os.path.join(BASE_DIR, os.path.normpath(os.environ['DATAHUB_DIRECTORY_PATH']))
+        return os.path.join(
+            BASE_DIR,
+            os.path.normpath(os.environ['DATAHUB_DIRECTORY_PATH'])
+        )
 
     @classmethod
     def _get_file_extension(cls, file_path: str):
