@@ -129,23 +129,6 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         return cls._get_file_from_datahub(file_name)
 
     @classmethod
-    def rename_catalogue_data_subset_resource_file(
-            cls,
-            catalogue_data_subset_id: str,
-            current_file_name_no_extension: str,
-            new_file_name_no_extension: str):
-        old_file_path = cls._get_catalogue_data_subset_resource_file_path_from_name_with_no_extension(
-            catalogue_data_subset_id,
-            current_file_name_no_extension
-        )
-        old_file_extension = cls._get_file_extension(old_file_path)
-        catalogue_data_subset_directory = cls._get_catalogue_data_subset_directory_path(
-            catalogue_data_subset_id
-        )
-        new_file_path = os.path.join(catalogue_data_subset_directory, f'{slugify(new_file_name_no_extension)}{old_file_extension}')
-        return os.rename(old_file_path, new_file_path)
-
-    @classmethod
     def get_files_for_catalogue_data_subset(cls, catalogue_data_subset_id: str):
         catalogue_data_subset_directory_path = cls._get_catalogue_data_subset_directory_path(
             catalogue_data_subset_id

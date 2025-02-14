@@ -99,41 +99,6 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
             os.path.basename(retrieved_cds_resource_file.name)
         )
 
-    def test_rename_catalogue_data_subset_resource_file(self):
-        """A catalogue data subset resource file
-        is renamed to a new given name.
-        """
-        catalogue_data_subset_id = 'catalogue_data_subset_id'
-        resource_name = 'resource_name'
-        cds_resource_file = self._create_and_store_catalogue_data_subset_test_resource_file(
-            catalogue_data_subset_id,
-            resource_name
-        )
-        cds_resource_file_name_no_extension = os.path.splitext(cds_resource_file.name)[0]
-        self.assertEqual(
-            resource_name,
-            cds_resource_file_name_no_extension
-        )
-        new_file_name = 'new_resource_name'
-        CatalogueDataSubsetDataHubService.rename_catalogue_data_subset_resource_file(
-            catalogue_data_subset_id,
-            cds_resource_file_name_no_extension,
-            new_file_name
-        )
-        renamed_cds_resource_file = CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
-            catalogue_data_subset_id,
-            new_file_name
-        )
-        renamed_cds_resource_file_no_extension = os.path.splitext(os.path.basename(renamed_cds_resource_file.name))[0]
-        self.assertEqual(
-            new_file_name,
-            renamed_cds_resource_file_no_extension
-        )
-        self.assertNotEqual(
-            cds_resource_file_name_no_extension,
-            renamed_cds_resource_file_no_extension
-        )
-
     def test_get_files_for_catalogue_data_subset(self):
         """Retrieves a list of all the resource files
         for a catalogue data subset.
