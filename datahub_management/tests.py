@@ -122,35 +122,6 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
         self.assertIn(resource_file_1.name, cds_resource_file_names)
         self.assertIn(resource_file_2.name, cds_resource_file_names)
 
-    def test_delete_catalogue_data_subset_resource_file(self):
-        """Deletes a catalogue data subset's resource
-        file by its name.
-        """
-        catalogue_data_subset_id = 'catalogue_data_subset_id'
-        resource_name = 'resource_name'
-        cds_resource_file = self._create_and_store_catalogue_data_subset_test_resource_file(
-            catalogue_data_subset_id=catalogue_data_subset_id,
-            resource_name='resource_name'
-        )
-        retrieved_cds_resource_file = CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
-            catalogue_data_subset_id,
-            resource_name
-        )
-        # Assert file has been created.
-        self.assertEqual(
-            os.path.basename(cds_resource_file.name),
-            os.path.basename(retrieved_cds_resource_file.name)
-        )
-        CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_resource_file(
-            catalogue_data_subset_id,
-            resource_name
-        )
-        cds_resource_file_after_deletion = CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
-            catalogue_data_subset_id,
-            resource_name
-        )
-        self.assertIsNone(cds_resource_file_after_deletion)
-
     def test_delete_catalogue_data_subset_directory(self):
         """Deletes the directory for a catalogue
         data subset's resource files.

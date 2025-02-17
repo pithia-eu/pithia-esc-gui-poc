@@ -142,14 +142,6 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         return files
 
     @classmethod
-    def delete_catalogue_data_subset_resource_file(cls, catalogue_data_subset_id: str, file_name_with_no_extension: str):
-        file_path = cls._get_catalogue_data_subset_resource_file_path_from_name_with_no_extension(
-            catalogue_data_subset_id,
-            file_name_with_no_extension
-        )
-        return cls._delete_file_from_datahub(file_path)
-
-    @classmethod
     def delete_catalogue_data_subset_directory(cls, catalogue_data_subset_id: str):
         try:
             return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id, create_if_not_exists=False))
