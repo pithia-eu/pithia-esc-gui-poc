@@ -7,10 +7,10 @@
 {% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
 {% endwith %}{% endblock breadcrumbs %}
 {% block pre_description_content %}
-<section class="resource-detail-emphasised-section resource-detail-section">
-    <h2 class="fw-semibold fs-4">Run this Workflow</h2>
-    <div class="d-flex flex-column align-items-start row-gap-4 pb-2">
-        <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" class="btn btn-outline-dark btn-outline-dark-togglable icon-link icon-link-hover fs-base-2" target="_blank" rel="noopener noreferrer">
+<section class="resource-detail-section">
+    <h2 class="fs-4">Run this Workflow</h2>
+    <div class="d-flex flex-column align-items-start row-gap-4 bg-body-tertiary rounded p-4">
+        <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" class="btn btn-outline-dark btn-lg btn-outline-dark-togglable icon-link icon-link-hover" target="_blank" rel="noopener noreferrer">
             Go to API
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
