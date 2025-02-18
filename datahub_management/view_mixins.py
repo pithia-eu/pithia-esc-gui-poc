@@ -88,7 +88,7 @@ class CatalogueDataSubsetDataHubViewMixin:
             for chunk in source_file.chunks():
                 destination.write(chunk)
 
-    def configure_and_add_source_file_to_temporary_directory(
+    def _configure_and_add_source_file_to_temporary_directory(
             self,
             online_resource_name: str,
             file_for_online_resource: InMemoryUploadedFile,
@@ -115,7 +115,7 @@ class CatalogueDataSubsetDataHubViewMixin:
             # Add the source files to a temporary directory,
             # preparing them to move all at once to DataHub.
             file_for_online_resource = self._get_file_for_online_resource(online_resource)
-            self.configure_and_add_source_file_to_temporary_directory(
+            self._configure_and_add_source_file_to_temporary_directory(
                 online_resource_name,
                 file_for_online_resource,
                 temporary_directory_path
