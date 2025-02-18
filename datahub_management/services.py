@@ -168,9 +168,13 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         )
         directory_items = os.listdir(catalogue_data_subset_directory_path)
         files = [
-            cls._get_file_from_datahub(os.path.join(catalogue_data_subset_directory_path, file_name))
+            cls._get_file_from_datahub(
+                os.path.join(catalogue_data_subset_directory_path, file_name)
+            )
             for file_name in directory_items
-            if os.path.isfile(os.path.join(catalogue_data_subset_directory_path, file_name))
+            if os.path.isfile(
+                os.path.join(catalogue_data_subset_directory_path, file_name)
+            )
         ]
         return files
 
