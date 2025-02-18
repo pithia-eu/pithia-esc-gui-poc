@@ -1,71 +1,67 @@
 {% extends 'browse/detail/bases/base_catalogue_related.html' %}
 {% load project_tags %}
-{% block top_section_extra_content %}
-<div class="resource-detail-top-section-extra-content mt-4">
-    <dl class="d-flex flex-lg-row flex-column flex-wrap column-gap-5 row-gap-4">
-        {% if resource.properties.result_time %}
-        <div>
-            <dt class="mb-1">Result Time</dt>
-            <dd>
-                <div class="d-inline-flex align-items-center justify-content-center column-gap-2 bg-body-tertiary rounded py-2 px-3">
-                    <span>
-                        {% if resource.properties.result_time.time_period.begin.time_position %}
-                        {{ resource.properties.result_time.time_period.begin.time_position|date:'M jS, Y, H:i O' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                    <span>-</span>
-                    <span>
-                        {% if resource.properties.result_time.time_period.end.time_position %}
-                        {{ resource.properties.result_time.time_period.end.time_position|date:'M jS, Y, H:i O' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                </div>
-            </dd>
-        </div>
-        {% endif %}
-        {% if resource.properties.catalogue_entry_urls %}
-        <div class="flex-shrink-0">
-            <dt>Catalogue Entry</dt>
-            <dd>
-                {% with value=resource.properties.catalogue_entry_urls.0 %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% endwith %}
-            </dd>
-        </div>
-        {% endif %}
-        {% if resource.properties.data_collection_urls %}
-        <div>
-            <dt>Subset of Data Collection</dt>
-            <dd>
-                {% with value=resource.properties.data_collection_urls.0 %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% endwith %}
-            </dd>
-        </div>
-        {% endif %}
-        {% if resource.properties.doi_kernel_metadata.referent_doi_name %}
-        <div>
-            <dt>DOI</dt>
-            <dd>
-                {% with doi_url='https://doi.org/'|add:resource.properties.doi_kernel_metadata.referent_doi_name %}
-                {{ doi_url }}
-                {% endwith %}
-            </dd>
-        </div>
-        {% endif %}
-    </dl>
-</div>
-{% endblock top_section_extra_content %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% with section_heading='How to Access This Data Subset' %}
 {% include 'browse/detail/sections/interaction_methods_section.html' %}
 {% endwith %}
+<div class="responsive-resource-detail-section resource-detail-section">
+    <h2>Result Time</h2>
+    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
+</div>
+{% if resource.properties.catalogue_entry_urls %}
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Catalogue Entry</h2>
+    {% with value=resource.properties.catalogue_entry_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
 {% endblock post_description_content %}
+
+{# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
+{% if resource.properties.doi_kernel_metadata.referent_doi_name %}
+<section class="resource-detail-section">
+    <h3>DOI</h3>
+    <p>
+        {{ resource.properties.doi_kernel_metadata.referent_doi_name|urlize }}
+    </p>
+</section>
+{% endif %}
+{% if resource.properties.data_collection_urls %}
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Subset of Data Collection</h2>
+    {% with value=resource.properties.data_collection_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
 {% endblock further_information_extra_sections %}
+
+{# Appears in aside section #}
+{% block aside_extra_content %}
+{% if resource.properties.catalogue_entry_urls %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Catalogue Entry</h2>
+    {% with value=resource.properties.catalogue_entry_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% if resource.properties.data_collection_urls %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Subset of Data Collection</h2>
+    {% with value=resource.properties.data_collection_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Result Time</h2>
+    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
+</section>
+{% endblock aside_extra_content %}
