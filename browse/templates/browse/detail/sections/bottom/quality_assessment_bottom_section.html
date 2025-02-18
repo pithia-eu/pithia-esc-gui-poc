@@ -2,64 +2,58 @@
 <section class="resource-detail-section">
     <h3>Quality Assessment</h3>
     {% if resource.properties.data_quality_flags %}
-    <div class="resource-detail-subsection">
-        <h4>Data Quality Flags</h4>
-        <ul>
-            {% for dqf in resource.properties.data_quality_flags %}
-            <li>
-                {% with value=dqf %}
-                {% if value in ontology_server_urls %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                {% elif value in resource_server_urls %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% else %}
-                {{ value.strip|urlize }}
-                {% endif %}
-                {% endwith %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <dl class="resource-detail-subsection">
+        <dt class="fw-medium fs-6">Data Quality Flags</dt>
+        {% for dqf in resource.properties.data_quality_flags %}
+        <dd class="dd-list-item">
+            {% with value=dqf %}
+            {% if value in ontology_server_urls %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% elif value in resource_server_urls %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% else %}
+            {{ value.strip|urlize }}
+            {% endif %}
+            {% endwith %}
+        </dd>
+        {% endfor %}
+    </dl>
     {% endif %}
     {% if resource.properties.metadata_quality_flags %}
-    <div class="resource-detail-subsection">
-        <h4>Metadata Quality Flags</h4>
-        <ul>
-            {% for mqf in resource.properties.metadata_quality_flags %}
-            <li>
-                {% with value=mqf %}
-                {% if value in ontology_server_urls %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                {% elif value in resource_server_urls %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% else %}
-                {{ value.strip|urlize }}
-                {% endif %}
-                {% endwith %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <dl class="resource-detail-subsection">
+        <dt class="fw-medium fs-6">Metadata Quality Flags</dt>
+        {% for mqf in resource.properties.metadata_quality_flags %}
+        <dd class="dd-list-item">
+            {% with value=mqf %}
+            {% if value in ontology_server_urls %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% elif value in resource_server_urls %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% else %}
+            {{ value.strip|urlize }}
+            {% endif %}
+            {% endwith %}
+        </dd>
+        {% endfor %}
+    </dl>
     {% endif %}
     {% if resource.properties.science_relevance_indicators %}
-    <div class="resource-detail-subsection">
-        <h4 class="fs-5 fw-normal">Science Relevance Indicators</h4>
-        <ul>
-            {% for sri in resource.properties.science_relevance_indicators %}
-            <li>
-                {% with value=sri %}
-                {% if value in ontology_server_urls %}
-                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                {% elif value in resource_server_urls %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% else %}
-                {{ value.strip|urlize }}
-                {% endif %}
-                {% endwith %}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <dl class="resource-detail-subsection">
+        <dt class="fw-medium fs-6">Science Relevance Indicators</dt>
+        {% for sri in resource.properties.science_relevance_indicators %}
+        <dd>
+            {% with value=sri %}
+            {% if value in ontology_server_urls %}
+            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+            {% elif value in resource_server_urls %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% else %}
+            {{ value.strip|urlize }}
+            {% endif %}
+            {% endwith %}
+        </dd>
+        {% endfor %}
+    </dl>
     {% endif %}
 </section>
 {% endif %}

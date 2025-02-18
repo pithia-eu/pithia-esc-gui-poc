@@ -670,11 +670,10 @@ as Bootstrap styling. */
 }
 
 .resource-detail-subsection {
-    padding: 1rem 0;
-}
-
-.resource-detail-section .resource-detail-subsection:last-child {
-    padding-bottom: 0;
+    margin: 0;
+    padding: 1rem;
+    border-radius: var(--bs-border-radius);
+    background-color: var(--bs-tertiary-bg);
 }
 
 .online-resource-list li > div:has(> details:not([open])) .or-service-function,
