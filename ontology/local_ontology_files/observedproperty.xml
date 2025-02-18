@@ -67,6 +67,18 @@
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+<!--
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bx"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_By"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bz"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Northward"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Eastward"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Vertical"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_HorizontalMagnitude"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_DeclinationAngle"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bd"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bh"/>
+-->
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -95,6 +107,230 @@
                 <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Scalar"/>
             </skos:Concept>
         </skos:member>
+<!--
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bx">
+                <skos:prefLabel xml:lang="en">Magnetic Field GSM X-component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Bx</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The X-component of the DC magnetic field in GSM system of coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_GSM_X"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_By">
+                <skos:prefLabel xml:lang="en">Magnetic Field GSM Y-component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">By</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The Y-component of the DC magnetic field in GSM system of coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_GSM_Y"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bz">
+                <skos:prefLabel xml:lang="en">Magnetic Field GSM Z-component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Bz</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The Z-component of the DC magnetic field in GSM system of coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_GSM_Z"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Northward">
+                <skos:prefLabel xml:lang="en">Magnetic Field NED Northward Component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">X</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The X-component (northward) of the DC magnetic field in North-East-Down geographic coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaNorthward"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_NED_X"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaNorthward">
+                <skos:prefLabel xml:lang="en">Magnetic Northward NED Field Strength Variation</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBx</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Variation of the NED X-component (northward geographic) of B-field about its mean value</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Northward"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_NED_X"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VariationAboutMean"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Eastward">
+                <skos:prefLabel xml:lang="en">Magnetic Field NED Eastward Component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Y</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The Y-component (eastward) of the DC magnetic field in North-East-Down geographic coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaEastward"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_NED_Y"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaEastward">
+                <skos:prefLabel xml:lang="en">Magnetic Eastward NED Field Strength Variation</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBy</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Variation of the NED Y-component (eastward geographic) of B-field about its mean value</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Eastward"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_NED_Y"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VariationAboutMean"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Vertical">
+                <skos:prefLabel xml:lang="en">Magnetic Field Vertical Component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Z</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The Z-component (downward vertical) of the B-field</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaBz"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_NED_Z"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_Z"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaVertical">
+                <skos:prefLabel xml:lang="en">Magnetic Vertical Field Strength Variation</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBz</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Variation of the vertical Z-component of B-field about its mean value</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Vertical"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_Z"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VariationAboutMean"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_HorizontalMagnitude">
+                <skos:prefLabel xml:lang="en">Magnetic Field Strength in Horizontal Plane</skos:prefLabel>
+                <skos:altLabel xml:lang="en">H</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The magnitude of the DC magnetic field in the horizontal plane parallel to Earth surface</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Projection_NED_XY"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/2DVectorMagnitude"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_DeclinationAngle">
+                <skos:prefLabel xml:lang="en">Declination Angle of Magnetic Field</skos:prefLabel>
+                <skos:altLabel xml:lang="en">D</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The eastward declination of the horizontal B-field component from geographic north pole [degrees]</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Projection_NED_XY"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/2DVectorDeclination"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bd">
+                <skos:prefLabel xml:lang="en">Magnetic Eastward Directed HDZ Field Strength</skos:prefLabel>
+                <skos:altLabel xml:lang="en">D</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The eastward D-component of the DC magnetic field in HDZ/Compass system of coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaBd"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_D"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaBd">
+                <skos:prefLabel xml:lang="en">Magnetic Eastward HDZ Field Strength Variation</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBd</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Variation of the eastward D-component of B-field about its mean value</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bd"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_D"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VariationAboutMean"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bh">
+                <skos:prefLabel xml:lang="en">Magnetic Northward Directed HDZ Field Strength</skos:prefLabel>
+                <skos:altLabel xml:lang="en">H</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">The northward H-component of the DC magnetic field in HDZ/Compass system of coordinates</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaBh"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_H"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_deltaBh">
+                <skos:prefLabel xml:lang="en">Magnetic Northward HDZ Field Strength Variation</skos:prefLabel>
+                <skos:altLabel xml:lang="en">dBh</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Variation of the northward H-component of B-field about its mean value</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagneticField_Bh"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/MagneticField"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Strength"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Direction"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_HDZ_H"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VariationAboutMean"/>
+            </skos:Concept>
+        </skos:member>
+-->
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity">
                 <skos:prefLabel xml:lang="en">Neutral Wind Velocity</skos:prefLabel>
@@ -102,11 +338,101 @@
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Neutral bulk wind velocity,magnitude and direction</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Component"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Projection"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
                 <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Vector"/>
             </skos:Concept>
         </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Component">
+                <skos:prefLabel xml:lang="en">Neutral Wind Velocity Component</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-i</skos:altLabel>
+                <dc:date>2015-06-10 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A component of neutral bulk wind velocity vector</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity"/>
+<!--
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Vertical"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Zonal"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Meridional"/>
+-->
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent"/>
+            </skos:Concept>
+        </skos:member>
+<!--
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Zonal">
+                <skos:prefLabel xml:lang="en">Zonal Neutral Wind Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-x</skos:altLabel>
+                <skos:definition xml:lang="en">Zonal component of neutral bulk wind velocity</skos:definition>
+                <dc:date>2015-09-22 19:47:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Component"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_ENU_X"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Meridional">
+                <skos:prefLabel xml:lang="en">Meridional Neutral Wind Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-y</skos:altLabel>
+                <skos:definition xml:lang="en">Meridional component of neutral bulk wind velocity</skos:definition>
+                <dc:date>2015-09-22 19:48:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Component"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_ENU_Y"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Vertical">
+                <skos:prefLabel xml:lang="en">Vertical Neutral Wind Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-z</skos:altLabel>
+                <skos:definition xml:lang="en">Vertical component of neutral bulk wind velocity</skos:definition>
+                <dc:date>2015-09-23 11:16:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Component"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/VectorComponent_ENU_Z"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Projection">
+                <skos:prefLabel xml:lang="en">Neutral Horizontal Wind Velocity Projection</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-ij</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Projection of neutral bulk wind velocity on a plane</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Horizontal"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/2DVector"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Projection"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Horizontal">
+                <skos:prefLabel xml:lang="en">Neutral Horizontal Wind Velocity</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Vn-horiz</skos:altLabel>
+                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Horizontal component of neutral bulk wind velocity</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralWindVelocity_Projection"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/NeutralParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BulkVelocity"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/2DVector"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Projection_ENU_XY"/>
+            </skos:Concept>
+        </skos:member>
+-->
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralTemperature">
                 <skos:prefLabel xml:lang="en">Neutral Temperature</skos:prefLabel>
@@ -132,7 +458,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralDensity">
                 <skos:prefLabel xml:lang="en">Neutral Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[]</skos:altLabel>
+                <skos:altLabel xml:lang="en">Ne</skos:altLabel>
                 <skos:definition xml:lang="en">Number density of neutral particles</skos:definition>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -147,7 +473,6 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralDensity_O">
                 <skos:prefLabel xml:lang="en">Neutral Density of Atomic Oxygen O</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[O]</skos:altLabel>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Number density of atomic oxygen</skos:definition>
@@ -159,7 +484,6 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralDensity_O2">
                 <skos:prefLabel xml:lang="en">Neutral Density of Dioxygen O2</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[O2]</skos:altLabel>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Neutral density of diatomic oxygen (dioxygen) O2</skos:definition>
@@ -171,7 +495,6 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralDensity_N2">
                 <skos:prefLabel xml:lang="en">Neutral Density of Dinitrogen N2</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[N2]</skos:altLabel>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Neutral density of diatomic nitrogen (dinitrogen) N2</skos:definition>
@@ -183,7 +506,6 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralDensity_He">
                 <skos:prefLabel xml:lang="en">Neutral Density of Helium He</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[He]</skos:altLabel>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Neutral density of helium He</skos:definition>
@@ -195,7 +517,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/NeutralTemperature">
                 <skos:prefLabel xml:lang="en">Neutral Temperature</skos:prefLabel>
-                <skos:altLabel xml:lang="en">T</skos:altLabel>
+                <skos:altLabel xml:lang="en">Ne</skos:altLabel>
                 <skos:definition xml:lang="en">Temperature of neutral particles</skos:definition>
                 <dc:date>2022-11-30 09:00:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -264,7 +586,8 @@
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaBoundaryPosition"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaLayerType"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ProfileShapeParameter"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/DensityOverVTEC"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/NumberDensity"/>
             </skos:Concept>
@@ -276,7 +599,7 @@
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The electron velocity vector</skos:definition>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronDriftVelocity"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronVelocity_Drift"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronVelocity_Heliosphere"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Velocity"/>
@@ -286,6 +609,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronVelocity_Drift">
                 <skos:prefLabel xml:lang="en">Electron Drift Velocity in the Earth's Ionosphere</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Ve</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The electron drift velocity vector</skos:definition>
@@ -298,6 +622,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronVelocity_Heliosphere">
                 <skos:prefLabel xml:lang="en">Electron Velocity in the Heliosphere</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Ve</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The electron velocity vector of the solar wind</skos:definition>
@@ -396,6 +721,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaTemperature_MHD">
                 <skos:prefLabel xml:lang="en">Plasma Temperature in MHD calculations</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Te</skos:altLabel>
                 <dc:date>2023-04-14 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Plasma temperature in the MHD framework</skos:definition>
@@ -493,7 +819,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ProtonDensity">
                 <skos:prefLabel xml:lang="en">Proton Density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">N+</skos:altLabel>
+                <skos:altLabel xml:lang="en">N</skos:altLabel>
                 <skos:definition xml:lang="en">Number density of protons</skos:definition>
                 <dc:date>2013-12-04 16:56:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -505,7 +831,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ProtonDriftVelocity">
                 <skos:prefLabel xml:lang="en">Proton Drift Velocity</skos:prefLabel>
-                <skos:altLabel xml:lang="en">V+</skos:altLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
                 <skos:definition xml:lang="en">The proton drift velocity vector</skos:definition>
                 <dc:date>2013-12-04 16:56:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -518,7 +844,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ProtonTemperature">
                 <skos:prefLabel xml:lang="en">Proton Temperature</skos:prefLabel>
-                <skos:altLabel xml:lang="en">T+</skos:altLabel>
+                <skos:altLabel xml:lang="en">T</skos:altLabel>
                 <skos:definition xml:lang="en">Proton temperature</skos:definition>
                 <dc:date>2013-12-04 16:57:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -530,7 +856,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/ProtonFlux">
                 <skos:prefLabel xml:lang="en">Proton Flux</skos:prefLabel>
-                <skos:altLabel xml:lang="en">F+</skos:altLabel>
+                <skos:altLabel xml:lang="en">F</skos:altLabel>
                 <skos:definition xml:lang="en">Flux of energetic protons</skos:definition>
                 <dc:date>2013-12-04 16:57:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -555,8 +881,8 @@
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/IonComposition_AtomicOxygen-Ne">
-                <skos:prefLabel xml:lang="en">O/Ne Composition</skos:prefLabel>
-                <skos:altLabel xml:lang="en">[O]/[e-]</skos:altLabel>
+                <skos:prefLabel xml:lang="en">O /Ne Composition</skos:prefLabel>
+                <skos:altLabel xml:lang="en">[O ]/[e-]</skos:altLabel>
                 <skos:definition xml:lang="en">Proportions of particle densities in a composite gas</skos:definition>
                 <dc:date>2013-12-04 17:04:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -598,6 +924,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/CollisionFrequency">
                 <skos:prefLabel xml:lang="en">Collision Frequency</skos:prefLabel>
+                <skos:altLabel xml:lang="en">V</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Average number of collisions between particles per unit of time</skos:definition>
@@ -627,6 +954,7 @@
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Particle transport flux of photons counted within the acceptance solid angle, the energy passband, and detection bin of a detector.</skos:definition>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonFlux_Optical"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonFlux_UV"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonFlux_EUV"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/CountRate"/>
@@ -671,6 +999,37 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonIrradiance">
+                <skos:prefLabel xml:lang="en">Photon Irradiance</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Ep</skos:altLabel>
+                <dc:date>2023-12-11 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photon irradiance per second per m2</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonIrradiance_EUV"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceParticle"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Differential_Time"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Integral_EnergyPassband"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Integral_SolidAngleAcceptance"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonIrradiance_EUV">
+                <skos:prefLabel xml:lang="en">EUV Photon Irradiance</skos:prefLabel>
+                <skos:altLabel xml:lang="en">qp</skos:altLabel>
+                <dc:date>2023-12-11 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Photon irradiance in the ultraviolet spectrum</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PhotonIrradiance"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ElectromagneticWave"/>
+                <pithia:photonType rdf:resource="https://metadata.pithia.eu/ontology/2.2/photonType/EUV"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceParticle"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Differential_Time"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Integral_EnergyPassband"/>
+                <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Integral_SolidAngleAcceptance"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaBoundaryPosition">
                 <skos:prefLabel xml:lang="en">Plasma Boundary Position</skos:prefLabel>
                 <skos:altLabel xml:lang="en">Dp</skos:altLabel>
@@ -678,6 +1037,7 @@
                 <dc:date>2015-09-02 14:49:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmapausePosition"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagnetopausePosition"/>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/Position"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/BoundaryPosition"/>
@@ -842,7 +1202,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_E-Layer">
                 <skos:prefLabel xml:lang="en">E layer peak height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmE,hmE</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmE</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the E layer</skos:definition>
@@ -855,7 +1215,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_F1-Layer">
                 <skos:prefLabel xml:lang="en">F1 layer peak height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmF1,hmF1</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmF1</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the F1 layer</skos:definition>
@@ -868,7 +1228,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_F2-Layer">
                 <skos:prefLabel xml:lang="en">F2 layer peak height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmF2,hmF2</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmF2</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the F2 layer</skos:definition>
@@ -897,7 +1257,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_Es-Layer">
                 <skos:prefLabel xml:lang="en">Es layer peak electron density</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmEs,hmEs</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmEs</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the Es layer</skos:definition>
@@ -910,7 +1270,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_Ea-Layer">
                 <skos:prefLabel xml:lang="en">Ea layer peak height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmEa,hmEa</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmEa</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the Ea layer</skos:definition>
@@ -923,7 +1283,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/PeakHeight_F3-Layer">
                 <skos:prefLabel xml:lang="en">F3 layer peak height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zmF3,hmF3</skos:altLabel>
+                <skos:altLabel xml:lang="en">zmF3</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The peak height of the F3 layer</skos:definition>
@@ -950,7 +1310,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/HalfDensityHeight_F2-Layer">
                 <skos:prefLabel xml:lang="en">F2 layer half-density height</skos:prefLabel>
-                <skos:altLabel xml:lang="en">zhalfNmF2</skos:altLabel>
+                <skos:altLabel xml:lang="en">zhalfNm</skos:altLabel>
                 <skos:definition xml:lang="en">True height at half peak electron density of F2 layer</skos:definition>
                 <dc:date>2013-10-10 23:22:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
@@ -1223,20 +1583,33 @@
                 <skos:prefLabel xml:lang="en">Total Electron Content</skos:prefLabel>
                 <skos:altLabel xml:lang="en">TEC</skos:altLabel>
                 <skos:definition xml:lang="en">Total Electron Content (TEC) integrated along a path in plasma layer</skos:definition>
-                <dc:date>2013-10-10 23:04:00.0</dc:date>
+                <dc:date>2023-10-24 23:04:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Slant"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical_Ionosphere"/>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronDensity"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/DensityOverVTEC">
+                <skos:prefLabel xml:lang="en">Ratio of Electron Density over Vertical TEC</skos:prefLabel>
+                <skos:altLabel xml:lang="en">TEC</skos:altLabel>
+                <skos:definition xml:lang="en">Ratio of Electron Density over Vertical TEC</skos:definition>
+                <dc:date>2023-12-07 09:04:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/ElectronDensity"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/DensityToContentRatio"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Slant">
                 <skos:prefLabel xml:lang="en">Total Slant Electron Content</skos:prefLabel>
                 <skos:altLabel xml:lang="en">STEC</skos:altLabel>
-                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <dc:date>2023-10-24 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">TEC integrated along a slant path from spacecraft to ground</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent"/>
@@ -1251,11 +1624,10 @@
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical">
                 <skos:prefLabel xml:lang="en">Total Vertical Electron Content</skos:prefLabel>
                 <skos:altLabel xml:lang="en">VTEC</skos:altLabel>
-                <dc:date>2013-06-01 21:30:00.0</dc:date>
+                <dc:date>2023-10-24 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">TEC along a vertical path from ground</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical_Ionosphere"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent"/>
                 <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Vertical"/>
@@ -1265,12 +1637,12 @@
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical_Ionosphere">
-                <skos:prefLabel xml:lang="en">Total Vertical Electron Content of Ionosphere</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Total Vertical Electron Content of the Ionosphere</skos:prefLabel>
                 <skos:altLabel xml:lang="en">iTEC</skos:altLabel>
-                <dc:date>2023-09-13 13:30:00.0</dc:date>
-                <owlxml:versionInfo>0.2</owlxml:versionInfo>
-                <skos:definition xml:lang="en">TEC along a vertical path from ground to the upper boundry of the ionosphere</skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent_Vertical"/>
+                <dc:date>2023-10-24 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">TEC along a vertical path from ground to the top boundary of the ionosphere, typically 2,000 km</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/TotalElectronContent"/>
                 <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent"/>
                 <pithia:qualifier rdf:resource="https://metadata.pithia.eu/ontology/2.2/qualifier/Vertical"/>
@@ -1301,6 +1673,7 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/EM-Wave_Direction">
                 <skos:prefLabel xml:lang="en">EM-wave Direction</skos:prefLabel>
+                <skos:altLabel xml:lang="en">D</skos:altLabel>
                 <dc:date>2013-06-01 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Direction of the propagating electromagnetic wave</skos:definition>
@@ -3083,6 +3456,17 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/DummyDeprecatedTerm">
+                <skos:prefLabel xml:lang="en">Dummy Deprecated Term</skos:prefLabel>
+                <skos:altLabel xml:lang="en">Dummy</skos:altLabel>
+                <skos:definition xml:lang="en">A dummy deprecated term to demonstrate the use of a deprecated term</skos:definition>
+                <dc:date>2014-09-22 23:38:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Particle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Count"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/CriticalFrequency_E-Layer_X-Mode">
                 <skos:prefLabel xml:lang="en">E-layer X-Mode Critical Frequency</skos:prefLabel>
                 <skos:altLabel xml:lang="en">fxE</skos:altLabel>
@@ -3172,9 +3556,22 @@
                 <dc:date>2015-09-02 14:49:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaBoundaryPosition"/>
-                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/Electron"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle"/>
                 <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Position"/>
                 <pithia:featureOfInterest rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Plasmasphere"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/observedProperty/MagnetopausePosition">
+                <skos:prefLabel xml:lang="en">Magnetopause Position</skos:prefLabel>
+                <skos:altLabel xml:lang="en">DSO</skos:altLabel>
+                <skos:definition xml:lang="en">Position of the Earth magnetopause in space</skos:definition>
+                <dc:date>2024-03-01 14:49:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/observedProperty/PlasmaBoundaryPosition"/>
+                <pithia:phenomenon rdf:resource="https://metadata.pithia.eu/ontology/2.2/phenomenon/ChargedParticle"/>
+                <pithia:measurand rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Position"/>
+                <pithia:featureOfInterest rdf:resource="https://metadata.pithia.eu/ontology/2.2/featureOfInterest/Earth_Magnetosphere_Magnetopause"/>
             </skos:Concept>
         </skos:member>
         <skos:member>

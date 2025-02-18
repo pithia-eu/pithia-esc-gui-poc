@@ -62,6 +62,24 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/10_12m-3">
+                <skos:prefLabel xml:lang="en">10^12 m-3</skos:prefLabel>
+                <skos:altLabel xml:lang="en">10^12*m-3</skos:altLabel>
+                <dc:date>2024-08-22 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Used by NEDM model of plasma density</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/m-1">
+                <skos:prefLabel xml:lang="en">per meter</skos:prefLabel>
+                <skos:altLabel xml:lang="en">m-1</skos:altLabel>
+                <dc:date>2023-12-07 15:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en"></skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/TECu">
                 <skos:prefLabel xml:lang="en">TEC unit</skos:prefLabel>
                 <skos:altLabel xml:lang="en">TECu</skos:altLabel>
@@ -95,6 +113,14 @@
                 <dc:date>2013-05-31 15:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Used for NOAA/MEPED energetic particle fluxes</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/unit/m-2s-2">
+                <skos:prefLabel xml:lang="en">counts/m2 per s2</skos:prefLabel>
+                <dc:date>2023-12-11 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Used for rate (s-1) of photon irradiance (s-1), thus s-2</skos:definition>
             </skos:Concept>
         </skos:member>
         <skos:member>

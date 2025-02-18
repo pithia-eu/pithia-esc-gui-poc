@@ -12,11 +12,48 @@
         <owlxml:versionInfo>0.1</owlxml:versionInfo>
         <dc:publisher>PITHIA</dc:publisher>
         <skos:member>
+        <!-- to be deprecated -->
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/catalogueCategory/VolcanoEruption">
-                <skos:prefLabel xml:lang="en">Volcano Eruption</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">DEPRECATE: Volcano Eruption</skos:prefLabel>
                 <dc:date>2023-09-11 21:37:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Eruptions of volcano</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+        <!-- to be deprecated -->
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/catalogueCategory/LSTID">
+                <skos:prefLabel xml:lang="en">DEPRECATE: Large Scale Traveling Ionospheric Disturbance</skos:prefLabel>
+                <dc:date>2024-09-24 12:32:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Traveling ionospheric disturbance events of >600 km scale (LS) and 
+significantly large wave amplitudes
+                </skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/catalogueCategory/AcademicPublication">
+                <skos:prefLabel xml:lang="en">Academic Publication</skos:prefLabel>
+                <dc:date>2024-10-16 12:32:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Publication in an academic journal that requires persistent access to the source
+data used in the published research
+                </skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/catalogueCategory/TrainingDataset">
+                <skos:prefLabel xml:lang="en">Training Dataset for a Machine Learning Model</skos:prefLabel>
+                <dc:date>2024-11-05 08:35:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Training dataset for a Machine Learning model allocated by the model designer 
+and stored in a persistent repository for posterity. Catalog Entry registers the 
+model, and Data Subset registers the training dataset. Retraining of the model 
+results in registration of another Data Subset document for the same Catalog Entry.
+                </skos:definition>
             </skos:Concept>
         </skos:member>
     </skos:ConceptScheme>

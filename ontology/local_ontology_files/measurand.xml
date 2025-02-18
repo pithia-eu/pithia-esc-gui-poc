@@ -99,6 +99,7 @@
                 <skos:definition xml:lang="en">A measure of a physical quantity per unit of length, area, or volume</skos:definition>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/NumberDensity"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/ColumnarContent"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/DensityToContentRatio"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -118,6 +119,16 @@
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">The number of particles per unit area in the column between observer and target</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Density"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/DensityToContentRatio">
+                <skos:prefLabel xml:lang="en">Density to Columnar Content Ratio</skos:prefLabel>
+                <skos:altLabel xml:lang="en">I</skos:altLabel>
+                <dc:date>2013-05-31 21:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Ratio of insitu density to columnar content of matter</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/Density"/>
             </skos:Concept>
         </skos:member>
@@ -221,7 +232,27 @@
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Flow rate of particles per unit area</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceParticle"/>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransport"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceParticle">
+                <skos:prefLabel xml:lang="en">Particle Irradiance</skos:prefLabel>
+                <dc:date>2023-12-11 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Flow rate of particles per unit area, all angles and energies</skos:definition>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceRateParticle"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/FluxTransportParticle"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceRateParticle">
+                <skos:prefLabel xml:lang="en">Rate of Particle Irradiance</skos:prefLabel>
+                <dc:date>2023-12-11 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Rate of Particle Irradiance</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/measurand/IrradianceParticle"/>
             </skos:Concept>
         </skos:member>
         <skos:member>

@@ -23,15 +23,14 @@
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor">
-                <skos:prefLabel xml:lang="en">Active Remote Sensing Instrument</skos:prefLabel>
-                <dc:date>2013-06-21 21:30:00.0</dc:date>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:prefLabel xml:lang="en">Active Remote Sensor</skos:prefLabel>
+                <dc:date>2024-12-17 07:30:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A remote sensing instrument that emits energy in order to illuminate the feature of interest and then to detect and evaluate the part of radiated energy that was reflected, refracted, attenuated, or scattered by the feature.</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/RemoteSensor"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Radar"/>
                 <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/Sounder"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-transmitter"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -103,29 +102,139 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS">
+                <skos:prefLabel xml:lang="en">GNSS</skos:prefLabel>
+                <dc:date>2024-12-17 07:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Global satellite navigation system for geopositioning used as active sensor 
+to infer properties of the underlying propagation medium of the GNSS signal.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-transmitter"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver">
-                <skos:prefLabel xml:lang="en">Receiver of GNSS signals</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">GNSS Receiver</skos:prefLabel>
                 <dc:date>2013-06-21 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <skos:definition xml:lang="en">An instrument that infers properties of the propagation medium from analysis of received signals from the GNSS spacecraft.</skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverDualFrequency"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverScintillation"/>
-                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverOccultation"/>
+                <skos:definition xml:lang="en">
+An instrument that infers properties of the propagation medium from analysis of 
+received signals from the GNSS spacecraft.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased">
+                <skos:prefLabel xml:lang="en">Groundbased GNSS receiver</skos:prefLabel>
+                <dc:date>2024-12-17 08:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A GNSS receiver built for operations on the ground.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_SingleFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_DualFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_MultiFrequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_SingleFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Groundbased Single Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A groundbased receiver that records GNSS signals on one frequency.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_DualFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Groundbased Dual Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A groundbased receiver that determines total electron content (TEC) from 
+the difference of travel times of the dual-frequency GNSS signals.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased_MultiFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Groundbased Multi Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A groundbased receiver that determines total electron content (TEC) operating on
+multiple frequencies of the GNSS signal.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverGroundbased"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne">
+                <skos:prefLabel xml:lang="en">Spaceborne receiver of GNSS signals</skos:prefLabel>
+                <dc:date>2024-12-17 08:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A GNSS receiver built for operations on a satellite.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiver"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_SingleFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_DualFrequency"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_MultiFrequency"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_SingleFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Spaceborne Single Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A spaceborne receiver that records GNSS signals on one frequency.</skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_DualFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Spaceborne Dual Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A spaceborne receiver that determines total electron content (TEC) from the difference of 
+travel times of the dual-frequency GNSS signals.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne_MultiFrequency">
+                <skos:prefLabel xml:lang="en">GNSS Spaceborne Multi Frequency Receiver</skos:prefLabel>
+                <dc:date>2024-12-17 09:30:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+A spaceborne receiver that determines total electron content (TEC) operating on
+multiple frequencies of the GNSS signal.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverSpaceborne"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-transmitter">
-                <skos:prefLabel xml:lang="en">A spaceborne GNSS Transmitter Instrument</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">GNSS Transmitter</skos:prefLabel>
                 <dc:date>2013-06-21 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A transmitter on GNSS platform with a precise time measurement of pulse tranmission.</skos:definition>
-                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/ActiveRemoteSensor"/>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS"/>
             </skos:Concept>
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverDualFrequency">
-                <skos:prefLabel xml:lang="en">GNSS Dual Frequency Receiver</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Deprecate: GNSS DualFrequency Rx</skos:prefLabel>
                 <dc:date>2013-06-21 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A receiver that determines total electron content (TEC) from the difference of travel times of the dual-frequency GNSS signals.</skos:definition>
@@ -134,7 +243,7 @@
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverScintillation">
-                <skos:prefLabel xml:lang="en">GNSS Scintillation Receiver</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Deprecate: GNSS Scintillation Receiver</skos:prefLabel>
                 <dc:date>2013-06-21 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A GNSS receiver that evaluates degree of fluctuation in the signal characteristics.</skos:definition>
@@ -143,7 +252,7 @@
         </skos:member>
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/GNSS-receiverOccultation">
-                <skos:prefLabel xml:lang="en">GNSS Radio Occultation Receiver</skos:prefLabel>
+                <skos:prefLabel xml:lang="en">Deprecate: GNSS Radio Occultation Receiver</skos:prefLabel>
                 <dc:date>2013-06-21 21:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A GNSS receiver that evaluates amount of signal refraction as it propagates through the medium between the transmitter and receiver.</skos:definition>
@@ -297,10 +406,102 @@
         <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer">
                 <skos:prefLabel xml:lang="en">Magnetometer</skos:prefLabel>
-                <dc:date>2013-06-21 21:30:00.0</dc:date>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <dc:date>2024-10-31 07:00:00.0</dc:date>
+                <owlxml:versionInfo>0.2</owlxml:versionInfo>
                 <skos:definition xml:lang="en">An in situ instrument that measures the ambient magnetic field.</skos:definition>
                 <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituSensor"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/FluxgateVectorMagnetometer"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/SearchCoilVectorMagnetometer"/>
+                <skos:narrower rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/AbsoluteScalarMagnetometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/FluxgateVectorMagnetometer">
+                <skos:prefLabel xml:lang="en">Fluxgate Vector Magnetometer</skos:prefLabel>
+                <dc:date>2024-10-31 07:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Fluxgate magnetometers are active observing instruments sensitive to a magnetic 
+field component aligned with the core axis. The sensors are nowadays built on 
+linear or ring cores made of high permeability permalloy or mumetal around which 
+two coils are wrapped. They constitute the drive and the reception circuits. 
+The drive circuit drives the core with a frequency of the order of 100 kHz 
+into fully symmetric saturation in alternating directions along the core axis. 
+If an external quasi-stationary magnetic field (fully stationary or varying 
+very slowly compared to the driver frequency) is imposed along the core axis 
+the saturation symmetry is violated and higher even harmonics appear in the 
+reception circuit. The amplitude of the second harmonic is usually exploited 
+as a measure of the strength of the externally imposed magnetic field.
+Science quality magnetometers combine three cores to form an orthogonal 
+three-axis system. They can thus measure the full magnetic field vector. 
+The most sensitive science grade fluxgate magnetometers used in space and 
+geoscience cover a dynamic range of up to six orders of magnitude 
+(+/-50,000 nT full scale with 0.1 nT resolution) at 100 Hz sampling rate. 
+Digitising the output would require a 20-bit AD converter. In order to 
+relax this requirement the circuits of fixed location ground-based 
+magnetometers for space science applications often employ mean geomagnetic 
+field compensation circuits and return only the superimposed magnetic field 
+variations. 
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/SearchCoilVectorMagnetometer">
+                <skos:prefLabel xml:lang="en">Search Coil Vector Magnetometer</skos:prefLabel>
+                <dc:date>2024-10-31 07:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Search coil magnetometers (sometimes called induction coil magnetometers) are 
+passive observing instruments sensitive to magnetic field variations along 
+the coil axis. They consist of a long and slim permalloy or mumetal rod 
+surrounded by a coil with up to several million turns of copper wire. A 
+varying magnetic field induces a circular electric field around the coil 
+core which is measured as an electric potential difference (voltage) between 
+the two ends of the coil wire. It is often used to measure magnetic field 
+variations in the ULF-VLF range, but a sensibility to higher frequencies 
+is also of interest for the investigation of plasma waves. Because of their 
+large size two search coils are often placed flat on the ground in orthogonal 
+directions and measure horizontal components of magnetic field variations. 
+But three-axis search coil magnetometers were also constructed and 
+successfully employed for full vector measurements of geomagnetic field 
+variations. 
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/instrumentType/AbsoluteScalar">
+                <skos:prefLabel xml:lang="en">Absolute Scalar Magnetometer</skos:prefLabel>
+                <dc:date>2024-10-31 07:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">
+Scalar magnetometers (also called total field magnetometers) are active 
+observing instruments for measuring the strength of the ambient magnetic 
+field irrespective of its orientation. They were for a long time mostly 
+realised as proton precession magnetometers. They align protons by their 
+spin in a suitable measurement fluid by applying a strong and brief excitation 
+magnetic field. The frequency of the relaxing precession of the protons 
+around the ambient magnetic field provides a measure of the magnetic field 
+strength. Proton magnetometers were gradually replaced by Overhauser and 
+optically pumped magnetometers.
+The Overhauser magnetometer has free radicals added to the measurement fluid 
+instrumentType.xmland exploits the Overhauser effect but otherwise uses 
+the same fundamental principle as the proton precession magnetometer. Rather 
+than aligning the protons using a solenoid (as in the proton magnetometer), 
+a low power radio-frequency field is used to align (polarise) the electron 
+spin of the free radicals, which then couples to the protons via the 
+Overhauser effect.
+Optically pumped magnetometers are an alternative to proton precession and 
+Overhauser magnetometers. The Helium 4 magnetometer became the most advanced 
+version of this type. Its operating principle is based on the electron spin 
+magnetic resonance of Helium 4 and exploits the Zeeman effect which splits 
+the emission and absorption lines of atoms in an ambient magnetic field. 
+The signal is amplified by optical laser pumping. The Helium 4 magnetometer 
+can provide an accuracy of 0.1 nT which makes it appropriate for magnetic 
+field scalar measurements on ground and in space.
+                </skos:definition>
+                <skos:broader rdf:resource="https://metadata.pithia.eu/ontology/2.2/instrumentType/InSituMagnetometer"/>
             </skos:Concept>
         </skos:member>
         <skos:member>

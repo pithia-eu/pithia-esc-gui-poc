@@ -176,6 +176,14 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/qualifier/Detrended">
+                <skos:prefLabel xml:lang="en">Detrended</skos:prefLabel>
+                <dc:date>2023-12-11 09:13:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Time series passed through a high-pass filter to remove slow-varying trend</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/qualifier/RateOfChange">
                 <skos:prefLabel xml:lang="en">Rate of Change</skos:prefLabel>
                 <dc:date>2013-05-31 21:30:00.0</dc:date>
@@ -197,6 +205,14 @@
                 <dc:date>2022-11-28 16:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">Difference between measured and true value (related to the systematic error that affects the accuracy)</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/qualifier/Normalized">
+                <skos:prefLabel xml:lang="en">Normalized</skos:prefLabel>
+                <dc:date>2023-10-18 11:10:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">Multiplied by a scaling factor to bring to a unified scale</skos:definition>
             </skos:Concept>
         </skos:member>
         <skos:member>
@@ -998,6 +1014,22 @@
                 <dc:date>2023-05-04 16:34:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">A value that has been adjusted to calibrate or compensate for varying conditions</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/qualifier/Proxy">
+                <skos:prefLabel xml:lang="en">Proxy</skos:prefLabel>
+                <dc:date>2023-12-11 10:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A entity that represents behavior of a different entity</skos:definition>
+            </skos:Concept>
+        </skos:member>
+        <skos:member>
+            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/qualifier/Classifier">
+                <skos:prefLabel xml:lang="en">Classifier into a category</skos:prefLabel>
+                <dc:date>2024-07-18 09:00:00.0</dc:date>
+                <owlxml:versionInfo>0.1</owlxml:versionInfo>
+                <skos:definition xml:lang="en">A classifier into a specific set of categories or classes</skos:definition>
             </skos:Concept>
         </skos:member>
     </skos:ConceptScheme>

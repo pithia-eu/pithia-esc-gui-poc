@@ -122,25 +122,17 @@
             </skos:Concept>
         </skos:member>
         <skos:member>
-            <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CAA">
-                <skos:prefLabel xml:lang="en">CAA Rules of the Road</skos:prefLabel>
-                <dc:date>2014-03-13 10:30:00.0</dc:date>
-                <owlxml:versionInfo>0.1</owlxml:versionInfo>
-                <skos:definition xml:lang="en">All data on the CAA are publicly available to the world-wide science community. However, the data production is often based on routine calibration processes, and so some of the features in the data can be instrumental rather than representing physical processes. Therefore users who are not experts of given data files may wish to be in contact with the PI team or knowledgeable Co-I in order to interpret the measurements correctly. For presentations and publications, please acknowledge the instrument teams and the Cluster Active Archive.</skos:definition>
-            </skos:Concept>
-        </skos:member>
-        <skos:member>
             <skos:Concept rdf:about="https://metadata.pithia.eu/ontology/2.2/licence/CSA">
                 <skos:prefLabel xml:lang="en">CSA Rules of the Road</skos:prefLabel>
                 <dc:date>2023-03-21 07:30:00.0</dc:date>
                 <owlxml:versionInfo>0.1</owlxml:versionInfo>
                 <skos:definition xml:lang="en">
-All data on the CSA are publicly available to the world-wide science community. However, the data production is 
-often based on routine calibration processes, and so some of the features in the data can be instrumental rather 
-than representing physical processes. Therefore users who are not experts of given data files may wish to be in 
-contact with the PI team or knowledgeable co-I in order to interpret the measurements correctly.
-For each instrument on these missions, detailed documentation is available. Users are warmly invited to read the 
-PI recommendations provided in the User Guide and Calibration Report of each instrument.
+Cluster Science Archive (CSA): all data on the CSA are publicly available to the world-wide science community. 
+However, the data production is often based on routine calibration processes, and so some of the features in the 
+data can be instrumental rather than representing physical processes. Therefore users who are not experts of given 
+data files may wish to be in contact with the PI team or knowledgeable co-I in order to interpret the measurements 
+correctly. For each instrument on these missions, detailed documentation is available. Users are warmly invited to 
+read the PI recommendations provided in the User Guide and Calibration Report of each instrument.
 For presentations and publications, please acknowledge the instrument teams and the Cluster Science Archive. 
 In publications, please refer to Laakso et al., 2010 when mentioning the usage of the Cluster Science Archive.
 Laakso, H., C. Perry, S. McCaffrey, D. Herment, A.J. Allen, C.C. Harvey, C.P. Escoubet, C. Gruenberger, 
