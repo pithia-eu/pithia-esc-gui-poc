@@ -127,9 +127,9 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
         data subset's resource files.
         """
         catalogue_data_subset_id = 'catalogue_data_subset_id'
+        CatalogueDataSubsetDataHubService._create_directory_for_catalogue_data_subset(catalogue_data_subset_id)
         catalogue_data_subset_directory_path = CatalogueDataSubsetDataHubService._get_catalogue_data_subset_directory_path(
-            catalogue_data_subset_id,
-            create_if_not_exists=True
+            catalogue_data_subset_id
         )
         self.assertTrue(os.path.isdir(catalogue_data_subset_directory_path))
         CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_directory(catalogue_data_subset_id)

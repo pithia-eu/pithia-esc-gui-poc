@@ -48,8 +48,7 @@ class CatalogueDataSubsetDataHubViewMixin:
 
     def get_catalogue_data_subset_datahub_directory_path(self):
         return CatalogueDataSubsetDataHubService._get_catalogue_data_subset_directory_path(
-            self.resource_id,
-            create_if_not_exists=False
+            self.resource_id
         )
 
     def get_online_resource_file_for_catalogue_data_subset_by_file_name(self, file_name_no_extension: str):
