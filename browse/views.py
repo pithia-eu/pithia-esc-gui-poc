@@ -3,7 +3,7 @@ import itertools
 import json
 import logging
 import re
-from dateutil.parser import parse
+from dateutil.parser import isoparse
 from django.http import JsonResponse
 from django.utils.http import urlencode
 from django.views.decorators.http import require_POST
@@ -428,8 +428,8 @@ class ResourceDetailView(TemplateView):
         }
         context['related_registrations'] = self.clean_related_registrations_dict(self.get_related_registrations())
         context['property_table_dict'] = self.property_table_dict
-        context['scientific_metadata_creation_date_parsed'] = parse(self.resource.creation_date_json)
-        context['scientific_metadata_last_modification_date_parsed'] = parse(self.resource.last_modification_date_json)
+        context['scientific_metadata_creation_date_parsed'] = isoparse(self.resource.creation_date_json)
+        context['scientific_metadata_last_modification_date_parsed'] = isoparse(self.resource.last_modification_date_json)
         context['server_url_conversion_url'] = reverse('browse:convert_server_urls')
         context['ontology_node_properties_mapping_url'] = reverse('browse:ontology_node_properties_mapping_url')
         return context
