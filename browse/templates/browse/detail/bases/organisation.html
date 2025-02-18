@@ -1,4 +1,6 @@
 {% extends 'browse/detail/bases/base.html' %}
+
+{# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.properties.online_resource %}
 {% with contact_info_details_top_section_heading='Website and Contact Details' %}
