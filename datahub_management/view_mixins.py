@@ -63,7 +63,16 @@ class CatalogueDataSubsetDataHubViewMixin:
         )
 
     def get_online_resource_file_url_for_catalogue_data_subset(self, online_resource_name):
-        return f'{os.environ["HANDLE_URL_PREFIX"]}{reverse_lazy("browse:catalogue_data_subset_online_resource_file", kwargs={"catalogue_data_subset_id": self.resource_id, "online_resource_name": online_resource_name})}'
+        return '%s%s' % (
+            os.environ["HANDLE_URL_PREFIX"],
+            reverse_lazy(
+                'browse:catalogue_data_subset_online_resource_file',
+                kwargs={
+                    'catalogue_data_subset_id': self.resource_id,
+                    'online_resource_name': online_resource_name
+                }
+            )
+        )
 
     def delete_catalogue_data_subset_directory(self):
         return CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_directory(self.resource_id)
