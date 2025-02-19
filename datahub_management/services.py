@@ -17,7 +17,8 @@ class DataHubService:
     def _get_datahub_directory_path(cls):
         return os.path.join(
             BASE_DIR,
-            os.path.normpath(os.environ['DATAHUB_DIRECTORY_PATH'])
+            os.path.normpath(os.environ['DATAHUB_DIRECTORY_PATH']),
+            ''
         )
 
     @classmethod
@@ -58,9 +59,14 @@ class WorkflowDataHubService(DataHubService):
         )
 
     @classmethod
-    def store_or_overwrite_workflow_details_file(cls, file: SimpleUploadedFile, workflow_id: str):
-        # Change the name of the workflow details file
-        # to the workflow ID and store in DataHub.
+    def store_or_overwrite_workflow_details_file(
+            cls,
+            file: SimpleUploadedFile,
+            workflow_id: str):
+        """Renames a workflow details file to the
+        ID of the workflow it is for, then, stores
+        it in the DataHub workflows directory.
+        """
         return cls._store_or_overwrite_file_in_datahub(
             cls._get_workflow_details_file_path(workflow_id),
             file
@@ -82,7 +88,8 @@ class CatalogueDataSubsetDataHubService(DataHubService):
         return os.path.join(
             cls._get_datahub_directory_path(),
             'catalogues',
-            catalogue_data_subset_id
+            catalogue_data_subset_id,
+            ''
         )
 
     @classmethod
