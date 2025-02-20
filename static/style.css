@@ -669,6 +669,28 @@ as Bootstrap styling. */
     margin-bottom: 0;
 }
 
+.resource-detail-section:has(> details:only-child) {
+    padding-block: 0;
+}
+
+.resource-detail-section:has(> details[open]:only-child) {
+    padding-block-end: calc(var(--resource-detail-section-padding) / 2);
+}
+
+.resource-detail-section > details:only-child summary.summary-marker-custom {
+    padding-block-start: var(--resource-detail-section-padding);
+    padding-block-end: var(--resource-detail-section-padding);
+}
+
+.resource-detail-section > details:only-child summary.summary-marker-custom:hover,
+.resource-detail-section > details:only-child summary.summary-marker-custom:focus {
+    background-color: var(--bs-tertiary-bg);
+}
+
+.resource-detail-section > details:only-child[open] summary.summary-marker-custom {
+    margin-bottom: 0;
+}
+
 .resource-detail-subsection {
     margin: 0;
     padding: 1rem;
