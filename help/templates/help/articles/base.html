@@ -9,9 +9,9 @@
 {% block content %}
 <div class="row gx-md-5">
     <div class="col-lg-9">
-        <hgroup>
-            <h1 class="fs-3 text-body-secondary mb-0">Help</h1>
-            <p class="fs-1 text-body">{{ help_topic }}</p>
+        <hgroup class="d-flex flex-column-reverse">
+            <h1 class="fs-1 text-body mb-4">{{ help_topic }}</h1>
+            <p class="fs-3 text-body-secondary mb-0">Help</p>
         </hgroup>
         {% if hover_text %}
         <section class="border-top py-5">
@@ -28,13 +28,11 @@
         <section class="border-top py-5">
             <h2 class="d-inline-block mb-0">Description</h2>
             <div class="mt-2">
-                {% if main_text %}
-                {% autoescape off %}
-                {{ main_text }}
-                {% endautoescape %}
-                {% else %}
-                <p><i class="text-body-secondary">No description yet.</i></p>
-                {% endif %}
+                {% block help_description %}
+                <p>
+                    <i class="text-body-secondary">No description yet.</i>
+                </p>
+                {% endblock help_description %}
             </div>
         </section>
         {% if links %}

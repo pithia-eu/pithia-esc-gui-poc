@@ -14,8 +14,9 @@ def index(request):
         'title': 'Help'
     })
 
+
 class HelpArticleView(TemplateView):
-    template_name = 'help/article.html'
+    template_name = 'help/articles/base.html'
 
     help_article_content = None
 
@@ -24,7 +25,6 @@ class HelpArticleView(TemplateView):
         context['title'] = f'{self.help_article_content.title} Help'
         context['help_topic'] = self.help_article_content.title
         context['hover_text'] = self.help_article_content.hover_text
-        context['main_text'] = self.help_article_content.main_text
         context['links'] = self.help_article_content.links
         context['closely_related_links'] = self.help_article_content.closely_related_links
         context['broadly_related_links'] = self.help_article_content.broadly_related_links
@@ -32,11 +32,17 @@ class HelpArticleView(TemplateView):
         context['related_functionalities'] = self.help_article_content.related_functionalities
         return context
 
-class SearchDataCollectionsByContentHelpArticleView(HelpArticleView):
-    help_article_content = SearchDataCollectionsByContentHelpArticleContent
-
-class DataCollectionSimpleSearchHelpArticleView(HelpArticleView):
-    help_article_content = DataCollectionsSimpleSearchHelpArticleContent
 
 class DataCollectionsHelpArticleView(HelpArticleView):
+    template_name = 'help/articles/data_collections.html'
     help_article_content = DataCollectionsHelpArticleContent
+
+
+class DataCollectionSimpleSearchHelpArticleView(HelpArticleView):
+    template_name = 'help/articles/data_collection_simple_search.html'
+    help_article_content = DataCollectionsSimpleSearchHelpArticleContent
+
+
+class SearchDataCollectionsByContentHelpArticleView(HelpArticleView):
+    template_name = 'help/articles/search_data_collections_by_content.html'
+    help_article_content = SearchDataCollectionsByContentHelpArticleContent

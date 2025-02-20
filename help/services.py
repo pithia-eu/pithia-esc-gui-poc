@@ -22,11 +22,6 @@ class AbstractHelpArticleContent(ABC):
 
     @classproperty
     @abstractmethod
-    def main_text(self):
-        pass
-
-    @classproperty
-    @abstractmethod
     def links(self):
         return []
 
@@ -65,7 +60,6 @@ class AbstractHelpArticleContent(ABC):
         return {
             'title': cls.title,
             'hover_text': cls.hover_text,
-            'main_text': cls.main_text,
             'links': cls.links,
             'closely_related_links': cls.closely_related_links,
             'broadly_related_links': cls.broadly_related_links,
@@ -79,14 +73,6 @@ class AbstractHelpArticleContent(ABC):
 class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
     title = 'Data Collections'
     hover_text = 'List of all Data Collections in e-Science Centre.'
-    main_text = '''
-        <p>The e-Science Centre holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
-        Data Collections can be sensor measurements, outputs of numerical models, computed indicators of helio- and geospace activity.
-        They can be <strong>pre-computed</strong> (stored as permanent datasets) or <strong>run on-demand</strong> with custom parameters.
-        The data access can be provided by the <strong>original data owners</strong> using their resources (web pages, standardized API calls) or by <strong>running installed models</strong> at eSC computer park.</p>
-        <p><strong>The &quot;All Data Collections&quot; function lists all collections</strong>, sorted alphabetically by their name.</p>
-
-    '''
     closely_related_links = [
         ('Search by Content', reverse_lazy('help:search_data_collections_by_content')),
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
@@ -101,17 +87,6 @@ class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
 class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleContent):
     title = 'Search Data Collections by Content'
     hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument or model type, observed property).'
-    main_text = '''
-        <p>The e-Science Centre holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
-        A subset of relevant Data Collection may be retrieved for inspection by specifying various search criteria.</p>
-        <p><strong>The &quot;Search Data Collections by content&quot; uses standard dictionary terms</strong> to find data of relevant content.</p>
-        <p>Each Data Collection is registered using standard terminology to describe it. The terminology includes (a) PITHIA schema based on the <em>science-neutral</em> ISO 19156:2023 standard for Observations and Measurements and (b) <em>Space Physics specific</em> dictionaries of the standard terms (Ontology).</p>
-        <p>Search Data Collections by content presents selectable items in the schema and ontology dictionaries to locate data collections of interest.
-        The PITHIA schema items include: 1. Feature of Interest, 2. Computation and Instrument types, and 3. Observed Property.
-        Ontology provides standard terms for the check-boxes under 1, 2, and 3.</p>
-
-
-    '''
     closely_related_links = [
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
     ]
@@ -126,10 +101,6 @@ class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleConten
 class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
     title = 'Data Collection Simple Search'
     hover_text = 'Search relevant Data Collections by looking for matching words in various free-text metadata descriptions.'
-    main_text = '''
-        The e-Science Centre holds <strong>metadata documents</strong> that describe a wide variety of <strong>Data Collections</strong> relevant to PITHIA-NRF.
-        A subset of relevant Data Collection may be retrieved for inspection by specifying various search criteria.
-    '''
     closely_related_links = [
         ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
     ]
