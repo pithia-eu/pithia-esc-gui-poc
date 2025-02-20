@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from .services import (
     DataCollectionsHelpArticleContent,
     DataCollectionsSimpleSearchHelpArticleContent,
+    GgusRaiseATicketHelpArticleContent,
     SearchDataCollectionsByContentHelpArticleContent,
 )
 
@@ -41,6 +42,11 @@ class DataCollectionsHelpArticleView(HelpArticleView):
 class DataCollectionSimpleSearchHelpArticleView(HelpArticleView):
     template_name = 'help/articles/data_collection_simple_search.html'
     help_article_content = DataCollectionsSimpleSearchHelpArticleContent
+
+
+class GgusRaiseATicketHelpArticleView(HelpArticleView):
+    template_name = 'help/articles/ggus_raise_a_ticket.html'
+    help_article_content = GgusRaiseATicketHelpArticleContent
 
 
 class SearchDataCollectionsByContentHelpArticleView(HelpArticleView):

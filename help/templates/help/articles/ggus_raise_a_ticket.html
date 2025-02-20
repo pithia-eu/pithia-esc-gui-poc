@@ -1,0 +1,48 @@
+{% extends 'help/articles/base.html' %}
+{% block help_description %}
+
+<ol>
+    <li>
+        Click the <strong>Raise a Ticket</strong> button to
+        go to the GGUS helpdesk landing page.
+    </li>
+    <li>
+        Click the "EGI Check-in" button to start the sign
+        into the GGUS helpdesk service.
+    </li>
+    <li>
+        Select the institution or login portal that you would
+        like to sign in with. Logging in successfully will
+        take you to the your GGUS user dashboard.
+    </li>
+    <li>
+        Click the green "+" button in the bottom-left corner of the screen
+        (if this is your first time raising a ticket, you can also click the
+        "Create your first ticket button"). This will take you to the ticket
+        form.
+    </li>
+    <li>
+        Fill in the provided fields and click <b>Create</b>.
+    </li>
+</ol>
+<section>
+    <h3>Ticket Guidelines</h3>
+    <ul>
+        <li>
+            Use the provided text fields to give a description of your problem.
+            We also recommend attaching screenshots and/or files to help us with
+            getting a good understanding of your ticket later on.
+        </li>
+        <li>
+            Select the <strong>TPM</strong> group under the <strong>Group</strong>
+            field. This assigns the ticket to the GGUS Ticket Processing Managers
+            (TPM), who will re-assign the ticket to our support group later on.
+        </li>
+        <li>
+            Add a line to your ticket's main description, requesting it to be
+            re-assigned to the <strong>PITHIA e-Science Centre</strong> support unit -
+            this will help the TPM in re-assigning the ticket to us later.
+        </li>
+    </ul>
+</section>
+{% endblock help_description %}

@@ -84,6 +84,29 @@ class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
     dialog_id = 'dialog-data-collections-help'
 
 
+class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
+    title = 'Data Collection Simple Search'
+    hover_text = 'Search relevant Data Collections by looking for matching words in various free-text metadata descriptions.'
+    closely_related_links = [
+        ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
+    ]
+    related_functionalities = [
+        ('All Scientific Metadata', reverse_lazy('browse:index')),
+    ]
+    article_url = reverse_lazy('help:data_collection_simple_search')
+    dialog_id = 'dialog-simple-search-help'
+
+
+class GgusRaiseATicketHelpArticleContent(AbstractHelpArticleContent):
+    title = 'Raising a Ticket'
+    hover_text = None
+    related_functionalities = [
+        ('Help & Support', reverse_lazy('help:index')),
+    ]
+    article_url = reverse_lazy('help:ggus_raise_a_ticket')
+    dialog_id = None
+
+
 class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleContent):
     title = 'Search Data Collections by Content'
     hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument or model type, observed property).'
@@ -96,16 +119,3 @@ class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleConten
     ]
     article_url = reverse_lazy('help:search_data_collections_by_content')
     dialog_id = 'dialog-search-by-content-help'
-
-
-class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
-    title = 'Data Collection Simple Search'
-    hover_text = 'Search relevant Data Collections by looking for matching words in various free-text metadata descriptions.'
-    closely_related_links = [
-        ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
-    ]
-    related_functionalities = [
-        ('All Scientific Metadata', reverse_lazy('browse:index')),
-    ]
-    article_url = reverse_lazy('help:data_collection_simple_search')
-    dialog_id = 'dialog-simple-search-help'
