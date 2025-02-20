@@ -8,24 +8,28 @@
     <p>{{ resource.properties.computation_version }}</p>
 </section>
 {% endif %}
+{% if resource.properties.child_computations %}
+<section class="resource-detail-section">
+    <details>
+        <summary class="summary-marker-custom">
+            <h2 class="fs-6">Child Computations <span class="text-body-secondary">({{ resource.properties.child_computations|length }})</span></h2>
+        </summary>
+        <ul class="list-group list-group-flush">
+            {% for child_computation_url in resource.properties.child_computations %}
+            <li class="list-group-item">
+                {% with value=child_computation_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+</section>
+{% endif %}
 {% endblock pre_description_content %}
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% if resource.properties.child_computations %}
-<section class="resource-detail-section">
-    <h2>Child Computations</h2>
-    <ul>
-        {% for child_computation_url in resource.properties.child_computations %}
-        <li>
-            {% with value=child_computation_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
 {% include 'browse/detail/sections/capabilities_section.html' %}
 {% if resource.properties.processing_inputs %}
 {% with io_section_heading_text='Processing Input Parameters' io_data=resource.properties.processing_inputs io_name='input parameter' %}
