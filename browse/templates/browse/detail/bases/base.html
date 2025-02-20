@@ -29,7 +29,6 @@
                 {% block pre_last_modified_date_content %}{% endblock pre_last_modified_date_content %}
             </div>
             <div class="d-flex flex-column row-gap-4">
-                {% include 'browse/detail/components/type_badges.html' %}
                 <p class="text-secondary-emphasis mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
                 {% block top_section_website %}{% endblock top_section_website %}
             </div>
@@ -59,6 +58,23 @@
                 {% endfor %}
             </dl>
         </div>
+        {% endif %}
+        {% if 'type' in resource.json %}
+        <section class="responsive-resource-detail-section resource-detail-section">
+            <h2>Type</h2>
+            {% load project_tags %}
+            {% if 'type' in resource.json %}
+            <ul class="d-flex flex-column row-gap-1 list-unstyled mb-0">
+                {% for type in resource.json.type|wrap_in_list_if_dict %}
+                <li>
+                    {% with value=type|get_key_value:'@xlink:href' %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
         {% endif %}
         {% block pre_description_content %}{% endblock pre_description_content %}
         {% include 'browse/detail/sections/description_section.html' %}
@@ -174,6 +190,12 @@
         {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
+        {% if 'type' in resource.json %}
+        <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+            <h2>Type</h2>
+            {% include 'browse/detail/components/type_badges.html' %}
+        </section>
+        {% endif %}
         {% block aside_extra_content %}{% endblock aside_extra_content %}
         <section class="resource-detail-aside-section">
             <h2 class="fs-6 text-body-secondary">

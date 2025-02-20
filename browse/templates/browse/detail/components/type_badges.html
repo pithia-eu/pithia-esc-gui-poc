@@ -1,6 +1,6 @@
 {% load project_tags %}
 {% if 'type' in resource.json %}
-<ul class="d-flex flex-wrap column-gap-2 list-unstyled type-badge-list fs-5 mb-0">
+<ul class="d-flex flex-column row-gap-1 list-unstyled type-badge-list fs-5 mb-0">
     {% for type in resource.json.type|wrap_in_list_if_dict %}
     <li>
         {% with value=type|get_key_value:'@xlink:href' pill_type='none' %}
