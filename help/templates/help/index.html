@@ -8,9 +8,18 @@
 <div class="col-xl-7 col-lg-9">
     <section class="border-bottom mb-3">
         <h1>{{ title }}</h1>
-        <p>
-            Use the help articles below for help and descriptions on e-Science Centre aspects and functionalities.
+        <p class="fs-base-2">
+            Use the articles below for further information
+            and guidance with e-Science Centre.
         </p>
+    </section>
+    <section class="border-bottom mb-3">
+        <h2>GGUS Helpdesk</h2>
+        <ul class="list-group pb-3 mt-3">
+            <li class="list-group-item">
+                <a href="{% url 'help:ggus_raise_a_ticket' %}">Raising a Ticket</a>
+            </li>
+        </ul>
     </section>
     <section>
         <h2>Data Collection Search</h2>
@@ -20,14 +29,6 @@
             </li>
             <li class="list-group-item">
                 <a href="{% url 'help:data_collection_simple_search' %}">Data Collections Simple Search</a>
-            </li>
-        </ul>
-    </section>
-    <section>
-        <h2>GGUS Helpdesk</h2>
-        <ul class="list-group pb-3 mt-3">
-            <li class="list-group-item">
-                <a href="{% url 'help:ggus_raise_a_ticket' %}">Raising a Ticket</a>
             </li>
         </ul>
     </section>
