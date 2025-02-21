@@ -44,27 +44,18 @@ function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
 }
 
 function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
-    const childLiNodes = Array.from(getEnclosingLiNode(parentNodeCheckbox).querySelectorAll("li:not(.search-no-match, .filter-no-match)"));
-    const indeterminateChildLiNodes = childLiNodes.filter(liNode => liNode.querySelector("li.search-no-match") || liNode.querySelector("li.filter-no-match"));
-    const leafChildLiNodes = childLiNodes.filter(liNode => !liNode.querySelector("li.search-no-match") && !liNode.querySelector("li.filter-no-match"));
-    let checkedChildNodeCheckboxes = [];
-    indeterminateChildLiNodes.forEach(liNode => {
-        checkedChildNodeCheckboxes.push(liNode.querySelector(`input[type=checkbox]`));
-    });
-    leafChildLiNodes.forEach(liNode => {
-        checkedChildNodeCheckboxes.push(...Array.from(liNode.querySelectorAll(`input[type=checkbox]`)));
-    });
+    const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${parentNodeCheckbox.id}']`);
     const enclosingLiNode = getEnclosingLiNode(parentNodeCheckbox);
     const childDetailsNodes = enclosingLiNode.querySelectorAll("details");
     childDetailsNodes.forEach(detailsNode => {
         detailsNode.open = true;
     });
-    console.log('indeterminateChildLiNodes', indeterminateChildLiNodes);
-    indeterminateChildLiNodes.forEach(checkbox => {
+    childNodeCheckboxes.forEach(checkbox => {
         checkbox.checked = parentNodeCheckbox.checked;
-    });
-    checkedChildNodeCheckboxes.forEach(checkbox => {
-        checkbox.checked = parentNodeCheckbox.checked;
+        const childNodeCheckboxesOfChildNodeCheckbox = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
+        if (childNodeCheckboxesOfChildNodeCheckbox.length > 0) {
+            updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
+        }
     });
 }
 
