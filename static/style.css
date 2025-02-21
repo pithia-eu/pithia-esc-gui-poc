@@ -1207,6 +1207,42 @@ label.required::after {
     max-width: min-content;
 }
 
+
+/* Help page */
+.help-section {
+    border-top:
+        var(--bs-border-width)
+        var(--bs-border-style)
+        var(--bs-border-color);
+    padding-block: 1.5rem;
+}
+
+.help-section h2 {
+    font-size: 1.5rem;
+}
+
+.help-section p:last-child {
+    margin-bottom: 0;
+}
+
+.help-section li {
+    padding-top: 0.5rem;
+}
+
+.help-aside-section {
+    display: none;
+}
+
+.help-aside-section h2 {
+    font-size: 1.25rem;
+    font-weight: normal;
+}
+
+.responsive-help-section {
+    display: block;
+}
+
+
 /* View resource as XML page */
 .xml-display-area {
     overflow-x: scroll;
@@ -1681,6 +1717,19 @@ ul.tree ul {
     
     .responsive-resource-detail-aside-section {
         display: block;
+    }
+
+    /* Help page */
+    .help-aside-section {
+        display: block;
+        border-inline-start:
+            var(--bs-border-width)
+            var(--bs-border-style)
+            var(--bs-border-color);
+    }
+
+    .responsive-help-section {
+        display: none;
     }
 
     /* Breadcrumb */
