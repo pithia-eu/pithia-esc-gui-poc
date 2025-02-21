@@ -12,7 +12,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse px-lg-0 px-2" id="navbarNav">
-            <div class="d-md-none d-flex flex-column column-gap-5 row-gap-2 border-bottom py-3">
+            <div class="d-md-none d-flex flex-column align-items-start column-gap-5 row-gap-3 border-bottom pt-4 pb-3">
                 {% include 'header/user_menu.html' %}
                 {% if request.session.institution_for_login_session %}
                 <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default" style="font-size: 0.875rem;">
