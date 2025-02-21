@@ -434,6 +434,9 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
     def referencing_project_url(self, project_url: list):
         return self.filter(**{'json__project__contains': [{'@xlink:href': project_url}]})
 
+    def for_search_by_feature_of_interest_urls(self, feature_of_interest_urls: list):
+        return self.referencing_feature_of_interest_urls(feature_of_interest_urls)
+
     def for_search_by_instrument_type_urls(self, instrument_type_urls: list, process_urls: list):
         return self.referencing_instrument_type_urls(instrument_type_urls) \
             | self.referencing_process_urls(process_urls)
@@ -445,19 +448,19 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
     def for_search_by_annotation_type_urls(self, annotation_type_urls: list):
         return self.referencing_annotation_type_urls(annotation_type_urls)
 
-    def for_search_by_observed_property_urls(self, feature_of_interest_urls: list, process_urls: list):
-        # Features of interest can be derived from observed properties.
-        return self.referencing_feature_of_interest_urls(feature_of_interest_urls) \
-            | self.referencing_process_urls(process_urls)
+    def for_search_by_observed_property_urls(self, process_urls: list):
+        return self.referencing_process_urls(process_urls)
 
     def for_final_search_step(
-        self,
-        data_collections_found_by_instrument_type,
-        data_collections_found_by_computation_type,
-        data_collections_found_by_annotation_type,
-        data_collections_found_by_observed_property
-    ):
+            self,
+            data_collections_found_by_feature_of_interest,
+            data_collections_found_by_instrument_type,
+            data_collections_found_by_computation_type,
+            data_collections_found_by_annotation_type,
+            data_collections_found_by_observed_property):
         search_results = self.all()
+        if data_collections_found_by_feature_of_interest:
+            search_results &= data_collections_found_by_feature_of_interest
         if data_collections_found_by_instrument_type:
             search_results &= data_collections_found_by_instrument_type
         if data_collections_found_by_computation_type:

@@ -25,13 +25,15 @@ from ontology.utils import (
 
 
 def get_data_collections_for_search(
-    feature_of_interest_urls: list = [],
-    instrument_type_urls: list = [],
-    computation_type_urls: list = [],
-    annotation_type_urls: list = [],
-    observed_property_urls: list = [],
-):
+        feature_of_interest_urls: list = [],
+        instrument_type_urls: list = [],
+        computation_type_urls: list = [],
+        annotation_type_urls: list = [],
+        observed_property_urls: list = []):
     if len(feature_of_interest_urls) > 0:
+        # Retrives observed properties that also
+        # reference the features of interest that
+        # were selected.
         additional_observed_property_urls = get_observed_property_urls_from_feature_of_interest_urls(feature_of_interest_urls)
         observed_property_urls += additional_observed_property_urls
         observed_property_urls = list(set(observed_property_urls))
@@ -110,11 +112,13 @@ def get_data_collections_for_search(
     pfbop_urls = [p.metadata_server_url for p in processes_found_by_observed_property]
 
     # Data Collections
-    data_collections_found_by_observed_property = DataCollection.objects.for_search_by_observed_property_urls(feature_of_interest_urls, pfbop_urls)
+    data_collections_found_by_feature_of_interest = DataCollection.objects.for_search_by_feature_of_interest_urls(feature_of_interest_urls)
+    data_collections_found_by_observed_property = DataCollection.objects.for_search_by_observed_property_urls(pfbop_urls)
 
 
     # Merge data collections from prerequisite steps
     data_collections = DataCollection.objects.for_final_search_step(
+        data_collections_found_by_feature_of_interest,
         data_collections_found_by_instrument_type,
         data_collections_found_by_computation_type,
         data_collections_found_by_annotation_type,
