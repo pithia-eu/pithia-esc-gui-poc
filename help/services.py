@@ -100,9 +100,6 @@ class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
 class GgusRaiseATicketHelpArticleContent(AbstractHelpArticleContent):
     title = 'Raising a Ticket'
     hover_text = None
-    related_functionalities = [
-        ('Help & Support', reverse_lazy('help:index')),
-    ]
     article_url = reverse_lazy('help:ggus_raise_a_ticket')
     dialog_id = None
 
