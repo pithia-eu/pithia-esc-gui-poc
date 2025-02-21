@@ -1,21 +1,18 @@
 {% extends 'browse/detail/bases/base_catalogue_related.html' %}
 {% load project_tags %}
 
-{# Appears after the last modified date, before the description #}
-{% block top_section_extra_content %}
-<div class="type-badge-list pt-4">
-    {% with value=resource.properties.catalogue_category pill_type='none' extra_badge_classes='catalogue-category-badge' %}
-    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
-    {% endwith %}
-</div>
-{% endblock top_section_extra_content %}
-
 {# Appears before the description #}
 {% block pre_description_content %}
+<section class="responsive-resource-detail-section resource-detail-section">
+    <h2>Category</h2>
+    {% with value=resource.properties.catalogue_category extra_badge_classes='catalogue-category-badge' %}
+    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
 {% if resource.entries %}
 <section class="resource-detail-section">
     <details>
-        <summary>
+        <summary class="summary-marker-custom">
             <h2 class="d-inline fs-6">Entries <span class="text-body-secondary">({{ resource.entries|length }})</span></h2>
         </summary>
         <ol class="list-group list-group-flush my-2">
@@ -37,3 +34,13 @@
 {% include 'browse/detail/sections/bottom/quality_assessment_bottom_section.html' %}
 {% include 'browse/detail/sections/bottom/data_levels_bottom_section.html' %}
 {% endblock further_information_extra_sections %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Category</h2>
+    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='catalogue-category-badge' %}
+    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endblock aside_extra_content %}
