@@ -40,31 +40,13 @@
             </p>
             <div class="alert alert-light">
                 <h3 class="alert-heading fs-6 mb-3">Ticket Guidelines</h3>
-                <ul class="ps-3">
-                    <li class="pb-3">
-                        <div class="fw-bold mb-2">
-                            Tickets are manually re-assigned to our support
-                            unit by the Ticket Process Managers (TPM) in GGUS.
-                            To ensure that we will receive a notification of
-                            your ticket, please:
-                        </div>
-                        <ul class="ps-4 ms-1">
-                            <li class="pb-2">
-                                Include a line in the ticket's description to request
-                                the re-assignment of the ticket to the <strong>PITHIA
-                                e-Science Centre</strong> support unit, which will help
-                                the TPM with re-assigning the ticket to us later.
-                            </li>
-                            <li>Set the ticket group to <strong>TPM</strong>.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        Consider attaching screenshots and/or files to help us better
-                        understand your ticket.
-                    </li>
-                </ul>
+                {% include 'ggus/ticket_guidelines.html' %}
             </div>
-            <a href="https://ggus.eu/index.php?mode=ticket_submit" target="_blank" id="raise-ticket-link" class="btn btn-outline-dark btn-outline-dark-togglable btn-lg fw-bold">
+            <a
+                href="https://ggus.eu/index.php?mode=ticket_submit"
+                target="_blank"
+                id="raise-ticket-link"
+                class="btn btn-outline-dark btn-outline-dark-togglable btn-lg fw-bold">
                 Raise a ticket with GGUS</a>
         </div>
     </section>
