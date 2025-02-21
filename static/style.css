@@ -1225,7 +1225,7 @@ label.required::after {
     margin-bottom: 0;
 }
 
-.help-section li {
+.help-section li:not(li:first-child) {
     padding-top: 0.5rem;
 }
 

@@ -100,13 +100,16 @@ class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
 class GgusRaiseATicketHelpArticleContent(AbstractHelpArticleContent):
     title = 'Raising a Ticket'
     hover_text = None
+    related_functionalities = [
+        ('Help & Support', reverse_lazy('support')),
+    ]
     article_url = reverse_lazy('help:ggus_raise_a_ticket')
     dialog_id = None
 
 
 class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleContent):
     title = 'Search Data Collections by Content'
-    hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument or model type, observed property).'
+    hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument, model or annotation type, observed property).'
     closely_related_links = [
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
     ]
