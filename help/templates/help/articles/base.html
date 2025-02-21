@@ -13,6 +13,14 @@
             <h1 class="text-body">{{ help_topic }}</h1>
             <p class="fs-3 text-body-secondary mb-0">Help</p>
         </hgroup>
+        {% if functionality %}
+        <section class="help-section">
+            <h2 class="fs-6 fw-normal text-body-secondary">
+                Covered in this article
+            </h2>
+            <a href="{{ functionality.1 }}" class="link-underline-by-default">{{ functionality.0 }}</a>
+        </section>
+        {% endif %}
         {% if hover_text %}
         <section class="help-section">
             <h2>

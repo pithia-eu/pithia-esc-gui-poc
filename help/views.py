@@ -25,6 +25,7 @@ class HelpArticleView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Help | {self.help_article_content.title}'
         context['help_topic'] = self.help_article_content.title
+        context['functionality'] = self.help_article_content.functionality
         context['hover_text'] = self.help_article_content.hover_text
         context['links'] = self.help_article_content.links
         context['closely_related_links'] = self.help_article_content.closely_related_links

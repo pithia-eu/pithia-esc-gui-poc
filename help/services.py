@@ -17,6 +17,11 @@ class AbstractHelpArticleContent(ABC):
 
     @classproperty
     @abstractmethod
+    def functionality(self):
+        return None
+
+    @classproperty
+    @abstractmethod
     def hover_text(self):
         pass
 
@@ -59,6 +64,7 @@ class AbstractHelpArticleContent(ABC):
     def as_dict(cls):
         return {
             'title': cls.title,
+            'functionality': cls.functionality,
             'hover_text': cls.hover_text,
             'links': cls.links,
             'closely_related_links': cls.closely_related_links,
@@ -72,6 +78,7 @@ class AbstractHelpArticleContent(ABC):
 
 class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
     title = 'Data Collections'
+    functionality = ('Data Collections', reverse_lazy('browse:list_data_collections'))
     hover_text = 'List of all Data Collections in e-Science Centre.'
     closely_related_links = [
         ('Search by Content', reverse_lazy('help:search_data_collections_by_content')),
@@ -86,6 +93,7 @@ class DataCollectionsHelpArticleContent(AbstractHelpArticleContent):
 
 class DataCollectionsSimpleSearchHelpArticleContent(AbstractHelpArticleContent):
     title = 'Data Collection Simple Search'
+    functionality = ('Data Collection Simple Search', reverse_lazy('simple_search:index'))
     hover_text = 'Search relevant Data Collections by looking for matching words in various free-text metadata descriptions.'
     closely_related_links = [
         ('Search Data Collections by Content', reverse_lazy('help:search_data_collections_by_content')),
@@ -109,6 +117,7 @@ class GgusRaiseATicketHelpArticleContent(AbstractHelpArticleContent):
 
 class SearchDataCollectionsByContentHelpArticleContent(AbstractHelpArticleContent):
     title = 'Search Data Collections by Content'
+    functionality = ('Search Data Collections by Content', reverse_lazy('search:index'))
     hover_text = 'Search relevant Data Collections by selecting desired data content (feature of interest, instrument, model or annotation type, observed property).'
     closely_related_links = [
         ('Simple Search', reverse_lazy('help:data_collection_simple_search')),
