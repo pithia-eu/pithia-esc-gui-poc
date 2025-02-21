@@ -39,8 +39,10 @@
 {% block aside_extra_content %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Category</h2>
-    {% with value=resource.properties.catalogue_category pill_type='dark' extra_badge_classes='catalogue-category-badge' %}
-    {% include 'browse/placeholders/ontology_server_url_pill_placeholder.html' %}
-    {% endwith %}
+    <span class="fw-bold text-secondary-emphasis">
+        {% with value=resource.properties.catalogue_category extra_badge_classes='catalogue-category-badge' %}
+        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+        {% endwith %}
+    </span>
 </section>
 {% endblock aside_extra_content %}
