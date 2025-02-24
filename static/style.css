@@ -1290,11 +1290,7 @@ label.required::after {
 }
 
 .tree-search-terms li.search-no-match {
-    display: none;
-}
-
-.tree-search-box {
-    margin-bottom: 1rem;
+    color: var(--bs-secondary-color);
 }
 
 #observed-properties-tree-search-terms li.filter-no-match {

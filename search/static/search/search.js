@@ -44,27 +44,18 @@ function updateParentNodeCheckboxesByChildNodeCheckbox(childNodeCheckbox) {
 }
 
 function updateChildNodeCheckboxesByParentNodeCheckbox(parentNodeCheckbox) {
-    const childLiNodes = Array.from(getEnclosingLiNode(parentNodeCheckbox).querySelectorAll("li:not(.search-no-match, .filter-no-match)"));
-    const indeterminateChildLiNodes = childLiNodes.filter(liNode => liNode.querySelector("li.search-no-match") || liNode.querySelector("li.filter-no-match"));
-    const leafChildLiNodes = childLiNodes.filter(liNode => !liNode.querySelector("li.search-no-match") && !liNode.querySelector("li.filter-no-match"));
-    let checkedChildNodeCheckboxes = [];
-    indeterminateChildLiNodes.forEach(liNode => {
-        checkedChildNodeCheckboxes.push(liNode.querySelector(`input[type=checkbox]`));
-    });
-    leafChildLiNodes.forEach(liNode => {
-        checkedChildNodeCheckboxes.push(...Array.from(liNode.querySelectorAll(`input[type=checkbox]`)));
-    });
+    const childNodeCheckboxes = document.querySelectorAll(`input[data-parent-node-in-ontology='${parentNodeCheckbox.id}']`);
     const enclosingLiNode = getEnclosingLiNode(parentNodeCheckbox);
     const childDetailsNodes = enclosingLiNode.querySelectorAll("details");
     childDetailsNodes.forEach(detailsNode => {
         detailsNode.open = true;
     });
-    console.log('indeterminateChildLiNodes', indeterminateChildLiNodes);
-    indeterminateChildLiNodes.forEach(checkbox => {
+    childNodeCheckboxes.forEach(checkbox => {
         checkbox.checked = parentNodeCheckbox.checked;
-    });
-    checkedChildNodeCheckboxes.forEach(checkbox => {
-        checkbox.checked = parentNodeCheckbox.checked;
+        const childNodeCheckboxesOfChildNodeCheckbox = document.querySelectorAll(`input[data-parent-node-in-ontology='${checkbox.id}']`);
+        if (childNodeCheckboxesOfChildNodeCheckbox.length > 0) {
+            updateChildNodeCheckboxesByParentNodeCheckbox(checkbox);
+        }
     });
 }
 
@@ -124,11 +115,45 @@ function removeSearchBoxInputFiltersFromLiNodes(liNodes) {
     });
 }
 
+function addHighlightToSearchBoxInputMatches(checkboxesMatchingSearch) {
+    checkboxesMatchingSearch.forEach(checkbox => {
+        const checkboxId = checkbox.id;
+        const labelForCheckbox = document.querySelector(`label[for="${checkboxId}"]`);
+        labelForCheckbox.classList.add("fw-bold");
+    });
+}
+
+function removeHighlightFromSearchBoxInputMatches(checkboxesHiddenWithSearch) {
+    checkboxesHiddenWithSearch.forEach(checkbox => {
+        const checkboxId = checkbox.id;
+        const labelForCheckbox = document.querySelector(`label[for="${checkboxId}"]`);
+        labelForCheckbox.classList.remove("fw-bold");
+    });
+}
+
+function resetHighlightingForSearchBoxInputMatches(treeContainerId) {
+    const highlightedSearchTerms = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll(".fw-bold");
+    highlightedSearchTerms.forEach(highlightedSearchTerm => {
+        highlightedSearchTerm.classList.remove("fw-bold");
+    });
+}
+
+function updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch) {
+    const searchResultsNumbers = document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers");
+    searchResultsNumbers.classList.remove("d-none");
+    searchResultsNumbers.textContent = `(${checkboxesMatchingSearch.length} found)`;
+}
+
+function hideSearchBoxResultsNumbers(treeContainerId) {
+    return document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers").classList.add("d-none");;
+}
+
 function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searchBoxInput) {
     const allCheckboxLabelsForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll("label");
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
 
-    const validCheckboxes = [];
+    const validHiddenCheckboxes = [];
+    const validCheckedCheckboxes = [];
     let liNodesToShow = [], liNodesToHide = [];
     allCheckboxLabelsForTree.forEach(label => {
         // All keywords should be present
@@ -144,7 +169,14 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
         // If all keywords are not present in the
         // label, add its <li> to an array of <li>s
         // to be hidden.
+        const checkboxForLabel = document.getElementById(label.htmlFor);
         if (matchCountForLabel !== searchBoxInputSplit.length) {
+            if (!checkboxForLabel.disabled) {
+                // If the checkbox the label is associated
+                // with is enabled, this is counted as a
+                // valid match.
+                validHiddenCheckboxes.push(checkboxForLabel);
+            }
             return liNodesToHide.push(enclosingLiNode);
         }
 
@@ -152,12 +184,11 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
         // total match count, and add the enclosing
         // <li> of the label to an array of <li>s to
         // be shown.
-        const checkboxForLabel = document.getElementById(label.htmlFor);
         if (!checkboxForLabel.disabled) {
             // If the checkbox the label is associated
             // with is enabled, this is counted as a
             // valid match.
-            validCheckboxes.push(checkboxForLabel);
+            validCheckedCheckboxes.push(checkboxForLabel);
         }
         liNodesToShow.push(enclosingLiNode);
 
@@ -178,7 +209,8 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
     liNodesToShow = Array.from(new Set(liNodesToShow));
 
     return {
-        validCheckboxes: validCheckboxes,
+        validHiddenCheckboxes: validHiddenCheckboxes,
+        validCheckedCheckboxes: validCheckedCheckboxes,
         liNodesToHide: liNodesToHide,
         liNodesToShow: liNodesToShow,
     }
@@ -187,6 +219,11 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
 function applySearchBoxInputFiltersToLiNodes(liNodesToHide, liNodesToShow) {
     addSearchBoxInputFiltersToLiNodes(liNodesToHide);
     removeSearchBoxInputFiltersFromLiNodes(liNodesToShow);
+}
+
+function applyHighlightingToSearchBoxInputMatches(checkboxesHiddenWithSearch, checkboxesMatchingSearch) {
+    removeHighlightFromSearchBoxInputMatches(checkboxesHiddenWithSearch);
+    addHighlightToSearchBoxInputMatches(checkboxesMatchingSearch);
 }
 
 function hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId) {
@@ -350,6 +387,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
     // Keyword search setup
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     const searchBoxCheckbox = document.querySelector(`#${treeContainerId} input[type="checkbox"][id$="keyword-input-checkbox"]`);
+    let checkboxesHiddenWithSearch = [];
     let checkboxesMatchingSearch = [];
 
     searchBoxForTree.addEventListener("input", event => {
@@ -359,7 +397,9 @@ function setupInputsForTreeContainerId(treeContainerId) {
             // blank.
             const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
             removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
-            hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId)
+            resetHighlightingForSearchBoxInputMatches(treeContainerId);
+            hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId);
+            hideSearchBoxResultsNumbers(treeContainerId);
             selectAllCheckboxForTree.disabled = false;
             expandAllButtonForTree.disabled = false;
             collapseAllButtonForTree.disabled = false;
@@ -369,7 +409,8 @@ function setupInputsForTreeContainerId(treeContainerId) {
 
         // Reset search box checkbox and its variables
         const allCheckedCheckboxes = getCheckedCheckboxesForTreeContainerId(treeContainerId);
-        checkboxesMatchingSearch = filterResults.validCheckboxes;
+        checkboxesHiddenWithSearch = filterResults.validHiddenCheckboxes;
+        checkboxesMatchingSearch = filterResults.validCheckedCheckboxes;
         searchBoxCheckbox.checked = checkboxesMatchingSearch.every(c => allCheckedCheckboxes.includes(c));
         
         // Disable select all checkbox
@@ -379,13 +420,14 @@ function setupInputsForTreeContainerId(treeContainerId) {
 
         // Filter by search box input
         applySearchBoxInputFiltersToLiNodes(filterResults.liNodesToHide, filterResults.liNodesToShow);
-
+        applyHighlightingToSearchBoxInputMatches(filterResults.validHiddenCheckboxes, filterResults.validCheckedCheckboxes);
 
         // Collapse hidden nodes, expand visible ones
         setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToHide, false);
         setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToShow, true);
 
         // Update numbers and show checkbox for search box input
+        updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch);
         if (checkboxesMatchingSearch.length > 0) {
             return updateAndShowSearchBoxInputCheckboxForTreeContainerId(treeContainerId, checkboxesMatchingSearch.length);
         }

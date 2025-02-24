@@ -1,7 +1,9 @@
 {% if node.prefLabel %}
-<div class="form-check d-inline-block"
-    {% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
-    style="padding-left: 0;"
+<div
+{% if node.value not in registered_ontology_terms and node.value not in parents_of_registered_ontology_terms %}
+    class="form-check d-inline-block ps-0"
+    {% else %}
+    class="form-check d-inline-block"
     {% endif %}>
     <input type="checkbox" id="{{ node.id }}" name="{{ ontology_component_name }}" value="{{ node.value }}"
         data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
