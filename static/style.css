@@ -1293,10 +1293,6 @@ label.required::after {
     display: none;
 }
 
-.tree-search-box {
-    margin-bottom: 1rem;
-}
-
 #observed-properties-tree-search-terms li.filter-no-match {
     display: none;
 }
