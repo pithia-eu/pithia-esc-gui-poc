@@ -115,11 +115,22 @@ function removeSearchBoxInputFiltersFromLiNodes(liNodes) {
     });
 }
 
+function updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch) {
+    const searchResultsNumbers = document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers");
+    searchResultsNumbers.classList.remove("d-none");
+    searchResultsNumbers.textContent = `(${checkboxesMatchingSearch.length} found, ${checkboxesHiddenWithSearch.length} hidden)`;
+}
+
+function hideSearchBoxResultsNumbers(treeContainerId) {
+    return document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers").classList.add("d-none");;
+}
+
 function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searchBoxInput) {
     const allCheckboxLabelsForTree = getSearchTermsContainerForTreeContainerId(treeContainerId).querySelectorAll("label");
     const searchBoxInputSplit = searchBoxInput.split(/\s+/).filter(string => string !== ""); // /\s+/ regex means to split by any length of whitespace
 
-    const validCheckboxes = [];
+    const validHiddenCheckboxes = [];
+    const validCheckedCheckboxes = [];
     let liNodesToShow = [], liNodesToHide = [];
     allCheckboxLabelsForTree.forEach(label => {
         // All keywords should be present
@@ -135,7 +146,14 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
         // If all keywords are not present in the
         // label, add its <li> to an array of <li>s
         // to be hidden.
+        const checkboxForLabel = document.getElementById(label.htmlFor);
         if (matchCountForLabel !== searchBoxInputSplit.length) {
+            if (!checkboxForLabel.disabled) {
+                // If the checkbox the label is associated
+                // with is enabled, this is counted as a
+                // valid match.
+                validHiddenCheckboxes.push(checkboxForLabel);
+            }
             return liNodesToHide.push(enclosingLiNode);
         }
 
@@ -143,12 +161,11 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
         // total match count, and add the enclosing
         // <li> of the label to an array of <li>s to
         // be shown.
-        const checkboxForLabel = document.getElementById(label.htmlFor);
         if (!checkboxForLabel.disabled) {
             // If the checkbox the label is associated
             // with is enabled, this is counted as a
             // valid match.
-            validCheckboxes.push(checkboxForLabel);
+            validCheckedCheckboxes.push(checkboxForLabel);
         }
         liNodesToShow.push(enclosingLiNode);
 
@@ -169,7 +186,8 @@ function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searc
     liNodesToShow = Array.from(new Set(liNodesToShow));
 
     return {
-        validCheckboxes: validCheckboxes,
+        validHiddenCheckboxes: validHiddenCheckboxes,
+        validCheckedCheckboxes: validCheckedCheckboxes,
         liNodesToHide: liNodesToHide,
         liNodesToShow: liNodesToShow,
     }
@@ -341,6 +359,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
     // Keyword search setup
     const searchBoxForTree = document.querySelector(`#${treeContainerId} .tree-search-box`);
     const searchBoxCheckbox = document.querySelector(`#${treeContainerId} input[type="checkbox"][id$="keyword-input-checkbox"]`);
+    let checkboxesHiddenWithSearch = [];
     let checkboxesMatchingSearch = [];
 
     searchBoxForTree.addEventListener("input", event => {
@@ -350,7 +369,8 @@ function setupInputsForTreeContainerId(treeContainerId) {
             // blank.
             const hiddenLisForTreeContainer = getLiNodesHiddenBySearchBoxInputFilterForTreeContainerId(treeContainerId);
             removeSearchBoxInputFiltersFromLiNodes(hiddenLisForTreeContainer);
-            hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId)
+            hideSearchBoxInputCheckboxForTreeContainerId(treeContainerId);
+            hideSearchBoxResultsNumbers(treeContainerId);
             selectAllCheckboxForTree.disabled = false;
             expandAllButtonForTree.disabled = false;
             collapseAllButtonForTree.disabled = false;
@@ -360,7 +380,8 @@ function setupInputsForTreeContainerId(treeContainerId) {
 
         // Reset search box checkbox and its variables
         const allCheckedCheckboxes = getCheckedCheckboxesForTreeContainerId(treeContainerId);
-        checkboxesMatchingSearch = filterResults.validCheckboxes;
+        checkboxesHiddenWithSearch = filterResults.validHiddenCheckboxes;
+        checkboxesMatchingSearch = filterResults.validCheckedCheckboxes;
         searchBoxCheckbox.checked = checkboxesMatchingSearch.every(c => allCheckedCheckboxes.includes(c));
         
         // Disable select all checkbox
@@ -377,6 +398,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
         setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToShow, true);
 
         // Update numbers and show checkbox for search box input
+        updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch);
         if (checkboxesMatchingSearch.length > 0) {
             return updateAndShowSearchBoxInputCheckboxForTreeContainerId(treeContainerId, checkboxesMatchingSearch.length);
         }
