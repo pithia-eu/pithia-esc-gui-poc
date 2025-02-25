@@ -2,32 +2,36 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% if resource.properties.acquisition_components %}
-<section class="resource-detail-section">
-    <h2>Acquisition Components</h2>
-    <ul>
-        {% for acquisition_url in resource.properties.acquisition_components %}
-        <li>
-            {% with value=acquisition_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% if resource.properties.computation_components %}
-<section class="resource-detail-section">
-    <h2>Computation Components</h2>
-    <ul>
-        {% for computation_url in resource.properties.computation_components %}
-        <li>
-            {% with value=computation_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
+{% if resource.properties.acquisition_components or resource.properties.computation_components %}
+<section class="d-flex flex-column row-gap-4 resource-detail-section">
+    {% if resource.properties.acquisition_components %}
+    <div>
+        <h2>Acquisition Components</h2>
+        <ul class="list-group list-group-flush">
+            {% for acquisition_url in resource.properties.acquisition_components %}
+            <li class="list-group-item px-0">
+                {% with value=acquisition_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% if resource.properties.computation_components %}
+    <div>
+        <h2>Computation Components</h2>
+        <ul class="list-group list-group-flush">
+            {% for computation_url in resource.properties.computation_components %}
+            <li class="list-group-item px-0">
+                {% with value=computation_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 </section>
 {% endif %}
 {% include 'browse/detail/sections/data_levels_section.html' %}
@@ -37,5 +41,7 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content %}
+{% include 'browse/detail/sections/asides/responsive/data_levels_aside_section.html' %}
+{% include 'browse/detail/sections/asides/responsive/quality_assessment_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
 {% endblock aside_extra_content %}

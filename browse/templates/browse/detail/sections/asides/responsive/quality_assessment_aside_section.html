@@ -1,0 +1,66 @@
+{% load project_tags %}
+{% if resource.properties.data_quality_flags or resource.properties.metadata_quality_flags or resource.properties.science_relevance_indicators %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Quality Assessment</h2>
+    {% if resource.properties.data_quality_flags %}
+    <div class="resource-detail-subsection">
+        <h3 class="fw-semibold fs-6">Data Quality Flags</h3>
+        <ul class="list-group list-group-flush bg-transparent mb-0">
+            {% for dqf in resource.properties.data_quality_flags %}
+            <li class="list-group-item bg-transparent px-0">
+                {% with value=dqf %}
+                {% if value in ontology_server_urls %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                {% elif value in resource_server_urls %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% else %}
+                {{ value.strip|urlize }}
+                {% endif %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% if resource.properties.metadata_quality_flags %}
+    <div class="resource-detail-subsection">
+        <h3 class="fw-semibold fs-6">Metadata Quality Flags</h3>
+        <ul class="list-group list-group-flush bg-transparent mb-0">
+            {% for mqf in resource.properties.metadata_quality_flags %}
+            <li class="list-group-item bg-transparent px-0">
+                {% with value=mqf %}
+                {% if value in ontology_server_urls %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                {% elif value in resource_server_urls %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% else %}
+                {{ value.strip|urlize }}
+                {% endif %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% if resource.properties.science_relevance_indicators %}
+    <div class="resource-detail-subsection">
+        <h3 class="fw-semibold fs-6">Science Relevance Indicators</h3>
+        <ul class="list-group list-group-flush bg-transparent mb-0">
+            {% for sri in resource.properties.science_relevance_indicators %}
+            <li class="list-group-item bg-transparent px-0">
+                {% with value=sri %}
+                {% if value in ontology_server_urls %}
+                {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                {% elif value in resource_server_urls %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% else %}
+                {{ value.strip|urlize }}
+                {% endif %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
