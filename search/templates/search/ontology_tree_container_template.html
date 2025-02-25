@@ -13,7 +13,6 @@
                 </span>
                 <input type="search" class="tree-search-box form-control" id="{{ ontology_component }}-tree-search-box" placeholder="Start typing to filter...">
             </div>
-            <small class="d-none tree-search-box-results-numbers text-body-secondary">(0 found)</small>
         </div>
     </div>
     <div class="d-flex align-items-center flex-wrap search-form-controls mb-3">
@@ -55,6 +54,11 @@
                 </label>
             </div>
         </div>
+    </div>
+    {# Styles for the filter result numbers are managed in CSS styles #}
+    <div class="flex-column row-gap-1 tree-filter-results text-body-secondary pb-3">
+        <div class="tree-search-box-filter-results">0 found, 0 hidden</div>
+        <div class="tree-checkbox-filter-results">0 found, 0 hidden</div>
     </div>
     <div class="tree-search-terms px-md-3 px-0" id="{{ ontology_component }}-tree-search-terms"></div>
 </div>

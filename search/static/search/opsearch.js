@@ -48,36 +48,53 @@ function getHtmlDatasetNameByInputName(inputName) {
     }
 }
 
-function filterOPTree() {
+function hideShownAndHiddenNumbersForOpTree() {
+    const checkboxFilterResultsElementContainer = document.querySelector(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID}`).querySelector(".tree-filter-results");
+    return checkboxFilterResultsElementContainer.classList.remove("show-tree-checkbox-filter-results");
+}
+
+function showAndUpdateShownAndHiddenNumbersForOpTree(checkboxesHidden, checkboxesShown) {
+    const checkboxFilterResultsElement = document.querySelector(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID}`).querySelector(".tree-checkbox-filter-results");
+    checkboxFilterResultsElement.textContent = `${checkboxesShown.length} filtered, ${checkboxesHidden.length} made less visible by phenomenons/measurands`;
+    const checkboxFilterResultsElementContainer = document.querySelector(`#${OBSERVED_PROPERTIES_TREE_CONTAINER_ID}`).querySelector(".tree-filter-results");
+    return checkboxFilterResultsElementContainer.classList.add("show-tree-checkbox-filter-results");
+}
+
+function filterOpTree() {
     const checkedPhenomenonCheckboxes = Array.from(getSearchTermsContainerForTreeContainerId(PHENOMENONS_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]:checked`));
     const checkedMeasurandCheckboxes= Array.from(getSearchTermsContainerForTreeContainerId(MEASURANDS_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]:checked`));
     const checkboxesToFilterBy = checkedPhenomenonCheckboxes.concat(checkedMeasurandCheckboxes);
     if (checkboxesToFilterBy.length === 0) {
         const hiddenLisForTreeContainer = getLiNodesHiddenByCheckboxFilterForTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID);
+        hideShownAndHiddenNumbersForOpTree();
         return removeCheckboxFiltersFromLiNodes(hiddenLisForTreeContainer);
     }
     const checkboxesToFilter = getSearchTermsContainerForTreeContainerId(OBSERVED_PROPERTIES_TREE_CONTAINER_ID).querySelectorAll(`input[type="checkbox"]`);
     const liNodesToHide = [], liNodesToShow = [];
+    const checkboxesShown = [], checkboxesHidden = [];
     checkboxesToFilter.forEach(checkboxToFilter => {
-        let isCheckboxToFilterAndChildrenVisible = false;
         // OR match
-        checkboxesToFilterBy.forEach(checkboxToFilterBy => {
+        const enclosingLiNode = getEnclosingLiNode(checkboxToFilter);
+        for (const checkboxToFilterBy of checkboxesToFilterBy) {
             const htmlDatasetToFilterBy = getHtmlDatasetNameByInputName(checkboxToFilterBy.name);
             const isHtmlDatasetInCheckbox = checkboxToFilter.dataset && checkboxToFilter.dataset[htmlDatasetToFilterBy];
             if (isHtmlDatasetInCheckbox && checkboxToFilter.dataset[htmlDatasetToFilterBy].includes(checkboxToFilterBy.id)) {
-                isCheckboxToFilterAndChildrenVisible = true;
+                liNodesToShow.push(enclosingLiNode);
+                const parentCheckboxes = getParentNodeCheckboxes(checkboxToFilter);
+                const parentLiNodesToShow = parentCheckboxes.map(checkbox => getEnclosingLiNode(checkbox));
+                liNodesToShow.push(...parentLiNodesToShow);
+                if (!checkboxToFilter.disabled) {
+                    checkboxesShown.push(checkboxToFilter);
+                }
+                return;
             }
-        });
-        const enclosingLiNode = getEnclosingLiNode(checkboxToFilter);
-        if (isCheckboxToFilterAndChildrenVisible) {
-            liNodesToShow.push(enclosingLiNode);
-            const parentCheckboxes = getParentNodeCheckboxes(checkboxToFilter);
-            const parentLiNodesToShow = parentCheckboxes.map(checkbox => getEnclosingLiNode(checkbox));
-            liNodesToShow.push(...parentLiNodesToShow);
-        } else {
-            liNodesToHide.push(enclosingLiNode);
         }
+        if (!checkboxToFilter.disabled) {
+            checkboxesHidden.push(checkboxToFilter);
+        }
+        return liNodesToHide.push(enclosingLiNode);
     });
+    showAndUpdateShownAndHiddenNumbersForOpTree(checkboxesHidden, checkboxesShown);
     addCheckboxFiltersToLiNodes(liNodesToHide);
     removeCheckboxFiltersFromLiNodes(liNodesToShow);
 }
@@ -86,7 +103,7 @@ export function setupCheckboxesForTreeContainerIdToFilterOPTerms(treeContainerId
     const allCheckboxesForTree = document.querySelectorAll(`#${treeContainerId} input[type="checkbox"]`);
     allCheckboxesForTree.forEach(checkbox => {
         checkbox.addEventListener("change", event => {
-            filterOPTree();
+            filterOpTree();
         });
     });
 }
@@ -94,21 +111,21 @@ export function setupCheckboxesForTreeContainerIdToFilterOPTerms(treeContainerId
 export function setupSelectAllCheckboxForTreeContainerId(treeContainerId) {
     const selectAllCheckbox = getSelectAllCheckboxForTreeContainerId(treeContainerId);
     selectAllCheckbox.addEventListener("change", event => {
-        filterOPTree();
+        filterOpTree();
     });
 }
 
 export function activateDeselectAllButtonForTreeContainerId(treeContainerId) {
     const deselectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-deselect-all`);
     deselectAllButtonForTree.addEventListener("click", event => {
-        filterOPTree();
+        filterOpTree();
     });
 }
 
 export function setupSelectAllButtonForTreeContainerId(treeContainerId) {
     const selectAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-select-all`);
     selectAllButtonForTree.addEventListener("click", event => {
-        filterOPTree();
+        filterOpTree();
     });
 }
 

@@ -138,14 +138,15 @@ function resetHighlightingForSearchBoxInputMatches(treeContainerId) {
     });
 }
 
-function updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch) {
-    const searchResultsNumbers = document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers");
-    searchResultsNumbers.classList.remove("d-none");
-    searchResultsNumbers.textContent = `(${checkboxesMatchingSearch.length} found)`;
+function updateAndShowNumberOfSearchBoxResults(treeContainerId, checkboxesMatchingSearch) {
+    const searchResultsNumbers = document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-filter-results");
+    searchResultsNumbers.innerHTML = `${checkboxesMatchingSearch.length} keyword matches found`;
+    const searchResultsNumbersContainer = document.querySelector(`#${treeContainerId}`).querySelector(".tree-filter-results");
+    searchResultsNumbersContainer.classList.add("show-tree-search-box-filter-results");
 }
 
 function hideSearchBoxResultsNumbers(treeContainerId) {
-    return document.querySelector(`#${treeContainerId}`).querySelector(".tree-search-box-results-numbers").classList.add("d-none");;
+    return document.querySelector(`#${treeContainerId}`).querySelector(".tree-filter-results").classList.remove("show-tree-search-box-filter-results");
 }
 
 function getSearchBoxInputFilterResultsForTreeContainerId(treeContainerId, searchBoxInput) {
@@ -427,7 +428,7 @@ function setupInputsForTreeContainerId(treeContainerId) {
         setDetailNodeOpenStatesForLiNodes(filterResults.liNodesToShow, true);
 
         // Update numbers and show checkbox for search box input
-        updateAndShowSearchBoxResultNumbers(treeContainerId, checkboxesHiddenWithSearch, checkboxesMatchingSearch);
+        updateAndShowNumberOfSearchBoxResults(treeContainerId, checkboxesMatchingSearch);
         if (checkboxesMatchingSearch.length > 0) {
             return updateAndShowSearchBoxInputCheckboxForTreeContainerId(treeContainerId, checkboxesMatchingSearch.length);
         }

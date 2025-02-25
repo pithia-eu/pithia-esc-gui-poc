@@ -1289,12 +1289,31 @@ label.required::after {
     height: var(--tree-search-loading-spinner-height);
 }
 
-.tree-search-terms li.search-no-match {
-    color: var(--bs-secondary-color);
+.tree-search-terms li.search-no-match label {
+    color: var(--bs-tertiary-color);
 }
 
-#observed-properties-tree-search-terms li.filter-no-match {
+#observed-properties-tree-search-terms li.filter-no-match label {
+    color: var(--bs-tertiary-color);
+}
+
+.tree-filter-results,
+.tree-search-box-filter-results,
+.tree-checkbox-filter-results {
     display: none;
+}
+
+.tree-filter-results.show-tree-search-box-filter-results,
+.tree-filter-results.show-tree-checkbox-filter-results {
+    display: flex;
+}
+
+.tree-filter-results.show-tree-search-box-filter-results .tree-search-box-filter-results {
+    display: block;
+}
+
+.tree-filter-results.show-tree-checkbox-filter-results .tree-checkbox-filter-results {
+    display: block;
 }
 
 #accordion-filters .accordion-header {
