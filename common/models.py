@@ -157,37 +157,93 @@ class ScientificMetadata(models.Model):
     @property
     def root_element_name(self):
         return None
-    
-    @property
-    def _immediate_metadata_dependents(self) -> list:
-        scientific_metadata_model_subclasses_sorted = sorted(list(ScientificMetadata.__subclasses__()), key=lambda subclass: subclass.weight)
-        scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[self.weight:]
+
+    def _get_immediate_metadata_dependents_and_update_checked_metadata(
+            self,
+            checked_metadata: set = set(),
+            up_to_weight: int = -1) -> list:
+        scientific_metadata_model_subclasses_sorted = sorted(
+            list(ScientificMetadata.__subclasses__()),
+            key=lambda subclass: subclass.weight
+        )
+        if up_to_weight != -1:
+            up_to_weight += 1
+        scientific_metadata_models_in_range = scientific_metadata_model_subclasses_sorted[
+            self.weight:up_to_weight
+        ]
         potential_dependents = []
         immediate_dependents = []
         for m in scientific_metadata_models_in_range:
-            potential_dependents += list(m.objects.all())
+            potential_dependents += list(m.objects.filter(xml__icontains=self.localid))
         for pd in potential_dependents:
             parsed_xml = etree.fromstring(pd.xml.encode('utf-8'))
             url_mentions = parsed_xml.xpath(f"//*[contains(@xlink:href, '{self.metadata_server_url}')]/@*[local-name()='href' and namespace-uri()='http://www.w3.org/1999/xlink']", namespaces={'xlink': 'http://www.w3.org/1999/xlink'})
-            if len(url_mentions) > 0 and pd.localid != self.localid:
-                immediate_dependents.append(pd)
+            if pd.localid == self.localid:
+                continue
+            if len(url_mentions) < 1:
+                continue
+            immediate_dependents.append(pd)
+        checked_metadata.add(str(self.pk))
         return immediate_dependents
 
-    def _dependents_of_immediate_metadata_dependents(self, immediate_metadata_dependents) -> list:
+    def _get_dependents_of_immediate_metadata_dependents_and_update_checked_metadata(
+            self,
+            immediate_metadata_dependents: list,
+            checked_metadata: set = set(),
+            up_to_weight: int = -1) -> list:
         all_dependents_of_dependents = []
         for imd in immediate_metadata_dependents:
-            if not any(str(imd.pk) == str(md.pk) for md in all_dependents_of_dependents):
-                dependents_of_imd = imd.metadata_dependents
-                all_dependents_of_dependents += dependents_of_imd
+            if any(str(imd.pk) == md_pk for md_pk in checked_metadata):
+                continue
+            dependents_of_imd, updated_checked_metadata = imd.get_metadata_dependents_and_checked_metadata(
+                checked_metadata=checked_metadata,
+                up_to_weight=up_to_weight
+            )
+            all_dependents_of_dependents += dependents_of_imd
 
         return all_dependents_of_dependents
 
+    def get_metadata_dependents_and_checked_metadata(
+            self,
+            checked_metadata: set = set(),
+            up_to_weight: int = -1) -> list:
+        # Get the immediate metadata dependents first
+        immediate_metadata_dependents = self._get_immediate_metadata_dependents_and_update_checked_metadata(
+            checked_metadata=checked_metadata,
+            up_to_weight=up_to_weight
+        )
+        # Get all deeper dependents for immediate metadata dependents
+        dependents_of_immediate_metadata_dependents = self._get_dependents_of_immediate_metadata_dependents_and_update_checked_metadata(
+            immediate_metadata_dependents,
+            checked_metadata=checked_metadata,
+            up_to_weight=up_to_weight
+        )
+        # Combine the immediate dependents and deeper dependents
+        all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
+        # Sort and make sure all found dependents are unique
+        return sorted(
+            list({
+                str(md.pk): md
+                for md in all_metadata_dependents
+            }.values()),
+            key=lambda md: md.weight
+        ), checked_metadata
+    
+    @property
+    def _immediate_metadata_dependents(self) -> list:
+        return self._get_immediate_metadata_dependents_and_update_checked_metadata()
+
+    def _dependents_of_immediate_metadata_dependents(self, immediate_metadata_dependents) -> list:
+        return self._get_dependents_of_immediate_metadata_dependents_and_update_checked_metadata(
+            immediate_metadata_dependents
+        )
+
     @property
     def metadata_dependents(self) -> list:
-        immediate_metadata_dependents = self._immediate_metadata_dependents
-        dependents_of_immediate_metadata_dependents = self._dependents_of_immediate_metadata_dependents(immediate_metadata_dependents)
-        all_metadata_dependents = list(immediate_metadata_dependents) + list(dependents_of_immediate_metadata_dependents)
-        return sorted(list({ str(md.pk): md for md in all_metadata_dependents }.values()), key=lambda md: md.weight)
+        metadata_dependents, checked_metadata = self.get_metadata_dependents_and_checked_metadata(
+            checked_metadata=set()
+        )
+        return metadata_dependents
     
     objects = ScientificMetadataManager.from_queryset(ScientificMetadataQuerySet)()
     organisations = OrganisationManager.from_queryset(OrganisationQuerySet)()

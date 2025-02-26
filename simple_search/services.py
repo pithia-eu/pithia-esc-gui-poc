@@ -8,14 +8,12 @@ from ontology.utils import (
 
 # Utilities
 def parse_registration_xml(r):
-    """
-    Parses the XML of a metadata registration.
+    """Parses the XML of a metadata registration.
     """
     return etree.fromstring(r.xml.encode())
 
 def parse_rdf_text(rdf_text):
-    """
-    Parses the RDF of an ontology component.
+    """Parses the RDF of an ontology component.
     """
     return etree.fromstring(rdf_text.encode())
 
@@ -34,8 +32,7 @@ def is_each_query_section_in_string(query_sections, string):
 
 # Text node filtering
 def get_and_process_text_nodes_from_registration(r):
-    """
-    Finds and returns a list of strings retrieved
+    """Finds and returns a list of strings retrieved
     from text nodes of a metadata registration.
     """
     parsed_xml = parse_registration_xml(r)
@@ -78,16 +75,16 @@ def filter_metadata_registrations_by_text_nodes_exact(query, registrations):
 def filter_metadata_registrations_by_name_exact(query, registrations):
     registrations_with_match = []
     for r in registrations:
-        if query in r.name:
-            registrations_with_match.append(r)
+        if query not in r.name:
+            continue
+        registrations_with_match.append(r)
 
     return list({r.id: r for r in registrations_with_match}.values())
 
 
 # Ontology URL filtering
 def get_ontology_urls_from_registration(r):
-    """
-    Finds and returns a list of ontology term
+    """Finds and returns a list of ontology term
     URLs found within a metadata registration.
     """
     parsed_xml = parse_registration_xml(r)
@@ -96,8 +93,7 @@ def get_ontology_urls_from_registration(r):
     })))
 
 def get_and_map_ontology_urls_to_registrations(registrations):
-    """
-    Creates a dict of ontology URLs and the registrations
+    """Creates a dict of ontology URLs and the registrations
     that they were found in.
     """
     ontology_urls_to_registrations = {}
@@ -111,8 +107,7 @@ def get_and_map_ontology_urls_to_registrations(registrations):
     return ontology_urls_to_registrations
 
 def get_and_process_text_nodes_of_ontology_url(ontology_url, ontology_component_rdf):
-    """
-    Gets the text properties of the ontology term
+    """Gets the text properties of the ontology term
     node corresponding with a given ontology term
     URL.
     """
@@ -133,8 +128,7 @@ def get_ontology_component_name_from_ontology_url(ontology_url):
     return ontology_component_name
 
 def get_and_map_searchable_text_to_ontology_urls(ontology_urls, ontology_rdfs):
-    """
-    Creates a dict mapping each ontology URL to its
+    """Creates a dict mapping each ontology URL to its
     corresponding text properties, fetched from the
     Space Physics Ontology.
     """
@@ -152,8 +146,7 @@ def get_and_map_searchable_text_to_ontology_urls(ontology_urls, ontology_rdfs):
     return ontology_urls_to_text_nodes
 
 def get_rdfs_from_ontology_urls(ontology_urls):
-    """
-    Creates a dict of ontology component
+    """Creates a dict of ontology component
     RDFs that the ontology URLs are from.
     """
     ontology_rdfs = {}
@@ -204,31 +197,35 @@ def filter_metadata_registrations_by_ontology_urls_exact(query, ontology_urls_to
 
 # Find Data Collections referring to pre-Data Collection step registrations.
 def get_data_collections_from_metadata_dependents(metadata_dependents):
-    """
-    Utility function - gets and returns the metadata dependents
+    """Utility function - gets and returns the metadata dependents
     which are Data Collections from a list of given metadata
     dependents.
     """
     return [md for md in metadata_dependents if md.type_in_metadata_server_url == models.DataCollection.type_in_metadata_server_url]
 
-def get_data_collections_from_other_metadata(registrations):
-    """
-    Gets and returns dependent Data Collections from a list
+def get_data_collections_from_other_metadata(registrations, checked_metadata: set = set()):
+    """Gets and returns dependent Data Collections from a list
     of given pre-Data Collection step registrations.
     """
     data_collections_found = []
     for r in registrations:
-        data_collections_from_metadata_dependents = get_data_collections_from_metadata_dependents(r.metadata_dependents)
+        if str(r.pk) in checked_metadata:
+            continue
+        metadata_dependents, new_checked_metadata = r.get_metadata_dependents_and_checked_metadata(
+            checked_metadata=checked_metadata,
+            up_to_weight=models.DataCollection.weight
+        )
+        checked_metadata.union(new_checked_metadata)
+        data_collections_from_metadata_dependents = get_data_collections_from_metadata_dependents(metadata_dependents)
         data_collections_found += data_collections_from_metadata_dependents
-    return data_collections_found
+    return data_collections_found, checked_metadata
 
 
 def get_registrations_for_simple_search(model):
     return model.objects.all()
 
 def find_data_collections_for_simple_search(query, exact=False):
-    """
-    Does a simple search based on the given query.
+    """Does a simple search based on the given query.
     """
 
     data_collections_matching_query = []
@@ -308,17 +305,50 @@ def find_data_collections_for_simple_search(query, exact=False):
         organisations_filtered_by_name = filter_metadata_registrations_by_name_exact(query_or_query_sections, list(models.Organisation.objects.all()))
         projects_filtered_by_name = filter_metadata_registrations_by_name_exact(query_or_query_sections, list(models.Project.objects.all()))
 
-    data_collections_matching_query += get_data_collections_from_other_metadata(organisations_filtered_by_name)
-    data_collections_matching_query += get_data_collections_from_other_metadata(individuals_filtered_by_text_nodes + individuals_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(projects_filtered_by_name)
-    data_collections_matching_query += get_data_collections_from_other_metadata(platforms_filtered_by_text_nodes + platforms_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(operations_filtered_by_text_nodes + operations_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(instruments_filtered_by_text_nodes + instruments_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(acquisition_capabilities_filtered_by_text_nodes + acquisition_capabilities_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(acquisitions_filtered_by_text_nodes + acquisitions_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(computation_capabilities_filtered_by_text_nodes + computation_capabilities_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(computations_filtered_by_text_nodes + computations_filtered_by_ontology_urls)
-    data_collections_matching_query += get_data_collections_from_other_metadata(processes_filtered_by_text_nodes + processes_filtered_by_ontology_urls)
+    checked_metadata = set()
+    # Organisations
+    data_collections_from_organisations, updated_checked_metadata_from_organisations = get_data_collections_from_other_metadata(organisations_filtered_by_name, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_organisations
+    checked_metadata.union(updated_checked_metadata_from_organisations)
+    # Individuals
+    data_collections_from_individuals, updated_checked_metadata_from_individuals = get_data_collections_from_other_metadata(individuals_filtered_by_text_nodes + individuals_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_individuals
+    checked_metadata.union(updated_checked_metadata_from_individuals)
+    # Projects
+    data_collections_from_projects, updated_checked_metadata_from_projects = get_data_collections_from_other_metadata(projects_filtered_by_name, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_projects
+    checked_metadata.union(updated_checked_metadata_from_projects)
+    # Platforms
+    data_collections_from_platforms, updated_checked_metadata_from_platforms = get_data_collections_from_other_metadata(platforms_filtered_by_text_nodes + platforms_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_platforms
+    checked_metadata.union(updated_checked_metadata_from_platforms)
+    # Operations
+    data_collections_from_operations, updated_checked_metadata_from_operations = get_data_collections_from_other_metadata(operations_filtered_by_text_nodes + operations_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_operations
+    checked_metadata.union(updated_checked_metadata_from_operations)
+    # Instruments
+    data_collections_from_instruments, updated_checked_metadata_from_instruments = get_data_collections_from_other_metadata(instruments_filtered_by_text_nodes + instruments_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_instruments
+    checked_metadata.union(updated_checked_metadata_from_instruments)
+    # Acquisition Capabilities
+    data_collections_from_acquisition_capabilities, updated_checked_metadata_from_acquisition_capabilities = get_data_collections_from_other_metadata(acquisition_capabilities_filtered_by_text_nodes + acquisition_capabilities_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_acquisition_capabilities
+    checked_metadata.union(updated_checked_metadata_from_acquisition_capabilities)
+    # Acquisitions
+    data_collections_from_acquisitions, updated_checked_metadata_from_acquisitions = get_data_collections_from_other_metadata(acquisitions_filtered_by_text_nodes + acquisitions_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_acquisitions
+    checked_metadata.union(updated_checked_metadata_from_acquisitions)
+    # Computation Capabilities
+    data_collections_from_computation_capabilities, updated_checked_metadata_from_computation_capabilities = get_data_collections_from_other_metadata(computation_capabilities_filtered_by_text_nodes + computation_capabilities_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_computation_capabilities
+    checked_metadata.union(updated_checked_metadata_from_computation_capabilities)
+    # Computations
+    data_collections_from_computations, updated_checked_metadata_from_computations = get_data_collections_from_other_metadata(computations_filtered_by_text_nodes + computations_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_computations
+    checked_metadata.union(updated_checked_metadata_from_computations)
+    # Processes
+    data_collections_from_processes, updated_checked_metadata_from_processes = get_data_collections_from_other_metadata(processes_filtered_by_text_nodes + processes_filtered_by_ontology_urls, checked_metadata=checked_metadata)
+    data_collections_matching_query += data_collections_from_processes
     data_collections_matching_query += data_collections_filtered_by_text_nodes + data_collections_filtered_by_ontology_urls
 
     # Ensure there are no duplicate data collections
