@@ -36,7 +36,7 @@
         </div>
         {% block pre_related_parties_section %}{% endblock pre_related_parties_section %}
         {% if resource.properties.related_parties %}
-        <div id="responsible-parties-top-section" class="resource-detail-section pt-4">
+        <div id="responsible-parties-top-section">
             <dl class="d-flex flex-md-row flex-column flex-wrap column-gap-5 row-gap-4 mb-0">
                 {% for rp in resource.properties.related_parties %}
                 <div class="d-flex flex-column row-gap-2">
