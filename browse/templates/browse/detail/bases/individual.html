@@ -2,13 +2,7 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% if resource.properties.online_resource %}
-{% with contact_info_details_top_section_heading='Website and Contact Details' %}
-{% include 'browse/detail/components/top_section_extra_content/contact_info_individual.html' %}
-{% endwith %}
-{% else %}
-{% with contact_info_details_top_section_heading='Contact Details' %}
-{% include 'browse/detail/components/top_section_extra_content/contact_info_individual.html' %}
-{% endwith %}
-{% endif %}
+<section class="resource-detail-section">
+    {% include 'browse/detail/components/contact_info_individual.html' %}
+</section>
 {% endblock post_description_content %}
