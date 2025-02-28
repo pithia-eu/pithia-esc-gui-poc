@@ -1,7 +1,7 @@
 {% extends 'browse/detail/bases/base.html' %}
 
 {# Appears before the description #}
-{% block pre_description_content %}
+{% block post_description_content %}
 {% if resource.properties.online_resource %}
 {% with contact_info_details_top_section_heading='Website and Contact Details' %}
 {% include 'browse/detail/components/top_section_extra_content/contact_info.html' %}
@@ -11,4 +11,17 @@
 {% include 'browse/detail/components/top_section_extra_content/contact_info.html' %}
 {% endwith %}
 {% endif %}
-{% endblock pre_description_content %}
+{% endblock post_description_content %}
+
+{# Appears in the aside section #}
+{% block aside_extra_content %}
+{% if resource.properties.online_resource %}
+{% with contact_info_details_top_section_heading='Website and Contact Details' %}
+{% include 'browse/detail/sections/asides/responsive/contact_info_aside_section.html' %}
+{% endwith %}
+{% else %}
+{% with contact_info_details_top_section_heading='Contact Details' %}
+{% include 'browse/detail/sections/asides/responsive/contact_info_aside_section.html' %}
+{% endwith %}
+{% endif %}
+{% endblock aside_extra_content %}
