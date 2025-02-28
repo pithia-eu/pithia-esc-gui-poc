@@ -1,8 +1,11 @@
 from django.shortcuts import get_object_or_404
+from django.http import FileResponse
 from django.views.generic import TemplateView
 from lxml import etree
 
 from . import view_mixins
+
+from common.models import ScientificMetadata
 
 
 # Create your views here.
@@ -150,3 +153,8 @@ class WorkflowXmlDownloadFromBrowsingView(
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
+
+
+def metadata_xml_file_direct_download(request, resource_id):
+    resource = get_object_or_404(ScientificMetadata, pk=resource_id)
+    return FileResponse(resource.xml, content_type='application/xml')
