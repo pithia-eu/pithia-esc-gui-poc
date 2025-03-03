@@ -1,47 +1,5 @@
 {% extends 'browse/detail/bases/base_catalogue_related.html' %}
 
-{# Appears after the last modified date, before the description #}
-{% block top_section_extra_content %}
-<div class="resource-detail-top-section-extra-content mt-4">
-    <dl class="d-flex flex-md-row flex-column align-items-lg-center align-items-start column-gap-5 row-gap-4">
-        {% if resource.properties.phenomenon_time %}
-        <div>
-            <dt class="mb-1">Phenomenon Time</dt>
-            <dd>
-                <div class="d-inline-flex align-items-center justify-content-center column-gap-2 bg-body-tertiary rounded py-2 px-3">
-                    <span>
-                        {% if resource.properties.phenomenon_time.time_period.begin.time_position %}
-                        {{ resource.properties.phenomenon_time.time_period.begin.time_position|date:'M jS, Y, H:i O' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                    <span>-</span>
-                    <span>
-                        {% if resource.properties.phenomenon_time.time_period.end.time_position %}
-                        {{ resource.properties.phenomenon_time.time_period.end.time_position|date:'M jS, Y, H:i O' }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                </div>
-            </dd>
-        </div>
-        {% endif %}
-        {% if resource.properties.catalogue_urls %}
-        <div>
-            <dt>Catalogue</dt>
-            <dd>
-                {% with value=resource.properties.catalogue_urls.0 %}
-                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                {% endwith %}
-            </dd>
-        </div>
-        {% endif %}
-    </dl>
-</div>
-{% endblock top_section_extra_content %}
-
 {# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.data_subsets %}
@@ -63,3 +21,21 @@
 </section>
 {% endif %}
 {% endblock pre_description_content %}
+
+{# Appears in aside section #}
+{% block aside_extra_content %}
+{% if resource.properties.catalogue_urls %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Catalogue</h2>
+    {% with value=resource.properties.catalogue_urls.0 %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+</section>
+{% endif %}
+{% if resource.properties.phenomenon_time %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Phenomenon Time</h2>
+    {% include 'browse/detail/components/catalogue_entry/phenomenon_time_section_content.html' %}
+</section>
+{% endif %}
+{% endblock aside_extra_content %}
