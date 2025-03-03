@@ -718,8 +718,8 @@ class Catalogue(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'Catalogue'
     weight = 12
-    type_readable = 'catalogue'
-    type_plural_readable = 'catalogues'
+    type_readable = 'static dataset'
+    type_plural_readable = 'static datasets'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
