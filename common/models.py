@@ -745,8 +745,8 @@ class CatalogueEntry(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'CatalogueEntry'
     weight = 13
-    type_readable = 'catalogue entry'
-    type_plural_readable = 'catalogue entries'
+    type_readable = 'static dataset entry'
+    type_plural_readable = 'static dataset entries'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
@@ -794,8 +794,8 @@ class CatalogueDataSubset(ScientificMetadata):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'DataSubset'
     weight = 14
-    type_readable = 'catalogue data subset'
-    type_plural_readable = 'catalogue data subsets'
+    type_readable = 'static data subset'
+    type_plural_readable = 'static data subsets'
     type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
