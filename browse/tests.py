@@ -89,7 +89,7 @@ class BulkMetadataUrlMappingTestCase(TestCase):
         converted_instrument_resource_url_with_op_mode = map_metadata_server_urls_to_browse_urls([instrument_resource_url_with_op_mode])[0]
         # Data Collection-related metadata URL
         converted_process_metadata_url = map_metadata_server_urls_to_browse_urls([process_metadata_url])[0]
-        # Catalogue-related metadata URL
+        # Static Dataset-related metadata URL
         converted_catalogue_related_resource_url = map_metadata_server_urls_to_browse_urls([catalogue_related_resource_url])[0]
 
         # converted_instrument_resource_url_with_op_mode

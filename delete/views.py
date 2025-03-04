@@ -113,7 +113,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
     A subclass of ResourceDeleteView.
 
     Maps Data Collection-related features (e.g., breadcrumbs)
-    to Catalogue-related features.
+    to Static Dataset-related features.
 
     This view is intended to be subclassed and to not
     be called directly.

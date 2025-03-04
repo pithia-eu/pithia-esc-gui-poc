@@ -510,11 +510,10 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
 
 class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
     def test_catalogue_metadata_url_splits_correctly(self):
-        """
-        A catalogue-related metadata URL is split up into
+        """A static dataset-related metadata URL is split up into
         its components correctly.
         """
-        # A catalogue-related metadata URL should have the following structure:
+        # A static dataset-related metadata URL should have the following structure:
         # 'catalogue/namespace/Event/Catalogue metadata type' (i.e. Catalogue,
         # CatalogueEntry, CatalogueDataSubset).
         catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
@@ -583,7 +582,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
     def test_no_invalid_metadata_urls_found_within_valid_catalogue_related_file(self):
         """
         The validator returns no invalid metadata URLs when validating
-        a valid catalogue-related metadata file.
+        a valid static dataset-related metadata file.
         """
         catalogue_xml_file = test_xml_files.CATALOGUE_METADATA_XML
         catalogue_xml_file.seek(0)
