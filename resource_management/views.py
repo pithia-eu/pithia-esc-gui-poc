@@ -11,7 +11,7 @@ from user_management.services import (
 
 _INDEX_PAGE_TITLE = 'Manage Registrations'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
-_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Catalogue-related Metadata'
+_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Static Dataset-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural_readable):
     return resource_type_plural_readable.title()
