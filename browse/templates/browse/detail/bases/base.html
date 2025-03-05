@@ -39,21 +39,19 @@
         <div id="responsible-parties-top-section">
             <dl class="d-flex flex-md-row flex-column flex-wrap column-gap-5 row-gap-4 mb-0">
                 {% for rp in resource.properties.related_parties %}
-                <div class="d-flex flex-column row-gap-2">
-                    <dt>
+                <div>
+                    <dt class="mb-2">
                         {% with value=rp.role %}
                         {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                         {% endwith %}
                     </dt>
-                    <div class="d-flex flex-column row-gap-1">
-                        {% for p in rp.parties %}
-                        <dd class="mb-0">
-                            {% with value=p url_text_extra_classes='link-plain-by-default' %}
-                            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-                            {% endwith %}
-                        </dd>
-                        {% endfor %}
-                    </div>
+                    {% for p in rp.parties %}
+                    <dd class="mb-1">
+                        {% with value=p url_text_extra_classes='link-plain-by-default' %}
+                        {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                        {% endwith %}
+                    </dd>
+                    {% endfor %}
                 </div>
                 {% endfor %}
             </dl>
