@@ -94,7 +94,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
 
     @classmethod
     def _create_directory_for_catalogue_data_subset(cls, catalogue_data_subset_id: str):
-        """Creates a directory for a Catalogue Data
+        """Creates a directory for a Static Data
         Subset, based on its ID. An error is raised
         if a file exists at the designated directory 
         path.
@@ -110,7 +110,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
             cls,
             catalogue_data_subset_id: str,
             resource_name_with_no_extension: str):
-        """Determines the file extension of a Catalogue
+        """Determines the file extension of a Static
         Data Subset's resource from its name and returns
         a file path to that file, or None if a file is
         not found.
@@ -153,7 +153,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     
     @classmethod
     def get_catalogue_data_subset_file(cls, catalogue_data_subset_id: str, file_name_with_no_extension: str):
-        """Gets a resource file for a Catalogue Data
+        """Gets a resource file for a Static Data
         Subset based on its name without the file
         extension from DataHub.
         """
@@ -166,7 +166,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
     def get_files_for_catalogue_data_subset(cls, catalogue_data_subset_id: str) -> List:
         """Returns a list of resource files for a
-        Catalogue Data Subset.
+        Static Data Subset.
         """
         if not cls.is_catalogue_data_subset_directory_created(catalogue_data_subset_id):
             return []
@@ -188,7 +188,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
     def delete_catalogue_data_subset_directory(cls, catalogue_data_subset_id: str):
         """Deletes a resource file DataHub directory
-        for a Catalogue Data Subset.
+        for a Static Data Subset.
         """
         try:
             return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id))

@@ -593,7 +593,7 @@ class CatalogueEntryEditorForm(
         self.fields['time_instant_end_id'].required = True
 
     catalogue_identifier = forms.ChoiceField(
-        label='Catalogue',
+        label='Static Dataset',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
@@ -640,7 +640,7 @@ class CatalogueDataSubsetForm(
     )
 
     entry_identifier = forms.ChoiceField(
-        label='Catalogue Entry',
+        label='Static Dataset Entry',
         required=True,
         widget=forms.Select(attrs={
             'class': 'form-select',

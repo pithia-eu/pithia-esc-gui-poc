@@ -373,7 +373,7 @@ class CatalogueDataSubsetUpdateFormView(
             try:
                 self.delete_catalogue_data_subset_directory()
             except FileNotFoundError:
-                logger.exception(f'The directory for Catalogue Data Subset {self.resource_id} has already been deleted.')
+                logger.exception(f'The directory for Static Data Subset {self.resource_id} has already been deleted.')
             return super().update_resource()
 
         with tempfile.TemporaryDirectory() as temp_dirname:

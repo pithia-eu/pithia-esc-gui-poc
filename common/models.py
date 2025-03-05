@@ -714,13 +714,17 @@ class DataCollection(ScientificMetadata):
     class Meta:
         proxy = True
 
-class Catalogue(ScientificMetadata):
+
+class CatalogueTypeDescriptionMixin:
+    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Static Dataset has distinct begin and end times and a list of registered Static Data Subsets with optional DOIs to their persistent storage.'
+
+
+class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'Catalogue'
     weight = 12
     type_readable = 'static dataset'
     type_plural_readable = 'static datasets'
-    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
     root_element_name = 'Catalogue'
 
@@ -741,13 +745,12 @@ class Catalogue(ScientificMetadata):
     class Meta:
         proxy = True
 
-class CatalogueEntry(ScientificMetadata):
+class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'CatalogueEntry'
     weight = 13
     type_readable = 'static dataset entry'
     type_plural_readable = 'static dataset entries'
-    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
     root_element_name = 'CatalogueEntry'
 
@@ -790,13 +793,12 @@ class CatalogueEntry(ScientificMetadata):
     class Meta:
         proxy = True
 
-class CatalogueDataSubset(ScientificMetadata):
+class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'DataSubset'
     weight = 14
     type_readable = 'static data subset'
     type_plural_readable = 'static data subsets'
-    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Catalogue has distinct begin and end times and a list of registered Data Subsets with optional DOIs to their persistent storage.'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
 

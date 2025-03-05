@@ -399,7 +399,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
         try:
             self.delete_catalogue_data_subset_directory()
         except FileNotFoundError:
-            logger.exception(f'A DataHub directory for Catalogue Data Subset {self.resource_id} was not found.')
+            logger.exception(f'A DataHub directory for Static Data Subset {self.resource_id} was not found.')
         return super().run_actions_on_registration_failure()
 
     def form_valid(self, form):

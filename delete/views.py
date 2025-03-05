@@ -36,8 +36,7 @@ logger = logging.getLogger(__name__)
 @method_decorator(login_session_institution_required, name='dispatch')
 @method_decorator(institution_ownership_required, name='dispatch')
 class ResourceDeleteView(TemplateView):
-    """
-    The deletion confirmation page for a
+    """The deletion confirmation page for a
     scientific metadata registration.
 
     Displays (if any) the scientific metadata
@@ -109,8 +108,7 @@ class ResourceDeleteView(TemplateView):
 
 
 class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
-    """
-    A subclass of ResourceDeleteView.
+    """A subclass of ResourceDeleteView.
 
     Maps Data Collection-related features (e.g., breadcrumbs)
     to Static Dataset-related features.
@@ -126,8 +124,7 @@ class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
 
 
 class OrganisationDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Organisation
+    """The deletion confirmation page for an Organisation
     registration.
     """
     model = models.Organisation
@@ -138,8 +135,7 @@ class OrganisationDeleteView(ResourceDeleteView):
 
 
 class IndividualDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Individual
+    """The deletion confirmation page for an Individual
     registration.
     """
     model = models.Individual
@@ -150,8 +146,7 @@ class IndividualDeleteView(ResourceDeleteView):
 
 
 class ProjectDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Project
+    """The deletion confirmation page for a Project
     registration.
     """
     model = models.Project
@@ -162,8 +157,7 @@ class ProjectDeleteView(ResourceDeleteView):
 
 
 class PlatformDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Platform
+    """The deletion confirmation page for a Platform
     registration.
     """
     model = models.Platform
@@ -174,8 +168,7 @@ class PlatformDeleteView(ResourceDeleteView):
 
 
 class InstrumentDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Instrument
+    """The deletion confirmation page for an Instrument
     registration.
     """
     model = models.Instrument
@@ -186,8 +179,7 @@ class InstrumentDeleteView(ResourceDeleteView):
 
 
 class OperationDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Operation
+    """The deletion confirmation page for an Operation
     registration.
     """
     model = models.Operation
@@ -198,8 +190,7 @@ class OperationDeleteView(ResourceDeleteView):
 
 
 class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Acquisition
+    """The deletion confirmation page for an Acquisition
     Capabilities registration.
     """
     model = models.AcquisitionCapabilities
@@ -210,8 +201,7 @@ class AcquisitionCapabilitiesDeleteView(ResourceDeleteView):
 
 
 class AcquisitionDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for an Acquisition
+    """The deletion confirmation page for an Acquisition
     registration.
     """
     model = models.Acquisition
@@ -222,8 +212,7 @@ class AcquisitionDeleteView(ResourceDeleteView):
 
 
 class ComputationCapabilitiesDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Computation
+    """The deletion confirmation page for a Computation
     Capabilities registration.
     """
     model = models.ComputationCapabilities
@@ -234,8 +223,7 @@ class ComputationCapabilitiesDeleteView(ResourceDeleteView):
 
 
 class ComputationDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Computation
+    """The deletion confirmation page for a Computation
     registration.
     """
     model = models.Computation
@@ -246,8 +234,7 @@ class ComputationDeleteView(ResourceDeleteView):
 
 
 class ProcessDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Process
+    """The deletion confirmation page for a Process
     registration.
     """
     model = models.Process
@@ -257,8 +244,7 @@ class ProcessDeleteView(ResourceDeleteView):
     delete_resource_page_breadcrumb_url_name = 'delete:process'
 
 class DataCollectionDeleteView(ResourceDeleteView):
-    """
-    The deletion confirmation page for a Data
+    """The deletion confirmation page for a Data
     Collection registration.
     """
     template_name = 'delete/confirm_delete_data_collection.html'
@@ -275,8 +261,7 @@ class DataCollectionDeleteView(ResourceDeleteView):
 
 
 class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
-    """
-    The deletion confirmation page for a Catalogue
+    """The deletion confirmation page for a Static Dataset
     registration.
     """
     model = models.Catalogue
@@ -287,8 +272,7 @@ class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
 
 
 class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
-    """
-    The deletion confirmation page for a Catalogue
+    """The deletion confirmation page for a Static Dataset
     Entry registration.
     """
     model = models.CatalogueEntry
@@ -301,7 +285,7 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
 class CatalogueDataSubsetDeleteView(
         CatalogueDataSubsetDataHubViewMixin,
         CatalogueRelatedResourceDeleteView):
-    """The deletion confirmation page for a Catalogue
+    """The deletion confirmation page for a Static
     Data Subset registration.
     """
     template_name = 'delete/confirm_delete_catalogue_data_subset.html'
@@ -317,7 +301,7 @@ class CatalogueDataSubsetDeleteView(
         try:
             self.delete_catalogue_data_subset_directory()
         except FileNotFoundError:
-            logger.exception(f'The directory for Catalogue Data Subset {self.resource_id} has already been deleted.')
+            logger.exception(f'The directory for Static Data Subset {self.resource_id} has already been deleted.')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
