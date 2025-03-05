@@ -85,8 +85,8 @@ def data_collection_related_resource_types(request):
     })
 
 def catalogue_tree(request):
-    """Lists all catalogues, catalogue entries and data
-    subsets in a collapsible tree view.
+    """Lists all static datasets, static dataset entries
+    and static data subsets in a collapsible tree view.
     """
     catalogues = models.Catalogue.objects.all()
     return render(request, 'browse/catalogue_tree.html', {
@@ -361,8 +361,8 @@ class ResourceDetailView(TemplateView):
             'Computations': self.resource.properties.computation_urls,
             'Processes': self.resource.properties.process_urls,
             'Data Collections': self.resource.properties.data_collection_urls,
-            'Catalogues': self.resource.properties.catalogue_urls,
-            'Catalogue Entries': self.resource.properties.catalogue_entry_urls,
+            'Static Datasets': self.resource.properties.catalogue_urls,
+            'Static Dataset Entries': self.resource.properties.catalogue_entry_urls,
         }
 
     def clean_related_registrations_dict(self, related_registrations_dict):

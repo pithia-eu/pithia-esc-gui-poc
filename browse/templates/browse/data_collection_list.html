@@ -6,7 +6,7 @@
 <script src="{% static 'browse/resource_filter_by_name_data_collection.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block extra_description_content %}
-Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-default">Catalogues</a>, data collections do not include begin and end times.
+Unlike <a href="{% url 'browse:catalogue_tree' %}" class="link-underline-by-default">Static Datasets</a>, data collections do not include begin and end times.
 {% endblock extra_description_content %}
 {% block resource_count %}
 {% if resource_count == 1 %}
