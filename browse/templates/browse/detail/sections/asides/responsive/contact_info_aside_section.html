@@ -1,0 +1,58 @@
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <div class="d-flex flex-column row-gap-4">
+        {% block position_name_section %}{% endblock position_name_section %}
+        {% if resource.properties.online_resource.strip or resource.properties.email_address or resource.properties.phone %}
+        <section class="d-flex flex-column align-items-start row-gap-1 py-0">
+            <h2 class="fw-semibold fs-6 mb-0">{{ contact_info_details_top_section_heading }}</h2>
+            <div class="d-flex flex-column align-items-start row-gap-2">
+                {% if resource.properties.online_resource.strip %}
+                <a href="{{ resource.properties.online_resource }}" class="link-underline-by-default mb-auto">
+                    {{ resource.properties.online_resource }}
+                </a>
+                {% endif %}
+                <div class="d-flex flex-column row-gap-1">
+                    {% if resource.properties.email_address %}
+                    <a href="mailto:{{ resource.properties.email_address }}" class="link-underline-by-default">
+                        Send email
+                    </a>
+                    {% endif %}
+                    {% if resource.properties.phone %}
+                    <a href="tel:{{ resource.properties.phone }}" class="link-underline-by-default">
+                        {{ resource.properties.phone }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        {% if resource.properties.hours_of_service %}
+        <section class="d-flex flex-column row-gap-1 py-0">
+            <h2 class="fw-semibold fs-6 mb-0">Hours of Service</h2>
+            <p class="mb-0">{{ resource.properties.hours_of_service }}</p>
+        </section>
+        {% endif %}
+        <section class="d-flex flex-column row-gap-1 py-0">
+            <h2 class="fw-semibold fs-6 mb-0">Location</h2>
+            <div>
+                {% if resource.properties.delivery_point %}
+                <p class="mb-0">{{ resource.properties.delivery_point }}</p>
+                {% endif %}
+                {% if resource.properties.street_name %}
+                <p class="mb-0">{{ resource.properties.street_name }}</p>
+                {% endif %}
+                {% if resource.properties.city %}
+                <p class="mb-0">{{ resource.properties.city }}</p>
+                {% endif %}
+                {% if resource.properties.administrative_area %}
+                <p class="mb-0">{{ resource.properties.administrative_area }}</p>
+                {% endif %}
+                {% if resource.properties.postal_code %}
+                <p class="mb-0">{{ resource.properties.postal_code }}</p>
+                {% endif %}
+                {% if resource.properties.country %}
+                <p class="mb-0">{{ resource.properties.country }}</p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</section>

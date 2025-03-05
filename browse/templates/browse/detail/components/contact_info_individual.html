@@ -1,0 +1,21 @@
+{% extends 'browse/detail/components/contact_info_section_content.html' %}
+{% block position_name_section %}
+{# organisation and position_name are set in the template being extended. #}
+{% if organisation %}
+<section class="d-flex flex-column align-items-start row-gap-1 py-0">
+    <h2 class="fw-semibold {{ heading_font_size_class }} mb-0">
+        Organisation {% if position_name %}and Position{% endif %}
+    </h2>
+    {# Organisation #}
+    {% if organisation %}
+    {% with value=organisation %}
+    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+    {% endwith %}
+    {% endif %}
+    {# Position Name #}
+    {% if position_name %}
+    {{ position_name }}
+    {% endif %}
+</section>
+{% endif %}
+{% endblock position_name_section %}
