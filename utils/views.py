@@ -172,4 +172,9 @@ def metadata_xml_file_direct_download(request, resource_type, resource_namespace
         resource = model.objects.get_by_namespace_and_localid(resource_namespace, resource_id)
     except ScientificMetadata.DoesNotExist:
         raise Http404(f'Metadata with a namespace of "{resource_namespace}" and a local ID of "{resource_id}" was not found.')
-    return FileResponse(resource.xml, content_type='application/xml')
+    response = FileResponse(
+        resource.xml,
+        content_type='application/xml'
+    )
+    response['Content-Disposition'] = f'filename="{resource_id}.xml"'
+    return response
