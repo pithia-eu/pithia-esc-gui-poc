@@ -79,7 +79,7 @@ class ResourceUpdateFormView(FormView):
     template_name = 'update/file_upload_update.html'
     form_class = UploadUpdatedFileForm
     success_url = ''
-    xml_file_string = None
+    xml_string = None
 
     def update_resource(self):
         return self.model.objects.update_from_xml_string(
