@@ -20,5 +20,5 @@ urlpatterns = [
     path('catalogue-entries/<resource_id>/xml/', views.CatalogueEntryXmlDownloadFromBrowsingView.as_view(), name='view_catalogue_entry_as_xml'),
     path('catalogue-data-subsets/<resource_id>/xml/', views.CatalogueDataSubsetXmlDownloadFromBrowsingView.as_view(), name='view_catalogue_data_subset_as_xml'),
     path('workflows/<resource_id>/xml/', views.WorkflowXmlDownloadFromBrowsingView.as_view(), name='view_workflow_as_xml'),
-    path('xml/<resource_id>/', views.metadata_xml_file_direct_download, name='xml_file_download')
+    path('resources/2.2/<resource_type>/<resource_namespace>/<resource_id>/', views.metadata_xml_file_direct_download, name='xml_file_download')
 ]

@@ -1,5 +1,8 @@
 from django.shortcuts import get_object_or_404
-from django.http import FileResponse
+from django.http import (
+    FileResponse,
+    Http404,
+)
 from django.views.generic import TemplateView
 from lxml import etree
 
@@ -155,6 +158,18 @@ class WorkflowXmlDownloadFromBrowsingView(
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
 
 
-def metadata_xml_file_direct_download(request, resource_id):
-    resource = get_object_or_404(ScientificMetadata, pk=resource_id)
+def metadata_xml_file_direct_download(request, resource_type, resource_namespace, resource_id):
+    scientific_metadata_model_subclasses = list(ScientificMetadata.__subclasses__())
+    model = next(
+        (
+            m
+            for m in scientific_metadata_model_subclasses
+            if m.type_in_metadata_server_url == resource_type
+        ), None)
+    if not model:
+        raise Http404(f'"{resource_type}" is not a valid metadata type.')
+    try:
+        resource = model.objects.get_by_namespace_and_localid(resource_namespace, resource_id)
+    except ScientificMetadata.DoesNotExist:
+        raise Http404(f'Metadata with a namespace of "{resource_namespace}" and a local ID of "{resource_id}" was not found.')
     return FileResponse(resource.xml, content_type='application/xml')
