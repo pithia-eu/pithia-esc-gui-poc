@@ -40,7 +40,7 @@
             <dl class="d-flex flex-md-row flex-column flex-wrap column-gap-5 row-gap-4 mb-0">
                 {% for rp in resource.properties.related_parties %}
                 <div>
-                    <dt class="mb-2">
+                    <dt class="mb-1">
                         {% with value=rp.role %}
                         {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                         {% endwith %}
