@@ -2,23 +2,23 @@
     class="d-inline-flex flex-column align-items-start row-gap-2 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} my-3"
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
-    <div class="d-flex align-items-start flex-wrap">
+    <div class="d-flex flex-wrap align-items-baseline column-gap-2 row-gap-1">
         <!-- Link to term detail page -->
         {% if node.prefLabel %}
         <a
           href="{% url 'ontology:ontology_term_detail' category node.value %}"
-          class="d-flex align-items-center fw-bold me-2 keyword-searchable">
+          class="d-flex align-items-center fw-semibold keyword-searchable">
             {{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </a>
         {% elif node.value %}
-        <span class="fw-bold keyword-searchable me-2">
+        <span class="fw-semibold keyword-searchable">
             {{ node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </span>
         {% endif %}
 
         <!-- "Registered" indicator -->
         {% if node.value in registered_ontology_terms and node.value in parents_of_registered_ontology_terms %}
-        <small class="border rounded-3 bg-body-secondary px-1 me-3">
+        <small class="border rounded-3 bg-body-secondary px-1 me-1">
             registered
         </small>
         {% endif %}
@@ -46,7 +46,7 @@
                     rel="noopener noreferrer"
                     class="link-underline-by-default text-break me-1">
                     {{ node.iri|default:'' }}</a>
-                <button class="btn btn-link btn-copy-ontology-iri pithia-blue p-0" data-bs-toggle="tooltip" data-bs-title="Copy Ontology IRI" data-ontology-iri="{{ node.iri|default:'' }}">
+                <button class="btn btn-link btn-copy-ontology-iri text-body-secondary p-0" data-bs-toggle="tooltip" data-bs-title="Copy Ontology IRI" data-ontology-iri="{{ node.iri|default:'' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
                     </svg>
