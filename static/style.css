@@ -1470,18 +1470,6 @@ ul.tree ul {
     display: none;
 }
 
-.ontology-browser-terms ul.tree ul li::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: calc(var(--spacing) / -2);
-    left: -2px;
-    width: calc(var(--spacing) + 2px);
-    height: calc(var(--spacing) + 1px);
-    border: solid var(--bs-gray-400);
-    border-width: 0 0 1px 1px;
-}
-
 .ontology-browser-terms a.keyword-searchable {
     text-decoration: none;
 }
