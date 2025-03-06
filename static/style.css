@@ -1439,13 +1439,22 @@ ul.tree ul {
     max-width: 80ch;
 }
 
+.ontology-browser-terms .summary-marker-custom::before {
+    font-size: 0.75rem;
+    transform: translateY(-0.125rem);
+}
+
 .ontology-browser-terms ul.tree {
     --spacing: 1.5rem;
 }
 
+.ontology-browser-terms ul.tree ul {
+    padding-left: 0.75rem;
+}
+
 .ontology-browser-terms ul.tree ul li {
     border-left : 1px solid var(--bs-gray-400);
-    padding-left: 1rem;
+    padding-left: 0.75rem;
 }
 
 .ontology-browser-terms ul.tree li:last-child hr,
@@ -1818,6 +1827,10 @@ ul.tree ul {
         display: none;
     }
 
+    .ontology-browser-terms ul.tree ul {
+        padding-left: 2rem;
+    }
+
     .ontology-browser-terms ul.tree ul li {
         padding-left: 2rem;
     }
@@ -1839,9 +1852,17 @@ ul.tree ul {
     }
 }
 
-@media (min-width: 450px) {
+@media (min-width: 450px) and (max-width: 576px) {
     .card-menu a {
         padding: 1rem 1.25rem;
+    }
+
+    .ontology-browser-terms ul.tree ul {
+        padding-left: 1rem;
+    }
+    
+    .ontology-browser-terms ul.tree ul li {
+        padding-left: 1rem;
     }
 }
 
