@@ -1439,22 +1439,30 @@ ul.tree ul {
     max-width: 80ch;
 }
 
-.ontology-browser-terms .summary-marker-custom::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
-}
-
 .ontology-browser-terms ul.tree {
     --spacing: 1.5rem;
+    --list-item-left-padding: 0.65em;
+    --nested-list-left-padding: calc(var(--list-item-left-padding) + 0.5em);
+    padding-left: 0;
 }
 
 .ontology-browser-terms ul.tree ul {
-    padding-left: 0.75rem;
+    padding-left: var(--nested-list-left-padding);
 }
 
 .ontology-browser-terms ul.tree ul li {
     border-left : 1px solid var(--bs-gray-400);
-    padding-left: 0.75rem;
+    padding-left: var(--list-item-left-padding);
+}
+
+.ontology-browser-terms ul.tree ul li:not(li:has(> details)) {
+    padding-left: calc(var(--list-item-left-padding) * 2);
+}
+
+.ontology-browser-terms .summary-marker-custom::before {
+    font-size: 0.75rem;
+    transform: translateY(-0.125rem);
+    margin: 0 var(--list-item-left-padding) 0 0;
 }
 
 .ontology-browser-terms ul.tree li:last-child hr,
@@ -1827,14 +1835,6 @@ ul.tree ul {
         display: none;
     }
 
-    .ontology-browser-terms ul.tree ul {
-        padding-left: 2rem;
-    }
-
-    .ontology-browser-terms ul.tree ul li {
-        padding-left: 2rem;
-    }
-
     .file-list-group-item .details-validation > ul {
         padding-left: 30px;
     }
@@ -1850,19 +1850,19 @@ ul.tree ul {
     .catalogue-category-badge {
         font-size: 1rem;
     }
+    
+    .ontology-browser-terms ul.tree {
+        --list-item-left-padding: 1em;
+    }
 }
 
 @media (min-width: 450px) and (max-width: 576px) {
     .card-menu a {
         padding: 1rem 1.25rem;
     }
-
-    .ontology-browser-terms ul.tree ul {
-        padding-left: 1rem;
-    }
     
-    .ontology-browser-terms ul.tree ul li {
-        padding-left: 1rem;
+    .ontology-browser-terms ul.tree {
+        --list-item-left-padding: 0.75em;
     }
 }
 
