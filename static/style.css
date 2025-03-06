@@ -1456,7 +1456,7 @@ ul.tree ul {
 }
 
 .ontology-browser-terms ul.tree ul li:not(li:has(> details)) {
-    padding-left: calc((var(--list-item-left-padding) * 2) + 0.35em);
+    padding-left: calc((var(--list-item-left-padding) * 2) + 0.4em);
 }
 
 .ontology-browser-terms .summary-marker-custom::before {
