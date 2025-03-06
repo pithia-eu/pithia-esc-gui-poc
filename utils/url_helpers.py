@@ -59,9 +59,18 @@ def get_namespace_and_localid_from_resource_url(resource_url: str) -> Tuple[str,
 
 def create_ontology_term_detail_url_from_ontology_term_server_url(ontology_term_server_url):
     ontology_term_server_url_split = ontology_term_server_url.split('/')
+    if not ontology_term_server_url_split:
+        return None
     ontology_category = ontology_term_server_url_split[-2]
+    if not ontology_category:
+        return None
     ontology_term_id = ontology_term_server_url_split[-1]
-    return reverse('ontology:ontology_term_detail', args=[ontology_category, ontology_term_id])
+    if not ontology_term_id:
+        return None
+    return reverse(
+        'ontology:ontology_term_detail',
+        args=[ontology_category, ontology_term_id]
+    )
 
 def create_data_subset_detail_page_url(data_subset_id: str) -> str:
     data_subset_detail_page_url = reverse('browse:catalogue_data_subset_detail', kwargs={'catalogue_data_subset_id': data_subset_id})
