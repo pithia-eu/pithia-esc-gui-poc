@@ -204,9 +204,15 @@ class SrsNameSelectFormViewMixin(OntologyCategoryChoicesViewMixin):
 
 class OrganisationSelectFormViewMixin(ResourceChoicesViewMixin):
     def get_organisation_choices_for_form(self):
+        organisation_choices = [
+            (o.metadata_server_url, f'{o.name} ({clean_localid_or_namespace(o.short_name.lower())})')
+            for o in self.get_resources_with_model_ordered_by_name(models.Organisation)
+        ]
+        organisation_choices.append(('pithia', 'PITHIA (pithia)'))
+        organisation_choices.sort(key=lambda tup: tup[1].lower() if isinstance(tup[1], str) else tup[1])
         return (
             ('', ''),
-            *[(o.metadata_server_url, f'{o.name} ({clean_localid_or_namespace(o.short_name.lower())})') for o in self.get_resources_with_model_ordered_by_name(models.Organisation)],
+            *organisation_choices,
         )
 
 
