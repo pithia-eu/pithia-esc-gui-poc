@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 PITHIA = Namespace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/')
 
+
 def get_object_names_from_triple(triple):
     s, p, o = triple
     if 'phenomenon' in o:
@@ -24,6 +25,7 @@ def get_object_names_from_triple(triple):
         return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/measurand/', 'measurand')
     if 'featureOfInterest' in o:
         return o.replace(f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/featureOfInterest/', 'featureOfInterest')
+
 
 def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_phenomenons = list(map(get_object_names_from_triple, g.triples((op_uri, PITHIA.phenomenon, None))))
@@ -34,10 +36,13 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     op_dict['featuresOfInterest'] = op_featuresOfInterest
     return op_dict
 
+
+# Old
 def get_rdf_text_remotely(ontology_component):
     ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/'
     ontology_response = get(ontology_component_url)
     return ontology_response.text
+
 
 def get_rdf_text_locally(ontology_component):
     local_ontology_files_path = os.path.join(BASE_DIR, 'ontology', 'local_ontology_files')
@@ -49,15 +54,44 @@ def get_rdf_text_locally(ontology_component):
     return ontology_file.read()
 
 
-def get_rdf_text_for_ontology_component(ontology_component):
+# New
+def get_xml_of_ontology_category_terms_remotely(ontology_category):
+    ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_category}/'
+    ontology_response = get(ontology_component_url)
+    return ontology_response.text
+
+
+def get_xml_of_ontology_category_terms_locally(ontology_category):
     try:
-        ontology_text = get_rdf_text_remotely(ontology_component)
+        with open(os.path.join(BASE_DIR, 'ontology', 'local_ontology_files', f'{ontology_category}.xml')) as xml_file:
+            xml_file.seek(0)
+            return xml_file.read()
+    except FileNotFoundError:
+        logger.exception(f'An offline XML file for the ontology category, "{ontology_category}", was not found.')
+    return None
+
+
+def get_ontology_category_terms_in_xml_format(ontology_category):
+    try:
+        return get_rdf_text_remotely(ontology_category)
     except BaseException as err:
         logger.exception('Encountered error whilst fetching RDF for ontology category.')
-        # Read ontology from file - alt method if connection to ontology server fails
-        ontology_text = get_rdf_text_locally(ontology_component)
+    
+    # If fetching from the ontology XML file server
+    # fails, use a locally stored version of the
+    # XML file instead.
+    return get_rdf_text_locally(ontology_category)
 
-    return ontology_text
+
+def get_rdf_text_for_ontology_component(ontology_component):
+    try:
+        return get_rdf_text_remotely(ontology_component)
+    except BaseException as err:
+        logger.exception('Encountered error whilst fetching RDF for ontology category.')
+    
+    # Read ontology from file - alt method if connection to ontology server fails
+    return get_rdf_text_locally(ontology_component)
+
 
 def get_graph_of_pithia_ontology_component(ontology_component):
     ontology_text = get_rdf_text_for_ontology_component(ontology_component)
@@ -65,6 +99,7 @@ def get_graph_of_pithia_ontology_component(ontology_component):
     # Create a graph object with rdflib and parse fetched text
     g = Graph()
     return g.parse(data=ontology_text, format='application/rdf+xml')
+
 
 def get_observed_property_hrefs_from_features_of_interest(features_of_interest):
     op_hrefs = []
