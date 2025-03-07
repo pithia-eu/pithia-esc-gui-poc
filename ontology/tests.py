@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .utils import get_xml_of_ontology_category_terms_locally
+from .services import get_xml_of_ontology_category_terms_locally
 
 # Create your tests here.
 class OntologyFileRetrievalTestCase(TestCase):

@@ -2,7 +2,7 @@ from lxml import etree
 
 from common import models
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
-from ontology.utils import (
+from ontology.services import (
     get_xml_of_ontology_category_terms_locally,
 )
 

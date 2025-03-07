@@ -27,7 +27,7 @@ from common.constants import (
     INSTRUMENT_TYPE_URL_BASE,
     OBSERVED_PROPERTY_URL_BASE,
 )
-from ontology.utils import (
+from ontology.services import (
     create_dictionary_from_pithia_ontology_component,
     categorise_observed_property_dict_by_top_level_phenomenons,
 )

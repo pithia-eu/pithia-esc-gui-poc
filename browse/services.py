@@ -9,7 +9,7 @@ from common.models import (
     Instrument,
     ScientificMetadata,
 )
-from ontology.utils import (
+from ontology.services import (
     get_graph_of_pithia_ontology_component,
     get_skos_properties_from_ontology_node,
     get_pref_label_from_ontology_node_iri,

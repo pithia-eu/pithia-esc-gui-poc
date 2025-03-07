@@ -10,7 +10,7 @@ from rdflib.resource import Resource
 from rdflib.namespace._SKOS import SKOS
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
-from ontology.utils import (
+from ontology.services import (
     create_dictionary_from_pithia_ontology_component,
     get_graph_of_pithia_ontology_component,
 )

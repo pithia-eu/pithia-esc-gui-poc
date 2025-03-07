@@ -31,7 +31,7 @@ from .services import (
 
 from common import models
 from common.helpers import clean_localid_or_namespace
-from ontology.utils import get_graph_of_pithia_ontology_component
+from ontology.services import get_graph_of_pithia_ontology_component
 
 logger = logging.getLogger(__name__)
 
