@@ -1,5 +1,5 @@
 <div id="{{ node.id }}"
-    class="d-inline-flex flex-column align-items-start row-gap-2 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} my-3"
+    class="d-inline-flex flex-column align-items-start row-gap-1 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} my-3"
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
     <div class="d-flex flex-wrap align-items-baseline column-gap-2 row-gap-1">
