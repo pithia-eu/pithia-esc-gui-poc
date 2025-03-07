@@ -1,10 +1,12 @@
 import logging
+
+from django.urls import reverse_lazy
 from lxml import etree
 
-from .xml_metadata_utils import (
-    Namespace,
-    NamespacePrefix,
-)
+from .services import get_ontology_category_terms_in_xml_format
+from .xml_metadata_utils import Namespace, NamespacePrefix
+
+from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 
 
 logger = logging.getLogger(__name__)
@@ -53,14 +55,25 @@ class OntologyCategoryMetadata(OntologyXmlMixin):
     def __init__(self, xml_string_for_ontology_category: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.xml_parsed = etree.fromstring(xml_string_for_ontology_category.encode('utf-8'))
+        self.ontology_category_base_url = self._get_first_element_value_or_blank_string_with_xpath_query(
+            './/%s:ConceptScheme/@%s:about' %
+            (NamespacePrefix.SKOS, NamespacePrefix.RDF)
+        )
 
     def get_term_with_iri(self, ontology_iri: str):
-        return self._get_first_element_from_list(
+        element_for_term = self._get_first_element_from_list(
             self._get_elements_with_xpath_query(
                 './/%s:Concept[@%s:about="%s"]' %
                 (NamespacePrefix.SKOS, NamespacePrefix.RDF, ontology_iri)
             )
         )
+        if not element_for_term:
+            # element_for_term is ''
+            return element_for_term
+        return etree.tostring(element_for_term).decode()
+
+    def get_term_with_id(self, ontology_term_id: str):
+        return self.get_term_with_iri(f'{self.ontology_category_base_url}/{ontology_term_id}')
 
 
 class OntologyTermMetadata(OntologyXmlMixin):
@@ -81,12 +94,50 @@ class OntologyTermMetadata(OntologyXmlMixin):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:definition' % NamespacePrefix.SKOS)
 
     @property
-    def narrower_terms(self):
+    def urls_of_narrower_terms(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:narrower' % NamespacePrefix.SKOS)
 
     @property
-    def broader_terms(self):
+    def urls_of_broader_terms(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:broader' % NamespacePrefix.SKOS)
+
+    def get_names_and_ontology_browser_urls_of_ontology_term_urls(self, fetched_ontology_categories: dict = dict()):
+        ontology_term_urls = self._get_elements_with_xpath_query('.//*[contains(@*, "%s")]/@*' % SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE)
+        names_and_ontology_browser_urls = {}
+        for url in ontology_term_urls:
+            # In case an element has one of multiple
+            # attributes that doesn't contain the
+            # ontology server URL base.
+            if SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE not in url:
+                continue
+            # Get the ontology category right after
+            # the ontology server URL base.
+            ontology_category_in_url = next(iter(url.replace(SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE + '/', '').split('/')), None)
+            if not ontology_category_in_url:
+                continue
+            if ontology_category_in_url not in fetched_ontology_categories:
+                # Get the XML for the ontology category
+                # if not fetched yet.
+                fetched_ontology_categories.update({
+                    ontology_category_in_url: OntologyCategoryMetadata(
+                        get_ontology_category_terms_in_xml_format(ontology_category_in_url)
+                    )
+                })
+            ontology_category_metadata = fetched_ontology_categories.get(ontology_category_in_url)
+            xml_of_ontology_term = ontology_category_metadata.get_term_with_iri(url)
+            if not xml_of_ontology_term:
+                continue
+            ontology_term_metadata = OntologyTermMetadata(xml_of_ontology_term)
+            names_and_ontology_browser_urls.update({
+                url: {
+                    'name': ontology_term_metadata.pref_label,
+                    'ontology_browser_url': reverse_lazy('ontology:ontology_term_detail', kwargs={
+                        'category': ontology_category_in_url,
+                        'term_id': url.split('/')[-1],
+                    }),
+                },
+            })
+        return names_and_ontology_browser_urls
 
 
 class ObservedPropertyOntologyTermMetadata(OntologyTermMetadata):
