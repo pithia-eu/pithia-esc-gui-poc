@@ -95,11 +95,11 @@ class OntologyTermMetadata(OntologyXmlMixin):
 
     @property
     def urls_of_narrower_terms(self):
-        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:narrower' % NamespacePrefix.SKOS)
+        return self._get_elements_with_xpath_query('.//%s:narrower/@%s:resource' % (NamespacePrefix.SKOS, NamespacePrefix.RDF))
 
     @property
     def urls_of_broader_terms(self):
-        return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:broader' % NamespacePrefix.SKOS)
+        return self._get_elements_with_xpath_query('.//%s:broader/@%s:resource' % (NamespacePrefix.SKOS, NamespacePrefix.RDF))
 
     def get_names_and_ontology_browser_urls_of_ontology_term_urls(self, fetched_ontology_categories: dict = dict()):
         ontology_term_urls = self._get_elements_with_xpath_query('.//*[contains(@*, "%s")]/@*' % SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE)
@@ -130,7 +130,8 @@ class OntologyTermMetadata(OntologyXmlMixin):
             ontology_term_metadata = OntologyTermMetadata(xml_of_ontology_term)
             names_and_ontology_browser_urls.update({
                 url: {
-                    'name': ontology_term_metadata.pref_label,
+                    'pref_label': ontology_term_metadata.pref_label,
+                    'alt_label': ontology_term_metadata.alt_label,
                     'ontology_browser_url': reverse_lazy('ontology:ontology_term_detail', kwargs={
                         'category': ontology_category_in_url,
                         'term_id': url.split('/')[-1],
