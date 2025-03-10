@@ -36,23 +36,10 @@
     </div>
     {% endif %}
     {% if node.prefLabel %}
-    <small class="text-body-secondary">
-        <span class="d-inline-flex flex-sm-row flex-column align-items-baseline column-gap-1">
-            Ontology IRI:
-            <span class="d-inline-flex align-items-baseline">
-                <a
-                    href="{{ node.iri|default:'#' }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link-underline-by-default text-break me-1">
-                    {{ node.iri|default:'' }}</a>
-                <button class="btn btn-link btn-copy-ontology-iri text-body-secondary p-0" data-bs-toggle="tooltip" data-bs-title="Copy Ontology IRI" data-ontology-iri="{{ node.iri|default:'' }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
-                    </svg>
-                </button>
-            </span>
-        </span>
+    <small>
+        {% with ontology_iri=node.iri %}
+        {% include 'ontology/ontology_iri.html' %}
+        {% endwith %}
     </small>
     {% endif %}
 </div>

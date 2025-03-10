@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load project_tags %}
 {% block breadcrumbs %}
 {% breadcrumb_item ontology_index_page_breadcrumb_text 'ontology:index' %}
 {% breadcrumb_item ontology_category_term_list_page_breadcrumb_text 'ontology:ontology_category_terms_list' category %}
 {% breadcrumb_item_active ontology_term_metadata.pref_label %}
 {% endblock breadcrumbs %}
+{% block scripts %}
+<script src="{% static 'ontology/ontology_detail.js' %}" type="module"></script>
+{% endblock scripts %}
 {% block content %}
 <div class="row align-items-lg-baseline justify-content-between gx-md-5 gx-4 mt-3">
     <div class="col-lg-8">
@@ -15,14 +19,11 @@
                 <span class="d-inline-block text-body-secondary">({{ ontology_term_metadata.alt_label }})</span>
                 {% endif %}
             </div>
-            <span class="d-flex flex-md-row flex-column align-items-baseline column-gap-2 text-body-secondary">
-                Ontology IRI:
-                <a
-                    href="{{ resource_ontology_url }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link-underline-by-default">{{ resource_ontology_url }}</a>
-            </span>
+            <div>
+                {% with ontology_iri=resource_ontology_url %}
+                {% include 'ontology/ontology_iri.html' %}
+                {% endwith %}
+            </div>
         </div>
         {# Appears before the definition #}
         {% block pre_definition_content %}{% endblock pre_definition_content %}
