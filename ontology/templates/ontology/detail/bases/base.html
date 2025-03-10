@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load project_tags %}
+{% block breadcrumbs %}
+{% breadcrumb_item ontology_index_page_breadcrumb_text 'ontology:index' %}
+{% breadcrumb_item ontology_category_term_list_page_breadcrumb_text 'ontology:ontology_category_terms_list' category %}
+{% breadcrumb_item_active ontology_term_metadata.pref_label %}
+{% endblock breadcrumbs %}
+{% block content %}
+<div class="row align-items-lg-baseline justify-content-between gx-md-5 gx-4 mt-3">
+    <div class="col-lg-8">
+        <div class="resource-detail-top-section">
+            <div class="mb-2">
+                <h1 class="pb-0 mb-0">{{ ontology_term_metadata.pref_label }}</h1>
+                {% if ontology_term_metadata.alt_label %}
+                <span class="d-inline-block text-body-secondary">({{ ontology_term_metadata.alt_label }})</span>
+                {% endif %}
+            </div>
+            <span class="d-flex flex-md-row flex-column align-items-baseline column-gap-2 text-body-secondary">
+                Ontology IRI:
+                <a
+                    href="{{ resource_ontology_url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link-underline-by-default">{{ resource_ontology_url }}</a>
+            </span>
+        </div>
+        {# Appears before the definition #}
+        {% block pre_definition_content %}{% endblock pre_definition_content %}
+
+        {# Definition #}
+        {% if ontology_term_metadata.definition %}
+        <section class="resource-detail-section">
+            <h2>Definition</h2>
+            <p class="fs-base-2">
+                {{ ontology_term_metadata.definition }}
+            </p>
+        </section>
+        {% endif %}
+
+        {# Appears after the definition #}
+        {% block post_definition_content %}
+        {# Broader terms #}
+        {% if ontology_term_metadata.urls_of_broader_terms %}
+        <section class="resource-detail-section">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                    <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+                </svg>
+                Broader Terms
+                <span class="text-body-secondary fw-normal">({{ ontology_term_metadata.urls_of_broader_terms|length }})</span>
+            </h2>
+            {% with ontology_browser_urls=ontology_term_metadata.urls_of_broader_terms %}
+            {% include 'ontology/detail/ontology_browser_url_list.html' %}
+            {% endwith %}
+        </section>
+        {% endif %}
+        {# Narrower terms #}
+        {% if ontology_term_metadata.urls_of_narrower_terms %}
+        <section class="resource-detail-section">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                    <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+                </svg>
+                Narrower Terms
+                <span class="text-body-secondary fw-normal">({{ ontology_term_metadata.urls_of_narrower_terms|length }})</span>
+            </h2>
+            {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
+            {% include 'ontology/detail/ontology_browser_url_list.html' %}
+            {% endwith %}
+        </section>
+        {% endif %}
+        {% endblock post_definition_content %}
+    </div>
+    <aside class="col-lg-3 resource-detail-aside border-start">
+        {# Appears in the aside section #}
+        {% block aside_content %}{% endblock aside_content %}
+    </aside>
+</div>
+{% endblock content %}

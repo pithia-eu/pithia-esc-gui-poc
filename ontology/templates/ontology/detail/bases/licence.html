@@ -1,0 +1,24 @@
+{% extends 'ontology/detail/bases/base.html' %}
+
+{# Appears before the definition #}
+{% block aside_content %}
+{# Licence deeds #}
+{% if ontology_term_metadata.licence_deeds %}
+<section class="resource-detail-aside-section">
+    <h2 class="mb-0">
+        {% if ontology_term_metadata.licence_deeds|length == 1 %}
+        Link to Licence Deed
+        {% else %}
+        Link to Licence Deeds
+        {% endif %}
+    </h2>
+    <ul class="list-group list-group-flush mb-0">
+        {% for url in ontology_term_metadata.licence_deeds %}
+        <li class="list-group-item px-0">
+            <a href="{{ url }}" class="link-underline-by-default">{{ url }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock aside_content %}
