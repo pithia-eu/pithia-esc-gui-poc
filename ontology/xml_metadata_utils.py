@@ -16,6 +16,6 @@ class NamespacePrefix:
 class Namespace:
     DC = str(DC)
     OWLXML = str(OWL)
-    PITHIA = SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
+    PITHIA = SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE + '/'
     RDF = str(RDF)
     SKOS = str(SKOS)
