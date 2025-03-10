@@ -63,9 +63,16 @@ def get_xml_of_ontology_category_terms_remotely(ontology_category):
 
 def get_xml_of_ontology_category_terms_locally(ontology_category):
     try:
-        with open(os.path.join(BASE_DIR, 'ontology', 'local_ontology_files', f'{ontology_category}.xml')) as xml_file:
-            xml_file.seek(0)
-            return xml_file.read()
+        local_ontology_files_path = os.path.join(BASE_DIR, 'ontology', 'local_ontology_files')
+        local_ontology_file_name = None
+        for filename in os.listdir(local_ontology_files_path):
+            # The casing of the ontology category may not
+            # always be the same.
+            if filename[:-4].lower() != ontology_category.lower():
+                continue
+            local_ontology_file_name = filename
+        ontology_file = open(os.path.join(BASE_DIR, 'ontology', 'local_ontology_files', local_ontology_file_name), 'r', encoding='utf-8')
+        return ontology_file.read()
     except FileNotFoundError:
         logger.exception(f'An offline XML file for the ontology category, "{ontology_category}", was not found.')
     return None
