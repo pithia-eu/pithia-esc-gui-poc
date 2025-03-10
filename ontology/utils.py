@@ -141,33 +141,33 @@ class OntologyTermMetadata(OntologyXmlMixin):
         return names_and_ontology_browser_urls
 
 
-class ObservedPropertyOntologyTermMetadata(OntologyTermMetadata):
+class LicenceOntologyTermMetadata(OntologyTermMetadata):
     @property
     def licence_deeds(self):
-        return self._get_elements_with_xpath_query('.//%s:licenceDeed' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:licenceDeed/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
 
 class ObservedPropertyOntologyTermMetadata(OntologyTermMetadata):
     @property
     def features_of_interest(self):
-        return self._get_elements_with_xpath_query('.//%s:featureOfInterest' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:featureOfInterest/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
     @property
     def interactions(self):
-        return self._get_elements_with_xpath_query('.//%s:interaction' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:interaction/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
     @property
     def measurands(self):
-        return self._get_elements_with_xpath_query('.//%s:measurand' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:measurand/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
     @property
     def phenomenons(self):
-        return self._get_elements_with_xpath_query('.//%s:phenomenon' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:phenomenon/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
     @property
     def propagation_modes(self):
-        return self._get_elements_with_xpath_query('.//%s:propagationMode' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:propagationMode/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
 
     @property
     def qualifiers(self):
-        return self._get_elements_with_xpath_query('.//%s:qualifier' % NamespacePrefix.PITHIA)
+        return self._get_elements_with_xpath_query('.//%s:qualifier/@%s:resource' % (NamespacePrefix.PITHIA, NamespacePrefix.RDF))
