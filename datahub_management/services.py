@@ -166,7 +166,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
     def get_files_for_catalogue_data_subset(cls, catalogue_data_subset_id: str) -> List:
         """Returns a list of resource files for a
-        Static Data Subset.
+        Data Subset.
         """
         if not cls.is_catalogue_data_subset_directory_created(catalogue_data_subset_id):
             return []
@@ -188,7 +188,7 @@ class CatalogueDataSubsetDataHubService(DataHubService):
     @classmethod
     def delete_catalogue_data_subset_directory(cls, catalogue_data_subset_id: str):
         """Deletes a resource file DataHub directory
-        for a Static Data Subset.
+        for a Data Subset.
         """
         try:
             return shutil.rmtree(cls._get_catalogue_data_subset_directory_path(catalogue_data_subset_id))

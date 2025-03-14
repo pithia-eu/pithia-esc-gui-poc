@@ -8,7 +8,7 @@ const sourceFileListItemTemplate = JSON.parse(document.querySelector("#source-fi
 
 const emptyOnlineResourceFileListItem = document.createElement("LI");
 emptyOnlineResourceFileListItem.className = "list-group-item list-group-item-light";
-emptyOnlineResourceFileListItem.textContent = "This Static Data Subset has no online resources.";
+emptyOnlineResourceFileListItem.textContent = "This Data Subset has no online resources.";
 
 
 export class CatalogueDataSubsetOnlineResourceList {

@@ -86,7 +86,7 @@ def data_collection_related_resource_types(request):
 
 def catalogue_tree(request):
     """Lists all static datasets, static dataset entries
-    and static data subsets in a collapsible tree view.
+    and data subsets in a collapsible tree view.
     """
     catalogues = models.Catalogue.objects.all()
     return render(request, 'browse/catalogue_tree.html', {

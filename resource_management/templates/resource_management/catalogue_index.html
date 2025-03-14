@@ -8,12 +8,15 @@
 <div class="col-xl-7 col-lg-9">
     <h1 class="mb-4">{{ title }}</h1>
     <p class="d-block page-info page-info-emphasised my-4">
-        Registering a catalogue involves registering <strong>
+        Registering a static dataset involves registering <strong>
         up to 3 types of metadata</strong>, registered in the
         order presented below.
         Information on what to include for each type can be
         found in the
-        <a href="{% url 'resource_registration_user_guide' %}#page=21" target="_blank" class="link-underline-by-default">data resource registration guide</a>.
+        <a
+            href="{% url 'resource_registration_user_guide' %}#page=21"
+            target="_blank" class="link-underline-by-default">
+            data resource registration guide</a>.
     </p>
     <ul class="list-group list-group-numbered">
         <li class="list-group-item">
@@ -25,7 +28,7 @@
             <span class="text-body-secondary">{{ num_current_catalogue_entries }}</span>
         </li>
         <li class="list-group-item">
-            <a href="{% url 'resource_management:catalogue_data_subsets' %}">Static Data Subsets</a>
+            <a href="{% url 'resource_management:catalogue_data_subsets' %}">Data Subsets</a>
             <span class="text-body-secondary">{{ num_current_catalogue_data_subsets }}</span>
         </li>
     </ul>

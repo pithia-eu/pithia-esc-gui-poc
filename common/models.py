@@ -716,7 +716,12 @@ class DataCollection(ScientificMetadata):
 
 
 class CatalogueTypeDescriptionMixin:
-    type_description_readable = 'A listing of events or investigations assembled to aid users in locating data of interest. Each Entry in a Static Dataset has distinct begin and end times and a list of registered Static Data Subsets with optional DOIs to their persistent storage.'
+    type_description_readable = '''
+        A listing of events or investigations assembled to
+        aid users in locating data of interest. Each Entry
+        in a Static Dataset has distinct begin and end times
+        and a list of registered Data Subsets with optional
+        DOIs to their persistent storage.'''
 
 
 class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
@@ -797,8 +802,8 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'catalogue'
     localid_base = 'DataSubset'
     weight = 14
-    type_readable = 'static data subset'
-    type_plural_readable = 'static data subsets'
+    type_readable = 'data subset'
+    type_plural_readable = 'data subsets'
     _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
     root_element_name = 'DataSubset'
 

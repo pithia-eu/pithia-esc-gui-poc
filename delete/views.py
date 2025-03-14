@@ -301,7 +301,7 @@ class CatalogueDataSubsetDeleteView(
         try:
             self.delete_catalogue_data_subset_directory()
         except FileNotFoundError:
-            logger.exception(f'The directory for Static Data Subset {self.resource_id} has already been deleted.')
+            logger.exception(f'The directory for Data Subset {self.resource_id} has already been deleted.')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
