@@ -49,10 +49,20 @@
                         {% endwith %}
                     </div>
                     <div class="col-xl-4 col-lg-6">
-                        {{ form.geometry_location_point_pos_1.label_tag }}
-                        <div class="d-flex column-gap-2">
-                            {{ form.geometry_location_point_pos_1 }}
-                            {{ form.geometry_location_point_pos_2 }}
+                        <h3 class="fs-6 mb-1">Position</h3>
+                        <div class="d-flex align-items-baseline column-gap-2">
+                            {# Latitude #}
+                            <div>
+                                {% with field=form.geometry_location_point_pos_1 %}
+                                {% include 'metadata_editor/components/form_field_template.html' %}
+                                {% endwith %}
+                            </div>
+                            {# Longitude #}
+                            <div>
+                                {% with field=form.geometry_location_point_pos_2 %}
+                                {% include 'metadata_editor/components/form_field_template.html' %}
+                                {% endwith %}
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-9 col-lg-12">

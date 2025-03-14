@@ -229,24 +229,27 @@ class LocationEditorFormComponent(forms.Form):
     )
 
     geometry_location_point_pos_1 = forms.FloatField(
-        label='Pos',
+        label='Latitude',
         required=False,
         min_value=MIN_POS_1,
         max_value=MAX_POS_1,
         widget=forms.NumberInput(attrs={
             'min': MIN_POS_1,
             'max': MAX_POS_1,
-        })
+        }),
+        help_text='Minimum: -90, Maximum: 90'
     )
 
     geometry_location_point_pos_2 = forms.FloatField(
+        label='Longitude',
         required=False,
         min_value=MIN_POS_2,
         max_value=MAX_POS_2,
         widget=forms.NumberInput(attrs={
             'min': MIN_POS_2,
             'max': MAX_POS_2,
-        })
+        }),
+        help_text='Minimum: -180, Maximum: 180'
     )
 
 class StatusEditorFormComponent(forms.Form):
