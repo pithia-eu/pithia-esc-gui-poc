@@ -286,7 +286,7 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[OTHER_KEY].append(dc)
                 continue
             type_urls = dc.type_urls
-            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator$', url) for url in type_urls])
+            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator(.*)$', url) for url in type_urls])
             is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
             is_computational_model = any([re.search('\/computationType/(.*)$', url) for url in type_urls])
 
