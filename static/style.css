@@ -702,6 +702,18 @@ as Bootstrap styling. */
     padding-bottom: 0;
 }
 
+.resource-detail-section details[name="details-capabilities"][open],
+.resource-detail-section details[name="details-capability-links"][open] {
+    border-radius: var(--bs-border-radius);
+    background-color: var(--bs-light-bg-subtle);
+}
+
+.resource-detail-section details[name="details-capabilities"] .summary-marker-custom::before,
+.resource-detail-section details[name="details-capability-links"] .summary-marker-custom::before {
+    font-size: 0.75rem;
+    transform: translateY(-0.125rem);
+}
+
 .resource-detail-subsection {
     margin: 0;
     padding: 1rem;

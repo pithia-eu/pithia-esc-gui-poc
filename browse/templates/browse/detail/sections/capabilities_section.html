@@ -13,7 +13,7 @@
                 <details name="details-capabilities" {% if forloop.counter == 1 %}open{% endif %}>
                     <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 mb-0">
                         <div>
-                            <h3 class="fw-semibold fs-base-2">{{ cap.name }}</h3>
+                            <h3 class="fw-medium fs-base-2">{{ cap.name }}</h3>
                             {% if cap.observed_property %}
                             <small class="text-body-secondary">
                                 {% with value=cap.observed_property %}
