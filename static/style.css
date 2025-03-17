@@ -1797,7 +1797,7 @@ ul.tree ul {
     }
 
     .breadcrumb-item {
-        font-size: 1rem;
+        font-size: 0.925rem;
     }
 
     .breadcrumb-item + .breadcrumb-item {
