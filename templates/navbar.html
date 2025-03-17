@@ -11,7 +11,7 @@
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse px-lg-0 px-2" id="navbarNav">
+        <div id="navbarNav" class="collapse navbar-collapse px-lg-0 px-2">
             <div class="d-md-none d-flex flex-column align-items-start column-gap-5 row-gap-3 border-bottom pt-4 pb-3">
                 {% include 'header/user_menu.html' %}
                 {% if request.session.institution_for_login_session %}
