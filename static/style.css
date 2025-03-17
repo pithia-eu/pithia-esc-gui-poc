@@ -683,12 +683,23 @@ as Bootstrap styling. */
 }
 
 .resource-detail-section > details:only-child summary.summary-marker-custom:hover,
-.resource-detail-section > details:only-child summary.summary-marker-custom:focus {
+.resource-detail-section > details:only-child summary.summary-marker-custom:focus,
+.resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:hover,
+.resource-detail-section details[name="details-permissions"] summary.summary-marker-custom:focus {
     background-color: var(--bs-tertiary-bg);
 }
 
-.resource-detail-section > details:only-child[open] summary.summary-marker-custom {
+.resource-detail-section > details:only-child[open] summary.summary-marker-custom,
+.resource-detail-section details[name="details-permissions"][open] summary.summary-marker-custom {
     margin-bottom: 0;
+}
+
+.resource-detail-section details[name="details-permissions"] .permission-definition {
+    padding-bottom: 1.5rem;
+}
+
+.resource-detail-section li:last-of-type details[name="details-permissions"] .permission-definition {
+    padding-bottom: 0;
 }
 
 .resource-detail-subsection {
