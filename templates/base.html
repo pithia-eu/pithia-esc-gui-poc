@@ -83,12 +83,12 @@
     </div>
     {% block breadcrumb_wrapper %}
     <div class="container">
-        <div class="breadcrumb-wrapper">
+        <div class="breadcrumb-wrapper pt-3">
             {% url 'home' as base_url %}
             {% if not request.path == base_url %}
             <div class="d-flex align-items-center justify-content-between column-gap-5">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
+                    <ol class="breadcrumb mb-3">
                         {% load project_tags %}
                         {% breadcrumb_item 'Home' 'home' %}
                         {% block breadcrumbs %}{% endblock breadcrumbs %}
@@ -99,7 +99,7 @@
         </div>
     </div>
     {% endblock breadcrumb_wrapper %}
-    <div class="container pt-3">
+    <div class="container">
         <main class="main-content">
             {% block content %}{% endblock content %}
         </main>
