@@ -1,6 +1,9 @@
 from django.test import SimpleTestCase
 
-from .services import get_xml_of_ontology_category_terms_locally
+from .services import (
+    get_xml_of_ontology_category_terms_locally,
+    OntologyCategoryMetadataService,
+)
 from .utils import (
     OntologyCategoryMetadata,
     OntologyTermMetadata,
@@ -84,3 +87,52 @@ class OntologyCategoryMetadataTestCase(SimpleTestCase):
         xml_for_electron_density_term = observed_property_terms.get_term_with_id('ElectronDensity')
         print('xml_for_electron_density_term', xml_for_electron_density_term)
         self.assertIsNot(xml_for_electron_density_term, '')
+
+
+class OntologyCategoryMetadataServiceTestCase(SimpleTestCase):
+    def test_get_immediate_descendents_by_skos_narrower_for_ontology_term(self):
+        """Returns the URLs of ontology terms that are SKOS
+        narrowers of a given ontology term .
+        """
+        ontology_category = 'computationType'
+        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
+        descendents_by_skos_narrower = ontology_category_metadata._get_immediate_descendents_by_skos_narrower_for_ontology_term(
+            'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
+        )
+        self.assertGreater(len(descendents_by_skos_narrower), 1)
+
+    def test_get_immediate_descendents_by_skos_broader_for_ontology_term(self):
+        """Returns the URLs of ontology terms that have the
+        URL of a given ontology term as a SKOS broader.
+        """
+        ontology_category = 'computationType'
+        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
+        descendents_by_skos_broader = ontology_category_metadata._get_immediate_descendents_by_skos_broader_for_ontology_term(
+            'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
+        )
+        self.assertGreater(len(descendents_by_skos_broader), 1)
+
+    def test_get_immediate_descendents_of_ontology_term(self):
+        """Returns the URLs of immediate descendents of a given
+        ontology term.
+        """
+        ontology_category = 'computationType'
+        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
+        immediate_descendents = ontology_category_metadata._get_immediate_descendents_of_ontology_term(
+            'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
+        )
+        self.assertGreater(len(immediate_descendents), 1)
+
+    def test_get_all_descendents_of_ontology_term(self):
+        """Returns the URLs of all descendents of a given ontology term.
+        """
+        ontology_category = 'computationType'
+        xml_for_ontology_category = get_xml_of_ontology_category_terms_locally(ontology_category)
+        ontology_category_metadata = OntologyCategoryMetadataService(xml_for_ontology_category)
+        all_descendents = ontology_category_metadata.get_all_descendents_of_ontology_term(
+            'https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator'
+        )
+        self.assertGreater(len(all_descendents), 1)

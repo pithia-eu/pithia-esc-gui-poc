@@ -19,3 +19,12 @@ class Namespace:
     PITHIA = SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE + '/'
     RDF = str(RDF)
     SKOS = str(SKOS)
+
+
+ontology_namespaces = {
+    NamespacePrefix.DC: Namespace.DC,
+    NamespacePrefix.OWLXML: Namespace.OWLXML,
+    NamespacePrefix.PITHIA: Namespace.PITHIA,
+    NamespacePrefix.RDF: Namespace.RDF,
+    NamespacePrefix.SKOS: Namespace.SKOS,
+}

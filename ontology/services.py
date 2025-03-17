@@ -1,5 +1,6 @@
 import logging
 import os
+from lxml import etree
 from requests import get
 from rdflib import (
     Graph,
@@ -8,6 +9,11 @@ from rdflib import (
 )
 from rdflib.namespace._SKOS import SKOS
 from rdflib.resource import Resource
+
+from .xml_metadata_utils import (
+    NamespacePrefix as PithiaOntologyNamespacePrefix,
+    ontology_namespaces,
+)
 
 from common.constants import SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE
 from pithiaesc.settings import BASE_DIR
@@ -37,7 +43,7 @@ def map_ontology_components_to_observed_property_dictionary(op_uri, op_dict, g):
     return op_dict
 
 
-# Old
+# Existing
 def get_rdf_text_remotely(ontology_component):
     ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_component}/'
     ontology_response = get(ontology_component_url)
@@ -55,6 +61,57 @@ def get_rdf_text_locally(ontology_component):
 
 
 # New
+class OntologyCategoryMetadataService:
+    def __init__(self, xml_of_ontology_category_terms: str) -> None:
+        self.xml_parsed = etree.fromstring(xml_of_ontology_category_terms.encode('utf-8'))
+        self.namespaces = ontology_namespaces
+
+    def _get_elements_by_xpath_query(self, xpath_query: str):
+        return self.xml_parsed.xpath(
+            xpath_query,
+            namespaces=self.namespaces
+        )
+
+    def _get_immediate_descendents_by_skos_narrower_for_ontology_term(self, url_of_ontology_term: str) -> set:
+        return set(self._get_elements_by_xpath_query(
+            './/%s:Concept[@%s:about="%s"]/%s:narrower/@%s:resource' % (
+                PithiaOntologyNamespacePrefix.SKOS,
+                PithiaOntologyNamespacePrefix.RDF,
+                url_of_ontology_term,
+                PithiaOntologyNamespacePrefix.SKOS,
+                PithiaOntologyNamespacePrefix.RDF,
+            )
+        ))
+
+    def _get_immediate_descendents_by_skos_broader_for_ontology_term(self, url_of_ontology_term: str) -> set:
+        return set(self._get_elements_by_xpath_query(
+            './/%s:Concept[%s:broader[@%s:resource="%s"]]/@%s:about' % (
+                PithiaOntologyNamespacePrefix.SKOS,
+                PithiaOntologyNamespacePrefix.SKOS,
+                PithiaOntologyNamespacePrefix.RDF,
+                url_of_ontology_term,
+                PithiaOntologyNamespacePrefix.RDF,
+            )
+        ))
+
+    def _get_immediate_descendents_of_ontology_term(self, url_of_ontology_term: str) -> set:
+        immediate_descendents_by_skos_narrower = self._get_immediate_descendents_by_skos_narrower_for_ontology_term(
+            url_of_ontology_term
+        )
+        immediate_descendents_by_skos_broader = self._get_immediate_descendents_by_skos_broader_for_ontology_term(
+            url_of_ontology_term
+        )
+        return immediate_descendents_by_skos_narrower.union(immediate_descendents_by_skos_broader)
+
+    def get_all_descendents_of_ontology_term(self, url_of_ontology_term: str) -> set:
+        immediate_descendents = self._get_immediate_descendents_of_ontology_term(url_of_ontology_term)
+        all_descendents = immediate_descendents
+        for descendent_url in immediate_descendents:
+            ims_of_immediate_descendents = self.get_all_descendents_of_ontology_term(descendent_url)
+            all_descendents = all_descendents.union(ims_of_immediate_descendents)
+        return all_descendents
+
+
 def get_xml_of_ontology_category_terms_remotely(ontology_category):
     ontology_component_url = f'{SPACE_PHYSICS_ONTOLOGY_SERVER_HTTPS_URL_BASE}/{ontology_category}/'
     ontology_response = get(ontology_component_url)
@@ -90,6 +147,7 @@ def get_ontology_category_terms_in_xml_format(ontology_category):
     return get_rdf_text_locally(ontology_category)
 
 
+# Continued - existing
 def get_rdf_text_for_ontology_component(ontology_component):
     try:
         return get_rdf_text_remotely(ontology_component)
