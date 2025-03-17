@@ -1314,7 +1314,8 @@ label.required::after {
 }
 
 .tree-filter-results.show-tree-search-box-filter-results .tree-search-box-filter-results {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .tree-filter-results.show-tree-checkbox-filter-results .tree-checkbox-filter-results {
