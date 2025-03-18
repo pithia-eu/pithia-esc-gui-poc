@@ -1181,7 +1181,7 @@ label.required::after {
 }
 
 .ontology-server-url a.metadata-server-url-text:not(:hover, :focus) {
-    text-decoration: underline dashed;
+    text-decoration: underline dotted;
 }
 
 .metadata-server-url .metadata-server-url-text {
