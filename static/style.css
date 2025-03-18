@@ -321,13 +321,13 @@ header .login-link {
 .navbar .nav-item .nav-link,
 .navbar .dropdown-menu .dropdown-item,
 .user-dropdown .dropdown-menu a {
-    color: var(--bs-dark-emphasis);
-    text-decoration-color: var(--bs-dark-emphasis);
+    color: var(--bs-secondary-text-emphasis);
+    text-decoration-color: var(--bs-secondary-text-emphasis);
 }
 
 .navbar .nav-item a.dropdown-toggle {
-    color: var(--bs-dark-emphasis);
-    text-decoration-color: var(--bs-dark-emphasis);
+    color: var(--bs-secondary-text-emphasis);
+    text-decoration-color: var(--bs-secondary-text-emphasis);
 }
 
 .navbar .nav-item a.dropdown-toggle span:hover,
