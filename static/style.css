@@ -311,7 +311,7 @@ header .login-link {
 
 /* Navbar */
 #navbar-global {
-    background: var(--bs-tertiary-bg);
+    background: rgba(var(--bs-secondary-bg-rgb), 0.5);
     padding-block: 0.25rem;
 }
 
