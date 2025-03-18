@@ -704,7 +704,6 @@ as Bootstrap styling. */
 
 .resource-detail-section details[name="details-capabilities"][open],
 .resource-detail-section details[name="details-capability-links"][open] {
-    border-radius: var(--bs-border-radius);
     background-color: var(--bs-light-bg-subtle);
 }
 
@@ -712,6 +711,11 @@ as Bootstrap styling. */
 .resource-detail-section details[name="details-capability-links"] .summary-marker-custom::before {
     font-size: 0.75rem;
     transform: translateY(-0.125rem);
+}
+
+.resource-detail-section details.details-capabilities-top[open] > summary,
+.resource-detail-section details.details-capability-links-top[open] > summary {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
 }
 
 .resource-detail-subsection {
