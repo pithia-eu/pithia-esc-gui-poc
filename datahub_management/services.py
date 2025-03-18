@@ -39,6 +39,8 @@ class DataHubService:
         try:
             # Get the details file by the workflow ID.
             return open(file_path, 'rb')
+        except OSError:
+            logger.exception(f'It was not possible to check DataHub for the file at this path: {file_path}.')
         except (FileNotFoundError, TypeError) as err:
             logger.exception(f'Could not find a file in DataHub with path: {file_path}.')
         return None

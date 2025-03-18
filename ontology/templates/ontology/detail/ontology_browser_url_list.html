@@ -1,0 +1,22 @@
+{% load project_tags %}
+<ul class="list-group list-group-flush fs-6 mb-0">
+    {% for url in ontology_browser_urls %}
+    <li class="list-group-item px-0">
+        {% with url_metadata=names_and_ontology_browser_urls|get_key_value:url %}
+        {% if url_metadata %}
+        <a href="{{ url_metadata.ontology_browser_url }}">
+            {{ url_metadata.pref_label }}
+            {% if url_metadata.alt_label %}({{ url_metadata.alt_label }}){% endif %}</a>
+        {% else %}
+        <span class="text-body-secondary">
+            {% if url|server_url_id %}
+            {{ url|server_url_id }} <small class="fst-italic text-body-secondary">— A page for this term could not be found</small>
+            {% else %}
+            <small class="fst-italic">A page for this term could not be found</small>
+            {% endif %}
+        </span>
+        {% endif %}
+        {% endwith %}
+    </li>
+    {% endfor %}
+</ul>

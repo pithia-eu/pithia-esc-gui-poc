@@ -14,7 +14,7 @@ from common.models import (
     Instrument,
     Process,
 )
-from ontology.utils import (
+from ontology.services import (
     get_feature_of_interest_ids_from_observed_property_id,
     get_graph_of_pithia_ontology_component,
     get_measurand_ids_from_observed_property_id,

@@ -1,7 +1,7 @@
 <li>
     {% if node.narrowers|length > 0 %}
     <details>
-        <summary>
+        <summary class="summary-marker-custom summary-marker-custom-baseline">
             {% with is_parent_node="true" category=category registered_ontology_terms=registered_ontology_terms %}
             {% include "ontology/ontology_tree_node_template.html" %}
             {% endwith %}

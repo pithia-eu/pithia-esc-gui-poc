@@ -1,3 +1,7 @@
+import {
+    setupOntologyIriCopyButtons,
+} from "/static/ontology/ontology_utils_setup.js";
+
 const SEARCH_BOX_INPUT_FILTER_CLASS = "search-no-match";
 const noSearchMatchesFound = document.getElementById("no-search-results-msg");
 
@@ -127,7 +131,6 @@ function setupInputsForTreeContainerId(treeContainerId) {
         filterTreeContainerIdBySearchBoxInput(treeContainerId);
     });
 
-    
     // Expand/collapse all buttons setup
     const expandAllButtonForTree = document.querySelector(`#${treeContainerId} .btn-expand-all`);
     expandAllButtonForTree.addEventListener("click", event => {
@@ -146,6 +149,7 @@ export async function setupSearchFormComponent(html, treeContainerId, callback) 
     setTimeout(async () => {
         document.querySelector(`#${treeContainerId} .tree-search-terms`).innerHTML = html;
         setupInputsForTreeContainerId(treeContainerId);
+        await setupOntologyIriCopyButtons();
         document.querySelector(`#${treeContainerId} .tree-search-terms`).style.opacity = 1;
         if (callback) {
             callback();

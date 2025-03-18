@@ -1,6 +1,6 @@
 {% if resource.properties.capability_links %}
 <section class="resource-detail-section">
-    <details open>
+    <details class="details-capability-links-top" open>
         <summary class="summary-marker-custom summary-marker-custom-baseline">
             <div class="d-inline-block">
                 <h2>
@@ -27,18 +27,21 @@
                             <h3 class="fw-semibold fs-base-2 mb-1">
                                 Capability Link {{ forloop.counter }}
                             </h3>
+                            {# Smaller details below capability link name #}
                             <small class="d-flex flex-column text-body-secondary">
+                                {# Platforms #}
                                 {% if cap_link.platforms %}
                                 {% with value=cap_link.platforms.0 %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
                                 {% endwith %}
                                 {% endif %}
+                                {# Computation capabilities #}
                                 {% if cap_link.computation_capabilities %}
                                 {% with value=cap_link.computation_capabilities %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
                                 {% endwith %}
                                 {% endif %}
-        
+                                {# Acquisition capabilities #}
                                 {% if cap_link.acquisition_capabilities %}
                                 {% with value=cap_link.acquisition_capabilities %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder_no_link.html' %}
@@ -52,7 +55,7 @@
                         <div>
                             <dt>Platforms</dt>
                             {% for platform in cap_link.platforms %}
-                            <dd class="dd-list-item">
+                            <dd>
                                 {% with value=platform %}
                                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                                 {% endwith %}

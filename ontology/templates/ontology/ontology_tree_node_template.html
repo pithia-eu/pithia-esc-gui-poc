@@ -1,43 +1,45 @@
 <div id="{{ node.id }}"
-    class="d-inline-flex flex-column align-items-start {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} my-3"
+    class="d-inline-flex flex-column align-items-start row-gap-1 {% if parent_node_in_ontology %}ontology-term-with-parent{% endif %} my-3"
     data-is-parent-node="{{ is_parent_node|default_if_none:"false" }}"
     data-parent-node-in-ontology="{{ parent_node_in_ontology|default_if_none:"" }}">
-    <div class="d-flex align-items-start flex-wrap mb-xl-0 mb-2">
+    <div class="d-flex flex-wrap align-items-baseline column-gap-2 row-gap-1">
         <!-- Link to term detail page -->
         {% if node.prefLabel %}
         <a
           href="{% url 'ontology:ontology_term_detail' category node.value %}"
-          class="d-flex align-items-center fw-bold me-2 keyword-searchable">
+          class="d-flex align-items-center fw-semibold keyword-searchable">
             {{ node.prefLabel|default:node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </a>
-        {% else %}
-        <span class="fw-bold keyword-searchable me-2">
+        {% elif node.value %}
+        <span class="fw-semibold keyword-searchable">
             {{ node.value }} {% if node.altLabel %}({{ node.altLabel }}){% endif %}
         </span>
         {% endif %}
 
         <!-- "Registered" indicator -->
         {% if node.value in registered_ontology_terms and node.value in parents_of_registered_ontology_terms %}
-        <small class="border rounded-3 bg-body-secondary px-1 me-3">
+        <small class="border rounded-3 bg-body-secondary px-1 me-1">
             registered
         </small>
         {% endif %}
 
         <!-- "Invalid" indicator -->
         {% if not node.prefLabel %}
-        <small class="text-body-secondary fst-italic">(This ontology term may no longer be invalid.)</small>
+        <small class="text-body-secondary fst-italic">— A page for this term could not be found</small>
         {% endif %}
     </div>
     {% if node.definition %}
-    <div class="ontology-term-description text-body-secondary mb-3">
+    <div class="ontology-term-description text-body-secondary">
         {% autoescape off %}
         {{ node.definition|default:'' }}
         {% endautoescape %}
     </div>
     {% endif %}
     {% if node.prefLabel %}
-    <small class="text-body-secondary text-break">
-        Ontology IRI: <a href="{{ node.iri|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ node.iri|default:'' }}</a>
+    <small>
+        {% with ontology_iri=node.iri %}
+        {% include 'ontology/ontology_iri.html' %}
+        {% endwith %}
     </small>
     {% endif %}
 </div>

@@ -27,7 +27,7 @@ from common.test_setup import (
     register_instrument_for_test,
     register_process_for_test,
 )
-from ontology.utils import (
+from ontology.services import (
     create_dictionary_from_pithia_ontology_component,
     categorise_observed_property_dict_by_top_level_phenomenons,
     get_nested_phenomenons_in_observed_property,

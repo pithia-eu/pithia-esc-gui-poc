@@ -1,17 +1,17 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav id="navbar-global" class="navbar navbar-expand-lg">
     <div class="container">
         <a class="d-md-none d-flex align-items-center navbar-brand header-logo-link" href="/">
             {% load static %}
             {% include 'header/logo.html' %}
             <div class="d-inline-flex flex-column align-items-start text-decoration-none fs-4">
                 <span class="fs-6 fw-semibold lh-sm pithia-blue-2">PITHIA</span>
-                <span class="fs-5 lh-sm">eSC</span>
+                <span class="fs-base-2 lh-sm text-dark-emphasis">eSC</span>
             </div>
         </a>
         <button class="navbar-toggler mx-2 my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse px-lg-0 px-2" id="navbarNav">
+        <div id="navbarNav" class="collapse navbar-collapse px-lg-0 px-2">
             <div class="d-md-none d-flex flex-column align-items-start column-gap-5 row-gap-3 border-bottom pt-4 pb-3">
                 {% include 'header/user_menu.html' %}
                 {% if request.session.institution_for_login_session %}
@@ -23,7 +23,7 @@
                 </a>
                 {% endif %}
             </div>
-            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 w-100 py-lg-0 py-3 mb-0">
+            <ul class="navbar-nav align-items-lg-center align-items-start column-gap-4 fw-medium text-secondary-emphasis w-100 py-lg-0 py-3 mb-0">
                 <li class="nav-item">
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,11 +35,19 @@
                         <ul class="dropdown-menu" data-bs-popper="static">
                             <li>
                                 {% url 'search:index' as search_url %}
-                                <a href="{{ search_url }}" class="dropdown-item">Search Data Collections by Content</a>
+                                <a href="{{ search_url }}" class="dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square me-2" viewBox="0 0 16 16">
+                                        <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5z"/>
+                                        <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0"/>
+                                    </svg>Search by Content</a>
                             </li>
                             <li>
                                 {% url 'simple_search:index' as simple_search_url %}
-                                <a href="{{ simple_search_url }}" class="dropdown-item">Data Collection Simple Search</a>
+                                <a href="{{ simple_search_url }}" class="dropdown-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-input-cursor-text me-2" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5 2a.5.5 0 0 1 .5-.5c.862 0 1.573.287 2.06.566.174.099.321.198.44.286.119-.088.266-.187.44-.286A4.17 4.17 0 0 1 10.5 1.5a.5.5 0 0 1 0 1c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.436.294V7.5H9a.5.5 0 0 1 0 1h-.5v4.272c.1.08.248.187.436.294.387.221.926.434 1.564.434a.5.5 0 0 1 0 1 4.17 4.17 0 0 1-2.06-.566A5 5 0 0 1 8 13.65a5 5 0 0 1-.44.285 4.17 4.17 0 0 1-2.06.566.5.5 0 0 1 0-1c.638 0 1.177-.213 1.564-.434.188-.107.335-.214.436-.294V8.5H7a.5.5 0 0 1 0-1h.5V3.228a3.5 3.5 0 0 0-.436-.294A3.17 3.17 0 0 0 5.5 2.5.5.5 0 0 1 5 2"/>
+                                        <path d="M10 5h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4v1h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-4zM6 5V4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v-1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/>
+                                    </svg>Simple Search</a>
                             </li>
                         </ul>
                     </div>
@@ -77,7 +85,7 @@
                     </a>
                 </li>
                 {% if request.session.institution_for_login_session %}
-                <li class="d-lg-inline-block d-none nav-item ms-auto">
+                <li class="d-md-inline-block d-none nav-item pt-lg-0 pt-2 ms-0 ms-lg-auto">
                     <a href="{% url 'resource_management:index' %}" class="nav-link link-plain-by-default">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text me-2" viewBox="0 0 16 16">
                             <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>

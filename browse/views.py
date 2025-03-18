@@ -33,6 +33,10 @@ from .utils import (
 from common import models
 from common.xml_metadata_mapping_shortcuts import DoiKernelMetadataMappingShortcuts
 from handle_management.services import HandleClient
+from ontology.services import (
+    get_ontology_category_terms_in_xml_format,
+    OntologyCategoryMetadataService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -263,6 +267,12 @@ class DataCollectionListView(ResourceListView):
 
     def get_queryset(self):
         data_collections = super().get_queryset()
+        # Get URLs of activity indicators early to help
+        # mitigate against possible ontology server loading
+        # times.
+        xml_of_computation_types_ontology_category = get_ontology_category_terms_in_xml_format('computationType')
+        computation_types_ontology_category = OntologyCategoryMetadataService(xml_of_computation_types_ontology_category)
+        urls_of_activity_indicators = computation_types_ontology_category.get_all_descendents_of_ontology_term('https://metadata.pithia.eu/ontology/2.2/computationType/ActivityIndicator')
 
         ACTIVITY_INDICATORS_KEY = 'Activity Indicators'
         SENSOR_MEASUREMENTS_KEY = 'Sensor Measurements'
@@ -286,7 +296,7 @@ class DataCollectionListView(ResourceListView):
                 data_collections_by_type[OTHER_KEY].append(dc)
                 continue
             type_urls = dc.type_urls
-            is_activity_indicator = any([re.search('\/computationType/(.*)ActivityIndicator$', url) for url in type_urls])
+            is_activity_indicator = any([url in urls_of_activity_indicators for url in type_urls])
             is_sensor_measurement = any([re.search('\/instrumentType/(.*)$', url) for url in type_urls])
             is_computational_model = any([re.search('\/computationType/(.*)$', url) for url in type_urls])
 
