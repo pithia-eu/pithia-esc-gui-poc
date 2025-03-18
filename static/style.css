@@ -247,7 +247,7 @@ p {
 
 .page-info-emphasised {
     color: var(--bs-secondary-emphasis);
-    background-color: var(--bs-light-bg-subtle);
+    background-color: var(--bs-tertiary-bg);
     padding-block: 1rem;
     padding-inline: 1.5rem;
     border-radius: var(--bs-border-radius);
