@@ -311,7 +311,8 @@ header .login-link {
 
 /* Navbar */
 #navbar-global {
-    background: linear-gradient(to right, var(--bs-tertiary-bg), var(--bs-secondary-bg));
+    background: var(--bs-tertiary-bg);
+    padding-block: 0.25rem;
 }
 
 .navbar a,
@@ -1804,10 +1805,6 @@ ul.tree ul {
 }
 
 @media (min-width: 768px) {
-    #navbar-global {
-        background: var(--bs-secondary-bg);
-    }
-
     input[name="api_specification_url"]:not(#workflow-openapi-spec-url-update-form input[name="api_specification_url"]) {
         max-width: 45ch;
     }
