@@ -14,15 +14,16 @@ export function filterResourceList(
     resourceCountElement,
     typeReadable,
     typePluralReadable) {
-    const searchInputValue = searchInput.value;
+    const searchInputValue = searchInput.value.trim();
     if (!searchInputValue) {
         updateResourceCount(resourceCountElement, searchableListClone.childElementCount, typeReadable, typePluralReadable, true);
         return searchableList.replaceChildren(...searchableListClone.cloneNode(true).children);
     }
+    const searchInputValueSplit = searchInputValue.split(/\s/);
     const fragment = new DocumentFragment();
     for (const property in searchableListItemText) {
         const listItemText = searchableListItemText[property];
-        if (!listItemText.toLowerCase().includes(searchInputValue.toLowerCase())) {
+        if (!searchInputValueSplit.every((searchInputValuePart) => listItemText.toLowerCase().includes(searchInputValuePart.toLowerCase()))) {
             continue;
         }
         const listItem = searchableListClone.querySelector(`#${property}`);
