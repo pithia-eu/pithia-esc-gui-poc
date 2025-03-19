@@ -3,7 +3,7 @@
     <h2 class="visually-hidden">Responsible Parties</h2>
     <dl class="d-flex flex-sm-row flex-column flex-wrap column-gap-5 row-gap-3 mb-0">
         {% for rp in resource.properties.related_parties %}
-        <div class="d-flex flex-column row-gap-2">
+        <div>
             <dt class="mb-0">
                 {% with value=rp.role %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}

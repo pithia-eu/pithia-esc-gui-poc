@@ -652,6 +652,18 @@ as Bootstrap styling. */
     font-weight: 700;
 }
 
+#responsible-parties-top-section dd {
+    display: inline;
+}
+
+#responsible-parties-top-section dd > span::after {
+    content: ', ';
+}
+
+#responsible-parties-top-section dd:last-child > span::after {
+    content: '';
+}
+
 .resource-detail-section {
     padding: var(--resource-detail-section-padding) 0;
     border-top: 1px solid var(--bs-gray-300);
@@ -1858,7 +1870,7 @@ ul.tree ul {
     }
 
     #responsible-parties-top-section dl > div {
-        max-width: 12rem;
+        max-width: 15rem;
     }
 
     .resource-detail-emphasised-section {
