@@ -1,0 +1,4 @@
+<h2 class="{{ description_section_heading_extra_classes }}">{{ description_heading_text|default:'Description' }}</h2>
+{% with text_block_id='resource-description' text_block_paragraphs=resource_description_split %}
+{% include 'browse/detail/components/expandable_text_block.html' %}
+{% endwith %}

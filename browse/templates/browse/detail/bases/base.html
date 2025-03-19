@@ -54,7 +54,9 @@
         </section>
         {% endif %}
         {% block pre_description_content %}{% endblock pre_description_content %}
+        {% block description_section %}
         {% include 'browse/detail/sections/description_section.html' %}
+        {% endblock description_section %}
         {% block post_description_content %}{% endblock post_description_content %}
         <section id="further-information-section" class="resource-detail-section">
             <details>
