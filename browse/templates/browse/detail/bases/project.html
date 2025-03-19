@@ -62,7 +62,7 @@
 {# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
-<section class="resource-detail-section responsive-resource-detail-section">
+<section class="resource-detail-section">
     <h3>Keywords</h3>
     {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
@@ -74,17 +74,11 @@
 {% if resource.properties.status %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Status</h2>
-    {% with value=resource.properties.status %}
+    {% with value=resource.properties.status url_text_extra_classes='fs-6 text-secondary-emphasis' %}
     {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
     {% endwith %}
 </section>
 {% endif %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
-{% if resource.properties.keywords %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Keywords</h2>
-    {% include 'browse/detail/components/project/keyword_inline_list.html' %}
-</section>
-{% endif %}
 {% endblock aside_extra_content %}
