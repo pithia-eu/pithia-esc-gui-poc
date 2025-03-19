@@ -1,5 +1,6 @@
 import logging
 
+from dateutil.parser import isoparse
 from django.urls import reverse_lazy
 from lxml import etree
 
@@ -80,6 +81,15 @@ class OntologyTermMetadata(OntologyXmlMixin):
     def __init__(self, xml_string_for_ontology_term: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.xml_parsed = etree.fromstring(xml_string_for_ontology_term.encode('utf-8'))
+
+    @property
+    def last_modified_date(self):
+        value_of_last_modified_date = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:date' % NamespacePrefix.DC)
+        try:
+            return isoparse(value_of_last_modified_date)
+        except Exception:
+            logger.exception('Could not parse ontology term\'s last modified date')
+            return value_of_last_modified_date
 
     @property
     def pref_label(self):

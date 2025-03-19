@@ -14,11 +14,16 @@
     <div class="col-lg-8">
         <div class="resource-detail-top-section">
             <div class="mb-2">
-                <h1 class="pb-0 mb-0">{{ ontology_term_metadata.pref_label }}</h1>
+                <h1 class="mb-0">{{ ontology_term_metadata.pref_label }}</h1>
                 {% if ontology_term_metadata.alt_label %}
                 <span class="d-inline-block text-body-secondary">({{ ontology_term_metadata.alt_label }})</span>
                 {% endif %}
             </div>
+            {% if ontology_term_metadata.last_modified_date %}
+            <p class="text-secondary-emphasis">
+                Last modified at {{ ontology_term_metadata.last_modified_date|date:'M jS, Y, H:i e' }}
+            </p>
+            {% endif %}
             <div>
                 {% with ontology_iri=resource_ontology_url %}
                 {% include 'ontology/ontology_iri.html' %}
