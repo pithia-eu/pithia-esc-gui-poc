@@ -1,11 +1,18 @@
 {% extends 'ontology/detail/bases/base.html' %}
 
+{# Definition of the ontology term #}
+{% block term_definition %}
+{% autoescape off %}
+{{ ontology_term_metadata.definition }}
+{% endautoescape %}
+{% endblock term_definition %}
+
 {# Appears before the definition #}
-{% block aside_content %}
+{% block aside_extra_content_end %}
 {# Licence deeds #}
 {% if ontology_term_metadata.licence_deeds %}
 <section class="resource-detail-aside-section">
-    <h2 class="mb-0">
+    <h2 class="fs-6 mb-0">
         {% if ontology_term_metadata.licence_deeds|length == 1 %}
         Link to Licence Deed
         {% else %}
@@ -21,4 +28,4 @@
     </ul>
 </section>
 {% endif %}
-{% endblock aside_content %}
+{% endblock aside_extra_content_end %}
