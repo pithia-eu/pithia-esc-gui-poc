@@ -7,7 +7,7 @@
         {% with value=p|get_key_value:'@xlink:href' %}
         <li class="list-group-item py-0 ps-0" data-metadata-server-url={{ value }}>
             <details id="permission_{{ value|server_url_id|lower }}" name="details-permissions">
-                <summary class="summary-marker-custom align-items-baseline py-3">
+                <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm py-3">
                     <span class="d-inline-flex flex-column">
                         <span class="d-inline-block fs-base-2">
                             {% with url_extra_classes='ontology-server-url permission-ontology-server-url' %}

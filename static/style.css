@@ -151,6 +151,11 @@ summary.summary-marker-custom-baseline {
     align-items: baseline;
 }
 
+summary.summary-marker-custom.summary-marker-custom-sm::before {
+    font-size: 0.75rem;
+    transform: translateY(-0.125rem);
+}
+
 summary.summary-marker-custom::-webkit-details-marker,
 summary.summary-marker-custom::marker {
     content: none;
@@ -710,12 +715,6 @@ as Bootstrap styling. */
 .resource-detail-section details[name="details-capabilities"][open],
 .resource-detail-section details[name="details-capability-links"][open] {
     background-color: var(--bs-light-bg-subtle);
-}
-
-.resource-detail-section details[name="details-capabilities"] .summary-marker-custom::before,
-.resource-detail-section details[name="details-capability-links"] .summary-marker-custom::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
 }
 
 .resource-detail-section details.details-capabilities-top[open] > summary,
@@ -1493,8 +1492,6 @@ ul.tree ul {
 }
 
 .ontology-browser-terms .summary-marker-custom::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
     margin: 0 var(--list-item-left-padding) 0 0;
 }
 
