@@ -45,7 +45,7 @@
     <div class="d-inline-flex flex-column align-items-start">
         {% with description_urlized=online_resource.description|urlize type_id=type|server_url_id|lower %}
         {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-        {% include 'browse/detail/components/expandable_text_block.html' %}
+        {% include 'utils/expandable_text_block.html' %}
         {% endwith %}
         {% endwith %}
     </div>

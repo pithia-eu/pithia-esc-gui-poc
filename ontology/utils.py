@@ -61,6 +61,16 @@ class OntologyCategoryMetadata(OntologyXmlMixin):
             (NamespacePrefix.SKOS, NamespacePrefix.RDF)
         )
 
+    @property
+    def description(self):
+        try:
+            return self._get_first_element_value_or_blank_string_with_xpath_query(
+                './/%s:description' % NamespacePrefix.DC
+            )
+        except Exception:
+            logger.exception('Encountered an error whilst getting ontology category description.')
+            return ''
+
     def get_term_with_iri(self, ontology_iri: str):
         element_for_term = self._get_first_element_from_list(
             self._get_elements_with_xpath_query(

@@ -15,7 +15,7 @@
 <section class="resource-detail-section">
     <h2 class="mb-2">Abstract</h2>
     {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split %}
-    {% include 'browse/detail/components/expandable_text_block.html' %}
+    {% include 'utils/expandable_text_block.html' %}
     {% endwith %}
     {# Custom description implementation if abstract is present #}
     {% if resource.description and resource.description|cut:' ' != '' %}

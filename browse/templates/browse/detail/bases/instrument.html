@@ -33,7 +33,7 @@
                     {% with forloop_counter_str=forloop.counter|stringformat:'s' op_mode_description_paragraphs=operational_mode.description|wrap_in_list_if_dict %}
                     {% with text_block_id='op-mode-description-'|add:forloop_counter_str text_block_paragraphs=op_mode_description_paragraphs %}
                     {% with expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-                    {% include 'browse/detail/components/expandable_text_block.html' %}
+                    {% include 'utils/expandable_text_block.html' %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
