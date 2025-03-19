@@ -1,103 +1,116 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+<script src="{% static 'ontology/ontology_index.js' %}" defer></script>
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item_active title %}
 {% endblock breadcrumbs %}
 {% block content %}
-<h1>{{ title }}</h1>
-<ul class="list-group">
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'annotationType' %}">Annotation Type</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'catalogueCategory' %}">Catalogue Category</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'component' %}">Component</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'compressedRepresentation' %}">Compressed Representation</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'computationType' %}">Computation Type</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'crs' %}">Co-ordinate Reference System</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'dataLevel' %}">Data Level</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'dataQualityFlag' %}">Data Quality Flag</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'dimensionalityInstance' %}">Dimensionality Instance</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'dimensionalityTimeline' %}">Dimensionality Timeline</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'featureOfInterest' %}">Feature of Interest</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'instrumentType' %}">Instrument Type</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'interaction' %}">Interaction</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'licence' %}">Licence</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'measurand' %}">Measurand</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'metadataQualityFlag' %}">Metadata Quality Flag</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'observedProperty' %}">Observed Property</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'phenomenon' %}">Phenomenon</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'photonType' %}">Photon Type</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'platformType' %}">Platform Type</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'projection' %}">Projection</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'propagationMode' %}">Propagation Mode</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'qualifier' %}">Qualifier</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'relatedObservationRole' %}">Related Observation Role</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'relatedPartyRole' %}">Related Party Role</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'resultAccumulation' %}">Result Accumulation</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'resultDataFormat' %}">Result Data Format</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'serviceFunction' %}">Service Function</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'status' %}">Status</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'unit' %}">Unit</a>
-    </li>
-    <li class="list-group-item">
-        <a href="{% url 'ontology:ontology_category_terms_list' 'verticalCrs' %}">Vertical Co-ordinate Reference System</a>
-    </li>
-</ul>
+<h1 class="mb-4">{{ title }}</h1>
+<div class="col-xl-7">
+    <p>
+        The PITHIA-NRF e-Science Centre (eSC) manages the vocabulary of Space Physics keywords
+        that can be used to narrow down data searches to acquired or computed observations of specific
+        physical content.
+    </p>
+    <p id="ontology-category-search-results" class="text-body-secondary">X Categories</p>
+    <input type="search" id="ontology-category-search" class="form-control mb-3" placeholder="Start typing to filter...">
+    <ul class="list-group list-group-searchable">
+        <li id="category-annotationType" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'annotationType' %}">Annotation Type</a>
+        </li>
+        <li id="category-catalogueCategory" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'catalogueCategory' %}">Catalogue Category</a>
+        </li>
+        <li id="category-component" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'component' %}">Component</a>
+        </li>
+        <li id="category-compressedRepresentation" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'compressedRepresentation' %}">Compressed Representation</a>
+        </li>
+        <li id="category-computationType" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'computationType' %}">Computation Type</a>
+        </li>
+        <li id="category-crs" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'crs' %}">Co-ordinate Reference System</a>
+        </li>
+        <li id="category-dataLevel" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'dataLevel' %}">Data Level</a>
+        </li>
+        <li id="category-dataQualityFlag" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'dataQualityFlag' %}">Data Quality Flag</a>
+        </li>
+        <li id="category-dimensionalityInstance" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'dimensionalityInstance' %}">Dimensionality Instance</a>
+        </li>
+        <li id="category-dimensionalityTimeline" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'dimensionalityTimeline' %}">Dimensionality Timeline</a>
+        </li>
+        <li id="category-featureOfInterest" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'featureOfInterest' %}">Feature of Interest</a>
+        </li>
+        <li id="category-instrumentType" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'instrumentType' %}">Instrument Type</a>
+        </li>
+        <li id="category-interaction" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'interaction' %}">Interaction</a>
+        </li>
+        <li id="category-licence" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'licence' %}">Licence</a>
+        </li>
+        <li id="category-measurand" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'measurand' %}">Measurand</a>
+        </li>
+        <li id="category-metadataQualityFlag" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'metadataQualityFlag' %}">Metadata Quality Flag</a>
+        </li>
+        <li id="category-observedProperty" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'observedProperty' %}">Observed Property</a>
+        </li>
+        <li id="category-phenomenon" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'phenomenon' %}">Phenomenon</a>
+        </li>
+        <li id="category-photonType" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'photonType' %}">Photon Type</a>
+        </li>
+        <li id="category-platformType" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'platformType' %}">Platform Type</a>
+        </li>
+        <li id="category-projection" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'projection' %}">Projection</a>
+        </li>
+        <li id="category-propagationMode" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'propagationMode' %}">Propagation Mode</a>
+        </li>
+        <li id="category-qualifier" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'qualifier' %}">Qualifier</a>
+        </li>
+        <li id="category-relatedObservationRole" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'relatedObservationRole' %}">Related Observation Role</a>
+        </li>
+        <li id="category-relatedPartyRole" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'relatedPartyRole' %}">Related Party Role</a>
+        </li>
+        <li id="category-resultAccumulation" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'resultAccumulation' %}">Result Accumulation</a>
+        </li>
+        <li id="category-resultDataFormat" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'resultDataFormat' %}">Result Data Format</a>
+        </li>
+        <li id="category-serviceFunction" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'serviceFunction' %}">Service Function</a>
+        </li>
+        <li id="category-status" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'status' %}">Status</a>
+        </li>
+        <li id="category-unit" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'unit' %}">Unit</a>
+        </li>
+        <li id="category-verticalCrs" class="list-group-item">
+            <a href="{% url 'ontology:ontology_category_terms_list' 'verticalCrs' %}">Vertical Co-ordinate Reference System</a>
+        </li>
+    </ul>
+</div>
 {% endblock content %}
