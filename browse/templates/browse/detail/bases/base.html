@@ -64,6 +64,14 @@
                     <h2>Further Information and Resources</h2>
                 </summary>
                 <div class="d-flex flex-column">
+                    {% if resource.properties.documentation %}
+                    {% with documentation=resource.properties.documentation %}
+                    <section class="resource-detail-section">
+                        <h2>Documentation</h2>
+                        {% include 'browse/detail/components/documentation_section_content.html' %}
+                    </section>
+                    {% endwith %}
+                    {% endif %}
                     {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
                     <section class="resource-detail-section">
                         <h3>Resources</h3>
