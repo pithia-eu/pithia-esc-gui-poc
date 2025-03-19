@@ -3,6 +3,8 @@
 {# Appears after the description #}
 {% block post_description_content %}
 <section class="resource-detail-section">
+    {% with heading_font_size_class='fs-6 fw-bold' %}
     {% include 'browse/detail/components/contact_info_individual.html' %}
+    {% endwith %}
 </section>
 {% endblock post_description_content %}
