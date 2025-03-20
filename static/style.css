@@ -666,7 +666,7 @@ as Bootstrap styling. */
 
 .resource-detail-section {
     padding: var(--resource-detail-section-padding) 0;
-    border-top: 1px solid var(--bs-gray-300);
+    border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
 }
 
 .resource-detail-section h2:first-child,
@@ -803,7 +803,7 @@ as Bootstrap styling. */
 }
 
 .resource-detail-aside .resource-detail-aside-section {
-    border-bottom: var(--bs-gray-300) solid 1px;
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
     padding-block: var(--resource-detail-aside-section-padding);
     font-size: 1rem;
 }
