@@ -41,7 +41,7 @@
 {% endblock post_description_content %}
 
 {# Appears in aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
 {% if resource.properties.catalogue_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Catalogue</h2>
@@ -56,4 +56,4 @@
     {% include 'browse/detail/components/catalogue_entry/phenomenon_time_section_content.html' %}
 </section>
 {% endif %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

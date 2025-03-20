@@ -178,13 +178,14 @@
         {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
+        {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
             <h2>Type</h2>
             {% include 'browse/detail/components/type_badges.html' %}
         </section>
         {% endif %}
-        {% block aside_extra_content %}{% endblock aside_extra_content %}
+        {% block aside_extra_content_after_default %}{% endblock aside_extra_content_after_default %}
         <section class="resource-detail-aside-section">
             <h2 class="fs-6 text-body-secondary">
                 Page Suggestions & Support

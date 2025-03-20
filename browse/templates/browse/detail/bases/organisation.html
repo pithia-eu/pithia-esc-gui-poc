@@ -12,7 +12,7 @@
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
 {% if resource.properties.contact_info %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     {% with col_width_class='col-lg-12' %}
@@ -20,4 +20,4 @@
     {% endwith %}
 </section>
 {% endif %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

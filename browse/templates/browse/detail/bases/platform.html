@@ -40,7 +40,7 @@
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
 {% if resource.properties.location %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
@@ -54,4 +54,4 @@
     {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
 </div>
 {% endif %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

@@ -251,7 +251,7 @@ p {
 }
 
 .page-info-emphasised {
-    color: var(--bs-secondary-emphasis);
+    color: var(--bs-secondary-text-emphasis);
     background-color: var(--bs-tertiary-bg);
     padding-block: 1rem;
     padding-inline: 1.5rem;
@@ -1145,7 +1145,7 @@ section .keyword-list li:last-child:after {
 
 .online-resource-files-list-wrapper.disabled::before {
     content: 'Links to online resources will be taken from the selected metadata file.';
-    color: var(--bs-secondary-emphasis);
+    color: var(--bs-secondary-text-emphasis);
 }
 
 .online-resource-files-list-wrapper.disabled .online-resource-similar-names-error,
@@ -1765,7 +1765,7 @@ ul.tree ul {
     }
 
     .resource-detail-aside-section h2:first-child {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
     }
 
     .resource-detail-aside .resource-detail-aside-section:first-child {

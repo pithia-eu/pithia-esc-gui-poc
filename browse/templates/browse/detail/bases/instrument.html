@@ -61,7 +61,7 @@
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
 {% if resource.properties.instrument_version %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Version</h2>
@@ -69,4 +69,4 @@
 </section>
 {% endif %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}
