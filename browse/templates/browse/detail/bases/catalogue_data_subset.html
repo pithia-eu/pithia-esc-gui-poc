@@ -12,7 +12,7 @@
 </div>
 {% if resource.properties.catalogue_entry_urls %}
 <section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Catalogue Entry</h2>
+    <h2 class="fs-6 fw-semibold mb-2">Catalogue Entry</h2>
     {% with value=resource.properties.catalogue_entry_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
