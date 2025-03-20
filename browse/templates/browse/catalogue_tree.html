@@ -1,5 +1,9 @@
 {% extends 'browse/resource_list_by_type.html' %}
+{% load static %}
 {% load project_tags %}
+{% block scripts %}
+<script src="{% static 'utils/expandable_text_block.js' %}" defer></script>
+{% endblock scripts %}
 {% block breadcrumbs %}
 {% breadcrumb_item browse_index_page_breadcrumb_text 'browse:index' %}
 {% breadcrumb_item_active title %}
@@ -7,17 +11,25 @@
 {% block search %}{% endblock search %}
 {% block resource_list_outer %}
 {% for catalogue in resources %}
-<section class="pb-5 mt-0 {% if not forloop.last %}border-bottom{% endif %}">
+<section class="border-top py-4 mt-3">
     <h2 class="fs-3 mb-3">
         <a href="{% url 'browse:catalogue_detail' catalogue.id %}" class="link-plain-by-default">
             {{ catalogue.name }}
         </a>
     </h2>
     {% if catalogue.description %}
-    <p>
-        {{ catalogue.description }}
-    </p>
+    {# Catalogue descriptions are expandable/collapsible in case there is a lot of text #}
+    <div class="mb-2">
+        {% with forloop_counter_str=forloop.counter|stringformat:'s' catalogue_description_paragraphs=catalogue.description|wrap_in_list_if_dict %}
+        {% with text_block_id='catalogue-description-'|add:forloop_counter_str text_block_paragraphs=catalogue_description_paragraphs line_clamp_number='4' %}
+        {% with expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-0' expand_btn_text='Show more...' %}
+        {% include 'utils/expandable_text_block.html' %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    </div>
     {% endif %}
+
     {% with entries=catalogue.entries %}
     {% if not entries %}
     <div class="card border text-body-secondary mt-4 mb-0">
