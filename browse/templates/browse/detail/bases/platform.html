@@ -1,5 +1,13 @@
 {% extends 'browse/detail/bases/base.html' %}
 
+{# The metadata type displayed in the main & aside sections #}
+{% block metadata_type_main %}
+{% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+{% endblock metadata_type_main %}
+{% block metadata_type_aside %}
+{% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+{% endblock metadata_type_aside %}
+
 {# Appears before the type section on smaller screens #}
 {% block pre_type_content %}
 {% if resource.properties.standard_identifiers %}
@@ -36,7 +44,7 @@
 {# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.location %}
-<section class="responsive-resource-detail-section resource-detail-section">
+<section class="resource-detail-section">
     <h2 class="mb-2">Location</h2>
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
@@ -44,22 +52,12 @@
 {% endblock post_description_content %}
 
 {# Appears before default content in the aside section #}
-{% block aside_extra_content_before_default %}
+{% block aside_extra_content_after_default %}
 {% if resource.properties.standard_identifiers %}
 <div class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Standard Identifiers</h2>
     {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
 </div>
 {% endif %}
-{% endblock aside_extra_content_before_default %}
-
-{# Appears before default content in the aside section #}
-{% block aside_extra_content_after_default %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% if resource.properties.location %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2 class="mb-2">Location</h2>
-    {% include 'browse/detail/components/platform/location_section_content.html' %}
-</section>
-{% endif %}
 {% endblock aside_extra_content_after_default %}
