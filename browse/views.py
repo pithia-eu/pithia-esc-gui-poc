@@ -860,7 +860,7 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
             self.interaction_methods_by_type['api'] = self.interaction_methods_by_type.get('api', []) + [{
                 'service_functions': ['https://metadata.pithia.eu/ontology/2.2/serviceFunction/OpenAPI'],
                 'linkage': reverse('present:interact_with_data_collection_through_api', kwargs={'data_collection_id': self.resource_id}),
-                'name': 'PITHIA e-Science Centre Access',
+                'name': 'Access with the PITHIA e-Science Centre',
                 'protocol': '',
                 'description': api_int_method.config.get('description', ''),
                 'data_format': '',

@@ -11,7 +11,7 @@
         {% if type == 'api' %}
         <section class="interaction-methods-subsection">
             <div>
-                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' online_resource_access_type='API Access' %}
+                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' online_resource_access_type='API' %}
                 {% include 'browse/detail/components/online_resource_list.html' %}
                 {% endwith %}
             </div>
