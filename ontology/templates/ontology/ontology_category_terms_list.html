@@ -15,7 +15,7 @@
 {% if category_description %}
 <div class="col-lg-7 mb-5">
     {% with description_urlized=category_description|urlize %}
-    {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='ontology-category-description' expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+    {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='ontology-category-description' expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
     {% include 'utils/expandable_text_block.html' %}
     {% endwith %}
     {% endwith %}
