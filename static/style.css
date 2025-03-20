@@ -686,6 +686,19 @@ as Bootstrap styling. */
     content: '';
 }
 
+.standard-identifier-list,
+.standard-identifier-list li {
+    display: inline;
+}
+
+.standard-identifier-list li::after {
+    content: ', ';
+}
+
+.standard-identifier-list li:last-child::after {
+    content: '';
+}
+
 .resource-detail-section {
     padding: var(--resource-detail-section-padding) 0;
     border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);

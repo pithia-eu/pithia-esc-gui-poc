@@ -1,5 +1,15 @@
 {% extends 'browse/detail/bases/base.html' %}
 
+{# Appears before the type section on smaller screens #}
+{% block pre_type_content %}
+{% if resource.properties.standard_identifiers %}
+<div class="responsive-resource-detail-section resource-detail-section">
+    <h2 class="fs-6 fw-semibold">Standard Identifiers</h2>
+    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
+</div>
+{% endif %}
+{% endblock pre_type_content %}
+
 {# Appears before the description #}
 {% block pre_description_content %}
 {% if resource.properties.child_platforms %}
@@ -27,31 +37,29 @@
 {% block post_description_content %}
 {% if resource.properties.location %}
 <section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Location</h2>
+    <h2 class="mb-2">Location</h2>
     {% include 'browse/detail/components/platform/location_section_content.html' %}
 </section>
-{% endif %}
-{% if resource.properties.standard_identifiers %}
-<div class="responsive-resource-detail-section resource-detail-section">
-    <h2>Standard Identifiers</h2>
-    {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
-</div>
 {% endif %}
 {% endblock post_description_content %}
 
-{# Appears in the aside section #}
-{% block aside_extra_content_after_default %}
-{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% if resource.properties.location %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Location</h2>
-    {% include 'browse/detail/components/platform/location_section_content.html' %}
-</section>
-{% endif %}
+{# Appears before default content in the aside section #}
+{% block aside_extra_content_before_default %}
 {% if resource.properties.standard_identifiers %}
 <div class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Standard Identifiers</h2>
     {% include 'browse/detail/components/platform/standard_identifier_section_content.html' %}
 </div>
+{% endif %}
+{% endblock aside_extra_content_before_default %}
+
+{# Appears before default content in the aside section #}
+{% block aside_extra_content_after_default %}
+{% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
+{% if resource.properties.location %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2 class="mb-2">Location</h2>
+    {% include 'browse/detail/components/platform/location_section_content.html' %}
+</section>
 {% endif %}
 {% endblock aside_extra_content_after_default %}

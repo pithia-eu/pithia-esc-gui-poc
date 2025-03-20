@@ -37,6 +37,7 @@
         </div>
         {% block pre_related_parties_section %}{% endblock pre_related_parties_section %}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
+        {% block pre_type_content %}{% endblock pre_type_content %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-section resource-detail-section">
             <h2>Type</h2>

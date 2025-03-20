@@ -1,7 +1,6 @@
-<ul class="d-flex flex-column row-gap-2 list-unstyled">
+<ul class="list-unstyled standard-identifier-list">
     {% for standard_identifier in resource.properties.standard_identifiers %}
     <li>
-        {{ standard_identifier.value }} <span class="text-body-secondary">({{ standard_identifier.authority }})</span>
-    </li>
+        {{ standard_identifier.value }} <span class="text-body-secondary">({{ standard_identifier.authority }})</span></li>
     {% endfor %}
 </ul>
