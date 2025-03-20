@@ -17,7 +17,7 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
         namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
-        return self.get_by_namespace_and_localid(namespace, localid)
+        return self.get(pk=localid)
     
     def get_by_metadata_server_urls(self, metadata_server_urls: list):
         if not metadata_server_urls:
