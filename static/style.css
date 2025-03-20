@@ -746,7 +746,10 @@ as Bootstrap styling. */
     background-color: var(--bs-tertiary-bg);
 }
 
-.resource-detail-section > details:only-child[open] summary.summary-marker-custom,
+.resource-detail-section > details:only-child[open] > summary.summary-marker-custom {
+    margin-bottom: 0;
+}
+
 .resource-detail-section details[name="details-permissions"][open] summary.summary-marker-custom {
     margin-bottom: 0;
 }
