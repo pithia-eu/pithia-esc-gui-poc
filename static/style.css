@@ -272,6 +272,28 @@ p {
     transition-property: none;
 }
 
+.line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    -webkit-line-clamp: 3;
+}
+
+.line-clamp-4 {
+    -webkit-line-clamp: 4;
+}
+
+.line-clamp-5 {
+    -webkit-line-clamp: 5;
+}
+
 /* Colours */
 .pithia-theme {
     color: white;
@@ -841,13 +863,6 @@ as Bootstrap styling. */
     margin-bottom: 0;
 }
 
-.resource-description-wrapper {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
-}
-
 .resource-description-wrapper.expanded {
     display: block;
 }
@@ -935,15 +950,20 @@ details[name="details-permissions"][open] summary > span::after {
 }
 
 .interaction-methods-counter + .interaction-methods-subsection {
-    padding-top: 2rem;
+    padding-top: 1.25rem;
 }
 
 .interaction-methods-subsection + .interaction-methods-subsection {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
 }
 
-.resource-detail-section .interaction-methods-subsection:only-child h3 {
-    font-weight: bold !important;
+.resource-detail-section .interaction-methods-subsection:only-of-type {
+    padding-top: 0.75rem;
+}
+
+.resource-detail-section .interaction-methods-subsection h3 {
+    color: var(--bs-secondary-text-emphasis);
+    font-weight: 600 !important;
     font-size: 1rem !important;
 }
 
@@ -952,7 +972,7 @@ details[name="details-permissions"][open] summary > span::after {
 }
 
 .online-resource-list > li:not(li:first-of-type) {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
 }
 
 .online-resource-list .service-function-list,
@@ -965,6 +985,11 @@ details[name="details-permissions"][open] summary > span::after {
     white-space: wrap;
     text-align: left;
     line-height: 1.2;
+}
+
+.online-resource-list .online-resource-description p {
+    font-size: 1rem !important;
+    color: var(--bs-secondary-text-emphasis);
 }
 
 .type-badge-list .badge {
@@ -1605,12 +1630,6 @@ ul.tree ul {
 /* Search results */
 .search-result-description {
     overflow: hidden;
-}
-
-.line-clamp {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
 }
 
 /* Metadata editor */
