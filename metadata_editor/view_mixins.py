@@ -154,7 +154,7 @@ class ResourceChoicesViewMixin:
     def get_resource_choices_with_model(self, model):
         return (
             ('', ''),
-            *[(quote(r.metadata_server_url, safe='/:?=&'), r.name) for r in self.get_resources_with_model_ordered_by_name(model)],
+            *[(r.metadata_server_url, r.name) for r in self.get_resources_with_model_ordered_by_name(model)],
         )
 
     def get_resource_choices_with_multiple_models(self, optgroup_model_pairs):
