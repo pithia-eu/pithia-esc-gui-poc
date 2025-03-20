@@ -1,6 +1,6 @@
 {% load project_tags %}
 <address class="row row-gap-4 gx-md-5 gx-0 text-break">
-    {% with position_name=resource.properties.position_name.strip organisation=resource.properties.organisation.strip non_address_contact_info=resource.properties.non_address_contact_info col_width_class=col_width_class|default:'col-md-6' heading_font_size_class=heading_font_size_class|default:'fs-5' %}
+    {% with position_name=resource.properties.position_name.strip organisation=resource.properties.organisation.strip non_address_contact_info=resource.properties.non_address_contact_info col_width_class=col_width_class|default:'col-md-6' heading_font_size_class=heading_font_size_class|default:'fs-6' %}
     {# Non-address contact info = website, email, phone number or hours of service #}
     {% if position_name or organisation or non_address_contact_info %}
     <div class="d-flex flex-column row-gap-4 {{ col_width_class }}">

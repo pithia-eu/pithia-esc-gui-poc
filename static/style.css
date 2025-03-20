@@ -228,7 +228,7 @@ p {
 }
 
 .fs-base-2 {
-    font-size: 1.1rem;
+    font-size: 1.1rem !important;
 }
 
 .sidemenu li a {

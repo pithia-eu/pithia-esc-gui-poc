@@ -4,7 +4,9 @@
 {% block post_description_content %}
 {% if resource.properties.contact_info %}
 <section class="responsive-resource-detail-section resource-detail-section">
+    {% with heading_font_size_class='fs-base-2 fw-semibold' %}
     {% include 'browse/detail/components/contact_info_section_content.html' %}
+    {% endwith %}
 </section>
 {% endif %}
 {% endblock post_description_content %}
@@ -13,7 +15,7 @@
 {% block aside_extra_content %}
 {% if resource.properties.contact_info %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    {% with col_width_class='col-lg-12' heading_font_size_class='fs-6' %}
+    {% with col_width_class='col-lg-12' %}
     {% include 'browse/detail/components/contact_info_section_content.html' %}
     {% endwith %}
 </section>
