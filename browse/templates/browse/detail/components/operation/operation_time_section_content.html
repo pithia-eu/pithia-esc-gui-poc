@@ -1,17 +1,24 @@
-<div class="d-inline-flex column-gap-2">
-    <span>
-        {% if resource.properties.operation_time.time_period.begin.time_position %}
-        {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS, Y' }}
-        {% else %}
-        N/A
-        {% endif %}
-    </span>
-    <span>-</span>
-    <span>
-        {% if resource.properties.operation_time.time_period.end.time_position %}
-        {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS, Y' }}
-        {% else %}
-        N/A
-        {% endif %}
-    </span>
+<div class="bg-body-tertiary rounded p-3">
+    <dl class="d-lg-inline-flex d-flex flex-column row-gap-3">
+        <div>
+            <dt class="text-secondary-emphasis">From</dt>
+            <dd>
+                {% if resource.properties.operation_time.time_period.begin.time_position %}
+                {{ resource.properties.operation_time.time_period.begin.time_position|date:'M jS Y, H:i' }}
+                {% else %}
+                N/A
+                {% endif %}
+            </dd>
+        </div>
+        <div>
+            <dt class="text-secondary-emphasis">To</dt>
+            <dd>
+                {% if resource.properties.operation_time.time_period.end.time_position %}
+                {{ resource.properties.operation_time.time_period.end.time_position|date:'M jS Y, H:i' }}
+                {% else %}
+                N/A
+                {% endif %}
+            </dd>
+        </div>
+    </dl>
 </div>

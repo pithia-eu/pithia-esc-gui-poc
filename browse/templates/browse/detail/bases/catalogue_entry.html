@@ -42,18 +42,18 @@
 
 {# Appears in aside section #}
 {% block aside_extra_content_after_default %}
+{% if resource.properties.phenomenon_time %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Phenomenon Time</h2>
+    {% include 'browse/detail/components/catalogue_entry/phenomenon_time_section_content.html' %}
+</section>
+{% endif %}
 {% if resource.properties.catalogue_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Catalogue</h2>
     {% with value=resource.properties.catalogue_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
-</section>
-{% endif %}
-{% if resource.properties.phenomenon_time %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Phenomenon Time</h2>
-    {% include 'browse/detail/components/catalogue_entry/phenomenon_time_section_content.html' %}
 </section>
 {% endif %}
 {% endblock aside_extra_content_after_default %}

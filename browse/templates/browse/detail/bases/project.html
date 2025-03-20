@@ -2,14 +2,7 @@
 
 {# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% include 'browse/detail/sections/responsive/status_section.html' %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
@@ -70,13 +63,6 @@
 
 {# Appears in the aside section #}
 {% block aside_extra_content_after_default %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status url_text_extra_classes='fs-6 text-secondary-emphasis' %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% include 'browse/detail/sections/asides/responsive/status_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
 {% endblock aside_extra_content_after_default %}

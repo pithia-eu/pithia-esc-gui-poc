@@ -44,6 +44,10 @@
 
 {# Appears in aside section #}
 {% block aside_extra_content_after_default %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Result Time</h2>
+    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
+</section>
 {% if resource.properties.catalogue_entry_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Catalogue Entry</h2>
@@ -60,8 +64,4 @@
     {% endwith %}
 </section>
 {% endif %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Result Time</h2>
-    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
-</section>
 {% endblock aside_extra_content_after_default %}
