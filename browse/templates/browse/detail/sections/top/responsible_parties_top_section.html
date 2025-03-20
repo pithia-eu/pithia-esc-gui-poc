@@ -4,13 +4,13 @@
     <dl class="d-flex flex-sm-row flex-column flex-wrap column-gap-5 row-gap-3 mb-0">
         {% for rp in resource.properties.related_parties %}
         <div>
-            <dt class="mb-1">
+            <dt>
                 {% with value=rp.role %}
                 {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
                 {% endwith %}
             </dt>
             {% for p in rp.parties %}
-            <dd class="mb-0">
+            <dd>
                 {% with value=p %}
                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                 {% endwith %}
