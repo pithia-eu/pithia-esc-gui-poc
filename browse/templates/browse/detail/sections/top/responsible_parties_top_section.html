@@ -11,7 +11,7 @@
             </dt>
             {% for p in rp.parties %}
             <dd class="mb-0">
-                {% with value=p url_text_extra_classes='link-plain-by-default' %}
+                {% with value=p %}
                 {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
                 {% endwith %}
             </dd>
