@@ -1,5 +1,4 @@
 /* || General styles */
-
 html, body {
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -9,57 +8,202 @@ section {
     padding: 1rem 0;
 }
 
-.pithia-blue {
-    color: var(--pithia-blue) !important;
+/* Credit: Used this article as reference for dialog implementation:
+https://web.dev/articles/building/a-dialog-component */
+dialog {
+    width: 30rem;
+    border: 1px var(--bs-gray-300) solid;
+    border-radius: 12.5px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    display: grid;
+    align-content: start;
+    max-inline-size: min(90vw, 60ch);
+    max-block-size: min(80vh, 100%);
+    max-block-size: min(80dvb, 100%);
+    overflow: auto;
+    margin: auto;
+    padding: 0;
+    position: fixed;
+    inset: 0;
 }
 
-.pithia-blue-2 {
-    color: var(--pithia-blue-2);
+dialog[open] {
+    opacity: 1;
+    pointer-events: inherit;
 }
 
-header .nav-link,
-.accordion-button a,
-.card-menu a,
-.list-group-item > a {
-    text-decoration: none;
+html:has(dialog[open]) {
+    overflow: hidden;
 }
 
-a:not(.btn, .badge, .header-logo-link, footer a),
-a:hover:not(.btn, .badge, .header-logo-link, footer a),
-a:focus:not(.btn, .badge, .header-logo-link, footer a) {
+dialog .dialog-content {
+    padding: 2rem;
+}
+
+dialog .dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+dialog .btn-close {
+    transform: translateY(0.25rem);
+    flex-shrink: 0;
+}
+
+
+/* || Heading styles */
+h1 {
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+hgroup p {
+    max-width: 45ch;
+    font-size: 1.75rem !important;
+    color: var(--bs-secondary-color);
+}
+
+
+/* || Font sizes */
+.fs-sm-1 {
+    font-size: var(--fs-sm-1) !important;
+}
+
+.fs-sm-2 {
+    font-size: var(--fs-sm-2) !important;
+}
+
+.fs-base-2 {
+    font-size: 1.1rem !important;
+}
+
+
+/* || Link styles */
+a {
     color: var(--pithia-blue);
     text-decoration-color: var(--pithia-blue);
-}
-
-a:not(
-    .btn,
-    .header-logo-link,
-    footer a,
-    header a,
-    .breadcrumb a,
-    .card-menu a,
-    a.dropdown-item,
-    a.support-link,
-    a.login-link,
-    .toc-container a,
-    .badge):visited {
-    /* color: #551A8B !important;
-    text-decoration-color: #551A8B; */
-}
-
-a {
+    text-decoration: underline;
     overflow-wrap: break-word;
     word-break: break-word;
 }
 
-a:not(.btn, .nav-link):hover,
-a:not(.btn, .nav-link):focus,
-.logout-button:hover,
-.logout-button:focus {
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+/* Link styles - navigation elements */
+/* Header logo */
+a.header-logo-link {
+    text-decoration: none;
+}
+
+a.header-logo-link:hover,
+a.header-logo-link:focus {
     text-decoration: underline;
 }
 
-a.link-plain-by-default {
+/* Navbar links */
+.navbar a,
+.navbar .nav-item a.dropdown-toggle
+.navbar .dropdown-menu .dropdown-item,
+.user-dropdown .dropdown-menu a {
+    color: var(--bs-secondary-text-emphasis);
+    text-decoration-color: var(--bs-secondary-text-emphasis);
+}
+
+.navbar .nav-item a.dropdown-toggle span:hover,
+.navbar .nav-item a.dropdown-toggle span:focus,
+.navbar .nav-item a.dropdown-toggle:hover,
+.navbar .nav-item a.dropdown-toggle:focus {
+    text-decoration: underline;
+}
+
+/* Navbar, footer */
+a.nav-link {
+    text-decoration: none;
+}
+
+a.nav-link:hover,
+a.nav-link:focus,
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus {
+    text-decoration: underline;
+}
+
+/* Breadcrumb */
+.breadcrumb-item a {
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover,
+.breadcrumb-item a:focus {
+    text-decoration: underline;
+}
+
+/* Link styles - Bootstrap elements */
+a.btn,
+a.badge,
+.accordion-button a,
+.list-group-item > a {
+    text-decoration: none;
+}
+
+.metadata-server-url:not(.loading) .metadata-server-url-text.badge {
+    text-decoration: none;
+}
+
+a.btn:hover,
+a.btn:focus,
+a.badge:hover,
+a.badge:focus,
+.accordion-button a:hover,
+.accordion-button a:focus,
+.list-group-item > a:hover,
+.list-group-item > a:focus {
+    text-decoration: underline;
+}
+
+/* Link styles - custom elements */
+.card-menu a {
+    text-decoration: none;
+}
+
+.card-menu a:hover,
+.card-menu a:focus {
+    text-decoration: underline;
+}
+
+.sidemenu li a {
+    text-decoration: none;
+}
+
+.user-dropdown .dropdown-menu li a:hover,
+.user-dropdown .dropdown-menu li a:focus,
+.user-dropdown .dropdown-menu li button:hover,
+.user-dropdown .dropdown-menu li button:focus {
+    text-decoration: underline;
+}
+
+.ontology-server-url a.metadata-server-url-text:not(:hover, :focus) {
+    text-decoration: underline dotted;
+}
+
+.metadata-server-url.loading .metadata-server-url-text {
+    text-decoration: none;
+}
+
+.metadata-server-url.loading {
+    text-decoration: none;
+    cursor: wait;
+}
+
+/* Link styles - text decoration utility classes */
+a.link-plain-by-default,
+.btn-link.link-plain-by-default {
     text-decoration: none;
 }
 
@@ -82,6 +226,8 @@ a.link-underline-by-default:focus,
     text-decoration: none;
 }
 
+
+/* || External link styling */
 a[href^="http"]:not([href*="https://esc.pithia.eu"]):not(footer a, .card-menu a)::after,
 .card-menu a[href^="http"]:not([href*="https://esc.pithia.eu"]) span::after {
     display: inline-block;
@@ -116,17 +262,8 @@ a[href^="http"].btn-outline-dark:not([href*="https://esc.pithia.eu"]):not(footer
     filter: invert(100%) sepia(2%) saturate(7490%) hue-rotate(224deg) brightness(107%) contrast(99%);
 }
 
-h1 {
-    overflow-wrap: break-word;
-    text-wrap: balance;
-}
 
-hgroup p {
-    max-width: 45ch;
-    font-size: 1.75rem !important;
-    color: var(--bs-secondary-color);
-}
-
+/* || Bootstrap custom elements */
 .btn-transparent {
     --bs-btn-color: var(--bs-dark);
     --bs-btn-bg: rgb(0, 0, 0, 0);
@@ -139,6 +276,29 @@ hgroup p {
     --bs-btn-active-bg: var(--bs-gray-300);
     --bs-btn-active-border-color: var(--bs-gray-400);
 }
+
+.bi {
+    width: 1em;
+    height: 1em;
+    vertical-align: -.125em;
+    fill: currentcolor;
+}
+
+
+/* || Theme colours */
+.pithia-blue {
+    color: var(--pithia-blue) !important;
+}
+
+.pithia-blue-2 {
+    color: var(--pithia-blue-2);
+}
+
+.pithia-theme {
+    color: white;
+    background-color: var(--pithia-blue);
+}
+
 
 /* Custom summary marker */
 summary.summary-marker-custom {
@@ -197,6 +357,7 @@ summary.summary-marker-custom h3 {
     list-style: paren-lower-alpha;
 }
 
+
 /* .card-menu, .list-group combinators */
 h1 + .card-menu,
 h2 + .card-menu {
@@ -211,12 +372,8 @@ h3.opblock-tag p {
     font-size: 1rem;
 }
 
-p {
-    font-size: 100%;
-    line-height: 1.5;
-}
 
-/* Utilities */
+/* || Utilities */
 .list-group-numbered li::before {
     display: inline-block;
     width: 1.5em;
@@ -227,23 +384,8 @@ p {
     list-style: ' -  ';
 }
 
-.fs-base-2 {
-    font-size: 1.1rem !important;
-}
-
-.sidemenu li a {
-    text-decoration: none;
-}
-
 .sidemenu li {
     margin-bottom: 0.5rem;
-}
-
-.bi {
-    width: 1em;
-    height: 1em;
-    vertical-align: -.125em;
-    fill: currentcolor;
 }
 
 .page-info-lg {
@@ -272,6 +414,7 @@ p {
     transition-property: none;
 }
 
+/* Line clamp */
 .line-clamp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -294,13 +437,8 @@ p {
     -webkit-line-clamp: 5;
 }
 
-/* Colours */
-.pithia-theme {
-    color: white;
-    background-color: var(--pithia-blue);
-}
 
-/* Header class */
+/* || Header */
 .header-logo {
     /* This is the same logo width used with the official PITHIA-NRF website */
     width: 97px;
@@ -321,7 +459,7 @@ header a.support-link {
 
 header a.support-link,
 header a.logout-link {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
 }
 
 header .dropdown-menu {
@@ -329,44 +467,18 @@ header .dropdown-menu {
 }
 
 header .user-dropdown .dropdown-toggle {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
 }
 
 header .login-link {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
 }
 
-/* Navbar */
+
+/* || Navbar */
 #navbar-global {
     background: rgba(var(--bs-secondary-bg-rgb), 0.5);
     padding-block: 0.25rem;
-}
-
-.navbar a,
-.navbar a:hover,
-.navbar a:focus,
-.navbar a:active,
-.navbar .nav-item .nav-link,
-.navbar .dropdown-menu .dropdown-item,
-.user-dropdown .dropdown-menu a {
-    color: var(--bs-secondary-text-emphasis);
-    text-decoration-color: var(--bs-secondary-text-emphasis);
-}
-
-.navbar .nav-item a.dropdown-toggle {
-    color: var(--bs-secondary-text-emphasis);
-    text-decoration-color: var(--bs-secondary-text-emphasis);
-}
-
-.navbar .nav-item a.dropdown-toggle span:hover,
-.navbar .nav-item a.dropdown-toggle span:focus,
-.navbar .nav-item a.dropdown-toggle:hover,
-.navbar .nav-item a.dropdown-toggle:focus {
-    text-decoration: underline;
-}
-
-.user-dropdown {
-    text-align: center;
 }
 
 .user-dropdown .dropdown-menu.show {
@@ -383,11 +495,6 @@ header .login-link {
 .user-dropdown .dropdown-menu li a,
 .user-dropdown .dropdown-menu li button {
     width: 100%;
-}
-
-.user-dropdown .dropdown-menu li a:hover,
-.user-dropdown .dropdown-menu li button:hover {
-    text-decoration: underline;
 }
 
 .user-dropdown .logout-button {
@@ -415,7 +522,8 @@ header .login-link {
     width: fit-content;
 }
 
-/* Breadcrumb */
+
+/* || Breadcrumb */
 .breadcrumb-wrapper {
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
@@ -429,17 +537,8 @@ header .login-link {
     padding-left: 0;
 }
 
-.breadcrumb-item a {
-    text-decoration: none;
-}
-
 .breadcrumb-item:not(.breadcrumb-item:nth-last-of-type(2)) {
     display: none;
-}
-
-.breadcrumb-item a:hover,
-.breadcrumb-item a:focus {
-    text-decoration: underline;
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -450,12 +549,14 @@ header .login-link {
     padding-right: 1rem;
 }
 
+
 /* Footer */
 .footer-link-separator {
     color: #dee2e6;
 }
 
-/* Home page */
+
+/* || Home page - card menu */
 .card-menu {
     display: grid;
     gap: 1rem;
@@ -505,7 +606,7 @@ header .login-link {
     height: 1.75rem;
 }
 
-/* Card menu - interactive help */
+/* Home page, card menu - interactive help */
 .btn-card-help-dialog,
 .btn-card-help-dialog .btn-icon-container {
     width: 1.5rem;
@@ -591,60 +692,14 @@ header .login-link {
     opacity: 60%;
 }
 
-/* Credit: Used this article as reference for dialog implementation:
-https://web.dev/articles/building/a-dialog-component */
-dialog {
-    width: 30rem;
-    border: 1px var(--bs-gray-300) solid;
-    border-radius: 12.5px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.25s;
-    display: grid;
-    align-content: start;
-    max-inline-size: min(90vw, 60ch);
-    max-block-size: min(80vh, 100%);
-    max-block-size: min(80dvb, 100%);
-    overflow: auto;
-    margin: auto;
-    padding: 0;
-    position: fixed;
-    inset: 0;
-}
-
-dialog[open] {
-    opacity: 1;
-    pointer-events: inherit;
-}
-
-html:has(dialog[open]) {
-    overflow: hidden;
-}
-
-dialog .dialog-content {
-    padding: 2rem;
-}
-
-dialog .dialog-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
-dialog .btn-close {
-    transform: translateY(0.25rem);
-    flex-shrink: 0;
-}
-
-/* Login alert - Institution selection */
+/* Home page, login alert - institution selection */
 .alert-institution-setting svg:first-child {
     width: 1.2rem;
     height: 1.2rem;
 }
 
 
-/* Resource detail page */
-.col-lg-12 .resource-key-details td:first-child,
+/* || Resource detail page */
 .interaction-method-table td:first-child,
 .interaction-method-table td:nth-child(3),
 .interaction-method-table td:nth-child(4),
@@ -657,6 +712,8 @@ dialog .btn-close {
     width: 25%;
 }
 
+
+/* Resource detail page - top section (h1 heading, short name, last modified date) */
 .resource-detail-top-section {
     padding-bottom: var(--resource-detail-top-section-padding);
 }
@@ -664,7 +721,7 @@ dialog .btn-close {
 /* font-size and font-weight is intended to be the same
 as Bootstrap styling. */
 #responsible-parties-top-section {
-    font-size: 0.925rem;
+    font-size: var(--fs-sm-2);
     padding-top: 0.25rem;
     padding-bottom: 1.5rem;
 }
@@ -678,7 +735,7 @@ as Bootstrap styling. */
 }
 
 #responsible-parties-top-section dt h3 {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
     font-weight: 700;
 }
 
@@ -898,6 +955,14 @@ as Bootstrap styling. */
     margin-left: 2rem;
 }
 
+.btn-expand-resource-description {
+    
+}
+
+.btn-expand-resource-description.btn-link {
+    color: var(--pithia-blue);
+}
+
 .btn-expand-resource-description.hidden {
     display: none;
 }
@@ -907,7 +972,7 @@ as Bootstrap styling. */
 }
 
 .col-lg-3 .resource-key-details {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
 }
 
 .resource-key-details {
@@ -944,15 +1009,15 @@ as Bootstrap styling. */
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 0.925rem;
+    font-size: var(--fs-sm-2);
 }
 
 .resource-detail-top-section-extra-content > dl > div {
-    font-size: 0.925rem;
+    font-size: var(--fs-sm-2);
 }
 
 details[name="details-permissions"] summary > span::after {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
     color: var(--bs-secondary-color);
 }
 
@@ -1047,7 +1112,7 @@ section .keyword-list li:last-child:after {
 }
 
 
-/* Resource management list page */
+/* || Resource management list page */
 .resource-management-table td:first-child {
     width: 40%;
 }
@@ -1097,6 +1162,7 @@ section .keyword-list li:last-child:after {
 .btn-view-xml {
     display: none;
 }
+
 
 /* Register page */
 .messages-container {
@@ -1239,7 +1305,7 @@ label.required::after {
 }
 
 
-/* Skeleton loading animation for metadata server urls */
+/* || Skeleton loading animation for metadata server urls */
 @keyframes skeleton-loading {
     0% {
         background-color: hsl(200, 20%, 80%);
@@ -1249,8 +1315,8 @@ label.required::after {
     }
 }
 
-.ontology-server-url a.metadata-server-url-text:not(:hover, :focus) {
-    text-decoration: underline dotted;
+.metadata-server-url {
+    text-decoration: inherit;
 }
 
 .metadata-server-url .metadata-server-url-text {
@@ -1263,14 +1329,6 @@ label.required::after {
     transition: opacity 0.5s ease
 }
 
-.metadata-server-url.loading .metadata-server-url-text {
-    text-decoration: none;
-}
-
-.metadata-server-url:not(.loading) .metadata-server-url-text.badge {
-    text-decoration: none;
-}
-
 .metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-secondary {
     color: #fff !important;
 }
@@ -1281,15 +1339,6 @@ label.required::after {
 
 .metadata-server-url:not(.loading) .metadata-server-url-text.badge.text-bg-light {
     color: #000 !important;
-}
-
-.metadata-server-url.loading {
-    text-decoration: none;
-    cursor: wait;
-}
-
-.metadata-server-url {
-    text-decoration: inherit;
 }
 
 .metadata-server-url.loading .metadata-server-url-text {
@@ -1305,7 +1354,7 @@ label.required::after {
 }
 
 
-/* Help page */
+/* || Help page */
 .help-section {
     border-top:
         var(--bs-border-width)
@@ -1340,7 +1389,7 @@ label.required::after {
 }
 
 
-/* View resource as XML page */
+/* || XML file download page */
 .xml-display-area {
     overflow-x: scroll;
 }
@@ -1349,7 +1398,8 @@ label.required::after {
     min-width: fit-content;
 }
 
-/* Search page */
+
+/* || Search by content page */
 #search-by-content-accordion legend h3 {
     font-size: 1rem;
     font-weight: 600;
@@ -1358,7 +1408,7 @@ label.required::after {
 }
 
 #search-by-content-accordion legend h4 {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm-1);
     color: var(--bs-secondary-color);
     margin-top: 0.15rem;
 }
@@ -1460,8 +1510,6 @@ ul.tree ul {
 #search-form-progress {
     position: relative;
     pointer-events: none;
-    
-    /* margin-bottom: 30px; */
 }
 
 #search-form-progress-bar {
@@ -1523,11 +1571,8 @@ ul.tree ul {
     width: 1.5rem;
 }
 
-.accordion-button:not(.collapsed) img {
-    filter: invert(24%) sepia(75%) saturate(5610%) hue-rotate(211deg) brightness(98%) contrast(91%);
-}
 
-/* Ontology browser */
+/* || Ontology browser */
 .ontology-term-description {
     max-width: 80ch;
 }
@@ -1573,12 +1618,8 @@ ul.tree ul {
     display: none;
 }
 
-/* Support page */
-.support-page-description {
-    max-width: 70ch;
-}
 
-/* Skeleton loader while search terms are loading */
+/* || Skeleton loader while search terms are loading */
 @keyframes loading {
     to {
         background-position:
@@ -1651,12 +1692,12 @@ ul.tree ul {
     animation: loading 1s infinite;
 }
 
-/* Search results */
+/* || Search results */
 .search-result-description {
     overflow: hidden;
 }
 
-/* Metadata editor */
+/* || Metadata editor */
 .table-dynamic thead {
     display: none;
 }
@@ -1721,8 +1762,7 @@ ul.tree ul {
 }
 
 
-/* Customisation */
-/* Tom select */
+/* || Tom select customisation */
 .ts-wrapper.multi .ts-control > div {
     display: inline-block;
     word-break: break-word;
@@ -1740,13 +1780,15 @@ ul.tree ul {
     display: none;
 }
 
-/* Bootstrap tooltips */
+
+/* || Bootstrap tooltips */
 .custom-tooltip {
     --bs-tooltip-bg: var(--bs-light-bg-subtle);
     --bs-tooltip-color: var(--bs-light-emphasis);
 }
 
 
+/* || Media queries */
 @media (min-width: 1200px) {
     .table-dynamic thead {
         display: table-header-group;
@@ -1817,7 +1859,7 @@ ul.tree ul {
 
     .resource-detail-aside .resource-detail-aside-section,
     .resource-detail-aside #related-aside-section li {
-        font-size: 0.875rem;
+        font-size: var(--fs-sm-1);
     }
 
     #further-information-section .resource-detail-section.d-lg-none:first-child + .resource-detail-section {
@@ -1870,7 +1912,7 @@ ul.tree ul {
     }
 
     .breadcrumb-item {
-        font-size: 0.925rem;
+        font-size: var(--fs-sm-2);
     }
 
     .breadcrumb-item + .breadcrumb-item {
@@ -1954,7 +1996,7 @@ ul.tree ul {
     .navbar .dropdown-menu:not(.user-dropdown .dropdown-menu) {
         background: transparent;
         border: none;
-        font-size: 0.875rem;
+        font-size: var(--fs-sm-1);
         padding-top: 0;
     }
 
@@ -2124,6 +2166,10 @@ ul.tree ul {
     --resource-detail-section-padding: 2rem;
     --resource-detail-aside-section-padding: 2rem;
     --resource-registration-upload-section-padding: 2rem;
+
+    /* Custom font sizes */
+    --fs-sm-1: 0.875rem;
+    --fs-sm-2: 0.925rem;
 }
 
 @media (min-width: 768px) and (prefers-color-scheme: dark) {
