@@ -16,7 +16,10 @@ class ScientificMetadataQuerySet(models.QuerySet, AbstractMetadataDatabaseQuerie
         return self.get(json__identifier__PITHIA_Identifier__namespace=namespace, json__identifier__PITHIA_Identifier__localID=localid)
 
     def get_by_metadata_server_url(self, metadata_server_url: str):
-        namespace, localid = get_namespace_and_localid_from_resource_url(metadata_server_url)
+        try:
+            localid = metadata_server_url.split('/')[-1]
+        except Exception:
+            raise self.model.DoesNotExist
         return self.get(pk=localid)
     
     def get_by_metadata_server_urls(self, metadata_server_urls: list):

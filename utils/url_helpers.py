@@ -25,7 +25,7 @@ def divide_catalogue_related_resource_url_into_main_components(resource_url):
         'resource_type': resource_url_split[5],
         'namespace': resource_url_split[6],
         'event': resource_url_split[7],
-        'localid': resource_url_split[8],
+        'localid': resource_url_split[-1],
     }
 
 def divide_resource_url_into_main_components(resource_url):

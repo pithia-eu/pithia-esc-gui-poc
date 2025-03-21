@@ -119,8 +119,7 @@ def _sort_resource_server_urls_from_operational_mode_urls(pred, resource_server_
 
 
 def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
-    """
-    Maps metadata server URLs to e-Science Centre browse page URLs
+    """Maps metadata server URLs to e-Science Centre browse page URLs
     based on the metadata term that each metadata server URL is for.
     """
     mapped_resource_server_urls = []
@@ -175,6 +174,7 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         try:
             referenced_resource = model.objects.get_by_metadata_server_url(url)
         except (AttributeError, ObjectDoesNotExist):
+            logger.exception(f'Could not find detail page URL mapping for metadata server URL: {url}')
             mapped_resource_server_urls.append(url_mapping)
             continue
         url_mapping['converted_url'] = referenced_resource.get_absolute_url()
