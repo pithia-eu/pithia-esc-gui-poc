@@ -119,7 +119,10 @@ class ScientificMetadata(models.Model):
     
     @property
     def description(self):
-        return self.json['description']
+        try:
+            return self.json['description']
+        except Exception:
+            return ''
 
     @property
     def creation_date_json(self):
