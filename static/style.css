@@ -156,10 +156,6 @@ a.badge,
     text-decoration: none;
 }
 
-a.btn:hover,
-a.btn:focus,
-a.badge:hover,
-a.badge:focus,
 .accordion-button a:hover,
 .accordion-button a:focus,
 .list-group-item > a:hover,
