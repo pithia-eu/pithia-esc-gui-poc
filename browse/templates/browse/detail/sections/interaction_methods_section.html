@@ -1,6 +1,6 @@
 {% if num_interaction_methods %}
 <section class="resource-detail-section">
-    <h2 class="mb-0">{{ section_heading|default:'How to Access the Data' }}</h2>
+    <h2 class="mb-0">{{ section_heading|default:'Access the Data' }}</h2>
     <div class="d-flex flex-column">
         {% if num_interaction_methods > 1 %}
         <p class="interaction-methods-counter text-dark-emphasis fw-semibold mt-1 mb-0">
@@ -10,20 +10,14 @@
         {% for type, interaction_methods_for_type in interaction_methods_by_type.items %}
         {% if type == 'api' %}
         <section class="interaction-methods-subsection">
-            <h3 class="fs-5 fw-semibold">
-                API Access
-            </h3>
             <div>
-                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' %}
+                {% with online_resources=interaction_methods_for_type pill_type='none bg-primary-subtle text-primary-emphasis' online_resource_access_type='API Access' %}
                 {% include 'browse/detail/components/online_resource_list.html' %}
                 {% endwith %}
             </div>
         </section>
         {% elif type == 'online_resource' %}
         <section class="interaction-methods-subsection">
-            <h3 class="fs-5 fw-semibold">
-                Online Resource Access
-            </h3>
             <div>
                 {% with online_resources=interaction_methods_for_type pill_type='none bg-dark-subtle text-dark' %}
                 {% include 'browse/detail/components/online_resource_list.html' %}

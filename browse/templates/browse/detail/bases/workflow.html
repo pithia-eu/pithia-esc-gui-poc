@@ -5,46 +5,53 @@
 {% breadcrumb_item resource_list_page_breadcrumb_text resource_list_page_breadcrumb_url_name %}
 {% with pithia_identifier=resource.identifier.PITHIA_Identifier %}
 {% breadcrumb_item_active resource.name|default:pithia_identifier.localID %}
-{% endwith %}{% endblock breadcrumbs %}
+{% endwith %}
+{% endblock breadcrumbs %}
 {% block pre_description_content %}
 <section class="resource-detail-section">
-    <h2 class="fs-4">Run this Workflow</h2>
-    <div class="d-flex flex-column align-items-start row-gap-4 bg-body-tertiary rounded p-4">
-        <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" class="btn btn-outline-dark btn-lg btn-outline-dark-togglable icon-link icon-link-hover" target="_blank" rel="noopener noreferrer">
-            Go to API
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-            </svg>
-        </a>
-        {% if workflow_interaction_method.config.description %}
-        <div>
-            <h3 class="fw-semibold fs-base-2">Description</h3>
-            <p class="fs-base-2 mb-0">
+    <div class="d-flex flex-column row-gap-3">
+        <h2 class="mb-0">
+            <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" class="btn btn-lg btn-outline-dark btn-outline-dark-togglable fs-5 fw-semibold icon-link icon-link-hover" target="_blank" rel="noopener noreferrer">
+                Run this Workflow
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                </svg>
+            </a>
+        </h2>
+        {% if resource.properties.data_collection_urls %}
+        <details>
+            <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm mb-0">
+                <h3 class="d-inline fs-6">
+                    Data Collections in this Workflow
+                    <span class="text-body-secondary">({{ resource.properties.data_collection_urls|length }})</span>
+                </h3>
+            </summary>
+            <ul class="list-group list-group-flush mt-2" style="font-size: 0.875rem;">
+                {% for data_collection_url in resource.properties.data_collection_urls %}
+                <li class="list-group-item px-0">
+                    {% with value=data_collection_url url_text_extra_classes='link-plain-by-default' %}
+                    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
+        {% endif %}
+    </div>
+    <div class="bg-body-tertiary rounded px-3 py-4 mt-4">
+        <h3 class="fw-semibold fs-base-2">Workflow Notes & Diagram</h3>
+        <div class="d-flex flex-column align-items-start row-gap-2">
+            {% if workflow_interaction_method.config.description %}
+            <p class="mb-0">
                 {{ workflow_interaction_method.config.description }}
             </p>
+            {% endif %}
+            <a href="{{ resource.details_url }}" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-fill me-1" viewBox="0 0 16 16">
+                    <path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2z"/>
+                </svg>Workflow Diagram
+            </a>
         </div>
-        {% endif %}
-        <a href="{{ resource.details_url }}" class="icon-link icon-link-hover link-underline-by-default" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-fill me-1" viewBox="0 0 16 16">
-                <path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2z"/>
-            </svg>Diagram and Further Details
-        </a>
     </div>
 </section>
 {% endblock pre_description_content %}
-{% block post_description_content %}
-{% if resource.properties.data_collection_urls %}
-<section class="resource-detail-section">
-    <h2>Data Collections in this Workflow</h2>
-    <ul>
-        {% for data_collection_url in resource.properties.data_collection_urls %}
-        <li>
-            {% with value=data_collection_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% endblock post_description_content %}

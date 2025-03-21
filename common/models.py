@@ -119,7 +119,10 @@ class ScientificMetadata(models.Model):
     
     @property
     def description(self):
-        return self.json['description']
+        try:
+            return self.json['description']
+        except Exception:
+            return ''
 
     @property
     def creation_date_json(self):
@@ -834,12 +837,12 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     @property
     def metadata_server_url(self):
         try:
-            return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}'
+            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}', safe='/:?=&')
         except ObjectDoesNotExist:
             pass
         except AttributeError:
             pass
-        return f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}'
+        return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
     @property
     def properties(self):

@@ -1,31 +1,33 @@
-<dl class="d-flex flex-column row-gap-4">
-    {% if resource.properties.location.name %}
-    <div>
-        <dt class="fs-6 visually-hidden">Name</dt>
-        <dd>{{ resource.properties.location.name }}</dd>
-    </div>
-    {% endif %}
-    <div>
-        <dt class="fs-6">Point</dt>
-        <dd>
-            <dl>
-                <div class="mb-3">
-                    <dt class="visually-hidden">ID</dt>
-                    <dd>{{ resource.properties.location.point.id }}</dd>
-                </div>
-                <div class="mb-3">
-                    <dt>SRS Name</dt>
-                    <dd>
-                        {% with value=resource.properties.location.point.srs_name %}
-                        {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
-                        {% endwith %}
-                    </dd>
-                </div>
-                <div>
-                    <dt>Position</dt>
-                    <dd>{{ resource.properties.location.point.pos }}</dd>
-                </div>
-            </dl>
-        </dd>
-    </div>
-</dl>
+<div class="bg-body-tertiary rounded p-3">
+    <dl class="d-flex flex-column row-gap-4">
+        {% if resource.properties.location.name %}
+        <div>
+            <dt class="fs-6 visually-hidden">Name</dt>
+            <dd class="fw-semibold">{{ resource.properties.location.name }}</dd>
+        </div>
+        {% endif %}
+        <div>
+            <dt class="fs-6">Point</dt>
+            <dd>
+                <dl>
+                    <div class="mb-3">
+                        <dt class="visually-hidden">ID</dt>
+                        <dd>{{ resource.properties.location.point.id }}</dd>
+                    </div>
+                    <div class="mb-3">
+                        <dt>SRS Name</dt>
+                        <dd>
+                            {% with value=resource.properties.location.point.srs_name %}
+                            {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                            {% endwith %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Position</dt>
+                        <dd>{{ resource.properties.location.point.pos }}</dd>
+                    </div>
+                </dl>
+            </dd>
+        </div>
+    </dl>
+</div>

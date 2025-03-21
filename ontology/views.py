@@ -17,6 +17,7 @@ from .services import (
     get_ontology_category_terms_in_xml_format,
 )
 from .utils import (
+    get_ontology_category_terms_in_xml_format,
     LicenceOntologyTermMetadata,
     ObservedPropertyOntologyTermMetadata,
     OntologyCategoryMetadata,
@@ -63,8 +64,11 @@ def _get_ontology_category_term_list_page_title_from_category(category):
     return f'{title_base} Terms'
 
 def ontology_category_terms_list(request, category):
+    xml_for_ontology_category = get_ontology_category_terms_in_xml_format(category)
+    ontology_category_metadata = OntologyCategoryMetadata(xml_for_ontology_category)
     return render(request, 'ontology/ontology_category_terms_list.html', {
         'category': category,
+        'category_description': ontology_category_metadata.description,
         'title': _get_ontology_category_term_list_page_title_from_category(category),
         'ontology_index_page_breadcrumb_text': _ONTOLOGY_INDEX_PAGE_TITLE,
     })

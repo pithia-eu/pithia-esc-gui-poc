@@ -23,7 +23,7 @@ function updateResourceCount(numResourceCount, reset = false) {
 }
 
 export function filterResourceList() {
-    const searchInputValue = searchInput.value;
+    const searchInputValue = searchInput.value.trim();
     if (!searchInputValue) {
         updateResourceCount(Object.keys(searchableListItemText).length, typeReadable, typePluralReadable, true);
         searchResultsSection.classList.add("d-none");
@@ -36,10 +36,11 @@ export function filterResourceList() {
     dataCollectionCategorySections.forEach(section => {
         section.classList.add("d-none");
     });
+    const searchInputValueSplit = searchInputValue.split(/\s/);
     const fragment = new DocumentFragment();
     for (const property in searchableListItemText) {
         const listItemText = searchableListItemText[property];
-        if (!listItemText.toLowerCase().includes(searchInputValue.toLowerCase())) {
+        if (!searchInputValueSplit.every((searchInputValuePart) => listItemText.toLowerCase().includes(searchInputValuePart.toLowerCase()))) {
             continue;
         }
         try {

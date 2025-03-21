@@ -3,7 +3,7 @@
 
 {# Appears after the description #}
 {% block post_description_content %}
-{% with section_heading='How to Access This Data Subset' %}
+{% with section_heading='Access This Data Subset' %}
 {% include 'browse/detail/sections/interaction_methods_section.html' %}
 {% endwith %}
 <div class="responsive-resource-detail-section resource-detail-section">
@@ -12,7 +12,7 @@
 </div>
 {% if resource.properties.catalogue_entry_urls %}
 <section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Static Dataset Entry</h2>
+<h2 class="fs-6 fw-semibold mb-2">Static Dataset Entry</h2>
     {% with value=resource.properties.catalogue_entry_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
@@ -43,7 +43,11 @@
 {% endblock further_information_extra_sections %}
 
 {# Appears in aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
+<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
+    <h2>Result Time</h2>
+    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
+</section>
 {% if resource.properties.catalogue_entry_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Static Dataset Entry</h2>
@@ -60,8 +64,4 @@
     {% endwith %}
 </section>
 {% endif %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Result Time</h2>
-    {% include 'browse/detail/components/catalogue_data_subset/result_time_section_content.html' %}
-</section>
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

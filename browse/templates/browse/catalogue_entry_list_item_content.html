@@ -4,7 +4,7 @@
 </a>
 {% else %}
 <details>
-    <summary>
+    <summary class="summary-marker-custom summary-marker-custom-sm summary-marker-custom-baseline">
         <div class="d-inline-flex flex-column">
             <a href="{% url 'browse:catalogue_entry_detail' catalogue_entry.id %}" class="link-plain-by-default">
                 {{ catalogue_entry.name }}

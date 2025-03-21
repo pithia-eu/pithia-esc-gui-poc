@@ -5,7 +5,7 @@
 {# Features of interest #}
 {% if ontology_term_metadata.features_of_interest %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Features of Interest</h2>
+    <h2>Features of Interest</h2>
     {% with ontology_browser_urls=ontology_term_metadata.features_of_interest %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
@@ -14,7 +14,7 @@
 {# Interactions #}
 {% if ontology_term_metadata.interactions %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Interactions</h2>
+    <h2>Interactions</h2>
     {% with ontology_browser_urls=ontology_term_metadata.interactions %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
@@ -23,7 +23,7 @@
 {# Measurands #}
 {% if ontology_term_metadata.measurands %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Measurands</h2>
+    <h2>Measurands</h2>
     {% with ontology_browser_urls=ontology_term_metadata.measurands %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
@@ -32,7 +32,7 @@
 {# Phenomenons #}
 {% if ontology_term_metadata.phenomenons %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Phenomenons</h2>
+    <h2>Phenomenons</h2>
     {% with ontology_browser_urls=ontology_term_metadata.phenomenons %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
@@ -41,7 +41,7 @@
 {# Propagation modes #}
 {% if ontology_term_metadata.propagation_modes %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Propagation Modes</h2>
+    <h2>Propagation Modes</h2>
     {% with ontology_browser_urls=ontology_term_metadata.propagation_modes %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
@@ -50,52 +50,10 @@
 {# Qualifiers #}
 {% if ontology_term_metadata.qualifiers %}
 <section class="resource-detail-section">
-    <h2 class="mb-1">Qualifiers</h2>
+    <h2>Qualifiers</h2>
     {% with ontology_browser_urls=ontology_term_metadata.qualifiers %}
     {% include 'ontology/detail/ontology_browser_url_list.html' %}
     {% endwith %}
 </section>
 {% endif %}
 {% endblock post_definition_content %}
-
-{# Appears in the aside section #}
-{% block aside_content %}
-{# Narrower terms #}
-{% if ontology_term_metadata.urls_of_narrower_terms %}
-<section class="resource-detail-aside-section">
-    <details open>
-        <summary class="summary-marker-custom">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
-                    <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-                </svg>
-                Narrower Terms
-                <span class="text-body-secondary fw-normal">({{ ontology_term_metadata.urls_of_narrower_terms|length }})</span>
-            </h2>
-        </summary>
-        {% with ontology_browser_urls=ontology_term_metadata.urls_of_narrower_terms %}
-        {% include 'ontology/detail/ontology_browser_url_list.html' %}
-        {% endwith %}
-    </details>
-</section>
-{% endif %}
-{# Broader terms #}
-{% if ontology_term_metadata.urls_of_broader_terms %}
-<section class="resource-detail-aside-section">
-    <details open>
-        <summary class="summary-marker-custom">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-                    <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-                </svg>
-                Broader Terms
-                <span class="text-body-secondary fw-normal">({{ ontology_term_metadata.urls_of_broader_terms|length }})</span>
-            </h2>
-        </summary>
-        {% with ontology_browser_urls=ontology_term_metadata.urls_of_broader_terms %}
-        {% include 'ontology/detail/ontology_browser_url_list.html' %}
-        {% endwith %}
-    </details>
-</section>
-{% endif %}
-{% endblock aside_content %}

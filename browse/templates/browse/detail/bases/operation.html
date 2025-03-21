@@ -1,23 +1,12 @@
 {% extends 'browse/detail/bases/base.html' %}
 
-{# Appears before the description #}
-{% block pre_description_content %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{# Appears after the description #}
+{% block post_description_content %}
+{% include 'browse/detail/sections/responsive/status_section.html' %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Operation Time</h2>
     {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
 </section>
-{% endblock pre_description_content %}
-
-{# Appears after the description #}
-{% block post_description_content %}
 {% if resource.properties.platforms %}
 <section class="resource-detail-section">
     <details>
@@ -36,22 +25,13 @@
     </details>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% block aside_extra_content_after_default %}
+{% include 'browse/detail/sections/asides/responsive/status_aside_section.html' %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Operation Time</h2>
     {% include 'browse/detail/components/operation/operation_time_section_content.html' %}
 </section>
-{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

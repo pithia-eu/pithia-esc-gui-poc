@@ -1,7 +1,7 @@
 <div class="d-inline-block overflow-hidden">
-    <div id="{{ text_block_id }}" class="resource-description-wrapper text-break">
+    <div id="{{ text_block_id }}" class="resource-description-wrapper text-break line-clamp line-clamp-{{ line_clamp_number|default:'5' }}">
         {% for p in text_block_paragraphs %}
-        <p class="resource-description">{{ p|urlize }}</p>
+        <p class="resource-description {{ text_block_font_size_class|default:'' }}">{{ p|urlize }}</p>
         {% endfor %}
     </div>
 </div>

@@ -1,10 +1,10 @@
 {% load project_tags %}
-<ul class="list-group list-group-flush fs-6 mb-0">
+<ul class="list-group list-group-flush bg-body-tertiary rounded fs-6 mb-0">
     {% for url in ontology_browser_urls %}
-    <li class="list-group-item px-0">
+    <li class="list-group-item bg-body-tertiary py-2 mx-2">
         {% with url_metadata=names_and_ontology_browser_urls|get_key_value:url %}
         {% if url_metadata %}
-        <a href="{{ url_metadata.ontology_browser_url }}">
+        <a href="{{ url_metadata.ontology_browser_url }}" class="link-underline-by-default">
             {{ url_metadata.pref_label }}
             {% if url_metadata.alt_label %}({{ url_metadata.alt_label }}){% endif %}</a>
         {% else %}

@@ -1,4 +1,4 @@
-<div class="d-inline-flex flex-column row-gap-1 mb-4">
+<div class="d-inline-flex flex-column row-gap-1 mb-2">
     <div>
         {% if documentation.online_resource %}
         <a href="{{ documentation.online_resource }}" class="link-underline-by-default">
@@ -22,11 +22,11 @@
     {% endif %}
 </div>
 {% if documentation.online_resource or documentation.identifier or documentation.other_documentation_details %}
-<details>
+<details class="text-body-secondary">
     <summary>
         More details
     </summary>
-    <dl class="d-flex flex-column row-gap-4 pt-4">
+    <dl class="d-flex flex-column row-gap-3 mt-3" style="font-size: 0.875rem;">
         {% if documentation.online_resource %}
         <div>
             <dt>Link to Documentation</dt>

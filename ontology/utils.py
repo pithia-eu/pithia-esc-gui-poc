@@ -1,5 +1,6 @@
 import logging
 
+from dateutil.parser import isoparse
 from django.urls import reverse_lazy
 from lxml import etree
 
@@ -60,6 +61,16 @@ class OntologyCategoryMetadata(OntologyXmlMixin):
             (NamespacePrefix.SKOS, NamespacePrefix.RDF)
         )
 
+    @property
+    def description(self):
+        try:
+            return self._get_first_element_value_or_blank_string_with_xpath_query(
+                './/%s:description' % NamespacePrefix.DC
+            )
+        except Exception:
+            logger.exception('Encountered an error whilst getting ontology category description.')
+            return ''
+
     def get_term_with_iri(self, ontology_iri: str):
         element_for_term = self._get_first_element_from_list(
             self._get_elements_with_xpath_query(
@@ -80,6 +91,15 @@ class OntologyTermMetadata(OntologyXmlMixin):
     def __init__(self, xml_string_for_ontology_term: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.xml_parsed = etree.fromstring(xml_string_for_ontology_term.encode('utf-8'))
+
+    @property
+    def last_modified_date(self):
+        value_of_last_modified_date = self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:date' % NamespacePrefix.DC)
+        try:
+            return isoparse(value_of_last_modified_date)
+        except Exception:
+            logger.exception('Could not parse ontology term\'s last modified date')
+            return value_of_last_modified_date
 
     @property
     def pref_label(self):

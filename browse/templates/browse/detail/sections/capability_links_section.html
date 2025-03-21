@@ -22,7 +22,7 @@
             {% for cap_link in resource.properties.capability_links %}
             <li class="list-group-item p-0">
                 <details name="details-capability-links" {% if forloop.counter == 1 %}open{% endif %}>
-                    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 mb-0">
+                    <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm summary-marker-custom-highlight {% if forloop.first %}rounded-top{% endif %} p-3 mb-0">
                         <div>
                             <h3 class="fw-semibold fs-base-2 mb-1">
                                 Capability Link {{ forloop.counter }}

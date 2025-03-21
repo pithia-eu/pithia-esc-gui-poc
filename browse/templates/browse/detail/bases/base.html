@@ -6,6 +6,7 @@
 <script src="{% static 'browse/resource_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/ontology_url_conversion.js' %}" type="module"></script>
 <script src="{% static 'browse/detail.js' %}" type="module"></script>
+<script src="{% static 'utils/expandable_text_block.js' %}" type="module"></script>
 {% block extra_scripts %}{% endblock extra_scripts %}
 {% endblock scripts %}
 {% block breadcrumbs %}
@@ -19,7 +20,7 @@
 {% block content %}
 {% csrf_token %}
 <div class="row align-items-lg-baseline justify-content-between gx-md-5">
-    <div class="col-xl-7 col-lg-8">
+    <div class="col-lg-8">
         <div class="resource-detail-top-section">
             <div class="d-flex flex-column align-items-start row-gap-1 mb-2">
                 <h1 class="text-break mb-0">{{ resource.name }}</h1>
@@ -29,13 +30,14 @@
                 {% block pre_last_modified_date_content %}{% endblock pre_last_modified_date_content %}
             </div>
             <div class="d-flex flex-column row-gap-4">
-                <p class="text-secondary-emphasis mb-0">Last modified at {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
+                <p class="text-secondary-emphasis mb-0">Last modified on {{ scientific_metadata_last_modification_date_parsed|date:'M jS, Y, H:i e' }}</p>
                 {% block top_section_website %}{% endblock top_section_website %}
             </div>
             {% block top_section_extra_content %}{% endblock top_section_extra_content %}
         </div>
         {% block pre_related_parties_section %}{% endblock pre_related_parties_section %}
         {% include 'browse/detail/sections/top/responsible_parties_top_section.html' %}
+        {% block pre_type_content %}{% endblock pre_type_content %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-section resource-detail-section">
             <h2>Type</h2>
@@ -45,7 +47,9 @@
                 {% for type in resource.json.type|wrap_in_list_if_dict %}
                 <li>
                     {% with value=type|get_key_value:'@xlink:href' %}
+                    {% block metadata_type_main %}
                     {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% endblock metadata_type_main %}
                     {% endwith %}
                 </li>
                 {% endfor %}
@@ -54,7 +58,9 @@
         </section>
         {% endif %}
         {% block pre_description_content %}{% endblock pre_description_content %}
+        {% block description_section %}
         {% include 'browse/detail/sections/description_section.html' %}
+        {% endblock description_section %}
         {% block post_description_content %}{% endblock post_description_content %}
         <section id="further-information-section" class="resource-detail-section">
             <details>
@@ -62,6 +68,14 @@
                     <h2>Further Information and Resources</h2>
                 </summary>
                 <div class="d-flex flex-column">
+                    {% if resource.properties.documentation %}
+                    {% with documentation=resource.properties.documentation %}
+                    <section class="resource-detail-section">
+                        <h2>Documentation</h2>
+                        {% include 'browse/detail/components/documentation_section_content.html' %}
+                    </section>
+                    {% endwith %}
+                    {% endif %}
                     {% block further_information_extra_sections %}{% endblock further_information_extra_sections %}
                     <section class="resource-detail-section">
                         <h3>Resources</h3>
@@ -167,13 +181,26 @@
         {% endif %}
     </div>
     <aside class="col-xl-3 col-lg-4 resource-detail-aside border-start">
+        {% block aside_extra_content_before_default %}{% endblock aside_extra_content_before_default %}
         {% if 'type' in resource.json %}
         <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
             <h2>Type</h2>
-            {% include 'browse/detail/components/type_badges.html' %}
+            {% if 'type' in resource.json %}
+            <ul class="d-flex flex-column row-gap-2 list-unstyled type-badge-list bg-body-tertiary rounded p-3 mb-0">
+                {% for type in resource.json.type|wrap_in_list_if_dict %}
+                <li>
+                    {% with value=type|get_key_value:'@xlink:href' pill_type='none' %}
+                    {% block metadata_type_aside %}
+                    {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
+                    {% endblock metadata_type_aside %}
+                    {% endwith %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </section>
         {% endif %}
-        {% block aside_extra_content %}{% endblock aside_extra_content %}
+        {% block aside_extra_content_after_default %}{% endblock aside_extra_content_after_default %}
         <section class="resource-detail-aside-section">
             <h2 class="fs-6 text-body-secondary">
                 Page Suggestions & Support

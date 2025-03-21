@@ -151,6 +151,11 @@ summary.summary-marker-custom-baseline {
     align-items: baseline;
 }
 
+summary.summary-marker-custom.summary-marker-custom-sm::before {
+    font-size: 0.75rem;
+    transform: translateY(-0.125rem);
+}
+
 summary.summary-marker-custom::-webkit-details-marker,
 summary.summary-marker-custom::marker {
     content: none;
@@ -223,7 +228,7 @@ p {
 }
 
 .fs-base-2 {
-    font-size: 1.1rem;
+    font-size: 1.1rem !important;
 }
 
 .sidemenu li a {
@@ -246,8 +251,8 @@ p {
 }
 
 .page-info-emphasised {
-    color: var(--bs-secondary-emphasis);
-    background-color: var(--bs-light-bg-subtle);
+    color: var(--bs-secondary-text-emphasis);
+    background-color: var(--bs-tertiary-bg);
     padding-block: 1rem;
     padding-inline: 1.5rem;
     border-radius: var(--bs-border-radius);
@@ -265,6 +270,28 @@ p {
     background-color: var(--pithia-blue);
     color: white !important;
     transition-property: none;
+}
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    -webkit-line-clamp: 3;
+}
+
+.line-clamp-4 {
+    -webkit-line-clamp: 4;
+}
+
+.line-clamp-5 {
+    -webkit-line-clamp: 5;
 }
 
 /* Colours */
@@ -311,7 +338,8 @@ header .login-link {
 
 /* Navbar */
 #navbar-global {
-    background: linear-gradient(to right, var(--bs-tertiary-bg), var(--bs-secondary-bg));
+    background: rgba(var(--bs-secondary-bg-rgb), 0.5);
+    padding-block: 0.25rem;
 }
 
 .navbar a,
@@ -321,13 +349,13 @@ header .login-link {
 .navbar .nav-item .nav-link,
 .navbar .dropdown-menu .dropdown-item,
 .user-dropdown .dropdown-menu a {
-    color: var(--bs-dark-emphasis);
-    text-decoration-color: var(--bs-dark-emphasis);
+    color: var(--bs-secondary-text-emphasis);
+    text-decoration-color: var(--bs-secondary-text-emphasis);
 }
 
 .navbar .nav-item a.dropdown-toggle {
-    color: var(--bs-dark-emphasis);
-    text-decoration-color: var(--bs-dark-emphasis);
+    color: var(--bs-secondary-text-emphasis);
+    text-decoration-color: var(--bs-secondary-text-emphasis);
 }
 
 .navbar .nav-item a.dropdown-toggle span:hover,
@@ -641,14 +669,47 @@ as Bootstrap styling. */
     padding-bottom: 1.5rem;
 }
 
+#responsible-parties-top-section dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 1.75rem;
+    margin-block-end: 0;
+}
+
 #responsible-parties-top-section dt h3 {
     font-size: 0.875rem;
     font-weight: 700;
 }
 
+#responsible-parties-top-section dd {
+    display: inline;
+}
+
+#responsible-parties-top-section dd > span::after {
+    content: ', ';
+}
+
+#responsible-parties-top-section dd:last-child > span::after {
+    content: '';
+}
+
+.standard-identifier-list,
+.standard-identifier-list li {
+    display: inline;
+}
+
+.standard-identifier-list li::after {
+    content: ', ';
+}
+
+.standard-identifier-list li:last-child::after {
+    content: '';
+}
+
 .resource-detail-section {
     padding: var(--resource-detail-section-padding) 0;
-    border-top: 1px solid var(--bs-gray-300);
+    border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
 }
 
 .resource-detail-section h2:first-child,
@@ -693,7 +754,10 @@ as Bootstrap styling. */
     background-color: var(--bs-tertiary-bg);
 }
 
-.resource-detail-section > details:only-child[open] summary.summary-marker-custom,
+.resource-detail-section > details:only-child[open] > summary.summary-marker-custom {
+    margin-bottom: 0;
+}
+
 .resource-detail-section details[name="details-permissions"][open] summary.summary-marker-custom {
     margin-bottom: 0;
 }
@@ -709,12 +773,6 @@ as Bootstrap styling. */
 .resource-detail-section details[name="details-capabilities"][open],
 .resource-detail-section details[name="details-capability-links"][open] {
     background-color: var(--bs-light-bg-subtle);
-}
-
-.resource-detail-section details[name="details-capabilities"] .summary-marker-custom::before,
-.resource-detail-section details[name="details-capability-links"] .summary-marker-custom::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
 }
 
 .resource-detail-section details.details-capabilities-top[open] > summary,
@@ -791,7 +849,7 @@ as Bootstrap styling. */
 }
 
 .resource-detail-aside .resource-detail-aside-section {
-    border-bottom: var(--bs-gray-300) solid 1px;
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
     padding-block: var(--resource-detail-aside-section-padding);
     font-size: 1rem;
 }
@@ -827,13 +885,6 @@ as Bootstrap styling. */
 
 .resource-description:last-child {
     margin-bottom: 0;
-}
-
-.resource-description-wrapper {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
 }
 
 .resource-description-wrapper.expanded {
@@ -923,15 +974,20 @@ details[name="details-permissions"][open] summary > span::after {
 }
 
 .interaction-methods-counter + .interaction-methods-subsection {
-    padding-top: 2rem;
+    padding-top: 1.25rem;
 }
 
 .interaction-methods-subsection + .interaction-methods-subsection {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
 }
 
-.resource-detail-section .interaction-methods-subsection:only-child h3 {
-    font-weight: bold !important;
+.resource-detail-section .interaction-methods-subsection:only-of-type {
+    padding-top: 0.75rem;
+}
+
+.resource-detail-section .interaction-methods-subsection h3 {
+    color: var(--bs-secondary-text-emphasis);
+    font-weight: 600 !important;
     font-size: 1rem !important;
 }
 
@@ -940,7 +996,7 @@ details[name="details-permissions"][open] summary > span::after {
 }
 
 .online-resource-list > li:not(li:first-of-type) {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
 }
 
 .online-resource-list .service-function-list,
@@ -953,6 +1009,11 @@ details[name="details-permissions"][open] summary > span::after {
     white-space: wrap;
     text-align: left;
     line-height: 1.2;
+}
+
+.online-resource-list .online-resource-description p {
+    font-size: 1rem !important;
+    color: var(--bs-secondary-text-emphasis);
 }
 
 .type-badge-list .badge {
@@ -1133,7 +1194,7 @@ section .keyword-list li:last-child:after {
 
 .online-resource-files-list-wrapper.disabled::before {
     content: 'Links to online resources will be taken from the selected metadata file.';
-    color: var(--bs-secondary-emphasis);
+    color: var(--bs-secondary-text-emphasis);
 }
 
 .online-resource-files-list-wrapper.disabled .online-resource-similar-names-error,
@@ -1492,8 +1553,6 @@ ul.tree ul {
 }
 
 .ontology-browser-terms .summary-marker-custom::before {
-    font-size: 0.75rem;
-    transform: translateY(-0.125rem);
     margin: 0 var(--list-item-left-padding) 0 0;
 }
 
@@ -1595,12 +1654,6 @@ ul.tree ul {
 /* Search results */
 .search-result-description {
     overflow: hidden;
-}
-
-.line-clamp {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
 }
 
 /* Metadata editor */
@@ -1755,7 +1808,7 @@ ul.tree ul {
     }
 
     .resource-detail-aside-section h2:first-child {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
     }
 
     .resource-detail-aside .resource-detail-aside-section:first-child {
@@ -1804,10 +1857,6 @@ ul.tree ul {
 }
 
 @media (min-width: 768px) {
-    #navbar-global {
-        background: var(--bs-secondary-bg);
-    }
-
     input[name="api_specification_url"]:not(#workflow-openapi-spec-url-update-form input[name="api_specification_url"]) {
         max-width: 45ch;
     }
@@ -1843,10 +1892,6 @@ ul.tree ul {
 }
 
 @media (min-width: 576px) {
-    .resource-description {
-        font-size: 1.1rem;
-    }
-
     .action-buttons {
         grid-template-columns: 1fr 1fr;
     }
@@ -1864,7 +1909,7 @@ ul.tree ul {
     }
 
     #responsible-parties-top-section dl > div {
-        max-width: 12rem;
+        max-width: 13rem;
     }
 
     .resource-detail-emphasised-section {

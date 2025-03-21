@@ -1,0 +1,6 @@
+<h2 class="mb-3">Status</h2>
+<div class="d-inline-block bg-body-tertiary rounded p-2">
+    {% with value=resource.properties.status url_text_extra_classes='text-secondary-emphasis' %}
+    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
+    {% endwith %}
+</div>

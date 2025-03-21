@@ -1,8 +1,5 @@
 {% if resource.description and resource.description|cut:' ' != '' %}
 <section class="resource-detail-section">
-    <h2>{% block description_heading_text %}Description{% endblock description_heading_text %}</h2>
-    {% with text_block_id='resource-description' text_block_paragraphs=resource_description_split %}
-    {% include 'browse/detail/components/expandable_text_block.html' %}
-    {% endwith %}
+    {% include 'browse/detail/components/description_section_content.html' %}
 </section>
 {% endif %}

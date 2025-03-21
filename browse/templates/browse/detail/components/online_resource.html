@@ -1,9 +1,16 @@
 {% load project_tags %}
 <div class="d-flex flex-column align-items-start row-gap-3">
     <div class="d-flex flex-column row-gap-2">
-        <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start link-underline-by-default fs-5" target="_blank" rel="noopener noreferrer" style="line-height: 1.2;">
+        {% with online_resource_access_type=online_resource_access_type|default:'' %}
+        {% if online_resource_access_type %}
+        <span class="fw-semibold text-body-secondary">
+            {{ online_resource_access_type }}
+        </span>
+        {% endif %}
+        {% endwith %}
+        <a href="{{ online_resource.linkage }}" class="icon-link icon-link-hover align-items-start fw-semibold link-underline-by-default" target="_blank" rel="noopener noreferrer">
             {{ online_resource.name }}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short bi-lg" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short fs-5" viewBox="0 0 16 16" style="margin-top: 0.15rem;">
                 <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
             </svg>
         </a>
@@ -42,10 +49,10 @@
         {% endwith %}
     </div>
     {% if online_resource.description.strip %}
-    <div class="d-inline-flex flex-column align-items-start">
-        {% with description_urlized=online_resource.description|urlize type_id=type|server_url_id|lower %}
-        {% with text_block_paragraphs=description_urlized|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-        {% include 'browse/detail/components/expandable_text_block.html' %}
+    <div class="d-inline-flex flex-column align-items-start online-resource-description">
+        {% with type_id=type|server_url_id|lower text_block_font_size_class='' line_clamp_number=3 %}
+        {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+        {% include 'utils/expandable_text_block.html' %}
         {% endwith %}
         {% endwith %}
     </div>
@@ -53,7 +60,7 @@
     {% if online_resource.protocol or online_resource.data_format %}
     <details class="details-interaction-methods" name="details-collection-results">
         <summary>
-            Show details
+            <span style="font-size: 0.975rem;">Additional details</span>
         </summary>
         <dl class="d-flex flex-column row-gap-2 my-2">
             {% if online_resource.protocol %}

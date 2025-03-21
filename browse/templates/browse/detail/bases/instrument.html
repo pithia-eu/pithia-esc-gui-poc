@@ -32,8 +32,8 @@
                 <div class="py-3">
                     {% with forloop_counter_str=forloop.counter|stringformat:'s' op_mode_description_paragraphs=operational_mode.description|wrap_in_list_if_dict %}
                     {% with text_block_id='op-mode-description-'|add:forloop_counter_str text_block_paragraphs=op_mode_description_paragraphs %}
-                    {% with expand_btn_type='sm btn-link pithia-blue px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
-                    {% include 'browse/detail/components/expandable_text_block.html' %}
+                    {% with expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+                    {% include 'utils/expandable_text_block.html' %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
@@ -58,11 +58,10 @@
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
+{% block aside_extra_content_after_default %}
 {% if resource.properties.instrument_version %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Version</h2>
@@ -70,5 +69,4 @@
 </section>
 {% endif %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}

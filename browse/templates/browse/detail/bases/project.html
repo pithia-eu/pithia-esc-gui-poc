@@ -2,31 +2,38 @@
 
 {# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-section resource-detail-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% include 'browse/detail/sections/responsive/status_section.html' %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
 <section class="resource-detail-section">
-    <h2>Abstract</h2>
+    <h2 class="mb-2">Abstract</h2>
     {% with text_block_id='resource-abstract' text_block_paragraphs=project_abstract_split %}
-    {% include 'browse/detail/components/expandable_text_block.html' %}
+    {% include 'utils/expandable_text_block.html' %}
     {% endwith %}
+    {# Custom description implementation if abstract is present #}
+    {% if resource.description and resource.description|cut:' ' != '' %}
+    <section class="resource-detail-subsection mt-4">
+        {# Displays additional information to abstract #}
+        {% with description_heading_text='Additional Description' description_section_heading_extra_classes='fs-6 fw-semibold' text_block_font_size_class='fs-6' line_clamp_number='3' %}
+        {% with expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+        {% include 'browse/detail/components/description_section_content.html' %}
+        {% endwith %}
+        {% endwith %}
+    </section>
+    {% endif %}
 </section>
 {% endif %}
 {% endblock pre_description_content %}
-{% block description_heading_text %}
-{% if resource.abstract.strip|length > 0 %}
-Additional Description
-{% else %}
-Description
+
+{# Description section - custom heading text #}
+{% block description_section %}
+{# Used in absence of abstract #}
+{% if resource.abstract.strip|length == 0 %}
+{% include 'browse/detail/sections/description_section.html' %}
 {% endif %}
-{% endblock description_heading_text %}
+{% endblock description_section %}
+
+{# Appears after the description #}
 {% block post_description_content %}
 {% if resource.properties.sub_projects %}
 <section class="resource-detail-section">
@@ -42,13 +49,12 @@ Description
     </ul>
 </section>
 {% endif %}
-{% include 'browse/detail/sections/responsive/documentation_section.html' %}
 {% endblock post_description_content %}
 
 {# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
 {% if resource.properties.keywords %}
-<section class="resource-detail-section responsive-resource-detail-section">
+<section class="resource-detail-section">
     <h3>Keywords</h3>
     {% include 'browse/detail/components/project/keyword_inline_list.html' %}
 </section>
@@ -56,21 +62,7 @@ Description
 {% endblock further_information_extra_sections %}
 
 {# Appears in the aside section #}
-{% block aside_extra_content %}
-{% if resource.properties.status %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Status</h2>
-    {% with value=resource.properties.status %}
-    {% include 'browse/placeholders/ontology_server_url_placeholder_no_link.html' %}
-    {% endwith %}
-</section>
-{% endif %}
+{% block aside_extra_content_after_default %}
+{% include 'browse/detail/sections/asides/responsive/status_aside_section.html' %}
 {% include 'browse/detail/sections/asides/responsive/website_aside_section.html' %}
-{% include 'browse/detail/sections/asides/responsive/documentation_aside_section.html' %}
-{% if resource.properties.keywords %}
-<section class="responsive-resource-detail-aside-section resource-detail-aside-section">
-    <h2>Keywords</h2>
-    {% include 'browse/detail/components/project/keyword_inline_list.html' %}
-</section>
-{% endif %}
-{% endblock aside_extra_content %}
+{% endblock aside_extra_content_after_default %}
