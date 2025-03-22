@@ -193,7 +193,7 @@ a.badge,
 }
 
 .metadata-server-url.loading {
-    text-decoration: none;
+    text-decoration: none !important;
     cursor: wait;
 }
 
