@@ -12,6 +12,7 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .services import (
+    InstrumentMetadataFileValidator,
     MetadataFileRegistrationValidator,
     MetadataFileXSDValidator,
     MetadataFileUpdateValidator,
@@ -283,7 +284,7 @@ class UpdateValidationTestCase:
 class OperationalModesValidationTestCase:
     @tag('fast', 'opmodes')
     def test_operational_mode_id_validation(self):
-        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument()
+        """InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument()
         returns a result of True and an empty list with no missing operational mode IDs.
         """
         xml_file_string = None
@@ -293,7 +294,7 @@ class OperationalModesValidationTestCase:
             xml_file_name = xml_file.name
         xml_metadata_file = InstrumentXMLMetadataFile(xml_file_string, xml_file_name)
         instrument_registration = self.model.objects.create_from_xml_string(xml_file_string, SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
-        result, missing_operational_mode_urls = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+        result, missing_operational_mode_urls = InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
             xml_metadata_file,
             instrument_registration.pk,
             self.model
@@ -304,7 +305,7 @@ class OperationalModesValidationTestCase:
 
     @tag('fast', 'opmodes')
     def test_new_operational_mode_ids_with_validation(self):
-        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
+        """InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
         True when new operational modes are added and an empty list with no missing operational mode IDs.
         """
         test_registration = None
@@ -317,7 +318,7 @@ class OperationalModesValidationTestCase:
             xml_file_string = xml_file.read()
             xml_file_name = xml_file.name
         xml_metadata_file = InstrumentXMLMetadataFile(xml_file_string, xml_file_name)
-        result, missing_operational_mode_urls = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+        result, missing_operational_mode_urls = InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
             xml_metadata_file,
             test_registration.pk,
             self.model
@@ -328,7 +329,7 @@ class OperationalModesValidationTestCase:
 
     @tag('fast', 'opmodes')
     def test_removal_of_operational_mode_ids_with_validation(self):
-        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
+        """InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
         Falsee when new operational modes are added and a list of missing operational mode IDs.
         """
         test_registration = None
@@ -341,7 +342,7 @@ class OperationalModesValidationTestCase:
             xml_file_string = xml_file.read()
             xml_file_name = xml_file.name
         xml_metadata_file = InstrumentXMLMetadataFile(xml_file_string, xml_file_name)
-        result, missing_operational_mode_urls = MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
+        result, missing_operational_mode_urls = InstrumentMetadataFileValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument(
             xml_metadata_file,
             test_registration.pk,
             self.model

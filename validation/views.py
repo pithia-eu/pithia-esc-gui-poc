@@ -21,12 +21,13 @@ from .file_wrappers import (
 )
 from .forms import *
 from .services import (
-    is_localid_taken,
-    validate_instrument_xml_file_update_and_return_errors,
-    validate_new_xml_file_registration_and_return_errors,
-    validate_xml_file_references_and_return_errors,
-    validate_xml_file_update_and_return_errors,
-    validate_xml_file_with_xsd_and_return_errors,
+    InstrumentMetadataFileValidator,
+    MetadataFileRegistrationValidator,
+    MetadataFileUpdateValidator,
+    MetadataFileXSDValidator,
+)
+from .url_validation_services import (
+    MetadataFileMetadataURLReferencesValidator,
 )
 
 from common import models
@@ -39,13 +40,16 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class QuickInlineValidationFormView(FormView):
     form_class = QuickInlineMetadataValidationForm
     error_dict = {}
     file_wrapper_class = XMLMetadataFile
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict.update(validate_xml_file_references_and_return_errors(xml_metadata_file))
+        self.error_dict.update(
+            MetadataFileMetadataURLReferencesValidator.validate_and_return_errors(xml_metadata_file)
+        )
 
     def post(self, request, *args, **kwargs):
         self.error_dict = {}
@@ -61,51 +65,65 @@ class QuickInlineValidationFormView(FormView):
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class QuickInlineRegistrationValidationFormView(QuickInlineValidationFormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_registration_errors'] = validate_new_xml_file_registration_and_return_errors(
-            xml_metadata_file,
-            models.ScientificMetadata
-        )
+        self.error_dict.update({
+            'xml_file_registration_errors': MetadataFileRegistrationValidator.validate_and_return_errors(
+                xml_metadata_file,
+                models.ScientificMetadata
+            )
+        })
         return super().validate(request, xml_metadata_file)
 
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
     form_class = QuickInlineMetadataUpdateValidationForm
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
-            xml_metadata_file,
-            models.ScientificMetadata,
-            request.POST.get('existing_metadata_id')
-        )
+        self.error_dict.update({
+            'xml_file_update_errors': MetadataFileUpdateValidator.validate_and_return_errors(
+                xml_metadata_file,
+                models.ScientificMetadata,
+                request.POST.get('existing_metadata_id')
+            )
+        })
         return super().validate(request, xml_metadata_file)
 
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormView):
     file_wrapper_class = InstrumentXMLMetadataFile
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
-        self.error_dict['xml_file_update_errors'] = validate_xml_file_update_and_return_errors(
-            xml_metadata_file,
-            models.Instrument,
-            request.POST.get('existing_metadata_id')
-        )
+        self.error_dict.update({
+            'xml_file_update_errors': MetadataFileUpdateValidator.validate_and_return_errors(
+                xml_metadata_file,
+                models.Instrument,
+                request.POST.get('existing_metadata_id')
+            )
+        })
 
-        if len(self.error_dict['xml_file_update_errors']) > 0:
-            self.error_dict['xml_file_op_mode_errors'] = ['Could not validate operational modes as metadata file did not pass update validation.']
-            self.error_dict['xml_file_op_mode_warnings'] = ['Could not validate operational modes as metadata file did not pass update validation.']
+        if len(self.error_dict.get('xml_file_update_errors', [])) > 0:
+            self.error_dict.update({
+                'xml_file_op_mode_errors': ['Could not validate operational modes as metadata file did not pass update validation.'],
+                'xml_file_op_mode_warnings': ['Could not validate operational modes as metadata file did not pass update validation.'],
+            })
             return super().validate(request, xml_metadata_file)
         
-        self.error_dict['xml_file_op_mode_errors'] = []
-        self.error_dict['xml_file_op_mode_warnings'] = validate_instrument_xml_file_update_and_return_errors(
-            xml_metadata_file,
-            request.POST.get('existing_metadata_id')
-        )
+        self.error_dict.update({
+            'xml_file_op_mode_errors': [],
+            'xml_file_op_mode_warnings': InstrumentMetadataFileValidator.validate_and_return_errors(
+                xml_metadata_file,
+                request.POST.get('existing_metadata_id')
+            ),
+        })
 
         return super().validate(request, xml_metadata_file)
 
 
+@method_decorator(login_session_institution_required, name='dispatch')
 class InlineXSDValidationFormView(FormView):
     form_class = InlineXSDMetadataValidationForm
     error_dict = {}
@@ -115,7 +133,9 @@ class InlineXSDValidationFormView(FormView):
         if not form.is_valid():
             return HttpResponseBadRequest('The form submitted was not valid.')
         xml_metadata_file = XMLMetadataFile(request.POST.get('xml_file_string'), '')
-        self.error_dict['xml_file_xsd_errors'] = validate_xml_file_with_xsd_and_return_errors(xml_metadata_file)
+        self.error_dict.update({
+            'xml_file_xsd_errors': MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file),
+        })
 
         if not any(self.error_dict.values()):
             return JsonResponse(self.error_dict, status=HTTPStatus.OK)
@@ -132,7 +152,9 @@ def localid(request):
     
     localid = form.cleaned_data.get('localid')
     localid = clean_localid_or_namespace(localid)
-    return JsonResponse(is_localid_taken(localid))
+    return JsonResponse(MetadataFileRegistrationValidator.check_if_localid_is_already_in_use_and_return_suggestion_if_taken(
+        localid
+    ))
 
 
 @require_POST

@@ -11,12 +11,10 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .services import (
-    is_localid_taken,
+    InstrumentMetadataFileValidator,
+    MetadataFileRegistrationValidator,
+    MetadataFileUpdateValidator,
     MetadataFileXSDValidator,
-    validate_instrument_xml_file_update_and_return_errors,
-    validate_xml_file_references_and_return_errors,
-    validate_new_xml_file_registration_and_return_errors,
-    validate_xml_file_update_and_return_errors,
 )
 from .url_validation_services import (
     MetadataFileOntologyURLReferencesValidator,
@@ -452,6 +450,7 @@ class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
 
 
 class DoiValidationTestCase(SimpleTestCase):
+    @tag('slow')
     def test_catalogue_data_subset_with_handle_fails(self):
         """Data subset validation fails with a handle in the
         DOI metadata kernel element.
@@ -621,7 +620,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_references_and_return_errors(test_xml_file)
+        results = MetadataFileMetadataURLReferencesValidator.validate_and_return_errors(test_xml_file)
         print('results', results)
         self.assertIs(type(results), dict)
         self.assertFalse(any(results.values()))
@@ -639,7 +638,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        results = MetadataFileRegistrationValidator.validate_and_return_errors(test_xml_file, ScientificMetadata)
         print('results', results)
         self.assertIs(type(results), list)
         self.assertGreater(len(results), 0)
@@ -654,7 +653,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        results = MetadataFileRegistrationValidator.validate_and_return_errors(test_xml_file, ScientificMetadata)
         print('results', results)
         self.assertIs(type(results), list)
         self.assertEqual(len(results), 0)
@@ -671,7 +670,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        results = MetadataFileUpdateValidator.validate_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
         print('results', results)
         self.assertIs(type(results), list)
         self.assertGreater(len(results), 0)
@@ -687,7 +686,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        results = MetadataFileUpdateValidator.validate_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
         print('results', results)
         self.assertIs(type(results), list)
         self.assertEqual(len(results), 0)
@@ -705,7 +704,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
         print('results', results)
         self.assertIs(type(results), list)
 
@@ -720,7 +719,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
         print('results', results)
         self.assertIs(type(results), list)
 
@@ -732,10 +731,11 @@ class LocalIDServiceTestCase(TestCase):
         return super().setUp()
 
     def test_is_localid_taken_suggestion(self):
-        results = is_localid_taken(self.organisation.localid)
+        results = MetadataFileRegistrationValidator.check_if_localid_is_already_in_use_and_return_suggestion_if_taken(self.organisation.localid)
         print('results', results)
 
 
+@tag('slow')
 class AcquisitionCapabilitiesXSDValidationTestCase(SimpleTestCase):
     def test_acquisition_capabilities_with_multiple_imps_fails(self):
         xml_file = AcquisitionCapabilitiesXMLMetadataFile.from_file(test_xml_files.ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_METADATA_XML)
