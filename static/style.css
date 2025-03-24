@@ -82,8 +82,11 @@ hgroup p {
 
 
 /* || Link styles */
-a {
+a,
+a.icon-link,
+.btn-link {
     color: var(--pithia-blue);
+    -webkit-text-decoration-color: var(--pithia-blue);
     text-decoration-color: var(--pithia-blue);
     text-decoration: underline;
     overflow-wrap: break-word;
@@ -91,7 +94,11 @@ a {
 }
 
 a:hover,
-a:focus {
+a:focus,
+a.icon-link:hover,
+a.icon-link:focus,
+.btn-link:hover,
+.btn-link:focus {
     text-decoration: none;
 }
 
@@ -414,7 +421,9 @@ h3.opblock-tag p {
 .line-clamp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    -webkit-box-pack: end;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .line-clamp-2 {
@@ -952,11 +961,11 @@ as Bootstrap styling. */
 }
 
 .btn-expand-resource-description {
-    
 }
 
 .btn-expand-resource-description.btn-link {
     color: var(--pithia-blue);
+    padding: 0;
 }
 
 .btn-expand-resource-description.hidden {

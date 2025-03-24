@@ -51,7 +51,7 @@
     {% if online_resource.description.strip %}
     <div class="d-inline-flex flex-column align-items-start online-resource-description">
         {% with type_id=type|server_url_id|lower text_block_font_size_class='' line_clamp_number=3 %}
-        {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
+        {% with text_block_paragraphs=online_resource.description|wrap_in_list_if_dict text_block_id='online-resource-description-'|add:type_id|add:'-'|add:forloop_counter_str expand_btn_type='sm btn-link' expand_btn_top_margin='mt-1' expand_btn_text='Show more...' %}
         {% include 'utils/expandable_text_block.html' %}
         {% endwith %}
         {% endwith %}
