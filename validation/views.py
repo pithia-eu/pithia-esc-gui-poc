@@ -10,28 +10,20 @@ from django.views.decorators.http import (
     require_GET,
     require_POST,
 )
-from django.views.generic import (
-    FormView,
-    View,
-)
+from django.views.generic import FormView
 from http import HTTPStatus
-from lxml import etree
 from openapi_spec_validator import validate_spec_url
 from urllib.error import HTTPError
 
 from .file_wrappers import (
-    AcquisitionCapabilitiesXMLMetadataFile,
-    DataSubsetXMLMetadataFile,
     InstrumentXMLMetadataFile,
     XMLMetadataFile,
 )
 from .forms import *
-from .helpers import create_validation_summary_error
 from .services import (
     is_localid_taken,
     validate_instrument_xml_file_update_and_return_errors,
     validate_new_xml_file_registration_and_return_errors,
-    validate_xml_file_and_return_summary,
     validate_xml_file_references_and_return_errors,
     validate_xml_file_update_and_return_errors,
     validate_xml_file_with_xsd_and_return_errors,
@@ -45,112 +37,7 @@ from common.helpers import clean_localid_or_namespace
 logger = logging.getLogger(__name__)
 
 # Create your views here.
-@method_decorator(login_session_institution_required, name='dispatch')
-class ResourceXmlMetadataFileValidationFormView(View):
-    def prepare_xml_metadata_file(self, xml_file):
-        return XMLMetadataFile.from_file(xml_file)
 
-    def post(self, request, *args, **kwargs):
-        # Extract content from request
-        xml_file = request.FILES['file']
-        validate_registration = 'validate_is_not_registered' in request.POST
-        existing_scientific_metadata_id = request.POST['resource_id'] if 'resource_id' in request.POST else None
-        
-        # Begin the validation process
-        validation_summary = {}
-        try:
-            # Syntax validation
-            prepared_xml_metadata_file = self.prepare_xml_metadata_file(xml_file)
-        except etree.XMLSyntaxError as err:
-            logger.exception('An exception occurred whilst parsing the XML.')
-            validation_summary['error'] = create_validation_summary_error(
-                message='Syntax is invalid.',
-                details=str(err)
-            )
-            return JsonResponse(validation_summary, status=HTTPStatus.BAD_REQUEST)
-
-        try:
-            validation_summary = validate_xml_file_and_return_summary(
-                prepared_xml_metadata_file,
-                self.model,
-                validate_for_registration=validate_registration,
-                metadata_id_to_validate_for_update=existing_scientific_metadata_id
-            )
-        except BaseException as err:
-            logger.exception('An exception occurred during metadata file validation.')
-            validation_summary['error'] = create_validation_summary_error(details=str(err))
-            return JsonResponse(validation_summary, status=HTTPStatus.INTERNAL_SERVER_ERROR)
-
-        # Process any errors not handled by the try-except block
-        if (validation_summary['error'] is None
-            and len(validation_summary['warnings']) == 0):
-            return JsonResponse({
-                'result': 'valid',
-            })
-
-        response_body = {}
-        if len(validation_summary['warnings']) > 0:
-            response_body['warnings'] = validation_summary['warnings']
-        if validation_summary['error'] != None:
-            response_body['error'] = validation_summary['error']
-        return JsonResponse(response_body, status=HTTPStatus.BAD_REQUEST)
-
-class OrganisationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Organisation
-    
-class IndividualXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Individual
-
-class ProjectXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Project
-
-class PlatformXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Platform
-
-class OperationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Operation
-
-class InstrumentXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Instrument
-
-    def prepare_xml_metadata_file(self, xml_file):
-        return InstrumentXMLMetadataFile.from_file(xml_file)
-
-class AcquisitionCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.AcquisitionCapabilities
-
-    def prepare_xml_metadata_file(self, xml_file):
-        return AcquisitionCapabilitiesXMLMetadataFile.from_file(xml_file)
-
-class AcquisitionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Acquisition
-
-class ComputationCapabilitiesXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.ComputationCapabilities
-
-class ComputationXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Computation
-
-class ProcessXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Process
-
-class DataCollectionXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.DataCollection
-
-class CatalogueXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Catalogue
-
-class CatalogueEntryXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.CatalogueEntry
-
-class CatalogueDataSubsetXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.CatalogueDataSubset
-
-    def prepare_xml_metadata_file(self, xml_file):
-        return DataSubsetXMLMetadataFile.from_file(xml_file)
-
-class WorkflowXmlMetadataFileValidationFormView(ResourceXmlMetadataFileValidationFormView):
-    model = models.Workflow
 
 class QuickInlineValidationFormView(FormView):
     form_class = QuickInlineMetadataValidationForm
@@ -173,6 +60,7 @@ class QuickInlineValidationFormView(FormView):
         
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
+
 class QuickInlineRegistrationValidationFormView(QuickInlineValidationFormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict['xml_file_registration_errors'] = validate_new_xml_file_registration_and_return_errors(
@@ -180,6 +68,7 @@ class QuickInlineRegistrationValidationFormView(QuickInlineValidationFormView):
             models.ScientificMetadata
         )
         return super().validate(request, xml_metadata_file)
+
 
 class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
     form_class = QuickInlineMetadataUpdateValidationForm
@@ -191,6 +80,7 @@ class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
             request.POST.get('existing_metadata_id')
         )
         return super().validate(request, xml_metadata_file)
+
 
 class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormView):
     file_wrapper_class = InstrumentXMLMetadataFile
@@ -215,6 +105,7 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
 
         return super().validate(request, xml_metadata_file)
 
+
 class InlineXSDValidationFormView(FormView):
     form_class = InlineXSDMetadataValidationForm
     error_dict = {}
@@ -231,6 +122,7 @@ class InlineXSDValidationFormView(FormView):
         
         return JsonResponse(self.error_dict, status=HTTPStatus.BAD_REQUEST)
 
+
 @require_GET
 @login_session_institution_required
 def localid(request):
@@ -241,6 +133,7 @@ def localid(request):
     localid = form.cleaned_data.get('localid')
     localid = clean_localid_or_namespace(localid)
     return JsonResponse(is_localid_taken(localid))
+
 
 @require_POST
 @login_session_institution_required

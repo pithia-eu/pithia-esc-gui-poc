@@ -56,7 +56,6 @@ class ResourceRegisterFormView(FormView):
 
     new_registration = None
     xml_file_string = None
-    validation_url = ''
     post_url = ''
 
     institution_id = None
@@ -104,7 +103,6 @@ class ResourceRegisterFormView(FormView):
         context['title'] = f'Register {self.model.type_plural_readable.title()} via File Upload'
         context['data_collection_related_index_page_title'] = _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_type_plural_readable'] = self.model.type_plural_readable.title()
-        context['validation_url'] = self.validation_url
         context['expected_root_element_name'] = self.model.root_element_name
         context['inline_validation_url'] = reverse_lazy('validation:new_registration')
         context['inline_xsd_validation_url'] = reverse_lazy('validation:xsd')
@@ -141,7 +139,6 @@ class OrganisationRegisterFormView(ResourceRegisterFormView):
     model = models.Organisation
     success_url = reverse_lazy('register:organisation')
 
-    validation_url = reverse_lazy('validation:organisation')
     post_url = reverse_lazy('register:organisation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('organisations')
@@ -151,7 +148,6 @@ class IndividualRegisterFormView(ResourceRegisterFormView):
     model = models.Individual
     success_url = reverse_lazy('register:individual')
 
-    validation_url = reverse_lazy('validation:individual')
     post_url = reverse_lazy('register:individual')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('individuals')
@@ -161,7 +157,6 @@ class ProjectRegisterFormView(ResourceRegisterFormView):
     model = models.Project
     success_url = reverse_lazy('register:project')
 
-    validation_url = reverse_lazy('validation:project')
     post_url = reverse_lazy('register:project')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('projects')
@@ -171,7 +166,6 @@ class PlatformRegisterFormView(ResourceRegisterFormView):
     model = models.Platform
     success_url = reverse_lazy('register:platform')
 
-    validation_url = reverse_lazy('validation:platform')
     post_url = reverse_lazy('register:platform')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('platforms')
@@ -181,7 +175,6 @@ class OperationRegisterFormView(ResourceRegisterFormView):
     model = models.Operation
     success_url = reverse_lazy('register:operation')
 
-    validation_url = reverse_lazy('validation:operation')
     post_url = reverse_lazy('register:operation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('operations')
@@ -191,7 +184,6 @@ class InstrumentRegisterFormView(ResourceRegisterFormView):
     model = models.Instrument
     success_url = reverse_lazy('register:instrument')
 
-    validation_url = reverse_lazy('validation:instrument')
     post_url = reverse_lazy('register:instrument')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('instruments')
@@ -201,7 +193,6 @@ class AcquisitionCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.AcquisitionCapabilities
     success_url = reverse_lazy('register:acquisition_capability_set')
 
-    validation_url = reverse_lazy('validation:acquisition_capability_set')
     post_url = reverse_lazy('register:acquisition_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisition capabilities')
@@ -211,7 +202,6 @@ class AcquisitionRegisterFormView(ResourceRegisterFormView):
     model = models.Acquisition
     success_url = reverse_lazy('register:acquisition')
 
-    validation_url = reverse_lazy('validation:acquisition')
     post_url = reverse_lazy('register:acquisition')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('acquisitions')
@@ -221,7 +211,6 @@ class ComputationCapabilitiesRegisterFormView(ResourceRegisterFormView):
     model = models.ComputationCapabilities
     success_url = reverse_lazy('register:computation_capability_set')
 
-    validation_url = reverse_lazy('validation:computation_capability_set')
     post_url = reverse_lazy('register:computation_capability_set')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computation capabilities')
@@ -231,7 +220,6 @@ class ComputationRegisterFormView(ResourceRegisterFormView):
     model = models.Computation
     success_url = reverse_lazy('register:computation')
 
-    validation_url = reverse_lazy('validation:computation')
     post_url = reverse_lazy('register:computation')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('computations')
@@ -241,7 +229,6 @@ class ProcessRegisterFormView(ResourceRegisterFormView):
     model = models.Process
     success_url = reverse_lazy('register:process')
 
-    validation_url = reverse_lazy('validation:process')
     post_url = reverse_lazy('register:process')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('processes')
@@ -254,7 +241,6 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload_data_collection.html'
     form_class = UploadDataCollectionFileForm
 
-    validation_url = reverse_lazy('validation:data_collection')
     post_url = reverse_lazy('register:data_collection')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data collections')
@@ -295,7 +281,6 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
     model = models.Catalogue
     success_url = reverse_lazy('register:catalogue')
 
-    validation_url = reverse_lazy('validation:catalogue')
     post_url = reverse_lazy('register:catalogue')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
@@ -312,7 +297,6 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     model = models.CatalogueEntry
     success_url = reverse_lazy('register:catalogue_entry')
 
-    validation_url = reverse_lazy('validation:catalogue_entry')
     post_url = reverse_lazy('register:catalogue_entry')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
@@ -335,7 +319,6 @@ class CatalogueDataSubsetRegisterFormView(
 
     form_class = UploadCatalogueDataSubsetFileForm
 
-    validation_url = reverse_lazy('validation:catalogue_data_subset')
     post_url = reverse_lazy('register:catalogue_data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
@@ -429,7 +412,6 @@ class WorkflowRegisterFormView(
     success_url = reverse_lazy('register:workflow')
     form_class = UploadWorkflowFileForm
 
-    validation_url = reverse_lazy('validation:workflow')
     post_url = reverse_lazy('register:workflow')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('workflows')
