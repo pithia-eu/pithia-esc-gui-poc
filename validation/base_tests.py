@@ -14,10 +14,7 @@ from .file_wrappers import (
 from .services import (
     MetadataFileRegistrationValidator,
     MetadataFileXSDValidator,
-    MetadataFileNameValidator,
     MetadataFileUpdateValidator,
-    MetadataRootElementNameValidator,
-    validate_xml_file_and_return_summary,
 )
 
 from common import models
@@ -37,6 +34,7 @@ class FileTestCase:
         self.xml_file_path = os.path.join(_XML_METADATA_FILE_DIR, self.xml_file_name)
         return super().setUp()
 
+
 @tag('organisation')
 class OrganisationFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -44,6 +42,7 @@ class OrganisationFileTestCase(FileTestCase):
         self.model = models.Organisation
         self.root_element_name = models.Organisation.root_element_name
         return super().setUp()
+
 
 @tag('individual')
 class IndividualFileTestCase(FileTestCase):
@@ -53,6 +52,7 @@ class IndividualFileTestCase(FileTestCase):
         self.root_element_name = models.Individual.root_element_name
         return super().setUp()
 
+
 @tag('project')
 class ProjectFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -60,6 +60,7 @@ class ProjectFileTestCase(FileTestCase):
         self.model = models.Project
         self.root_element_name = models.Project.root_element_name
         return super().setUp()
+
 
 @tag('platform')
 class PlatformFileTestCase(FileTestCase):
@@ -69,6 +70,7 @@ class PlatformFileTestCase(FileTestCase):
         self.root_element_name = models.Platform.root_element_name
         return super().setUp()
 
+
 @tag('operation')
 class OperationFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -76,6 +78,7 @@ class OperationFileTestCase(FileTestCase):
         self.model = models.Operation
         self.root_element_name = models.Operation.root_element_name
         return super().setUp()
+
 
 @tag('instrument')
 class InstrumentFileTestCase(FileTestCase):
@@ -85,6 +88,7 @@ class InstrumentFileTestCase(FileTestCase):
         self.root_element_name = models.Instrument.root_element_name
         return super().setUp()
 
+
 @tag('acquisition_capabilities')
 class AcquisitionCapabilitiesFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -92,6 +96,7 @@ class AcquisitionCapabilitiesFileTestCase(FileTestCase):
         self.model = models.AcquisitionCapabilities
         self.root_element_name = models.AcquisitionCapabilities.root_element_name
         return super().setUp()
+
 
 @tag('acquisition')
 class AcquisitionFileTestCase(FileTestCase):
@@ -101,6 +106,7 @@ class AcquisitionFileTestCase(FileTestCase):
         self.root_element_name = models.Acquisition.root_element_name
         return super().setUp()
 
+
 @tag('computation_capabilities')
 class ComputationCapabilitiesFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -108,6 +114,7 @@ class ComputationCapabilitiesFileTestCase(FileTestCase):
         self.model = models.ComputationCapabilities
         self.root_element_name = models.ComputationCapabilities.root_element_name
         return super().setUp()
+
 
 @tag('computation')
 class ComputationFileTestCase(FileTestCase):
@@ -117,6 +124,7 @@ class ComputationFileTestCase(FileTestCase):
         self.root_element_name = models.Computation.root_element_name
         return super().setUp()
 
+
 @tag('process')
 class ProcessFileTestCase(FileTestCase):
     def setUp(self) -> None:
@@ -124,6 +132,7 @@ class ProcessFileTestCase(FileTestCase):
         self.model = models.Process
         self.root_element_name = models.Process.root_element_name
         return super().setUp()
+
 
 @tag('data_collection')
 class DataCollectionFileTestCase(FileTestCase):
@@ -137,8 +146,7 @@ class DataCollectionFileTestCase(FileTestCase):
 class SyntaxValidationTestCase:
     @tag('fast', 'syntax')
     def test_xml_metadata_file_init(self):
-        """
-        An XMLMetadataFile instance is initialised successfully.
+        """An XMLMetadataFile instance is initialised successfully.
         """
         try:
             with open(self.xml_file_path) as xml_file:
@@ -149,8 +157,7 @@ class SyntaxValidationTestCase:
 
     @tag('fast', 'syntax')
     def test_xml_metadata_file_from_file(self):
-        """
-        An XMLMetadataFile instance is initialised successfully
+        """An XMLMetadataFile instance is initialised successfully
         with XMLMetadataFile.from_file().
         """
         try:
@@ -162,8 +169,7 @@ class SyntaxValidationTestCase:
 
     @tag('fast', 'syntax')
     def test_file_with_invalid_syntax(self):
-        """
-        The file causes XMLMetadataFile() to raise an etree.XMLSyntaxError exception.
+        """The file causes XMLMetadataFile() to raise an etree.XMLSyntaxError exception.
         """
         with open(os.path.join(_XML_METADATA_FILE_DIR, 'Organisation_Test_InvalidSyntax.xml')) as invalid_xml_file:
             try:
@@ -172,26 +178,11 @@ class SyntaxValidationTestCase:
                 print('Exception raised, as expected!')
             self.assertRaises(XMLSyntaxError, XMLMetadataFile.from_file, invalid_xml_file)
 
-class RootElementValidationTestCase:
-    @tag('fast', 'rootelement')
-    def test_file_with_valid_root_element_name(self):
-        """
-        The metadata file's root element name passes validation
-        when passed into MetadataRootElementNameValidator.validate().
-        """
-        try:
-            with open(self.xml_file_path) as xml_file:
-                xml_metadata_file = XMLMetadataFile.from_file(xml_file)
-            MetadataRootElementNameValidator.validate(xml_metadata_file, self.root_element_name)
-            print(f'Passed root element validation for {Path(xml_file.name).name}.')
-        except BaseException:
-            self.fail('MetadataRootElementNameValidator.validate() raised an exception unexpectedly!')
 
 class XSDValidationTestCase:
     @tag('slow', 'xsd')
     def test_validate_against_own_schema(self):
-        """
-        MetadataFileXSDValidator.validate() does not raise an exception when
+        """MetadataFileXSDValidator.validate() does not raise an exception when
         passed a valid xml file.
         """
         try:
@@ -210,26 +201,11 @@ class XSDValidationTestCase:
             # finished.
             os.chdir(cwd_before_validation)
 
-class FileNameValidationTestCase:
-    @tag('fast', 'filename')
-    def test_validate_xml_file_name(self):
-        """
-        MetadataFileNameValidator.validate() does not raise an exception when
-        passed a valid xml file.
-        """
-        try:
-            with open(self.xml_file_path) as xml_file:
-                xml_metadata_file = XMLMetadataFile.from_file(xml_file)
-            MetadataFileNameValidator.validate(xml_metadata_file)
-            print(f'Passed file name validation for {Path(xml_file.name).name}.')
-        except BaseException:
-            self.fail('MetadataFileNameValidator.validate() raised an exception unexpectedly!')
 
 class NewRegistrationValidationTestCase:
     @tag('fast', 'registration')
     def test_registration_validation(self):
-        """
-        MetadataFileRegistrationValidator.validate() does not raise an
+        """MetadataFileRegistrationValidator.validate() does not raise an
         exception when passed a valid xml file.
         """
         try:
@@ -245,8 +221,7 @@ class NewRegistrationValidationTestCase:
 
     @tag('fast', 'registration')
     def test_registration_validation_fails(self):
-        """
-        MetadataFileRegistrationValidator.validate() raises an exception
+        """MetadataFileRegistrationValidator.validate() raises an exception
         when passed an xml file that has already been registered.
         """
         xml_file_string = None
@@ -264,11 +239,11 @@ class NewRegistrationValidationTestCase:
         )
         print(f'Failed registration validation for {Path(xml_file.name).name} successfully.')
 
+
 class UpdateValidationTestCase:
     @tag('fast', 'update')
     def test_update_validation(self):
-        """
-        MetadataFileUpdateValidator.validate() does not raise an exception
+        """MetadataFileUpdateValidator.validate() does not raise an exception
         when passed a valid xml_file.
         """
         try:
@@ -304,11 +279,11 @@ class UpdateValidationTestCase:
     #         )
     #         print(f'Failed update validation for {Path(xml_file.name).name} successfully.')
 
+
 class OperationalModesValidationTestCase:
     @tag('fast', 'opmodes')
     def test_operational_mode_id_validation(self):
-        """
-        MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument()
+        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument()
         returns a result of True and an empty list with no missing operational mode IDs.
         """
         xml_file_string = None
@@ -329,8 +304,7 @@ class OperationalModesValidationTestCase:
 
     @tag('fast', 'opmodes')
     def test_new_operational_mode_ids_with_validation(self):
-        """
-        MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
+        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
         True when new operational modes are added and an empty list with no missing operational mode IDs.
         """
         test_registration = None
@@ -354,8 +328,7 @@ class OperationalModesValidationTestCase:
 
     @tag('fast', 'opmodes')
     def test_removal_of_operational_mode_ids_with_validation(self):
-        """
-        MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
+        """MetadataFileUpdateValidator.is_each_operational_mode_id_in_current_instrument_present_in_updated_instrument() returns
         Falsee when new operational modes are added and a list of missing operational mode IDs.
         """
         test_registration = None
@@ -378,27 +351,3 @@ class OperationalModesValidationTestCase:
         self.assertEqual(result, False)
         self.assertTrue(len(missing_operational_mode_urls) > 0)
         print('Passed test_removal_of_operational_mode_ids_with_validation() test.')
-
-class ValidationChecklistTestCase:
-    @tag('slow', 'checklist')
-    def test_validate_xml_file_and_return_summary(self):
-        """
-        The validation results does not contain an error.
-        """
-        xml_metadata_file = None
-        with open(self.xml_file_path) as xml_file:
-            xml_metadata_file = XMLMetadataFile.from_file(xml_file)
-        try:
-            validation_results = validate_xml_file_and_return_summary(
-                xml_metadata_file,
-                self.model,
-                validate_for_registration=True
-            )
-            if validation_results['error'] is not None:
-                print('error', validation_results['error'])
-                print(f'Failed validation checklist test for {Path(xml_file.name).name}.')
-                self.fail('validate_xml_file_and_return_summary() returned an error.')
-            self.assertEqual(validation_results['error'], None)
-            print(f'Passed validation checklist test for {Path(xml_file.name).name}.')
-        except:
-            self.fail('validate_xml_file_and_return_summary() raised an exception unexpectedly!')

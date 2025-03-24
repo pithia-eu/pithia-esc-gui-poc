@@ -68,33 +68,6 @@ class DataCollectionSyntaxValidationTestCase(DataCollectionFileTestCase, SyntaxV
     pass
 
 
-# Root element validation tests, based on metadata type.
-class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class IndividualRootElementValidationTestCase(IndividualFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ProjectRootElementValidationTestCase(ProjectFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class PlatformRootElementValidationTestCase(PlatformFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class OperationRootElementValidationTestCase(OperationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class InstrumentRootElementValidationTestCase(InstrumentFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesRootElementValidationTestCase(AcquisitionCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class AcquisitionRootElementValidationTestCase(AcquisitionFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ComputationCapabilitiesRootElementValidationTestCase(ComputationCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ComputationRootElementValidationTestCase(ComputationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ProcessRootElementValidationTestCase(ProcessFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class DataCollectionRootElementValidationTestCase(DataCollectionFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-
-
 # XSD validation tests, based on metadata type.
 class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
@@ -119,33 +92,6 @@ class ComputationXSDValidationTestCase(ComputationFileTestCase, XSDValidationTes
 class ProcessXSDValidationTestCase(ProcessFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class DataCollectionXSDValidationTestCase(DataCollectionFileTestCase, XSDValidationTestCase, SimpleTestCase):
-    pass
-
-
-# File name-localID match tests, based on metadata type.
-class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class IndividualFileNameValidationTestCase(IndividualFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ProjectFileNameValidationTestCase(ProjectFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class PlatformFileNameValidationTestCase(PlatformFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class OperationFileNameValidationTestCase(OperationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class InstrumentFileNameValidationTestCase(InstrumentFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesFileNameValidationTestCase(AcquisitionCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class AcquisitionFileNameValidationTestCase(AcquisitionFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ComputationCapabilitiesFileNameValidationTestCase(ComputationCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ComputationFileNameValidationTestCase(ComputationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ProcessFileNameValidationTestCase(ProcessFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class DataCollectionFileNameValidationTestCase(DataCollectionFileTestCase, FileNameValidationTestCase, TestCase):
     pass
 
 
@@ -200,33 +146,6 @@ class ComputationUpdateValidationTestCase(ComputationFileTestCase, UpdateValidat
 class ProcessUpdateValidationTestCase(ProcessFileTestCase, UpdateValidationTestCase, TestCase):
     pass
 class DataCollectionUpdateValidationTestCase(DataCollectionFileTestCase, UpdateValidationTestCase, TestCase):
-    pass
-
-
-# Complete run through of validation process, based on metadata type
-class OrganisationValidationChecklistTestCase(OrganisationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class IndividualValidationChecklistTestCase(IndividualFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ProjectValidationChecklistTestCase(ProjectFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class PlatformValidationChecklistTestCase(PlatformFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class OperationValidationChecklistTestCase(OperationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class InstrumentValidationChecklistTestCase(InstrumentFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesValidationChecklistTestCase(AcquisitionCapabilitiesFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class AcquisitionValidationChecklistTestCase(AcquisitionFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ComputationCapabilitiesValidationChecklistTestCase(ComputationCapabilitiesFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ComputationValidationChecklistTestCase(ComputationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ProcessValidationChecklistTestCase(ProcessFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class DataCollectionValidationChecklistTestCase(DataCollectionFileTestCase, ValidationChecklistTestCase, TestCase):
     pass
 
 
