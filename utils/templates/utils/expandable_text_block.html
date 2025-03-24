@@ -1,10 +1,12 @@
-<div class="d-inline-block overflow-hidden">
-    <div id="{{ text_block_id }}" class="resource-description-wrapper text-break line-clamp line-clamp-{{ line_clamp_number|default:'5' }}">
-        {% for p in text_block_paragraphs %}
-        <p class="resource-description {{ text_block_font_size_class|default:'' }}">{{ p|urlize }}</p>
-        {% endfor %}
+<div class="d-inline-flex flex-column align-items-start">
+    <div class="d-inline-block overflow-hidden">
+        <div id="{{ text_block_id }}" class="resource-description-wrapper text-break line-clamp line-clamp-{{ line_clamp_number|default:'5' }}">
+            {% for p in text_block_paragraphs %}
+            <p class="resource-description {{ text_block_font_size_class|default:'' }}">{{ p|urlize }}</p>
+            {% endfor %}
+        </div>
     </div>
+    <button
+        class="btn btn-{{ expand_btn_type|default:'sm btn-light btn-light-togglable fw-semibold' }} btn-expand-resource-description {{ expand_btn_top_margin|default:'mt-3' }}"
+        data-target="{{ text_block_id }}">{{ expand_btn_text|default:'Show more' }}</button>
 </div>
-<button
-    class="btn btn-{{ expand_btn_type|default:'light btn-light-togglable' }} btn-expand-resource-description {{ expand_btn_top_margin|default:'mt-3' }}"
-    data-target="{{ text_block_id }}">{{ expand_btn_text|default:'Show more' }}</button>
