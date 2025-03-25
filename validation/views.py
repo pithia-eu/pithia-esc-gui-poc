@@ -69,7 +69,7 @@ class QuickInlineValidationFormView(FormView):
 class QuickInlineRegistrationValidationFormView(QuickInlineValidationFormView):
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update({
-            'xml_file_registration_errors': MetadataFileRegistrationValidator.validate_and_return_errors(
+            'registration_conflicts': MetadataFileRegistrationValidator.validate_and_return_errors(
                 xml_metadata_file,
                 models.ScientificMetadata
             )
@@ -83,7 +83,7 @@ class QuickInlineUpdateValidationFormView(QuickInlineValidationFormView):
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update({
-            'xml_file_update_errors': MetadataFileUpdateValidator.validate_and_return_errors(
+            'update_conflicts': MetadataFileUpdateValidator.validate_and_return_errors(
                 xml_metadata_file,
                 models.ScientificMetadata,
                 request.POST.get('existing_metadata_id')
@@ -98,23 +98,25 @@ class QuickInlineInstrumentUpdateValidationFormView(QuickInlineValidationFormVie
 
     def validate(self, request, xml_metadata_file: XMLMetadataFile):
         self.error_dict.update({
-            'xml_file_update_errors': MetadataFileUpdateValidator.validate_and_return_errors(
+            'update_conflicts': MetadataFileUpdateValidator.validate_and_return_errors(
                 xml_metadata_file,
                 models.Instrument,
                 request.POST.get('existing_metadata_id')
             )
         })
 
-        if len(self.error_dict.get('xml_file_update_errors', [])) > 0:
+        if len(self.error_dict.get('update_conflicts', [])) > 0:
+            # Don't continue with instrument operational mode
+            # validation if update validation was not successful.
             self.error_dict.update({
-                'xml_file_op_mode_errors': ['Could not validate operational modes as metadata file did not pass update validation.'],
-                'xml_file_op_mode_warnings': ['Could not validate operational modes as metadata file did not pass update validation.'],
+                'op_mode_conflicts': ['Could not validate operational modes as metadata file did not pass update validation.'],
+                'op_mode_warnings': ['Could not validate operational modes as metadata file did not pass update validation.'],
             })
             return super().validate(request, xml_metadata_file)
         
         self.error_dict.update({
-            'xml_file_op_mode_errors': [],
-            'xml_file_op_mode_warnings': InstrumentMetadataFileValidator.validate_and_return_errors(
+            'op_mode_conflicts': [],
+            'op_mode_warnings': InstrumentMetadataFileValidator.validate_and_return_errors(
                 xml_metadata_file,
                 request.POST.get('existing_metadata_id')
             ),
@@ -134,7 +136,7 @@ class InlineXSDValidationFormView(FormView):
             return HttpResponseBadRequest('The form submitted was not valid.')
         xml_metadata_file = XMLMetadataFile(request.POST.get('xml_file_string'), '')
         self.error_dict.update({
-            'xml_file_xsd_errors': MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file),
+            'xsd_errors': MetadataFileXSDValidator.validate_and_return_errors(xml_metadata_file),
         })
 
         if not any(self.error_dict.values()):
@@ -163,19 +165,29 @@ def api_specification_url(request):
     response_body = {
         'valid': False
     }
+    
     form = ApiSpecificationUrlValidationForm(request.POST)
-    if form.is_valid():
-        api_specification_url = request.POST['api_specification_url']
-        try:
-            validate_spec_url(api_specification_url)
-            response_body['valid'] = True
-        except HTTPError as err:
-            logger.exception('The provided API specification URL returned an HTTP Error 404: Not Found.')
-            response_body['error'] = 'The URL was not found'
-        except BaseException as err:
-            logger.exception('The provided API specification URL does not link to a valid OpenAPI specification.')
-            response_body['error'] = 'The URL does not link to a valid OpenAPI specification'
-            response_body['details'] = str(err)
-    else:
-        response_body['error'] = 'Please enter a URL'
+    if not form.is_valid():
+        # Stop further processing if the API specification
+        # URL is not valid.
+        response_body.update({
+            'error': 'Please enter a URL',
+        })
+        return HttpResponse(json.dumps(response_body), content_type='application/json')
+
+    api_specification_url = request.POST['api_specification_url']
+    try:
+        validate_spec_url(api_specification_url)
+        response_body['valid'] = True
+    except HTTPError as err:
+        logger.exception('The provided API specification URL returned an HTTP Error 404: Not Found.')
+        response_body.update({
+            'error': 'The URL was not found',
+        })
+    except BaseException as err:
+        logger.exception('The provided API specification URL does not link to a valid OpenAPI specification.')
+        response_body.update({
+            'error': 'The URL does not link to a valid OpenAPI specification',
+            'details': str(err),
+        })
     return HttpResponse(json.dumps(response_body), content_type='application/json')
