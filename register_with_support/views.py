@@ -8,6 +8,10 @@ from django.db import (
     IntegrityError,
     transaction,
 )
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+)
 from django.urls import reverse_lazy
 from django.utils.html import escape
 from pyexpat import ExpatError
@@ -129,9 +133,56 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         return kwargs
 
 
+class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
+    def convert_form_to_validated_xml(self, form):
+        metadata_editor = self.metadata_editor_class()
+        self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
+        xml_string = metadata_editor.to_xml()
+        return xml_string
+
+    def form_invalid(self, form):
+        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
+
+    def form_valid(self, form):
+        response = HttpResponse()
+
+        try:
+            xml_result = self.convert_form_to_validated_xml(form)
+        except ExpatError:
+            logger.exception('Expat error occurred during registration process.')
+            messages.error(self.request, 'An error occurred whilst parsing the XML.')
+            return response.write('')
+        except Exception:
+            logger.exception('An unexpected error occurred during XML generation.')
+            messages.error(self.request, 'An unexpected error occurred during XML generation.')
+            response.write('''An unexpected error occurred whilst the XML was
+                being generated. Please try submitting the form again. If the
+                problem persists, please inform our support team of the problem.
+            ''')
+            return response
+
+        try:
+            self.xml_string = xml_result.get('xml_string')
+            registration_name = form.cleaned_data.get('name', '')
+            self.resource = self.run_registration_actions(self.request)
+            response.write(f'Successfully registered {escape(registration_name)}.')
+            return response
+        except ExpatError as err:
+            logger.exception('Expat error occurred during registration process.')
+            response.write(f'There was a problem during XML generation. Please report this error to our support team.')
+        except IntegrityError as err:
+            logger.exception('The local ID submitted is already in use.')
+            response.write('The local ID submitted is already in use.')
+        except Exception as err:
+            logger.exception('An unexpected error occurred during registration.')
+            response.write('An unexpected error occurred during registration.')
+        self.run_actions_on_registration_failure()
+        return response
+
+
 class OrganisationRegisterWithEditorFormView(
     OrganisationEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = OrganisationEditorRegistrationForm
     success_url = reverse_lazy('register:organisation_with_editor')
 
@@ -151,7 +202,7 @@ class OrganisationRegisterWithEditorFormView(
 
 class IndividualRegisterWithEditorFormView(
     IndividualEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = IndividualEditorRegistrationForm
     success_url = reverse_lazy('register:individual_with_editor')
 
@@ -161,7 +212,7 @@ class IndividualRegisterWithEditorFormView(
 
 class ProjectRegisterWithEditorFormView(
     ProjectEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ProjectEditorRegistrationForm
     success_url = reverse_lazy('register:project_with_editor')
 
@@ -172,7 +223,7 @@ class ProjectRegisterWithEditorFormView(
 
 class PlatformRegisterWithEditorFormView(
     PlatformEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = PlatformEditorRegistrationForm
     success_url = reverse_lazy('register:platform_with_editor')
 
@@ -182,7 +233,7 @@ class PlatformRegisterWithEditorFormView(
 
 class OperationRegisterWithEditorFormView(
     OperationEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = OperationEditorRegistrationForm
     success_url = reverse_lazy('register:operation_with_editor')
 
@@ -192,7 +243,7 @@ class OperationRegisterWithEditorFormView(
 
 class InstrumentRegisterWithEditorFormView(
     InstrumentEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = InstrumentEditorRegistrationForm
     success_url = reverse_lazy('register:instrument_with_editor')
 
@@ -211,7 +262,7 @@ class InstrumentRegisterWithEditorFormView(
 
 class AcquisitionCapabilitiesRegisterWithEditorFormView(
     AcquisitionCapabilitiesEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = AcquisitionCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_capability_set_with_editor')
 
@@ -232,7 +283,7 @@ class AcquisitionCapabilitiesRegisterWithEditorFormView(
 
 class AcquisitionRegisterWithEditorFormView(
     AcquisitionEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = AcquisitionEditorRegistrationForm
     success_url = reverse_lazy('register:acquisition_with_editor')
 
@@ -247,7 +298,7 @@ class AcquisitionRegisterWithEditorFormView(
 
 class ComputationCapabilitiesRegisterWithEditorFormView(
     ComputationCapabilitiesEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ComputationCapabilitiesEditorRegistrationForm
     success_url = reverse_lazy('register:computation_capability_set_with_editor')
 
@@ -269,7 +320,7 @@ class ComputationCapabilitiesRegisterWithEditorFormView(
 
 class ComputationRegisterWithEditorFormView(
     ComputationEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ComputationEditorRegistrationForm
     success_url = reverse_lazy('register:computation_with_editor')
 
@@ -286,7 +337,7 @@ class ComputationRegisterWithEditorFormView(
 
 class ProcessRegisterWithEditorFormView(
     ProcessEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = ProcessEditorRegistrationForm
     success_url = reverse_lazy('register:process_with_editor')
 
@@ -306,7 +357,7 @@ class ProcessRegisterWithEditorFormView(
 
 class DataCollectionRegisterWithEditorFormView(
     DataCollectionEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = DataCollectionEditorRegistrationForm
     success_url = reverse_lazy('register:data_collection_with_editor')
 
@@ -351,7 +402,7 @@ class DataCollectionRegisterWithEditorFormView(
 
 class CatalogueRegisterWithEditorFormView(
     CatalogueEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = CatalogueEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_with_editor')
 
@@ -361,7 +412,7 @@ class CatalogueRegisterWithEditorFormView(
 
 class CatalogueEntryRegisterWithEditorFormView(
     CatalogueEntryEditorFormView,
-    ResourceRegisterWithEditorFormView):
+    NewResourceRegisterWithEditorFormView):
     form_class = CatalogueEntryEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_entry_with_editor')
 
@@ -372,7 +423,7 @@ class CatalogueEntryRegisterWithEditorFormView(
 class CatalogueDataSubsetRegisterWithEditorFormView(
         CatalogueDataSubsetEditorFormView,
         HandleRegistrationViewMixin,
-        ResourceRegisterWithEditorFormView):
+        NewResourceRegisterWithEditorFormView):
     form_class = CatalogueDataSubsetEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_data_subset_with_editor')
 
@@ -421,7 +472,7 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
 class WorkflowRegisterWithEditorFormView(
         WorkflowDetailsUrlValidationViewMixin,
         WorkflowEditorFormView,
-        ResourceRegisterWithEditorFormView):
+        NewResourceRegisterWithEditorFormView):
     form_class = WorkflowEditorRegistrationForm
     success_url = reverse_lazy('register:workflow_with_editor')
 
