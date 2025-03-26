@@ -95,10 +95,16 @@ a.icon-link,
 
 a:hover,
 a:focus,
+a:active,
 a.icon-link:hover,
 a.icon-link:focus,
+a.icon-link:active,
 .btn-link:hover,
-.btn-link:focus {
+.btn-link:focus,
+.btn-link:active {
+    color: var(--pithia-blue);
+    -webkit-text-decoration-color: var(--pithia-blue);
+    text-decoration-color: var(--pithia-blue);
     text-decoration: none;
 }
 
