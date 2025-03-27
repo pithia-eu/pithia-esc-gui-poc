@@ -7,10 +7,12 @@ from dateutil.parser import parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.http import (
-    HttpResponse,
+    HttpResponseServerError,
     HttpResponseBadRequest,
+    JsonResponse,
 )
-from django.shortcuts import render
+from django.shortcuts import redirect
+from django.utils.html import escape
 from io import BufferedReader
 from pyexpat import ExpatError
 
@@ -68,7 +70,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     success_url = ''
     success_url_name = ''
 
-    error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
+    error_msg = 'An unexpected error occurred whilst trying to update this resource.'
 
     submit_button_text = 'Validate and Update'
 
@@ -133,16 +135,13 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
 
 
 class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
-    def get(self, request, *args, **kwargs):
-        if request.GET.get('success'):
-            messages.success(request, f'Successfully updated {escape(self.resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
-        return super().get(request, *args, **kwargs)
-
     def form_invalid(self, form):
-        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
+        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors and re-submit.')
 
     def form_valid(self, form):
-        response = HttpResponse()
+        if self.request.GET.get('updated_resource_id'):
+            messages.success(self.request, f'Successfully updated {escape(self.resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
         try:
             if not hasattr(self, 'current_resource_xml'):
@@ -152,19 +151,19 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
             self.xml_string = metadata_editor.to_xml()
             self.run_extra_actions_before_update()
             self.updated_resource = self.update_resource()
-
-            response.write(f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            return JsonResponse({
+                'message': f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.',
+                'redirect_url': f'{reverse_lazy(self.success_url_name, kwargs={"resource_id": self.resource_id})}?updated_resource_id={self.updated_resource.id}',
+            })
         except ExpatError:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
-            response.write('''An error occurred whilst parsing the XML.
+            return HttpResponseServerError('''An error occurred whilst parsing the XML.
                 Please try submitting the form again. If the problem
                 persists, please inform our support team of the problem.
             ''')
         except Exception:
             logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
-            response.write(self.error_msg)
-
-        return response
+            return HttpResponseServerError(self.error_msg)
 
 
 class OrganisationUpdateWithEditorFormView(

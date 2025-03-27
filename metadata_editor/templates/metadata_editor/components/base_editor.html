@@ -9,6 +9,7 @@
 <script src="{% static 'metadata_editor/components/editor_manual_and_autosave.js' %}" type="module"></script>
 {{ save_data_local_storage_key|json_script:'save-data-local-storage-key' }}
 {% block extra_scripts %}{% endblock extra_scripts %}
+{{ success_url|json_script:'xml-generation-url' }}
 {% if editor_registration_setup_script_path %}
 {{ localid_validation_url|json_script:'local-id-validation-url' }}
 {{ localid_base|json_script:'local-id-base' }}
@@ -91,11 +92,11 @@
                         </div>
                     </div>
                     <div class="col-lg-12 d-flex flex-column row-gap-2">
-                        <button type="submit" class="btn btn-outline-primary flex-grow-1 fw-semibold py-3 px-4">
+                        <button type="submit" class="btn btn-outline-primary flex-grow-1 py-3 px-4">
                             {{ submit_button_text }}
                         </button>
                         <button type="button" class="d-none btn btn-sm btn-link btn-abort-submit text-body mx-auto">
-                            Abort
+                            Cancel and retry
                         </button>
                         <div class="d-none form-text text-danger text-center form-status-alert">
                         </div>
