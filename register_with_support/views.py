@@ -9,8 +9,13 @@ from django.db import (
     transaction,
 )
 from django.http import (
-    HttpResponse,
     HttpResponseBadRequest,
+    HttpResponseServerError,
+    JsonResponse,
+)
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
 )
 from django.urls import reverse_lazy
 from django.utils.html import escape
@@ -45,7 +50,6 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             self.institution_id,
             self.owner_id,
         )
-        self.success_url += '?reset=true'
         return new_registration
 
     def run_registration_actions(self, request):
@@ -144,40 +148,49 @@ class NewResourceRegisterWithEditorFormView(ResourceRegisterWithEditorFormView):
         return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
 
     def form_valid(self, form):
-        response = HttpResponse()
+        if self.request.GET.get('registered_resource_id'):
+            resource = get_object_or_404(self.model, pk=self.request.GET.get('registered_resource_id'))
+            messages.success(self.request, f'Successfully registered {escape(resource.name)}.')
+            return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
         try:
-            xml_result = self.convert_form_to_validated_xml(form)
+            self.xml_string = self.convert_form_to_validated_xml(form)
         except ExpatError:
             logger.exception('Expat error occurred during registration process.')
-            messages.error(self.request, 'An error occurred whilst parsing the XML.')
-            return response.write('')
+            return HttpResponseServerError('''An error occurred whilst generating the XML
+                from the submitted data. Please try submitting the form again. If the
+                problem persists, please inform our support team of the problem.''')
         except Exception:
             logger.exception('An unexpected error occurred during XML generation.')
-            messages.error(self.request, 'An unexpected error occurred during XML generation.')
-            response.write('''An unexpected error occurred whilst the XML was
-                being generated. Please try submitting the form again. If the
-                problem persists, please inform our support team of the problem.
-            ''')
-            return response
+            return HttpResponseServerError('''An unexpected error occurred during the
+                registration process. Please try submitting the form again. If the
+                problem persists, please inform our support team of the problem.''')
 
         try:
-            self.xml_string = xml_result.get('xml_string')
             registration_name = form.cleaned_data.get('name', '')
             self.resource = self.run_registration_actions(self.request)
-            response.write(f'Successfully registered {escape(registration_name)}.')
-            return response
-        except ExpatError as err:
+            return JsonResponse({
+                'message': f'Successfully registered {escape(registration_name)}.',
+                'redirect_url': f'{self.success_url}?registered_resource_id={self.resource.id}',
+            })
+        except ExpatError:
             logger.exception('Expat error occurred during registration process.')
-            response.write(f'There was a problem during XML generation. Please report this error to our support team.')
-        except IntegrityError as err:
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError(f'''There was a problem whilst preparing for
+                registration. Please try submitting the form again. If this problem
+                persists, please report this error to our support team.''')
+        except IntegrityError:
             logger.exception('The local ID submitted is already in use.')
-            response.write('The local ID submitted is already in use.')
-        except Exception as err:
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError('''The local ID submitted is already in use. This
+                metadata may have already been registered. If this is not the case, please
+                let our support team know.''')
+        except Exception:
             logger.exception('An unexpected error occurred during registration.')
-            response.write('An unexpected error occurred during registration.')
-        self.run_actions_on_registration_failure()
-        return response
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError('''An unexpected error occurred during registration.
+                Please try submitting the form again. If the problem persists, please inform
+                our support team of the problem.''')
 
 
 class OrganisationRegisterWithEditorFormView(
