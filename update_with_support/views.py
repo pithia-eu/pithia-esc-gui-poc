@@ -15,6 +15,7 @@ from django.shortcuts import redirect
 from django.utils.html import escape
 from io import BufferedReader
 from pyexpat import ExpatError
+from xmlschema import XMLSchemaValidationError
 
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
@@ -70,7 +71,10 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     success_url = ''
     success_url_name = ''
 
-    error_msg = 'An unexpected error occurred whilst trying to update this resource.'
+    error_msg = '''An unexpected error occurred whilst trying
+        to update this resource. Please try submitting the form
+        again. If the problem persists, please let our support
+        team know.'''
 
     submit_button_text = 'Validate and Update'
 
@@ -155,6 +159,12 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
                 'message': f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.',
                 'redirect_url': f'{reverse_lazy(self.success_url_name, kwargs={"resource_id": self.resource_id})}?updated_resource_id={self.updated_resource.id}',
             })
+        except XMLSchemaValidationError:
+            logger.exception(f'Failed to XSD validate resource with ID "{escape(self.resource_id)}" due to XMLSchemaValidationError.')
+            return HttpResponseServerError('''An error occurred whilst validating this
+                resource. Please try submitting the form again. If the problem
+                persists, please let our support team know.
+            ''')
         except ExpatError:
             logger.exception('Could not update a resource as there was an error parsing the update XML.')
             return HttpResponseServerError('''An error occurred whilst parsing the XML.
