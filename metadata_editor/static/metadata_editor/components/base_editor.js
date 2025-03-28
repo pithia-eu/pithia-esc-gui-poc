@@ -94,6 +94,7 @@ export async function validateAndRegister() {
         controller = null;
     }
 
+    window.dispatchEvent(new CustomEvent("xmlRegisteredSuccessfully"));
     showSuccessAnimationAndContent();
     return editorForm.submit();
 }
