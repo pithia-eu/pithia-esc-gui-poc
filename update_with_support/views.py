@@ -7,8 +7,8 @@ from dateutil.parser import parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.http import (
-    HttpResponseServerError,
     HttpResponseBadRequest,
+    HttpResponseServerError,
     JsonResponse,
 )
 from django.shortcuts import redirect
@@ -144,7 +144,12 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
 
     def form_valid(self, form):
         if self.request.GET.get('updated_resource_id'):
-            messages.success(self.request, f'Successfully updated {escape(self.resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
+            messages.success(
+                self.request,
+                f'''Successfully updated {escape(self.resource.name)}.
+                It may take a few minutes for the changes to be visible
+                in the metadata\'s details page.'''
+            )
             return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
         try:
@@ -159,20 +164,20 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
                 'message': f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.',
                 'redirect_url': f'{reverse_lazy(self.success_url_name, kwargs={"resource_id": self.resource_id})}?updated_resource_id={self.updated_resource.id}',
             })
+        except ExpatError:
+            logger.exception('Could not finish updating the resource as the XML parser encountered an error whilst loading in/outputting XML.')
+            return HttpResponseServerError('''An error occurred during the update
+                process. The update has not been applied. Please try submitting
+                the form again, and if the problem persists, please inform our
+                support team of the problem.''')
         except XMLSchemaValidationError:
             logger.exception(f'Failed to XSD validate resource with ID "{escape(self.resource_id)}" due to XMLSchemaValidationError.')
             return HttpResponseServerError('''An error occurred whilst validating this
                 resource. Please try submitting the form again. If the problem
-                persists, please let our support team know.
-            ''')
-        except ExpatError:
-            logger.exception('Could not update a resource as there was an error parsing the update XML.')
-            return HttpResponseServerError('''An error occurred whilst parsing the XML.
-                Please try submitting the form again. If the problem
-                persists, please inform our support team of the problem.
-            ''')
+                persists, please let our support team know.''')
         except Exception:
-            logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
+            logger.exception(f'''An unexpected error occurred whilst attempting to
+                update resource with ID "{escape(self.resource_id)}".''')
             return HttpResponseServerError(self.error_msg)
 
 
