@@ -11,7 +11,7 @@ const formCancelButton = editorForm.querySelector(".btn-abort-submit");
 let controller;
 let isRequestAborted;
 // Error messages
-const NETWORK_ERROR_MSG = "The connection to the server timed out before validation could finish. Please try submitting the form again."
+const NETWORK_ERROR_MSG = "The connection to the server timed out. Please try submitting the form again, and if the problem persists please let our support team know."
 
 
 function updateFormStatusAlert(content) {
@@ -69,7 +69,7 @@ export async function validateAndRegister() {
             signal: controller.signal,
         });
         isResponseComplete = true;
-
+        
         if (response.status === 504) {
             updateFormStatusAlert(NETWORK_ERROR_MSG);
             throw new Error(`Response status: ${response.status}`);
