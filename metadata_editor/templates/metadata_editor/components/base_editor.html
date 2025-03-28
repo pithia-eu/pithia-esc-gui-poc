@@ -86,19 +86,20 @@
                 {% csrf_token %}
                 {% block form_content %}{% endblock form_content %}
                 <div class="d-flex flex-column row-gap-3 border-top pt-5 mt-4">
-                    <div class="col-lg-12">
-                        <div class="bg-body-tertiary form-text text-center border rounded p-3 px-4">
-                            <span>Validation usually takes up to a minute to complete on a good internet connection.</span>
-                        </div>
-                    </div>
                     <div class="col-lg-12 d-flex flex-column row-gap-2">
                         <button type="submit" class="btn btn-outline-primary flex-grow-1 py-3 px-4">
                             {{ submit_button_text }}
                         </button>
-                        <button type="button" class="d-none btn btn-sm btn-link btn-abort-submit text-body mx-auto">
-                            Cancel and retry
-                        </button>
                         <div class="d-none form-text text-danger text-center form-status-alert">
+                        </div>
+                    </div>
+                    <div class="d-none form-retry-notice col-lg-12">
+                        <div class="bg-body-tertiary form-text text-center border rounded p-3 px-4">
+                            The validation process can take up to a minute to complete
+                            with a good internet connection (the XML schema definitions
+                            used for validation usually take a while to all load in). If
+                            the wizard appears to become unresponsive during this time,
+                            try <button type="button" class="btn btn-sm btn-link btn-abort-submit text-body align-baseline p-0">re-submitting the form</button>.
                         </div>
                     </div>
                 </div>

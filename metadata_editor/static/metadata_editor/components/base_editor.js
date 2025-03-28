@@ -6,9 +6,11 @@ const formSubmitButtonDefaultContent = formSubmitButton.innerHTML;
 // Form submission status
 const formStatusAlert = document.querySelector(".form-status-alert");
 // Form submit abort button
+const formRetryNotice = document.querySelector(".form-retry-notice");
 const formCancelButton = editorForm.querySelector(".btn-abort-submit");
 let controller;
-// Network error msg
+let isRequestAborted;
+// Error messages
 const NETWORK_ERROR_MSG = "The connection to the server timed out before validation could finish. Please try submitting the form again."
 
 
@@ -23,17 +25,19 @@ function showInProgressAnimationAndContent() {
         <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
         <span role="status">Validating</span>
     `;
-    formCancelButton.classList.remove("d-none");
+    formRetryNotice.classList.remove("d-none");
 }
 
 function stopInProgressAnimationAndContent() {
     formSubmitButton.innerHTML = formSubmitButtonDefaultContent;
     formSubmitButton.disabled = false;
-    formCancelButton.classList.add("d-none");
+    formRetryNotice.classList.add("d-none");
 }
 
 function showSuccessAnimationAndContent() {
     formSubmitButton.disabled = true;
+    formSubmitButton.classList.remove('btn-outline-primary');
+    formSubmitButton.classList.add('btn-outline-secondary');
     formSubmitButton.innerHTML = `
         <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
         <span role="status">Redirecting</span>
@@ -43,6 +47,7 @@ function showSuccessAnimationAndContent() {
 
 export async function validateAndRegister() {
     controller = new AbortController();
+    isRequestAborted = false;
 
     // Hide form status alert if visible
     formStatusAlert.classList.add("d-none");
@@ -78,6 +83,9 @@ export async function validateAndRegister() {
         editorForm.setAttribute("action", responseJson.redirect_url);
     } catch (error) {
         console.error(error.message);
+        if (isRequestAborted) {
+            return stopInProgressAnimationAndContent();
+        }
         if (!isResponseComplete) {
             updateFormStatusAlert(NETWORK_ERROR_MSG);
         }
@@ -92,6 +100,7 @@ export async function validateAndRegister() {
 
 formCancelButton.addEventListener("click", () => {
     if (controller) {
+        isRequestAborted = true;
         controller.abort();
         return stopInProgressAnimationAndContent();
     }
