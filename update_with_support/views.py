@@ -98,51 +98,7 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         )
 
     def form_valid(self, form):
-        try:
-            if not hasattr(self, 'current_resource_xml'):
-                self.current_resource_xml = self.resource.xml
-            metadata_editor = self.metadata_editor_class(xml_string=self.current_resource_xml)
-            self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
-            self.xml_string = metadata_editor.to_xml()
-            self.run_extra_actions_before_update()
-            self.updated_resource = self.update_resource()
-
-            messages.success(self.request, f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
-            self.success_url += '?reset=true'
-        except ExpatError as err:
-            logger.exception('Could not update a resource as there was an error parsing the update XML.')
-            messages.error(self.request, 'An error occurred whilst parsing the XML.')
-        except Exception as err:
-            logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
-            messages.error(self.request, self.error_msg)
-
-        return super().form_valid(form)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['success_url'] = self.success_url
-        context['save_data_local_storage_key'] = f'{self.model.type_readable}_u_{escape(self.resource_id).lower()}_wizard_save_data'
-        return context
-
-    def dispatch(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs.get('resource_id')
-        self.resource = self.model.objects.get(pk=self.resource_id)
-        self.success_url = reverse_lazy(self.success_url_name, args=[self.resource_id])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_initial(self):
-        initial = super().get_initial()
-        form_field_to_metadata_mapper = self.form_field_to_metadata_mapper_class(self.resource.xml)
-        initial_from_metadata = form_field_to_metadata_mapper.get_initial_form_values()
-        initial.update(initial_from_metadata)
-        return initial
-
-
-class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
-    def form_invalid(self, form):
-        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors and re-submit.')
-
-    def form_valid(self, form):
+        # Success redirect after XML has been generated from the wizard.
         if self.request.GET.get('updated_resource_id'):
             messages.success(
                 self.request,
@@ -152,6 +108,7 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
             )
             return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
+        # Generate XML from the wizard
         try:
             if not hasattr(self, 'current_resource_xml'):
                 self.current_resource_xml = self.resource.xml
@@ -179,10 +136,29 @@ class NewResourceUpdateWithEditorFormView(ResourceUpdateWithEditorFormView):
             logger.exception(f'''An unexpected error occurred whilst attempting to
                 update resource with ID "{escape(self.resource_id)}".''')
             return HttpResponseServerError(self.error_msg)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['success_url'] = self.success_url
+        context['save_data_local_storage_key'] = f'{self.model.type_readable}_u_{escape(self.resource_id).lower()}_wizard_save_data'
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        self.resource_id = self.kwargs.get('resource_id')
+        self.resource = self.model.objects.get(pk=self.resource_id)
+        self.success_url = reverse_lazy(self.success_url_name, args=[self.resource_id])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        form_field_to_metadata_mapper = self.form_field_to_metadata_mapper_class(self.resource.xml)
+        initial_from_metadata = form_field_to_metadata_mapper.get_initial_form_values()
+        initial.update(initial_from_metadata)
+        return initial
 
 
 class OrganisationUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     OrganisationEditorFormView):
     model = models.Organisation
     success_url_name = 'update:organisation_with_editor'
@@ -195,7 +171,7 @@ class OrganisationUpdateWithEditorFormView(
 
 
 class IndividualUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     IndividualEditorFormView):
     model = models.Individual
     success_url_name = 'update:individual_with_editor'
@@ -208,7 +184,7 @@ class IndividualUpdateWithEditorFormView(
 
 
 class ProjectUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     ProjectEditorFormView):
     model = models.Project
     success_url_name = 'update:project_with_editor'
@@ -216,7 +192,7 @@ class ProjectUpdateWithEditorFormView(
 
 
 class PlatformUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     PlatformEditorFormView):
     model = models.Platform
     success_url_name = 'update:platform_with_editor'
@@ -224,7 +200,7 @@ class PlatformUpdateWithEditorFormView(
 
 
 class OperationUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     OperationEditorFormView):
     model = models.Operation
     success_url_name = 'update:operation_with_editor'
@@ -232,7 +208,7 @@ class OperationUpdateWithEditorFormView(
 
 
 class InstrumentUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     InstrumentEditorFormView):
     model = models.Instrument
     success_url_name = 'update:instrument_with_editor'
@@ -240,7 +216,7 @@ class InstrumentUpdateWithEditorFormView(
 
 
 class AcquisitionCapabilitiesUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     AcquisitionCapabilitiesEditorFormView):
     model = models.AcquisitionCapabilities
     success_url_name = 'update:acquisition_capability_set_with_editor'
@@ -248,7 +224,7 @@ class AcquisitionCapabilitiesUpdateWithEditorFormView(
 
 
 class AcquisitionUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     AcquisitionEditorFormView):
     model = models.Acquisition
     success_url_name = 'update:acquisition_with_editor'
@@ -256,7 +232,7 @@ class AcquisitionUpdateWithEditorFormView(
 
 
 class ComputationCapabilitiesUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     ComputationCapabilitiesEditorFormView):
     model = models.ComputationCapabilities
     success_url_name = 'update:computation_capability_set_with_editor'
@@ -264,7 +240,7 @@ class ComputationCapabilitiesUpdateWithEditorFormView(
 
 
 class ComputationUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     ComputationEditorFormView):
     model = models.Computation
     success_url_name = 'update:computation_with_editor'
@@ -272,7 +248,7 @@ class ComputationUpdateWithEditorFormView(
 
 
 class ProcessUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     ProcessEditorFormView):
     model = models.Process
     success_url_name = 'update:process_with_editor'
@@ -280,7 +256,7 @@ class ProcessUpdateWithEditorFormView(
 
 
 class DataCollectionUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     DataCollectionEditorFormView):
     model = models.DataCollection
     success_url_name = 'update:data_collection_with_editor'
@@ -288,7 +264,7 @@ class DataCollectionUpdateWithEditorFormView(
 
 
 class CatalogueUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     CatalogueEditorFormView):
     model = models.Catalogue
     success_url_name = 'update:catalogue_with_editor'
@@ -296,7 +272,7 @@ class CatalogueUpdateWithEditorFormView(
 
 
 class CatalogueEntryUpdateWithEditorFormView(
-    NewResourceUpdateWithEditorFormView,
+    ResourceUpdateWithEditorFormView,
     CatalogueEntryEditorFormView):
     model = models.CatalogueEntry
     success_url_name = 'update:catalogue_entry_with_editor'
@@ -314,7 +290,7 @@ class CatalogueEntryUpdateWithEditorFormView(
 class CatalogueDataSubsetUpdateWithEditorFormView(
         HandleReapplicationViewMixin,
         HandleRegistrationViewMixin,
-        NewResourceUpdateWithEditorFormView,
+        ResourceUpdateWithEditorFormView,
         CatalogueDataSubsetEditorFormView):
     template_name = 'update_with_support/catalogue_data_subset_update_editor.html'
     model = models.CatalogueDataSubset
@@ -431,7 +407,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
 
 
 class WorkflowUpdateWithEditorFormView(
-        NewResourceUpdateWithEditorFormView,
+        ResourceUpdateWithEditorFormView,
         WorkflowDetailsUrlValidationViewMixin,
         WorkflowEditorFormView):
     model = models.Workflow
