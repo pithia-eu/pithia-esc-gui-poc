@@ -160,6 +160,7 @@ a.nav-link:focus,
 /* Link styles - Bootstrap elements */
 a.btn,
 a.badge,
+a.dropdown-item,
 .accordion-button a,
 .list-group-item > a {
     text-decoration: none;
@@ -169,6 +170,8 @@ a.badge,
     text-decoration: none;
 }
 
+a.dropdown-item:hover,
+a.dropdown-item:focus,
 .accordion-button a:hover,
 .accordion-button a:focus,
 .list-group-item > a:hover,
