@@ -60,7 +60,10 @@ export async function validateAndRegister() {
     let isResponseComplete;
     try {
         const url = `${window.location.origin}${xmlGenerationUrl}`;
-        const data = new URLSearchParams(new FormData(editorForm));
+        let data = new FormData(editorForm);
+        if (editorForm.getAttribute("enctype") !== "multipart/form-data") {
+            data = new URLSearchParams(data);
+        }
         const csrfMiddlewareToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
         data.append("csrfmiddlewaretoken", csrfMiddlewareToken);
         const response = await fetch(url, {
