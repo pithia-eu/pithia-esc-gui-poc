@@ -855,6 +855,11 @@ as Bootstrap styling. */
     background-color: var(--bs-tertiary-bg);
 }
 
+.resource-detail-subsection + .resource-detail-subsection {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .online-resource-list li > div:has(> details:not([open])) .or-service-function,
 .online-resource-list li > div:has(> details:not([open])) > details > summary {
     color: var(--bs-secondary-color);
