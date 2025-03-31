@@ -7,7 +7,6 @@ from dateutil.parser import parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.http import (
-    HttpResponseBadRequest,
     HttpResponseServerError,
     JsonResponse,
 )
