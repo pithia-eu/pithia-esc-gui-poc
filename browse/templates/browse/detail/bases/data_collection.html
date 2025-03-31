@@ -41,9 +41,15 @@
 {% if resource.properties.sub_collections %}
 <section class="resource-detail-section">
     <h3>Sub-collections</h3>
-    {% with value=resource.properties.sub_collections %}
-    {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-    {% endwith %}
+    <ul>
+        {% for sub_collection in resource.properties.sub_collections %}
+        <li>
+            {% with value=sub_collection %}
+            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
 </section>
 {% endif %}
 {% if resource.properties.features_of_interest %}
