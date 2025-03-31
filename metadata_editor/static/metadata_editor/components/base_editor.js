@@ -79,7 +79,12 @@ export async function validateAndRegister() {
         }
 
         if (!response.ok) {
-            updateFormStatusAlert(await response.text());
+            const responseText = await response.text();
+            if (responseText.toLowerCase().startsWith("<!doctype html>")) {
+                updateFormStatusAlert("An unexpected response was received. Please try submitting the form again. If the problem persists, please let our support team know.");
+                throw new Error(`Response status: ${response.status}`);
+            }
+            updateFormStatusAlert(responseText);
             throw new Error(`Response status: ${response.status}`);
         }
         responseJson = await response.json();
