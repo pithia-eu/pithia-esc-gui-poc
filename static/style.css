@@ -83,7 +83,7 @@ hgroup p {
 
 /* || Link styles */
 a,
-a.icon-link,
+a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
     -webkit-text-decoration-color: var(--pithia-blue);
@@ -96,9 +96,9 @@ a.icon-link,
 a:hover,
 a:focus,
 a:active,
-a.icon-link:hover,
-a.icon-link:focus,
-a.icon-link:active,
+a.icon-link:not(a.btn.icon-link):hover,
+a.icon-link:not(a.btn.icon-link):focus,
+a.icon-link:not(a.btn.icon-link):active,
 .btn-link:hover,
 .btn-link:focus,
 .btn-link:active {
