@@ -2,6 +2,7 @@
 
 {# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
+{% if resource.properties.sub_projects %}
 <section class="resource-detail-section">
     <details>
         <summary class="summary-marker-custom">
@@ -21,6 +22,7 @@
         </ul>
     </details>
 </section>
+{% endif %}
 {% include 'browse/detail/sections/responsive/status_section.html' %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
