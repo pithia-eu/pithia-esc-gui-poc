@@ -2,6 +2,25 @@
 
 {# Appears after the last modified date, before the description #}
 {% block pre_description_content %}
+<section class="resource-detail-section">
+    <details>
+        <summary class="summary-marker-custom">
+            <h2 class="fs-6">
+                Sub-projects
+                <span class="text-body-secondary">({{ resource.properties.sub_projects|length }})</span>
+            </h2>
+        </summary>
+        <ul class="list-group list-group-flush">
+            {% for project_url in resource.properties.sub_projects %}
+            <li class="list-group-item">
+                {% with value=project_url %}
+                {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
+                {% endwith %}
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+</section>
 {% include 'browse/detail/sections/responsive/status_section.html' %}
 {% include 'browse/detail/sections/responsive/website_section.html' %}
 {% if resource.abstract.strip|length > 0 %}
@@ -32,24 +51,6 @@
 {% include 'browse/detail/sections/description_section.html' %}
 {% endif %}
 {% endblock description_section %}
-
-{# Appears after the description #}
-{% block post_description_content %}
-{% if resource.properties.sub_projects %}
-<section class="resource-detail-section">
-    <h2>Sub-projects</h2>
-    <ul>
-        {% for project_url in resource.properties.sub_projects %}
-        <li>
-            {% with value=project_url %}
-            {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
-            {% endwith %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
-{% endblock post_description_content %}
 
 {# Appears in the further information disclosure widget #}
 {% block further_information_extra_sections %}
