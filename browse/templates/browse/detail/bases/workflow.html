@@ -11,7 +11,11 @@
 <section class="resource-detail-section">
     <div class="d-flex flex-column row-gap-3">
         <h2 class="mb-0">
-            <a href="{% url 'present:interact_with_workflow_through_api' workflow_id %}" class="btn btn-lg btn-outline-dark btn-outline-dark-togglable fs-5 fw-semibold icon-link icon-link-hover" target="_blank" rel="noopener noreferrer">
+            <a
+                href="{% url 'present:interact_with_workflow_through_api' workflow_id %}"
+                class="btn btn-lg btn-outline-dark btn-outline-dark-togglable fs-5 fw-semibold icon-link icon-link-hover"
+                target="_blank"
+                rel="noopener noreferrer">
                 Run this Workflow
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right flex-shrink-0 ms-2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -21,12 +25,12 @@
         {% if resource.properties.data_collection_urls %}
         <details>
             <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm mb-0">
-                <h3 class="d-inline fs-6">
+                <h3 class="d-inline fs-6 fw-semibold">
                     Data Collections in this Workflow
                     <span class="text-body-secondary">({{ resource.properties.data_collection_urls|length }})</span>
                 </h3>
             </summary>
-            <ul class="list-group list-group-flush mt-2" style="font-size: 0.875rem;">
+            <ul class="list-group list-group-flush mt-2">
                 {% for data_collection_url in resource.properties.data_collection_urls %}
                 <li class="list-group-item px-0">
                     {% with value=data_collection_url url_text_extra_classes='link-plain-by-default' %}
@@ -39,7 +43,7 @@
         {% endif %}
     </div>
     <div class="bg-body-tertiary rounded px-3 py-4 mt-4">
-        <h3 class="fw-semibold fs-base-2">Workflow Notes & Diagram</h3>
+        <h3 class="fw-semibold fs-6">Workflow Notes & Diagram</h3>
         <div class="d-flex flex-column align-items-start row-gap-2">
             {% if workflow_interaction_method.config.description %}
             <p class="mb-0">
