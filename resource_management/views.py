@@ -63,11 +63,11 @@ def catalogue_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request.session)
     
     num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
-    num_current_catalogue_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
+    num_current_static_dataset_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
     num_current_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
-        'num_current_catalogue_entries': num_current_catalogue_entries,
+        'num_current_static_dataset_entries': num_current_static_dataset_entries,
         'num_current_data_subsets': num_current_data_subsets,
         'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
         'index_page_url_name_breadcrumb': 'resource_management:index',

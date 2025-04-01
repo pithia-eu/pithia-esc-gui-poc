@@ -910,7 +910,7 @@ class CatalogueEntryDetailView(ResourceDetailView):
     a Catalogue Entry registration.
     """
     model = models.CatalogueEntry
-    resource_list_by_type_url_name = 'browse:list_catalogue_entries'
+    resource_list_by_type_url_name = 'browse:list_static_dataset_entries'
     resource_download_url_name = 'utils:view_static_dataset_entry_as_xml'
     template_name = 'browse/detail/bases/static_dataset_entry.html'
 

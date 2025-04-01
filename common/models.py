@@ -262,7 +262,7 @@ class ScientificMetadata(models.Model):
     processes = ProcessManager.from_queryset(ProcessQuerySet)()
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
-    catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
+    static_dataset_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
     data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 

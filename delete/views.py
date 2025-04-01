@@ -277,8 +277,8 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     """
     model = models.CatalogueEntry
 
-    redirect_url = reverse_lazy('resource_management:catalogue_entries')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    redirect_url = reverse_lazy('resource_management:static_dataset_entries')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
     delete_resource_page_breadcrumb_url_name = 'delete:static_dataset_entry'
 
 

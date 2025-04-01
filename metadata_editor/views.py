@@ -875,7 +875,7 @@ class CatalogueEntryEditorFormView(
     metadata_editor_class = CatalogueEntryEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueEntry.type_plural_readable)
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
 
     def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEntryEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
@@ -959,7 +959,7 @@ class CatalogueDataSubsetEditorFormView(
         )
 
     def get_static_dataset_entry_choices_for_form(self):
-        catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
+        static_dataset_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
         UNKNOWN_KEY = 'ZZZ'
         entries_by_catalogue = {
             UNKNOWN_KEY: {
@@ -968,7 +968,7 @@ class CatalogueDataSubsetEditorFormView(
             }
         }
         # Sort catalogue entries by catalogue ID
-        for entry in catalogue_entries:
+        for entry in static_dataset_entries:
             catalogue_id = entry.properties.catalogue_identifier.split('/')[-1]
             if not catalogue_id:
                 entries_by_catalogue[UNKNOWN_KEY]['entries'].append(entry)

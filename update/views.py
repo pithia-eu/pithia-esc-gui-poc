@@ -323,9 +323,9 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
 class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
     model = models.CatalogueEntry
 
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
     resource_update_page_url_name = 'update:static_dataset_entry'
-    success_url = reverse_lazy('resource_management:catalogue_entries')
+    success_url = reverse_lazy('resource_management:static_dataset_entries')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
