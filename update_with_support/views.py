@@ -6,9 +6,15 @@ from datetime import timezone
 from dateutil.parser import parse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
-from django.shortcuts import render
+from django.http import (
+    HttpResponseServerError,
+    JsonResponse,
+)
+from django.shortcuts import redirect
+from django.utils.html import escape
 from io import BufferedReader
 from pyexpat import ExpatError
+from xmlschema import XMLSchemaValidationError
 
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
@@ -64,7 +70,10 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
     success_url = ''
     success_url_name = ''
 
-    error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
+    error_msg = '''An unexpected error occurred whilst trying
+        to update this resource. Please try submitting the form
+        again. If the problem persists, please let our support
+        team know.'''
 
     submit_button_text = 'Validate and Update'
 
@@ -88,6 +97,17 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
         )
 
     def form_valid(self, form):
+        # Success redirect after XML has been generated from the wizard.
+        if self.request.GET.get('updated_resource_id'):
+            messages.success(
+                self.request,
+                f'''Successfully updated {escape(self.resource.name)}.
+                It may take a few minutes for the changes to be visible
+                in the metadata\'s details page.'''
+            )
+            return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
+
+        # Generate XML from the wizard
         try:
             if not hasattr(self, 'current_resource_xml'):
                 self.current_resource_xml = self.resource.xml
@@ -96,17 +116,25 @@ class ResourceUpdateWithEditorFormView(ResourceEditorFormView):
             self.xml_string = metadata_editor.to_xml()
             self.run_extra_actions_before_update()
             self.updated_resource = self.update_resource()
-
-            messages.success(self.request, f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.')
-            self.success_url += '?reset=true'
-        except ExpatError as err:
-            logger.exception('Could not update a resource as there was an error parsing the update XML.')
-            messages.error(self.request, 'An error occurred whilst parsing the XML.')
-        except Exception as err:
-            logger.exception(f'An unexpected error occurred whilst attempting to update resource with ID "{escape(self.resource_id)}".')
-            messages.error(self.request, self.error_msg)
-
-        return super().form_valid(form)
+            return JsonResponse({
+                'message': f'Successfully updated {escape(self.updated_resource.name)}. It may take a few minutes for the changes to be visible in the metadata\'s details page.',
+                'redirect_url': f'{reverse_lazy(self.success_url_name, kwargs={"resource_id": self.resource_id})}?updated_resource_id={self.updated_resource.id}',
+            })
+        except ExpatError:
+            logger.exception('Could not finish updating the resource as the XML parser encountered an error whilst loading in/outputting XML.')
+            return HttpResponseServerError('''An error occurred during the update
+                process. The update has not been applied. Please try submitting
+                the form again, and if the problem persists, please inform our
+                support team of the problem.''')
+        except XMLSchemaValidationError:
+            logger.exception(f'Failed to XSD validate resource with ID "{escape(self.resource_id)}" due to XMLSchemaValidationError.')
+            return HttpResponseServerError('''An error occurred whilst validating this
+                resource. Please try submitting the form again. If the problem
+                persists, please let our support team know.''')
+        except Exception:
+            logger.exception(f'''An unexpected error occurred whilst attempting to
+                update resource with ID "{escape(self.resource_id)}".''')
+            return HttpResponseServerError(self.error_msg)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,18 +1,15 @@
 import logging
-import os
-import shutil
 from django.contrib import messages
+from django.http import HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.html import escape
 from django.utils.text import slugify
 from django.views.generic import FormView
-from pathlib import Path
 
 from .editor_dataclasses import (
-    CatalogueDataSubsetSourceMetadataUpdate,
+
     CitationPropertyTypeMetadataUpdate,
     OperationTimeMetadataUpdate,
     PhenomenonTimeMetadataUpdate,
@@ -111,8 +108,7 @@ class ResourceEditorFormView(
         return context
 
     def form_invalid(self, form):
-        messages.error(self.request, f'The form submitted was not valid. See the form below for details.')
-        return super().form_invalid(form)
+        return HttpResponseBadRequest('The form submitted was not valid. Please check the form for any errors.')
     
     def dispatch(self, request, *args, **kwargs):
         self.institution_id = get_institution_id_for_login_session(request.session)
@@ -123,6 +119,7 @@ class ResourceEditorFormView(
         kwargs = super().get_form_kwargs()
         kwargs['form_metadata_type'] = self.model.type_readable.title()
         return kwargs
+
 
 class OrganisationEditorFormView(
     ResourceEditorFormView,

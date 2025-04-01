@@ -295,7 +295,7 @@ export class MetadataFileValidator {
         }
 
         return {
-            XSDErrors: results.xml_file_xsd_errors
+            XSDErrors: results.xsd_errors
         };
     }
 

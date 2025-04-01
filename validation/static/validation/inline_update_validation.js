@@ -79,7 +79,7 @@ export class MetadataFileUpdateValidator extends MetadataFileValidator {
                                         .concat(results.unregistered_operational_mode_url_errors)
                                         .concat(results.unregistered_resource_url_errors),
             ontologyReferenceErrors: results.invalid_ontology_url_errors,
-            updateErrors: results.xml_file_update_errors,
+            updateErrors: results.update_conflicts,
         };
     }
 }

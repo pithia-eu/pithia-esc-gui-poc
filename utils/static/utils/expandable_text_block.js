@@ -38,9 +38,7 @@ function setupExpandDescriptionButton(expandDescriptionButton) {
 }
 
 window.addEventListener("load", () => {
-    console.log("hello");
     if (!expandDescriptionButtons) {
-        console.log("goodbye");
         return;
     }
     for (const expandDescriptionButton of expandDescriptionButtons) {

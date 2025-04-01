@@ -71,7 +71,6 @@ class ResourceUpdateFormView(FormView):
 
     # Template variables
     resource_update_page_url_name = ''
-    validation_url = ''
     # resource_to_update_name = '' # Set in dispatch() function
     resource_management_list_page_breadcrumb_url_name = ''
 
@@ -102,7 +101,6 @@ class ResourceUpdateFormView(FormView):
             context['form'] = self.get_form()
         context['resource'] = self.resource
         context['resource_id'] = self.resource_id
-        context['validation_url'] = self.validation_url
         context['expected_root_element_name'] = self.model.root_element_name
         context['inline_validation_url'] = reverse_lazy('validation:update')
         context['inline_xsd_validation_url'] = reverse_lazy('validation:xsd')
@@ -144,7 +142,6 @@ class OrganisationUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:organisations'
     resource_update_page_url_name = 'update:organisation'
-    validation_url = reverse_lazy('validation:organisation')
     success_url = reverse_lazy('resource_management:organisations')
 
 
@@ -153,7 +150,6 @@ class IndividualUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:individuals'
     resource_update_page_url_name = 'update:individual'
-    validation_url = reverse_lazy('validation:individual')
     success_url = reverse_lazy('resource_management:individuals')
 
 
@@ -162,7 +158,6 @@ class ProjectUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:projects'
     resource_update_page_url_name = 'update:project'
-    validation_url = reverse_lazy('validation:project')
     success_url = reverse_lazy('resource_management:projects')
 
 
@@ -171,7 +166,6 @@ class PlatformUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:platforms'
     resource_update_page_url_name = 'update:platform'
-    validation_url = reverse_lazy('validation:platform')
     success_url = reverse_lazy('resource_management:platforms')
 
 
@@ -180,7 +174,6 @@ class OperationUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:operations'
     resource_update_page_url_name = 'update:operation'
-    validation_url = reverse_lazy('validation:operation')
     success_url = reverse_lazy('resource_management:operations')
 
 
@@ -190,7 +183,6 @@ class InstrumentUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:instruments'
     resource_update_page_url_name = 'update:instrument'
-    validation_url = reverse_lazy('validation:instrument')
     success_url = reverse_lazy('resource_management:instruments')
 
     def get_context_data(self, **kwargs):
@@ -204,7 +196,6 @@ class AcquisitionCapabilitiesUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisition_capability_sets'
     resource_update_page_url_name = 'update:acquisition_capability_set'
-    validation_url = reverse_lazy('validation:acquisition_capability_set')
     success_url = reverse_lazy('resource_management:acquisition_capability_sets')
 
 
@@ -213,7 +204,6 @@ class AcquisitionUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:acquisitions'
     resource_update_page_url_name = 'update:acquisition'
-    validation_url = reverse_lazy('validation:acquisition')
     success_url = reverse_lazy('resource_management:acquisitions')
 
 
@@ -222,7 +212,6 @@ class ComputationCapabilitiesUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computation_capability_sets'
     resource_update_page_url_name = 'update:computation_capability_set'
-    validation_url = reverse_lazy('validation:computation_capability_set')
     success_url = reverse_lazy('resource_management:computation_capability_sets')
 
 
@@ -231,7 +220,6 @@ class ComputationUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:computations'
     resource_update_page_url_name = 'update:computation'
-    validation_url = reverse_lazy('validation:computation')
     success_url = reverse_lazy('resource_management:computations')
 
 
@@ -240,7 +228,6 @@ class ProcessUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:processes'
     resource_update_page_url_name = 'update:process'
-    validation_url = reverse_lazy('validation:process')
     success_url = reverse_lazy('resource_management:processes')
 
 
@@ -250,7 +237,6 @@ class DataCollectionUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_collections'
     resource_update_page_url_name = 'update:data_collection'
-    validation_url = reverse_lazy('validation:data_collection')
     success_url = reverse_lazy('resource_management:data_collections')
 
 
@@ -325,7 +311,6 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_update_page_url_name = 'update:catalogue'
-    validation_url = reverse_lazy('validation:catalogue')
     success_url = reverse_lazy('resource_management:catalogues')
 
     def get_context_data(self, **kwargs):
@@ -340,7 +325,6 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_update_page_url_name = 'update:catalogue_entry'
-    validation_url = reverse_lazy('validation:catalogue_entry')
     success_url = reverse_lazy('resource_management:catalogue_entries')
 
     def get_context_data(self, **kwargs):
@@ -362,7 +346,6 @@ class CatalogueDataSubsetUpdateFormView(
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
     resource_update_page_url_name = 'update:catalogue_data_subset'
-    validation_url = reverse_lazy('validation:catalogue_data_subset')
     success_url = reverse_lazy('resource_management:catalogue_data_subsets')
 
     error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
@@ -495,7 +478,6 @@ class WorkflowUpdateFormView(
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:workflows'
     resource_update_page_url_name = 'update:workflow'
-    validation_url = reverse_lazy('validation:workflow')
     success_url = reverse_lazy('resource_management:workflows')
 
     error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'

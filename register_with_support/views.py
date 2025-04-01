@@ -8,6 +8,14 @@ from django.db import (
     IntegrityError,
     transaction,
 )
+from django.http import (
+    HttpResponseServerError,
+    JsonResponse,
+)
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+)
 from django.urls import reverse_lazy
 from django.utils.html import escape
 from pyexpat import ExpatError
@@ -41,7 +49,6 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
             self.institution_id,
             self.owner_id,
         )
-        self.success_url += '?reset=true'
         return new_registration
 
     def run_registration_actions(self, request):
@@ -71,24 +78,10 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         return processed_form
 
     def convert_form_to_validated_xml(self, form):
-        result = {}
-
-        try:
-            metadata_editor = self.metadata_editor_class()
-            self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
-            xml_string = metadata_editor.to_xml()
-            result['xml_string'] = xml_string
-        except ExpatError as err:
-            logger.exception('Expat error occurred during registration process.')
-            messages.error(self.request, 'An error occurred whilst parsing the XML.')
-            result['error'] = err
-            return result
-        except BaseException as err:
-            logger.exception('An unexpected error occurred during XML generation.')
-            messages.error(self.request, 'An unexpected error occurred during XML generation.')
-            result['error'] = err
-
-        return result
+        metadata_editor = self.metadata_editor_class()
+        self.add_form_data_to_metadata_editor(metadata_editor, form.cleaned_data)
+        xml_string = metadata_editor.to_xml()
+        return xml_string
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -100,28 +93,52 @@ class ResourceRegisterWithEditorFormView(ResourceEditorFormView):
         return context
 
     def form_valid(self, form):
-        xml_result = self.convert_form_to_validated_xml(form)
-        if 'error' in xml_result:
-            return self.render_to_response(self.get_context_data(form=form))
+        # Success redirect after XML has been generated from the wizard
+        if self.request.GET.get('registered_resource_id'):
+            resource = get_object_or_404(self.model, pk=self.request.GET.get('registered_resource_id'))
+            messages.success(self.request, f'Successfully registered {escape(resource.name)}.')
+            return redirect(reverse_lazy(self.resource_management_list_page_breadcrumb_url_name))
 
+        # Generate XMl from the wizard
         try:
-            self.xml_string = xml_result['xml_string']
+            self.xml_string = self.convert_form_to_validated_xml(form)
+        except ExpatError:
+            logger.exception('Expat error occurred during registration process.')
+            return HttpResponseServerError('''An error occurred whilst generating the XML
+                from the submitted data. Please try submitting the form again. If the
+                problem persists, please inform our support team of the problem.''')
+        except Exception:
+            logger.exception('An unexpected error occurred during XML generation.')
+            return HttpResponseServerError('''An unexpected error occurred during the
+                registration process. Please try submitting the form again. If the
+                problem persists, please inform our support team of the problem.''')
+
+        # Register the XML generated from wizard
+        try:
             registration_name = form.cleaned_data.get('name', '')
             self.resource = self.run_registration_actions(self.request)
-            messages.success(self.request, f'Successfully registered {escape(registration_name)}.')
-            return super().form_valid(form)
-        except ExpatError as err:
+            return JsonResponse({
+                'message': f'Successfully registered {escape(registration_name)}.',
+                'redirect_url': f'{self.success_url}?registered_resource_id={self.resource.id}',
+            })
+        except ExpatError:
             logger.exception('Expat error occurred during registration process.')
-            messages.error(self.request, f'There was a problem during XML generation. Please report this error to our support team.')
-        except IntegrityError as err:
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError(f'''There was a problem whilst preparing for
+                registration. Please try submitting the form again. If this problem
+                persists, please report this error to our support team.''')
+        except IntegrityError:
             logger.exception('The local ID submitted is already in use.')
-            messages.error(self.request, 'The local ID submitted is already in use.')
-        except BaseException as err:
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError('''The local ID submitted is already in use. This
+                metadata may have already been registered. If this is not the case, please
+                let our support team know.''')
+        except Exception:
             logger.exception('An unexpected error occurred during registration.')
-            messages.error(self.request, 'An unexpected error occurred during registration.')
-        self.run_actions_on_registration_failure()
-        return self.render_to_response(self.get_context_data(form=form))
-        
+            self.run_actions_on_registration_failure()
+            return HttpResponseServerError('''An unexpected error occurred during registration.
+                Please try submitting the form again. If the problem persists, please inform
+                our support team of the problem.''')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

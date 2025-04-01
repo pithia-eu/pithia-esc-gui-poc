@@ -202,6 +202,10 @@ function setupEventListeners() {
         saveWizardDataToLocalStorage();
     });
 
+    window.addEventListener("xmlRegisteredSuccessfully", () => {
+        removePastWizardData();
+    });
+
     saveButtons.forEach(saveButton => {
         saveButton.addEventListener("click", () => {
             saveWizardDataToLocalStorage();

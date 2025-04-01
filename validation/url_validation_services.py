@@ -15,6 +15,10 @@ from .file_wrappers import (
     AcquisitionCapabilitiesXMLMetadataFile,
     XMLMetadataFile,
 )
+from .helpers import (
+    create_li_element_with_register_link_from_resource_type_from_resource_url,
+    map_string_to_li_element,
+)
 
 from common.constants import PITHIA_METADATA_SERVER_HTTPS_URL_BASE
 from common.models import (
@@ -30,8 +34,7 @@ from utils.url_helpers import (
 class MetadataFileOntologyURLReferencesValidator:
     @classmethod
     def _is_ontology_term_url_valid(cls, ontology_term_url: str):
-        """
-        Checks that the provided Space Physics Ontology URL
+        """Checks that the provided Space Physics Ontology URL
         has a valid HTTP response and that the response
         content is as expected.
 
@@ -65,8 +68,7 @@ class MetadataFileOntologyURLReferencesValidator:
     
     @classmethod
     def is_each_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> List[str]:
-        """
-        Checks each Space Physics Ontology URL in the
+        """Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
         """
         ontology_urls = xml_file.ontology_urls
@@ -74,12 +76,12 @@ class MetadataFileOntologyURLReferencesValidator:
     
     @classmethod
     def is_each_potential_ontology_url_in_xml_file_valid(cls, xml_file: XMLMetadataFile) -> list[str]:
-        """
-        Checks each Space Physics Ontology URL in the
+        """Checks each Space Physics Ontology URL in the
         provided XML metadata file is valid.
         """
         ontology_urls = xml_file.potential_ontology_urls
         return cls._is_each_ontology_url_valid(ontology_urls)
+
 
 class MetadataFileMetadataURLReferencesValidator:
     @classmethod
@@ -148,8 +150,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def _is_each_resource_url_valid(cls, resource_urls: List[str]) -> dict:
-        """
-        Checks that each metadata server URL is well-formed and that each URL
+        """Checks that each metadata server URL is well-formed and that each URL
         corresponds with a metadata registration in the e-Science Centre.
         """
         invalid_urls_dict = {
@@ -170,8 +171,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def is_each_resource_url_valid(cls, xml_file: XMLMetadataFile) -> dict:
-        """
-        Checks that each metadata server URL is valid by
+        """Checks that each metadata server URL is valid by
         meeting a specified set of criteria.
         """
         resource_urls = xml_file.metadata_urls
@@ -179,8 +179,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def is_each_potential_resource_url_valid(cls, xml_file: XMLMetadataFile) -> dict:
-        """
-        Checks that each potential metadata server URL is valid by
+        """Checks that each potential metadata server URL is valid by
         meeting a specified set of criteria.
         """
         resource_urls = xml_file.potential_metadata_urls
@@ -188,8 +187,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def is_each_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
-        """
-        Checks that each operational mode URL is well-formed and that
+        """Checks that each operational mode URL is well-formed and that
         each URL corresponds with a metadata registration in the
         e-Science Centre.
         """
@@ -211,8 +209,7 @@ class MetadataFileMetadataURLReferencesValidator:
 
     @classmethod
     def is_each_potential_operational_mode_url_valid(cls, xml_file: AcquisitionCapabilitiesXMLMetadataFile) -> dict:
-        """
-        Checks that each potential operational mode URL is well-formed
+        """Checks that each potential operational mode URL is well-formed
         and that each URL corresponds with a metadata registration in the
         e-Science Centre.
         """
@@ -242,3 +239,64 @@ class MetadataFileMetadataURLReferencesValidator:
                 invalid_urls_dict['urls_pointing_to_registered_resources_with_missing_op_modes'].append(url)
         
         return invalid_urls_dict
+
+    @classmethod
+    def validate_and_return_errors(cls, xml_metadata_file: XMLMetadataFile):
+        incorrectly_structured_url_errors = []
+        unregistered_resource_url_errors = []
+        unregistered_operational_mode_url_errors = []
+
+        # Resource URL validation
+        # Check which resource URLs are valid and return
+        # the invalid ones.
+        invalid_resource_urls = cls.is_each_potential_resource_url_valid(xml_metadata_file)
+        invalid_operational_mode_urls = cls.is_each_potential_operational_mode_url_valid(xml_metadata_file)
+
+        # Keys to access invalid URL categories
+        INCORRECTLY_STRUCTURED_URLS = 'urls_with_incorrect_structure'
+        UNREGISTERED_RESOURCE_URLS = 'urls_pointing_to_unregistered_resources'
+        UNREGISTERED_RESOURCE_URL_TYPES = 'types_of_missing_resources'
+        UNREGISTERED_OPERATIONAL_MODE_URLS = 'urls_pointing_to_registered_resources_with_missing_op_modes'
+
+        # Process the returned invalid resource URLs.
+        incorrectly_structured_urls = invalid_resource_urls.get(INCORRECTLY_STRUCTURED_URLS, []) + invalid_operational_mode_urls.get(INCORRECTLY_STRUCTURED_URLS, [])
+        unregistered_resource_urls = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URLS, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URLS, [])
+        unregistered_resource_url_types = invalid_resource_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, []) + invalid_operational_mode_urls.get(UNREGISTERED_RESOURCE_URL_TYPES, [])
+        unregistered_operational_mode_urls = invalid_operational_mode_urls.get(UNREGISTERED_OPERATIONAL_MODE_URLS, [])
+        
+        if len(incorrectly_structured_urls) > 0:
+            error_msg = 'One or multiple resource URLs specified via the xlink:href attribute are invalid.'
+            error_msg = error_msg + '<br>'
+            error_msg = error_msg + 'Invalid document URLs: <ul>%s</ul><div class="mt-2">Your resource URL may reference an unsupported resource type, or may not follow the correct structure.</div>' % ''.join(list(map(map_string_to_li_element, incorrectly_structured_urls)))
+            error_msg = error_msg + '<div class="mt-2">Expected resource URL structure: <i>https://metadata.pithia.eu/resources/2.2/<b>resource type</b>/<b>namespace</b>/<b>localID</b></i></div>'
+            incorrectly_structured_url_errors.append(error_msg)
+
+        if len(unregistered_resource_urls) > 0:
+            error_msg = 'One or multiple resources referenced by the xlink:href attribute have not been registered with the e-Science Centre.'
+            error_msg = error_msg + '<br>'
+            error_msg = error_msg + 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(map_string_to_li_element, unregistered_resource_urls)))
+            error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(create_li_element_with_register_link_from_resource_type_from_resource_url, unregistered_resource_url_types)))
+            unregistered_resource_url_errors.append(error_msg)
+
+        if len(unregistered_operational_mode_urls) > 0:
+            error_msg = 'One or multiple referenced operational modes are invalid.'
+            error_msg = error_msg + '<br>'
+            error_msg = error_msg + 'Invalid operational mode references: <ul>%s</ul>' % ''.join(list(map(map_string_to_li_element, unregistered_operational_mode_urls)))
+            unregistered_operational_mode_url_errors.append(error_msg)
+
+        # Ontology URL validation
+        invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_potential_ontology_url_in_xml_file_valid(xml_metadata_file)
+        invalid_ontology_url_errors = []
+        if len(invalid_ontology_urls) > 0:
+            error_msg = 'One or multiple ontology terms referenced by the xlink:href attribute are not valid PITHIA ontology terms.'
+            error_msg = error_msg + '<br>'
+            error_msg = error_msg + 'Invalid ontology term URLs: <ul>%s</ul><div class="mt-2">These ontology URLs may reference terms which have not yet been added to the PITHIA ontology, or no longer exist in the PITHIA ontology. Please also ensure URLs start with "<i>https://</i>" and not "<i>http://</i>".</div>' % ''.join(list(map(map_string_to_li_element, invalid_ontology_urls)))
+            invalid_ontology_url_errors.append(error_msg)
+
+        return {
+            'incorrectly_structured_url_errors': incorrectly_structured_url_errors,
+            'unregistered_resource_url_errors': unregistered_resource_url_errors,
+            'unregistered_operational_mode_url_errors': unregistered_operational_mode_url_errors,
+            'invalid_ontology_url_errors': invalid_ontology_url_errors,
+        }

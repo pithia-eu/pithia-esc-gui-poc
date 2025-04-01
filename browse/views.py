@@ -845,6 +845,7 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
                 'project',
                 'qualityAssessment',
                 'relatedParty',
+                'subCollection',
                 'type',
             ]
         )

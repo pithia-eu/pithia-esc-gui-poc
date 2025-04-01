@@ -11,12 +11,10 @@ from .file_wrappers import (
     XMLMetadataFile,
 )
 from .services import (
-    is_localid_taken,
+    InstrumentMetadataFileValidator,
+    MetadataFileRegistrationValidator,
+    MetadataFileUpdateValidator,
     MetadataFileXSDValidator,
-    validate_instrument_xml_file_update_and_return_errors,
-    validate_xml_file_references_and_return_errors,
-    validate_new_xml_file_registration_and_return_errors,
-    validate_xml_file_update_and_return_errors,
 )
 from .url_validation_services import (
     MetadataFileOntologyURLReferencesValidator,
@@ -68,33 +66,6 @@ class DataCollectionSyntaxValidationTestCase(DataCollectionFileTestCase, SyntaxV
     pass
 
 
-# Root element validation tests, based on metadata type.
-class OrganisationRootElementValidationTestCase(OrganisationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class IndividualRootElementValidationTestCase(IndividualFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ProjectRootElementValidationTestCase(ProjectFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class PlatformRootElementValidationTestCase(PlatformFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class OperationRootElementValidationTestCase(OperationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class InstrumentRootElementValidationTestCase(InstrumentFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesRootElementValidationTestCase(AcquisitionCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class AcquisitionRootElementValidationTestCase(AcquisitionFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ComputationCapabilitiesRootElementValidationTestCase(ComputationCapabilitiesFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ComputationRootElementValidationTestCase(ComputationFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class ProcessRootElementValidationTestCase(ProcessFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-class DataCollectionRootElementValidationTestCase(DataCollectionFileTestCase, RootElementValidationTestCase, TestCase):
-    pass
-
-
 # XSD validation tests, based on metadata type.
 class OrganisationXSDValidationTestCase(OrganisationFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
@@ -119,33 +90,6 @@ class ComputationXSDValidationTestCase(ComputationFileTestCase, XSDValidationTes
 class ProcessXSDValidationTestCase(ProcessFileTestCase, XSDValidationTestCase, SimpleTestCase):
     pass
 class DataCollectionXSDValidationTestCase(DataCollectionFileTestCase, XSDValidationTestCase, SimpleTestCase):
-    pass
-
-
-# File name-localID match tests, based on metadata type.
-class OrganisationFileNameValidationTestCase(OrganisationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class IndividualFileNameValidationTestCase(IndividualFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ProjectFileNameValidationTestCase(ProjectFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class PlatformFileNameValidationTestCase(PlatformFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class OperationFileNameValidationTestCase(OperationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class InstrumentFileNameValidationTestCase(InstrumentFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesFileNameValidationTestCase(AcquisitionCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class AcquisitionFileNameValidationTestCase(AcquisitionFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ComputationCapabilitiesFileNameValidationTestCase(ComputationCapabilitiesFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ComputationFileNameValidationTestCase(ComputationFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class ProcessFileNameValidationTestCase(ProcessFileTestCase, FileNameValidationTestCase, TestCase):
-    pass
-class DataCollectionFileNameValidationTestCase(DataCollectionFileTestCase, FileNameValidationTestCase, TestCase):
     pass
 
 
@@ -200,33 +144,6 @@ class ComputationUpdateValidationTestCase(ComputationFileTestCase, UpdateValidat
 class ProcessUpdateValidationTestCase(ProcessFileTestCase, UpdateValidationTestCase, TestCase):
     pass
 class DataCollectionUpdateValidationTestCase(DataCollectionFileTestCase, UpdateValidationTestCase, TestCase):
-    pass
-
-
-# Complete run through of validation process, based on metadata type
-class OrganisationValidationChecklistTestCase(OrganisationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class IndividualValidationChecklistTestCase(IndividualFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ProjectValidationChecklistTestCase(ProjectFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class PlatformValidationChecklistTestCase(PlatformFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class OperationValidationChecklistTestCase(OperationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class InstrumentValidationChecklistTestCase(InstrumentFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class AcquisitionCapabilitiesValidationChecklistTestCase(AcquisitionCapabilitiesFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class AcquisitionValidationChecklistTestCase(AcquisitionFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ComputationCapabilitiesValidationChecklistTestCase(ComputationCapabilitiesFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ComputationValidationChecklistTestCase(ComputationFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class ProcessValidationChecklistTestCase(ProcessFileTestCase, ValidationChecklistTestCase, TestCase):
-    pass
-class DataCollectionValidationChecklistTestCase(DataCollectionFileTestCase, ValidationChecklistTestCase, TestCase):
     pass
 
 
@@ -532,6 +449,7 @@ class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
 
 
 class DoiValidationTestCase(SimpleTestCase):
+    @tag('slow')
     def test_catalogue_data_subset_with_handle_fails(self):
         """Data subset validation fails with a handle in the
         DOI metadata kernel element.
@@ -701,7 +619,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_references_and_return_errors(test_xml_file)
+        results = MetadataFileMetadataURLReferencesValidator.validate_and_return_errors(test_xml_file)
         print('results', results)
         self.assertIs(type(results), dict)
         self.assertFalse(any(results.values()))
@@ -719,7 +637,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        results = MetadataFileRegistrationValidator.validate_and_return_errors(test_xml_file, ScientificMetadata)
         print('results', results)
         self.assertIs(type(results), list)
         self.assertGreater(len(results), 0)
@@ -734,7 +652,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_new_xml_file_registration_and_return_errors(test_xml_file, ScientificMetadata)
+        results = MetadataFileRegistrationValidator.validate_and_return_errors(test_xml_file, ScientificMetadata)
         print('results', results)
         self.assertIs(type(results), list)
         self.assertEqual(len(results), 0)
@@ -751,7 +669,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        results = MetadataFileUpdateValidator.validate_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
         print('results', results)
         self.assertIs(type(results), list)
         self.assertGreater(len(results), 0)
@@ -767,7 +685,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = XMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_xml_file_update_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
+        results = MetadataFileUpdateValidator.validate_and_return_errors(test_xml_file, ScientificMetadata, "Organisation_Test")
         print('results', results)
         self.assertIs(type(results), list)
         self.assertEqual(len(results), 0)
@@ -785,7 +703,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
         print('results', results)
         self.assertIs(type(results), list)
 
@@ -800,7 +718,7 @@ class InlineValidationTestCase(TestCase):
         xml_file_string = xml_file.read()
         test_xml_file = InstrumentXMLMetadataFile(xml_file_string, xml_file.name)
 
-        results = validate_instrument_xml_file_update_and_return_errors(test_xml_file, test_xml_file.localid)
+        results = InstrumentMetadataFileValidator.validate_and_return_errors(test_xml_file, test_xml_file.localid)
         print('results', results)
         self.assertIs(type(results), list)
 
@@ -812,10 +730,11 @@ class LocalIDServiceTestCase(TestCase):
         return super().setUp()
 
     def test_is_localid_taken_suggestion(self):
-        results = is_localid_taken(self.organisation.localid)
+        results = MetadataFileRegistrationValidator.check_if_localid_is_already_in_use_and_return_suggestion_if_taken(self.organisation.localid)
         print('results', results)
 
 
+@tag('slow')
 class AcquisitionCapabilitiesXSDValidationTestCase(SimpleTestCase):
     def test_acquisition_capabilities_with_multiple_imps_fails(self):
         xml_file = AcquisitionCapabilitiesXMLMetadataFile.from_file(test_xml_files.ACQUISITION_CAPABILITIES_MULTIPLE_INSTRUMENT_MODE_PAIRS_METADATA_XML)

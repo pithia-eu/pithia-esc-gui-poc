@@ -22,7 +22,7 @@
     <div class="mb-2">
         {% with forloop_counter_str=forloop.counter|stringformat:'s' catalogue_description_paragraphs=catalogue.description|wrap_in_list_if_dict %}
         {% with text_block_id='catalogue-description-'|add:forloop_counter_str text_block_paragraphs=catalogue_description_paragraphs line_clamp_number='4' %}
-        {% with expand_btn_type='sm btn-link pithia-blue link-underline-by-default px-0' expand_btn_top_margin='mt-0' expand_btn_text='Show more...' %}
+        {% with expand_btn_type='sm btn-link' expand_btn_top_margin='mt-0' expand_btn_text='Show more...' %}
         {% include 'utils/expandable_text_block.html' %}
         {% endwith %}
         {% endwith %}
