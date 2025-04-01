@@ -728,13 +728,13 @@ class CatalogueTypeDescriptionMixin:
 
 
 class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
-    type_in_metadata_server_url = 'catalogue'
-    localid_base = 'Catalogue'
+    type_in_metadata_server_url = 'staticDataset'
+    localid_base = 'StaticDataset'
     weight = 12
     type_readable = 'static dataset'
     type_plural_readable = 'static datasets'
     _browse_detail_page_url_name = 'browse:catalogue_detail'
-    root_element_name = 'Catalogue'
+    root_element_name = 'StaticDataset'
 
     @property
     def entries(self):
@@ -754,13 +754,13 @@ class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
         proxy = True
 
 class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
-    type_in_metadata_server_url = 'catalogue'
-    localid_base = 'CatalogueEntry'
+    type_in_metadata_server_url = 'staticDataset'
+    localid_base = 'StaticDatasetEntry'
     weight = 13
     type_readable = 'static dataset entry'
     type_plural_readable = 'static dataset entries'
     _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
-    root_element_name = 'CatalogueEntry'
+    root_element_name = 'StaticDatasetEntry'
 
     @property
     def name(self):
@@ -802,7 +802,7 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
         proxy = True
 
 class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
-    type_in_metadata_server_url = 'catalogue'
+    type_in_metadata_server_url = 'staticDataset'
     localid_base = 'DataSubset'
     weight = 14
     type_readable = 'data subset'
@@ -852,6 +852,7 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     class Meta:
         proxy = True
+
 
 class Workflow(ScientificMetadata):
     type_in_metadata_server_url = 'workflow'
