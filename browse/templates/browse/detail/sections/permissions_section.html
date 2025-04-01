@@ -5,7 +5,7 @@
     <ul class="list-group list-group-flush">
         {% for p in resource.permission_urls %}
         {% with value=p|get_key_value:'@xlink:href' %}
-        <li class="list-group-item py-0 ps-0" data-metadata-server-url={{ value }}>
+        <li class="list-group-item p-0" data-metadata-server-url={{ value }}>
             <details id="permission_{{ value|server_url_id|lower }}" name="details-permissions">
                 <summary class="summary-marker-custom summary-marker-custom-baseline summary-marker-custom-sm py-3">
                     <span class="d-inline-flex flex-column">
