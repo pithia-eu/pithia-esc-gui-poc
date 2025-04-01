@@ -18,7 +18,7 @@ urlpatterns = [
     path('data-collection/', views.DataCollectionRegisterFormView.as_view(), name='data_collection'),
     path('catalogue/', views.CatalogueRegisterFormView.as_view(), name='catalogue'),
     path('catalogue-entry/', views.CatalogueEntryRegisterFormView.as_view(), name='static_dataset_entry'),
-    path('catalogue-data-subset/', views.CatalogueDataSubsetRegisterFormView.as_view(), name='data_subset'),
+    path('data-subset/', views.CatalogueDataSubsetRegisterFormView.as_view(), name='data_subset'),
     path('workflow/', views.WorkflowRegisterFormView.as_view(), name='workflow'),
     path('', include('register_with_support.urls')),
 ]
