@@ -5,7 +5,7 @@
 {{ source_file_list_item_template|json_script:'source-file-list-item-template' }}
 {{ names_of_online_resources_with_files|json_script:'names-of-online-resources-with-files' }}
 {{ resource_id|json_script:"resource-id" }}
-<script src="{% static 'update/catalogue_data_subset_update_setup.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'update/data_subset_update_setup.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'update/update_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}
 {% block extra_content %}

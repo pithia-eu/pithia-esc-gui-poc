@@ -391,10 +391,10 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
         HandleRegistrationViewMixin,
         ResourceRegisterWithEditorFormView):
     form_class = CatalogueDataSubsetEditorRegistrationForm
-    success_url = reverse_lazy('register:catalogue_data_subset_with_editor')
+    success_url = reverse_lazy('register:data_subset_with_editor')
 
-    file_upload_registration_url = reverse_lazy('register:catalogue_data_subset')
-    save_data_local_storage_key = 'catalogue_data_subset_r_wizard_save_data'
+    file_upload_registration_url = reverse_lazy('register:data_subset')
+    save_data_local_storage_key = 'data_subset_r_wizard_save_data'
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_registration_actions(self, request):
@@ -408,13 +408,13 @@ class CatalogueDataSubsetRegisterWithEditorFormView(
             new_registration = self.register_xml_string()
             self.copy_temporary_directory_to_datahub(
                 temp_dirname,
-                self.get_catalogue_data_subset_datahub_directory_path()
+                self.get_data_subset_datahub_directory_path()
             )
             return new_registration
 
     def run_actions_on_registration_failure(self):
         try:
-            self.delete_catalogue_data_subset_directory()
+            self.delete_data_subset_directory()
         except FileNotFoundError:
             logger.exception(f'A DataHub directory for Data Subset {self.resource_id} was not found.')
         return super().run_actions_on_registration_failure()

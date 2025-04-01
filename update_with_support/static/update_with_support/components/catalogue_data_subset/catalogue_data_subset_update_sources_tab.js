@@ -1,6 +1,6 @@
 import {
     CatalogueDataSubsetSourcesTab,
-} from "/static/metadata_editor/components/catalogue_data_subset/catalogue_data_subset_sources_tab.js";
+} from "/static/metadata_editor/components/data_subset/data_subset_sources_tab.js";
 
 
 class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab {

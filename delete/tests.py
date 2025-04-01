@@ -24,7 +24,7 @@ from common.test_setup import (
     register_acquisition_for_test,
     register_acquisition_with_instrument_for_test,
     register_all_metadata_types,
-    register_catalogue_data_subset_for_test,
+    register_data_subset_for_test,
     register_catalogue_entry_for_test,
     register_catalogue_for_test,
     register_computation_capabilities_2_for_test,
@@ -254,7 +254,7 @@ class ProcessDeleteChainTestCase(TestCase):
 class DataCollectionDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
         self.data_collection = register_data_collection_for_test()
-        register_catalogue_data_subset_for_test()
+        register_data_subset_for_test()
         return super().setUp()
         
     @tag('immediate_metadata_dependents')
@@ -286,7 +286,7 @@ class CatalogueEntryDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
         register_catalogue_for_test()
         self.catalogue_entry = register_catalogue_entry_for_test()
-        register_catalogue_data_subset_for_test()
+        register_data_subset_for_test()
         return super().setUp()
         
     @tag('immediate_metadata_dependents')
@@ -311,7 +311,7 @@ class CatalogueDataSubsetDeleteChainTestCase(TestCase):
         catalogue data subset are included in the
         delete chain.
         """
-        catalogue_data_subset = CatalogueDataSubset.objects.all()[0]
-        immediate_metadata_dependents = catalogue_data_subset._immediate_metadata_dependents
+        data_subset = CatalogueDataSubset.objects.all()[0]
+        immediate_metadata_dependents = data_subset._immediate_metadata_dependents
         self.assertEqual(len(immediate_metadata_dependents), 0)
 

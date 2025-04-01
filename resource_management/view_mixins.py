@@ -8,10 +8,10 @@ class CatalogueDataSubsetResourceManagementViewMixin:
     
     def check_source_names(self, form):
         self.temp_xml_file = self.request.FILES.getlist('files')[0]
-        catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.temp_xml_file.read().decode())
+        data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.temp_xml_file.read().decode())
         source_names = [
             source.get('name', '')
-            for source in catalogue_data_subset_shortcutted.online_resources
+            for source in data_subset_shortcutted.online_resources
             if source.get('name', '')
         ]
         source_names_normalised = set(

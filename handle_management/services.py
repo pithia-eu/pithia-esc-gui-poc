@@ -39,8 +39,8 @@ logger = logging.getLogger(__name__)
 
 
 class HandleRegistrationProcessForCatalogueDataSubset:
-    catalogue_data_subset: CatalogueDataSubset
-    catalogue_data_subset_url_in_handle_record: str
+    data_subset: CatalogueDataSubset
+    data_subset_url_in_handle_record: str
     data_collection: DataCollection
     doi_kernel_metadata: DoiKernelMetadataUpdate
     doi_kernel_metadata_xml_string: str
@@ -49,12 +49,12 @@ class HandleRegistrationProcessForCatalogueDataSubset:
     principal_agent_name: str
     xml_string_with_doi_kernel_metadata: str
 
-    def __init__(self, catalogue_data_subset: CatalogueDataSubset, owner_id: str) -> None:
+    def __init__(self, data_subset: CatalogueDataSubset, owner_id: str) -> None:
         self.handle_client = HandleClient()
-        self.catalogue_data_subset = catalogue_data_subset
+        self.data_subset = data_subset
         self.owner_id = owner_id
         try:
-            self.data_collection = DataCollection.objects.get_by_metadata_server_url(self.catalogue_data_subset.data_collection_url)
+            self.data_collection = DataCollection.objects.get_by_metadata_server_url(self.data_subset.data_collection_url)
         except DataCollection.DoesNotExist:
             pass
         except KeyError:
@@ -141,15 +141,15 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             return 'Unknown'
         return organisation.name
     
-    def _register_handle_for_catalogue_data_subset(self):
+    def _register_handle_for_data_subset(self):
         # The eSC website domain is pre-pended to
         # the reversed URL name for the data subset
         # detail page.
         return self.handle_client.create_and_register_handle_for_resource_url(
-            self.catalogue_data_subset_url_in_handle_record
+            self.data_subset_url_in_handle_record
         )
 
-    def _create_doi_kernel_metadata_with_spoofed_doi_details_for_catalogue_data_subset(self):
+    def _create_doi_kernel_metadata_with_spoofed_doi_details_for_data_subset(self):
         # referent_doi_name and registration_agency_doi_name
         # are changed so the doi kernel metadata will pass
         # XSD validation.
@@ -162,7 +162,7 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             doi_issue_date=self.handle_client.get_date_handle_was_issued_as_string(self.handle_name),
             doi_issue_number=1,
             rc_name_primary_language='en',
-            rc_name_value=self.catalogue_data_subset.name,
+            rc_name_value=self.data_subset.name,
             rc_name_type='Name',
             rc_identifier_non_uri_value=self.handle_name,
             rc_identifier_uri_return_type='text/html',
@@ -176,21 +176,21 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             rc_principal_agent_name_type='Name'
         )
     
-    def _get_catalogue_data_subset_xml_with_spoofed_doi_kernel_metadata(self):
-        catalogue_data_subset_editor = CatalogueDataSubsetEditor(self.catalogue_data_subset.xml)
-        catalogue_data_subset_editor.update_doi_kernel_metadata(self.doi_kernel_metadata)
-        return catalogue_data_subset_editor.to_xml()
+    def _get_data_subset_xml_with_spoofed_doi_kernel_metadata(self):
+        data_subset_editor = CatalogueDataSubsetEditor(self.data_subset.xml)
+        data_subset_editor.update_doi_kernel_metadata(self.doi_kernel_metadata)
+        return data_subset_editor.to_xml()
     
     def _replace_referent_doi_name_with_handle_name(self):
-        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
             self.xml_string_with_doi_kernel_metadata
         )
-        simple_catalogue_data_subset_editor.update_referent_doi_name(
+        simple_data_subset_editor.update_referent_doi_name(
             self.handle_name
         )
-        return simple_catalogue_data_subset_editor.to_xml()
+        return simple_data_subset_editor.to_xml()
     
-    def _get_doi_kernel_metadata_from_catalogue_data_subset_xml(self):
+    def _get_doi_kernel_metadata_from_data_subset_xml(self):
         xml_string_parsed = etree.fromstring(
             self.xml_string_with_doi_kernel_metadata
         )
@@ -207,17 +207,17 @@ class HandleRegistrationProcessForCatalogueDataSubset:
             doctype='<?xml version="1.0" encoding="UTF-8"?>'
         ).decode()
     
-    def _update_catalogue_data_subset_with_doi_kernel_metadata_in_database(self):
+    def _update_data_subset_with_doi_kernel_metadata_in_database(self):
         with transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME']):
             CatalogueDataSubset.objects.update_from_xml_string(
-                self.catalogue_data_subset.pk,
+                self.data_subset.pk,
                 self.xml_string_with_doi_kernel_metadata,
                 self.owner_id
             )
             handle_url_mapping = HandleURLMapping(
                 id=self.handle_name,
                 handle_name=self.handle_name,
-                url=self.catalogue_data_subset_url_in_handle_record
+                url=self.data_subset_url_in_handle_record
             )
             handle_url_mapping.save(using=os.environ['DJANGO_RW_DATABASE_NAME'])
 
@@ -230,20 +230,20 @@ class HandleRegistrationProcessForCatalogueDataSubset:
     def run(self):
         try:
             data_subset_detail_page_url = reverse_lazy(
-                'browse:catalogue_data_subset_detail',
+                'browse:data_subset_detail',
                 kwargs={
-                    'catalogue_data_subset_id': self.catalogue_data_subset.pk,
+                    'data_subset_id': self.data_subset.pk,
                 }
             )
-            self.catalogue_data_subset_url_in_handle_record = f'{os.environ["HANDLE_URL_PREFIX"]}{str(data_subset_detail_page_url)}'
-            self.handle_name = self._register_handle_for_catalogue_data_subset()
+            self.data_subset_url_in_handle_record = f'{os.environ["HANDLE_URL_PREFIX"]}{str(data_subset_detail_page_url)}'
+            self.handle_name = self._register_handle_for_data_subset()
             self.principal_agent_name = self._get_principal_agent_name_from_data_collection()
-            self.doi_kernel_metadata = self._create_doi_kernel_metadata_with_spoofed_doi_details_for_catalogue_data_subset()
-            self.xml_string_with_doi_kernel_metadata = self._get_catalogue_data_subset_xml_with_spoofed_doi_kernel_metadata()
+            self.doi_kernel_metadata = self._create_doi_kernel_metadata_with_spoofed_doi_details_for_data_subset()
+            self.xml_string_with_doi_kernel_metadata = self._get_data_subset_xml_with_spoofed_doi_kernel_metadata()
             self.xml_string_with_doi_kernel_metadata = self._replace_referent_doi_name_with_handle_name()
-            self.doi_kernel_metadata_xml_string = self._get_doi_kernel_metadata_from_catalogue_data_subset_xml()
+            self.doi_kernel_metadata_xml_string = self._get_doi_kernel_metadata_from_data_subset_xml()
             self._update_handle_with_doi_kernel_metadata()
-            self._update_catalogue_data_subset_with_doi_kernel_metadata_in_database()
+            self._update_data_subset_with_doi_kernel_metadata_in_database()
             return self.handle_name
         except Exception:
             logger.exception('An unexpected error occurred whilst registering a handle with a catalogue data subset.')
@@ -332,9 +332,9 @@ class HandleClient:
             resource_id: str) -> str:
         handle = self._create_handle_name_with_suffix(resource_id)
         resource_details_page_url = reverse_lazy(
-            'browse:catalogue_data_subset_detail',
+            'browse:data_subset_detail',
             kwargs={
-                'catalogue_data_subset_id': resource_id
+                'data_subset_id': resource_id
             }
         )
         # Prefixes the domain name to the details page URL.

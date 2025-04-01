@@ -9,7 +9,7 @@ import {
 } from "/static/metadata_editor/components/url_format_checker.js";
 import {
     checkForSimilarSourceNames,
-} from "/static/validation/catalogue_data_subset_validation.js";
+} from "/static/validation/data_subset_validation.js";
 
 
 export class CatalogueDataSubsetSourcesTab extends SourcesTab {

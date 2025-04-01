@@ -942,9 +942,9 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
     a Catalogue Data Subset registration.
     """
     model = models.CatalogueDataSubset
-    resource_list_by_type_url_name = 'browse:list_catalogue_data_subsets'
-    resource_download_url_name = 'utils:view_catalogue_data_subset_as_xml'
-    template_name = 'browse/detail/bases/catalogue_data_subset.html'
+    resource_list_by_type_url_name = 'browse:list_data_subsets'
+    resource_download_url_name = 'utils:view_data_subset_as_xml'
+    template_name = 'browse/detail/bases/data_subset.html'
     interaction_methods_by_type = {}
 
     def get_description_from_xml(self, resource):
@@ -1007,7 +1007,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
         return handle_context
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_data_subset_id']
+        self.resource_id = self.kwargs['data_subset_id']
         self.url_for_handle_url_mappings = request.build_absolute_uri()
 
         # Custom handling 404 handling - shows DOI information

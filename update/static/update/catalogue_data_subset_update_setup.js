@@ -1,9 +1,9 @@
 import {
     setupOnlineResourceListAndLoadFiles,
-} from "/static/register/catalogue_data_subset_form.js";
+} from "/static/register/data_subset_form.js";
 import {
     CatalogueDataSubsetOnlineResourceUpdateList,
-} from "/static/update/catalogue_data_subset_source_updates.js";
+} from "/static/update/data_subset_source_updates.js";
 const fileUploadForm = document.querySelector("#file-upload-form");
 
 

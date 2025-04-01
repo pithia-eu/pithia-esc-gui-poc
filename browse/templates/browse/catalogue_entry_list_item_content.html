@@ -24,7 +24,7 @@
     <ul class="list-group list-group-flush mt-3">
         {% for data_subset in catalogue_entry.data_subsets %}
         <li class="list-group-item">
-            <a href="{% url 'browse:catalogue_data_subset_detail' data_subset.id %}" class="link-plain-by-default">
+            <a href="{% url 'browse:data_subset_detail' data_subset.id %}" class="link-plain-by-default">
                 {{ data_subset.name }}
             </a>
         </li>

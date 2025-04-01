@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 from datahub_management.views import (
-    get_catalogue_data_subset_online_resource_file,
+    get_data_subset_online_resource_file,
     get_workflow_details_file,
 )
 
@@ -39,8 +39,8 @@ urlpatterns = [
     path('data-collections/<data_collection_id>/', views.DataCollectionDetailView.as_view(), name='data_collection_detail'),
     path('catalogues/<catalogue_id>/', views.CatalogueDetailView.as_view(), name='catalogue_detail'),
     path('catalogue-entries/<catalogue_entry_id>/', views.CatalogueEntryDetailView.as_view(), name='catalogue_entry_detail'),
-    path('catalogue-data-subsets/<catalogue_data_subset_id>/', views.CatalogueDataSubsetDetailView.as_view(), name='catalogue_data_subset_detail'),
-    path('catalogue-data-subsets/<catalogue_data_subset_id>/online-resources/<online_resource_name>/', get_catalogue_data_subset_online_resource_file, name='catalogue_data_subset_online_resource_file'),
+    path('catalogue-data-subsets/<data_subset_id>/', views.CatalogueDataSubsetDetailView.as_view(), name='data_subset_detail'),
+    path('catalogue-data-subsets/<data_subset_id>/online-resources/<online_resource_name>/', get_data_subset_online_resource_file, name='data_subset_online_resource_file'),
     path('workflows/<workflow_id>/', views.WorkflowDetailView.as_view(), name='workflow_detail'),
     path('workflows/<workflow_id>/details/', get_workflow_details_file, name='workflow_details_file'),
     path('utils/convert/urls/', views.get_esc_url_templates_for_ontology_server_urls_and_resource_server_urls, name='convert_server_urls'),

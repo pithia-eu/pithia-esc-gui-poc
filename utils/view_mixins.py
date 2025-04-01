@@ -151,9 +151,9 @@ class CatalogueEntryXmlDownloadViewMixin(CatalogueRelatedDownloadViewMixin):
 
 class CatalogueDataSubsetXmlDownloadViewMixin(CatalogueRelatedDownloadViewMixin):
     model = models.CatalogueDataSubset
-    detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    detail_page_url_name = 'browse:data_subset_detail'
     resource_list_by_type_url_name = 'browse:catalogue_tree'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
 
 
 class WorkflowXmlDownloadViewMixin:

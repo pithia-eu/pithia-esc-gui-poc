@@ -43,51 +43,51 @@ class WorkflowDataHubViewMixin:
 
 
 class CatalogueDataSubsetDataHubViewMixin:
-    def is_catalogue_data_subset_directory_created(self):
-        return CatalogueDataSubsetDataHubService.is_catalogue_data_subset_directory_created(self.resource_id)
+    def is_data_subset_directory_created(self):
+        return CatalogueDataSubsetDataHubService.is_data_subset_directory_created(self.resource_id)
 
-    def get_catalogue_data_subset_datahub_directory_path(self):
-        return CatalogueDataSubsetDataHubService._get_catalogue_data_subset_directory_path(
+    def get_data_subset_datahub_directory_path(self):
+        return CatalogueDataSubsetDataHubService._get_data_subset_directory_path(
             self.resource_id
         )
 
-    def get_online_resource_file_for_catalogue_data_subset_by_file_name(self, file_name_no_extension: str):
-        return CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
+    def get_online_resource_file_for_data_subset_by_file_name(self, file_name_no_extension: str):
+        return CatalogueDataSubsetDataHubService.get_data_subset_file(
             self.resource_id,
             file_name_no_extension
         )
 
-    def get_online_resource_files_for_catalogue_data_subset(self):
-        return CatalogueDataSubsetDataHubService.get_files_for_catalogue_data_subset(
+    def get_online_resource_files_for_data_subset(self):
+        return CatalogueDataSubsetDataHubService.get_files_for_data_subset(
             self.resource_id
         )
 
-    def get_online_resource_file_url_for_catalogue_data_subset(self, online_resource_name):
+    def get_online_resource_file_url_for_data_subset(self, online_resource_name):
         return '%s%s' % (
             os.environ["HANDLE_URL_PREFIX"],
             reverse_lazy(
-                'browse:catalogue_data_subset_online_resource_file',
+                'browse:data_subset_online_resource_file',
                 kwargs={
-                    'catalogue_data_subset_id': self.resource_id,
+                    'data_subset_id': self.resource_id,
                     'online_resource_name': online_resource_name
                 }
             )
         )
 
-    def delete_catalogue_data_subset_directory(self):
-        return CatalogueDataSubsetDataHubService.delete_catalogue_data_subset_directory(self.resource_id)
+    def delete_data_subset_directory(self):
+        return CatalogueDataSubsetDataHubService.delete_data_subset_directory(self.resource_id)
 
-    def add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+    def add_online_resource_file_link_to_data_subset_xml_file_string(
             self,
             online_resource_name,
             xml_file_string):
         # Construct link to online resource
         # file and put in the catalogue data
         # subset's XML.
-        online_resource_file_url = self.get_online_resource_file_url_for_catalogue_data_subset(online_resource_name)
-        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(xml_file_string)
-        simple_catalogue_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
-        return simple_catalogue_data_subset_editor.to_xml()
+        online_resource_file_url = self.get_online_resource_file_url_for_data_subset(online_resource_name)
+        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(xml_file_string)
+        simple_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
+        return simple_data_subset_editor.to_xml()
     
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResource|CatalogueDataSubsetSourceMetadataUpdate):
         return self.source_files.get(online_resource.file_input_name)
@@ -116,7 +116,7 @@ class CatalogueDataSubsetDataHubViewMixin:
             online_resource_name = online_resource.name
             # Add links to each online resource source
             # file in the XML.
-            self.xml_string = self.add_online_resource_file_link_to_catalogue_data_subset_xml_file_string(
+            self.xml_string = self.add_online_resource_file_link_to_data_subset_xml_file_string(
                 online_resource_name,
                 self.xml_string
             )

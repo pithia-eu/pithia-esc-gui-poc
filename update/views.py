@@ -341,12 +341,12 @@ class CatalogueDataSubsetUpdateFormView(
         HandleRegistrationViewMixin,
         ResourceUpdateFormView):
     model = models.CatalogueDataSubset
-    template_name = 'update/file_upload_catalogue_data_subset_update.html'
+    template_name = 'update/file_upload_data_subset_update.html'
     form_class = UploadUpdatedCatalogueDataSubsetFileForm
 
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
-    resource_update_page_url_name = 'update:catalogue_data_subset'
-    success_url = reverse_lazy('resource_management:catalogue_data_subsets')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
+    resource_update_page_url_name = 'update:data_subset'
+    success_url = reverse_lazy('resource_management:data_subsets')
 
     error_msg = 'An unexpected error occurred whilst trying to update this resource. The update has not been applied.'
 
@@ -354,7 +354,7 @@ class CatalogueDataSubsetUpdateFormView(
     def update_resource(self):
         if not self.is_file_uploaded_for_each_online_resource:
             try:
-                self.delete_catalogue_data_subset_directory()
+                self.delete_data_subset_directory()
             except FileNotFoundError:
                 logger.exception(f'The directory for Data Subset {self.resource_id} has already been deleted.')
             return super().update_resource()
@@ -364,7 +364,7 @@ class CatalogueDataSubsetUpdateFormView(
             updated_resource = super().update_resource()
             self.copy_temporary_directory_to_datahub(
                 temp_dirname,
-                self.get_catalogue_data_subset_datahub_directory_path()
+                self.get_data_subset_datahub_directory_path()
             )
             return updated_resource
 
@@ -380,8 +380,8 @@ class CatalogueDataSubsetUpdateFormView(
 
     def get_names_of_online_resources_with_files(self):
         # Get list of online resources from resource
-        catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.resource.xml)
-        online_resources = catalogue_data_subset_shortcutted.online_resources
+        data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.resource.xml)
+        online_resources = data_subset_shortcutted.online_resources
 
         names_of_online_resources_with_files = []
         for online_resource in online_resources:
@@ -389,7 +389,7 @@ class CatalogueDataSubsetUpdateFormView(
             # Find files for each slugified online resource
             # name and store in a dictionary to pass to
             # template context later
-            online_resource_file = self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+            online_resource_file = self.get_online_resource_file_for_data_subset_by_file_name(
                 online_resource_name
             )
             if not online_resource_file:
@@ -401,7 +401,7 @@ class CatalogueDataSubsetUpdateFormView(
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
         file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
-        return self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+        return self.get_online_resource_file_for_data_subset_by_file_name(
             file_name_with_no_extension
         )
 
@@ -433,7 +433,7 @@ class CatalogueDataSubsetUpdateFormView(
         try:
             self.temp_xml_file.seek(0)
             self.xml_string = self.temp_xml_file.read().decode()
-            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
             datahub_file_usage_for_each_source = form.cleaned_data.get('online_resource_datahub_file_usage')
             self.valid_sources = [
                 CatalogueDataSubsetOnlineResourceUpdate(
@@ -442,7 +442,7 @@ class CatalogueDataSubsetUpdateFormView(
                     datahub_file_name=slugify(online_resource.get('name')),
                     is_existing_datahub_file_used=datahub_file_usage_for_each_source.get(online_resource.get('name'), False)
                 )
-                for online_resource in catalogue_data_subset_shortcutted.online_resources
+                for online_resource in data_subset_shortcutted.online_resources
             ]
         except Exception as err:
             logger.exception(err)

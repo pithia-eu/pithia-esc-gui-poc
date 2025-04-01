@@ -4,10 +4,10 @@ import {
 } from "/static/metadata_editor/components/base_editor.js";
 import {
     setupCatalogueDataSubsetSourcesTab,
-} from "/static/metadata_editor/components/catalogue_data_subset/catalogue_data_subset_sources_tab.js";
+} from "/static/metadata_editor/components/data_subset/data_subset_sources_tab.js";
 import {
     setupSourceFileSharingMethodSwitching,
-} from "/static/metadata_editor/components/catalogue_data_subset/source_file_sharing_method_switching.js";
+} from "/static/metadata_editor/components/data_subset/source_file_sharing_method_switching.js";
 import {
     setupTimePeriodElements,
 } from "/static/metadata_editor/components/time_period.js";

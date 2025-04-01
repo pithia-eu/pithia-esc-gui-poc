@@ -1030,7 +1030,7 @@ class DataCollectionEditorTestCase(SimpleTestCase):
 
 
 class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
-    def test_simple_catalogue_data_subset_editor_with_file(self):
+    def test_simple_data_subset_editor_with_file(self):
         CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
         original_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>',)
         updated_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-updated-doi</doi:referentDoiName>',)
@@ -1039,11 +1039,11 @@ class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
             original_referent_doi_name_element_string,
             xml_string
         )
-        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
             xml_string
         )
-        simple_catalogue_data_subset_editor.update_referent_doi_name('10.1000/my-updated-doi')
-        updated_xml_string = simple_catalogue_data_subset_editor.to_xml()
+        simple_data_subset_editor.update_referent_doi_name('10.1000/my-updated-doi')
+        updated_xml_string = simple_data_subset_editor.to_xml()
         print('updated_xml_string', updated_xml_string)
         self.assertNotIn(
             original_referent_doi_name_element_string,
@@ -1065,14 +1065,14 @@ class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
             online_resource_url,
             xml_string
         )
-        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
             xml_string
         )
-        simple_catalogue_data_subset_editor.update_online_resource_url(
+        simple_data_subset_editor.update_online_resource_url(
             'SAO Explorer for DIDBase ionograms',
             'https://www.example.com/'
         )
-        updated_xml_string = simple_catalogue_data_subset_editor.to_xml()
+        updated_xml_string = simple_data_subset_editor.to_xml()
         self.assertIn(
             online_resource_url,
             updated_xml_string

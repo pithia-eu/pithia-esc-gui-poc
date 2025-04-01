@@ -1,8 +1,8 @@
-{% extends 'metadata_editor/catalogue_data_subset_editor.html' %}
+{% extends 'metadata_editor/data_subset_editor.html' %}
 {% load static %}
 {% block extra_scripts %}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 {{ form.sources_json.value|json_script:'sources-default' }}
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-<script src="{% static 'update_with_support/catalogue_data_subset_update_editor.js' %}" type="module"></script>
+<script src="{% static 'update_with_support/data_subset_update_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}

@@ -55,7 +55,7 @@ from metadata_editor.editor_dataclasses import (
     CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
-from metadata_editor.form_utils import map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses
+from metadata_editor.form_utils import map_data_subset_sources_with_existing_data_hub_files_to_dataclasses
 from metadata_editor.service_utils import BaseMetadataEditor
 from metadata_editor.services import SimpleCatalogueDataSubsetEditor
 from metadata_editor.views import *
@@ -291,32 +291,32 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         HandleRegistrationViewMixin,
         ResourceUpdateWithEditorFormView,
         CatalogueDataSubsetEditorFormView):
-    template_name = 'update_with_support/catalogue_data_subset_update_editor.html'
+    template_name = 'update_with_support/data_subset_update_editor.html'
     model = models.CatalogueDataSubset
-    success_url_name = 'update:catalogue_data_subset_with_editor'
+    success_url_name = 'update:data_subset_with_editor'
     
     form_class = CatalogueDataSubsetEditorUpdateForm
     form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
 
     def get_sources_tab_pane_content_template_path(self):
-        return 'update_with_support/components/catalogue_data_subset/sources_tab_pane_content_template.html'
+        return 'update_with_support/components/data_subset/sources_tab_pane_content_template.html'
 
     def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResourceUpdate|CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
         file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
-        return self.get_online_resource_file_for_catalogue_data_subset_by_file_name(
+        return self.get_online_resource_file_for_data_subset_by_file_name(
             file_name_with_no_extension
         )
 
     def run_extra_actions_before_update(self):
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()
-        simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
+        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
         # Replace temp DOI name used to pass
         # XSD validation with real DOI name.
-        simple_catalogue_data_subset_editor.update_referent_doi_name(self.current_doi_name)
-        self.xml_string = simple_catalogue_data_subset_editor.to_xml()
+        simple_data_subset_editor.update_referent_doi_name(self.current_doi_name)
+        self.xml_string = simple_data_subset_editor.to_xml()
         return super().run_extra_actions_before_update()
 
     def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile|BufferedReader, source_file_write_path: str):
@@ -333,7 +333,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def update_resource(self):
         if not self.is_file_uploaded_for_each_online_resource:
             try:
-                self.delete_catalogue_data_subset_directory()
+                self.delete_data_subset_directory()
             except FileNotFoundError:
                 logger.exception(f'The directory for Data Subset {self.resource_id} has already been deleted.')
             return super().update_resource()
@@ -343,7 +343,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
             updated_resource = super().update_resource()
             self.copy_temporary_directory_to_datahub(
                 temp_dirname,
-                self.get_catalogue_data_subset_datahub_directory_path()
+                self.get_data_subset_datahub_directory_path()
             )
         return updated_resource
 
@@ -351,7 +351,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
             self,
             form_cleaned_data,
             is_file_uploaded_for_each_online_resource):
-        return map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses(
+        return map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(
             form_cleaned_data,
             is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
         )
@@ -368,9 +368,9 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
             xml_shortcuts = CatalogueDataSubsetXmlMappingShortcuts(self.current_resource_xml)
             self.current_doi_name = xml_shortcuts.doi_kernel_metadata.get('referent_doi_name')
             temp_doi_name = '10.000/000'
-            simple_catalogue_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.current_resource_xml)
-            simple_catalogue_data_subset_editor.update_referent_doi_name(temp_doi_name)
-            self.current_resource_xml = simple_catalogue_data_subset_editor.to_xml()
+            simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.current_resource_xml)
+            simple_data_subset_editor.update_referent_doi_name(temp_doi_name)
+            self.current_resource_xml = simple_data_subset_editor.to_xml()
         except Exception as err:
             logger.exception(err)
 
@@ -398,7 +398,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
             'time_instant_begin_position': parse(initial.get('time_instant_begin_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
             'time_instant_end_position': parse(initial.get('time_instant_end_position', '')).replace(second=0, microsecond=0).isoformat().replace('+00:00', ''),
         })
-        if not self.get_online_resource_files_for_catalogue_data_subset():
+        if not self.get_online_resource_files_for_data_subset():
             initial.update({
                 'is_file_uploaded_for_each_online_resource': False,
             })

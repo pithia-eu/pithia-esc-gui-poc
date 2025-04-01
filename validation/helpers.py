@@ -31,7 +31,7 @@ def create_li_element_with_register_link_from_resource_type_from_resource_url(re
         url_name = 'catalogue_entry'
         url_base_text = 'Catalogue Entry'
     elif resource_type_from_resource_url.startswith('catalogue_DataSubset_'):
-        url_name = 'catalogue_data_subset'
+        url_name = 'data_subset'
         url_base_text = 'Catalogue Data Subset'
     return f'<li><a href="{reverse_lazy(f"register:{url_name}")}" target="_blank" class="alert-link">{url_base_text} Metadata Registration</a></li>'
 

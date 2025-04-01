@@ -17,11 +17,11 @@ def get_workflow_details_file(request, workflow_id):
     return FileResponse(workflow_details_file, content_type='application/pdf')
 
 
-def get_catalogue_data_subset_online_resource_file(request, catalogue_data_subset_id, online_resource_name):
-    online_resource_file = CatalogueDataSubsetDataHubService.get_catalogue_data_subset_file(
-        catalogue_data_subset_id,
+def get_data_subset_online_resource_file(request, data_subset_id, online_resource_name):
+    online_resource_file = CatalogueDataSubsetDataHubService.get_data_subset_file(
+        data_subset_id,
         online_resource_name
     )
     if not online_resource_file:
-        raise Http404(f'A file for <i>{online_resource_name}</i> (<i>catalogue data subset {catalogue_data_subset_id}</i>) was not found in the e-Science Centre.')
+        raise Http404(f'A file for <i>{online_resource_name}</i> (<i>catalogue data subset {data_subset_id}</i>) was not found in the e-Science Centre.')
     return FileResponse(online_resource_file)

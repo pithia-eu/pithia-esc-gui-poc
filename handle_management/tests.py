@@ -260,14 +260,14 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         handle.
         """
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+        data_subset = CatalogueDataSubset.objects.create_from_xml_string(
             CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
         )
-        self.catalogue_data_subset_id = catalogue_data_subset.pk
+        self.data_subset_id = data_subset.pk
         self.handle_name = self.handle_client.create_and_register_handle_for_resource(
-            self.catalogue_data_subset_id
+            self.data_subset_id
         )
         DOI_KERNEL_METADATA_XML.seek(0)
         self.handle_client.add_doi_kernel_metadata_to_handle(
@@ -414,12 +414,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_2_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
@@ -443,12 +443,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_REFERENCING_INDIVIDUAL_2_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent = handle_reg_process._get_organisation_responsible_for_data_collection()
@@ -470,12 +470,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_WITH_MULTIPLE_POINTS_OF_CONTACT_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent = handle_reg_process._get_organisation_for_related_party(
@@ -496,12 +496,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_WITH_PRINCIPAL_INVESTIGATOR_ONLY_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
@@ -519,12 +519,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_WITH_NO_RELATED_PARTIES_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
@@ -540,12 +540,12 @@ class PrincipalAgentTestCase(TestCase):
             DATA_COLLECTION_METADATA_XML,
             DataCollection
         )
-        catalogue_data_subset = self._register_xml_file_for_test(
+        data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
             CatalogueDataSubset
         )
         handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
-            catalogue_data_subset,
+            data_subset,
             SAMPLE_USER_ID
         )
         principal_agent_name = handle_reg_process._get_principal_agent_name_from_data_collection()
@@ -569,7 +569,7 @@ class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestC
             SAMPLE_USER_ID
         )
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        self.catalogue_data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+        self.data_subset = CatalogueDataSubset.objects.create_from_xml_string(
             CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
@@ -578,7 +578,7 @@ class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestC
 
     def test_process_creates_handle(self):
         new_handle_registration_process = HandleRegistrationProcessForCatalogueDataSubset(
-            self.catalogue_data_subset,
+            self.data_subset,
             SAMPLE_USER_ID
         )
         self.handle_name = new_handle_registration_process.run()

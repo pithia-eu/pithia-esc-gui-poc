@@ -313,14 +313,14 @@ class CatalogueDataSubsetRegisterFormView(
         CatalogueDataSubsetResourceManagementViewMixin,
         HandleRegistrationViewMixin,
         ResourceRegisterFormView):
-    template_name='register/file_upload_catalogue_data_subset.html'
+    template_name='register/file_upload_data_subset.html'
     model = models.CatalogueDataSubset
-    success_url = reverse_lazy('register:catalogue_data_subset')
+    success_url = reverse_lazy('register:data_subset')
 
     form_class = UploadCatalogueDataSubsetFileForm
 
-    post_url = reverse_lazy('register:catalogue_data_subset')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    post_url = reverse_lazy('register:data_subset')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
 
     def register_xml_file(self, xml_file):
@@ -349,7 +349,7 @@ class CatalogueDataSubsetRegisterFormView(
             new_registration = self.register_xml_file(xml_file)
             self.copy_temporary_directory_to_datahub(
                 temp_dirname,
-                self.get_catalogue_data_subset_datahub_directory_path()
+                self.get_data_subset_datahub_directory_path()
             )
             return new_registration
 
@@ -370,13 +370,13 @@ class CatalogueDataSubsetRegisterFormView(
         try:
             self.temp_xml_file.seek(0)
             self.xml_string = self.temp_xml_file.read().decode()
-            catalogue_data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
             self.valid_sources = [
                 CatalogueDataSubsetOnlineResource(
                     name=online_resource.get('name'),
                     file_input_name=f'online_resource_file__{online_resource.get("name")}'
                 )
-                for online_resource in catalogue_data_subset_shortcutted.online_resources
+                for online_resource in data_subset_shortcutted.online_resources
             ]
         except Exception as err:
             logger.exception(err)

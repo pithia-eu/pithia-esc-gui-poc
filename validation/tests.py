@@ -416,7 +416,7 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/CatalogueEntry_TEST_2023-01-01')
         self.assertTrue(result)
 
-    def test_valid_catalogue_data_subset_metadata_url_passes(self):
+    def test_valid_data_subset_metadata_url_passes(self):
         """
         A valid catalogue data subset metadata
         URL passes validation.
@@ -450,7 +450,7 @@ class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
 
 class DoiValidationTestCase(SimpleTestCase):
     @tag('slow')
-    def test_catalogue_data_subset_with_handle_fails(self):
+    def test_data_subset_with_handle_fails(self):
         """Data subset validation fails with a handle in the
         DOI metadata kernel element.
         """

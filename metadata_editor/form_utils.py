@@ -109,7 +109,7 @@ def map_sources_to_dataclasses(form_cleaned_data):
         )
     for s in form_cleaned_data.get('sources_json')]
 
-def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
+def map_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
     return [
         CatalogueDataSubsetSourceMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
@@ -122,7 +122,7 @@ def map_catalogue_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_
         )
     for s in form_cleaned_data.get('sources_json')]
 
-def map_catalogue_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
+def map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
     return [
         CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),

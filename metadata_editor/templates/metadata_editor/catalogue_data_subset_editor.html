@@ -3,7 +3,7 @@
 {% block extra_scripts %}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-<script src="{% static 'metadata_editor/catalogue_data_subset_editor.js' %}" type="module"></script>
+<script src="{% static 'metadata_editor/data_subset_editor.js' %}" type="module"></script>
 {% endblock extra_scripts %}
 {% block extra_form_attrs %}enctype="multipart/form-data"{% endblock extra_form_attrs %}
 {% block form_content %}
@@ -33,7 +33,7 @@
     </div>
 </section>
 <hr class="my-5">
-{% include 'metadata_editor/components/catalogue_data_subset/result_time.html' %}
+{% include 'metadata_editor/components/data_subset/result_time.html' %}
 <hr class="my-5">
 <section id="sources-section">
     <div class="row gy-4">
@@ -101,7 +101,7 @@
 {% include 'metadata_editor/components/quality_assessment.html' %}
 {% endwith %}
 <hr class="my-5">
-{% include 'metadata_editor/components/catalogue_data_subset/doi_section.html' %}
+{% include 'metadata_editor/components/data_subset/doi_section.html' %}
 {% endblock form_content %}
 {% block table_of_contents %}
 <li class="list-group-item">

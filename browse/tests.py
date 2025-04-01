@@ -9,7 +9,7 @@ from .services import (
 )
 
 from common.test_setup import (
-    register_catalogue_data_subset_for_test,
+    register_data_subset_for_test,
     register_individual_for_test,
     register_instrument_for_test,
     register_organisation_for_test,
@@ -78,7 +78,7 @@ class BulkMetadataUrlMappingTestCase(TestCase):
         # Register the test metadata first.
         register_instrument_for_test()
         register_process_for_test()
-        register_catalogue_data_subset_for_test()
+        register_data_subset_for_test()
 
         # Test data
         instrument_resource_url_with_op_mode = 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1'

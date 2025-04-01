@@ -64,11 +64,11 @@ def catalogue_related_metadata_index(request):
     
     num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
     num_current_catalogue_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
-    num_current_catalogue_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
+    num_current_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_catalogue_entries': num_current_catalogue_entries,
-        'num_current_catalogue_data_subsets': num_current_catalogue_data_subsets,
+        'num_current_data_subsets': num_current_data_subsets,
         'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
         'index_page_url_name_breadcrumb': 'resource_management:index',
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
@@ -283,12 +283,12 @@ class CatalogueEntryManagementListView(ResourceManagementListView):
 class CatalogueDataSubsetManagementListView(ResourceManagementListView):
     model = models.CatalogueDataSubset
 
-    resource_delete_page_url_name = 'delete:catalogue_data_subset'
-    resource_update_page_url_name = 'update:catalogue_data_subset'
-    resource_update_with_wizard_page_url_name = 'update:catalogue_data_subset_with_editor'
-    resource_register_page_url_name = 'register:catalogue_data_subset'
-    resource_register_with_editor_name = 'register:catalogue_data_subset_with_editor'
-    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_data_subset_as_xml_with_editing'
+    resource_delete_page_url_name = 'delete:data_subset'
+    resource_update_page_url_name = 'update:data_subset'
+    resource_update_with_wizard_page_url_name = 'update:data_subset_with_editor'
+    resource_register_page_url_name = 'register:data_subset'
+    resource_register_with_editor_name = 'register:data_subset_with_editor'
+    resource_xml_download_page_url_name = 'utils_secure:view_data_subset_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 

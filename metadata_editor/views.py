@@ -18,7 +18,7 @@ from .editor_dataclasses import (
 )
 from .forms import *
 from .form_utils import (
-    map_catalogue_data_subset_sources_to_dataclasses,
+    map_data_subset_sources_to_dataclasses,
     map_input_descriptions_to_dataclasses,
     map_processing_inputs_to_dataclasses,
     map_sources_to_dataclasses,
@@ -904,18 +904,18 @@ class CatalogueDataSubsetEditorFormView(
     QualityAssessmentSelectFormViewMixin,
     ResourceEditorFormView):
     form_class = CatalogueDataSubsetForm
-    template_name = 'metadata_editor/catalogue_data_subset_editor.html'
+    template_name = 'metadata_editor/data_subset_editor.html'
 
     model = models.CatalogueDataSubset
     metadata_editor_class = CatalogueDataSubsetEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
 
     SIMILAR_SOURCE_NAMES_ERROR = 'Some online resource names are too similar to each other. Please update the names highlighted below.'
     
     def get_sources_tab_pane_content_template_path(self):
-        return 'metadata_editor/components/catalogue_data_subset/sources_tab_pane_content_template.html'
+        return 'metadata_editor/components/data_subset/sources_tab_pane_content_template.html'
 
     def get_sources_tab_pane_content_template(self, context):
         return render_to_string(
@@ -927,7 +927,7 @@ class CatalogueDataSubsetEditorFormView(
             self,
             form_cleaned_data,
             is_file_uploaded_for_each_online_resource):
-        return map_catalogue_data_subset_sources_to_dataclasses(
+        return map_data_subset_sources_to_dataclasses(
             form_cleaned_data,
             is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
         )

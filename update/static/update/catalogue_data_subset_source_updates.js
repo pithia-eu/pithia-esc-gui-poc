@@ -1,6 +1,6 @@
 import {
     CatalogueDataSubsetOnlineResourceList,
-} from "/static/register/catalogue_data_subset_sources.js";
+} from "/static/register/data_subset_sources.js";
 const namesOfOnlineResourcesWithDataHubFiles = JSON.parse(document.querySelector("#names-of-online-resources-with-files").textContent);
 
 

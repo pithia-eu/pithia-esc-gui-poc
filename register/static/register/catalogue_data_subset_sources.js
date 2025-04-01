@@ -1,6 +1,6 @@
 import {
     checkForSimilarSourceNames,
-} from "/static/validation/catalogue_data_subset_validation.js";
+} from "/static/validation/data_subset_validation.js";
 
 const onlineResourceFileListWrapper = document.querySelector(".online-resource-files-list-wrapper");
 const onlineResourceFileList = document.querySelector(".online-resource-files-list");

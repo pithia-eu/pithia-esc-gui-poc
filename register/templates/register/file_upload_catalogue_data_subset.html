@@ -3,7 +3,7 @@
 {% block page_specific_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 {{ source_file_list_item_template|json_script:'source-file-list-item-template' }}
-<script src="{% static 'register/catalogue_data_subset_registration_setup.js' %}?{% now 'U' %}" type="module" defer></script>
+<script src="{% static 'register/data_subset_registration_setup.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'validation/inline_registration_validation.js' %}?{% now 'U' %}" type="module" defer></script>
 <script src="{% static 'register/register_form.js' %}?{% now 'U' %}" type="module" defer></script>
 {% endblock page_specific_scripts %}

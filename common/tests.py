@@ -16,7 +16,7 @@ from .models import (
 from common.test_setup import (
     register_acquisition_capabilities_for_test,
     register_acquisition_for_test,
-    register_catalogue_data_subset_for_test,
+    register_data_subset_for_test,
     register_catalogue_entry_for_test,
     register_catalogue_for_test,
     register_computation_capabilities_for_test,
@@ -88,7 +88,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.data_collection = register_data_collection_for_test()
         self.catalogue = register_catalogue_for_test()
         self.catalogue_entry = register_catalogue_entry_for_test()
-        self.catalogue_data_subset = register_catalogue_data_subset_for_test()
+        self.data_subset = register_data_subset_for_test()
         return super().setUp()
 
     def test_organisation_immediate_metadata_dependents_are_correct(self):
@@ -206,7 +206,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         collection metadata URL are correctly identified.
         """
         imds = self.data_collection._immediate_metadata_dependents
-        self.assertIn(self.catalogue_data_subset, imds)
+        self.assertIn(self.data_subset, imds)
         self.assertEqual(len(imds), 1)
 
     def test_catalogue_immediate_metadata_dependents_are_correct(self):
@@ -224,15 +224,15 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         entry metadata URL are correctly identified.
         """
         imds = self.catalogue_entry._immediate_metadata_dependents
-        self.assertIn(self.catalogue_data_subset, imds)
+        self.assertIn(self.data_subset, imds)
         self.assertEqual(len(imds), 1)
 
-    def test_catalogue_data_subset_immediate_metadata_dependents_are_correct(self):
+    def test_data_subset_immediate_metadata_dependents_are_correct(self):
         """
         Metadata registrations referring to a catalogue
         data subset metadata URL are correctly identified.
         """
-        imds = self.catalogue_data_subset._immediate_metadata_dependents
+        imds = self.data_subset._immediate_metadata_dependents
         self.assertEqual(len(imds), 0)
 
     def test_child_computation_references_are_included(self):

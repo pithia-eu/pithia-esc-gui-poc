@@ -263,7 +263,7 @@ class ScientificMetadata(models.Model):
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
     catalogue_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
-    catalogue_data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+    data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
     def save(self, *args, **kwargs):
@@ -807,7 +807,7 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     weight = 14
     type_readable = 'data subset'
     type_plural_readable = 'data subsets'
-    _browse_detail_page_url_name = 'browse:catalogue_data_subset_detail'
+    _browse_detail_page_url_name = 'browse:data_subset_detail'
     root_element_name = 'DataSubset'
 
     @property

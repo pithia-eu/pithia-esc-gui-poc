@@ -18,6 +18,6 @@ urlpatterns = [
     path('data-collections/<resource_id>/xml/', secure_views.DataCollectionXmlDownloadFromManagementView.as_view(), name='view_data_collection_as_xml_with_editing'),
     path('catalogues/<resource_id>/xml/', secure_views.CatalogueXmlDownloadFromManagementView.as_view(), name='view_catalogue_as_xml_with_editing'),
     path('catalogue-entries/<resource_id>/xml/', secure_views.CatalogueEntryXmlDownloadFromManagementView.as_view(), name='view_catalogue_entry_as_xml_with_editing'),
-    path('catalogue-data-subsets/<resource_id>/xml/', secure_views.CatalogueDataSubsetXmlDownloadFromManagementView.as_view(), name='view_catalogue_data_subset_as_xml_with_editing'),
+    path('catalogue-data-subsets/<resource_id>/xml/', secure_views.CatalogueDataSubsetXmlDownloadFromManagementView.as_view(), name='view_data_subset_as_xml_with_editing'),
     path('workflows/<resource_id>/xml/', secure_views.WorkflowXmlDownloadFromManagementView.as_view(), name='view_workflow_as_xml_with_editing'),
 ]

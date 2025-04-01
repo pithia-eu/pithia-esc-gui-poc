@@ -288,24 +288,24 @@ class CatalogueDataSubsetDeleteView(
     """The deletion confirmation page for a Static
     Data Subset registration.
     """
-    template_name = 'delete/confirm_delete_catalogue_data_subset.html'
+    template_name = 'delete/confirm_delete_data_subset.html'
     model = models.CatalogueDataSubset
 
-    redirect_url = reverse_lazy('resource_management:catalogue_data_subsets')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_data_subsets'
-    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_data_subset'
+    redirect_url = reverse_lazy('resource_management:data_subsets')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
+    delete_resource_page_breadcrumb_url_name = 'delete:data_subset'
 
     @transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME'])
     def run_delete_actions(self):
         super().run_delete_actions()
         try:
-            self.delete_catalogue_data_subset_directory()
+            self.delete_data_subset_directory()
         except FileNotFoundError:
             logger.exception(f'The directory for Data Subset {self.resource_id} has already been deleted.')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_datahub_used'] = self.is_catalogue_data_subset_directory_created()
+        context['is_datahub_used'] = self.is_data_subset_directory_created()
         return context
 
 
