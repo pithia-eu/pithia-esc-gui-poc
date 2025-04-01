@@ -869,7 +869,7 @@ class CatalogueEntryEditorFormView(
     CatalogueRelatedEditorFormViewMixin,
     ResourceEditorFormView):
     form_class = CatalogueEntryEditorForm
-    template_name = 'metadata_editor/catalogue_entry_editor.html'
+    template_name = 'metadata_editor/static_dataset_entry_editor.html'
 
     model = models.CatalogueEntry
     metadata_editor_class = CatalogueEntryEditor
@@ -958,7 +958,7 @@ class CatalogueDataSubsetEditorFormView(
             )
         )
 
-    def get_catalogue_entry_choices_for_form(self):
+    def get_static_dataset_entry_choices_for_form(self):
         catalogue_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
         UNKNOWN_KEY = 'ZZZ'
         entries_by_catalogue = {
@@ -1042,7 +1042,7 @@ class CatalogueDataSubsetEditorFormView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['data_collection_choices'] = self.get_data_collection_choices_for_form()
-        kwargs['catalogue_entry_choices'] = self.get_catalogue_entry_choices_for_form()
+        kwargs['static_dataset_entry_choices'] = self.get_static_dataset_entry_choices_for_form()
         kwargs['data_level_choices'] = self.get_data_level_choices_for_form()
         kwargs['data_quality_flag_choices'] = self.get_data_quality_flag_choices_for_form()
         kwargs['metadata_quality_flag_choices'] = self.get_metadata_quality_flag_choices_for_form()

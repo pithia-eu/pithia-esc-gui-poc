@@ -44,9 +44,9 @@
         {% endif %}
     </p>
     <ul class="list-group tree-catalogue-entry pt-2 mb-0">
-        {% for catalogue_entry in catalogue.entries %}
+        {% for static_dataset_entry in catalogue.entries %}
         <li class="list-group-item p-3">
-            {% include 'browse/catalogue_entry_list_item_content.html' %}
+            {% include 'browse/static_dataset_entry_list_item_content.html' %}
         </li>
         {% endfor %}
     </ul>

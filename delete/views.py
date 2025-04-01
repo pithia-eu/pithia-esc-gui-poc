@@ -279,7 +279,7 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
 
     redirect_url = reverse_lazy('resource_management:catalogue_entries')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
-    delete_resource_page_breadcrumb_url_name = 'delete:catalogue_entry'
+    delete_resource_page_breadcrumb_url_name = 'delete:static_dataset_entry'
 
 
 class CatalogueDataSubsetDeleteView(

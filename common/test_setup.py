@@ -73,7 +73,7 @@ def register_data_collection_for_test():
 def register_catalogue_for_test():
     return _register_metadata_file_for_test(test_xml_files.CATALOGUE_METADATA_XML, Catalogue)
 
-def register_catalogue_entry_for_test():
+def register_static_dataset_entry_for_test():
     return _register_metadata_file_for_test(test_xml_files.CATALOGUE_ENTRY_METADATA_XML, CatalogueEntry)
 
 def register_data_subset_for_test():
@@ -93,5 +93,5 @@ def register_all_metadata_types():
     register_process_for_test()
     register_data_collection_for_test()
     register_catalogue_for_test()
-    register_catalogue_entry_for_test()
+    register_static_dataset_entry_for_test()
     register_data_subset_for_test()

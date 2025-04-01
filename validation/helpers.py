@@ -28,7 +28,7 @@ def create_li_element_with_register_link_from_resource_type_from_resource_url(re
         url_name = 'catalogue'
         url_base_text = 'Catalogue'
     elif resource_type_from_resource_url.startswith('catalogue_CatalogueEntry_'):
-        url_name = 'catalogue_entry'
+        url_name = 'static_dataset_entry'
         url_base_text = 'Catalogue Entry'
     elif resource_type_from_resource_url.startswith('catalogue_DataSubset_'):
         url_name = 'data_subset'

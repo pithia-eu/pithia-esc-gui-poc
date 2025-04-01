@@ -519,19 +519,19 @@ class CatalogueEntryQuerySet(ScientificMetadataQuerySet, AbstractCatalogueEntryD
         return referencing_catalogue_url
 
 class CatalogueDataSubsetQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
-    def referencing_catalogue_entry_url(self, catalogue_entry_url: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href': catalogue_entry_url})
+    def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
+        return self.filter(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
 
-    def referencing_catalogue_entry_id(self, catalogue_entry_id: str):
-        return self.filter(**{'json__entryIdentifier__@xlink:href__endswith': catalogue_entry_id})
+    def referencing_static_dataset_entry_id(self, static_dataset_entry_id: str):
+        return self.filter(**{'json__entryIdentifier__@xlink:href__endswith': static_dataset_entry_id})
 
     def referencing_data_collection_url(self, data_collection_url: str):
         return self.filter(**{'json__dataCollection__@xlink:href': data_collection_url})
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_data_collection_url = self.referencing_data_collection_url(metadata_server_url)
-        referencing_catalogue_entry_url = self.referencing_catalogue_entry_url(metadata_server_url)
-        return referencing_data_collection_url | referencing_catalogue_entry_url
+        referencing_static_dataset_entry_url = self.referencing_static_dataset_entry_url(metadata_server_url)
+        return referencing_data_collection_url | referencing_static_dataset_entry_url
 
 class WorkflowQuerySet(ScientificMetadataQuerySet, AbstractWorkflowDatabaseQueries):
     pass

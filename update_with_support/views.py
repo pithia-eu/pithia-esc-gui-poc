@@ -274,7 +274,7 @@ class CatalogueEntryUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     CatalogueEntryEditorFormView):
     model = models.CatalogueEntry
-    success_url_name = 'update:catalogue_entry_with_editor'
+    success_url_name = 'update:static_dataset_entry_with_editor'
     form_field_to_metadata_mapper_class = CatalogueEntryFormFieldsToMetadataMapper
 
     def get_initial(self):

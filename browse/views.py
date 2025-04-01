@@ -372,7 +372,7 @@ class ResourceDetailView(TemplateView):
             'Processes': self.resource.properties.process_urls,
             'Data Collections': self.resource.properties.data_collection_urls,
             'Static Datasets': self.resource.properties.catalogue_urls,
-            'Static Dataset Entries': self.resource.properties.catalogue_entry_urls,
+            'Static Dataset Entries': self.resource.properties.static_dataset_entry_urls,
         }
 
     def clean_related_registrations_dict(self, related_registrations_dict):
@@ -911,8 +911,8 @@ class CatalogueEntryDetailView(ResourceDetailView):
     """
     model = models.CatalogueEntry
     resource_list_by_type_url_name = 'browse:list_catalogue_entries'
-    resource_download_url_name = 'utils:view_catalogue_entry_as_xml'
-    template_name = 'browse/detail/bases/catalogue_entry.html'
+    resource_download_url_name = 'utils:view_static_dataset_entry_as_xml'
+    template_name = 'browse/detail/bases/static_dataset_entry.html'
 
     def get_description_from_xml(self, resource):
         return etree.fromstring(resource.xml.encode('utf-8')).find('{https://metadata.pithia.eu/schemas/2.2}entryDescription').text
@@ -931,7 +931,7 @@ class CatalogueEntryDetailView(ResourceDetailView):
         return cleaned_property_table_dict
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_entry_id']
+        self.resource_id = self.kwargs['static_dataset_entry_id']
         return super().get(request, *args, **kwargs)
 
 class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):

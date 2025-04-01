@@ -271,12 +271,12 @@ class CatalogueManagementListView(ResourceManagementListView):
 class CatalogueEntryManagementListView(ResourceManagementListView):
     model = models.CatalogueEntry
 
-    resource_delete_page_url_name = 'delete:catalogue_entry'
-    resource_update_page_url_name = 'update:catalogue_entry'
-    resource_update_with_wizard_page_url_name = 'update:catalogue_entry_with_editor'
-    resource_register_page_url_name = 'register:catalogue_entry'
-    resource_register_with_editor_name = 'register:catalogue_entry_with_editor'
-    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_entry_as_xml_with_editing'
+    resource_delete_page_url_name = 'delete:static_dataset_entry'
+    resource_update_page_url_name = 'update:static_dataset_entry'
+    resource_update_with_wizard_page_url_name = 'update:static_dataset_entry_with_editor'
+    resource_register_page_url_name = 'register:static_dataset_entry'
+    resource_register_with_editor_name = 'register:static_dataset_entry_with_editor'
+    resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_entry_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 

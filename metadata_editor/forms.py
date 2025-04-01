@@ -620,10 +620,10 @@ class CatalogueDataSubsetForm(
     QualityAssessmentFormComponent,
     SourceMetadataFormComponent,
     TimePeriodEditorFormComponent):
-    def __init__(self, *args, data_collection_choices=(), catalogue_entry_choices=(), **kwargs):
+    def __init__(self, *args, data_collection_choices=(), static_dataset_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices
-        self.fields['entry_identifier'].choices = catalogue_entry_choices
+        self.fields['entry_identifier'].choices = static_dataset_entry_choices
         self.fields['description'].help_text = 'A free-text description of the data subset contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True

@@ -759,7 +759,7 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     weight = 13
     type_readable = 'static dataset entry'
     type_plural_readable = 'static dataset entries'
-    _browse_detail_page_url_name = 'browse:catalogue_entry_detail'
+    _browse_detail_page_url_name = 'browse:static_dataset_entry_detail'
     root_element_name = 'StaticDatasetEntry'
 
     @property
@@ -783,7 +783,7 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def data_subsets(self):
-        return CatalogueDataSubset.objects.referencing_catalogue_entry_id(self.localid)
+        return CatalogueDataSubset.objects.referencing_static_dataset_entry_id(self.localid)
 
     @property
     def metadata_server_url(self):
@@ -823,16 +823,16 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
         return self.json['dataCollection']['@xlink:href']
     
     @property
-    def catalogue_entry_url(self):
+    def static_dataset_entry_url(self):
         return self.json['entryIdentifier']['@xlink:href']
     
     @property
-    def catalogue_entry(self):
-        return CatalogueEntry.objects.get_by_metadata_server_url(self.catalogue_entry_url)
+    def static_dataset_entry(self):
+        return CatalogueEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
 
     @property
     def catalogue(self):
-        return self.catalogue_entry.catalogue
+        return self.static_dataset_entry.catalogue
 
     @property
     def metadata_server_url(self):

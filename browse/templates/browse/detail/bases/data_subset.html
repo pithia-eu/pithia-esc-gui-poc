@@ -10,10 +10,10 @@
     <h2>Result Time</h2>
     {% include 'browse/detail/components/data_subset/result_time_section_content.html' %}
 </div>
-{% if resource.properties.catalogue_entry_urls %}
+{% if resource.properties.static_dataset_entry_urls %}
 <section class="responsive-resource-detail-section resource-detail-section">
 <h2 class="fs-6 fw-semibold mb-2">Static Dataset Entry</h2>
-    {% with value=resource.properties.catalogue_entry_urls.0 %}
+    {% with value=resource.properties.static_dataset_entry_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
 </section>
@@ -48,10 +48,10 @@
     <h2>Result Time</h2>
     {% include 'browse/detail/components/data_subset/result_time_section_content.html' %}
 </section>
-{% if resource.properties.catalogue_entry_urls %}
+{% if resource.properties.static_dataset_entry_urls %}
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Static Dataset Entry</h2>
-    {% with value=resource.properties.catalogue_entry_urls.0 %}
+    {% with value=resource.properties.static_dataset_entry_urls.0 %}
     {% include 'browse/placeholders/resource_server_url_placeholder.html' %}
     {% endwith %}
 </section>

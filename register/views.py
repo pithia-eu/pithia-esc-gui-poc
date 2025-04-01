@@ -295,9 +295,9 @@ class CatalogueRegisterFormView(ResourceRegisterFormView):
 class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
     model = models.CatalogueEntry
-    success_url = reverse_lazy('register:catalogue_entry')
+    success_url = reverse_lazy('register:static_dataset_entry')
 
-    post_url = reverse_lazy('register:catalogue_entry')
+    post_url = reverse_lazy('register:static_dataset_entry')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogue_entries'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
 

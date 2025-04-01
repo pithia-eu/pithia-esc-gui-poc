@@ -601,9 +601,9 @@ class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetad
         self.append_data_levels(properties['data_levels'])
         self.append_quality_assessment(properties['quality_assessment'])
 
-    def append_entry_identifier(self, catalogue_entry):
+    def append_entry_identifier(self, static_dataset_entry):
         entry_identifier_element_attributes = {
-            '{%s}href' % Namespace.XLINK: catalogue_entry,
+            '{%s}href' % Namespace.XLINK: static_dataset_entry,
         }
         entry_identifier_element = etree.SubElement(self.root, 'entryIdentifier', **entry_identifier_element_attributes)
 

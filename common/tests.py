@@ -17,7 +17,7 @@ from common.test_setup import (
     register_acquisition_capabilities_for_test,
     register_acquisition_for_test,
     register_data_subset_for_test,
-    register_catalogue_entry_for_test,
+    register_static_dataset_entry_for_test,
     register_catalogue_for_test,
     register_computation_capabilities_for_test,
     register_computation_capabilities_2_for_test,
@@ -87,7 +87,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         self.process = register_process_for_test()
         self.data_collection = register_data_collection_for_test()
         self.catalogue = register_catalogue_for_test()
-        self.catalogue_entry = register_catalogue_entry_for_test()
+        self.static_dataset_entry = register_static_dataset_entry_for_test()
         self.data_subset = register_data_subset_for_test()
         return super().setUp()
 
@@ -215,15 +215,15 @@ class ImmediateMetadataDependentsTestCase(TestCase):
         metadata URL are correctly identified.
         """
         imds = self.catalogue._immediate_metadata_dependents
-        self.assertIn(self.catalogue_entry, imds)
+        self.assertIn(self.static_dataset_entry, imds)
         self.assertEqual(len(imds), 1)
 
-    def test_catalogue_entry_immediate_metadata_dependents_are_correct(self):
+    def test_static_dataset_entry_immediate_metadata_dependents_are_correct(self):
         """
         Metadata registrations referring to a catalogue
         entry metadata URL are correctly identified.
         """
-        imds = self.catalogue_entry._immediate_metadata_dependents
+        imds = self.static_dataset_entry._immediate_metadata_dependents
         self.assertIn(self.data_subset, imds)
         self.assertEqual(len(imds), 1)
 

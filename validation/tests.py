@@ -408,7 +408,7 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/Catalogue_TEST')
         self.assertTrue(result)
 
-    def test_valid_catalogue_entry_metadata_url_passes(self):
+    def test_valid_static_dataset_entry_metadata_url_passes(self):
         """
         A valid catalogue entry metadata URL passes
         validation.
@@ -506,9 +506,9 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         catalogue_xml_file.seek(0)
         Catalogue.objects.create_from_xml_string(catalogue_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
-        catalogue_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
+        static_dataset_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
         invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
-            XMLMetadataFile.from_file(catalogue_entry_xml_file)
+            XMLMetadataFile.from_file(static_dataset_entry_xml_file)
         )
         for key in invalid_resource_urls_dict.keys():
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
