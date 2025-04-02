@@ -584,9 +584,10 @@ class StaticDatasetEditorForm(BaseEditorForm):
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
     TimePeriodEditorFormComponent):
-    def __init__(self, *args, static_dataset_choices=(), **kwargs):
+    def __init__(self, *args, static_dataset_choices=(), static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['static_dataset_identifier'].choices = static_dataset_choices
+        self.fields['static_dataset_category'].choices = static_dataset_category_choices
         self.fields['description'].help_text = 'A free-text description of the static dataset entry contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
@@ -599,6 +600,14 @@ class StaticDatasetEntryEditorForm(
             'class': 'form-select',
         }),
         help_text='The static dataset that this entry belongs to.'
+    )
+
+    static_dataset_category = forms.ChoiceField(
+        label='Static Dataset Category',
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+        })
     )
 
     time_instant_begin_position = forms.DateTimeField(
