@@ -3,7 +3,7 @@ import {
     validateAndRegister,
 } from "/static/metadata_editor/components/base_editor.js";
 import {
-    setupCatalogueDataSubsetSourcesTab,
+    setupDataSubsetSourcesTab,
 } from "/static/metadata_editor/components/data_subset/data_subset_sources_tab.js";
 import {
     setupSourceFileSharingMethodSwitching,
@@ -31,7 +31,7 @@ editorForm.addEventListener("submit", async e => {
 window.addEventListener("load", () => {
     setupWizardManualAndAutoSave();
 
-    sourcesTab = setupCatalogueDataSubsetSourcesTab();
+    sourcesTab = setupDataSubsetSourcesTab();
     setupTimePeriodElements("input[name='time_instant_begin_position']", "input[name='time_instant_end_position']");
     setupSourceFileSharingMethodSwitching(sourcesTab);
 });

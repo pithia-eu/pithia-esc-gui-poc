@@ -19,16 +19,16 @@ from .forms import *
 from common import models
 from common.decorators import login_session_institution_required
 from common.xml_metadata_mapping_shortcuts import (
-    CatalogueDataSubsetXmlMappingShortcuts,
+    DataSubsetXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
-from datahub_management.dataclasses import CatalogueDataSubsetOnlineResource
+from datahub_management.dataclasses import DataSubsetOnlineResource
 from datahub_management.view_mixins import (
-    CatalogueDataSubsetDataHubViewMixin,
+    DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
 from handle_management.view_mixins import HandleRegistrationViewMixin
-from resource_management.view_mixins import CatalogueDataSubsetResourceManagementViewMixin
+from resource_management.view_mixins import DataSubsetResourceManagementViewMixin
 from resource_management.views import (
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
@@ -308,16 +308,16 @@ class CatalogueEntryRegisterFormView(ResourceRegisterFormView):
         return context
 
 
-class CatalogueDataSubsetRegisterFormView(
-        CatalogueDataSubsetDataHubViewMixin,
-        CatalogueDataSubsetResourceManagementViewMixin,
+class DataSubsetRegisterFormView(
+        DataSubsetDataHubViewMixin,
+        DataSubsetResourceManagementViewMixin,
         HandleRegistrationViewMixin,
         ResourceRegisterFormView):
     template_name='register/file_upload_data_subset.html'
-    model = models.CatalogueDataSubset
+    model = models.DataSubset
     success_url = reverse_lazy('register:data_subset')
 
-    form_class = UploadCatalogueDataSubsetFileForm
+    form_class = UploadDataSubsetFileForm
 
     post_url = reverse_lazy('register:data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
@@ -370,9 +370,9 @@ class CatalogueDataSubsetRegisterFormView(
         try:
             self.temp_xml_file.seek(0)
             self.xml_string = self.temp_xml_file.read().decode()
-            data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            data_subset_shortcutted = DataSubsetXmlMappingShortcuts(self.xml_string)
             self.valid_sources = [
-                CatalogueDataSubsetOnlineResource(
+                DataSubsetOnlineResource(
                     name=online_resource.get('name'),
                     file_input_name=f'online_resource_file__{online_resource.get("name")}'
                 )

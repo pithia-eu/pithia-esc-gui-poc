@@ -135,11 +135,11 @@ class SourceMetadataUpdate:
     data_formats: Optional[list[str]] = field(default_factory=list)
 
 @dataclass(kw_only=True)
-class CatalogueDataSubsetSourceMetadataUpdate(SourceMetadataUpdate):
+class DataSubsetSourceMetadataUpdate(SourceMetadataUpdate):
     file_input_name: Optional[str] = None
 
 @dataclass(kw_only=True)
-class CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(CatalogueDataSubsetSourceMetadataUpdate):
+class DataSubsetSourceWithExistingDataHubFileMetadataUpdate(DataSubsetSourceMetadataUpdate):
     is_existing_datahub_file_used: Optional[bool] = False
     datahub_file_name: Optional[str] = None
 

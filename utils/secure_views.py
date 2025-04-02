@@ -98,8 +98,8 @@ class CatalogueEntryXmlDownloadFromManagementView(
     pass
 
 
-class CatalogueDataSubsetXmlDownloadFromManagementView(
-        view_mixins.CatalogueDataSubsetXmlDownloadViewMixin,
+class DataSubsetXmlDownloadFromManagementView(
+        view_mixins.DataSubsetXmlDownloadViewMixin,
         ResourceXmlDownloadFromManagementView):
     pass
 

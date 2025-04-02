@@ -3,7 +3,7 @@ from django.test import SimpleTestCase, tag
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .services import (
-    CatalogueDataSubsetDataHubService,
+    DataSubsetDataHubService,
     WorkflowDataHubService,
 )
 
@@ -43,7 +43,7 @@ class WorkflowDataHubServiceTestCase(SimpleTestCase):
 
 
 @tag('manual')
-class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
+class DataSubsetDataHubServiceTestCase(SimpleTestCase):
     def setUp(self) -> None:
         self.data_subset_ids_teardown = set()
         return super().setUp()
@@ -52,7 +52,7 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
         if not self.data_subset_ids_teardown:
             return super().tearDown()
         for cds_id in self.data_subset_ids_teardown:
-            CatalogueDataSubsetDataHubService.delete_data_subset_directory(cds_id)
+            DataSubsetDataHubService.delete_data_subset_directory(cds_id)
         return super().tearDown()
 
     def _create_and_store_data_subset_test_resource_file(
@@ -62,7 +62,7 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
         ):
         self.data_subset_ids_teardown.add(data_subset_id)
         test_uploaded_file = SimpleUploadedFile('test.pdf', b'')
-        return CatalogueDataSubsetDataHubService.store_or_overwrite_data_subset_resource_file(
+        return DataSubsetDataHubService.store_or_overwrite_data_subset_resource_file(
             test_uploaded_file,
             resource_name,
             data_subset_id
@@ -90,7 +90,7 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
             data_subset_id,
             resource_name
         )
-        retrieved_cds_resource_file = CatalogueDataSubsetDataHubService.get_data_subset_file(
+        retrieved_cds_resource_file = DataSubsetDataHubService.get_data_subset_file(
             data_subset_id,
             resource_name
         )
@@ -114,7 +114,7 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
             data_subset_id=data_subset_id,
             resource_name=resource_name_2
         )
-        cds_resource_files = CatalogueDataSubsetDataHubService.get_files_for_data_subset(
+        cds_resource_files = DataSubsetDataHubService.get_files_for_data_subset(
             data_subset_id
         )
         cds_resource_file_names = [os.path.basename(file.name) for file in cds_resource_files]
@@ -127,10 +127,10 @@ class CatalogueDataSubsetDataHubServiceTestCase(SimpleTestCase):
         data subset's resource files.
         """
         data_subset_id = 'data_subset_id'
-        CatalogueDataSubsetDataHubService._create_directory_for_data_subset(data_subset_id)
-        data_subset_directory_path = CatalogueDataSubsetDataHubService._get_data_subset_directory_path(
+        DataSubsetDataHubService._create_directory_for_data_subset(data_subset_id)
+        data_subset_directory_path = DataSubsetDataHubService._get_data_subset_directory_path(
             data_subset_id
         )
         self.assertTrue(os.path.isdir(data_subset_directory_path))
-        CatalogueDataSubsetDataHubService.delete_data_subset_directory(data_subset_id)
+        DataSubsetDataHubService.delete_data_subset_directory(data_subset_id)
         self.assertFalse(os.path.isdir(data_subset_directory_path))

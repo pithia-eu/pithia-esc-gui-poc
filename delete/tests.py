@@ -17,7 +17,7 @@ from common.models import (
     Process,
     DataCollection,
     CatalogueEntry,
-    CatalogueDataSubset,
+    DataSubset,
 )
 from common.test_setup import (
     register_acquisition_capabilities_for_test,
@@ -265,7 +265,7 @@ class DataCollectionDeleteChainTestCase(TestCase):
         chain.
         """
         immediate_metadata_dependents = self.data_collection._immediate_metadata_dependents
-        self.assertTrue(any(isinstance(md, CatalogueDataSubset) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, DataSubset) for md in immediate_metadata_dependents))
 
 class CatalogueDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
@@ -297,9 +297,9 @@ class CatalogueEntryDeleteChainTestCase(TestCase):
         chain.
         """
         immediate_metadata_dependents = self.static_dataset_entry._immediate_metadata_dependents
-        self.assertTrue(any(isinstance(md, CatalogueDataSubset) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, DataSubset) for md in immediate_metadata_dependents))
 
-class CatalogueDataSubsetDeleteChainTestCase(TestCase):
+class DataSubsetDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
         register_all_metadata_types()
         return super().setUp()
@@ -311,7 +311,7 @@ class CatalogueDataSubsetDeleteChainTestCase(TestCase):
         catalogue data subset are included in the
         delete chain.
         """
-        data_subset = CatalogueDataSubset.objects.all()[0]
+        data_subset = DataSubset.objects.all()[0]
         immediate_metadata_dependents = data_subset._immediate_metadata_dependents
         self.assertEqual(len(immediate_metadata_dependents), 0)
 

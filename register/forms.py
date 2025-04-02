@@ -84,7 +84,7 @@ class UploadDataCollectionFileForm(forms.Form):
     )
 
 
-class UploadCatalogueDataSubsetFileForm(forms.Form):
+class UploadDataSubsetFileForm(forms.Form):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):

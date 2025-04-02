@@ -2,8 +2,8 @@ import json
 import logging
 from .editor_dataclasses import (
     CapabilityLinkMetadataUpdate,
-    CatalogueDataSubsetSourceMetadataUpdate,
-    CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate,
+    DataSubsetSourceMetadataUpdate,
+    DataSubsetSourceWithExistingDataHubFileMetadataUpdate,
     InputOutputMetadataUpdate,
     ProcessCapabilityMetadataUpdate,
     RelatedPartyMetadataUpdate,
@@ -111,7 +111,7 @@ def map_sources_to_dataclasses(form_cleaned_data):
 
 def map_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
     return [
-        CatalogueDataSubsetSourceMetadataUpdate(
+        DataSubsetSourceMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
             linkage='TEMP_LINKAGE_URL' if is_file_uploaded_for_each_online_resource else s.get('linkage'),
             name=s.get('name'),
@@ -124,7 +124,7 @@ def map_data_subset_sources_to_dataclasses(form_cleaned_data, is_file_uploaded_f
 
 def map_data_subset_sources_with_existing_data_hub_files_to_dataclasses(form_cleaned_data, is_file_uploaded_for_each_online_resource: bool = True):
     return [
-        CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate(
+        DataSubsetSourceWithExistingDataHubFileMetadataUpdate(
             service_functions=s.get('serviceFunctions', []),
             linkage='TEMP_LINKAGE_URL' if is_file_uploaded_for_each_online_resource else s.get('linkage'),
             name=s.get('name'),

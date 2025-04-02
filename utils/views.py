@@ -144,8 +144,8 @@ class CatalogueEntryXmlDownloadFromBrowsingView(
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'
 
 
-class CatalogueDataSubsetXmlDownloadFromBrowsingView(
-        view_mixins.CatalogueDataSubsetXmlDownloadViewMixin,
+class DataSubsetXmlDownloadFromBrowsingView(
+        view_mixins.DataSubsetXmlDownloadViewMixin,
         view_mixins.ResourceXmlDownloadFromBrowsingViewMixin,
         ResourceXmlDownloadView):
     template_name = 'utils/from_browsing/resource_as_xml_from_browsing_2.html'

@@ -442,7 +442,7 @@ class CatalogueEntryEditor(
         self.update_time_period(update_data, phenomenon_time_key)
 
 
-class CatalogueDataSubsetEditor(
+class DataSubsetEditor(
     BaseMetadataEditor,
     DataLevelMetadataEditor,
     QualityAssessmentMetadataEditor,
@@ -560,7 +560,7 @@ class SimpleMetadataEditor:
         return etree.tostring(self.xml_string_parsed, pretty_print=True).decode()
 
 
-class SimpleCatalogueDataSubsetEditor(SimpleMetadataEditor):
+class SimpleDataSubsetEditor(SimpleMetadataEditor):
     def update_online_resource_url(self, online_resource_name: str, online_resource_url: str):
         corresponding_linkage_elements = self.xml_string_parsed.xpath(
             './/%s:source/%s:OnlineResource[%s:name[contains(text(), "%s")]]/%s:linkage/%s:URL'

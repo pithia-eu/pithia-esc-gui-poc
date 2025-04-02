@@ -64,7 +64,7 @@ def catalogue_related_metadata_index(request):
     
     num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
     num_current_static_dataset_entries = models.CatalogueEntry.objects.owned_by_institution(institution_id).count()
-    num_current_data_subsets = models.CatalogueDataSubset.objects.owned_by_institution(institution_id).count()
+    num_current_data_subsets = models.DataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_static_dataset_entries': num_current_static_dataset_entries,
@@ -280,8 +280,8 @@ class CatalogueEntryManagementListView(ResourceManagementListView):
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
 
-class CatalogueDataSubsetManagementListView(ResourceManagementListView):
-    model = models.CatalogueDataSubset
+class DataSubsetManagementListView(ResourceManagementListView):
+    model = models.DataSubset
 
     resource_delete_page_url_name = 'delete:data_subset'
     resource_update_page_url_name = 'update:data_subset'

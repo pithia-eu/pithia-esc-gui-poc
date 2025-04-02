@@ -2,7 +2,7 @@ import {
     setupOnlineResourceListAndLoadFiles,
 } from "/static/register/data_subset_form.js";
 import {
-    CatalogueDataSubsetOnlineResourceUpdateList,
+    DataSubsetOnlineResourceUpdateList,
 } from "/static/update/data_subset_source_updates.js";
 const fileUploadForm = document.querySelector("#file-upload-form");
 
@@ -24,6 +24,6 @@ fileUploadForm.addEventListener("submit", e => {
 });
 
 window.addEventListener("load", async () => {
-    const onlineResourceList = new CatalogueDataSubsetOnlineResourceUpdateList();
+    const onlineResourceList = new DataSubsetOnlineResourceUpdateList();
     setupOnlineResourceListAndLoadFiles(onlineResourceList);
 });

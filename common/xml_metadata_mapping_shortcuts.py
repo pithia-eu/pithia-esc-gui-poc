@@ -306,7 +306,7 @@ class CatalogueEntryXmlMappingShortcuts(
         return self._gml_time_period(phenomenon_time_element)
 
 
-class CatalogueDataSubsetXmlMappingShortcuts(
+class DataSubsetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         GmlTimePeriodMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,

@@ -3,7 +3,7 @@ from .models import (
     Acquisition,
     AcquisitionCapabilities,
     Catalogue,
-    CatalogueDataSubset,
+    DataSubset,
     CatalogueEntry,
     Computation,
     ComputationCapabilities,
@@ -77,7 +77,7 @@ def register_static_dataset_entry_for_test():
     return _register_metadata_file_for_test(test_xml_files.CATALOGUE_ENTRY_METADATA_XML, CatalogueEntry)
 
 def register_data_subset_for_test():
-    return _register_metadata_file_for_test(test_xml_files.CATALOGUE_DATA_SUBSET_METADATA_XML, CatalogueDataSubset)
+    return _register_metadata_file_for_test(test_xml_files.CATALOGUE_DATA_SUBSET_METADATA_XML, DataSubset)
 
 def register_all_metadata_types():
     register_organisation_for_test()

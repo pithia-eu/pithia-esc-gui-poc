@@ -18,7 +18,7 @@ from .form_to_metadata_mapper_components import (
     TypeFormFieldsToMetadataMixin,
 )
 
-from datahub_management.services import CatalogueDataSubsetDataHubService
+from datahub_management.services import DataSubsetDataHubService
 from metadata_editor.xml_ns_enums import Namespace, NamespacePrefix
 
 
@@ -325,7 +325,7 @@ class CatalogueEntryFormFieldsToMetadataMapper(
         return mappings
 
 
-class CatalogueDataSubsetFormFieldsToMetadataMapper(
+class DataSubsetFormFieldsToMetadataMapper(
         QualityAssessmentFormFieldsToMetadataMixin,
         SourceFormFieldsToMetadataMixin,
         TimePeriodFormFieldsToMetadataMixin,
@@ -335,7 +335,7 @@ class CatalogueDataSubsetFormFieldsToMetadataMapper(
     def _map_source_to_form(self, online_resource_element):
         source = super()._map_source_to_form(online_resource_element)
         data_subset_id = self._get_element_text_or_blank_string(self._get_first_element_from_list(self.xml_string_parsed.xpath('.//%s:identifier/%s:PITHIA_Identifier/%s:localID' % (self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX, self.DEFAULT_XPATH_NSPREFIX), namespaces=self.namespaces)))
-        source_file_in_datahub = CatalogueDataSubsetDataHubService.get_data_subset_file(
+        source_file_in_datahub = DataSubsetDataHubService.get_data_subset_file(
             data_subset_id,
             source.get('name')
         )

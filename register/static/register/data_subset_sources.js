@@ -11,7 +11,7 @@ emptyOnlineResourceFileListItem.className = "list-group-item list-group-item-lig
 emptyOnlineResourceFileListItem.textContent = "This Data Subset has no online resources.";
 
 
-export class CatalogueDataSubsetOnlineResourceList {
+export class DataSubsetOnlineResourceList {
     addRandomNumberToElementId(elementId) {
         const randomString = Math.random().toString().substring(2, 7)
         return `${elementId}${randomString}`;

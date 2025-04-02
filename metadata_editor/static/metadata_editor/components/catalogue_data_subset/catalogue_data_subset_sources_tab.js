@@ -12,7 +12,7 @@ import {
 } from "/static/validation/data_subset_validation.js";
 
 
-export class CatalogueDataSubsetSourcesTab extends SourcesTab {
+export class DataSubsetSourcesTab extends SourcesTab {
     constructor() {
         super();
         this.sourceLinkageInputWrapperSelector = ".source-linkage-wrapper";
@@ -270,8 +270,8 @@ export class CatalogueDataSubsetSourcesTab extends SourcesTab {
     }
 }
 
-export function setupCatalogueDataSubsetSourcesTab() {
-    const sourcesTab = new CatalogueDataSubsetSourcesTab();
+export function setupDataSubsetSourcesTab() {
+    const sourcesTab = new DataSubsetSourcesTab();
     sourcesTab.setup();
     return sourcesTab;
 }

@@ -614,7 +614,7 @@ class CatalogueEntryEditorForm(
     )
 
 
-class CatalogueDataSubsetForm(
+class DataSubsetForm(
     BaseEditorForm,
     DataLevelFormComponent,
     QualityAssessmentFormComponent,

@@ -19,7 +19,7 @@ urlpatterns = [
     path('data-collections/<resource_id>/update/interaction-methods', views.data_collection_interaction_methods, name='data_collection_interaction_methods'),
     path('catalogues/<resource_id>/update', views.CatalogueUpdateFormView.as_view(), name='catalogue'),
     path('static-dataset-entries/<resource_id>/update', views.CatalogueEntryUpdateFormView.as_view(), name='static_dataset_entry'),
-    path('data-subsets/<resource_id>/update', views.CatalogueDataSubsetUpdateFormView.as_view(), name='data_subset'),
+    path('data-subsets/<resource_id>/update', views.DataSubsetUpdateFormView.as_view(), name='data_subset'),
     path('workflows/<resource_id>/update', views.WorkflowUpdateFormView.as_view(), name='workflow'),
     path('workflows/<resource_id>/update/openapi-spec-url', views.workflow_openapi_specification_url, name='workflow_openapi_specification_url'),
     path('', include('update_with_support.urls')),

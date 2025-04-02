@@ -1,10 +1,10 @@
 import {
-    CatalogueDataSubsetOnlineResourceList,
+    DataSubsetOnlineResourceList,
 } from "/static/register/data_subset_sources.js";
 const namesOfOnlineResourcesWithDataHubFiles = JSON.parse(document.querySelector("#names-of-online-resources-with-files").textContent);
 
 
-export class CatalogueDataSubsetOnlineResourceUpdateList extends CatalogueDataSubsetOnlineResourceList {
+export class DataSubsetOnlineResourceUpdateList extends DataSubsetOnlineResourceList {
     mapDataHubCheckboxToOnlineResource(existingDataHubFileCheckbox, onlineResourceName) {
         existingDataHubFileCheckbox.dataset.onlineResourceName = onlineResourceName;
     }

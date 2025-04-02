@@ -28,7 +28,7 @@ from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
     CatalogueEditor,
-    CatalogueDataSubsetEditor,
+    DataSubsetEditor,
     CatalogueEntryEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
@@ -47,7 +47,7 @@ from .view_mixins import *
 from common import models
 from common.decorators import login_session_institution_required
 from datahub_management.view_mixins import (
-    CatalogueDataSubsetDataHubViewMixin,
+    DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
 from resource_management.views import (
@@ -896,20 +896,20 @@ class CatalogueEntryEditorFormView(
         return kwargs
 
 
-class CatalogueDataSubsetEditorFormView(
-    CatalogueDataSubsetDataHubViewMixin,
+class DataSubsetEditorFormView(
+    DataSubsetDataHubViewMixin,
     CatalogueRelatedEditorFormViewMixin,
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
     ResourceEditorFormView):
-    form_class = CatalogueDataSubsetForm
+    form_class = DataSubsetForm
     template_name = 'metadata_editor/data_subset_editor.html'
 
-    model = models.CatalogueDataSubset
-    metadata_editor_class = CatalogueDataSubsetEditor
+    model = models.DataSubset
+    metadata_editor_class = DataSubsetEditor
 
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueDataSubset.type_plural_readable)
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.DataSubset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
 
     SIMILAR_SOURCE_NAMES_ERROR = 'Some online resource names are too similar to each other. Please update the names highlighted below.'
@@ -932,7 +932,7 @@ class CatalogueDataSubsetEditorFormView(
             is_file_uploaded_for_each_online_resource=is_file_uploaded_for_each_online_resource
         )
 
-    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueDataSubsetEditor, form_cleaned_data):
+    def add_form_data_to_metadata_editor(self, metadata_editor: DataSubsetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_entry_identifier(form_cleaned_data.get('entry_identifier'))

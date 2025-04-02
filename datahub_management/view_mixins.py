@@ -5,15 +5,15 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from pathlib import Path
 
-from .dataclasses import CatalogueDataSubsetOnlineResource
+from .dataclasses import DataSubsetOnlineResource
 from .services import (
-    CatalogueDataSubsetDataHubService,
+    DataSubsetDataHubService,
     WorkflowDataHubService,
 )
 
-from metadata_editor.editor_dataclasses import CatalogueDataSubsetSourceMetadataUpdate
+from metadata_editor.editor_dataclasses import DataSubsetSourceMetadataUpdate
 from metadata_editor.services import (
-    SimpleCatalogueDataSubsetEditor,
+    SimpleDataSubsetEditor,
     SimpleWorkflowEditor,
 )
 
@@ -42,23 +42,23 @@ class WorkflowDataHubViewMixin:
         return self.add_workflow_details_file_link_to_workflow_xml_file_string(xml_file_string)
 
 
-class CatalogueDataSubsetDataHubViewMixin:
+class DataSubsetDataHubViewMixin:
     def is_data_subset_directory_created(self):
-        return CatalogueDataSubsetDataHubService.is_data_subset_directory_created(self.resource_id)
+        return DataSubsetDataHubService.is_data_subset_directory_created(self.resource_id)
 
     def get_data_subset_datahub_directory_path(self):
-        return CatalogueDataSubsetDataHubService._get_data_subset_directory_path(
+        return DataSubsetDataHubService._get_data_subset_directory_path(
             self.resource_id
         )
 
     def get_online_resource_file_for_data_subset_by_file_name(self, file_name_no_extension: str):
-        return CatalogueDataSubsetDataHubService.get_data_subset_file(
+        return DataSubsetDataHubService.get_data_subset_file(
             self.resource_id,
             file_name_no_extension
         )
 
     def get_online_resource_files_for_data_subset(self):
-        return CatalogueDataSubsetDataHubService.get_files_for_data_subset(
+        return DataSubsetDataHubService.get_files_for_data_subset(
             self.resource_id
         )
 
@@ -75,7 +75,7 @@ class CatalogueDataSubsetDataHubViewMixin:
         )
 
     def delete_data_subset_directory(self):
-        return CatalogueDataSubsetDataHubService.delete_data_subset_directory(self.resource_id)
+        return DataSubsetDataHubService.delete_data_subset_directory(self.resource_id)
 
     def add_online_resource_file_link_to_data_subset_xml_file_string(
             self,
@@ -85,11 +85,11 @@ class CatalogueDataSubsetDataHubViewMixin:
         # file and put in the catalogue data
         # subset's XML.
         online_resource_file_url = self.get_online_resource_file_url_for_data_subset(online_resource_name)
-        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(xml_file_string)
+        simple_data_subset_editor = SimpleDataSubsetEditor(xml_file_string)
         simple_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)
         return simple_data_subset_editor.to_xml()
     
-    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResource|CatalogueDataSubsetSourceMetadataUpdate):
+    def _get_file_for_online_resource(self, online_resource: DataSubsetOnlineResource|DataSubsetSourceMetadataUpdate):
         return self.source_files.get(online_resource.file_input_name)
 
     def add_source_file_to_temporary_directory(self, source_file: InMemoryUploadedFile, source_file_write_path: str):

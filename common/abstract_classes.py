@@ -561,7 +561,7 @@ class AbstractCatalogueEntryDatabaseQueries(ABC):
         """
         pass
 
-class AbstractCatalogueDataSubsetDatabaseQueries(ABC):
+class AbstractDataSubsetDatabaseQueries(ABC):
     @abstractmethod
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
         """

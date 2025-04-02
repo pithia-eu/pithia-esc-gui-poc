@@ -19,7 +19,7 @@ from xmlschema import XMLSchemaValidationError
 from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
-    CatalogueDataSubsetFormFieldsToMetadataMapper,
+    DataSubsetFormFieldsToMetadataMapper,
     CatalogueEntryFormFieldsToMetadataMapper,
     CatalogueFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
@@ -36,28 +36,28 @@ from .form_to_metadata_mappers import (
 )
 from .form_to_metadata_mapper_components import EditorFormFieldsToMetadataUtilsMixin
 from .forms import (
-    CatalogueDataSubsetEditorUpdateForm,
+    DataSubsetEditorUpdateForm,
     WorkflowEditorUpdateForm,
 )
 
 from common import models
 from common.xml_metadata_mapping_shortcuts import (
-    CatalogueDataSubsetXmlMappingShortcuts,
+    DataSubsetXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
-from datahub_management.dataclasses import CatalogueDataSubsetOnlineResourceUpdate
+from datahub_management.dataclasses import DataSubsetOnlineResourceUpdate
 from datahub_management.services import WorkflowDataHubService
 from handle_management.view_mixins import (
     HandleReapplicationViewMixin,
     HandleRegistrationViewMixin,
 )
 from metadata_editor.editor_dataclasses import (
-    CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate,
+    DataSubsetSourceWithExistingDataHubFileMetadataUpdate,
     PithiaIdentifierMetadataUpdate,
 )
 from metadata_editor.form_utils import map_data_subset_sources_with_existing_data_hub_files_to_dataclasses
 from metadata_editor.service_utils import BaseMetadataEditor
-from metadata_editor.services import SimpleCatalogueDataSubsetEditor
+from metadata_editor.services import SimpleDataSubsetEditor
 from metadata_editor.views import *
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
 
@@ -286,22 +286,22 @@ class CatalogueEntryUpdateWithEditorFormView(
         return initial
 
 
-class CatalogueDataSubsetUpdateWithEditorFormView(
+class DataSubsetUpdateWithEditorFormView(
         HandleReapplicationViewMixin,
         HandleRegistrationViewMixin,
         ResourceUpdateWithEditorFormView,
-        CatalogueDataSubsetEditorFormView):
+        DataSubsetEditorFormView):
     template_name = 'update_with_support/data_subset_update_editor.html'
-    model = models.CatalogueDataSubset
+    model = models.DataSubset
     success_url_name = 'update:data_subset_with_editor'
     
-    form_class = CatalogueDataSubsetEditorUpdateForm
-    form_field_to_metadata_mapper_class = CatalogueDataSubsetFormFieldsToMetadataMapper
+    form_class = DataSubsetEditorUpdateForm
+    form_field_to_metadata_mapper_class = DataSubsetFormFieldsToMetadataMapper
 
     def get_sources_tab_pane_content_template_path(self):
         return 'update_with_support/components/data_subset/sources_tab_pane_content_template.html'
 
-    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResourceUpdate|CatalogueDataSubsetSourceWithExistingDataHubFileMetadataUpdate):
+    def _get_file_for_online_resource(self, online_resource: DataSubsetOnlineResourceUpdate|DataSubsetSourceWithExistingDataHubFileMetadataUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
         file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
@@ -312,7 +312,7 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
     def run_extra_actions_before_update(self):
         if not self.current_doi_name:
             return super().run_extra_actions_before_update()
-        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.xml_string)
+        simple_data_subset_editor = SimpleDataSubsetEditor(self.xml_string)
         # Replace temp DOI name used to pass
         # XSD validation with real DOI name.
         simple_data_subset_editor.update_referent_doi_name(self.current_doi_name)
@@ -365,10 +365,10 @@ class CatalogueDataSubsetUpdateWithEditorFormView(
         self.current_resource_xml = self.resource.xml
         self.is_file_uploaded_for_each_online_resource = form.cleaned_data.get('is_file_uploaded_for_each_online_resource')
         try:
-            xml_shortcuts = CatalogueDataSubsetXmlMappingShortcuts(self.current_resource_xml)
+            xml_shortcuts = DataSubsetXmlMappingShortcuts(self.current_resource_xml)
             self.current_doi_name = xml_shortcuts.doi_kernel_metadata.get('referent_doi_name')
             temp_doi_name = '10.000/000'
-            simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(self.current_resource_xml)
+            simple_data_subset_editor = SimpleDataSubsetEditor(self.current_resource_xml)
             simple_data_subset_editor.update_referent_doi_name(temp_doi_name)
             self.current_resource_xml = simple_data_subset_editor.to_xml()
         except Exception as err:

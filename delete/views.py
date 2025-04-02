@@ -16,7 +16,7 @@ from common.decorators import (
 )
 from common.models import ScientificMetadata
 from datahub_management.view_mixins import (
-    CatalogueDataSubsetDataHubViewMixin,
+    DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
 from resource_management.views import (
@@ -282,14 +282,14 @@ class CatalogueEntryDeleteView(CatalogueRelatedResourceDeleteView):
     delete_resource_page_breadcrumb_url_name = 'delete:static_dataset_entry'
 
 
-class CatalogueDataSubsetDeleteView(
-        CatalogueDataSubsetDataHubViewMixin,
+class DataSubsetDeleteView(
+        DataSubsetDataHubViewMixin,
         CatalogueRelatedResourceDeleteView):
     """The deletion confirmation page for a Static
     Data Subset registration.
     """
     template_name = 'delete/confirm_delete_data_subset.html'
-    model = models.CatalogueDataSubset
+    model = models.DataSubset
 
     redirect_url = reverse_lazy('resource_management:data_subsets')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'

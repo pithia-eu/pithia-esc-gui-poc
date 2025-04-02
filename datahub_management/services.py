@@ -84,7 +84,7 @@ class WorkflowDataHubService(DataHubService):
         return cls._delete_file_from_datahub(cls._get_workflow_details_file_path(workflow_id))
 
 
-class CatalogueDataSubsetDataHubService(DataHubService):
+class DataSubsetDataHubService(DataHubService):
     @classmethod
     def _get_data_subset_directory_path(cls, data_subset_id: str):
         return os.path.join(

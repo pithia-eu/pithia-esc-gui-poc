@@ -6,7 +6,7 @@ from common.models import (
     Acquisition,
     AcquisitionCapabilities,
     Catalogue,
-    CatalogueDataSubset,
+    DataSubset,
     CatalogueEntry,
     Computation,
     ComputationCapabilities,
@@ -585,9 +585,9 @@ class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataC
         self.append_gml_time_period(phenomenon_time_element, phenomenon_time_dict['time_period'])
 
 
-class CatalogueDataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, SourceMetadataComponent):
+class DataSubsetMetadata(DataLevelMetadataComponent, GMLTimePeriodMetadataComponent, IdentifierMetadataComponent, QualityAssessmentMetadataComponent, SourceMetadataComponent):
     def __init__(self, properties) -> None:
-        super().__init__(CatalogueDataSubset.root_element_name, nsmap_extensions={
+        super().__init__(DataSubset.root_element_name, nsmap_extensions={
             NamespacePrefix.GMD: Namespace.GMD,
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,

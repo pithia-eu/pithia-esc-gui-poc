@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.utils.html import escape
 
 from .services import (
-    CatalogueDataSubsetDataHubService,
+    DataSubsetDataHubService,
     WorkflowDataHubService,
 )
 
@@ -18,7 +18,7 @@ def get_workflow_details_file(request, workflow_id):
 
 
 def get_data_subset_online_resource_file(request, data_subset_id, online_resource_name):
-    online_resource_file = CatalogueDataSubsetDataHubService.get_data_subset_file(
+    online_resource_file = DataSubsetDataHubService.get_data_subset_file(
         data_subset_id,
         online_resource_name
     )

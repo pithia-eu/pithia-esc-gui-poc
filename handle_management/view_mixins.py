@@ -2,7 +2,7 @@ import logging
 from django.contrib import messages
 from django.utils.html import escape
 
-from .services import HandleRegistrationProcessForCatalogueDataSubset
+from .services import HandleRegistrationProcessForDataSubset
 from handle_management.xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
     get_doi_xml_string_from_metadata_xml_string,
@@ -46,7 +46,7 @@ class HandleRegistrationViewMixin:
             messages.error(request, self.DOI_FOUND_IN_SUBMITTED_FILE_MESSAGE)
             return None
         
-        handle_registration_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_registration_process = HandleRegistrationProcessForDataSubset(
             resource,
             self.owner_id
         )

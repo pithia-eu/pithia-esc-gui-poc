@@ -32,7 +32,7 @@ from .services import (
     PlatformEditor,
     ProcessEditor,
     ProjectEditor,
-    SimpleCatalogueDataSubsetEditor,
+    SimpleDataSubsetEditor,
     WorkflowEditor,
 )
 
@@ -1029,7 +1029,7 @@ class DataCollectionEditorTestCase(SimpleTestCase):
         print('xml', xml)
 
 
-class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
+class SimpleDataSubsetEditorTestCase(SimpleTestCase):
     def test_simple_data_subset_editor_with_file(self):
         CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML.seek(0)
         original_referent_doi_name_element_string = str('<doi:referentDoiName>10.1000/my-doi</doi:referentDoiName>',)
@@ -1039,7 +1039,7 @@ class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
             original_referent_doi_name_element_string,
             xml_string
         )
-        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleDataSubsetEditor(
             xml_string
         )
         simple_data_subset_editor.update_referent_doi_name('10.1000/my-updated-doi')
@@ -1065,7 +1065,7 @@ class SimpleCatalogueDataSubsetEditorTestCase(SimpleTestCase):
             online_resource_url,
             xml_string
         )
-        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleDataSubsetEditor(
             xml_string
         )
         simple_data_subset_editor.update_online_resource_url(

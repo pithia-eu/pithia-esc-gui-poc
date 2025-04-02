@@ -2,7 +2,7 @@ from django import forms
 
 from register.forms import (
     _API_DESCRIPTION_TEXTAREA_HELP_TEXT,
-    UploadCatalogueDataSubsetFileForm,
+    UploadDataSubsetFileForm,
 )
 
 
@@ -41,7 +41,7 @@ class UploadUpdatedDataCollectionFileForm(forms.Form):
     )
 
 
-class UploadUpdatedCatalogueDataSubsetFileForm(UploadCatalogueDataSubsetFileForm):
+class UploadUpdatedDataSubsetFileForm(UploadDataSubsetFileForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['files'].label = _FILE_INPUT_LABEL

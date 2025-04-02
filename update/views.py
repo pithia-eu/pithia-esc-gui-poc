@@ -25,12 +25,12 @@ from common.decorators import (
     institution_ownership_required
 )
 from common.xml_metadata_mapping_shortcuts import (
-    CatalogueDataSubsetXmlMappingShortcuts,
+    DataSubsetXmlMappingShortcuts,
     WorkflowXmlMappingShortcuts,
 )
-from datahub_management.dataclasses import CatalogueDataSubsetOnlineResourceUpdate
+from datahub_management.dataclasses import DataSubsetOnlineResourceUpdate
 from datahub_management.view_mixins import (
-    CatalogueDataSubsetDataHubViewMixin,
+    DataSubsetDataHubViewMixin,
     WorkflowDataHubViewMixin,
 )
 from handle_management.view_mixins import (
@@ -40,12 +40,12 @@ from handle_management.view_mixins import (
 from resource_management.forms import (
     UpdateDataCollectionInteractionMethodsForm,
     UpdateWorkflowOpenAPISpecificationURLForm,
-    UploadUpdatedCatalogueDataSubsetFileForm,
+    UploadUpdatedDataSubsetFileForm,
     UploadUpdatedDataCollectionFileForm,
     UploadUpdatedFileForm,
     UploadUpdatedWorkflowFileForm,
 )
-from resource_management.view_mixins import CatalogueDataSubsetResourceManagementViewMixin
+from resource_management.view_mixins import DataSubsetResourceManagementViewMixin
 from resource_management.views import (
     _create_manage_resource_page_title,
     _INDEX_PAGE_TITLE,
@@ -334,15 +334,15 @@ class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
         return context
 
 
-class CatalogueDataSubsetUpdateFormView(
-        CatalogueDataSubsetDataHubViewMixin,
-        CatalogueDataSubsetResourceManagementViewMixin,
+class DataSubsetUpdateFormView(
+        DataSubsetDataHubViewMixin,
+        DataSubsetResourceManagementViewMixin,
         HandleReapplicationViewMixin,
         HandleRegistrationViewMixin,
         ResourceUpdateFormView):
-    model = models.CatalogueDataSubset
+    model = models.DataSubset
     template_name = 'update/file_upload_data_subset_update.html'
-    form_class = UploadUpdatedCatalogueDataSubsetFileForm
+    form_class = UploadUpdatedDataSubsetFileForm
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
     resource_update_page_url_name = 'update:data_subset'
@@ -380,7 +380,7 @@ class CatalogueDataSubsetUpdateFormView(
 
     def get_names_of_online_resources_with_files(self):
         # Get list of online resources from resource
-        data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.resource.xml)
+        data_subset_shortcutted = DataSubsetXmlMappingShortcuts(self.resource.xml)
         online_resources = data_subset_shortcutted.online_resources
 
         names_of_online_resources_with_files = []
@@ -397,7 +397,7 @@ class CatalogueDataSubsetUpdateFormView(
             names_of_online_resources_with_files.append(online_resource_name)
         return names_of_online_resources_with_files
 
-    def _get_file_for_online_resource(self, online_resource: CatalogueDataSubsetOnlineResourceUpdate):
+    def _get_file_for_online_resource(self, online_resource: DataSubsetOnlineResourceUpdate):
         if not online_resource.is_existing_datahub_file_used:
             return super()._get_file_for_online_resource(online_resource)
         file_name_with_no_extension, file_extension = os.path.splitext(online_resource.datahub_file_name)
@@ -433,10 +433,10 @@ class CatalogueDataSubsetUpdateFormView(
         try:
             self.temp_xml_file.seek(0)
             self.xml_string = self.temp_xml_file.read().decode()
-            data_subset_shortcutted = CatalogueDataSubsetXmlMappingShortcuts(self.xml_string)
+            data_subset_shortcutted = DataSubsetXmlMappingShortcuts(self.xml_string)
             datahub_file_usage_for_each_source = form.cleaned_data.get('online_resource_datahub_file_usage')
             self.valid_sources = [
-                CatalogueDataSubsetOnlineResourceUpdate(
+                DataSubsetOnlineResourceUpdate(
                     name=online_resource.get('name'),
                     file_input_name=f'online_resource_file__{online_resource.get("name")}',
                     datahub_file_name=slugify(online_resource.get('name')),

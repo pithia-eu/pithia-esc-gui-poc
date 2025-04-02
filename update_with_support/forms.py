@@ -1,12 +1,12 @@
 from django import forms
 
 from metadata_editor.forms import (
-    CatalogueDataSubsetForm,
+    DataSubsetForm,
     WorkflowEditorForm,
 )
 
 
-class CatalogueDataSubsetEditorUpdateForm(CatalogueDataSubsetForm):
+class DataSubsetEditorUpdateForm(DataSubsetForm):
     is_existing_datahub_file_used = forms.BooleanField(
         label='Continue using the same file for this source',
         required=False,

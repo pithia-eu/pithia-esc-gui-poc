@@ -1,9 +1,9 @@
 import {
-    CatalogueDataSubsetSourcesTab,
+    DataSubsetSourcesTab,
 } from "/static/metadata_editor/components/data_subset/data_subset_sources_tab.js";
 
 
-class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab {
+class DataSubsetUpdateSourcesTab extends DataSubsetSourcesTab {
     setFileUploadDisplayState(isDisplayed, isRequiredAttributeUpdated, fileInputWrapper) {
         const fileInput = fileInputWrapper.querySelector("input[type='file']");
         // Enable/disable file input
@@ -110,8 +110,8 @@ class CatalogueDataSubsetUpdateSourcesTab extends CatalogueDataSubsetSourcesTab 
     }
 }
 
-export function setupCatalogueDataSubsetUpdateSourcesTab() {
-    const sourcesTab = new CatalogueDataSubsetUpdateSourcesTab();
+export function setupDataSubsetUpdateSourcesTab() {
+    const sourcesTab = new DataSubsetUpdateSourcesTab();
     sourcesTab.setup();
     return sourcesTab;
 }

@@ -14,7 +14,7 @@ from .querysets import *
 from .xml_metadata_mapping_shortcuts import (
     AcquisitionCapabilitiesXmlMappingShortcuts,
     AcquisitionXmlMappingShortcuts,
-    CatalogueDataSubsetXmlMappingShortcuts,
+    DataSubsetXmlMappingShortcuts,
     CatalogueEntryXmlMappingShortcuts,
     CatalogueXmlMappingShortcuts,
     ComputationCapabilitiesXmlMappingShortcuts,
@@ -263,7 +263,7 @@ class ScientificMetadata(models.Model):
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
     static_dataset_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
-    data_subsets = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+    data_subsets = DataSubsetManager.from_queryset(DataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
     def save(self, *args, **kwargs):
@@ -783,7 +783,7 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def data_subsets(self):
-        return CatalogueDataSubset.objects.referencing_static_dataset_entry_id(self.localid)
+        return DataSubset.objects.referencing_static_dataset_entry_id(self.localid)
 
     @property
     def metadata_server_url(self):
@@ -801,7 +801,7 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     class Meta:
         proxy = True
 
-class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
+class DataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'DataSubset'
     weight = 14
@@ -846,9 +846,9 @@ class CatalogueDataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def properties(self):
-        return CatalogueDataSubsetXmlMappingShortcuts(self.xml)
+        return DataSubsetXmlMappingShortcuts(self.xml)
 
-    objects = CatalogueDataSubsetManager.from_queryset(CatalogueDataSubsetQuerySet)()
+    objects = DataSubsetManager.from_queryset(DataSubsetQuerySet)()
 
     class Meta:
         proxy = True

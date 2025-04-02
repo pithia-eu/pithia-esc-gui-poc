@@ -445,7 +445,7 @@ class ResourceDetailView(TemplateView):
         return context
 
 class OnlineResourcesViewMixin:
-    def categorise_online_resources_from_resource(self, resource: models.DataCollection | models.CatalogueDataSubset):
+    def categorise_online_resources_from_resource(self, resource: models.DataCollection | models.DataSubset):
         interaction_methods_by_type = {
             'api': [],
             'online_resource': [],
@@ -472,7 +472,7 @@ class OnlineResourcesViewMixin:
             
         return interaction_methods_by_type
 
-    def get_online_resources_from_resource_by_type(self, resource: models.DataCollection | models.CatalogueDataSubset):
+    def get_online_resources_from_resource_by_type(self, resource: models.DataCollection | models.DataSubset):
         interaction_methods_by_type = {}
         # Link interaction methods
         for online_resource in resource.properties.online_resources:
@@ -934,14 +934,14 @@ class CatalogueEntryDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['static_dataset_entry_id']
         return super().get(request, *args, **kwargs)
 
-class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
+class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
     A detail page displaying the properties of
     a Catalogue Data Subset registration.
     """
-    model = models.CatalogueDataSubset
+    model = models.DataSubset
     resource_list_by_type_url_name = 'browse:list_data_subsets'
     resource_download_url_name = 'utils:view_data_subset_as_xml'
     template_name = 'browse/detail/bases/data_subset.html'
@@ -1014,7 +1014,7 @@ class CatalogueDataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin
         # on missing resource.
         try:
             self.resource = self.model.objects.get(pk=self.resource_id)
-        except models.CatalogueDataSubset.DoesNotExist:
+        except models.DataSubset.DoesNotExist:
             context = {'title': 'Not Found'}
             context.update(self.get_context_handle_variables())
             return render(request, 'browse/detail_404.html', context)

@@ -210,7 +210,7 @@ class CatalogueEntryManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_ENTRY, institution_id, owner_id)
 
-class CatalogueDataSubsetManager(ScientificMetadataManager):
+class DataSubsetManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.CATALOGUE_DATA_SUBSET)
 

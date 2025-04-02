@@ -15,7 +15,7 @@ from pyhandle.handleclient import (
 )
 
 from common.models import (
-    CatalogueDataSubset,
+    DataSubset,
     DataCollection,
     HandleURLMapping,
     Individual,
@@ -25,8 +25,8 @@ from metadata_editor.editor_dataclasses import (
     DoiKernelMetadataUpdate,
 )
 from metadata_editor.services import (
-    CatalogueDataSubsetEditor,
-    SimpleCatalogueDataSubsetEditor,
+    DataSubsetEditor,
+    SimpleDataSubsetEditor,
 )
 from metadata_editor.service_utils import (
     Namespace,
@@ -38,8 +38,8 @@ from utils.dict_helpers import flatten
 logger = logging.getLogger(__name__)
 
 
-class HandleRegistrationProcessForCatalogueDataSubset:
-    data_subset: CatalogueDataSubset
+class HandleRegistrationProcessForDataSubset:
+    data_subset: DataSubset
     data_subset_url_in_handle_record: str
     data_collection: DataCollection
     doi_kernel_metadata: DoiKernelMetadataUpdate
@@ -49,7 +49,7 @@ class HandleRegistrationProcessForCatalogueDataSubset:
     principal_agent_name: str
     xml_string_with_doi_kernel_metadata: str
 
-    def __init__(self, data_subset: CatalogueDataSubset, owner_id: str) -> None:
+    def __init__(self, data_subset: DataSubset, owner_id: str) -> None:
         self.handle_client = HandleClient()
         self.data_subset = data_subset
         self.owner_id = owner_id
@@ -177,12 +177,12 @@ class HandleRegistrationProcessForCatalogueDataSubset:
         )
     
     def _get_data_subset_xml_with_spoofed_doi_kernel_metadata(self):
-        data_subset_editor = CatalogueDataSubsetEditor(self.data_subset.xml)
+        data_subset_editor = DataSubsetEditor(self.data_subset.xml)
         data_subset_editor.update_doi_kernel_metadata(self.doi_kernel_metadata)
         return data_subset_editor.to_xml()
     
     def _replace_referent_doi_name_with_handle_name(self):
-        simple_data_subset_editor = SimpleCatalogueDataSubsetEditor(
+        simple_data_subset_editor = SimpleDataSubsetEditor(
             self.xml_string_with_doi_kernel_metadata
         )
         simple_data_subset_editor.update_referent_doi_name(
@@ -209,7 +209,7 @@ class HandleRegistrationProcessForCatalogueDataSubset:
     
     def _update_data_subset_with_doi_kernel_metadata_in_database(self):
         with transaction.atomic(using=os.environ['DJANGO_RW_DATABASE_NAME']):
-            CatalogueDataSubset.objects.update_from_xml_string(
+            DataSubset.objects.update_from_xml_string(
                 self.data_subset.pk,
                 self.xml_string_with_doi_kernel_metadata,
                 self.owner_id

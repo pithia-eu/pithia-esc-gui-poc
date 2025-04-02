@@ -9,7 +9,7 @@ from pyhandle.clientcredentials import PIDClientCredentials
 
 from .services import (
     HandleClient,
-    HandleRegistrationProcessForCatalogueDataSubset,
+    HandleRegistrationProcessForDataSubset,
 )
 from .xml_utils import (
     add_doi_xml_string_to_metadata_xml_string,
@@ -21,7 +21,7 @@ from .xml_utils import (
 )
 
 from common.models import (
-    CatalogueDataSubset,
+    DataSubset,
     DataCollection,
     Individual,
     Organisation,
@@ -260,7 +260,7 @@ class PyHandleTestCase(PyHandleSetupTestCase):
         handle.
         """
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+        data_subset = DataSubset.objects.create_from_xml_string(
             CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
@@ -416,9 +416,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -445,9 +445,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -472,9 +472,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -498,9 +498,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -521,9 +521,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -542,9 +542,9 @@ class PrincipalAgentTestCase(TestCase):
         )
         data_subset = self._register_xml_file_for_test(
             CATALOGUE_DATA_SUBSET_METADATA_XML,
-            CatalogueDataSubset
+            DataSubset
         )
-        handle_reg_process = HandleRegistrationProcessForCatalogueDataSubset(
+        handle_reg_process = HandleRegistrationProcessForDataSubset(
             data_subset,
             SAMPLE_USER_ID
         )
@@ -554,7 +554,7 @@ class PrincipalAgentTestCase(TestCase):
 
 
 @tag('manual')
-class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestCase):
+class HandleRegistrationProcessForDataSubsetTestCase(PyHandleSetupTestCase):
     def setUp(self) -> None:
         ORGANISATION_METADATA_XML.seek(0)
         Organisation.objects.create_from_xml_string(
@@ -569,7 +569,7 @@ class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestC
             SAMPLE_USER_ID
         )
         CATALOGUE_DATA_SUBSET_METADATA_XML.seek(0)
-        self.data_subset = CatalogueDataSubset.objects.create_from_xml_string(
+        self.data_subset = DataSubset.objects.create_from_xml_string(
             CATALOGUE_DATA_SUBSET_METADATA_XML.read(),
             SAMPLE_INSTITUTION_ID,
             SAMPLE_USER_ID
@@ -577,7 +577,7 @@ class HandleRegistrationProcessForCatalogueDataSubsetTestCase(PyHandleSetupTestC
         return super().setUp()
 
     def test_process_creates_handle(self):
-        new_handle_registration_process = HandleRegistrationProcessForCatalogueDataSubset(
+        new_handle_registration_process = HandleRegistrationProcessForDataSubset(
             self.data_subset,
             SAMPLE_USER_ID
         )

@@ -518,7 +518,7 @@ class CatalogueEntryQuerySet(ScientificMetadataQuerySet, AbstractCatalogueEntryD
         referencing_catalogue_url = self.referencing_catalogue_url(metadata_server_url)
         return referencing_catalogue_url
 
-class CatalogueDataSubsetQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDataSubsetDatabaseQueries):
+class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQueries):
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):
         return self.filter(**{'json__entryIdentifier__@xlink:href': static_dataset_entry_url})
 
