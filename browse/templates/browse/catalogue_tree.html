@@ -10,17 +10,17 @@
 {% endblock breadcrumbs %}
 {% block search %}{% endblock search %}
 {% block resource_list_outer %}
-{% for catalogue in resources %}
+{% for static_dataset in resources %}
 <section class="border-top py-4 mt-3">
     <h2 class="fs-3 mb-3">
-        <a href="{% url 'browse:static_dataset_detail' catalogue.id %}" class="link-plain-by-default">
-            {{ catalogue.name }}
+        <a href="{% url 'browse:static_dataset_detail' static_dataset.id %}" class="link-plain-by-default">
+            {{ static_dataset.name }}
         </a>
     </h2>
-    {% if catalogue.description %}
+    {% if static_dataset.description %}
     {# Static Dataset descriptions are expandable/collapsible in case there is a lot of text #}
     <div class="mb-2">
-        {% with forloop_counter_str=forloop.counter|stringformat:'s' static_dataset_description_paragraphs=catalogue.description|wrap_in_list_if_dict %}
+        {% with forloop_counter_str=forloop.counter|stringformat:'s' static_dataset_description_paragraphs=static_dataset.description|wrap_in_list_if_dict %}
         {% with text_block_id='static-dataset-description-'|add:forloop_counter_str text_block_paragraphs=static_dataset_description_paragraphs line_clamp_number='4' %}
         {% with expand_btn_type='sm btn-link' expand_btn_top_margin='mt-0' expand_btn_text='Show more...' %}
         {% include 'utils/expandable_text_block.html' %}
@@ -30,7 +30,7 @@
     </div>
     {% endif %}
 
-    {% with entries=catalogue.entries %}
+    {% with entries=static_dataset.entries %}
     {% if not entries %}
     <div class="card border text-body-secondary mt-4 mb-0">
         <div class="card-body">No entries.</div>
@@ -44,7 +44,7 @@
         {% endif %}
     </p>
     <ul class="list-group tree-static-dataset-entry pt-2 mb-0">
-        {% for static_dataset_entry in catalogue.entries %}
+        {% for static_dataset_entry in static_dataset.entries %}
         <li class="list-group-item p-3">
             {% include 'browse/static_dataset_entry_list_item_content.html' %}
         </li>

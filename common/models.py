@@ -778,7 +778,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
             return ''
 
     @property
-    def catalogue(self):
+    def static_dataset(self):
         return StaticDataset.objects.get_by_metadata_server_url(self.static_dataset_url)
 
     @property
@@ -788,7 +788,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     @property
     def metadata_server_url(self):
         try:
-            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}', safe='/:?=&')
+            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.static_dataset.name}/{self.localid}', safe='/:?=&')
         except StaticDataset.DoesNotExist:
             return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
@@ -831,13 +831,13 @@ class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
         return StaticDatasetEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
 
     @property
-    def catalogue(self):
-        return self.static_dataset_entry.catalogue
+    def static_dataset(self):
+        return self.static_dataset_entry.static_dataset
 
     @property
     def metadata_server_url(self):
         try:
-            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}', safe='/:?=&')
+            return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.static_dataset.name}/{self.localid}', safe='/:?=&')
         except ObjectDoesNotExist:
             pass
         except AttributeError:

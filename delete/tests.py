@@ -269,7 +269,7 @@ class DataCollectionDeleteChainTestCase(TestCase):
 
 class StaticDatasetDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
-        self.catalogue = register_static_dataset_for_test()
+        self.static_dataset = register_static_dataset_for_test()
         register_static_dataset_entry_for_test()
         return super().setUp()
         
@@ -279,7 +279,7 @@ class StaticDatasetDeleteChainTestCase(TestCase):
         Metadata with a possibility of referencing a
         static dataset are included in the delete chain.
         """
-        immediate_metadata_dependents = self.catalogue._immediate_metadata_dependents
+        immediate_metadata_dependents = self.static_dataset._immediate_metadata_dependents
         self.assertTrue(any(isinstance(md, StaticDatasetEntry) for md in immediate_metadata_dependents))
 
 class StaticDatasetEntryDeleteChainTestCase(TestCase):

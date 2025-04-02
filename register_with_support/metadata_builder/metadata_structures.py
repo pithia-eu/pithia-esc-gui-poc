@@ -574,9 +574,9 @@ class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetad
         entry_description_element = etree.SubElement(self.root, 'entryDescription')
         entry_description_element.text = entry_description
 
-    def append_static_dataset_identifier(self, catalogue):
+    def append_static_dataset_identifier(self, static_dataset):
         static_dataset_identifier_element_attributes = {
-            '{%s}href' % Namespace.XLINK: catalogue,
+            '{%s}href' % Namespace.XLINK: static_dataset,
         }
         static_dataset_identifier_element = etree.SubElement(self.root, 'staticDatasetIdentifier', **static_dataset_identifier_element_attributes)
 

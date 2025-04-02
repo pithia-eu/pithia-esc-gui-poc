@@ -279,9 +279,9 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
 class StaticDatasetRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
     model = models.StaticDataset
-    success_url = reverse_lazy('register:catalogue')
+    success_url = reverse_lazy('register:static_dataset')
 
-    post_url = reverse_lazy('register:catalogue')
+    post_url = reverse_lazy('register:static_dataset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static datasets')
 

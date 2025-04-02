@@ -372,7 +372,7 @@ class StaticDatasetRegisterWithEditorFormView(
     form_class = StaticDatasetEditorRegistrationForm
     success_url = reverse_lazy('register:static_dataset_with_editor')
 
-    file_upload_registration_url = reverse_lazy('register:catalogue')
+    file_upload_registration_url = reverse_lazy('register:static_dataset')
     save_data_local_storage_key = 'static_dataset_r_wizard_save_data'
 
 

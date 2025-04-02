@@ -886,7 +886,7 @@ class StaticDatasetDetailView(ResourceDetailView):
     """
     model = models.StaticDataset
     resource_download_url_name = 'utils:view_static_dataset_as_xml'
-    template_name = 'browse/detail/bases/catalogue.html'
+    template_name = 'browse/detail/bases/static_dataset.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
         cleaned_property_table = super().configure_resource_copy_for_property_table(property_table_dict)

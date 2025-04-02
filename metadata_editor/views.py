@@ -982,9 +982,9 @@ class DataSubsetEditorFormView(
         # Map each static dataset ID to a name
         for static_dataset_id, optgroup_data in entries_by_static_dataset.items():
             try:
-                catalogue = models.StaticDataset.objects.get(pk=static_dataset_id)
+                static_dataset = models.StaticDataset.objects.get(pk=static_dataset_id)
                 optgroup_data.update({
-                    'name': catalogue.name,
+                    'name': static_dataset.name,
                 })
             except models.StaticDataset.DoesNotExist:
                 pass
