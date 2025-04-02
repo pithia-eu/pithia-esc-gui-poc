@@ -89,7 +89,7 @@ class DataSubsetDataHubService(DataHubService):
     def _get_data_subset_directory_path(cls, data_subset_id: str):
         return os.path.join(
             cls._get_datahub_directory_path(),
-            'catalogues',
+            'static_datasets',
             data_subset_id,
             ''
         )

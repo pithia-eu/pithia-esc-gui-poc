@@ -61,8 +61,8 @@
                                 <a href="{{ data_collections_url }}" class="dropdown-item">Data Collections</a>
                             </li>
                             <li>
-                                {% url 'browse:static_dataset_tree' as catalogues_url %}
-                                <a href="{{ catalogues_url }}" class="dropdown-item">Static Datasets</a>
+                                {% url 'browse:static_dataset_tree' as static_datasets_url %}
+                                <a href="{{ static_datasets_url }}" class="dropdown-item">Static Datasets</a>
                             </li>
                             <li>
                                 {% url 'browse:list_workflows' as workflows_url %}

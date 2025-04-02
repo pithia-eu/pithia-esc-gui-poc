@@ -282,8 +282,8 @@ class StaticDatasetRegisterFormView(ResourceRegisterFormView):
     success_url = reverse_lazy('register:catalogue')
 
     post_url = reverse_lazy('register:catalogue')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogues')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static_datasets')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

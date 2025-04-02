@@ -139,7 +139,7 @@ class StaticDatasetXmlDownloadViewMixin(StaticDatasetRelatedDownloadViewMixin):
     model = models.StaticDataset
     detail_page_url_name = 'browse:static_dataset_detail'
     resource_list_by_type_url_name = 'browse:static_dataset_tree'
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
 
 
 class StaticDatasetEntryXmlDownloadViewMixin(StaticDatasetRelatedDownloadViewMixin):

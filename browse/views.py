@@ -92,12 +92,12 @@ def static_dataset_tree(request):
     """Lists all static datasets, static dataset entries
     and data subsets in a collapsible tree view.
     """
-    catalogues = models.StaticDataset.objects.all()
+    static_datasets = models.StaticDataset.objects.all()
     return render(request, 'browse/static_dataset_tree.html', {
         'title': models.StaticDataset.type_plural_readable.title(),
         'description': models.StaticDataset.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'resources': catalogues,
+        'resources': static_datasets,
         'type_readable': models.StaticDataset.type_readable,
         'type_plural_readable': models.StaticDataset.type_plural_readable,
     })

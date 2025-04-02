@@ -266,8 +266,8 @@ class StaticDatasetDeleteView(StaticDatasetRelatedResourceDeleteView):
     """
     model = models.StaticDataset
 
-    redirect_url = reverse_lazy('resource_management:catalogues')
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    redirect_url = reverse_lazy('resource_management:static_datasets')
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
 

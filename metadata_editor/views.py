@@ -849,7 +849,7 @@ class StaticDatasetEditorFormView(
     metadata_editor_class = StaticDatasetEditor
 
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.StaticDataset.type_plural_readable)
-    resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
+    resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
 
     def get_static_dataset_category_choices_for_form(self):
         return self.get_choices_from_ontology_category('catalogueCategory')
@@ -967,7 +967,7 @@ class DataSubsetEditorFormView(
                 'entries': [],
             }
         }
-        # Sort catalogue entries by catalogue ID
+        # Sort static dataset entries by static dataset ID
         for entry in static_dataset_entries:
             static_dataset_id = entry.properties.static_dataset_identifier.split('/')[-1]
             if not static_dataset_id:
@@ -979,7 +979,7 @@ class DataSubsetEditorFormView(
                     'entries': [],
                 }
             entries_by_catalogue[static_dataset_id]['entries'].append(entry)
-        # Map each catalogue ID to a name
+        # Map each static dataset ID to a name
         for static_dataset_id, optgroup_data in entries_by_catalogue.items():
             try:
                 catalogue = models.StaticDataset.objects.get(pk=static_dataset_id)
@@ -988,7 +988,7 @@ class DataSubsetEditorFormView(
                 })
             except models.StaticDataset.DoesNotExist:
                 pass
-        # Sort catalogues by name
+        # Sort static datasets by name
         entries_by_catalogue = dict(sorted(entries_by_catalogue.items(), key=lambda item: item[1]['name']))
         # Create optgroups and options for select
         choices_categorised = []
