@@ -5,7 +5,7 @@ from browse.views import (
 from common import models
 from resource_management.views import _INDEX_PAGE_TITLE as _RESOURCE_MANAGEMENT_INDEX_PAGE_TITLE
 from resource_management.views import (
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
     _create_manage_resource_page_title,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
 )
@@ -126,7 +126,7 @@ class DataCollectionXmlDownloadViewMixin:
 
 
 class StaticDatasetRelatedDownloadViewMixin:
-    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
     
     def get_context_data(self, **kwargs):

@@ -11,7 +11,7 @@ from user_management.services import (
 
 _INDEX_PAGE_TITLE = 'Manage Registrations'
 _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE = 'Data Collection-related Metadata'
-_CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE = 'Static Dataset-related Metadata'
+_STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE = 'Static Dataset-related Metadata'
 
 def _create_manage_resource_page_title(resource_type_plural_readable):
     return resource_type_plural_readable.title()
@@ -69,7 +69,7 @@ def static_dataset_related_metadata_index(request):
         'num_current_static_datasets': num_current_static_datasets,
         'num_current_static_dataset_entries': num_current_static_dataset_entries,
         'num_current_data_subsets': num_current_data_subsets,
-        'title': _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+        'title': _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
         'index_page_url_name_breadcrumb': 'resource_management:index',
         'index_page_title_breadcrumb': _INDEX_PAGE_TITLE,
     })
@@ -265,7 +265,7 @@ class StaticDatasetManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:static_dataset'
     resource_register_with_editor_name = 'register:static_dataset_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_as_xml_with_editing'
-    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class StaticDatasetEntryManagementListView(ResourceManagementListView):
@@ -277,7 +277,7 @@ class StaticDatasetEntryManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:static_dataset_entry'
     resource_register_with_editor_name = 'register:static_dataset_entry_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_entry_as_xml_with_editing'
-    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class DataSubsetManagementListView(ResourceManagementListView):
@@ -289,7 +289,7 @@ class DataSubsetManagementListView(ResourceManagementListView):
     resource_register_page_url_name = 'register:data_subset'
     resource_register_with_editor_name = 'register:data_subset_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_data_subset_as_xml_with_editing'
-    resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+    resource_management_category_list_page_breadcrumb_text = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
     resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class WorkflowManagementListView(ResourceManagementListView):

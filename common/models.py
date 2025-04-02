@@ -50,9 +50,9 @@ class ScientificMetadata(models.Model):
     COMPUTATION = 'computation'
     PROCESS = 'process'
     DATA_COLLECTION = 'data_collection'
-    CATALOGUE = 'catalogue'
-    CATALOGUE_ENTRY = 'catalogue_entry'
-    CATALOGUE_DATA_SUBSET = 'catalogue_data_subset'
+    STATIC_DATASET = 'catalogue'
+    STATIC_DATASET_ENTRY = 'catalogue_entry'
+    DATA_SUBSET = 'catalogue_data_subset'
     WORKFLOW = 'workflow'
     TYPE_CHOICES = [
         (ORGANISATION, 'Organisation'),
@@ -67,9 +67,9 @@ class ScientificMetadata(models.Model):
         (COMPUTATION, 'Computation'),
         (PROCESS, 'Process'),
         (DATA_COLLECTION, 'Data Collection'),
-        (CATALOGUE, 'Catalogue'),
-        (CATALOGUE_ENTRY, 'Catalogue Entry'),
-        (CATALOGUE_DATA_SUBSET, 'Catalogue Data Subset'),
+        (STATIC_DATASET, 'Static Dataset'),
+        (STATIC_DATASET_ENTRY, 'Static Dataset Entry'),
+        (DATA_SUBSET, 'Data Subset'),
         (WORKFLOW, 'Workflow'),
     ]
     id = models.CharField(

@@ -198,24 +198,24 @@ class DataCollectionManager(ScientificMetadataManager):
 
 class StaticDatasetManager(ScientificMetadataManager):
     def get_queryset(self):
-        return super().get_queryset().filter(type=self.model.CATALOGUE)
+        return super().get_queryset().filter(type=self.model.STATIC_DATASET)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE, institution_id, owner_id)
+        return super()._create_from_xml_string(xml_string, self.model.STATIC_DATASET, institution_id, owner_id)
 
 class StaticDatasetEntryManager(ScientificMetadataManager):
     def get_queryset(self):
-        return super().get_queryset().filter(type=self.model.CATALOGUE_ENTRY)
+        return super().get_queryset().filter(type=self.model.STATIC_DATASET_ENTRY)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_ENTRY, institution_id, owner_id)
+        return super()._create_from_xml_string(xml_string, self.model.STATIC_DATASET_ENTRY, institution_id, owner_id)
 
 class DataSubsetManager(ScientificMetadataManager):
     def get_queryset(self):
-        return super().get_queryset().filter(type=self.model.CATALOGUE_DATA_SUBSET)
+        return super().get_queryset().filter(type=self.model.DATA_SUBSET)
 
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
-        return super()._create_from_xml_string(xml_string, self.model.CATALOGUE_DATA_SUBSET, institution_id, owner_id)
+        return super()._create_from_xml_string(xml_string, self.model.DATA_SUBSET, institution_id, owner_id)
 
 class WorkflowManager(ScientificMetadataManager):
     def get_queryset(self):

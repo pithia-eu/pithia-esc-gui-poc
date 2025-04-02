@@ -50,7 +50,7 @@ from resource_management.views import (
     _create_manage_resource_page_title,
     _INDEX_PAGE_TITLE,
     _DATA_COLLECTION_MANAGEMENT_INDEX_PAGE_TITLE,
-    _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE,
+    _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE,
 )
 from user_management.services import get_user_id_for_login_session
 from validation.view_mixins import WorkflowDetailsUrlValidationViewMixin
@@ -315,7 +315,7 @@ class StaticDatasetUpdateFormView(ResourceUpdateFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
@@ -329,7 +329,7 @@ class StaticDatasetEntryUpdateFormView(ResourceUpdateFormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
@@ -407,7 +407,7 @@ class DataSubsetUpdateFormView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
+        context['resource_management_category_list_page_breadcrumb_text'] = _STATIC_DATASET_MANAGEMENT_INDEX_PAGE_TITLE
         context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         context['names_of_online_resources_with_files'] = self.get_names_of_online_resources_with_files()
         context['source_file_list_item_template'] = render_to_string(
