@@ -581,7 +581,7 @@ class CatalogueEditorForm(BaseEditorForm):
     )
 
 
-class CatalogueEntryEditorForm(
+class StaticDatasetEntryEditorForm(
     BaseEditorForm,
     TimePeriodEditorFormComponent):
     def __init__(self, *args, catalogue_choices=(), **kwargs):

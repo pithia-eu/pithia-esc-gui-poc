@@ -507,7 +507,7 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
 class CatalogueQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDatabaseQueries):
     pass
 
-class CatalogueEntryQuerySet(ScientificMetadataQuerySet, AbstractCatalogueEntryDatabaseQueries):
+class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):
     def referencing_catalogue_url(self, catalogue_url: str):
         return self.filter(**{'json__catalogueIdentifier__@xlink:href': catalogue_url})
     

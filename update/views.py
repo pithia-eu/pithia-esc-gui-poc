@@ -320,8 +320,8 @@ class CatalogueUpdateFormView(ResourceUpdateFormView):
         return context
 
 
-class CatalogueEntryUpdateFormView(ResourceUpdateFormView):
-    model = models.CatalogueEntry
+class StaticDatasetEntryUpdateFormView(ResourceUpdateFormView):
+    model = models.StaticDatasetEntry
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
     resource_update_page_url_name = 'update:static_dataset_entry'

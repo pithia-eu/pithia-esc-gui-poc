@@ -310,7 +310,7 @@ class CatalogueFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin)
         return mappings
 
 
-class CatalogueEntryFormFieldsToMetadataMapper(
+class StaticDatasetEntryFormFieldsToMetadataMapper(
         TimePeriodFormFieldsToMetadataMixin,
         BaseMetadataFormFieldsToMetadataMixin):
     time_period_container_element_name = 'phenomenonTime'

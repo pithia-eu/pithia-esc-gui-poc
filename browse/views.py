@@ -902,14 +902,14 @@ class CatalogueDetailView(ResourceDetailView):
         self.resource_id = self.kwargs['catalogue_id']
         return super().get(request, *args, **kwargs)
 
-class CatalogueEntryDetailView(ResourceDetailView):
+class StaticDatasetEntryDetailView(ResourceDetailView):
     """
     A subclass of CatalogueRelatedResourceDetailView.
 
     A detail page displaying the properties of
     a Catalogue Entry registration.
     """
-    model = models.CatalogueEntry
+    model = models.StaticDatasetEntry
     resource_list_by_type_url_name = 'browse:list_static_dataset_entries'
     resource_download_url_name = 'utils:view_static_dataset_entry_as_xml'
     template_name = 'browse/detail/bases/static_dataset_entry.html'

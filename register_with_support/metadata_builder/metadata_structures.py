@@ -7,7 +7,7 @@ from common.models import (
     AcquisitionCapabilities,
     Catalogue,
     DataSubset,
-    CatalogueEntry,
+    StaticDatasetEntry,
     Computation,
     ComputationCapabilities,
     DataCollection,
@@ -555,9 +555,9 @@ class CatalogueMetadata(DescriptionMetadataComponent, IdentifierMetadataComponen
         etree.SubElement(self.root, 'catalogueCategory', **catalogue_category_element_attributes)
 
 
-class CatalogueEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
+class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
     def __init__(self, properties) -> None:
-        super().__init__(CatalogueEntry.root_element_name, nsmap_extensions={
+        super().__init__(StaticDatasetEntry.root_element_name, nsmap_extensions={
             NamespacePrefix.GML: Namespace.GML,
             NamespacePrefix.XLINK: Namespace.XLINK,
         })

@@ -537,7 +537,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
 class AbstractCatalogueDatabaseQueries(ABC):
     pass
 
-class AbstractCatalogueEntryDatabaseQueries(ABC):
+class AbstractStaticDatasetEntryDatabaseQueries(ABC):
     @abstractmethod
     def referencing_catalogue_url(self, catalogue_url: str):
         """

@@ -16,7 +16,7 @@ from common.models import (
     Computation,
     Process,
     DataCollection,
-    CatalogueEntry,
+    StaticDatasetEntry,
     DataSubset,
 )
 from common.test_setup import (
@@ -280,9 +280,9 @@ class CatalogueDeleteChainTestCase(TestCase):
         catalogue are included in the delete chain.
         """
         immediate_metadata_dependents = self.catalogue._immediate_metadata_dependents
-        self.assertTrue(any(isinstance(md, CatalogueEntry) for md in immediate_metadata_dependents))
+        self.assertTrue(any(isinstance(md, StaticDatasetEntry) for md in immediate_metadata_dependents))
 
-class CatalogueEntryDeleteChainTestCase(TestCase):
+class StaticDatasetEntryDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
         register_catalogue_for_test()
         self.static_dataset_entry = register_static_dataset_entry_for_test()

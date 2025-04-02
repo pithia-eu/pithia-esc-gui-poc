@@ -29,7 +29,7 @@ from .services import (
     AcquisitionEditor,
     CatalogueEditor,
     DataSubsetEditor,
-    CatalogueEntryEditor,
+    StaticDatasetEntryEditor,
     ComputationCapabilitiesEditor,
     ComputationEditor,
     DataCollectionEditor,
@@ -865,19 +865,19 @@ class CatalogueEditorFormView(
         return kwargs
 
 
-class CatalogueEntryEditorFormView(
+class StaticDatasetEntryEditorFormView(
     CatalogueRelatedEditorFormViewMixin,
     ResourceEditorFormView):
-    form_class = CatalogueEntryEditorForm
+    form_class = StaticDatasetEntryEditorForm
     template_name = 'metadata_editor/static_dataset_entry_editor.html'
 
-    model = models.CatalogueEntry
-    metadata_editor_class = CatalogueEntryEditor
+    model = models.StaticDatasetEntry
+    metadata_editor_class = StaticDatasetEntryEditor
 
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.CatalogueEntry.type_plural_readable)
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.StaticDatasetEntry.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
 
-    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEntryEditor, form_cleaned_data):
+    def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEntryEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_catalogue_identifier(form_cleaned_data.get('catalogue_identifier'))
@@ -959,7 +959,7 @@ class DataSubsetEditorFormView(
         )
 
     def get_static_dataset_entry_choices_for_form(self):
-        static_dataset_entries = self.get_resources_with_model_ordered_by_name(models.CatalogueEntry)
+        static_dataset_entries = self.get_resources_with_model_ordered_by_name(models.StaticDatasetEntry)
         UNKNOWN_KEY = 'ZZZ'
         entries_by_catalogue = {
             UNKNOWN_KEY: {

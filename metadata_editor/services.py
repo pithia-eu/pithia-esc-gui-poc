@@ -415,7 +415,7 @@ class CatalogueEditor(
         )
 
 
-class CatalogueEntryEditor(
+class StaticDatasetEntryEditor(
     BaseMetadataEditor,
     TimePeriodMetadataEditor,
     XlinkHrefMetadataEditor):

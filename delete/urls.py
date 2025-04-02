@@ -17,7 +17,7 @@ urlpatterns = [
     path('processes/<resource_id>/delete/', views.ProcessDeleteView.as_view(), name='process'),
     path('data-collections/<resource_id>/delete/', views.DataCollectionDeleteView.as_view(), name='data_collection'),
     path('catalogues/<resource_id>/delete/', views.CatalogueDeleteView.as_view(), name='catalogue'),
-    path('static-dataset-entries/<resource_id>/delete/', views.CatalogueEntryDeleteView.as_view(), name='static_dataset_entry'),
+    path('static-dataset-entries/<resource_id>/delete/', views.StaticDatasetEntryDeleteView.as_view(), name='static_dataset_entry'),
     path('data-subsets/<resource_id>/delete/', views.DataSubsetDeleteView.as_view(), name='data_subset'),
     path('workflows/<resource_id>/delete/', views.WorkflowDeleteView.as_view(), name='workflow'),
 ]

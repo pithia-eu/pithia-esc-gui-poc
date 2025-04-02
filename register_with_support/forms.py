@@ -6,7 +6,7 @@ from metadata_editor.forms import (
     AcquisitionEditorForm,
     CatalogueEditorForm,
     DataSubsetForm,
-    CatalogueEntryEditorForm,
+    StaticDatasetEntryEditorForm,
     ComputationCapabilitiesEditorForm,
     ComputationEditorForm,
     DataCollectionEditorForm,
@@ -119,7 +119,7 @@ class CatalogueEditorRegistrationForm(EditorRegistrationForm, CatalogueEditorFor
     pass
 
 
-class CatalogueEntryEditorRegistrationForm(EditorRegistrationForm, CatalogueEntryEditorForm):
+class StaticDatasetEntryEditorRegistrationForm(EditorRegistrationForm, StaticDatasetEntryEditorForm):
     pass
 
 

@@ -15,7 +15,7 @@ from .xml_metadata_mapping_shortcuts import (
     AcquisitionCapabilitiesXmlMappingShortcuts,
     AcquisitionXmlMappingShortcuts,
     DataSubsetXmlMappingShortcuts,
-    CatalogueEntryXmlMappingShortcuts,
+    StaticDatasetEntryXmlMappingShortcuts,
     CatalogueXmlMappingShortcuts,
     ComputationCapabilitiesXmlMappingShortcuts,
     ComputationXmlMappingShortcuts,
@@ -262,7 +262,7 @@ class ScientificMetadata(models.Model):
     processes = ProcessManager.from_queryset(ProcessQuerySet)()
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
     catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
-    static_dataset_entries = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
+    static_dataset_entries = StaticDatasetEntryManager.from_queryset(StaticDatasetEntryQuerySet)()
     data_subsets = DataSubsetManager.from_queryset(DataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
 
@@ -738,7 +738,7 @@ class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def entries(self):
-        return CatalogueEntry.objects.referencing_catalogue_id(self.localid)
+        return StaticDatasetEntry.objects.referencing_catalogue_id(self.localid)
 
     @property
     def metadata_server_url(self):
@@ -753,7 +753,7 @@ class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
     class Meta:
         proxy = True
 
-class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
+class StaticDatasetEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'StaticDatasetEntry'
     weight = 13
@@ -794,9 +794,9 @@ class CatalogueEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def properties(self):
-        return CatalogueEntryXmlMappingShortcuts(self.xml)
+        return StaticDatasetEntryXmlMappingShortcuts(self.xml)
 
-    objects = CatalogueEntryManager.from_queryset(CatalogueEntryQuerySet)()
+    objects = StaticDatasetEntryManager.from_queryset(StaticDatasetEntryQuerySet)()
 
     class Meta:
         proxy = True
@@ -828,7 +828,7 @@ class DataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
     
     @property
     def static_dataset_entry(self):
-        return CatalogueEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
+        return StaticDatasetEntry.objects.get_by_metadata_server_url(self.static_dataset_entry_url)
 
     @property
     def catalogue(self):

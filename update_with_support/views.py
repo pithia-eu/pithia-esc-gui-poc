@@ -20,7 +20,7 @@ from .form_to_metadata_mappers import (
     AcquisitionCapabilitiesFormFieldsToMetadataMapper,
     AcquisitionFormFieldsToMetadataMapper,
     DataSubsetFormFieldsToMetadataMapper,
-    CatalogueEntryFormFieldsToMetadataMapper,
+    StaticDatasetEntryFormFieldsToMetadataMapper,
     CatalogueFormFieldsToMetadataMapper,
     ComputationCapabilitiesFormFieldsToMetadataMapper,
     ComputationFormFieldsToMetadataMapper,
@@ -270,12 +270,12 @@ class CatalogueUpdateWithEditorFormView(
     form_field_to_metadata_mapper_class = CatalogueFormFieldsToMetadataMapper
 
 
-class CatalogueEntryUpdateWithEditorFormView(
+class StaticDatasetEntryUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
-    CatalogueEntryEditorFormView):
-    model = models.CatalogueEntry
+    StaticDatasetEntryEditorFormView):
+    model = models.StaticDatasetEntry
     success_url_name = 'update:static_dataset_entry_with_editor'
-    form_field_to_metadata_mapper_class = CatalogueEntryFormFieldsToMetadataMapper
+    form_field_to_metadata_mapper_class = StaticDatasetEntryFormFieldsToMetadataMapper
 
     def get_initial(self):
         initial = super().get_initial()

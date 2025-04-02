@@ -142,8 +142,8 @@ class CatalogueXmlDownloadViewMixin(CatalogueRelatedDownloadViewMixin):
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
 
-class CatalogueEntryXmlDownloadViewMixin(CatalogueRelatedDownloadViewMixin):
-    model = models.CatalogueEntry
+class StaticDatasetEntryXmlDownloadViewMixin(CatalogueRelatedDownloadViewMixin):
+    model = models.StaticDatasetEntry
     detail_page_url_name = 'browse:static_dataset_entry_detail'
     resource_list_by_type_url_name = 'browse:catalogue_tree'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'

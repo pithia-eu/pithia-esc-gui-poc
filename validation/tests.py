@@ -432,7 +432,7 @@ class CatalogueMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
         """
         # A static dataset-related metadata URL should have the following structure:
         # 'catalogue/namespace/Event/Catalogue metadata type' (i.e. Catalogue,
-        # CatalogueEntry, DataSubset).
+        # StaticDatasetEntry, DataSubset).
         catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
         catalogue_resource_url_components = divide_catalogue_related_resource_url_into_main_components(catalogue_resource_url)
         catalogue_url_base = catalogue_resource_url_components['url_base']
