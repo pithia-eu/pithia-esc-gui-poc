@@ -316,7 +316,7 @@ class StaticDatasetUpdateFormView(ResourceUpdateFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
 
@@ -330,7 +330,7 @@ class StaticDatasetEntryUpdateFormView(ResourceUpdateFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
 
@@ -408,7 +408,7 @@ class DataSubsetUpdateFormView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         context['names_of_online_resources_with_files'] = self.get_names_of_online_resources_with_files()
         context['source_file_list_item_template'] = render_to_string(
             'update/source_file_update_list_item_template.html',

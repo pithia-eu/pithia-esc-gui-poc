@@ -266,7 +266,7 @@ class StaticDatasetUpdateWithEditorFormView(
     ResourceUpdateWithEditorFormView,
     StaticDatasetEditorFormView):
     model = models.StaticDataset
-    success_url_name = 'update:catalogue_with_editor'
+    success_url_name = 'update:static_dataset_with_editor'
     form_field_to_metadata_mapper_class = StaticDatasetFormFieldsToMetadataMapper
 
 

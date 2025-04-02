@@ -18,7 +18,7 @@ def divide_data_collection_related_resource_url_into_main_components(resource_ur
         'localid': resource_url_split[7],
     }
 
-def divide_catalogue_related_resource_url_into_main_components(resource_url):
+def divide_static_dataset_related_resource_url_into_main_components(resource_url):
     resource_url_split = resource_url.split('/')
     return {
         'url_base': '/'.join(resource_url_split[:5]),
@@ -30,7 +30,7 @@ def divide_catalogue_related_resource_url_into_main_components(resource_url):
 
 def divide_resource_url_into_main_components(resource_url):
     try:
-        return divide_catalogue_related_resource_url_into_main_components(resource_url)
+        return divide_static_dataset_related_resource_url_into_main_components(resource_url)
     except IndexError:
         pass
     

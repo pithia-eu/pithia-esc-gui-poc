@@ -127,7 +127,7 @@ class DataCollectionXmlDownloadViewMixin:
 
 class StaticDatasetRelatedDownloadViewMixin:
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -137,22 +137,22 @@ class StaticDatasetRelatedDownloadViewMixin:
 
 class StaticDatasetXmlDownloadViewMixin(StaticDatasetRelatedDownloadViewMixin):
     model = models.StaticDataset
-    detail_page_url_name = 'browse:catalogue_detail'
-    resource_list_by_type_url_name = 'browse:catalogue_tree'
+    detail_page_url_name = 'browse:static_dataset_detail'
+    resource_list_by_type_url_name = 'browse:static_dataset_tree'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
 
 class StaticDatasetEntryXmlDownloadViewMixin(StaticDatasetRelatedDownloadViewMixin):
     model = models.StaticDatasetEntry
     detail_page_url_name = 'browse:static_dataset_entry_detail'
-    resource_list_by_type_url_name = 'browse:catalogue_tree'
+    resource_list_by_type_url_name = 'browse:static_dataset_tree'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
 
 
 class DataSubsetXmlDownloadViewMixin(StaticDatasetRelatedDownloadViewMixin):
     model = models.DataSubset
     detail_page_url_name = 'browse:data_subset_detail'
-    resource_list_by_type_url_name = 'browse:catalogue_tree'
+    resource_list_by_type_url_name = 'browse:static_dataset_tree'
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
 
 

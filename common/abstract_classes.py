@@ -539,14 +539,14 @@ class AbstractStaticDatasetDatabaseQueries(ABC):
 
 class AbstractStaticDatasetEntryDatabaseQueries(ABC):
     @abstractmethod
-    def referencing_catalogue_url(self, catalogue_url: str):
+    def referencing_static_dataset_url(self, static_dataset_url: str):
         """
         Catalogue Entries referencing a given Catalogue URL.
         """
         pass
 
     @abstractmethod
-    def referencing_catalogue_id(self, catalogue_id: str):
+    def referencing_static_dataset_id(self, static_dataset_id: str):
         """Catalogue Entries referencing a given Catalogue's
         local ID.
         """

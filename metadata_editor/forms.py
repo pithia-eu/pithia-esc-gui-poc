@@ -567,11 +567,11 @@ class DataCollectionEditorForm(
 
 
 class StaticDatasetEditorForm(BaseEditorForm):
-    def __init__(self, *args, catalogue_category_choices=(), **kwargs):
+    def __init__(self, *args, static_dataset_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['catalogue_category'].choices = catalogue_category_choices
+        self.fields['static_dataset_category'].choices = static_dataset_category_choices
 
-    catalogue_category = forms.ChoiceField(
+    static_dataset_category = forms.ChoiceField(
         label='Catalogue Category',
         required=False,
         widget=forms.Select(attrs={
@@ -584,15 +584,15 @@ class StaticDatasetEditorForm(BaseEditorForm):
 class StaticDatasetEntryEditorForm(
     BaseEditorForm,
     TimePeriodEditorFormComponent):
-    def __init__(self, *args, catalogue_choices=(), **kwargs):
+    def __init__(self, *args, static_dataset_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['catalogue_identifier'].choices = catalogue_choices
+        self.fields['static_dataset_identifier'].choices = static_dataset_choices
         self.fields['description'].help_text = 'A free-text description of the catalogue entry contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
         self.fields['time_instant_end_id'].required = True
 
-    catalogue_identifier = forms.ChoiceField(
+    static_dataset_identifier = forms.ChoiceField(
         label='Static Dataset',
         required=False,
         widget=forms.Select(attrs={

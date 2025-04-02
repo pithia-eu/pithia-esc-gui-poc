@@ -238,7 +238,7 @@ class PithiaResourceUrlsMetadataPropertiesMixin(BaseMetadataPropertiesShortcutMi
         return self._get_resource_urls_with_type('collection')
 
     @property
-    def catalogue_urls(self):
+    def static_dataset_urls(self):
         return self._get_elements_with_xpath_query('.//%s:catalogueIdentifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
     @property

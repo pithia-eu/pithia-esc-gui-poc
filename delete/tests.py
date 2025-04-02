@@ -26,7 +26,7 @@ from common.test_setup import (
     register_all_metadata_types,
     register_data_subset_for_test,
     register_static_dataset_entry_for_test,
-    register_catalogue_for_test,
+    register_static_dataset_for_test,
     register_computation_capabilities_2_for_test,
     register_computation_capabilities_for_test,
     register_computation_for_test,
@@ -269,7 +269,7 @@ class DataCollectionDeleteChainTestCase(TestCase):
 
 class StaticDatasetDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
-        self.catalogue = register_catalogue_for_test()
+        self.catalogue = register_static_dataset_for_test()
         register_static_dataset_entry_for_test()
         return super().setUp()
         
@@ -284,7 +284,7 @@ class StaticDatasetDeleteChainTestCase(TestCase):
 
 class StaticDatasetEntryDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
-        register_catalogue_for_test()
+        register_static_dataset_for_test()
         self.static_dataset_entry = register_static_dataset_entry_for_test()
         register_data_subset_for_test()
         return super().setUp()

@@ -83,14 +83,14 @@ class BulkMetadataUrlMappingTestCase(TestCase):
         # Test data
         instrument_resource_url_with_op_mode = 'https://metadata.pithia.eu/resources/2.2/instrument/test/Instrument_Test#instrumentoperationalmode1'
         process_metadata_url = 'https://metadata.pithia.eu/resources/2.2/process/test/CompositeProcess_Test'
-        catalogue_related_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/DataSubset_Test-2023-01-01_DataCollectionTest'
+        static_dataset_related_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/DataSubset_Test-2023-01-01_DataCollectionTest'
 
         # Operational mode URL
         converted_instrument_resource_url_with_op_mode = map_metadata_server_urls_to_browse_urls([instrument_resource_url_with_op_mode])[0]
         # Data Collection-related metadata URL
         converted_process_metadata_url = map_metadata_server_urls_to_browse_urls([process_metadata_url])[0]
         # Static Dataset-related metadata URL
-        converted_catalogue_related_resource_url = map_metadata_server_urls_to_browse_urls([catalogue_related_resource_url])[0]
+        converted_static_dataset_related_resource_url = map_metadata_server_urls_to_browse_urls([static_dataset_related_resource_url])[0]
 
         # converted_instrument_resource_url_with_op_mode
         self.assertNotEqual(converted_instrument_resource_url_with_op_mode['original_server_url'], '')
@@ -104,8 +104,8 @@ class BulkMetadataUrlMappingTestCase(TestCase):
         self.assertNotEqual(converted_process_metadata_url['converted_url_text'], '')
         self.assertNotEqual(converted_process_metadata_url['original_server_url'], converted_process_metadata_url['converted_url'])
 
-        # converted_catalogue_related_resource_url
-        self.assertNotEqual(converted_catalogue_related_resource_url['original_server_url'], '')
-        self.assertNotEqual(converted_catalogue_related_resource_url['converted_url'], '')
-        self.assertNotEqual(converted_catalogue_related_resource_url['converted_url_text'], '')
-        self.assertNotEqual(converted_catalogue_related_resource_url['original_server_url'], converted_catalogue_related_resource_url['converted_url'])
+        # converted_static_dataset_related_resource_url
+        self.assertNotEqual(converted_static_dataset_related_resource_url['original_server_url'], '')
+        self.assertNotEqual(converted_static_dataset_related_resource_url['converted_url'], '')
+        self.assertNotEqual(converted_static_dataset_related_resource_url['converted_url_text'], '')
+        self.assertNotEqual(converted_static_dataset_related_resource_url['original_server_url'], converted_static_dataset_related_resource_url['converted_url'])

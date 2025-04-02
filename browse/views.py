@@ -88,12 +88,12 @@ def data_collection_related_resource_types(request):
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
     })
 
-def catalogue_tree(request):
+def static_dataset_tree(request):
     """Lists all static datasets, static dataset entries
     and data subsets in a collapsible tree view.
     """
     catalogues = models.StaticDataset.objects.all()
-    return render(request, 'browse/catalogue_tree.html', {
+    return render(request, 'browse/static_dataset_tree.html', {
         'title': models.StaticDataset.type_plural_readable.title(),
         'description': models.StaticDataset.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
@@ -371,7 +371,7 @@ class ResourceDetailView(TemplateView):
             'Computations': self.resource.properties.computation_urls,
             'Processes': self.resource.properties.process_urls,
             'Data Collections': self.resource.properties.data_collection_urls,
-            'Static Datasets': self.resource.properties.catalogue_urls,
+            'Static Datasets': self.resource.properties.static_dataset_urls,
             'Static Dataset Entries': self.resource.properties.static_dataset_entry_urls,
         }
 
@@ -885,7 +885,7 @@ class StaticDatasetDetailView(ResourceDetailView):
     a Static Dataset registration.
     """
     model = models.StaticDataset
-    resource_download_url_name = 'utils:view_catalogue_as_xml'
+    resource_download_url_name = 'utils:view_static_dataset_as_xml'
     template_name = 'browse/detail/bases/catalogue.html'
 
     def configure_resource_copy_for_property_table(self, property_table_dict: dict) -> dict:
@@ -899,7 +899,7 @@ class StaticDatasetDetailView(ResourceDetailView):
         return cleaned_property_table
 
     def get(self, request, *args, **kwargs):
-        self.resource_id = self.kwargs['catalogue_id']
+        self.resource_id = self.kwargs['static_dataset_id']
         return super().get(request, *args, **kwargs)
 
 class StaticDatasetEntryDetailView(ResourceDetailView):

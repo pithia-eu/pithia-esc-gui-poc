@@ -508,15 +508,15 @@ class StaticDatasetQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetDat
     pass
 
 class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):
-    def referencing_catalogue_url(self, catalogue_url: str):
-        return self.filter(**{'json__catalogueIdentifier__@xlink:href': catalogue_url})
+    def referencing_static_dataset_url(self, static_dataset_url: str):
+        return self.filter(**{'json__catalogueIdentifier__@xlink:href': static_dataset_url})
     
-    def referencing_catalogue_id(self, catalogue_id: str):
-        return self.filter(**{'json__catalogueIdentifier__@xlink:href__endswith': catalogue_id})
+    def referencing_static_dataset_id(self, static_dataset_id: str):
+        return self.filter(**{'json__catalogueIdentifier__@xlink:href__endswith': static_dataset_id})
 
     def for_delete_chain(self, metadata_server_url: str):
-        referencing_catalogue_url = self.referencing_catalogue_url(metadata_server_url)
-        return referencing_catalogue_url
+        referencing_static_dataset_url = self.referencing_static_dataset_url(metadata_server_url)
+        return referencing_static_dataset_url
 
 class DataSubsetQuerySet(ScientificMetadataQuerySet, AbstractDataSubsetDatabaseQueries):
     def referencing_static_dataset_entry_url(self, static_dataset_entry_url: str):

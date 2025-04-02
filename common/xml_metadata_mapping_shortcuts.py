@@ -285,7 +285,7 @@ class StaticDatasetXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
-    def catalogue_category(self):
+    def static_dataset_category(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:catalogueCategory/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
 
@@ -297,7 +297,7 @@ class StaticDatasetEntryXmlMappingShortcuts(
         PithiaRelatedPartiesMetadataPropertiesMixin,
         PithiaResourceUrlsMetadataPropertiesMixin):
     @property
-    def catalogue_identifier(self):
+    def static_dataset_identifier(self):
         return self._get_first_element_value_or_blank_string_with_xpath_query('.//%s:catalogueIdentifier/@%s:href' % (self.PITHIA_NSPREFIX_XPATH, NamespacePrefix.XLINK))
 
     @property

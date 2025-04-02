@@ -407,11 +407,11 @@ class StaticDatasetEditor(
     def __init__(self, xml_string: str = '') -> None:
         super().__init__('Catalogue', xml_string)
 
-    def update_catalogue_category(self, catalogue_category_url: str):
+    def update_static_dataset_category(self, static_dataset_category_url: str):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,
             'catalogueCategory',
-            self.get_as_xlink_href(catalogue_category_url)
+            self.get_as_xlink_href(static_dataset_category_url)
         )
 
 
@@ -430,11 +430,11 @@ class StaticDatasetEntryEditor(
     def update_description(self, description):
         self.metadata_dict['entryDescription'] = description
 
-    def update_catalogue_identifier(self, catalogue_url: str):
+    def update_static_dataset_identifier(self, static_dataset_url: str):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,
             'catalogueIdentifier',
-            self.get_as_xlink_href(catalogue_url)
+            self.get_as_xlink_href(static_dataset_url)
         )
 
     def update_phenomenon_time(self, update_data: PhenomenonTimeMetadataUpdate):

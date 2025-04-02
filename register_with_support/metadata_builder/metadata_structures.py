@@ -546,13 +546,13 @@ class StaticDatasetMetadata(DescriptionMetadataComponent, IdentifierMetadataComp
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])
         self.append_name(properties['name'])
         self.append_description(properties['description'])
-        self.append_catalogue_category(properties['catalogue_category'])
+        self.append_static_dataset_category(properties['static_dataset_category'])
 
-    def append_catalogue_category(self, catalogue_category):
-        catalogue_category_element_attributes = {
-            '{%s}href' % Namespace.XLINK: catalogue_category,
+    def append_static_dataset_category(self, static_dataset_category):
+        static_dataset_category_element_attributes = {
+            '{%s}href' % Namespace.XLINK: static_dataset_category,
         }
-        etree.SubElement(self.root, 'catalogueCategory', **catalogue_category_element_attributes)
+        etree.SubElement(self.root, 'catalogueCategory', **static_dataset_category_element_attributes)
 
 
 class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
@@ -574,11 +574,11 @@ class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetad
         entry_description_element = etree.SubElement(self.root, 'entryDescription')
         entry_description_element.text = entry_description
 
-    def append_catalogue_identifier(self, catalogue):
-        catalogue_identifier_element_attributes = {
+    def append_static_dataset_identifier(self, catalogue):
+        static_dataset_identifier_element_attributes = {
             '{%s}href' % Namespace.XLINK: catalogue,
         }
-        catalogue_identifier_element = etree.SubElement(self.root, 'catalogueIdentifier', **catalogue_identifier_element_attributes)
+        static_dataset_identifier_element = etree.SubElement(self.root, 'catalogueIdentifier', **static_dataset_identifier_element_attributes)
 
     def append_phenomenon_time(self, phenomenon_time_dict):
         phenomenon_time_element = etree.SubElement(self.root, 'phenomenonTime')

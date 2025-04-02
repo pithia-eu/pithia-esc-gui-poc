@@ -834,7 +834,7 @@ class StaticDatasetRelatedEditorFormViewMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
 
@@ -843,7 +843,7 @@ class StaticDatasetEditorFormView(
     OntologyCategoryChoicesViewMixin,
     ResourceEditorFormView):
     form_class = StaticDatasetEditorForm
-    template_name = 'metadata_editor/catalogue_editor.html'
+    template_name = 'metadata_editor/static_dataset_editor.html'
 
     model = models.StaticDataset
     metadata_editor_class = StaticDatasetEditor
@@ -851,17 +851,17 @@ class StaticDatasetEditorFormView(
     resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.StaticDataset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
-    def get_catalogue_category_choices_for_form(self):
+    def get_static_dataset_category_choices_for_form(self):
         return self.get_choices_from_ontology_category('catalogueCategory')
 
     def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
-        metadata_editor.update_catalogue_category(form_cleaned_data.get('catalogue_category'))
+        metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_category'))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['catalogue_category_choices'] = self.get_catalogue_category_choices_for_form()
+        kwargs['static_dataset_category_choices'] = self.get_static_dataset_category_choices_for_form()
         return kwargs
 
 
@@ -880,7 +880,7 @@ class StaticDatasetEntryEditorFormView(
     def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEntryEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
-        metadata_editor.update_catalogue_identifier(form_cleaned_data.get('catalogue_identifier'))
+        metadata_editor.update_static_dataset_identifier(form_cleaned_data.get('static_dataset_identifier'))
         phenomenon_time_update = PhenomenonTimeMetadataUpdate(
             time_period_id=form_cleaned_data.get('time_period_id'),
             time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
@@ -892,7 +892,7 @@ class StaticDatasetEntryEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['catalogue_choices'] = self.get_resource_choices_with_model(models.StaticDataset)
+        kwargs['static_dataset_choices'] = self.get_resource_choices_with_model(models.StaticDataset)
         return kwargs
 
 
@@ -969,20 +969,20 @@ class DataSubsetEditorFormView(
         }
         # Sort catalogue entries by catalogue ID
         for entry in static_dataset_entries:
-            catalogue_id = entry.properties.catalogue_identifier.split('/')[-1]
-            if not catalogue_id:
+            static_dataset_id = entry.properties.static_dataset_identifier.split('/')[-1]
+            if not static_dataset_id:
                 entries_by_catalogue[UNKNOWN_KEY]['entries'].append(entry)
                 continue
-            if catalogue_id not in entries_by_catalogue:
-                entries_by_catalogue[catalogue_id] = {
-                    'name': catalogue_id,
+            if static_dataset_id not in entries_by_catalogue:
+                entries_by_catalogue[static_dataset_id] = {
+                    'name': static_dataset_id,
                     'entries': [],
                 }
-            entries_by_catalogue[catalogue_id]['entries'].append(entry)
+            entries_by_catalogue[static_dataset_id]['entries'].append(entry)
         # Map each catalogue ID to a name
-        for catalogue_id, optgroup_data in entries_by_catalogue.items():
+        for static_dataset_id, optgroup_data in entries_by_catalogue.items():
             try:
-                catalogue = models.StaticDataset.objects.get(pk=catalogue_id)
+                catalogue = models.StaticDataset.objects.get(pk=static_dataset_id)
                 optgroup_data.update({
                     'name': catalogue.name,
                 })
@@ -992,7 +992,7 @@ class DataSubsetEditorFormView(
         entries_by_catalogue = dict(sorted(entries_by_catalogue.items(), key=lambda item: item[1]['name']))
         # Create optgroups and options for select
         choices_categorised = []
-        for catalogue_id, optgroup_data in entries_by_catalogue.items():
+        for static_dataset_id, optgroup_data in entries_by_catalogue.items():
             optgroup_name = optgroup_data.get('name')
             if optgroup_name == UNKNOWN_KEY:
                 optgroup_name = 'Unknown'

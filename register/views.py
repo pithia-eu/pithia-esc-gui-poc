@@ -288,7 +288,7 @@ class StaticDatasetRegisterFormView(ResourceRegisterFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
 
@@ -304,7 +304,7 @@ class StaticDatasetEntryRegisterFormView(ResourceRegisterFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         return context
 
 
@@ -395,7 +395,7 @@ class DataSubsetRegisterFormView(
         context = super().get_context_data(**kwargs)
         context['title'] = f'Register a {self.model.type_readable.title()} via File Upload'
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:catalogue_related_metadata_index'
+        context['resource_management_category_list_page_breadcrumb_url_name'] = 'resource_management:static_dataset_related_metadata_index'
         context['source_file_list_item_template'] = render_to_string(
             'register/components/source_file_list_item_template.html',
             context=context

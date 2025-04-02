@@ -31,7 +31,7 @@ from common.test_setup import (
     register_instrument_for_test,
     register_organisation_for_test,
 )
-from utils.url_helpers import divide_catalogue_related_resource_url_into_main_components
+from utils.url_helpers import divide_static_dataset_related_resource_url_into_main_components
 
 # For tests where ownership data is required
 SAMPLE_USER_ID        = 'johndoe@example.com'
@@ -278,7 +278,7 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/abc/individual/Individual_ABC_123')
         self.assertFalse(result)
 
-    def test_collection_resource_type_in_catalogue_metadata_url_fails(self):
+    def test_collection_resource_type_in_static_dataset_metadata_url_fails(self):
         """
         A catalogue metadata URL with 'collection' as the
         resource type fails validation.
@@ -286,7 +286,7 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
         self.assertFalse(result)
     
-    def test_multiple_namespaces_in_catalogue_metadata_url_fails(self):
+    def test_multiple_namespaces_in_static_dataset_metadata_url_fails(self):
         """
         A catalogue metadata URL with multiple namespaces
         fails validation.
@@ -294,7 +294,7 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
         self.assertFalse(result)
     
-    def test_multiple_resource_types_in_catalogue_metadata_url_fails(self):
+    def test_multiple_resource_types_in_static_dataset_metadata_url_fails(self):
         """
         A catalogue metadata URL with multiple resource types
         fails validation.
@@ -400,7 +400,7 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
         self.assertTrue(result)
 
-    def test_valid_catalogue_metadata_url_passes(self):
+    def test_valid_static_dataset_metadata_url_passes(self):
         """
         A valid catalogue metadata URL passes
         validation.
@@ -426,26 +426,26 @@ class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
 
 
 class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
-    def test_catalogue_metadata_url_splits_correctly(self):
+    def test_static_dataset_metadata_url_splits_correctly(self):
         """A static dataset-related metadata URL is split up into
         its components correctly.
         """
         # A static dataset-related metadata URL should have the following structure:
         # 'catalogue/namespace/Event/Catalogue metadata type' (i.e. StaticDataset,
         # StaticDatasetEntry, DataSubset).
-        catalogue_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
-        catalogue_resource_url_components = divide_catalogue_related_resource_url_into_main_components(catalogue_resource_url)
-        catalogue_url_base = catalogue_resource_url_components['url_base']
-        catalogue_url_resource_type = catalogue_resource_url_components['resource_type']
-        catalogue_url_namespace = catalogue_resource_url_components['namespace']
-        catalogue_url_event = catalogue_resource_url_components['event']
-        catalogue_url_localid = catalogue_resource_url_components['localid']
+        static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
+        static_dataset_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_resource_url)
+        static_dataset_url_base = static_dataset_resource_url_components['url_base']
+        static_dataset_url_resource_type = static_dataset_resource_url_components['resource_type']
+        static_dataset_url_namespace = static_dataset_resource_url_components['namespace']
+        static_dataset_url_event = static_dataset_resource_url_components['event']
+        static_dataset_url_localid = static_dataset_resource_url_components['localid']
 
-        self.assertEquals(catalogue_url_base, 'https://metadata.pithia.eu/resources/2.2')
-        self.assertEquals(catalogue_url_resource_type, 'catalogue')
-        self.assertEquals(catalogue_url_namespace, 'pithia')
-        self.assertEquals(catalogue_url_event, 'VolcanoEruption')
-        self.assertEquals(catalogue_url_localid, 'Catalogue_VolcanoEruption')
+        self.assertEquals(static_dataset_url_base, 'https://metadata.pithia.eu/resources/2.2')
+        self.assertEquals(static_dataset_url_resource_type, 'catalogue')
+        self.assertEquals(static_dataset_url_namespace, 'pithia')
+        self.assertEquals(static_dataset_url_event, 'VolcanoEruption')
+        self.assertEquals(static_dataset_url_localid, 'Catalogue_VolcanoEruption')
 
 
 class DoiValidationTestCase(SimpleTestCase):
@@ -497,14 +497,14 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         for key in invalid_resource_urls_dict.keys():
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
-    def test_no_invalid_metadata_urls_found_within_valid_catalogue_related_file(self):
+    def test_no_invalid_metadata_urls_found_within_valid_static_dataset_related_file(self):
         """
         The validator returns no invalid metadata URLs when validating
         a valid static dataset-related metadata file.
         """
-        catalogue_xml_file = test_xml_files.CATALOGUE_METADATA_XML
-        catalogue_xml_file.seek(0)
-        StaticDataset.objects.create_from_xml_string(catalogue_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
+        static_dataset_xml_file = test_xml_files.CATALOGUE_METADATA_XML
+        static_dataset_xml_file.seek(0)
+        StaticDataset.objects.create_from_xml_string(static_dataset_xml_file.read(), SAMPLE_INSTITUTION_ID, SAMPLE_USER_ID)
         
         static_dataset_entry_xml_file = test_xml_files.CATALOGUE_ENTRY_METADATA_XML
         invalid_resource_urls_dict = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(

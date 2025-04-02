@@ -59,13 +59,13 @@ def data_collection_related_metadata_index(request):
     })
 
 @login_session_institution_required
-def catalogue_related_metadata_index(request):
+def static_dataset_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request.session)
     
     num_current_catalogues = models.StaticDataset.objects.owned_by_institution(institution_id).count()
     num_current_static_dataset_entries = models.StaticDatasetEntry.objects.owned_by_institution(institution_id).count()
     num_current_data_subsets = models.DataSubset.objects.owned_by_institution(institution_id).count()
-    return render(request, 'resource_management/catalogue_index.html', {
+    return render(request, 'resource_management/static_dataset_index.html', {
         'num_current_catalogues': num_current_catalogues,
         'num_current_static_dataset_entries': num_current_static_dataset_entries,
         'num_current_data_subsets': num_current_data_subsets,
@@ -261,12 +261,12 @@ class StaticDatasetManagementListView(ResourceManagementListView):
 
     resource_delete_page_url_name = 'delete:catalogue'
     resource_update_page_url_name = 'update:catalogue'
-    resource_update_with_wizard_page_url_name = 'update:catalogue_with_editor'
+    resource_update_with_wizard_page_url_name = 'update:static_dataset_with_editor'
     resource_register_page_url_name = 'register:catalogue'
-    resource_register_with_editor_name = 'register:catalogue_with_editor'
-    resource_xml_download_page_url_name = 'utils_secure:view_catalogue_as_xml_with_editing'
+    resource_register_with_editor_name = 'register:static_dataset_with_editor'
+    resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class StaticDatasetEntryManagementListView(ResourceManagementListView):
     model = models.StaticDatasetEntry
@@ -278,7 +278,7 @@ class StaticDatasetEntryManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:static_dataset_entry_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_static_dataset_entry_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class DataSubsetManagementListView(ResourceManagementListView):
     model = models.DataSubset
@@ -290,7 +290,7 @@ class DataSubsetManagementListView(ResourceManagementListView):
     resource_register_with_editor_name = 'register:data_subset_with_editor'
     resource_xml_download_page_url_name = 'utils_secure:view_data_subset_as_xml_with_editing'
     resource_management_category_list_page_breadcrumb_text = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
-    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:catalogue_related_metadata_index'
+    resource_management_category_list_page_breadcrumb_url_name = 'resource_management:static_dataset_related_metadata_index'
 
 class WorkflowManagementListView(ResourceManagementListView):
     template_name = 'resource_management/workflow_management_list_outer.html'
