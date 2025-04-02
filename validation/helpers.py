@@ -24,15 +24,15 @@ def create_li_element_with_register_link_from_resource_type_from_resource_url(re
     elif resource_type_from_resource_url == 'collection':
         url_name = 'data_collection'
         url_base_text = 'Data Collection'
-    elif resource_type_from_resource_url.startswith('catalogue_Catalogue_'):
+    elif resource_type_from_resource_url.startswith('catalogue_StaticDataset_'):
         url_name = 'static_dataset'
-        url_base_text = 'Catalogue'
-    elif resource_type_from_resource_url.startswith('catalogue_CatalogueEntry_'):
+        url_base_text = 'Static Dataset'
+    elif resource_type_from_resource_url.startswith('catalogue_StaticDatasetEntry_'):
         url_name = 'static_dataset_entry'
-        url_base_text = 'Catalogue Entry'
+        url_base_text = 'Static Dataset Entry'
     elif resource_type_from_resource_url.startswith('catalogue_DataSubset_'):
         url_name = 'data_subset'
-        url_base_text = 'Catalogue Data Subset'
+        url_base_text = 'Data Subset'
     return f'<li><a href="{reverse_lazy(f"register:{url_name}")}" target="_blank" class="alert-link">{url_base_text} Metadata Registration</a></li>'
 
 def map_acquisition_capability_to_update_link(resource):

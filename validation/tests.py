@@ -435,7 +435,7 @@ class DoiValidationTestCase(SimpleTestCase):
 
     @tag('slow')
     def test_data_subset_xsd_validation(self):
-        """XML Catalogue Data Subset XSD validation passes DOI XML Schema validation with
+        """XML Data Subset XSD validation passes DOI XML Schema validation with
         a spoofed DOI element.
         """
         xml_file = DataSubsetXMLMetadataFile.from_file(test_xml_files.CATALOGUE_DATA_SUBSET_WITH_DOI_METADATA_XML)

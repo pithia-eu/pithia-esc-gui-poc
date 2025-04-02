@@ -405,7 +405,7 @@ class StaticDatasetEditor(
     BaseMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Catalogue', xml_string)
+        super().__init__('StaticDataset', xml_string)
 
     def update_static_dataset_category(self, static_dataset_category_url: str):
         self.update_child_element_and_remove_if_empty(
@@ -420,7 +420,7 @@ class StaticDatasetEntryEditor(
     TimePeriodMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('CatalogueEntry', xml_string)
+        super().__init__('StaticDatasetEntry', xml_string)
 
     def update_name(self, name):
         if not name:
