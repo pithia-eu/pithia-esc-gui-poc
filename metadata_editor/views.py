@@ -27,7 +27,7 @@ from .service_utils import BaseMetadataEditor
 from .services import (
     AcquisitionCapabilitiesEditor,
     AcquisitionEditor,
-    CatalogueEditor,
+    StaticDatasetEditor,
     DataSubsetEditor,
     StaticDatasetEntryEditor,
     ComputationCapabilitiesEditor,
@@ -830,7 +830,7 @@ class DataCollectionEditorFormView(
         return kwargs
 
 
-class CatalogueRelatedEditorFormViewMixin:
+class StaticDatasetRelatedEditorFormViewMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['resource_management_category_list_page_breadcrumb_text'] = _CATALOGUE_MANAGEMENT_INDEX_PAGE_TITLE
@@ -838,23 +838,23 @@ class CatalogueRelatedEditorFormViewMixin:
         return context
 
 
-class CatalogueEditorFormView(
-    CatalogueRelatedEditorFormViewMixin,
+class StaticDatasetEditorFormView(
+    StaticDatasetRelatedEditorFormViewMixin,
     OntologyCategoryChoicesViewMixin,
     ResourceEditorFormView):
-    form_class = CatalogueEditorForm
+    form_class = StaticDatasetEditorForm
     template_name = 'metadata_editor/catalogue_editor.html'
 
-    model = models.Catalogue
-    metadata_editor_class = CatalogueEditor
+    model = models.StaticDataset
+    metadata_editor_class = StaticDatasetEditor
 
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.Catalogue.type_plural_readable)
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title(models.StaticDataset.type_plural_readable)
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
 
     def get_catalogue_category_choices_for_form(self):
         return self.get_choices_from_ontology_category('catalogueCategory')
 
-    def add_form_data_to_metadata_editor(self, metadata_editor: CatalogueEditor, form_cleaned_data):
+    def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
         metadata_editor.update_catalogue_category(form_cleaned_data.get('catalogue_category'))
@@ -866,7 +866,7 @@ class CatalogueEditorFormView(
 
 
 class StaticDatasetEntryEditorFormView(
-    CatalogueRelatedEditorFormViewMixin,
+    StaticDatasetRelatedEditorFormViewMixin,
     ResourceEditorFormView):
     form_class = StaticDatasetEntryEditorForm
     template_name = 'metadata_editor/static_dataset_entry_editor.html'
@@ -892,13 +892,13 @@ class StaticDatasetEntryEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['catalogue_choices'] = self.get_resource_choices_with_model(models.Catalogue)
+        kwargs['catalogue_choices'] = self.get_resource_choices_with_model(models.StaticDataset)
         return kwargs
 
 
 class DataSubsetEditorFormView(
     DataSubsetDataHubViewMixin,
-    CatalogueRelatedEditorFormViewMixin,
+    StaticDatasetRelatedEditorFormViewMixin,
     DataCollectionSelectFormViewMixin,
     DataLevelSelectFormViewMixin,
     QualityAssessmentSelectFormViewMixin,
@@ -982,11 +982,11 @@ class DataSubsetEditorFormView(
         # Map each catalogue ID to a name
         for catalogue_id, optgroup_data in entries_by_catalogue.items():
             try:
-                catalogue = models.Catalogue.objects.get(pk=catalogue_id)
+                catalogue = models.StaticDataset.objects.get(pk=catalogue_id)
                 optgroup_data.update({
                     'name': catalogue.name,
                 })
-            except models.Catalogue.DoesNotExist:
+            except models.StaticDataset.DoesNotExist:
                 pass
         # Sort catalogues by name
         entries_by_catalogue = dict(sorted(entries_by_catalogue.items(), key=lambda item: item[1]['name']))

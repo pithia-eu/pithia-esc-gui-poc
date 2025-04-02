@@ -4,7 +4,7 @@ from metadata_editor.form_components import OrganisationSelect
 from metadata_editor.forms import (
     AcquisitionCapabilitiesEditorForm,
     AcquisitionEditorForm,
-    CatalogueEditorForm,
+    StaticDatasetEditorForm,
     DataSubsetForm,
     StaticDatasetEntryEditorForm,
     ComputationCapabilitiesEditorForm,
@@ -115,7 +115,7 @@ class DataCollectionEditorRegistrationForm(EditorRegistrationForm, DataCollectio
     pass
 
 
-class CatalogueEditorRegistrationForm(EditorRegistrationForm, CatalogueEditorForm):
+class StaticDatasetEditorRegistrationForm(EditorRegistrationForm, StaticDatasetEditorForm):
     pass
 
 

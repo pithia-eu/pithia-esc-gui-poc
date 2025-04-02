@@ -267,7 +267,7 @@ class DataCollectionDeleteChainTestCase(TestCase):
         immediate_metadata_dependents = self.data_collection._immediate_metadata_dependents
         self.assertTrue(any(isinstance(md, DataSubset) for md in immediate_metadata_dependents))
 
-class CatalogueDeleteChainTestCase(TestCase):
+class StaticDatasetDeleteChainTestCase(TestCase):
     def setUp(self) -> None:
         self.catalogue = register_catalogue_for_test()
         register_static_dataset_entry_for_test()

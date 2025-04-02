@@ -566,7 +566,7 @@ class DataCollectionEditorForm(
     )
 
 
-class CatalogueEditorForm(BaseEditorForm):
+class StaticDatasetEditorForm(BaseEditorForm):
     def __init__(self, *args, catalogue_category_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['catalogue_category'].choices = catalogue_category_choices

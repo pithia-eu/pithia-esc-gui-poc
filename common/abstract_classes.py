@@ -534,7 +534,7 @@ class AbstractDataCollectionDatabaseQueries(ABC):
         """
         pass
 
-class AbstractCatalogueDatabaseQueries(ABC):
+class AbstractStaticDatasetDatabaseQueries(ABC):
     pass
 
 class AbstractStaticDatasetEntryDatabaseQueries(ABC):

@@ -366,10 +366,10 @@ class DataCollectionRegisterWithEditorFormView(
         return context
 
 
-class CatalogueRegisterWithEditorFormView(
-    CatalogueEditorFormView,
+class StaticDatasetRegisterWithEditorFormView(
+    StaticDatasetEditorFormView,
     ResourceRegisterWithEditorFormView):
-    form_class = CatalogueEditorRegistrationForm
+    form_class = StaticDatasetEditorRegistrationForm
     success_url = reverse_lazy('register:catalogue_with_editor')
 
     file_upload_registration_url = reverse_lazy('register:catalogue')

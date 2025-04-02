@@ -18,7 +18,7 @@
         </a>
     </h2>
     {% if catalogue.description %}
-    {# Catalogue descriptions are expandable/collapsible in case there is a lot of text #}
+    {# Static Dataset descriptions are expandable/collapsible in case there is a lot of text #}
     <div class="mb-2">
         {% with forloop_counter_str=forloop.counter|stringformat:'s' catalogue_description_paragraphs=catalogue.description|wrap_in_list_if_dict %}
         {% with text_block_id='catalogue-description-'|add:forloop_counter_str text_block_paragraphs=catalogue_description_paragraphs line_clamp_number='4' %}

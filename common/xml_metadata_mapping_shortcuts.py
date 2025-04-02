@@ -278,7 +278,7 @@ class DataCollectionXmlMappingShortcuts(
         return self._get_online_resources(collection_results_element)
 
 
-class CatalogueXmlMappingShortcuts(
+class StaticDatasetXmlMappingShortcuts(
         GmdUrlMetadataPropertiesMixin,
         PithiaCoreMetadataPropertiesMixin,
         PithiaOntologyUrlsMetadataPropertiesMixin,

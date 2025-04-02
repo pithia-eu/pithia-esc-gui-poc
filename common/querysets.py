@@ -504,7 +504,7 @@ class DataCollectionQuerySet(ScientificMetadataQuerySet, AbstractDataCollectionD
         referencing_process_url = self.referencing_process_url(metadata_server_url)
         return referencing_party_url | referencing_project_url | referencing_process_url
 
-class CatalogueQuerySet(ScientificMetadataQuerySet, AbstractCatalogueDatabaseQueries):
+class StaticDatasetQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetDatabaseQueries):
     pass
 
 class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):

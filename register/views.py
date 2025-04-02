@@ -276,9 +276,9 @@ class DataCollectionRegisterFormView(ResourceRegisterFormView):
         return context
 
 
-class CatalogueRegisterFormView(ResourceRegisterFormView):
+class StaticDatasetRegisterFormView(ResourceRegisterFormView):
     template_name = 'register/file_upload.html'
-    model = models.Catalogue
+    model = models.StaticDataset
     success_url = reverse_lazy('register:catalogue')
 
     post_url = reverse_lazy('register:catalogue')

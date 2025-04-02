@@ -401,7 +401,7 @@ class DataCollectionEditor(
         )
 
 
-class CatalogueEditor(
+class StaticDatasetEditor(
     BaseMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:

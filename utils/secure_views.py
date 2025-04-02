@@ -86,8 +86,8 @@ class DataCollectionXmlDownloadFromManagementView(
     pass
 
 
-class CatalogueXmlDownloadFromManagementView(
-        view_mixins.CatalogueXmlDownloadViewMixin,
+class StaticDatasetXmlDownloadFromManagementView(
+        view_mixins.StaticDatasetXmlDownloadViewMixin,
         ResourceXmlDownloadFromManagementView):
     pass
 

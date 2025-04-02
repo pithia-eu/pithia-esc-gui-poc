@@ -107,7 +107,7 @@ class ResourceDeleteView(TemplateView):
         return HttpResponseRedirect(self.redirect_url)
 
 
-class CatalogueRelatedResourceDeleteView(ResourceDeleteView):
+class StaticDatasetRelatedResourceDeleteView(ResourceDeleteView):
     """A subclass of ResourceDeleteView.
 
     Maps Data Collection-related features (e.g., breadcrumbs)
@@ -260,18 +260,18 @@ class DataCollectionDeleteView(ResourceDeleteView):
         return context
 
 
-class CatalogueDeleteView(CatalogueRelatedResourceDeleteView):
+class StaticDatasetDeleteView(StaticDatasetRelatedResourceDeleteView):
     """The deletion confirmation page for a Static Dataset
     registration.
     """
-    model = models.Catalogue
+    model = models.StaticDataset
 
     redirect_url = reverse_lazy('resource_management:catalogues')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     delete_resource_page_breadcrumb_url_name = 'delete:catalogue'
 
 
-class StaticDatasetEntryDeleteView(CatalogueRelatedResourceDeleteView):
+class StaticDatasetEntryDeleteView(StaticDatasetRelatedResourceDeleteView):
     """The deletion confirmation page for a Static Dataset
     Entry registration.
     """
@@ -284,7 +284,7 @@ class StaticDatasetEntryDeleteView(CatalogueRelatedResourceDeleteView):
 
 class DataSubsetDeleteView(
         DataSubsetDataHubViewMixin,
-        CatalogueRelatedResourceDeleteView):
+        StaticDatasetRelatedResourceDeleteView):
     """The deletion confirmation page for a Static
     Data Subset registration.
     """

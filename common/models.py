@@ -16,7 +16,7 @@ from .xml_metadata_mapping_shortcuts import (
     AcquisitionXmlMappingShortcuts,
     DataSubsetXmlMappingShortcuts,
     StaticDatasetEntryXmlMappingShortcuts,
-    CatalogueXmlMappingShortcuts,
+    StaticDatasetXmlMappingShortcuts,
     ComputationCapabilitiesXmlMappingShortcuts,
     ComputationXmlMappingShortcuts,
     DataCollectionXmlMappingShortcuts,
@@ -261,7 +261,7 @@ class ScientificMetadata(models.Model):
     computations = ComputationManager.from_queryset(ComputationQuerySet)()
     processes = ProcessManager.from_queryset(ProcessQuerySet)()
     data_collections = DataCollectionManager.from_queryset(DataCollectionQuerySet)()
-    catalogues = CatalogueManager.from_queryset(CatalogueQuerySet)()
+    catalogues = StaticDatasetManager.from_queryset(StaticDatasetQuerySet)()
     static_dataset_entries = StaticDatasetEntryManager.from_queryset(StaticDatasetEntryQuerySet)()
     data_subsets = DataSubsetManager.from_queryset(DataSubsetQuerySet)()
     workflows = WorkflowManager.from_queryset(WorkflowQuerySet)()
@@ -718,7 +718,7 @@ class DataCollection(ScientificMetadata):
         proxy = True
 
 
-class CatalogueTypeDescriptionMixin:
+class StaticDatasetTypeDescriptionMixin:
     type_description_readable = '''
         A listing of events or investigations assembled to
         aid users in locating data of interest. Each Entry
@@ -727,7 +727,7 @@ class CatalogueTypeDescriptionMixin:
         DOIs to their persistent storage.'''
 
 
-class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
+class StaticDataset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'StaticDataset'
     weight = 12
@@ -746,14 +746,14 @@ class Catalogue(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def properties(self):
-        return CatalogueXmlMappingShortcuts(self.xml)
+        return StaticDatasetXmlMappingShortcuts(self.xml)
 
-    objects = CatalogueManager.from_queryset(CatalogueQuerySet)()
+    objects = StaticDatasetManager.from_queryset(StaticDatasetQuerySet)()
 
     class Meta:
         proxy = True
 
-class StaticDatasetEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
+class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'StaticDatasetEntry'
     weight = 13
@@ -779,7 +779,7 @@ class StaticDatasetEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
 
     @property
     def catalogue(self):
-        return Catalogue.objects.get_by_metadata_server_url(self.catalogue_url)
+        return StaticDataset.objects.get_by_metadata_server_url(self.catalogue_url)
 
     @property
     def data_subsets(self):
@@ -789,7 +789,7 @@ class StaticDatasetEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     def metadata_server_url(self):
         try:
             return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.catalogue.name}/{self.localid}', safe='/:?=&')
-        except Catalogue.DoesNotExist:
+        except StaticDataset.DoesNotExist:
             return quote(f'{self._metadata_server_url_base}/{self.type_in_metadata_server_url}/{self.namespace}/{self.localid}', safe='/:?=&')
 
     @property
@@ -801,7 +801,7 @@ class StaticDatasetEntry(ScientificMetadata, CatalogueTypeDescriptionMixin):
     class Meta:
         proxy = True
 
-class DataSubset(ScientificMetadata, CatalogueTypeDescriptionMixin):
+class DataSubset(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     type_in_metadata_server_url = 'staticDataset'
     localid_base = 'DataSubset'
     weight = 14

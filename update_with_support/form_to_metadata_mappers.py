@@ -301,7 +301,7 @@ class DataCollectionFormFieldsToMetadataMapper(
         return mappings
 
 
-class CatalogueFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):
+class StaticDatasetFormFieldsToMetadataMapper(BaseMetadataFormFieldsToMetadataMixin):
     def get_basic_form_field_to_xml_field_mappings(self):
         mappings = super().get_basic_form_field_to_xml_field_mappings()
         mappings.update({

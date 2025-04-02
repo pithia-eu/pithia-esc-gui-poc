@@ -5,7 +5,7 @@ from .metadata_structure_components import *
 from common.models import (
     Acquisition,
     AcquisitionCapabilities,
-    Catalogue,
+    StaticDataset,
     DataSubset,
     StaticDatasetEntry,
     Computation,
@@ -538,9 +538,9 @@ class DataCollectionMetadata(
         etree.SubElement(self.root, '{%s}result' % Namespace.OM)
 
 
-class CatalogueMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
+class StaticDatasetMetadata(DescriptionMetadataComponent, IdentifierMetadataComponent, NameMetadataComponent):
     def __init__(self, properties) -> None:
-        super().__init__(Catalogue.root_element_name, nsmap_extensions={
+        super().__init__(StaticDataset.root_element_name, nsmap_extensions={
             NamespacePrefix.XLINK: Namespace.XLINK,
         })
         self.append_identifier(properties['localid'], properties['namespace'], properties['identifier_version'])

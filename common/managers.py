@@ -196,7 +196,7 @@ class DataCollectionManager(ScientificMetadataManager):
     def create_from_xml_string(self, xml_string: str, institution_id: str, owner_id: str):
         return super()._create_from_xml_string(xml_string, self.model.DATA_COLLECTION, institution_id, owner_id)
 
-class CatalogueManager(ScientificMetadataManager):
+class StaticDatasetManager(ScientificMetadataManager):
     def get_queryset(self):
         return super().get_queryset().filter(type=self.model.CATALOGUE)
 

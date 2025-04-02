@@ -92,14 +92,14 @@ def catalogue_tree(request):
     """Lists all static datasets, static dataset entries
     and data subsets in a collapsible tree view.
     """
-    catalogues = models.Catalogue.objects.all()
+    catalogues = models.StaticDataset.objects.all()
     return render(request, 'browse/catalogue_tree.html', {
-        'title': models.Catalogue.type_plural_readable.title(),
-        'description': models.Catalogue.type_description_readable,
+        'title': models.StaticDataset.type_plural_readable.title(),
+        'description': models.StaticDataset.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': catalogues,
-        'type_readable': models.Catalogue.type_readable,
-        'type_plural_readable': models.Catalogue.type_plural_readable,
+        'type_readable': models.StaticDataset.type_readable,
+        'type_plural_readable': models.StaticDataset.type_plural_readable,
     })
 
 def schemas(request):
@@ -877,14 +877,14 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         
         return context
 
-class CatalogueDetailView(ResourceDetailView):
+class StaticDatasetDetailView(ResourceDetailView):
     """
-    A subclass of CatalogueRelatedResourceDetailView.
+    A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
-    a Catalogue registration.
+    a Static Dataset registration.
     """
-    model = models.Catalogue
+    model = models.StaticDataset
     resource_download_url_name = 'utils:view_catalogue_as_xml'
     template_name = 'browse/detail/bases/catalogue.html'
 
@@ -904,10 +904,10 @@ class CatalogueDetailView(ResourceDetailView):
 
 class StaticDatasetEntryDetailView(ResourceDetailView):
     """
-    A subclass of CatalogueRelatedResourceDetailView.
+    A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
-    a Catalogue Entry registration.
+    a Static Dataset Entry registration.
     """
     model = models.StaticDatasetEntry
     resource_list_by_type_url_name = 'browse:list_static_dataset_entries'
@@ -936,10 +936,10 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
 
 class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
     """
-    A subclass of CatalogueRelatedResourceDetailView.
+    A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
-    a Catalogue Data Subset registration.
+    a Data Subset registration.
     """
     model = models.DataSubset
     resource_list_by_type_url_name = 'browse:list_data_subsets'

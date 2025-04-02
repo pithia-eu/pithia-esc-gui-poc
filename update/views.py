@@ -306,8 +306,8 @@ def data_collection_interaction_methods(request, resource_id):
     })
 
 
-class CatalogueUpdateFormView(ResourceUpdateFormView):
-    model = models.Catalogue
+class StaticDatasetUpdateFormView(ResourceUpdateFormView):
+    model = models.StaticDataset
 
     resource_management_list_page_breadcrumb_url_name = 'resource_management:catalogues'
     resource_update_page_url_name = 'update:catalogue'

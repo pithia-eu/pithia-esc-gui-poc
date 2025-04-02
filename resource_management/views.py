@@ -62,7 +62,7 @@ def data_collection_related_metadata_index(request):
 def catalogue_related_metadata_index(request):
     institution_id = get_institution_id_for_login_session(request.session)
     
-    num_current_catalogues = models.Catalogue.objects.owned_by_institution(institution_id).count()
+    num_current_catalogues = models.StaticDataset.objects.owned_by_institution(institution_id).count()
     num_current_static_dataset_entries = models.StaticDatasetEntry.objects.owned_by_institution(institution_id).count()
     num_current_data_subsets = models.DataSubset.objects.owned_by_institution(institution_id).count()
     return render(request, 'resource_management/catalogue_index.html', {
@@ -256,8 +256,8 @@ class DataCollectionManagementListView(ResourceManagementListView):
         context['interaction_method_update_page_url_name'] = 'update:data_collection_interaction_methods'
         return context
 
-class CatalogueManagementListView(ResourceManagementListView):
-    model = models.Catalogue
+class StaticDatasetManagementListView(ResourceManagementListView):
+    model = models.StaticDataset
 
     resource_delete_page_url_name = 'delete:catalogue'
     resource_update_page_url_name = 'update:catalogue'
