@@ -24,7 +24,7 @@
 {% if resource.properties.catalogue_category %}
 <section class="responsive-resource-detail-section resource-detail-section">
     <h2>Category</h2>
-    {% with value=resource.properties.catalogue_category extra_badge_classes='catalogue-category-badge' %}
+    {% with value=resource.properties.catalogue_category extra_badge_classes='static-dataset-category-badge' %}
     {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
     {% endwith %}
 </section>
@@ -43,7 +43,7 @@
 <section class="responsive-resource-detail-aside-section resource-detail-aside-section">
     <h2>Category</h2>
     <span class="fw-bold text-secondary-emphasis">
-        {% with value=resource.properties.catalogue_category extra_badge_classes='catalogue-category-badge' %}
+        {% with value=resource.properties.catalogue_category extra_badge_classes='static-dataset-category-badge' %}
         {% include 'browse/placeholders/ontology_server_url_placeholder.html' %}
         {% endwith %}
     </span>
