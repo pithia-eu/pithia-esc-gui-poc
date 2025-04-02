@@ -572,12 +572,12 @@ class StaticDatasetEditorForm(BaseEditorForm):
         self.fields['static_dataset_category'].choices = static_dataset_category_choices
 
     static_dataset_category = forms.ChoiceField(
-        label='Catalogue Category',
+        label='Static Dataset Category',
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
-        help_text='A category of the catalogue from the ontology disctionary.'
+        help_text='A category of the static dataset from the ontology dictionary.'
     )
 
 
@@ -587,7 +587,7 @@ class StaticDatasetEntryEditorForm(
     def __init__(self, *args, static_dataset_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['static_dataset_identifier'].choices = static_dataset_choices
-        self.fields['description'].help_text = 'A free-text description of the catalogue entry contents.'
+        self.fields['description'].help_text = 'A free-text description of the static dataset entry contents.'
         self.fields['time_period_id'].required = True
         self.fields['time_instant_begin_id'].required = True
         self.fields['time_instant_end_id'].required = True
@@ -598,7 +598,7 @@ class StaticDatasetEntryEditorForm(
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
-        help_text='The catalogue that this entry belongs to.'
+        help_text='The static dataset that this entry belongs to.'
     )
 
     time_instant_begin_position = forms.DateTimeField(
@@ -645,7 +645,7 @@ class DataSubsetForm(
         widget=forms.Select(attrs={
             'class': 'form-select',
         }),
-        help_text='The catalogue entry that this data subset belongs to.'
+        help_text='The static dataset entry that this data subset belongs to.'
     )
 
     time_instant_begin_position = forms.DateTimeField(

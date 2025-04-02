@@ -509,10 +509,10 @@ class StaticDatasetQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetDat
 
 class StaticDatasetEntryQuerySet(ScientificMetadataQuerySet, AbstractStaticDatasetEntryDatabaseQueries):
     def referencing_static_dataset_url(self, static_dataset_url: str):
-        return self.filter(**{'json__catalogueIdentifier__@xlink:href': static_dataset_url})
+        return self.filter(**{'json__staticDatasetIdentifier__@xlink:href': static_dataset_url})
     
     def referencing_static_dataset_id(self, static_dataset_id: str):
-        return self.filter(**{'json__catalogueIdentifier__@xlink:href__endswith': static_dataset_id})
+        return self.filter(**{'json__staticDatasetIdentifier__@xlink:href__endswith': static_dataset_id})
 
     def for_delete_chain(self, metadata_server_url: str):
         referencing_static_dataset_url = self.referencing_static_dataset_url(metadata_server_url)

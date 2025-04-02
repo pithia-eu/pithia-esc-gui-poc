@@ -246,7 +246,7 @@ class HandleRegistrationProcessForDataSubset:
             self._update_data_subset_with_doi_kernel_metadata_in_database()
             return self.handle_name
         except Exception:
-            logger.exception('An unexpected error occurred whilst registering a handle with a catalogue data subset.')
+            logger.exception('An unexpected error occurred whilst registering a handle with a data subset.')
         
         if not self.handle_client or not self.handle_name:
             return None

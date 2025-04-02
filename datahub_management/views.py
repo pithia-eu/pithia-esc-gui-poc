@@ -23,5 +23,5 @@ def get_data_subset_online_resource_file(request, data_subset_id, online_resourc
         online_resource_name
     )
     if not online_resource_file:
-        raise Http404(f'A file for <i>{online_resource_name}</i> (<i>catalogue data subset {data_subset_id}</i>) was not found in the e-Science Centre.')
+        raise Http404(f'A file for <i>{online_resource_name}</i> (<i>data subset {data_subset_id}</i>) was not found in the e-Science Centre.')
     return FileResponse(online_resource_file)

@@ -852,7 +852,7 @@ class StaticDatasetEditorFormView(
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
 
     def get_static_dataset_category_choices_for_form(self):
-        return self.get_choices_from_ontology_category('catalogueCategory')
+        return self.get_choices_from_ontology_category('staticDatasetCategory')
 
     def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)

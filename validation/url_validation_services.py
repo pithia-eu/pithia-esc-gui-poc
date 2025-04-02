@@ -141,7 +141,7 @@ class MetadataFileMetadataURLReferencesValidator:
         except ObjectDoesNotExist:
             resource_type_in_resource_url, localid = itemgetter('resource_type', 'localid')(cls._divide_resource_url_into_components(resource_url))
             validation_summary_for_metadata_server_url['type_of_missing_resource'] = resource_type_in_resource_url
-            if resource_type_in_resource_url == 'catalogue':
+            if resource_type_in_resource_url == 'staticDataset':
                 validation_summary_for_metadata_server_url['type_of_missing_resource'] += f'_{localid}'
             return validation_summary_for_metadata_server_url
         validation_summary_for_metadata_server_url['is_pointing_to_registered_resource'] = True

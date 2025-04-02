@@ -155,8 +155,7 @@ class InstrumentOperationalModesValidationTestCase(InstrumentFileTestCase, Opera
 @tag('slow')
 class OntologyUrlValidationTestCase(SimpleTestCase):
     def test_valid_ontology_url_passes(self):
-        """
-        Valid ontology URLs pass validation.
+        """Valid ontology URLs pass validation.
         """
         result_1 = MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid('https://metadata.pithia.eu/ontology/2.2/relatedPartyRole/DataProvider')
         result_2 = MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid('https://metadata.pithia.eu/ontology/2.2/serviceFunction/ViewOnly')
@@ -164,8 +163,7 @@ class OntologyUrlValidationTestCase(SimpleTestCase):
         self.assertTrue(result_2)
 
     def test_non_existant_ontology_terms_are_detected(self):
-        """
-        URLs not corresponding to any terms in the Space
+        """URLs not corresponding to any terms in the Space
         Physics Ontology fail validation.
         """
         result_1 = MetadataFileOntologyURLReferencesValidator._is_ontology_term_url_valid('https://metadata.pithia.eu/ontology/2.2/invalid/test')
@@ -177,23 +175,20 @@ class OntologyUrlValidationTestCase(SimpleTestCase):
 
 class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
     def test_blank_string_fails(self):
-        """
-        A blank string fails validation.
+        """A blank string fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('')
         self.assertFalse(result)
 
     def test_url_with_namespace_and_resource_type_swapped_fails(self):
-        """
-        A metadata URL with the namespace and resource
+        """A metadata URL with the namespace and resource
         type in the wrong locations fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/pithia/project/Project_TEST')
         self.assertFalse(result)
 
     def test_just_forward_slashes_fails(self):
-        """
-        A metadata URL containing just '/' fails
+        """A metadata URL containing just '/' fails
         validation.
         """
         result_1 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('////')
@@ -206,40 +201,35 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertFalse(result_4)
 
     def test_incorrectly_formatted_url_fails(self):
-        """
-        A metadata URL that is not correctly
+        """A metadata URL that is not correctly
         formatted fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('http://www.google')
         self.assertFalse(result)
 
     def test_http_url_fails(self):
-        """
-        A metadata URL using HTTP instead of
+        """A metadata URL using HTTP instead of
         HTTPS fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('http://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         self.assertFalse(result)
 
     def test_url_with_no_protocol_fails(self):
-        """
-        A metadata URL that hasn't specified
+        """A metadata URL that hasn't specified
         a protocol fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         self.assertFalse(result)
 
     def test_metadata_url_with_duplicate_domain_fails(self):
-        """
-        A metadata URL with the domain duplicated
+        """A metadata URL with the domain duplicated
         multiple times fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         self.assertFalse(result)
 
     def test_wrong_acquisition_capabilities_casing_fails(self):
-        """
-        A metadata URL using the wrong casing for
+        """A metadata URL using the wrong casing for
         'acquisitionCapabilities' fails.
         """
         result_1 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/AcquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
@@ -250,8 +240,7 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertFalse(result_3)
 
     def test_wrong_computation_capabilities_casing_fails(self):
-        """
-        A metadata URL using the wrong casing for
+        """A metadata URL using the wrong casing for
         'computationCapabilities' fails.
         """
         result_1 = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/ComputationCapabilities/pithia/ComputationCapabilities_TEST')
@@ -262,16 +251,14 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertFalse(result_3)
 
     def test_no_metadata_version_fails(self):
-        """
-        A metadata URL that doesn't contain
+        """A metadata URL that doesn't contain
         the version number fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/individual/abc/Individual_ABC_123')
         self.assertFalse(result)
 
     def test_multiple_errors_fails(self):
-        """
-        A metadata URL containing multiple
+        """A metadata URL containing multiple
         errors fails validation.
         """
         # Missing the '2.2' part with swapped namespace and resource type.
@@ -279,24 +266,21 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
         self.assertFalse(result)
 
     def test_collection_resource_type_in_static_dataset_metadata_url_fails(self):
-        """
-        A catalogue metadata URL with 'collection' as the
+        """A static dataset metadata URL with 'collection' as the
         resource type fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
         self.assertFalse(result)
     
     def test_multiple_namespaces_in_static_dataset_metadata_url_fails(self):
-        """
-        A catalogue metadata URL with multiple namespaces
+        """A static dataset metadata URL with multiple namespaces
         fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/pithia/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
         self.assertFalse(result)
     
     def test_multiple_resource_types_in_static_dataset_metadata_url_fails(self):
-        """
-        A catalogue metadata URL with multiple resource types
+        """A static dataset metadata URL with multiple resource types
         fails validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption')
@@ -305,120 +289,105 @@ class InvalidMetadataUrlStructureValidationTestCase(SimpleTestCase):
 
 class ValidMetadataUrlStructureValidationTestCase(SimpleTestCase):
     def test_valid_organisation_metadata_url_passes(self):
-        """
-        A valid organisation metadata URL passes
+        """A valid organisation metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/organisation/pithia/Organisation_TEST')
         self.assertTrue(result)
 
     def test_valid_individual_metadata_url_passes(self):
-        """
-        A valid individual metadata URL passes
+        """A valid individual metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/individual/pithia/Individual_TEST')
         self.assertTrue(result)
 
     def test_valid_project_metadata_url_passes(self):
-        """
-        A valid project metadata URL passes
+        """A valid project metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/project/pithia/Project_TEST')
         self.assertTrue(result)
 
     def test_valid_platform_metadata_url_passes(self):
-        """
-        A valid platform metadata URL passes
+        """A valid platform metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/platform/pithia/Platform_TEST')
         self.assertTrue(result)
 
     def test_valid_operation_metadata_url_passes(self):
-        """
-        A valid operation metadata URL passes
+        """A valid operation metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/operation/pithia/Operation_TEST')
         self.assertTrue(result)
 
     def test_valid_instrument_metadata_url_passes(self):
-        """
-        A valid instrument metadata URL passes
+        """A valid instrument metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/instrument/pithia/Instrument_TEST')
         self.assertTrue(result)
 
     def test_valid_acquisition_capabilities_metadata_url_passes(self):
-        """
-        A valid acquisition capabilities metadata
+        """A valid acquisition capabilities metadata
         URL passes validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisitionCapabilities/pithia/AcquisitionCapabilities_TEST')
         self.assertTrue(result)
 
     def test_valid_acquisition_metadata_url_passes(self):
-        """
-        A valid acquisition metadata URL passes
+        """A valid acquisition metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/acquisition/pithia/Acquisition_TEST')
         self.assertTrue(result)
 
     def test_valid_computation_capabilities_metadata_url_passes(self):
-        """
-        A valid computation capabilities metadata
+        """A valid computation capabilities metadata
         URL passes validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computationCapabilities/pithia/ComputationCapabilities_TEST')
         self.assertTrue(result)
 
     def test_valid_computation_metadata_url_passes(self):
-        """
-        A valid computation metadata URL passes
+        """A valid computation metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/computation/pithia/Computation_TEST')
         self.assertTrue(result)
 
     def test_valid_process_metadata_url_passes(self):
-        """
-        A valid process metadata URL passes
+        """A valid process metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/process/pithia/CompositeProcess_TEST')
         self.assertTrue(result)
 
     def test_valid_data_collection_metadata_url_passes(self):
-        """
-        A valid data collection metadata URL passes
+        """A valid data collection metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/collection/pithia/DataCollection_TEST')
         self.assertTrue(result)
 
     def test_valid_static_dataset_metadata_url_passes(self):
-        """
-        A valid catalogue metadata URL passes
+        """A valid static dataset metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/Catalogue_TEST')
         self.assertTrue(result)
 
     def test_valid_static_dataset_entry_metadata_url_passes(self):
-        """
-        A valid catalogue entry metadata URL passes
+        """A valid static dataset entry metadata URL passes
         validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/CatalogueEntry_TEST_2023-01-01')
         self.assertTrue(result)
 
     def test_valid_data_subset_metadata_url_passes(self):
-        """
-        A valid catalogue data subset metadata
+        """A valid data subset metadata
         URL passes validation.
         """
         result = MetadataFileMetadataURLReferencesValidator._is_resource_url_structure_valid('https://metadata.pithia.eu/resources/2.2/catalogue/test/Test/DataSubset_TEST-2023-01-01_DataCollectionTEST')
@@ -431,7 +400,7 @@ class StaticDatasetMetadataUrlSplittingFunctionTestCase(SimpleTestCase):
         its components correctly.
         """
         # A static dataset-related metadata URL should have the following structure:
-        # 'catalogue/namespace/Event/Catalogue metadata type' (i.e. StaticDataset,
+        # "staticDataset/<namespace>/<Event>/<localid>" (i.e. StaticDataset,
         # StaticDatasetEntry, DataSubset).
         static_dataset_resource_url = 'https://metadata.pithia.eu/resources/2.2/catalogue/pithia/VolcanoEruption/Catalogue_VolcanoEruption'
         static_dataset_resource_url_components = divide_static_dataset_related_resource_url_into_main_components(static_dataset_resource_url)
@@ -482,8 +451,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         return super().setUp()
 
     def test_no_invalid_metadata_urls_found_within_valid_file(self):
-        """
-        The validator returns no invalid metadata URLs when validating
+        """The validator returns no invalid metadata URLs when validating
         a valid data collection-related metadata file.
         """
         organisation_xml_file = test_xml_files.ORGANISATION_METADATA_XML
@@ -498,8 +466,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
             self.assertEqual(len(invalid_resource_urls_dict[key]), 0)
 
     def test_no_invalid_metadata_urls_found_within_valid_static_dataset_related_file(self):
-        """
-        The validator returns no invalid metadata URLs when validating
+        """The validator returns no invalid metadata URLs when validating
         a valid static dataset-related metadata file.
         """
         static_dataset_xml_file = test_xml_files.CATALOGUE_METADATA_XML
@@ -515,8 +482,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
 
     @tag('slow')
     def test_invalid_ontology_urls_in_file_are_found(self):
-        """
-        The validator returns invalid ontology URLs
+        """The validator returns invalid ontology URLs
         within a metadata file.
         """
         invalid_ontology_urls = MetadataFileOntologyURLReferencesValidator.is_each_ontology_url_in_xml_file_valid(
@@ -525,8 +491,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         self.assertEquals(len(invalid_ontology_urls), 1)
 
     def test_invalid_resource_urls_in_file_are_found(self):
-        """
-        The validator returns invalid metadata files
+        """The validator returns invalid metadata files
         from a metadata file.
         """
         invalid_resource_urls = MetadataFileMetadataURLReferencesValidator.is_each_resource_url_valid(
@@ -535,8 +500,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
         self.assertEquals(len(invalid_resource_urls['urls_pointing_to_unregistered_resources']), 2)
 
     def test_invalid_op_mode_urls_in_file_are_found(self):
-        """
-        The validator returns lists of invalid operational
+        """The validator returns lists of invalid operational
         mode URLs sorted into categories.
         """
         xml_file = test_xml_files.METADATA_AND_ONTOLOGY_URLS_XML
@@ -552,8 +516,7 @@ class XMLMetadataFileIntegrationTestCase(TestCase):
 
 class XMLMetadataFileTestCase(TestCase):
     def test_potential_ontology_urls_are_retrieved_correctly(self):
-        """
-        Returns a list of potential ontology URLs.
+        """Returns a list of potential ontology URLs.
         """
         xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
         xml_file.seek(0)
@@ -568,8 +531,7 @@ class XMLMetadataFileTestCase(TestCase):
         self.assertTrue(not any('metadata.pithia.eu/resources' in url for url in potential_ontology_urls))
 
     def test_potential_metadata_urls_are_retrieved_correctly(self):
-        """
-        Returns a list of potential metadata URLs.
+        """Returns a list of potential metadata URLs.
         """
         xml_file = test_xml_files.PROJECT_METADATA_WITH_INVALID_METADATA_URLS_XML
         xml_file.seek(0)
@@ -583,8 +545,7 @@ class XMLMetadataFileTestCase(TestCase):
         self.assertTrue(not any('metadata.pithia.eu/ontology' in url for url in potential_metadata_urls))
 
     def test_potential_operational_mode_urls_are_retrieved_correctly(self):
-        """
-        Returns a list of potential operational
+        """Returns a list of potential operational
         mode URLs.
         """
         xml_file = test_xml_files.ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML
@@ -597,8 +558,7 @@ class XMLMetadataFileTestCase(TestCase):
         self.assertTrue(all('metadata.pithia.eu/resources' in url and '#' in url for url in potential_op_mode_urls))
 
     def test_is_each_potential_operational_mode_url_valid(self):
-        """
-        Validator returns lists of invalid opertional
+        """Validator returns lists of invalid opertional
         mode URLs sorted into categories. 
         """
         xml_file = test_xml_files.ACQUISITION_CAPABILITIES_WITH_INVALID_OP_MODE_URLS_METADATA_XML
@@ -610,8 +570,7 @@ class XMLMetadataFileTestCase(TestCase):
 
 class InlineValidationTestCase(TestCase):
     def test_inline_reference_validation_returns_no_errors(self):
-        """
-        Returns errors found whilst validating an XML file's
+        """Returns errors found whilst validating an XML file's
         references, organised into a dict.
         """
         xml_file = test_xml_files.ORGANISATION_METADATA_XML
@@ -625,8 +584,7 @@ class InlineValidationTestCase(TestCase):
         self.assertFalse(any(results.values()))
 
     def test_inline_new_registration_validation_returns_errors(self):
-        """
-        Returns a list of errors found whilst validating a new XML file
+        """Returns a list of errors found whilst validating a new XML file
         registration.
         """
         register_organisation_for_test()
@@ -643,8 +601,7 @@ class InlineValidationTestCase(TestCase):
         self.assertGreater(len(results), 0)
 
     def test_inline_new_registration_validation_does_not_return_errors(self):
-        """
-        Returns an empty list of errors found whilst validating a new XML file
+        """Returns an empty list of errors found whilst validating a new XML file
         registration.
         """
         xml_file = test_xml_files.ORGANISATION_METADATA_XML
@@ -675,8 +632,7 @@ class InlineValidationTestCase(TestCase):
         self.assertGreater(len(results), 0)
 
     def test_inline_update_validation_does_not_return_errors(self):
-        """
-        Returns an empty list of errors found whilst validating a XML file
+        """Returns an empty list of errors found whilst validating a XML file
         update.
         """
         register_organisation_for_test()
@@ -691,8 +647,7 @@ class InlineValidationTestCase(TestCase):
         self.assertEqual(len(results), 0)
 
     def test_inline_instrument_validation_returns_errors(self):
-        """
-        Returns a list of errors found whilst validating an instrument XML
+        """Returns a list of errors found whilst validating an instrument XML
         file update.
         """
         register_instrument_for_test()
@@ -708,8 +663,7 @@ class InlineValidationTestCase(TestCase):
         self.assertIs(type(results), list)
 
     def test_inline_instrument_validation_does_not_return_errors(self):
-        """
-        Returns an empty list of errors found whilst validating an instrument XML
+        """Returns an empty list of errors found whilst validating an instrument XML
         file update.
         """
         register_instrument_for_test()

@@ -211,7 +211,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
 
     def test_static_dataset_immediate_metadata_dependents_are_correct(self):
         """
-        Metadata registrations referring to a catalogue
+        Metadata registrations referring to a static dataset
         metadata URL are correctly identified.
         """
         imds = self.catalogue._immediate_metadata_dependents
@@ -220,7 +220,7 @@ class ImmediateMetadataDependentsTestCase(TestCase):
 
     def test_static_dataset_entry_immediate_metadata_dependents_are_correct(self):
         """
-        Metadata registrations referring to a catalogue
+        Metadata registrations referring to a static dataset
         entry metadata URL are correctly identified.
         """
         imds = self.static_dataset_entry._immediate_metadata_dependents
@@ -229,8 +229,8 @@ class ImmediateMetadataDependentsTestCase(TestCase):
 
     def test_data_subset_immediate_metadata_dependents_are_correct(self):
         """
-        Metadata registrations referring to a catalogue
-        data subset metadata URL are correctly identified.
+        Metadata registrations referring to a data subset
+        metadata URL are correctly identified.
         """
         imds = self.data_subset._immediate_metadata_dependents
         self.assertEqual(len(imds), 0)

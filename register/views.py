@@ -283,7 +283,7 @@ class StaticDatasetRegisterFormView(ResourceRegisterFormView):
 
     post_url = reverse_lazy('register:catalogue')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_datasets'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static_datasets')
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static datasets')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -299,7 +299,7 @@ class StaticDatasetEntryRegisterFormView(ResourceRegisterFormView):
 
     post_url = reverse_lazy('register:static_dataset_entry')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:static_dataset_entries'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue entries')
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('static dataset entries')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -321,7 +321,7 @@ class DataSubsetRegisterFormView(
 
     post_url = reverse_lazy('register:data_subset')
     resource_management_list_page_breadcrumb_url_name = 'resource_management:data_subsets'
-    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('catalogue data subsets')
+    resource_management_list_page_breadcrumb_text = _create_manage_resource_page_title('data subsets')
 
     def register_xml_file(self, xml_file):
         # This method is overridden to use

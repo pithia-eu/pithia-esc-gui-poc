@@ -69,9 +69,9 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
         )
 
     def test_store_or_overwrite_data_subset_resource_file(self):
-        """The catalogue data subset resource file
-        is stored in the DataHub directory and renamed
-        to the name of a resource.
+        """The data subset resource file is stored
+        in the DataHub directory and renamed to the
+        name of a resource.
         """
         resource_name = 'resource_name'
         cds_resource_file = self._create_and_store_data_subset_test_resource_file(
@@ -80,9 +80,8 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
         self.assertEqual(cds_resource_file.name, f'{resource_name}.pdf')
 
     def test_get_data_subset_file(self):
-        """A catalogue data subset resource file
-        is retrieved by its name (no extension is
-        provided).
+        """A data subset resource file is retrieved
+        by its name (no extension is provided).
         """
         data_subset_id = 'data_subset_id'
         resource_name = 'resource_name'
@@ -101,7 +100,7 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
 
     def test_get_files_for_data_subset(self):
         """Retrieves a list of all the resource files
-        for a catalogue data subset.
+        for a data subset.
         """
         data_subset_id = 'data_subset_id'
         resource_name_1 = 'resource_name_1'
@@ -123,8 +122,8 @@ class DataSubsetDataHubServiceTestCase(SimpleTestCase):
         self.assertIn(resource_file_2.name, cds_resource_file_names)
 
     def test_delete_data_subset_directory(self):
-        """Deletes the directory for a catalogue
-        data subset's resource files.
+        """Deletes the directory for a data subset's
+        resource files.
         """
         data_subset_id = 'data_subset_id'
         DataSubsetDataHubService._create_directory_for_data_subset(data_subset_id)

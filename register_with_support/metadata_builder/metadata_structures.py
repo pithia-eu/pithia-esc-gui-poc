@@ -552,7 +552,7 @@ class StaticDatasetMetadata(DescriptionMetadataComponent, IdentifierMetadataComp
         static_dataset_category_element_attributes = {
             '{%s}href' % Namespace.XLINK: static_dataset_category,
         }
-        etree.SubElement(self.root, 'catalogueCategory', **static_dataset_category_element_attributes)
+        etree.SubElement(self.root, 'staticDatasetCategory', **static_dataset_category_element_attributes)
 
 
 class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetadataComponent):
@@ -578,7 +578,7 @@ class StaticDatasetEntryMetadata(GMLTimePeriodMetadataComponent, IdentifierMetad
         static_dataset_identifier_element_attributes = {
             '{%s}href' % Namespace.XLINK: catalogue,
         }
-        static_dataset_identifier_element = etree.SubElement(self.root, 'catalogueIdentifier', **static_dataset_identifier_element_attributes)
+        static_dataset_identifier_element = etree.SubElement(self.root, 'staticDatasetIdentifier', **static_dataset_identifier_element_attributes)
 
     def append_phenomenon_time(self, phenomenon_time_dict):
         phenomenon_time_element = etree.SubElement(self.root, 'phenomenonTime')

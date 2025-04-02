@@ -277,7 +277,7 @@ class StaticDatasetDeleteChainTestCase(TestCase):
     def test_delete_chain_contains_correct_metadata_types(self):
         """
         Metadata with a possibility of referencing a
-        catalogue are included in the delete chain.
+        static dataset are included in the delete chain.
         """
         immediate_metadata_dependents = self.catalogue._immediate_metadata_dependents
         self.assertTrue(any(isinstance(md, StaticDatasetEntry) for md in immediate_metadata_dependents))
@@ -293,7 +293,7 @@ class StaticDatasetEntryDeleteChainTestCase(TestCase):
     def test_delete_chain_contains_correct_metadata_types(self):
         """
         Metadata with a possibility of referencing a
-        catalogue entry are included in the delete
+        static dataset entry are included in the delete
         chain.
         """
         immediate_metadata_dependents = self.static_dataset_entry._immediate_metadata_dependents
@@ -308,8 +308,7 @@ class DataSubsetDeleteChainTestCase(TestCase):
     def test_delete_chain_contains_correct_metadata_types(self):
         """
         Metadata with a possibility of referencing a
-        catalogue data subset are included in the
-        delete chain.
+        data subset are included in the delete chain.
         """
         data_subset = DataSubset.objects.all()[0]
         immediate_metadata_dependents = data_subset._immediate_metadata_dependents

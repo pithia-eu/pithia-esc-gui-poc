@@ -82,8 +82,8 @@ class DataSubsetDataHubViewMixin:
             online_resource_name,
             xml_file_string):
         # Construct link to online resource
-        # file and put in the catalogue data
-        # subset's XML.
+        # file and put in the data subset's
+        # XML.
         online_resource_file_url = self.get_online_resource_file_url_for_data_subset(online_resource_name)
         simple_data_subset_editor = SimpleDataSubsetEditor(xml_file_string)
         simple_data_subset_editor.update_online_resource_url(online_resource_name, online_resource_file_url)

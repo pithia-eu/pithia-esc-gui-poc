@@ -893,7 +893,7 @@ class StaticDatasetDetailView(ResourceDetailView):
         cleaned_property_table = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table,
             disallowed_property_keys=[
-                'catalogueCategory',
+                'staticDatasetCategory',
             ]
         )
         return cleaned_property_table
@@ -922,7 +922,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
         cleaned_property_table_dict = remove_disallowed_properties_from_property_table_dict(
             cleaned_property_table_dict,
             disallowed_property_keys=[
-                'catalogueIdentifier',
+                'staticDatasetIdentifier',
                 'entryName',
                 'entryDescription',
                 'phenomenonTime',

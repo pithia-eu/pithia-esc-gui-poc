@@ -762,21 +762,21 @@ DATA_COLLECTION_WITH_LOCALID_HTML['localid'] = 'DataCollection_<p>Test</p>'
 DATA_COLLECTION_WITH_HTML = copy.deepcopy(DATA_COLLECTION_WITH_LOCALID_HTML)
 DATA_COLLECTION_WITH_HTML['description'] = f'<div>{DATA_COLLECTION_WITH_HTML["description"]}</div>'
 
-# Catalogue
+# Static Dataset
 CATALOGUE_PROPERTIES_FULL = {
-    'localid': 'Catalogue_Test',
+    'localid': 'StaticDataset_Test',
     'namespace': 'test',
-    'name': 'Catalogue Test',
+    'name': 'Static Dataset Test',
     'identifier_version': '1',
     'description': 'Description',
-    'catalogue_category': 'https://metadata.pithia.eu/ontology/2.2/computationType/Model',
+    'static_dataset_category': 'https://metadata.pithia.eu/ontology/2.2/computationType/Model',
 }
 
-# Catalogue Entry
+# Static Dataset Entry
 CATALOGUE_ENTRY_PROPERTIES_FULL = {
-    'localid': 'Catalogue_Entry_Test',
+    'localid': 'StaticDatasetEntry_Test',
     'namespace': 'test',
-    'entry_name': 'Catalogue Entry Test',
+    'entry_name': 'Static Dataset Entry Test',
     'identifier_version': '1',
     'entry_description': 'Entry description',
     'phenomenon_time': {
@@ -798,13 +798,13 @@ CATALOGUE_ENTRY_PROPERTIES_FULL = {
     },
 }
 
-# Catalogue Data Subset
+# Data Subset
 CATALOGUE_DATA_SUBSET_PROPERTIES_FULL = {
-    'localid': 'Catalogue_Data_Subset_Test',
+    'localid': 'DataSubset_Test',
     'namespace': 'test',
-    'data_subset_name': 'Catalogue Data Subset Test',
+    'data_subset_name': 'Data Subset Test',
     'identifier_version': '1',
-    'data_subset_description': 'Catalogue data subset description',
+    'data_subset_description': 'Data subset description',
     'data_collection': 'https://metadata.pithia.eu/resources/2.2/collection/test/DataCollection_Test',
     'result_time': {
         'time_period': {

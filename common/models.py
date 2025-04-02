@@ -773,7 +773,7 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     @property
     def static_dataset_url(self):
         try:
-            return self.json['catalogueIdentifier']['@xlink:href']
+            return self.json['staticDatasetIdentifier']['@xlink:href']
         except KeyError:
             return ''
 
