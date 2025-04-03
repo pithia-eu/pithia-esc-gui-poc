@@ -9,7 +9,7 @@
     <h1 class="mb-4">{{ title }}</h1>
     <p class="d-block page-info page-info-emphasised my-4">
         Registering a static dataset involves registering <strong>
-        up to 3 types of metadata</strong>, registered in the
+        up to 2 types of metadata</strong>, registered in the
         order presented below.
         Information on what to include for each type can be
         found in the
@@ -19,10 +19,6 @@
             data resource registration guide</a>.
     </p>
     <ul class="list-group list-group-numbered">
-        <li class="list-group-item">
-            <a href="{% url 'resource_management:static_datasets' %}">Static Datasets</a>
-            <span class="text-body-secondary">{{ num_current_static_datasets }}</span>
-        </li>
         <li class="list-group-item">
             <a href="{% url 'resource_management:static_dataset_entries' %}">Static Dataset Entries</a>
             <span class="text-body-secondary">{{ num_current_static_dataset_entries }}</span>
