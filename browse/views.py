@@ -52,8 +52,7 @@ def index(request):
     })
 
 def data_collection_related_resource_types(request):
-    """
-    Acts as a centre point to all registration list pages
+    """Acts as a centre point to all registration list pages
     for each Data Collection-related registration (i.e.,
     all scientific metadata types up to Data Collections).
     Lists the links to these pages and the total number of
@@ -89,30 +88,42 @@ def data_collection_related_resource_types(request):
     })
 
 def static_dataset_tree(request):
-    """Lists all static datasets, static dataset entries
-    and data subsets in a collapsible tree view.
+    """Lists all static dataset entries and data subsets
+    in a categorised tree view.
     """
-    static_datasets = models.StaticDataset.objects.all()
+    xml_of_static_dataset_categories = get_ontology_category_terms_in_xml_format('staticDatasetCategory')
+    static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
+    static_dataset_category_names_and_definitions = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
+    static_dataset_entries = models.StaticDatasetEntry.objects.all()
+    static_dataset_entries_categorised = {}
+    for sd_entry in static_dataset_entries:
+        if sd_entry.static_dataset_category not in static_dataset_entries_categorised:
+            static_dataset_entries_categorised.update({
+                sd_entry.static_dataset_category: [],
+            })
+        static_dataset_entries_categorised[sd_entry.static_dataset_category].append(
+            sd_entry,
+        )
     return render(request, 'browse/static_dataset_tree.html', {
         'title': models.StaticDataset.type_plural_readable.title(),
         'description': models.StaticDataset.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
-        'resources': static_datasets,
+        'resources': static_dataset_entries,
+        'static_dataset_entries_categorised': static_dataset_entries_categorised,
+        'static_dataset_category_names_and_definitions': static_dataset_category_names_and_definitions,
         'type_readable': models.StaticDataset.type_readable,
         'type_plural_readable': models.StaticDataset.type_plural_readable,
     })
 
 def schemas(request):
-    """
-    A list of links to the XML metadata schemas.
+    """A list of links to the XML metadata schemas.
     """
     return render(request, 'browse/schemas.html', {
         'title': _XML_SCHEMAS_PAGE_TITLE
     })
 
 class ResourceListView(ListView):
-    """
-    A list of detail page links of scientific metadata
+    """A list of detail page links of scientific metadata
     registrations for one given type. E.g., a list of
     all registered Data Collections.
 
@@ -145,8 +156,7 @@ class ResourceListView(ListView):
 
 
 class OrganisationListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Organisation
     registration.
@@ -155,8 +165,7 @@ class OrganisationListView(ResourceListView):
     resource_detail_page_url_name = 'browse:organisation_detail'
 
 class IndividualListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Individual
     registration.
@@ -165,8 +174,7 @@ class IndividualListView(ResourceListView):
     resource_detail_page_url_name = 'browse:individual_detail'
 
 class ProjectListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Project
     registration.
@@ -175,8 +183,7 @@ class ProjectListView(ResourceListView):
     resource_detail_page_url_name = 'browse:project_detail'
 
 class PlatformListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Platform
     registration.
@@ -185,8 +192,7 @@ class PlatformListView(ResourceListView):
     resource_detail_page_url_name = 'browse:platform_detail'
 
 class InstrumentListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Instrument
     registration.
@@ -195,8 +201,7 @@ class InstrumentListView(ResourceListView):
     resource_detail_page_url_name = 'browse:instrument_detail'
 
 class OperationListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Operation
     registration.
@@ -205,8 +210,7 @@ class OperationListView(ResourceListView):
     resource_detail_page_url_name = 'browse:operation_detail'
 
 class AcquisitionCapabilitiesListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Acquisition
     Capabilities registration.
@@ -215,8 +219,7 @@ class AcquisitionCapabilitiesListView(ResourceListView):
     resource_detail_page_url_name = 'browse:acquisition_capability_set_detail'
 
 class AcquisitionListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Acquisition
     registration.
@@ -225,8 +228,7 @@ class AcquisitionListView(ResourceListView):
     resource_detail_page_url_name = 'browse:acquisition_detail'
 
 class ComputationCapabilitiesListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Computation
     Capabilities registration.
@@ -235,8 +237,7 @@ class ComputationCapabilitiesListView(ResourceListView):
     resource_detail_page_url_name = 'browse:computation_capability_set_detail'
 
 class ComputationListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Computation
     registration.
@@ -245,8 +246,7 @@ class ComputationListView(ResourceListView):
     resource_detail_page_url_name = 'browse:computation_detail'
 
 class ProcessListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Process
     registration.
@@ -255,8 +255,7 @@ class ProcessListView(ResourceListView):
     resource_detail_page_url_name = 'browse:process_detail'
 
 class DataCollectionListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Data
     Collection registration.
@@ -319,8 +318,7 @@ class DataCollectionListView(ResourceListView):
         return context
 
 class WorkflowListView(ResourceListView):
-    """
-    A subclass of ResourceListView.
+    """A subclass of ResourceListView.
 
     Lists the detail page links for each Workflow
     registration.
@@ -331,8 +329,7 @@ class WorkflowListView(ResourceListView):
 
 
 class ResourceDetailView(TemplateView):
-    """
-    The detail page for a scientific metadata
+    """The detail page for a scientific metadata
     registration. The properties of a scientific
     metadata registration are displayed here.
 
@@ -485,8 +482,7 @@ class OnlineResourcesViewMixin:
         return interaction_methods_by_type
 
 class OrganisationDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Organisation registration.
@@ -513,8 +509,7 @@ class OrganisationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class IndividualDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Individual registration.
@@ -541,8 +536,7 @@ class IndividualDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ProjectDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Project registration.
@@ -581,8 +575,7 @@ class ProjectDetailView(ResourceDetailView):
         return context
 
 class PlatformDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Platform registration.
@@ -613,8 +606,7 @@ class PlatformDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class InstrumentDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Instrument registration.
@@ -644,8 +636,7 @@ class InstrumentDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class OperationDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Operation registration.
@@ -673,8 +664,7 @@ class OperationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class AcquisitionCapabilitiesDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Acquisition Capabilities registration.
@@ -705,8 +695,7 @@ class AcquisitionCapabilitiesDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class AcquisitionDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     an Acquisition registration.
@@ -731,8 +720,7 @@ class AcquisitionDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ComputationCapabilitiesDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Computation Capabilities registration.
@@ -765,8 +753,7 @@ class ComputationCapabilitiesDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ComputationDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Computation registration.
@@ -791,8 +778,7 @@ class ComputationDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class ProcessDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Process registration.
@@ -821,8 +807,7 @@ class ProcessDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Data Collection registration.
@@ -878,8 +863,7 @@ class DataCollectionDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         return context
 
 class StaticDatasetDetailView(ResourceDetailView):
-    """
-    A subclass of StaticDatasetRelatedResourceDetailView.
+    """A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
     a Static Dataset registration.
@@ -903,8 +887,7 @@ class StaticDatasetDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class StaticDatasetEntryDetailView(ResourceDetailView):
-    """
-    A subclass of StaticDatasetRelatedResourceDetailView.
+    """A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
     a Static Dataset Entry registration.
@@ -935,8 +918,7 @@ class StaticDatasetEntryDetailView(ResourceDetailView):
         return super().get(request, *args, **kwargs)
 
 class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
-    """
-    A subclass of StaticDatasetRelatedResourceDetailView.
+    """A subclass of StaticDatasetRelatedResourceDetailView.
 
     A detail page displaying the properties of
     a Data Subset registration.
@@ -1030,8 +1012,7 @@ class DataSubsetDetailView(ResourceDetailView, OnlineResourcesViewMixin):
         return context
 
 class WorkflowDetailView(ResourceDetailView):
-    """
-    A subclass of ResourceDetailView.
+    """A subclass of ResourceDetailView.
 
     A detail page displaying the properties of
     a Workflow registration.

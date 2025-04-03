@@ -796,6 +796,10 @@ class StaticDatasetEntry(ScientificMetadata, StaticDatasetTypeDescriptionMixin):
     def properties(self):
         return StaticDatasetEntryXmlMappingShortcuts(self.xml)
 
+    @property
+    def static_dataset_category(self):
+        return self.properties.static_dataset_category
+
     objects = StaticDatasetEntryManager.from_queryset(StaticDatasetEntryQuerySet)()
 
     class Meta:

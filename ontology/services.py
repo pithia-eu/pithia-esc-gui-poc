@@ -66,8 +66,10 @@ class OntologyCategoryMetadataService:
         self.xml_parsed = etree.fromstring(xml_of_ontology_category_terms.encode('utf-8'))
         self.namespaces = ontology_namespaces
 
-    def _get_elements_by_xpath_query(self, xpath_query: str):
-        return self.xml_parsed.xpath(
+    def _get_elements_by_xpath_query(self, xpath_query: str, parent_element=None):
+        if not parent_element:
+            parent_element = self.xml_parsed
+        return parent_element.xpath(
             xpath_query,
             namespaces=self.namespaces
         )
@@ -102,6 +104,31 @@ class OntologyCategoryMetadataService:
             url_of_ontology_term
         )
         return immediate_descendents_by_skos_narrower.union(immediate_descendents_by_skos_broader)
+
+    def get_name_and_definition_of_ontology_terms_by_iri(self) -> list:
+        names_of_ontology_terms_by_iri = {}
+        for element in self._get_elements_by_xpath_query('.//%s:Concept' % PithiaOntologyNamespacePrefix.SKOS):
+            iri = next(iter(self._get_elements_by_xpath_query('.//@%s:about' % PithiaOntologyNamespacePrefix.RDF, parent_element=element)), '')
+            if not iri:
+                continue
+            name_element = next(iter(self._get_elements_by_xpath_query('.//%s:prefLabel' % PithiaOntologyNamespacePrefix.SKOS, parent_element=element)), '')
+            if name_element is None:
+                continue
+            definition_element = next(iter(self._get_elements_by_xpath_query('.//%s:definition' % PithiaOntologyNamespacePrefix.SKOS, parent_element=element)), '')
+            definition = ''
+            try:
+                definition = definition_element.text
+            except AttributeError:
+                pass
+            if iri in names_of_ontology_terms_by_iri:
+                continue
+            names_of_ontology_terms_by_iri.update({
+                iri: {
+                    'name': name_element.text,
+                    'definition': definition,
+                },
+            })
+        return names_of_ontology_terms_by_iri
 
     def get_all_descendents_of_ontology_term(self, url_of_ontology_term: str) -> set:
         immediate_descendents = self._get_immediate_descendents_of_ontology_term(url_of_ontology_term)
