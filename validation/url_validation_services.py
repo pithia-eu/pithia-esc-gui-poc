@@ -276,7 +276,14 @@ class MetadataFileMetadataURLReferencesValidator:
             error_msg = error_msg + '<br>'
             error_msg = error_msg + 'Unregistered document URLs: <ul>%s</ul><b>Note:</b> If your URLs start with "<i>http://</i>" please change this to "<i>https://</i>".' % ''.join(list(map(map_string_to_li_element, unregistered_resource_urls)))
             error_msg = error_msg + '<div class="mt-2">Please use the following links to register the resources referenced in the submitted metadata file:</div>'
-            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(list(map(create_li_element_with_register_link_from_resource_type_from_resource_url, unregistered_resource_url_types)))
+            error_msg = error_msg + '<ul class="mt-2">%s</ul>' % ''.join(
+                list(
+                    map(
+                        create_li_element_with_register_link_from_resource_type_from_resource_url,
+                        unregistered_resource_url_types
+                    )
+                )
+            )
             unregistered_resource_url_errors.append(error_msg)
 
         if len(unregistered_operational_mode_urls) > 0:
