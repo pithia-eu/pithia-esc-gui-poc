@@ -167,9 +167,10 @@ def map_metadata_server_urls_to_browse_urls(resource_server_urls: list) -> list:
         type_in_metadata_server_url, localid = itemgetter('resource_type', 'localid')(divide_resource_url_into_main_components(url))
         model = None
         for subclass in scientific_metadata_subclasses:
-            if (subclass.type_in_metadata_server_url == type_in_metadata_server_url
-                and localid.startswith(subclass.localid_base)):
-                model = subclass
+            if (not subclass.type_in_metadata_server_url == type_in_metadata_server_url
+                or not localid.startswith(subclass.localid_base)):
+                continue
+            model = subclass
         
         try:
             referenced_resource = model.objects.get_by_metadata_server_url(url)
