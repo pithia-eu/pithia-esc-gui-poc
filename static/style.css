@@ -83,6 +83,7 @@ hgroup p {
 
 /* || Link styles */
 a,
+a:not(a.btn),
 a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
@@ -96,6 +97,9 @@ a.icon-link:not(a.btn.icon-link),
 a:hover,
 a:focus,
 a:active,
+a:not(a.btn):hover,
+a:not(a.btn):focus,
+a:not(a.btn):active,
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
