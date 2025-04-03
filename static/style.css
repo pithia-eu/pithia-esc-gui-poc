@@ -94,7 +94,9 @@ a.icon-link:not(a.btn.icon-link),
     word-break: break-word;
 }
 
-a:not(a.btn, a.dropdown-item, a.nav-link),
+a:not(a.btn, a.dropdown-item, a.nav-link):hover,
+a:not(a.btn, a.dropdown-item, a.nav-link):focus,
+a:not(a.btn, a.dropdown-item, a.nav-link):active,
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
