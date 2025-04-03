@@ -50,9 +50,9 @@ class ScientificMetadata(models.Model):
     COMPUTATION = 'computation'
     PROCESS = 'process'
     DATA_COLLECTION = 'data_collection'
-    STATIC_DATASET = 'catalogue'
-    STATIC_DATASET_ENTRY = 'catalogue_entry'
-    DATA_SUBSET = 'catalogue_data_subset'
+    STATIC_DATASET = 'static_dataset'
+    STATIC_DATASET_ENTRY = 'static_dataset_entry'
+    DATA_SUBSET = 'data_subset'
     WORKFLOW = 'workflow'
     TYPE_CHOICES = [
         (ORGANISATION, 'Organisation'),
