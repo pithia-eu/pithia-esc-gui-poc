@@ -82,21 +82,22 @@ hgroup p {
 
 
 /* || Link styles */
-a:not(a.btn, a.dropdown-item, a.nav-link),
-a:not(.metadata-server-url.loading .metadata-server-url-text),
+a {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+a:not(header a, a.btn, a.dropdown-item, a.nav-link),
 a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
     -webkit-text-decoration-color: var(--pithia-blue);
     text-decoration-color: var(--pithia-blue);
-    text-decoration: underline;
-    overflow-wrap: break-word;
-    word-break: break-word;
 }
 
-a:not(a.btn, a.dropdown-item, a.nav-link):hover,
-a:not(a.btn, a.dropdown-item, a.nav-link):focus,
-a:not(a.btn, a.dropdown-item, a.nav-link):active,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link):hover,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link):focus,
+a:not(header a, a.btn, a.dropdown-item, a.nav-link):active,
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
@@ -106,6 +107,23 @@ a.icon-link:not(a.btn.icon-link):active,
     color: var(--pithia-blue);
     -webkit-text-decoration-color: var(--pithia-blue);
     text-decoration-color: var(--pithia-blue);
+}
+
+a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a),
+a.icon-link:not(a.btn.icon-link),
+.btn-link {
+    text-decoration: underline;
+}
+
+a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):hover,
+a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):focus,
+a:not(a.btn, a.dropdown-item, header a, a.nav-link, .card-menu a, .list-group-item a):active,
+a.icon-link:not(a.btn.icon-link):hover,
+a.icon-link:not(a.btn.icon-link):focus,
+a.icon-link:not(a.btn.icon-link):active,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
     text-decoration: none;
 }
 
@@ -149,13 +167,13 @@ a.nav-link:focus,
 }
 
 /* Breadcrumb */
-.breadcrumb .breadcrumb-item a {
+.breadcrumb-wrapper .breadcrumb .breadcrumb-item a {
     text-decoration: none;
 }
 
-.breadcrumb .breadcrumb-item a:hover,
-.breadcrumb .breadcrumb-item a:focus,
-.breadcrumb .breadcrumb-item a:active {
+.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:hover,
+.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:focus,
+.breadcrumb-wrapper .breadcrumb .breadcrumb-item a:active {
     text-decoration: underline;
 }
 
