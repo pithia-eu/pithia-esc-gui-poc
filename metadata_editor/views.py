@@ -893,7 +893,6 @@ class StaticDatasetEntryEditorFormView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['static_dataset_choices'] = self.get_resource_choices_with_model(models.StaticDataset)
         kwargs['static_dataset_category_choices'] = self.get_choices_from_ontology_category('staticDatasetCategory')
         return kwargs
 
