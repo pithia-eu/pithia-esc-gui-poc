@@ -881,9 +881,7 @@ class StaticDatasetEntryEditorFormView(
     def add_form_data_to_metadata_editor(self, metadata_editor: StaticDatasetEntryEditor, form_cleaned_data):
         super().add_form_data_to_metadata_editor(metadata_editor, form_cleaned_data)
         metadata_editor.update_description(form_cleaned_data.get('description'))
-        # Add static dataset category later when supported
-        # by XSD.
-        # metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_identifier'))
+        metadata_editor.update_static_dataset_category(form_cleaned_data.get('static_dataset_category'))
         phenomenon_time_update = PhenomenonTimeMetadataUpdate(
             time_period_id=form_cleaned_data.get('time_period_id'),
             time_instant_begin_id=form_cleaned_data.get('time_instant_begin_id'),
