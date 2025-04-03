@@ -34,13 +34,15 @@ from .editor_dataclasses import (
     SourceMetadataUpdate,
 )
 
+from common import models
+
 
 class OrganisationEditor(
     BaseMetadataEditor,
     ContactInfoMetadataEditor,
     ShortNameMetadataEditor):
     def __init__(self, xml_string: str ='') -> None:
-        super().__init__('Organisation', xml_string=xml_string)
+        super().__init__(models.Organisation.root_element_name, xml_string=xml_string)
 
     def update_short_name(self, short_name):
         self.metadata_dict['shortName'] = short_name
@@ -50,7 +52,7 @@ class IndividualEditor(
     BaseMetadataEditor,
     ContactInfoMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Individual', xml_string=xml_string)
+        super().__init__(models.Individual.root_element_name, xml_string=xml_string)
 
     def update_organisation(self, organisation_url: str):
         organisation_key = 'organisation'
@@ -77,7 +79,7 @@ class ProjectEditor(
     StatusMetadataEditor,
     URLMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Project', xml_string=xml_string)
+        super().__init__(models.Project.root_element_name, xml_string=xml_string)
 
     def update_abstract(self, abstract):
         abstract_key = 'abstract'
@@ -98,7 +100,7 @@ class PlatformEditor(
     TypeMetadataEditor,
     URLMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Platform', xml_string)
+        super().__init__(models.Platform.root_element_name, xml_string)
 
     def update_child_platforms(self, update_data):
         child_platform_key = 'childPlatform'
@@ -119,7 +121,7 @@ class OperationEditor(
     StatusMetadataEditor,
     TimePeriodMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Operation', xml_string)
+        super().__init__(models.Operation.root_element_name, xml_string)
 
     def update_platforms(self, update_data):
         platform_key = 'platform'
@@ -157,7 +159,7 @@ class InstrumentEditor(
     TypeMetadataEditor,
     URLMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Instrument', xml_string)
+        super().__init__(models.Instrument.root_element_name, xml_string)
 
     def update_instrument_version(self, version):
         self.update_child_element_and_remove_if_empty(
@@ -204,7 +206,7 @@ class AcquisitionCapabilitiesEditor(
     XlinkHrefMetadataEditor):
     GCO19115_NSPREFIX = 'gco19115'
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('AcquisitionCapabilities', xml_string)
+        super().__init__(models.AcquisitionCapabilities.root_element_name, xml_string)
 
     def setup_namespaces(self):
         super().setup_namespaces()
@@ -234,7 +236,7 @@ class AcquisitionEditor(
     capabilities_key = 'acquisitionCapabilities'
 
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Acquisition', xml_string)
+        super().__init__(models.Acquisition.root_element_name, xml_string)
 
 
 class ComputationCapabilitiesEditor(
@@ -248,7 +250,7 @@ class ComputationCapabilitiesEditor(
         TypeMultipleMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('ComputationCapabilities', xml_string)
+        super().__init__(models.ComputationCapabilities.root_element_name, xml_string)
 
     def update_computation_component_version(self, version: str):
         self.update_child_element_and_remove_if_empty(
@@ -277,7 +279,7 @@ class ComputationEditor(
     capabilities_key = 'computationCapabilities'
 
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Computation', xml_string)
+        super().__init__(models.Computation.root_element_name, xml_string)
 
 
 class ProcessEditor(
@@ -289,7 +291,7 @@ class ProcessEditor(
         RelatedPartiesMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('CompositeProcess', xml_string)
+        super().__init__(models.Process.root_element_name, xml_string)
 
     def update_acquisition_components(self, update_data: list[str]):
         self.update_child_element_and_remove_if_empty(
@@ -321,7 +323,7 @@ class DataCollectionEditor(
         TypeMultipleMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('DataCollection', xml_string)
+        super().__init__(models.DataCollection.root_element_name, xml_string)
 
     def set_empty_properties(self):
         self.metadata_dict['%s:phenomenonTime' % NamespacePrefix.OM] = {}
@@ -405,7 +407,7 @@ class StaticDatasetEditor(
     BaseMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('StaticDataset', xml_string)
+        super().__init__(models.StaticDataset.root_element_name, xml_string)
 
     def update_static_dataset_category(self, static_dataset_category_url: str):
         self.update_child_element_and_remove_if_empty(
@@ -420,7 +422,7 @@ class StaticDatasetEntryEditor(
     TimePeriodMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('StaticDatasetEntry', xml_string)
+        super().__init__(models.StaticDatasetEntry.root_element_name, xml_string)
 
     def update_name(self, name):
         if not name:
@@ -437,6 +439,13 @@ class StaticDatasetEntryEditor(
             self.get_as_xlink_href(static_dataset_url)
         )
 
+    def update_static_dataset_category(self, static_dataset_category_url: str):
+        self.update_child_element_and_remove_if_empty(
+            self.metadata_dict,
+            'staticDatasetCategory',
+            self.get_as_xlink_href(static_dataset_category_url)
+        )
+
     def update_phenomenon_time(self, update_data: PhenomenonTimeMetadataUpdate):
         phenomenon_time_key = 'phenomenonTime'
         self.update_time_period(update_data, phenomenon_time_key)
@@ -450,7 +459,7 @@ class DataSubsetEditor(
     TimePeriodMetadataEditor,
     XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('DataSubset', xml_string)
+        super().__init__(models.DataSubset.root_element_name, xml_string)
 
     def update_name(self, name):
         if not name:
@@ -523,7 +532,7 @@ class WorkflowEditor(
         BaseMetadataEditor,
         XlinkHrefMetadataEditor):
     def __init__(self, xml_string: str = '') -> None:
-        super().__init__('Workflow', xml_string)
+        super().__init__(models.Workflow.root_element_name, xml_string)
 
     def update_data_collections(self, update_data: list[str]):
         self.update_child_element_and_remove_if_empty(
