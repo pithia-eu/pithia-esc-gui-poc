@@ -82,8 +82,8 @@ hgroup p {
 
 
 /* || Link styles */
-
 a:not(a.btn, a.dropdown-item, a.nav-link),
+a:not(.metadata-server-url.loading .metadata-server-url-text),
 a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
@@ -149,12 +149,13 @@ a.nav-link:focus,
 }
 
 /* Breadcrumb */
-.breadcrumb-item a {
+.breadcrumb .breadcrumb-item a {
     text-decoration: none;
 }
 
-.breadcrumb-item a:hover,
-.breadcrumb-item a:focus {
+.breadcrumb .breadcrumb-item a:hover,
+.breadcrumb .breadcrumb-item a:focus,
+.breadcrumb .breadcrumb-item a:active {
     text-decoration: underline;
 }
 
@@ -201,17 +202,23 @@ a.dropdown-item:focus,
     text-decoration: underline;
 }
 
-.ontology-server-url a.metadata-server-url-text:not(:hover, :focus) {
+.ontology-server-url a.metadata-server-url-text:not(:hover, :focus, :active) {
     text-decoration: underline dotted;
 }
 
-.metadata-server-url.loading .metadata-server-url-text {
+.metadata-server-url.loading a.metadata-server-url-text {
     text-decoration: none;
 }
 
 .metadata-server-url.loading {
     text-decoration: none !important;
     cursor: wait;
+}
+
+.metadata-server-url a.metadata-server-url-text:hover,
+.metadata-server-url a.metadata-server-url-text:focus,
+.metadata-server-url a.metadata-server-url-text:active {
+    text-decoration: none;
 }
 
 /* Link styles - text decoration utility classes */
@@ -1978,7 +1985,7 @@ ul.tree ul {
         padding: 2rem;
     }
 
-    .catalogue-category-badge {
+    .static-dataset-category-badge {
         font-size: 1rem;
     }
     
