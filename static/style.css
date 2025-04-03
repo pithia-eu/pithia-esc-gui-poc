@@ -82,8 +82,8 @@ hgroup p {
 
 
 /* || Link styles */
-a,
-a:not(a.btn),
+
+a:not(a.btn, a.dropdown-item, a.nav-link),
 a.icon-link:not(a.btn.icon-link),
 .btn-link {
     color: var(--pithia-blue);
@@ -94,12 +94,7 @@ a.icon-link:not(a.btn.icon-link),
     word-break: break-word;
 }
 
-a:hover,
-a:focus,
-a:active,
-a:not(a.btn):hover,
-a:not(a.btn):focus,
-a:not(a.btn):active,
+a:not(a.btn, a.dropdown-item, a.nav-link),
 a.icon-link:not(a.btn.icon-link):hover,
 a.icon-link:not(a.btn.icon-link):focus,
 a.icon-link:not(a.btn.icon-link):active,
@@ -220,26 +215,26 @@ a.dropdown-item:focus,
 /* Link styles - text decoration utility classes */
 a.link-plain-by-default,
 .btn-link.link-plain-by-default {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 a.link-plain-by-default:hover,
 a.link-plain-by-default:focus,
 .btn-link.link-plain-by-default:hover,
 .btn-link.link-plain-by-default:focus {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 a.link-underline-by-default,
 .btn-link.link-underline-by-default {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 a.link-underline-by-default:hover,
 a.link-underline-by-default:focus,
 .btn-link.link-underline-by-default:hover,
 .btn-link.link-underline-by-default:focus {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 
