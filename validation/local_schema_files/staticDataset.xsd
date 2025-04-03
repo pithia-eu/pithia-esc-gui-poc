@@ -102,10 +102,10 @@ Each dataset entry includes 1+ registered data subsets.
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="staticDatasetIdentifier" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
+                    <element name="staticDatasetCategory" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
-                                A link to the StaticDataset that this entry belongs to.
+                                A category of the static dataset from the ontology dictionary.
                             </documentation>
                         </annotation>
                     </element>   
