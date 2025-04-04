@@ -1,0 +1,11 @@
+<section id="phenomenon-time-section" class="d-flex flex-column row-gap-4">
+    {% with time_period_section_heading_text='Phenomenon Time' time_period_input_type='datetime-local' %}
+    {% with time_period_id_field=form.phenomenon_time_period_id %}
+    {% with time_instant_begin_id_field=form.phenomenon_time_instant_begin_id time_instant_begin_position_field=form.phenomenon_time_instant_begin_position %}
+    {% with time_instant_end_id_field=form.phenomenon_time_instant_end_id time_instant_end_position_field=form.phenomenon_time_instant_end_position %}
+    {% include 'metadata_editor/components/time_period.html' %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+</section>

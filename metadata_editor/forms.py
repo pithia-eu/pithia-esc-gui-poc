@@ -617,16 +617,12 @@ class DataSubsetForm(
     BaseEditorForm,
     DataLevelFormComponent,
     QualityAssessmentFormComponent,
-    SourceMetadataFormComponent,
-    TimePeriodEditorFormComponent):
+    SourceMetadataFormComponent):
     def __init__(self, *args, data_collection_choices=(), static_dataset_entry_choices=(), **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['data_collection'].choices = data_collection_choices
         self.fields['entry_identifier'].choices = static_dataset_entry_choices
         self.fields['description'].help_text = 'A free-text description of the data subset contents.'
-        self.fields['time_period_id'].required = True
-        self.fields['time_instant_begin_id'].required = True
-        self.fields['time_instant_end_id'].required = True
         self.fields['data_quality_flags'].required = True
 
     data_collection = forms.ChoiceField(
@@ -647,13 +643,63 @@ class DataSubsetForm(
         help_text='The static dataset entry that this data subset belongs to.'
     )
 
-    time_instant_begin_position = forms.DateTimeField(
+    # Phenomenon time
+    phenomenon_time_period_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    phenomenon_time_instant_begin_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    phenomenon_time_instant_begin_position = forms.DateTimeField(
         label='Time Position',
         required=True,
         widget=forms.DateTimeInput()
     )
 
-    time_instant_end_position = forms.DateTimeField(
+    phenomenon_time_instant_end_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    phenomenon_time_instant_end_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
+    )
+
+    # Result time
+    result_time_period_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    result_time_instant_begin_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    result_time_instant_begin_position = forms.DateTimeField(
+        label='Time Position',
+        required=True,
+        widget=forms.DateTimeInput()
+    )
+
+    result_time_instant_end_id = forms.CharField(
+        label='ID',
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    result_time_instant_end_position = forms.DateTimeField(
         label='Time Position',
         required=True,
         widget=forms.DateTimeInput()

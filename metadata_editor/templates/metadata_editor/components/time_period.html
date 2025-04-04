@@ -22,7 +22,7 @@
         <h3 class="fs-4 mb-0">Time Period</h3>
     </div>
     <div class="col-xl-4 col-lg-6">
-        {% with field=form.time_period_id %}
+        {% with field=time_period_id_field %}
         {% include 'metadata_editor/components/form_field_template.html' %}
         {% endwith %}
     </div>
@@ -32,17 +32,17 @@
         <h4 class="fs-5">Begin (Time Instant)</h4>
     </div>
     <div class="col-xl-4 col-lg-6">
-        {% with field=form.time_instant_begin_id %}
+        {% with field=time_instant_begin_id_field %}
         {% include 'metadata_editor/components/form_field_template.html' %}
         {% endwith %}
     </div>
     <div class="col-xl-5 col-lg-6">
-        {{ form.time_instant_begin_position.label_tag }}
-        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_begin_position.name }}" id="{{ form.time_instant_begin_position.auto_id }}" class="form-control {% if form.time_instant_begin_position.errors %}is-invalid{% endif %}" value="{{ form.time_instant_begin_position.value|default:'' }}" aria-describedby="{{ form.time_instant_begin_position.auto_id }}-invalid-feedback">
-        <div id="{{ form.time_instant_begin_position.auto_id }}-invalid-feedback" class="invalid-feedback">
-            {% if form.time_instant_begin_position.errors %}
+        {{ time_instant_begin_position_field.label_tag }}
+        <input type="{{ time_period_input_type|default:'date' }}" name="{{ time_instant_begin_position_field.name }}" id="{{ time_instant_begin_position_field.auto_id }}" class="form-control {% if time_instant_begin_position_field.errors %}is-invalid{% endif %}" value="{{ time_instant_begin_position_field.value|default:'' }}" aria-describedby="{{ time_instant_begin_position_field.auto_id }}-invalid-feedback">
+        <div id="{{ time_instant_begin_position_field.auto_id }}-invalid-feedback" class="invalid-feedback">
+            {% if time_instant_begin_position_field.errors %}
             <ul class="list-unstyled">
-                {% for error in form.time_instant_begin_position.errors %}
+                {% for error in time_instant_begin_position_field.errors %}
                 <li>{{ error }}</li>
                 {% endfor %}
             </ul>
@@ -56,17 +56,17 @@
         <h4 class="fs-5">End (Time Instant)</h4>
     </div>
     <div class="col-xl-4 col-lg-6">
-        {% with field=form.time_instant_end_id %}
+        {% with field=time_instant_end_id_field %}
         {% include 'metadata_editor/components/form_field_template.html' %}
         {% endwith %}
     </div>
     <div class="col-xl-5 col-lg-6">
-        {{ form.time_instant_end_position.label_tag }}
-        <input type="{{ time_period_input_type|default:'date' }}" name="{{ form.time_instant_end_position.name }}" id="{{ form.time_instant_end_position.auto_id }}" class="form-control {% if form.time_instant_end_position.errors %}is-invalid{% endif %}" value="{{ form.time_instant_end_position.value|default:'' }}" aria-describedby="{{ form.time_instant_end_position.auto_id }}-invalid-feedback">
-        <div id="{{ form.time_instant_end_position.auto_id }}-invalid-feedback" class="invalid-feedback">
-            {% if form.time_instant_end_position.errors %}
+        {{ time_instant_end_position_field.label_tag }}
+        <input type="{{ time_period_input_type|default:'date' }}" name="{{ time_instant_end_position_field.name }}" id="{{ time_instant_end_position_field.auto_id }}" class="form-control {% if time_instant_end_position_field.errors %}is-invalid{% endif %}" value="{{ time_instant_end_position_field.value|default:'' }}" aria-describedby="{{ time_instant_end_position_field.auto_id }}-invalid-feedback">
+        <div id="{{ time_instant_end_position_field.auto_id }}-invalid-feedback" class="invalid-feedback">
+            {% if time_instant_end_position_field.errors %}
             <ul class="list-unstyled">
-                {% for error in form.time_instant_end_position.errors %}
+                {% for error in time_instant_end_position_field.errors %}
                 <li>{{ error }}</li>
                 {% endfor %}
             </ul>
