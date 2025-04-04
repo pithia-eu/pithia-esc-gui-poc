@@ -82,18 +82,42 @@
                 <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">{{ data_collection_related_index_page_title }}</h2>
                 <nav>
                     <ul class="list-unstyled ps-0">
-                        <li><a href="{% url 'register:organisation' %}" class="pithia-blue">Organisations</a></li>
-                        <li><a href="{% url 'register:individual' %}" class="pithia-blue">Individuals</a></li>
-                        <li><a href="{% url 'register:project' %}" class="pithia-blue">Projects</a></li>
-                        <li><a href="{% url 'register:platform' %}" class="pithia-blue">Platforms</a></li>
-                        <li><a href="{% url 'register:operation' %}" class="pithia-blue">Operations</a></li>
-                        <li><a href="{% url 'register:instrument' %}" class="pithia-blue">Instruments</a></li>
-                        <li><a href="{% url 'register:acquisition_capability_set' %}" class="pithia-blue">Acquisition Capabilities</a></li>
-                        <li><a href="{% url 'register:acquisition' %}" class="pithia-blue">Acquisitions</a></li>
-                        <li><a href="{% url 'register:computation_capability_set' %}" class="pithia-blue">Computation Capabilities</a></li>
-                        <li><a href="{% url 'register:computation' %}" class="pithia-blue">Computations</a></li>
-                        <li><a href="{% url 'register:process' %}" class="pithia-blue">Processes</a></li>
-                        <li><a href="{% url 'register:data_collection' %}" class="pithia-blue">Data Collections</a></li>
+                        <li>
+                            <a href="{% url 'register:organisation' %}" class="link-plain-by-default">Organisations</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:individual' %}" class="link-plain-by-default">Individuals</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:project' %}" class="link-plain-by-default">Projects</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:platform' %}" class="link-plain-by-default">Platforms</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:operation' %}" class="link-plain-by-default">Operations</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:instrument' %}" class="link-plain-by-default">Instruments</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:acquisition_capability_set' %}" class="link-plain-by-default">Acquisition Capabilities</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:acquisition' %}" class="link-plain-by-default">Acquisitions</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:computation_capability_set' %}" class="link-plain-by-default">Computation Capabilities</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:computation' %}" class="link-plain-by-default">Computations</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:process' %}" class="link-plain-by-default">Processes</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:data_collection' %}" class="link-plain-by-default">Data Collections</a>
+                        </li>
                     </ul>
                 </nav>
             </section>
@@ -101,9 +125,15 @@
                 <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">Static Dataset-related Metadata</h2>
                 <nav>
                     <ul class="list-unstyled ps-0">
-                        <li><a href="{% url 'register:static_dataset' %}" class="pithia-blue">Static Datasets</a></li>
-                        <li><a href="{% url 'register:static_dataset_entry' %}" class="pithia-blue">Static Dataset Entries</a></li>
-                        <li><a href="{% url 'register:data_subset' %}" class="pithia-blue">Data Subsets</a></li>
+                        <li>
+                            <a href="{% url 'register:static_dataset' %}" class="link-plain-by-default">Static Datasets</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:static_dataset_entry' %}" class="link-plain-by-default">Static Dataset Entries</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register:data_subset' %}" class="link-plain-by-default">Data Subsets</a>
+                        </li>
                     </ul>
                 </nav>
             </section>
@@ -111,7 +141,9 @@
                 <h2 class="fw-semibold fs-6 border-bottom pb-2 mb-2">Workflows</h2>
                 <nav>
                     <ul class="list-unstyled ps-0">
-                        <li><a href="{% url 'register:workflow' %}" class="pithia-blue">Workflows</a></li>
+                        <li>
+                            <a href="{% url 'register:workflow' %}" class="link-plain-by-default">Workflows</a>
+                        </li>
                     </ul>
                 </nav>
             </section>
