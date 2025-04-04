@@ -93,24 +93,34 @@ def static_dataset_tree(request):
     """
     xml_of_static_dataset_categories = get_ontology_category_terms_in_xml_format('staticDatasetCategory')
     static_dataset_categories = OntologyCategoryMetadataService(xml_of_static_dataset_categories)
-    static_dataset_category_names_and_definitions = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
-    static_dataset_entries = models.StaticDatasetEntry.objects.all()
-    static_dataset_entries_categorised = {}
-    for sd_entry in static_dataset_entries:
-        if sd_entry.static_dataset_category not in static_dataset_entries_categorised:
-            static_dataset_entries_categorised.update({
-                sd_entry.static_dataset_category: [],
+    static_dataset_category_properties_by_iri = static_dataset_categories.get_name_and_definition_of_ontology_terms_by_iri()
+    static_dataset_entries = set(models.StaticDatasetEntry.objects.all())
+    for key, value in static_dataset_category_properties_by_iri.items():
+        if 'entries' not in value:
+            value.update({
+                'entries': [],
             })
-        static_dataset_entries_categorised[sd_entry.static_dataset_category].append(
-            sd_entry,
-        )
+        entries_for_category = [entry for entry in static_dataset_entries if entry.static_dataset_category == key]
+        value.update({
+            'entries': entries_for_category,
+        })
+    static_dataset_category_properties_by_iri.update({
+        'other': {
+            'name': 'Other',
+            'definition': '',
+            'entries': [
+                entry
+                for entry in static_dataset_entries
+                if entry.static_dataset_category not in static_dataset_category_properties_by_iri
+            ],
+        },
+    })
     return render(request, 'browse/static_dataset_tree.html', {
         'title': models.StaticDataset.type_plural_readable.title(),
         'description': models.StaticDataset.type_description_readable,
         'browse_index_page_breadcrumb_text': _INDEX_PAGE_TITLE,
         'resources': static_dataset_entries,
-        'static_dataset_entries_categorised': static_dataset_entries_categorised,
-        'static_dataset_category_names_and_definitions': static_dataset_category_names_and_definitions,
+        'static_dataset_category_properties_by_iri': static_dataset_category_properties_by_iri,
         'type_readable': models.StaticDataset.type_readable,
         'type_plural_readable': models.StaticDataset.type_plural_readable,
     })
