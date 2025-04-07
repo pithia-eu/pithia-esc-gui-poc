@@ -320,7 +320,7 @@ class StaticDatasetEntryFormFieldsToMetadataMapper(
         mappings.update({
             'name': './/%s:entryName' % self.DEFAULT_XPATH_NSPREFIX,
             'description': './/%s:entryDescription' % self.DEFAULT_XPATH_NSPREFIX,
-            'static_dataset_identifier': './/%s:staticDatasetIdentifier/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
+            'static_dataset_category': './/%s:category/@%s:href' % (self.DEFAULT_XPATH_NSPREFIX, NamespacePrefix.XLINK),
         })
         return mappings
 

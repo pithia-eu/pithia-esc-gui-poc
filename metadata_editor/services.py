@@ -442,7 +442,7 @@ class StaticDatasetEntryEditor(
     def update_static_dataset_category(self, static_dataset_category_url: str):
         self.update_child_element_and_remove_if_empty(
             self.metadata_dict,
-            'staticDatasetCategory',
+            'category',
             self.get_as_xlink_href(static_dataset_category_url)
         )
 
@@ -595,7 +595,7 @@ class SimpleDataSubsetEditor(SimpleMetadataEditor):
     def update_referent_doi_name_if_exists(self, referent_doi_name: str):
         doi_kernel_metadata_element = self.xml_string_parsed.find('{%s}doi' % Namespace.PITHIA)
         if doi_kernel_metadata_element is None:
-            return
+            returna
         referent_doi_name_element = doi_kernel_metadata_element.find('{%s}referentDoiName' % Namespace.DOI)
         referent_doi_name_element.text = referent_doi_name
 
