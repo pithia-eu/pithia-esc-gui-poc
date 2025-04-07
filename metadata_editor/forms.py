@@ -674,6 +674,18 @@ class DataSubsetForm(
         widget=forms.DateTimeInput()
     )
 
+    time_periods_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
+    time_periods_extra_json = forms.JSONField(
+        required=False,
+        initial=list,
+        widget=forms.HiddenInput()
+    )
+
     data_levels = forms.ChoiceField(
         label='Data Level',
         required=False,

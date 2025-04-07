@@ -1,6 +1,7 @@
 {% extends 'metadata_editor/components/base_editor.html' %}
 {% load static %}
 {% block extra_scripts %}
+{{ time_periods_tab_pane_content_template|json_script:'time-periods-tab-pane-content-template' }}
 {{ sources_tab_pane_content_template|json_script:'sources-tab-pane-content-template' }}
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script src="{% static 'metadata_editor/data_subset_editor.js' %}" type="module"></script>

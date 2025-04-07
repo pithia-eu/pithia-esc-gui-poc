@@ -1036,6 +1036,10 @@ class DataSubsetEditorFormView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['time_periods_tab_pane_content_template'] = render_to_string(
+            'metadata_editor/components/data_subset/time_periods_tab_pane_content_template.html',
+            context=context
+        )
         context['sources_tab_pane_content_template_path'] = self.get_sources_tab_pane_content_template_path()
         context['sources_tab_pane_content_template'] = self.get_sources_tab_pane_content_template(context)
         return context

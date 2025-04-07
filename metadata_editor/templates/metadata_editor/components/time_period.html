@@ -20,7 +20,7 @@
     <div class="col-xl-5 col-lg-6">
         {{ time_instant_begin_position_field.label_tag }}
         <input type="{{ time_period_input_type|default:'date' }}" name="{{ time_instant_begin_position_field.name }}" id="{{ time_instant_begin_position_field.auto_id }}" class="form-control {% if time_instant_begin_position_field.errors %}is-invalid{% endif %}" value="{{ time_instant_begin_position_field.value|default:'' }}" aria-describedby="{{ time_instant_begin_position_field.auto_id }}-invalid-feedback">
-        <div id="{{ time_instant_begin_position_field.auto_id }}-invalid-feedback" class="invalid-feedback">
+        <div id="invalid-feedback-{{ time_instant_begin_position_field.auto_id }}" class="invalid-feedback">
             {% if time_instant_begin_position_field.errors %}
             <ul class="list-unstyled">
                 {% for error in time_instant_begin_position_field.errors %}
@@ -44,7 +44,7 @@
     <div class="col-xl-5 col-lg-6">
         {{ time_instant_end_position_field.label_tag }}
         <input type="{{ time_period_input_type|default:'date' }}" name="{{ time_instant_end_position_field.name }}" id="{{ time_instant_end_position_field.auto_id }}" class="form-control {% if time_instant_end_position_field.errors %}is-invalid{% endif %}" value="{{ time_instant_end_position_field.value|default:'' }}" aria-describedby="{{ time_instant_end_position_field.auto_id }}-invalid-feedback">
-        <div id="{{ time_instant_end_position_field.auto_id }}-invalid-feedback" class="invalid-feedback">
+        <div id="invalid-feedback-{{ time_instant_end_position_field.auto_id }}" class="invalid-feedback">
             {% if time_instant_end_position_field.errors %}
             <ul class="list-unstyled">
                 {% for error in time_instant_end_position_field.errors %}

@@ -18,7 +18,7 @@ function alertIfTimePeriodIsInvalid(timePeriodBeginInput, timePeriodEndInput) {
         timePeriodBeginInput.classList.remove("is-invalid");
         return;
     }
-    document.querySelector(`#${timePeriodBeginInput.id}-invalid-feedback`).textContent = "The begin time cannot be later than the end time.";
+    document.querySelector(`#invalid-feedback-${timePeriodBeginInput.id}`).textContent = "The begin time cannot be later than the end time.";
     timePeriodBeginInput.classList.add("is-invalid");
 }
 
