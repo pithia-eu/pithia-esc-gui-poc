@@ -9,61 +9,10 @@
     <include schemaLocation="utilities.xsd"/>
     <include schemaLocation="collectionResults.xsd"/>
     <annotation>
-        <documentation>Version 1.0 2025-03-04</documentation>
-    </annotation>
-    <element name="StaticDataset" substitutionGroup="gml:AbstractObject" type="pithia:PITHIA_StaticDatasetType">
-        <annotation>
-            <documentation>-- Definition --
-Static dataset registrations are arranged into three hierarchical levels: (1) the top document of the category (for example, 
-AcademicPublications, TrainingDatasets, Events, Features), (2) Entries under the top category (for example, individual 
-publication documents under AcademicPublications category), and (3) DataSubsets under particular Entry that were physically 
-placed for permanent storage (for example, at EGI) and optionally assigned a DOI (provided by PITHIA or some other repository
-like Zenodo). 
-            </documentation>
-        </annotation>
-    </element>
-    <complexType name="PITHIA_StaticDatasetType">
-        <complexContent>
-            <extension base="gml:AbstractFeatureType">
-                <sequence>
-                    <element name="identifier" type="pithia:PITHIA_IdentifierPropertyType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                External identifier of the static dataset category.
-                                
-                                -- Description --
-                                NOTE The identifier is used by StaticDatasetEntry to reference back to the staticDataset.
-                                
-                            </documentation>
-                        </annotation>
-                    </element>    
-                    <element name="name" type="string">
-                        <annotation>
-                            <documentation>-- Definition --
-                                Name of the Static Dataset Collection
-                            </documentation>
-                        </annotation>
-                    </element>                    
-                    <element maxOccurs="1" minOccurs="0" name="description" type="string">
-                        <annotation>
-                            <documentation>-- Definition --
-                                 A free-text description of the static dataset contents.  
-                            </documentation>
-                        </annotation>
-                    </element>
-                    <element maxOccurs="1" minOccurs="0" name="staticDatasetCategory" type="gml:ReferenceType">
-                        <annotation>
-                            <documentation>-- Definition --
-                                A category of the static dataset from the ontology dictionary.
-                            </documentation>
-                        </annotation>
-                    </element>   
-                </sequence>
-            </extension>
-        </complexContent>
-    </complexType>
+        <documentation>Version 1.1 2025-04-04</documentation>
+    </annotation>
 <!-- 
-
+     ===========================   S T A T I C     D A T A S E T     E N T R Y     =======================================
  -->
     <element name="StaticDatasetEntry" substitutionGroup="gml:AbstractObject" type="pithia:PITHIA_StaticDatasetEntryType">
         <annotation>
@@ -95,17 +44,17 @@ Each dataset entry includes 1+ registered data subsets.
                             </documentation>
                         </annotation>
                     </element>                    
-                    <element name="entryDescription" maxOccurs="1" minOccurs="0" type="string">
+                    <element name="entryDescription" maxOccurs="1" minOccurs="1" type="string">
                         <annotation>
                             <documentation>-- Definition --
                                  A free-text description of the static dataset entry contents.  
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="staticDatasetCategory" maxOccurs="1" minOccurs="0" type="gml:ReferenceType">
+                    <element name="category" maxOccurs="1" minOccurs="1" type="gml:ReferenceType">
                         <annotation>
                             <documentation>-- Definition --
-                                A category of the static dataset from the ontology dictionary.
+                                A link to the StaticDataset that this entry belongs to.
                             </documentation>
                         </annotation>
                     </element>   
@@ -115,7 +64,9 @@ Each dataset entry includes 1+ registered data subsets.
         </complexContent>
     </complexType>
 
-
+<!-- 
+     ===========================   D A T A    S U B S E T    =======================================
+ -->
     <element name="DataSubset" substitutionGroup="gml:AbstractObject" type="pithia:DataSubsetType">
         <annotation>
             <documentation>-- Definition --
@@ -163,7 +114,6 @@ document, the result time (with begin and end), and an optional DOI link to the 
                             </documentation>
                         </annotation>
                     </element>   
-                    <element name="phenomenonTime" minOccurs="1" type="om:TimeObjectPropertyType"/>
                     <element name="resultTime" minOccurs="1" maxOccurs="unbounded" type="om:TimeObjectPropertyType"/>
                     <element name="source" minOccurs="0" maxOccurs="unbounded" type="pithia:OnlineResourcePropertyType"/>
                     <element name="doi" minOccurs="0" maxOccurs="unbounded" type="doi:kernelMetadata"/>

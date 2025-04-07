@@ -4,7 +4,7 @@
     <import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd"/>
     <import namespace="http://www.opengis.net/om/2.0" schemaLocation="http://schemas.opengis.net/om/2.0/observation.xsd"/>
     <annotation>
-        <documentation>Version 2.2 08/20/2022</documentation>
+        <documentation>Version 2.3 2025-04-04</documentation>
     </annotation>
     <include schemaLocation="utilities.xsd"/>
     <include schemaLocation="project.xsd"/>
@@ -12,5 +12,5 @@
     <include schemaLocation="featureOfInterest.xsd"/>
     <include schemaLocation="procedure.xsd"/>  
     <include schemaLocation="collectionResults.xsd"/>
-    <include schemaLocation="staticDataset.xsd"/>
+    <include schemaLocation="staticDataset.xsd"/>  
 </schema>
