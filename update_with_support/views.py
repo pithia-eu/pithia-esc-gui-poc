@@ -315,7 +315,7 @@ class DataSubsetUpdateWithEditorFormView(
         simple_data_subset_editor = SimpleDataSubsetEditor(self.xml_string)
         # Replace temp DOI name used to pass
         # XSD validation with real DOI name.
-        simple_data_subset_editor.update_referent_doi_name(self.current_doi_name)
+        simple_data_subset_editor.update_referent_doi_name_if_exists(self.current_doi_name)
         self.xml_string = simple_data_subset_editor.to_xml()
         return super().run_extra_actions_before_update()
 
@@ -369,15 +369,22 @@ class DataSubsetUpdateWithEditorFormView(
             self.current_doi_name = xml_shortcuts.doi_kernel_metadata.get('referent_doi_name')
             temp_doi_name = '10.000/000'
             simple_data_subset_editor = SimpleDataSubsetEditor(self.current_resource_xml)
-            simple_data_subset_editor.update_referent_doi_name(temp_doi_name)
+            simple_data_subset_editor.update_referent_doi_name_if_exists(temp_doi_name)
             self.current_resource_xml = simple_data_subset_editor.to_xml()
         except Exception as err:
             logger.exception(err)
 
         response = super().form_valid(form)
 
+        if not 200 <= response.status_code <= 299:
+            return response
+
         try:
-            self.handle_name = self.register_doi_if_requested(self.request, self.resource, xml_file_string=self.xml_string)
+            self.handle_name = self.register_doi_if_requested(
+                self.request,
+                self.resource,
+                xml_file_string=self.xml_string
+            )
             # RE-INSERT PRE-EXISTING DOI KERNEL METADATA
             # Refresh self.resource if a DOI was added
             # so the new DOI kernel metadata is added to
@@ -389,7 +396,8 @@ class DataSubsetUpdateWithEditorFormView(
             )
         except Exception:
             logger.exception(self.error_msg)
-            messages.error(self.request, 'An unexpected error occurred whilst handling the DOI request.')
+            return HttpResponseServerError('''An unexpected error occurred
+            whilst handling the DOI request.''')
         return response
 
     def get_initial(self):

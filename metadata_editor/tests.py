@@ -1042,7 +1042,7 @@ class SimpleDataSubsetEditorTestCase(SimpleTestCase):
         simple_data_subset_editor = SimpleDataSubsetEditor(
             xml_string
         )
-        simple_data_subset_editor.update_referent_doi_name('10.1000/my-updated-doi')
+        simple_data_subset_editor.update_referent_doi_name_if_exists('10.1000/my-updated-doi')
         updated_xml_string = simple_data_subset_editor.to_xml()
         print('updated_xml_string', updated_xml_string)
         self.assertNotIn(

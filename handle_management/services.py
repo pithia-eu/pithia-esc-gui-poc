@@ -185,7 +185,7 @@ class HandleRegistrationProcessForDataSubset:
         simple_data_subset_editor = SimpleDataSubsetEditor(
             self.xml_string_with_doi_kernel_metadata
         )
-        simple_data_subset_editor.update_referent_doi_name(
+        simple_data_subset_editor.update_referent_doi_name_if_exists(
             self.handle_name
         )
         return simple_data_subset_editor.to_xml()
